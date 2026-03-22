@@ -39,18 +39,15 @@ test.describe('Basic Page Load Tests', () => {
     const response = await page.goto('/websites', { waitUntil: 'domcontentloaded' })
     expect(response?.status()).toBeLessThan(400)
 
-    // Check page loaded
-    const hasContent = await page.locator('main').first().isVisible()
-    expect(hasContent).toBeTruthy()
+    await expect(page).toHaveURL(/\/$/)
+    await expect(page.getByRole('heading', { level: 1, name: /llms\.txt hub/i })).toBeVisible()
   })
 
-  test('members page loads', async ({ page }) => {
-    const response = await page.goto('/members', { waitUntil: 'domcontentloaded' })
+  test('favorites page loads', async ({ page }) => {
+    const response = await page.goto('/favorites', { waitUntil: 'domcontentloaded' })
     expect(response?.status()).toBeLessThan(400)
 
-    // Check page has content
-    const bodyText = await page.textContent('body')
-    expect(bodyText).toBeTruthy()
+    await expect(page.getByRole('heading', { level: 1, name: /your favorites/i })).toBeVisible()
   })
 
   test('search functionality exists', async ({ page }) => {

@@ -128,10 +128,10 @@ export function MobileDrawer({ isOpen, onClose, featuredCount }: MobileDrawerPro
                 Guides
               </Link>
               <Link
-                href={getRoute('members.list')}
+                href={getRoute('submit')}
                 className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
               >
-                Members
+                Submit
               </Link>
               {/* <Link
                 href={getRoute('news')}

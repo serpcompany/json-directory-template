@@ -1,7 +1,6 @@
 'use server'
 
 import { getGuides, getWebsites } from '@/lib/content-loader'
-import { getLatestMembers } from '@/lib/members'
 import { getFeaturedProjects, getRecentlyUpdatedProjects } from '@/lib/project-utils'
 
 /**
@@ -11,23 +10,16 @@ import { getFeaturedProjects, getRecentlyUpdatedProjects } from '@/lib/project-u
  * @returns Promise containing homepage data with pagination info
  */
 export async function getHomePageData() {
-  const allProjects = await getWebsites()
+  const allProjects = getWebsites()
   const featuredProjects = getFeaturedProjects(allProjects)
   const recentlyUpdatedProjects = getRecentlyUpdatedProjects(allProjects, 8)
-
-  // Only load first 48 projects for initial homepage render to improve performance
-  // This reduces initial bundle size and data transfer from ~900 to 48 websites
-  const initialProjects = allProjects.slice(0, 48)
-
-  const featuredGuides = await getGuides()
-  const latestMembers = await getLatestMembers({ limit: 6 })
+  const featuredGuides = getGuides()
 
   return {
-    allProjects: initialProjects,
+    allProjects,
     featuredProjects,
     recentlyUpdatedProjects,
     totalCount: allProjects.length,
-    featuredGuides,
-    latestMembers
+    featuredGuides
   }
 }

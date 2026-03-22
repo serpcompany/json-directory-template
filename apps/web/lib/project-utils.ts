@@ -7,9 +7,15 @@ import type { WebsiteMetadata } from './content-loader'
  * @returns Array of featured projects (max 8)
  */
 export function getFeaturedProjects(projects: WebsiteMetadata[]): WebsiteMetadata[] {
-  // Get explicitly featured projects only, max 8
   const featuredProjects = projects.filter(project => project.featured === true)
-  return featuredProjects.slice(0, 8)
+
+  if (featuredProjects.length) {
+    return featuredProjects.slice(0, 8)
+  }
+
+  return [...projects]
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .slice(0, 8)
 }
 
 /**

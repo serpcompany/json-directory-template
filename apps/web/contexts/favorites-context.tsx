@@ -1,6 +1,5 @@
 'use client'
 
-import { useAuth } from '@thedaviddias/auth'
 import { logger } from '@thedaviddias/logging'
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 
@@ -27,9 +26,7 @@ interface FavoritesProviderProps {
 export function FavoritesProvider({ children }: FavoritesProviderProps) {
   const [favorites, setFavorites] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const { user, isSignedIn } = useAuth()
 
-  // Load favorites from localStorage on mount (client-side only)
   useEffect(() => {
     if (typeof window === 'undefined') return
 
@@ -51,51 +48,6 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
     }
   }, [])
 
-  // Sync with secure user favorites API when user changes
-  useEffect(() => {
-    if (!isSignedIn || !user) return
-
-    /**
-     * Syncs local favorites with the user's server-side favorites
-
-     */
-    const syncUserFavorites = async () => {
-      try {
-        const response = await fetch('/api/user/favorites')
-        if (response.ok) {
-          const { favorites: userFavorites } = await response.json()
-          if (Array.isArray(userFavorites)) {
-            // Merge localStorage favorites with user favorites
-            const localFavorites = favorites
-            const mergedFavorites = Array.from(new Set([...localFavorites, ...userFavorites]))
-
-            if (
-              mergedFavorites.length !== favorites.length ||
-              !mergedFavorites.every(fav => favorites.includes(fav))
-            ) {
-              setFavorites(mergedFavorites)
-              // Update localStorage with merged favorites
-              localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedFavorites))
-
-              // If there were local changes, sync back to server
-              if (mergedFavorites.length !== userFavorites.length) {
-                await updateUserFavorites(mergedFavorites)
-              }
-            }
-          }
-        }
-      } catch (error) {
-        logger.error('Failed to sync user favorites', {
-          data: error,
-          tags: { context: 'favorites' }
-        })
-      }
-    }
-
-    syncUserFavorites()
-  }, [isSignedIn, user]) // Remove favorites from dependency to avoid infinite loop
-
-  // Save favorites to localStorage
   const saveFavoritesToStorage = useCallback((newFavorites: string[]) => {
     if (typeof window === 'undefined') return
 
@@ -108,33 +60,6 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
       })
     }
   }, [])
-
-  // Update user favorites via secure API
-  const updateUserFavorites = useCallback(
-    async (newFavorites: string[]) => {
-      if (!isSignedIn || !user) return
-
-      try {
-        const response = await fetch('/api/user/favorites', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ favorites: newFavorites })
-        })
-
-        if (!response.ok) {
-          throw new Error('Failed to update favorites')
-        }
-      } catch (error) {
-        logger.error('Failed to update user favorites', {
-          data: error,
-          tags: { context: 'favorites' }
-        })
-      }
-    },
-    [isSignedIn, user]
-  )
 
   const isFavorite = useCallback(
     (slug: string): boolean => {
@@ -149,13 +74,9 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
         const newFavorites = [...favorites, slug]
         setFavorites(newFavorites)
         saveFavoritesToStorage(newFavorites)
-        // Only sync to server if user is logged in
-        if (isSignedIn && user) {
-          updateUserFavorites(newFavorites)
-        }
       }
     },
-    [favorites, saveFavoritesToStorage, updateUserFavorites, isSignedIn, user]
+    [favorites, saveFavoritesToStorage]
   )
 
   const removeFavorite = useCallback(
@@ -164,13 +85,9 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
         const newFavorites = favorites.filter(fav => fav !== slug)
         setFavorites(newFavorites)
         saveFavoritesToStorage(newFavorites)
-        // Only sync to server if user is logged in
-        if (isSignedIn && user) {
-          updateUserFavorites(newFavorites)
-        }
       }
     },
-    [favorites, saveFavoritesToStorage, updateUserFavorites, isSignedIn, user]
+    [favorites, saveFavoritesToStorage]
   )
 
   const toggleFavorite = useCallback(

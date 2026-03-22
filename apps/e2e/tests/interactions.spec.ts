@@ -91,7 +91,7 @@ test.describe('Navigation Interactions', () => {
       const homeLink = breadcrumb.getByRole('link', { name: /home/i })
       if (await homeLink.isVisible()) {
         await homeLink.click()
-        await expect(page).toHaveURL('http://localhost:3000/')
+        await expect(page).toHaveURL(/\/$/)
       }
     }
   })

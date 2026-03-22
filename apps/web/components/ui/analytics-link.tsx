@@ -15,6 +15,8 @@ interface AnalyticsLinkProps {
   onClick?: () => void
 }
 
+type DataLayerEvent = { event: string } & Record<string, string | number>
+
 /**
  * Link component that automatically tracks clicks with analytics
  */
@@ -37,7 +39,14 @@ export function AnalyticsLink({
 
     if (analyticsEvent) {
       if (process.env.NODE_ENV === 'production') {
-        window.op?.track(analyticsEvent, analyticsProps)
+        const windowWithDataLayer = window as Window & typeof globalThis & {
+          dataLayer?: DataLayerEvent[]
+        }
+        windowWithDataLayer.dataLayer = windowWithDataLayer.dataLayer || []
+        windowWithDataLayer.dataLayer.push({
+          event: analyticsEvent,
+          ...(analyticsProps || {})
+        })
       }
     } else if (href.startsWith('http')) {
       analytics.externalLink(href, typeof children === 'string' ? children : href)

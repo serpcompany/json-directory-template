@@ -9,7 +9,7 @@ test.describe('Homepage', () => {
     await page.waitForLoadState('domcontentloaded')
 
     // Verify that we're on the homepage by checking the URL
-    expect(page.url()).toBe('http://localhost:3000/')
+    await expect(page).toHaveURL(/\/$/)
 
     // Check if the page is accessible
     expect(await page.title()).toBeTruthy()

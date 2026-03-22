@@ -4,6 +4,7 @@ let allLegals: any[] = []
 let allResources: any[] = []
 let allWebsites: any[] = []
 let allDocs: any[] = []
+let allJsonWebsites: any[] = []
 
 try {
   const collections = require('@/.content-collections/generated')
@@ -18,6 +19,12 @@ try {
   if (process.env.NODE_ENV !== 'test') {
     console.warn('Content collections not available, using empty arrays')
   }
+}
+
+try {
+  allJsonWebsites = require('../../../data/websites.json')
+} catch {
+  allJsonWebsites = []
 }
 
 const collectionGuides = allGuides
@@ -154,12 +161,60 @@ export interface DocMetadata {
   content?: string
 }
 
+interface JsonWebsiteEntry {
+  category: string
+  description: string
+  featured?: boolean
+  llmsFullUrl?: string
+  llmsTxtUrl?: string
+  llmsUrl?: string
+  name: string
+  publishedAt: string
+  slug?: string
+  website?: string
+  domain?: string
+}
+
+function sanitizeWebsiteDescription(description: string): string {
+  return description.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
+function mapJsonWebsite(website: JsonWebsiteEntry): WebsiteMetadata {
+  const websiteUrl = website.website || website.domain || ''
+  const llmsUrl = website.llmsUrl || website.llmsTxtUrl || ''
+  const slug =
+    website.slug ||
+    website.name
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/--+/g, '-')
+
+  return {
+    category: website.category,
+    description: sanitizeWebsiteDescription(website.description),
+    featured: website.featured,
+    llmsFullUrl: website.llmsFullUrl || null,
+    llmsUrl,
+    name: website.name,
+    publishedAt: website.publishedAt,
+    slug,
+    website: websiteUrl
+  }
+}
+
 /**
  * Get all websites
  *
  * @returns Array of website metadata
  */
 export function getWebsites(): WebsiteMetadata[] {
+  if (Array.isArray(allJsonWebsites) && allJsonWebsites.length > 0) {
+    return allJsonWebsites.map(mapJsonWebsite).sort((a, b) => {
+      return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    })
+  }
+
   if (!collectionWebsites || collectionWebsites.length === 0) {
     return []
   }
@@ -197,21 +252,21 @@ export function getWebsites(): WebsiteMetadata[] {
  * @returns Website with content and navigation, or null if not found
  */
 export async function getWebsiteBySlug(slug: string) {
-  if (!collectionWebsites || collectionWebsites.length === 0) {
+  const websites = getWebsites() // Use the enhanced function that ensures slugs
+
+  if (websites.length === 0) {
     return null
   }
 
-  const websites = getWebsites() // Use the enhanced function that ensures slugs
-
   // Find the website with the matching slug
-  const website = websites.find((site: Website) => site.slug === slug)
+  const website = websites.find(site => site.slug === slug)
 
   if (!website) {
     return null
   }
 
   // Find current index for previous/next navigation
-  const currentIndex = websites.findIndex((site: Website) => site.slug === slug)
+  const currentIndex = websites.findIndex(site => site.slug === slug)
 
   // Get previous and next websites
   const previousWebsite = websites[currentIndex - 1] || null
@@ -219,7 +274,7 @@ export async function getWebsiteBySlug(slug: string) {
 
   // Get related websites (same category, excluding current)
   const relatedWebsites = websites
-    .filter((site: Website) => site.category === website.category && site.slug !== slug)
+    .filter(site => site.category === website.category && site.slug !== slug)
     .slice(0, 4)
 
   // Get content from _meta if available

@@ -1,6 +1,5 @@
 'use client'
 
-import { useAuth } from '@thedaviddias/auth'
 import { cn } from '@thedaviddias/design-system/lib/utils'
 import { Heart } from 'lucide-react'
 import { useState } from 'react'
@@ -29,7 +28,6 @@ export function FavoriteButton({
   variant = 'default'
 }: FavoriteButtonProps) {
   const { isFavorite, toggleFavorite } = useFavorites()
-  const { user } = useAuth()
   const [isAnimating, setIsAnimating] = useState(false)
 
   const favorited = isFavorite(slug)
@@ -82,13 +80,7 @@ export function FavoriteButton({
       onClick={handleClick}
       className={baseClasses}
       aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
-      title={
-        favorited
-          ? 'Remove from favorites'
-          : user
-            ? 'Add to favorites'
-            : 'Add to favorites (save locally)'
-      }
+      title={favorited ? 'Remove from favorites' : 'Add to favorites'}
     >
       <Heart
         className={cn(

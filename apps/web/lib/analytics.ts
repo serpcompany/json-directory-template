@@ -84,6 +84,9 @@ export const ANALYTICS_EVENTS = {
 
 type AnalyticsEvent = (typeof ANALYTICS_EVENTS)[keyof typeof ANALYTICS_EVENTS]
 
+type DataLayerValue = string | number
+type DataLayerEvent = { event: string } & Record<string, DataLayerValue>
+
 interface EventProps {
   // Common props
   source?: string
@@ -115,27 +118,32 @@ interface EventProps {
   content_slug?: string
 }
 
-/**
- * Track an event with OpenPanel analytics
- */
-export function trackEvent(event: AnalyticsEvent, props?: EventProps) {
-  if (typeof window === 'undefined') return
+function pushToDataLayer(event: string, props?: EventProps): void {
+  const windowWithDataLayer = window as Window & typeof globalThis & {
+    dataLayer?: DataLayerEvent[]
+  }
+  const payload: DataLayerEvent = { event }
 
-  const cleanProps: Record<string, string | number> = {}
   if (props) {
     Object.entries(props).forEach(([key, value]) => {
       if (value !== undefined) {
-        cleanProps[key] = value
+        payload[key] = value
       }
     })
   }
 
+  windowWithDataLayer.dataLayer = windowWithDataLayer.dataLayer || []
+  windowWithDataLayer.dataLayer.push(payload)
+}
+
+/**
+ * Track an event with Google Tag Manager's dataLayer when available.
+ */
+export function trackEvent(event: AnalyticsEvent, props?: EventProps) {
+  if (typeof window === 'undefined') return
+
   if (process.env.NODE_ENV === 'production') {
-    try {
-      window.op?.track(event, cleanProps)
-    } catch (error) {
-      console.warn('OpenPanel tracking failed:', error)
-    }
+    pushToDataLayer(event, props)
   }
 }
 

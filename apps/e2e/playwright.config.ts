@@ -1,12 +1,18 @@
 import { defineConfig, devices } from '@playwright/test'
 
+const playwrightPort = Number(process.env.PLAYWRIGHT_PORT ?? 3100)
+const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${playwrightPort}`
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : 2, // Use 2 workers locally for stability
-  reporter: process.env.CI ? 'github' : 'html',
+  reporter:
+    process.env.CI || process.env.CLAUDE
+      ? [['line'], ['html', { open: 'never' }]]
+      : 'html',
 
   // Performance optimizations
   timeout: 60000, // 60 seconds per test (more generous for loaded apps)
@@ -15,7 +21,7 @@ export default defineConfig({
   },
 
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: baseUrl,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -71,8 +77,8 @@ export default defineConfig({
     // }
   ],
   webServer: {
-    command: 'cd ../web && pnpm dev',
-    url: 'http://localhost:3000',
+    command: `cd ../web && pnpm exec next dev --hostname 127.0.0.1 --port ${playwrightPort}`,
+    url: baseUrl,
     reuseExistingServer: !process.env.CI,
     timeout: 60000, // 1 minute to start server
     env: {

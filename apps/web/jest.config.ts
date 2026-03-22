@@ -29,35 +29,11 @@ const config: Config.InitialOptions = {
       lines: 90,
       statements: 90
     },
-    './lib/auth-utils.ts': {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80
-    },
-    './lib/csrf-protection.ts': {
-      branches: 75,
-      functions: 80,
-      lines: 85,
-      statements: 85
-    },
     './lib/url-safety.ts': {
       branches: 40,
       functions: 80,
       lines: 70,
       statements: 65
-    },
-    './app/api/fetch-metadata/route.ts': {
-      branches: 55,
-      functions: 80,
-      lines: 80,
-      statements: 80
-    },
-    './app/api/check-url/route.ts': {
-      branches: 35,
-      functions: 90,
-      lines: 60,
-      statements: 60
     }
   },
 
@@ -73,6 +49,7 @@ const config: Config.InitialOptions = {
     '!**/*.stories.{ts,tsx}',
     '!**/node_modules/**',
     '!**/.next/**',
+    '!**/_archive/**',
     '!**/coverage/**',
     '!**/dist/**',
     '!**/build/**',
@@ -80,7 +57,7 @@ const config: Config.InitialOptions = {
     '!**/test-utils/**',
     '!**/mocks/**'
   ],
-  coveragePathIgnorePatterns: ['/node_modules/', '/.next/', '/coverage/'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/.next/', '/coverage/', '/_archive/'],
 
   // Coverage report formats
   coverageReporters: ['text', 'lcov', 'html', 'json-summary'],
@@ -88,7 +65,8 @@ const config: Config.InitialOptions = {
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/.next/',
-    '<rootDir>/__tests__/mocks/'
+    '<rootDir>/__tests__/mocks/',
+    '<rootDir>/_archive/'
   ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module

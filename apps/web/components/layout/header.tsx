@@ -1,35 +1,14 @@
 'use client'
-import { useAuth } from '@thedaviddias/auth'
-import { Menu, Search, UserPlus } from 'lucide-react'
+import { Menu, Plus, Search } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { useAnalyticsEvents } from '@/components/analytics-tracker'
 import { GithubStars } from '@/components/stats/github-stars'
 import { useSearch } from '@/hooks/use-search'
 import { getRoute } from '@/lib/routes'
 import { NavLink } from './header-nav-link'
 import { DesktopSearchForm, MobileSearchOverlay } from './header-search'
-import { UserDropdownMenu } from './header-user-menu'
 import { MobileDrawer } from './mobile-drawer'
-
-/**
- * Generates a user slug from user data
- *
- * @param user - User object from auth
- * @returns string - Generated user slug
- */
-function generateSlugFromUser(user: any): string {
-  if (!user) return ''
-
-  // Try to get username from user_metadata
-  const username = user.user_metadata?.user_name
-  if (username) {
-    return username
-  }
-
-  // Fallback to user ID if no username available
-  return user.id
-}
 
 /**
  * Main header component with navigation, search, and user actions
@@ -42,19 +21,7 @@ export function Header() {
   const [showAutocomplete, setShowAutocomplete] = useState(false)
   const [showMobileAutocomplete, setShowMobileAutocomplete] = useState(false)
   const { searchQuery, setSearchQuery, handleSearch } = useSearch()
-  const { user, signOut } = useAuth()
   const { trackSearch } = useAnalyticsEvents()
-
-  const userSlug = user ? generateSlugFromUser(user) : ''
-  const isProfilePrivate = Boolean(user?.publicMetadata?.isProfilePrivate)
-
-  // Check if profile is incomplete (needs name or username to be visible)
-  const needsNameOrUsername = Boolean(
-    user &&
-      !user.user_metadata?.full_name &&
-      !user.user_metadata?.user_name &&
-      !user.publicMetadata?.github_username
-  )
 
   // Auto-focus mobile search input when it appears and handle escape key
   useEffect(() => {
@@ -75,7 +42,7 @@ export function Header() {
    *
    * @param e - Form event
    */
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = (e: FormEvent<Element>) => {
     e.preventDefault()
     if (searchQuery.trim()) {
       // Track search submission
@@ -114,7 +81,7 @@ export function Header() {
    *
    * @param e - Input change event
    */
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
     if (!showAutocomplete) setShowAutocomplete(true)
   }
@@ -124,7 +91,7 @@ export function Header() {
    *
    * @param e - Input change event
    */
-  const handleMobileSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMobileSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
     if (!showMobileAutocomplete) setShowMobileAutocomplete(true)
   }
@@ -176,7 +143,7 @@ export function Header() {
               <NavLink href={getRoute('projects')}>Projects</NavLink>
               <NavLink href={getRoute('docs.list')}>Docs</NavLink>
               <NavLink href={getRoute('guides.list')}>Guides</NavLink>
-              <NavLink href={getRoute('members.list')}>Members</NavLink>
+              <NavLink href={getRoute('submit')}>Submit</NavLink>
               {/* <NavLink href={getRoute('news')}>News</NavLink> */}
             </nav>
 
@@ -194,25 +161,15 @@ export function Header() {
               <GithubStars mobileCompact={true} />
             </div>
 
-            {user ? (
-              <UserDropdownMenu
-                user={user}
-                userSlug={userSlug}
-                isProfilePrivate={isProfilePrivate}
-                needsNameOrUsername={needsNameOrUsername}
-                onSignOut={signOut}
-              />
-            ) : (
-              <Link
-                href="/login"
-                className="inline-flex items-center justify-center rounded-none text-sm font-bold h-9 px-4 bg-foreground text-background hover:bg-foreground/90 transition-all duration-200 press-effect"
-                aria-label="Sign up"
-                title="Sign up"
-              >
-                <UserPlus className="h-4 w-4 sm:hidden" />
-                <span className="hidden sm:inline">Sign Up</span>
-              </Link>
-            )}
+            <Link
+              href={getRoute('submit')}
+              className="inline-flex items-center justify-center rounded-none text-sm font-bold h-9 px-4 bg-foreground text-background hover:bg-foreground/90 transition-all duration-200 press-effect"
+              aria-label="Submit a website"
+              title="Submit a website"
+            >
+              <Plus className="h-4 w-4 sm:hidden" />
+              <span className="hidden sm:inline">Submit</span>
+            </Link>
           </div>
         </div>
 

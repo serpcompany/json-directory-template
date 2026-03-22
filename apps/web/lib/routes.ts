@@ -26,12 +26,7 @@ export const routes = {
     list: '/guides',
     guide: '/guides/[slug]'
   },
-  extension: {
-    whatsNew: '/extension/whats-new',
-    uninstall: '/extension/uninstall'
-  },
   faq: '/faq',
-  login: '/login',
   news: '/news',
   privacy: '/privacy',
   cookies: '/cookies',
@@ -39,14 +34,7 @@ export const routes = {
   search: '/search',
   submit: '/submit',
   terms: '/terms',
-  rss: '/rss.xml',
-  members: {
-    list: '/members',
-    page: '/members/[page]'
-  },
-  profile: {
-    detail: '/u/[slug]'
-  }
+  rss: '/rss.xml'
 } as const
 
 type StaticRoutes =
@@ -59,10 +47,7 @@ type StaticRoutes =
   | 'docs.list'
   | 'favorites'
   | 'guides.list'
-  | 'extension.whatsNew'
-  | 'extension.uninstall'
   | 'faq'
-  | 'login'
   | 'news'
   | 'privacy'
   | 'cookies'
@@ -71,7 +56,6 @@ type StaticRoutes =
   | 'submit'
   | 'terms'
   | 'rss'
-  | 'members.list'
 
 type DynamicRoutes =
   | 'website.detail'
@@ -79,8 +63,6 @@ type DynamicRoutes =
   | 'docs.doc'
   | 'guides.guide'
   | 'category.page'
-  | 'profile.detail'
-  | 'members.page'
 
 type Routes = StaticRoutes | DynamicRoutes
 
@@ -90,8 +72,6 @@ type DynamicRouteParams = {
   'docs.doc': { slug: string }
   'guides.guide': { slug: string }
   'category.page': { category: string }
-  'profile.detail': { slug: string }
-  'members.page': { page: string }
 }
 
 /**

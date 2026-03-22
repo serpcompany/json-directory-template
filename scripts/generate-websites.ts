@@ -3,13 +3,17 @@ import { join } from 'node:path'
 import matter from 'gray-matter'
 
 interface Website {
+  slug: string
   name: string
-  domain: string
+  website: string
   description: string
-  llmsTxtUrl: string
-  llmsFullTxtUrl?: string
+  llmsUrl: string
+  llmsFullUrl?: string
   category: string
   favicon: string
+  featured?: boolean
+  priority?: 'high' | 'low' | 'medium'
+  publishedAt: string
 }
 
 // Primary categories (tools and platforms only)
@@ -78,13 +82,16 @@ function generateWebsitesJson(): void {
       const { data } = matter(fileContent)
 
       return {
+        slug: file.replace(/\.mdx$/, ''),
         name: data.name,
-        domain: data.website,
+        website: data.website,
         description: data.description,
-        llmsTxtUrl: data.llmsUrl,
-        ...(data.llmsFullUrl && { llmsFullTxtUrl: data.llmsFullUrl }),
+        llmsUrl: data.llmsUrl,
+        ...(data.llmsFullUrl && { llmsFullUrl: data.llmsFullUrl }),
         category: data.category?.replace(/'/g, ''), // Remove quotes from category
         favicon: getFaviconUrl(data.website),
+        featured: Boolean(data.featured),
+        priority: data.priority,
         publishedAt: data.publishedAt
       }
     })

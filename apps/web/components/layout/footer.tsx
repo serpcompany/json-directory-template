@@ -89,8 +89,8 @@ export function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href={getRoute('members.list')} className="hover:text-foreground">
-                    Members
+                  <Link href={getRoute('submit')} className="hover:text-foreground">
+                    Submit
                   </Link>
                 </li>
                 {/* <li>
