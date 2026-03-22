@@ -19,6 +19,7 @@ A 'directory' style website template for a cohort of products.
 - Schema, shape, validations, protect the JSON and keep it high quality
 - github workflows build and deploy the site to github pages to one or multiple repositories / websites
 - github actions validate and update content submissions, edits, etc. in the JSONs and handle redeploys
+- 'product detail' pages represent entities listed on the directory; some page structure; a few very common fields can be used but the rest should be just unstructured (markdown/etc.)
 
 ## Ideal features
 
