@@ -15,7 +15,6 @@ Turn this repo into a simpler directory starter that keeps the current visual de
 
 ## Archived Product Features
 
-- [x] Login and account routes moved to [`apps/web/_archive`](/Users/devin/dev/repos/json-directory-template/apps/web/_archive)
 - [x] Members, profile, settings, community, extension, and old API routes moved to archive
 - [x] Supporting auth/profile/member/newsletter/CSRF/OpenPanel components, hooks, actions, and libs moved to archive
 - [x] Archive README added to explain what was moved

@@ -49,7 +49,6 @@ const config: Config.InitialOptions = {
     '!**/*.stories.{ts,tsx}',
     '!**/node_modules/**',
     '!**/.next/**',
-    '!**/_archive/**',
     '!**/coverage/**',
     '!**/dist/**',
     '!**/build/**',
@@ -57,7 +56,7 @@ const config: Config.InitialOptions = {
     '!**/test-utils/**',
     '!**/mocks/**'
   ],
-  coveragePathIgnorePatterns: ['/node_modules/', '/.next/', '/coverage/', '/_archive/'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/.next/', '/coverage/'],
 
   // Coverage report formats
   coverageReporters: ['text', 'lcov', 'html', 'json-summary'],
@@ -66,7 +65,6 @@ const config: Config.InitialOptions = {
     '<rootDir>/node_modules/',
     '<rootDir>/.next/',
     '<rootDir>/__tests__/mocks/',
-    '<rootDir>/_archive/'
   ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
