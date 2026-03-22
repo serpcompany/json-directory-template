@@ -11,7 +11,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
 
-    if: github.repository_owner == 'thedaviddias'
+    if: github.repository_owner == 'devinschumacher'
     steps:
       - name: Ensure managed labels exist
         uses: actions/github-script@v8
