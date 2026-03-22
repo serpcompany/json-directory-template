@@ -20,6 +20,11 @@ A 'directory' style website template for a cohort of products.
 - github workflows build and deploy the site to github pages to one or multiple repositories / websites
 - github actions validate and update content submissions, edits, etc. in the JSONs and handle redeploys
 
+## Ideal features
+
+- does not rely on external database (ie: postgres, neon) - only JSON
+- does not rely on external server (ie: vercel, etc.) - anything dynamic is handled in javascript
+
 ## Sitemap Routes
 
 - ...
