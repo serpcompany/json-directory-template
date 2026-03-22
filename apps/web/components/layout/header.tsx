@@ -141,7 +141,7 @@ export function Header() {
             {/* Desktop navigation */}
             <nav className="hidden lg:flex items-center gap-4">
               <NavLink href={getRoute('projects')}>Projects</NavLink>
-              <NavLink href={getRoute('docs.list')}>Docs</NavLink>
+              {/* <NavLink href={getRoute('docs.list')}>Docs</NavLink> */}
               <NavLink href={getRoute('guides.list')}>Guides</NavLink>
               <NavLink href={getRoute('submit')}>Submit</NavLink>
               {/* <NavLink href={getRoute('news')}>News</NavLink> */}

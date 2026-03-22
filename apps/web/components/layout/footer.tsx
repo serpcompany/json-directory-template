@@ -2,34 +2,27 @@ import { SiGithub, SiReddit, SiX } from '@icons-pack/react-simple-icons'
 import Link from 'next/link'
 import { ModeToggle } from '@/components/mode-toggle'
 import { getRoute } from '@/lib/routes'
+import { siteConfig } from '@/lib/site-config'
 
 /**
  * Footer component with site navigation and external links
  * Features: Bold typography, refined spacing, clean layout
  */
 export function Footer() {
+  const { drBadge } = siteConfig
+
   return (
     <footer className="border-t border-border/50 py-12 md:py-16 bg-muted/30">
       <h2 className="sr-only">Footer</h2>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-8 md:gap-12">
           <div className="space-y-4 md:col-span-2">
-            <h3 className="font-bold text-lg tracking-tight">llms.txt hub</h3>
-            <p className="text-sm text-muted-foreground">
-              Discover AI-ready documentation and explore websites implementing the proposed{' '}
-              <a
-                href="https://llmstxt.org/"
-                className="underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                llms.txt standard.
-              </a>
-            </p>
+            <h3 className="font-bold text-lg tracking-tight">{siteConfig.name}</h3>
+            <p className="text-sm text-muted-foreground">{siteConfig.tagline}</p>
             <div className="flex items-center gap-1 my-6">
               <ModeToggle />
               <Link
-                href="https://github.com/thedaviddias/llms-txt-hub"
+                href={siteConfig.githubUrl}
                 className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -38,7 +31,7 @@ export function Footer() {
                 <span className="sr-only">GitHub</span>
               </Link>
               <Link
-                href="https://www.reddit.com/r/llmstxt/"
+                href={siteConfig.redditUrl}
                 className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -47,7 +40,7 @@ export function Footer() {
                 <span className="sr-only">Reddit</span>
               </Link>
               <Link
-                href="https://x.com/llmstxthub"
+                href={siteConfig.twitterUrl}
                 className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -56,19 +49,12 @@ export function Footer() {
                 <span className="sr-only">X (Twitter)</span>
               </Link>
             </div>
-            <a
-              title="Install llms-txt Raycast Extension"
-              href="https://www.raycast.com/thedaviddias/llms-txt"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={drBadge.href} target="_blank" rel="noopener noreferrer">
               <img
-                src="https://www.raycast.com/thedaviddias/llms-txt/install_button@2x.png"
-                height={64}
-                alt="Install llms-txt Raycast Extension"
-                style={{ height: '64px' }}
-                loading="lazy"
-                decoding="async"
+                src={drBadge.imageSrc}
+                alt={drBadge.alt}
+                width={drBadge.width}
+                height={drBadge.height}
               />
             </a>
           </div>
@@ -79,7 +65,7 @@ export function Footer() {
               </h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link href={getRoute('projects')} className="hover:text-foreground">
+                  <Link href="#" className="hover:text-foreground">
                     Projects
                   </Link>
                 </li>
@@ -90,17 +76,9 @@ export function Footer() {
                 </li>
                 <li>
                   <Link href={getRoute('submit')} className="hover:text-foreground">
-                    Submit
+                    Brands
                   </Link>
                 </li>
-                {/* <li>
-                  <Link
-                    href={getRoute('news')}
-                    className="hover:text-foreground"
-                  >
-                    News
-                  </Link>
-                </li> */}
                 <li>
                   <Link href={getRoute('faq')} className="hover:text-foreground">
                     FAQ
@@ -110,44 +88,39 @@ export function Footer() {
             </div>
             <div>
               <h4 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-4">
-                Features
+                Blog
               </h4>
               <ul className="space-y-2 text-sm">
-                {/* <li>
-                  <Link href={getRoute('llmsTxt')} className="hover:text-foreground">
-                    llms.txt file
-                  </Link>
-                </li> */}
                 <li>
                   <Link href={getRoute('submit')} className="hover:text-foreground">
-                    Submit llms.txt
+                    Contribute
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
               <h4 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-4">
-                Resources
+                Legal
               </h4>
               <ul className="space-y-2 text-sm">
                 <li>
                   <Link href={getRoute('about')} className="hover:text-foreground">
-                    About
+                    Privacy
                   </Link>
                 </li>
                 <li>
                   <Link href={getRoute('privacy')} className="hover:text-foreground">
-                    Privacy Policy
+                    Terms
                   </Link>
                 </li>
                 <li>
                   <Link href={getRoute('terms')} className="hover:text-foreground">
-                    Terms of Service
+                    Affiliate Disclosure
                   </Link>
                 </li>
                 <li>
                   <Link href={getRoute('cookies')} className="hover:text-foreground">
-                    Cookie Policy
+                    DMCA
                   </Link>
                 </li>
               </ul>
@@ -155,21 +128,6 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
-          <div className="font-medium">
-            © {new Date().getFullYear()} llms.txt hub. All rights reserved.
-          </div>
-          <div className="mt-4 md:mt-0">
-            Made with ❤️ by{' '}
-            <a
-              href="https://thedaviddias.com"
-              className="font-bold text-foreground hover:underline transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              David Dias
-            </a>{' '}
-            for the Open-Source Community.
-          </div>
         </div>
       </div>
     </footer>

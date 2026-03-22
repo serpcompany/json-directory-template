@@ -17,10 +17,13 @@
 - Public docs pages live in `packages/content/data/docs`.
 - Docs are ordered by the frontmatter `order` field and rendered through the `/docs` routes.
 - Use that folder for starter-facing docs such as submit flow, JSON shape references, and rebrand runbooks.
+- Keep internal starter/operator notes such as `siteConfig` shapes in `docs/knowledge/**`, not in public `/docs`.
+- The runtime starter config now lives at `apps/web/lib/site-config.ts`.
 
 ## Rebrand Touchpoints
 
 - The main shell brand strings live in `apps/web/app/layout.tsx`, `apps/web/lib/seo/seo-config.ts`, `apps/web/components/layout/header.tsx`, and `apps/web/components/layout/footer.tsx`.
+- When you add a starter-level `siteConfig`, centralize `name`, `domain`, `tagline`, social URLs, and the optional DR badge there before wiring those values into the shell. The internal reference now lives in `docs/knowledge/site-config.md`.
 - The main visual brand assets live in `apps/web/app/favicon.ico`, `apps/web/app/opengraph-image.png`, `apps/web/app/opengraph-image.alt.txt`, and `apps/web/public/img/**`.
 - Legal contact details live in `packages/content/data/legal/**`.
 - The submit flow points at a GitHub repo from `apps/web/lib/github-issue.ts`, so rebrands usually need that updated too.

@@ -12,6 +12,7 @@ Turn this repo into a simpler directory starter that keeps the current visual de
 - [x] Submit flow opens a prefilled GitHub issue instead of using auth/server actions
 - [x] Analytics are reduced to optional GTM support
 - [x] Projects page is static-friendly and no longer calls the GitHub API at runtime
+- [x] Runtime site config exists at `apps/web/lib/site-config.ts` for name, domain, social URLs, tagline, and DR badge
 
 ## Archived Product Features
 
@@ -40,6 +41,7 @@ Turn this repo into a simpler directory starter that keeps the current visual de
 - [x] `pnpm --filter web build`
 - [x] Playwright smoke coverage updated for the static starter routes and flows
 - [x] Docs explain the GitHub issue submit flow and the active JSON data shapes
+- [x] Internal knowledge docs capture the starter site config fields
 - [x] Docs include a rebrand checklist for replacing brand text, assets, links, and legal copy
 - [x] Root `package.json` no longer references missing generator scripts
 
