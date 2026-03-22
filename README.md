@@ -18,3 +18,8 @@ A 'directory' style website template for a cohort of products.
 - JSON files power the data the site uses
 - Schema, shape, validations, protect the JSON and keep it high quality
 - github workflows build and deploy the site to github pages to one or multiple repositories / websites
+- github actions validate and update content submissions, edits, etc. in the JSONs and handle redeploys
+
+## Sitemap Routes
+
+- ...
