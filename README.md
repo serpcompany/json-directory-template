@@ -1,40 +1,6 @@
 <div align="center">
 
-# llmx.txt hub
-
-A comprehensive collection of llms.txt implementations and resources for LLM-powered tools and services.
-
-![Screenshot of the llms.txt hub website page](https://raw.githubusercontent.com/thedaviddias/llms-txt-hub/refs/heads/main/apps/web/public/img/llms-txt-hub.jpeg)
-
-</div>
-
-## About
-
-The `llms.txt` file is a standardized way to provide information about how LLM-powered tools and services should interact with your documentation and codebase. This repository serves as a central hub for discovering and sharing `llms.txt` implementations across different projects and platforms.
-
-## Why llms.txt?
-
-The `llms.txt` standard helps:
-- 🤖 Guide AI models on how to interpret and use your documentation
-- 📚 Standardize documentation access for LLM-powered tools
-- 🔍 Improve accuracy of AI responses about your project
-- 🛠 Enhance developer experience with AI-powered tools
-- 🔒 Set clear boundaries for AI interaction with your content
-
-## Categories
-
-We organize projects into primary categories (🤖 **AI & ML**, 💻 **Developer Tools**, 📊 **Data & Analytics**, ⚡ **Integration & Automation**, ☁️ **Infrastructure & Cloud**, 🔒 **Security & Identity**) and secondary categories (personal, agency, e-commerce, education, media, international, other).
-
-## Developer Tools
-
-| Tool                     | Description                                                     | Link                                                                                                          |
-| ------------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| 🔍 **LLMs.txt Checker**   | Chrome extension to check if websites implement llms.txt files  | [Chrome Web Store](https://chromewebstore.google.com/detail/llmstxt-checker/klcihkijejcgnaiinaehcjbggamippej) |
-| 💻 **VS Code Extension**  | Search and explore llms.txt files directly in VS Code           | [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=TheDavidDias.vscode-llms-txt)       |
-| 🧠 **MCP Explorer**       | Explore and analyze llms.txt files using Model Context Protocol | [GitHub](https://github.com/thedaviddias/mcp-llms-txt-explorer)                                               |
-| ⚡ **Raycast Extension**  | Search and explore llms.txt files directly in Raycast           | [Raycast Store](https://www.raycast.com/thedaviddias/llms-txt)                                                |
-| ⚡ **LLMs.txt Generator** | Generate llms.txt from sitemap, crawled pages and AI            | [LLMs.txt Generator](https://llmstxtgenerator.co/)                                                            |
-| 🛠 **llmstxt-cli**        | Install llms.txt docs as skills into 35+ AI coding agents       | [npm](https://www.npmjs.com/package/llmstxt-cli) · [README](packages/cli/README.md)                           |
+# READM
 
 <!-- LLMS-LIST:START - Do not remove or modify this section -->
 ## LLM Tools and Resources
@@ -1431,39 +1397,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contributors
 
-You are welcome to contribute to this project!
-
-- 🐛 [Report bugs](https://github.com/thedaviddias/llms-txt-hub/issues)
-- 💡 [Suggest new patterns](https://github.com/thedaviddias/llms-txt-hub/issues/new)
-- 📝 [Improve documentation](https://github.com/thedaviddias/llms-txt-hub/blob/main/.github/CONTRIBUTING.md)
-- 🔧 [Submit pull requests](https://github.com/thedaviddias/llms-txt-hub/pulls)
-
-Please read our [Contributing Guide](https://github.com/thedaviddias/llms-txt-hub/blob/main/.github/CONTRIBUTING.md) before submitting a pull request.
-
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jharrell"><img src="https://avatars.githubusercontent.com/u/4829245?v=4?s=100" width="100px;" alt="Jon Harrell"/><br /><sub><b>Jon Harrell</b></sub></a><br /><a href="#content-jharrell" title="Content">🖋</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://drizzle.team"><img src="https://avatars.githubusercontent.com/u/29543764?v=4?s=100" width="100px;" alt="Andrii Sherman"/><br /><sub><b>Andrii Sherman</b></sub></a><br /><a href="#content-AndriiSherman" title="Content">🖋</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Anulo2"><img src="https://avatars.githubusercontent.com/u/28984474?v=4?s=100" width="100px;" alt="_Zaizen_"/><br /><sub><b>_Zaizen_</b></sub></a><br /><a href="#content-Anulo2" title="Content">🖋</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://alexatallah.com"><img src="https://avatars.githubusercontent.com/u/1011391?v=4?s=100" width="100px;" alt="Alex Atallah"/><br /><sub><b>Alex Atallah</b></sub></a><br /><a href="#content-alexanderatallah" title="Content">🖋</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://www.eliostruyf.com"><img src="https://avatars.githubusercontent.com/u/2900833?v=4?s=100" width="100px;" alt="Elio Struyf"/><br /><sub><b>Elio Struyf</b></sub></a><br /><a href="#content-estruyf" title="Content">🖋</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://merloxx.dev"><img src="https://avatars.githubusercontent.com/u/12734661?v=4?s=100" width="100px;" alt="merloxx"/><br /><sub><b>merloxx</b></sub></a><br /><a href="#content-merloxx" title="Content">🖋</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sean-roberts"><img src="https://avatars.githubusercontent.com/u/950274?v=4?s=100" width="100px;" alt="Sean Roberts"/><br /><sub><b>Sean Roberts</b></sub></a><br /><a href="#content-sean-roberts" title="Content">🖋</a></td>
-    </tr>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://bendersej.com"><img src="https://avatars.githubusercontent.com/u/10613140?v=4?s=100" width="100px;" alt="Benjamin André-Micolon"/><br /><sub><b>Benjamin André-Micolon</b></sub></a><br /><a href="#content-bendersej" title="Content">🖋</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/HerringtonDarkholme"><img src="https://avatars.githubusercontent.com/u/2883231?v=4?s=100" width="100px;" alt="Herrington Darkholme"/><br /><sub><b>Herrington Darkholme</b></sub></a><br /><a href="#content-HerringtonDarkholme" title="Content">🖋</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://sxzz.moe"><img src="https://avatars.githubusercontent.com/u/6481596?v=4?s=100" width="100px;" alt="Kevin Deng 三咲智子"/><br /><sub><b>Kevin Deng 三咲智子</b></sub></a><br /><a href="#content-sxzz" title="Content">🖋</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/NVGONE"><img src="https://avatars.githubusercontent.com/u/170536944?v=4?s=100" width="100px;" alt="bdjdjdjo"/><br /><sub><b>bdjdjdjo</b></sub></a><br /><a href="#content-NVGONE" title="Content">🖋</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="http://semgrep.com"><img src="https://avatars.githubusercontent.com/u/1011067?v=4?s=100" width="100px;" alt="Drew Dennison"/><br /><sub><b>Drew Dennison</b></sub></a><br /><a href="#content-DrewDennison" title="Content">🖋</a></td>
-    </tr>
-  </tbody>
-</table>
-
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 

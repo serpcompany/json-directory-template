@@ -35,3 +35,9 @@
 - The E2E package should launch the web app directly with `pnpm exec next dev --hostname 127.0.0.1 --port 3000`.
 - That avoids inheriting the web package's local dev script flags and keeps Playwright aligned with its own `baseURL`.
 - For CLI runs, set `CLAUDE=1` so Playwright uses the line reporter instead of the verbose HTML-only default.
+
+## Root Package Scripts
+
+- The root `generate-search-index` script should target `scripts/search-index-generator.cjs`; the `.js` entry was stale.
+- The old `generate-llms-chatbot-index` root script pointed at a missing file and was removed.
+- Keep the root package name as `llms-txt-hub` until workspace-root discovery in internal tooling is made template-neutral.
