@@ -1,5 +1,4 @@
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
-import { getBaseUrl } from '@thedaviddias/utils/get-base-url'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
@@ -7,7 +6,7 @@ import remarkGfm from 'remark-gfm'
 import { components } from '@/components/mdx'
 import { type DocMetadata, getDocBySlug, getDocs } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
-import { generateDynamicMetadata } from '@/lib/seo/seo-config'
+import { SITE_PUBLIC_URL, generateDynamicMetadata } from '@/lib/seo/seo-config'
 
 interface DocPageProps {
   params: Promise<{
@@ -63,7 +62,7 @@ export default async function DocPage({ params }: DocPageProps) {
 
   return (
     <article>
-      <Breadcrumb items={breadcrumbItems} baseUrl={getBaseUrl()} />
+      <Breadcrumb items={breadcrumbItems} baseUrl={SITE_PUBLIC_URL} />
       <div className="space-y-2 mt-6 mb-8">
         <h1 className="text-4xl font-bold tracking-tight">{doc.title}</h1>
         <p className="text-lg text-muted-foreground">{doc.description}</p>

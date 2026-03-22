@@ -8,10 +8,10 @@ import { FeaturedGuidesSection } from '@/components/sections/featured-guides-sec
 import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { WebsitesListWithSearch } from '@/components/websites-list-with-search'
 import { getGuides } from '@/lib/content-loader'
-import { generateBaseMetadata } from '@/lib/seo/seo-config'
+import { SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: 'Your Favorite Websites - llms.txt hub',
+  title: `Your Favorite Websites - ${SITE_NAME}`,
   description:
     'View and manage your collection of favorite AI-ready websites and tools implementing the llms.txt standard.',
   keywords: ['favorites', 'saved websites', 'bookmarks', 'llms.txt', 'AI documentation'],
@@ -28,9 +28,9 @@ export default async function FavoritesPage() {
         data={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          name: 'Favorites - llms.txt hub',
+          name: `Favorites - ${SITE_NAME}`,
           description: 'Your personal collection of favorite AI-ready websites',
-          url: 'https://llmstxthub.com/favorites'
+          url: `${SITE_PUBLIC_URL}/favorites`
         }}
       />
 
@@ -43,7 +43,7 @@ export default async function FavoritesPage() {
             {/* Breadcrumb */}
             <Breadcrumb
               items={[{ name: 'Favorites', href: '/favorites' }]}
-              baseUrl="https://llmstxthub.com"
+              baseUrl={SITE_PUBLIC_URL}
             />
 
             {/* Header */}

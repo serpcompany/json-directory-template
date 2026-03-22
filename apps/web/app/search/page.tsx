@@ -5,7 +5,7 @@ import { Suspense } from 'react'
 import { SearchResults } from '@/components/search/search-results'
 import { categories } from '@/lib/categories'
 import { getRoute } from '@/lib/routes'
-import { generateBaseMetadata } from '@/lib/seo/seo-config'
+import { SITE_NAME, generateBaseMetadata } from '@/lib/seo/seo-config'
 import { tools } from '@/lib/tools'
 
 export const dynamic = 'force-dynamic'
@@ -28,8 +28,8 @@ export async function generateMetadata({
 
   const title = query ? `Search Results for "${query}"` : 'Search'
   const description = query
-    ? `Search results for "${query}" in the llms.txt hub database.`
-    : 'Search for AI-ready websites and tools in the llms.txt hub.'
+    ? `Search results for "${query}" in ${SITE_NAME}.`
+    : `Search for AI-ready websites and tools in ${SITE_NAME}.`
 
   return generateBaseMetadata({
     title,

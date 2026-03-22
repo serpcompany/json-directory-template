@@ -2,6 +2,7 @@ import { SiReddit, SiX } from '@icons-pack/react-simple-icons'
 import { Linkedin } from 'lucide-react'
 import { Section } from '@/components/layout/section'
 import { Card } from '@/components/ui/card'
+import { siteConfig } from '@/lib/site-config'
 
 const communities = [
   {
@@ -9,13 +10,13 @@ const communities = [
     description:
       'Join our Reddit community to discuss llms.txt implementation and share your experiences.',
     icon: SiReddit,
-    url: 'https://reddit.com/r/llmstxt'
+    url: siteConfig.redditUrl
   },
   {
     name: 'X Community',
     description: 'Follow us on X for the latest updates, tips, and community highlights.',
     icon: SiX,
-    url: 'https://x.com/i/communities/1896567756608491718'
+    url: siteConfig.twitterUrl
   },
   {
     name: 'LinkedIn',
@@ -33,7 +34,7 @@ export function CommunitiesSection() {
   return (
     <Section
       title="Join Our Communities"
-      description="Connect with other developers and stay updated with the latest llms.txt news and discussions."
+      description={`Connect with other developers and stay updated with the latest ${siteConfig.name} news and discussions.`}
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {communities.map(community => {

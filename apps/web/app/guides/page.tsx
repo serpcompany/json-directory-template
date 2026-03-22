@@ -1,12 +1,11 @@
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
-import { getBaseUrl } from '@thedaviddias/utils/get-base-url'
 import type { Metadata } from 'next'
 import { EmptyState } from '@/components/empty-state'
 import { JsonLd } from '@/components/json-ld'
 import { GuideCard } from '@/components/sections/guide-card'
 import { type GuideMetadata, getGuides } from '@/lib/content-loader'
 import { generateGuideSchema } from '@/lib/schema'
-import { generateBaseMetadata } from '@/lib/seo/seo-config'
+import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: 'llms.txt Guides - How to Create & Implement llms.txt Files',
@@ -36,7 +35,7 @@ export default async function GuidesPage() {
         }}
       />
       <div className="space-y-12">
-        <Breadcrumb items={[{ name: 'Guides', href: '/guides' }]} baseUrl={getBaseUrl()} />
+        <Breadcrumb items={[{ name: 'Guides', href: '/guides' }]} baseUrl={SITE_PUBLIC_URL} />
 
         {/* Header */}
         <div className="space-y-2">

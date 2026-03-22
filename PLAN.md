@@ -13,6 +13,11 @@ Turn this repo into a simpler directory starter that keeps the current visual de
 - [x] Analytics are reduced to optional GTM support
 - [x] Projects page is static-friendly and no longer calls the GitHub API at runtime
 - [x] Runtime site config exists at `apps/web/lib/site-config.ts` for name, domain, social URLs, tagline, and DR badge
+- [x] Header, footer, and GitHub CTA links read low-risk site values from runtime config
+- [x] Metadata, schema, RSS, robots, and sitemap outputs use centralized site name/domain values
+- [x] GitHub issue submit/report flows use centralized repo config instead of hardcoded owner/repo strings
+- [x] Hero, search, community, and recently-added UI copy use centralized site name and social values where low-risk
+- [x] Active app TypeScript excludes `_archive` so typecheck/build verify the starter, not parked legacy code
 
 ## Archived Product Features
 

@@ -1,5 +1,5 @@
-import { getBaseUrl } from '@thedaviddias/utils/get-base-url'
 import type { Metadata } from 'next'
+import { getTwitterHandleFromUrl, siteConfig } from '@/lib/site-config'
 
 /**
  * Centralized SEO Configuration
@@ -9,13 +9,12 @@ import type { Metadata } from 'next'
  */
 
 // Site-wide constants
-export const SITE_NAME = 'llms.txt Hub'
-export const SITE_TAGLINE = 'Discover AI-Ready Documentation'
-export const SITE_DESCRIPTION =
-  'The largest directory of AI-ready websites and tools implementing the llms.txt standard. Find APIs, platforms, and documentation optimized for LLM integration.'
-export const SITE_URL = getBaseUrl()
-export const TWITTER_HANDLE = '@llmstxthub'
-export const TWITTER_CREATOR = '@thedaviddias'
+export const SITE_NAME = siteConfig.name
+export const SITE_TAGLINE = siteConfig.tagline
+export const SITE_DESCRIPTION = siteConfig.description
+export const SITE_PUBLIC_URL = process.env.NEXT_PUBLIC_APP_URL || `https://${siteConfig.domain}`
+export const SITE_URL = SITE_PUBLIC_URL
+export const SITE_TWITTER_HANDLE = getTwitterHandleFromUrl(siteConfig.twitterUrl)
 
 // SEO Defaults
 export const DEFAULT_OG_IMAGE = {
@@ -42,7 +41,7 @@ export const ROBOTS_CONFIG = {
 // Keywords by page type
 export const KEYWORDS = {
   global: ['llms.txt', 'AI documentation', 'LLM integration', 'API documentation', 'AI-ready'],
-  homepage: ['llms.txt hub', 'AI tools directory', 'LLM documentation', 'developer tools'],
+  homepage: [SITE_NAME, 'AI tools directory', 'LLM documentation', 'developer tools'],
   categories: {
     ai: ['AI tools', 'artificial intelligence', 'machine learning', 'neural networks'],
     'developer-tools': ['developer tools', 'programming', 'software development', 'coding tools'],
@@ -99,8 +98,8 @@ export function generateBaseMetadata(options: {
       card: 'summary_large_image',
       title,
       description,
-      site: TWITTER_HANDLE,
-      creator: TWITTER_CREATOR,
+      site: SITE_TWITTER_HANDLE || undefined,
+      creator: SITE_TWITTER_HANDLE || undefined,
       images: [image.url]
     },
     robots: noindex
@@ -192,7 +191,7 @@ export function generateDynamicMetadata(options: {
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: updatedAt || publishedAt,
-      authors: type === 'website' ? ['llms.txt Hub'] : ['David Dias'],
+      authors: type === 'website' ? [SITE_NAME] : ['David Dias'],
       section: type === 'website' ? 'AI Documentation' : undefined
     }
   }
@@ -227,28 +226,24 @@ export function generateWebsiteSchema() {
     '@type': 'WebSite',
     name: SITE_NAME,
     description: SITE_DESCRIPTION,
-    url: SITE_URL,
+    url: SITE_PUBLIC_URL,
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `${SITE_URL}/search?q={search_term_string}`
+        urlTemplate: `${SITE_PUBLIC_URL}/search?q={search_term_string}`
       },
       'query-input': 'required name=search_term_string'
     },
     publisher: {
       '@type': 'Organization',
       name: SITE_NAME,
-      url: SITE_URL,
+      url: SITE_PUBLIC_URL,
       logo: {
         '@type': 'ImageObject',
-        url: `${SITE_URL}/logo.png`
+        url: `${SITE_PUBLIC_URL}/logo.png`
       },
-      sameAs: [
-        'https://github.com/thedaviddias/llms-txt-hub',
-        'https://www.reddit.com/r/llmstxt/',
-        'https://x.com/llmstxthub'
-      ]
+      sameAs: [siteConfig.githubUrl, siteConfig.redditUrl, siteConfig.twitterUrl]
     }
   }
 }

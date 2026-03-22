@@ -1,5 +1,4 @@
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
-import { getBaseUrl } from '@thedaviddias/utils/get-base-url'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
@@ -10,7 +9,7 @@ import { components } from '@/components/mdx'
 import { type GuideMetadata, getGuideBySlug, getGuides } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
 import { generateGuideSchema } from '@/lib/schema'
-import { generateDynamicMetadata } from '@/lib/seo/seo-config'
+import { SITE_PUBLIC_URL, generateDynamicMetadata } from '@/lib/seo/seo-config'
 
 interface GuidePageProps {
   params: Promise<{
@@ -66,7 +65,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
   return (
     <article className="container relative max-w-3xl py-6 lg:py-10">
       <JsonLd data={generateGuideSchema(guide)} />
-      <Breadcrumb items={breadcrumbItems} baseUrl={getBaseUrl()} />
+      <Breadcrumb items={breadcrumbItems} baseUrl={SITE_PUBLIC_URL} />
       <GuideHeader {...guide} />
       <div className="prose dark:prose-invert max-w-none">
         <MDXRemote

@@ -1,3 +1,5 @@
+import { siteConfig } from '@/lib/site-config'
+
 export interface SubmissionIssueInput {
   category: string
   description: string
@@ -7,10 +9,6 @@ export interface SubmissionIssueInput {
   notes?: string
   website: string
 }
-
-const ISSUE_OWNER = 'thedaviddias'
-const ISSUE_REPO = 'llms-txt-hub'
-const ISSUE_TEMPLATE = 'submit-website.yml'
 
 function buildIssueBody(input: SubmissionIssueInput): string {
   const lines = [
@@ -38,9 +36,11 @@ function buildIssueBody(input: SubmissionIssueInput): string {
 }
 
 export function buildSubmissionIssueUrl(input: SubmissionIssueInput): string {
-  const url = new URL(`https://github.com/${ISSUE_OWNER}/${ISSUE_REPO}/issues/new`)
+  const url = new URL(
+    `https://github.com/${siteConfig.githubIssueOwner}/${siteConfig.githubIssueRepo}/issues/new`
+  )
 
-  url.searchParams.set('template', ISSUE_TEMPLATE)
+  url.searchParams.set('template', siteConfig.githubIssueTemplate)
   url.searchParams.set('title', `Submit llms.txt: ${input.name}`)
   url.searchParams.set('body', buildIssueBody(input))
 

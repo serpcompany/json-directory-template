@@ -19,6 +19,8 @@
 - Use that folder for starter-facing docs such as submit flow, JSON shape references, and rebrand runbooks.
 - Keep internal starter/operator notes such as `siteConfig` shapes in `docs/knowledge/**`, not in public `/docs`.
 - The runtime starter config now lives at `apps/web/lib/site-config.ts`.
+- The config now covers both public social links and repo-specific submit/report fields, so shell links and GitHub issue flows can move without hardcoded owner/repo strings.
+- The active app `tsconfig.json` now excludes `_archive`, which keeps typecheck and build focused on the starter instead of parked legacy code.
 
 ## Rebrand Touchpoints
 

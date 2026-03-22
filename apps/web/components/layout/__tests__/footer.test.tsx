@@ -28,5 +28,12 @@ describe('Footer', () => {
     const badgeImage = screen.getByRole('img', { name: siteConfig.drBadge.alt })
     expect(badgeImage).toHaveAttribute('src', siteConfig.drBadge.imageSrc)
     expect(badgeImage.closest('a')).toHaveAttribute('href', siteConfig.drBadge.href)
+
+    expect(screen.getByRole('link', { name: 'Projects' })).toHaveAttribute('href', '/projects')
+    expect(screen.getByRole('link', { name: 'Submit' })).toHaveAttribute('href', '/submit')
+    expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about')
+    expect(screen.getByRole('link', { name: 'Privacy' })).toHaveAttribute('href', '/privacy')
+    expect(screen.getByRole('link', { name: 'Terms' })).toHaveAttribute('href', '/terms')
+    expect(screen.getByRole('link', { name: 'Cookies' })).toHaveAttribute('href', '/cookies')
   })
 })

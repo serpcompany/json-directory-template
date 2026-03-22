@@ -3,6 +3,7 @@
 import { SiGithub } from '@icons-pack/react-simple-icons'
 import { StarIcon } from 'lucide-react'
 import Link from 'next/link'
+import { siteConfig } from '@/lib/site-config'
 
 interface StarsProps {
   mobileCompact?: boolean
@@ -19,7 +20,7 @@ export function GithubStars({ mobileCompact = false }: StarsProps) {
   return (
     <div className={mobileCompact ? undefined : 'flex items-center justify-center'}>
       <Link
-        href="https://github.com/thedaviddias/llms-txt-hub"
+        href={siteConfig.githubRepoUrl}
         target="_blank"
         rel="noopener noreferrer"
         className={className}

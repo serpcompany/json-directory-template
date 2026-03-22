@@ -1,11 +1,11 @@
 import { Badge } from '@thedaviddias/design-system/badge'
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
-import { getBaseUrl } from '@thedaviddias/utils/get-base-url'
 import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url'
 import { ExternalLink, Globe } from 'lucide-react'
 import Link from 'next/link'
 import { FavoriteButton } from '@/components/ui/favorite-button'
 import type { WebsiteMetadata } from '@/lib/content-loader'
+import { SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
 import { generateAltText } from '@/lib/seo/seo-helpers'
 
 interface WebsiteHeroProps {
@@ -33,7 +33,7 @@ export function WebsiteHero({ website, breadcrumbItems }: WebsiteHeroProps) {
       <div className="container mx-auto px-6 py-8 md:py-12">
         {/* Breadcrumb - stagger 1 */}
         <div className="animate-fade-in-up opacity-0 stagger-1 mb-8 max-w-6xl mx-auto">
-          <Breadcrumb items={breadcrumbItems} baseUrl={getBaseUrl()} />
+          <Breadcrumb items={breadcrumbItems} baseUrl={SITE_PUBLIC_URL} />
         </div>
 
         {/* Main Hero Content */}

@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { SearchResults } from '@/components/search/search-results'
 import { useSearch } from '@/components/search/use-search'
+import { siteConfig } from '@/lib/site-config'
 
 // Mock Next.js navigation hooks
 jest.mock('next/navigation', () => ({
@@ -166,6 +167,7 @@ describe('SearchResults', () => {
 
     expect(screen.getByText('Nothing Found')).toBeInTheDocument()
     expect(screen.getByText(/We couldn't find any results for/)).toBeInTheDocument()
+    expect(document.title).toBe(`Search Results for "nonexistent" | ${siteConfig.name}`)
   })
 
   it('should display search results', () => {
@@ -251,6 +253,7 @@ describe('SearchResults', () => {
     render(<SearchResults />)
 
     expect(screen.getByText('Start Your Search')).toBeInTheDocument()
+    expect(document.title).toBe(`Search | ${siteConfig.name}`)
   })
 
   it('should render error message when search hook returns error', () => {

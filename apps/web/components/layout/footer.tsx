@@ -65,7 +65,7 @@ export function Footer() {
               </h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link href="#" className="hover:text-foreground">
+                  <Link href={getRoute('projects')} className="hover:text-foreground">
                     Projects
                   </Link>
                 </li>
@@ -76,7 +76,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link href={getRoute('submit')} className="hover:text-foreground">
-                    Brands
+                    Submit
                   </Link>
                 </li>
                 <li>
@@ -88,12 +88,12 @@ export function Footer() {
             </div>
             <div>
               <h4 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-4">
-                Blog
+                Contribute
               </h4>
               <ul className="space-y-2 text-sm">
                 <li>
                   <Link href={getRoute('submit')} className="hover:text-foreground">
-                    Contribute
+                    Submit Your Site
                   </Link>
                 </li>
               </ul>
@@ -105,22 +105,22 @@ export function Footer() {
               <ul className="space-y-2 text-sm">
                 <li>
                   <Link href={getRoute('about')} className="hover:text-foreground">
-                    Privacy
+                    About
                   </Link>
                 </li>
                 <li>
                   <Link href={getRoute('privacy')} className="hover:text-foreground">
-                    Terms
+                    Privacy
                   </Link>
                 </li>
                 <li>
                   <Link href={getRoute('terms')} className="hover:text-foreground">
-                    Affiliate Disclosure
+                    Terms
                   </Link>
                 </li>
                 <li>
                   <Link href={getRoute('cookies')} className="hover:text-foreground">
-                    DMCA
+                    Cookies
                   </Link>
                 </li>
               </ul>

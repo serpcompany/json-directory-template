@@ -4,6 +4,7 @@ import { logger } from '@thedaviddias/logging'
 import type { MetadataRoute } from 'next'
 import { categories } from '@/lib/categories'
 import { getWebsites } from '@/lib/content-loader'
+import { SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
 
 /**
  * Map of content paths that should be overridden to different URLs
@@ -110,7 +111,7 @@ function getStaticRoutes(baseUrl: string): MetadataRoute.Sitemap {
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes: MetadataRoute.Sitemap = []
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://llmstxthub.com'
+  const baseUrl = SITE_PUBLIC_URL
   const contentDir = join(process.cwd(), '../../packages/content/data')
 
   try {

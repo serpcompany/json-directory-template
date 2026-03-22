@@ -1,6 +1,7 @@
 import { getWebsites, type WebsiteMetadata } from '@/lib/content-loader'
+import { SITE_NAME, SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://llmstxthub.com'
+const baseUrl = SITE_PUBLIC_URL
 
 /**
  * Handles GET requests to generate the RSS feed as JSON
@@ -10,16 +11,16 @@ export async function GET() {
 
   const feed = {
     version: 'https://jsonfeed.org/version/1',
-    title: 'llms.txt Hub',
+    title: SITE_NAME,
     home_page_url: baseUrl,
     feed_url: `${baseUrl}/rss.xml`,
-    description: 'Latest updates from llms.txt Hub',
+    description: `Latest updates from ${SITE_NAME}`,
     icon: `${baseUrl}/apple-touch-icon.png`,
     favicon: `${baseUrl}/favicon.ico`,
     authors: [
       {
-        name: 'llms.txt Hub',
-        url: 'https://llmstxthub.com'
+        name: SITE_NAME,
+        url: baseUrl
       }
     ],
     language: 'en',
@@ -32,8 +33,8 @@ export async function GET() {
         date_published: site.publishedAt,
         authors: [
           {
-            name: 'llms.txt Hub',
-            url: 'https://llmstxthub.com'
+            name: SITE_NAME,
+            url: baseUrl
           }
         ],
         categories: ['Website', site.category || 'Uncategorized']

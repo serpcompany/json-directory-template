@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react'
 import { Chrome, Code2, Command, GitBranch, Terminal } from 'lucide-react'
+import { siteConfig } from '@/lib/site-config'
 
 export interface Tool {
   name: string
@@ -36,7 +37,7 @@ export const tools: Tool[] = [
     slug: 'raycast-extension',
     icon: Command,
     url: 'https://www.raycast.com/thedaviddias/llms-txt',
-    description: 'Search llms.txt hub from Raycast'
+    description: `Search ${siteConfig.name} from Raycast`
   },
   {
     name: 'CLI',

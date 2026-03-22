@@ -1,6 +1,7 @@
 import { Section } from '@/components/layout/section'
 import { LLMGrid } from '@/components/llm/llm-grid'
 import type { WebsiteMetadata } from '@/lib/content-loader'
+import { siteConfig } from '@/lib/site-config'
 
 interface RecentlyAddedSectionProps {
   websites: WebsiteMetadata[]
@@ -18,7 +19,7 @@ export function RecentlyAddedSection({ websites, maxItems = 8 }: RecentlyAddedSe
   return (
     <Section
       title="Recently Added"
-      description="Discover the latest websites and platforms that have joined llms.txt hub"
+      description={`Discover the latest websites and platforms that have joined ${siteConfig.name}`}
     >
       <LLMGrid
         items={recentWebsites}

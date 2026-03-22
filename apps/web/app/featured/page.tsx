@@ -9,10 +9,10 @@ import { FeaturedGuidesSection } from '@/components/sections/featured-guides-sec
 import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { ToolsSection } from '@/components/sections/tools-section'
 import { getGuides } from '@/lib/content-loader'
-import { generateBaseMetadata } from '@/lib/seo/seo-config'
+import { SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: 'Featured AI-Ready Websites - llms.txt hub',
+  title: `Featured AI-Ready Websites - ${SITE_NAME}`,
   description:
     'Discover our curated selection of the best AI-ready websites and tools implementing the llms.txt standard.',
   keywords: ['featured', 'curated', 'best websites', 'llms.txt', 'AI documentation'],
@@ -29,19 +29,19 @@ export default async function FeaturedPage() {
         data={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          '@id': 'https://llmstxthub.com/featured',
-          name: 'Featured - llms.txt hub',
+          '@id': `${SITE_PUBLIC_URL}/featured`,
+          name: `Featured - ${SITE_NAME}`,
           headline: `${featuredProjects.length}+ Featured AI-Ready Sites & Tools`,
           description: `Explore ${featuredProjects.length}+ curated featured websites and tools implementing the llms.txt standard. Hand-picked for quality and innovation.`,
-          url: 'https://llmstxthub.com/featured',
+          url: `${SITE_PUBLIC_URL}/featured`,
           inLanguage: 'en-US',
           isPartOf: {
             '@type': 'WebSite',
-            '@id': 'https://llmstxthub.com',
-            name: 'llms.txt hub',
+            '@id': SITE_PUBLIC_URL,
+            name: SITE_NAME,
             description:
               "The world's largest open-source directory of LLM-optimized tools and documentation",
-            url: 'https://llmstxthub.com'
+            url: SITE_PUBLIC_URL
           },
           breadcrumb: {
             '@type': 'BreadcrumbList',
@@ -50,13 +50,13 @@ export default async function FeaturedPage() {
                 '@type': 'ListItem',
                 position: 1,
                 name: 'Home',
-                item: 'https://llmstxthub.com'
+                item: SITE_PUBLIC_URL
               },
               {
                 '@type': 'ListItem',
                 position: 2,
                 name: 'Featured',
-                item: 'https://llmstxthub.com/featured'
+                item: `${SITE_PUBLIC_URL}/featured`
               }
             ]
           },
@@ -83,11 +83,11 @@ export default async function FeaturedPage() {
           },
           publisher: {
             '@type': 'Organization',
-            name: 'llms.txt hub',
-            url: 'https://llmstxthub.com',
+            name: SITE_NAME,
+            url: SITE_PUBLIC_URL,
             logo: {
               '@type': 'ImageObject',
-              url: 'https://llmstxthub.com/logo.png'
+              url: `${SITE_PUBLIC_URL}/logo.png`
             }
           },
           datePublished: new Date().toISOString(),
@@ -103,7 +103,7 @@ export default async function FeaturedPage() {
             {/* Breadcrumb Navigation */}
             <Breadcrumb
               items={[{ name: 'Featured', href: '/featured' }]}
-              baseUrl="https://llmstxthub.com"
+              baseUrl={SITE_PUBLIC_URL}
             />
 
             {/* Featured Websites Section */}

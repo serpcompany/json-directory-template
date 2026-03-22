@@ -1,5 +1,5 @@
 import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url'
-import { SITE_URL } from '@/lib/seo/seo-config'
+import { SITE_NAME, SITE_PUBLIC_URL, SITE_URL } from '@/lib/seo/seo-config'
 import type { GuideMetadata, WebsiteMetadata } from './content-loader'
 import { getRoute } from './routes'
 
@@ -103,7 +103,7 @@ export function generateArticleSchema(website: WebsiteMetadata): ArticleSchema {
     datePublished: website.publishedAt,
     author: {
       '@type': 'Organization',
-      name: 'LLMs.txt Hub'
+      name: SITE_NAME
     }
   }
 }
@@ -203,16 +203,16 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
         dateModified: website.publishedAt,
         author: {
           '@type': 'Organization',
-          name: 'llms.txt Hub',
-          url: SITE_URL
+          name: SITE_NAME,
+          url: SITE_PUBLIC_URL
         },
         publisher: {
           '@type': 'Organization',
-          name: 'llms.txt Hub',
-          url: SITE_URL,
+          name: SITE_NAME,
+          url: SITE_PUBLIC_URL,
           logo: {
             '@type': 'ImageObject',
-            url: `${SITE_URL}/logo.png`
+            url: `${SITE_PUBLIC_URL}/logo.png`
           }
         },
         mainEntityOfPage: {
@@ -255,7 +255,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
             name: `What category does ${website.name} belong to?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: `${website.name} is categorized under "${categoryFormatted}" in the llms.txt Hub directory. ${website.description}`
+              text: `${website.name} is categorized under "${categoryFormatted}" in the ${SITE_NAME} directory. ${website.description}`
             }
           }
         ]

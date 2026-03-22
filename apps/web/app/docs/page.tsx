@@ -1,5 +1,4 @@
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
-import { getBaseUrl } from '@thedaviddias/utils/get-base-url'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
@@ -7,10 +6,10 @@ import remarkGfm from 'remark-gfm'
 import { components } from '@/components/mdx'
 import { getDocBySlug } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
-import { generateBaseMetadata } from '@/lib/seo/seo-config'
+import { SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: 'Documentation - llms.txt hub',
+  title: `Documentation - ${SITE_NAME}`,
   description:
     'Learn how to use llmstxt-cli, how the static starter submit flow works, and how local JSON and MDX data power the active directory.',
   path: '/docs',
@@ -35,7 +34,7 @@ export default async function DocsPage() {
 
   return (
     <article>
-      <Breadcrumb items={[{ name: 'Docs', href: getRoute('docs.list') }]} baseUrl={getBaseUrl()} />
+      <Breadcrumb items={[{ name: 'Docs', href: getRoute('docs.list') }]} baseUrl={SITE_PUBLIC_URL} />
       <div className="space-y-2 mt-6 mb-8">
         <h1 className="text-4xl font-bold tracking-tight">{doc.title}</h1>
         <p className="text-lg text-muted-foreground">{doc.description}</p>

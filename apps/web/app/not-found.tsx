@@ -3,11 +3,11 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getRoute } from '@/lib/routes'
 import { generateBaseMetadata } from '@/lib/seo/seo-config'
+import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: 'Page Not Found',
-  description:
-    'The page you are looking for does not exist. Browse the llms.txt Hub directory to find AI-ready documentation.',
+  description: `The page you are looking for does not exist. Browse ${siteConfig.name} to find AI-ready documentation.`,
   path: '/404',
   noindex: true
 })
@@ -27,7 +27,7 @@ export default async function NotFound() {
             The page you are looking for does not exist. <br /> But don&apos;t worry, we&apos;ve got
             you covered. You can{' '}
             <Link
-              href="https://github.com/thedaviddias/llms-txt-hub/issues/new/choose"
+              href={siteConfig.githubIssuesUrl}
               className="text-foreground"
               target="_blank"
               rel="noopener noreferrer"

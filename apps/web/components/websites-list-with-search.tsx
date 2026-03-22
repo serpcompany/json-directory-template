@@ -82,7 +82,7 @@ export function WebsitesListWithSearch({
       <EmptyState
         title={emptyTitle}
         description={emptyDescription}
-        actionLabel="Add Your your llms.txt"
+        actionLabel="Add Your llms.txt"
         actionHref={getRoute('submit')}
       />
     )

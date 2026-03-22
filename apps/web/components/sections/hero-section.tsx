@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { AnimatedBackground } from '@/components/ui/animated-background'
 import { getWebsites } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
+import { siteConfig } from '@/lib/site-config'
 
 /**
  * Hero section component for the homepage
@@ -32,18 +33,17 @@ export async function HeroSection() {
 
         {/* Main heading - stagger 2 */}
         <h1 className="animate-fade-in-up opacity-0 stagger-2 text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.1]">
-          <span className="whitespace-nowrap relative">
-            <span className="bg-gradient-to-r from-foreground via-foreground/80 to-foreground bg-clip-text text-transparent">
-              llms.txt Hub
+            <span className="whitespace-nowrap relative">
+              <span className="bg-gradient-to-r from-foreground via-foreground/80 to-foreground bg-clip-text text-transparent">
+                {siteConfig.name}
+              </span>
             </span>
-          </span>
-        </h1>
+          </h1>
 
         {/* Description - stagger 3 */}
         <p className="animate-fade-in-up opacity-0 stagger-3 text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          The largest directory for{' '}
-          <span className="text-foreground font-medium">AI-ready documentation</span> and tools
-          implementing the proposed llms.txt standard
+          <span className="text-foreground font-medium">{siteConfig.tagline}</span> and browse
+          tools implementing the proposed llms.txt standard
         </p>
 
         {/* CTA Buttons - stagger 4 */}

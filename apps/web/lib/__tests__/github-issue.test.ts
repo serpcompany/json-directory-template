@@ -1,4 +1,5 @@
 import { buildSubmissionIssueUrl } from '@/lib/github-issue'
+import { siteConfig } from '@/lib/site-config'
 
 describe('buildSubmissionIssueUrl', () => {
   it('builds a prefilled GitHub issue URL with the required submission fields', () => {
@@ -13,7 +14,9 @@ describe('buildSubmissionIssueUrl', () => {
     const parsedUrl = new URL(url)
 
     expect(parsedUrl.origin).toBe('https://github.com')
-    expect(parsedUrl.pathname).toBe('/thedaviddias/llms-txt-hub/issues/new')
+    expect(parsedUrl.pathname).toBe(
+      `/${siteConfig.githubIssueOwner}/${siteConfig.githubIssueRepo}/issues/new`
+    )
     expect(parsedUrl.searchParams.get('template')).toBe('submit-website.yml')
     expect(parsedUrl.searchParams.get('title')).toBe('Submit llms.txt: Example Project')
 

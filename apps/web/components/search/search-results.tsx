@@ -7,6 +7,7 @@ import { SearchFilters } from '@/components/search/search-filters'
 import { useSearch } from '@/components/search/use-search'
 import { WebsitesListWithSort } from '@/components/websites-list-with-sort'
 import { getRoute } from '@/lib/routes'
+import { siteConfig } from '@/lib/site-config'
 
 /**
  * Search results component for displaying and filtering websites
@@ -34,9 +35,9 @@ export function SearchResults() {
 
   useEffect(() => {
     if (query) {
-      document.title = `Search Results for "${query}" | llms.txt hub`
+      document.title = `Search Results for "${query}" | ${siteConfig.name}`
     } else {
-      document.title = 'Search | llms.txt hub'
+      document.title = `Search | ${siteConfig.name}`
     }
   }, [query])
 
@@ -97,9 +98,9 @@ export function SearchResults() {
           </div>
         </div>
         <EmptyState
-          title="Add Your your llms.txt"
-          description="Don't see your project listed? Submit your llms.txt to be included in the directory."
-          actionLabel="Add Your your llms.txt"
+          title="Add Your llms.txt"
+          description={`Don't see your project listed? Submit your llms.txt to be included in ${siteConfig.name}.`}
+          actionLabel="Add Your llms.txt"
           actionHref={getRoute('submit')}
         />
       </div>

@@ -6,6 +6,7 @@ import { useAnalyticsEvents } from '@/components/analytics-tracker'
 import { GithubStars } from '@/components/stats/github-stars'
 import { useSearch } from '@/hooks/use-search'
 import { getRoute } from '@/lib/routes'
+import { siteConfig } from '@/lib/site-config'
 import { NavLink } from './header-nav-link'
 import { DesktopSearchForm, MobileSearchOverlay } from './header-search'
 import { MobileDrawer } from './mobile-drawer'
@@ -115,10 +116,7 @@ export function Header() {
               href={getRoute('home')}
               className="group text-lg font-bold whitespace-nowrap tracking-tight"
             >
-              <span className="inline transition-colors">llms.txt</span>
-              <span className="inline ml-1 text-muted-foreground group-hover:text-foreground transition-colors">
-                hub
-              </span>
+              <span className="inline transition-colors">{siteConfig.name}</span>
             </Link>
           </div>
 

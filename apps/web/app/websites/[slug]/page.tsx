@@ -12,7 +12,7 @@ import { WebsiteRelatedProjects } from '@/components/website/website-related-pro
 import { getWebsiteBySlug, getWebsites, type WebsiteMetadata } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
 import { generateWebsiteDetailSchema } from '@/lib/schema'
-import { generateDynamicMetadata } from '@/lib/seo/seo-config'
+import { SITE_NAME, generateDynamicMetadata } from '@/lib/seo/seo-config'
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     })
   } catch (_error) {
     return {
-      title: 'Website | llms.txt hub',
+      title: `Website | ${SITE_NAME}`,
       description: 'Website information'
     }
   }

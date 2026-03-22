@@ -2,7 +2,6 @@ import type { ReactNode } from 'react'
 import '../../../packages/design-system/styles/globals.css'
 import { fonts } from '@thedaviddias/design-system/lib/fonts'
 import { DesignSystemProvider } from '@thedaviddias/design-system/theme-provider'
-import { getBaseUrl } from '@thedaviddias/utils/get-base-url'
 import {
   GoogleTagManagerNoScript,
   GoogleTagManagerScript
@@ -12,15 +11,15 @@ import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
 import { BackToTop } from '@/components/ui/back-to-top'
 import { FavoritesProvider } from '@/contexts/favorites-context'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from '@/lib/seo/seo-config'
 
 export const metadata: import('next').Metadata = {
   title: {
-    default: 'llms.txt Hub - Directory of AI-Ready Documentation',
-    template: '%s | llms.txt Hub'
+    default: `${SITE_NAME} - ${SITE_TAGLINE}`,
+    template: `%s | ${SITE_NAME}`
   },
-  description:
-    'The largest directory of websites implementing the llms.txt standard. Find AI-ready documentation, browse llms.txt examples, and learn how to create your own llms.txt file.',
-  metadataBase: new URL(getBaseUrl())
+  description: SITE_DESCRIPTION,
+  metadataBase: new URL(SITE_URL)
 }
 
 type RootLayoutProps = {
@@ -37,7 +36,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <link
           rel="alternate"
           type="application/feed+json"
-          title="llms.txt Hub - New Websites"
+          title={`${SITE_NAME} - New Websites`}
           href="/rss.xml"
         />
       </head>

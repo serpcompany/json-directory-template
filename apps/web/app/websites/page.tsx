@@ -1,15 +1,13 @@
-import { getBaseUrl } from '@thedaviddias/utils/get-base-url'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import { SITE_NAME, SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
 
 export function generateMetadata(): Metadata {
-  const baseUrl = getBaseUrl()
-
   return {
-    title: 'Websites - llms.txt hub',
+    title: `Websites - ${SITE_NAME}`,
     description: 'Discover a curated list of websites that implement the llms.txt standard.',
     alternates: {
-      canonical: `${baseUrl}/`
+      canonical: `${SITE_PUBLIC_URL}/`
     }
   }
 }

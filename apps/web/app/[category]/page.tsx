@@ -11,7 +11,12 @@ import { ToolsSection } from '@/components/sections/tools-section'
 import { categories, getCategoryBySlug } from '@/lib/categories'
 import { getGuides } from '@/lib/content-loader'
 import { getCategorySEO } from '@/lib/seo/category-seo'
-import { generateDynamicMetadata, optimizeMetaDescription } from '@/lib/seo/seo-config'
+import {
+  SITE_NAME,
+  SITE_PUBLIC_URL,
+  generateDynamicMetadata,
+  optimizeMetaDescription
+} from '@/lib/seo/seo-config'
 
 interface CategoryPageProps {
   params: Promise<{ category: string }>
@@ -102,19 +107,19 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         data={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          '@id': `https://llmstxthub.com/${category.slug}`,
-          name: `${category.name} - llms.txt hub`,
+          '@id': `${SITE_PUBLIC_URL}/${category.slug}`,
+          name: `${category.name} - ${SITE_NAME}`,
           headline: `${categoryProjects.length}+ ${category.name} Sites & Tools`,
           description: `Explore ${categoryProjects.length}+ curated ${category.name.toLowerCase()} websites and tools implementing the llms.txt standard. ${category.description}`,
-          url: `https://llmstxthub.com/${category.slug}`,
+          url: `${SITE_PUBLIC_URL}/${category.slug}`,
           inLanguage: 'en-US',
           isPartOf: {
             '@type': 'WebSite',
-            '@id': 'https://llmstxthub.com',
-            name: 'llms.txt hub',
+            '@id': SITE_PUBLIC_URL,
+            name: SITE_NAME,
             description:
               "The world's largest open-source directory of LLM-optimized tools and documentation",
-            url: 'https://llmstxthub.com'
+            url: SITE_PUBLIC_URL
           },
           breadcrumb: {
             '@type': 'BreadcrumbList',
@@ -123,13 +128,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 '@type': 'ListItem',
                 position: 1,
                 name: 'Home',
-                item: 'https://llmstxthub.com'
+                item: SITE_PUBLIC_URL
               },
               {
                 '@type': 'ListItem',
                 position: 2,
                 name: category.name,
-                item: `https://llmstxthub.com/${category.slug}`
+                item: `${SITE_PUBLIC_URL}/${category.slug}`
               }
             ]
           },
@@ -156,11 +161,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           },
           publisher: {
             '@type': 'Organization',
-            name: 'llms.txt hub',
-            url: 'https://llmstxthub.com',
+            name: SITE_NAME,
+            url: SITE_PUBLIC_URL,
             logo: {
               '@type': 'ImageObject',
-              url: 'https://llmstxthub.com/logo.png'
+              url: `${SITE_PUBLIC_URL}/logo.png`
             }
           },
           datePublished: new Date().toISOString(),
@@ -192,7 +197,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             {/* Breadcrumb Navigation */}
             <Breadcrumb
               items={[{ name: category.name, href: `/${category.slug}` }]}
-              baseUrl="https://llmstxthub.com"
+              baseUrl={SITE_PUBLIC_URL}
             />
 
             {/* Category Websites Section */}

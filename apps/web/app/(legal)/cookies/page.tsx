@@ -1,11 +1,10 @@
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
-import { getBaseUrl } from '@thedaviddias/utils/get-base-url'
 import type { Metadata } from 'next'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
 import { components } from '@/components/mdx'
 import { getLegalContent } from '@/lib/content-loader'
-import { generateBaseMetadata } from '@/lib/seo/seo-config'
+import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: 'Cookie Policy',
@@ -21,7 +20,7 @@ export default async function CookiePolicyPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Breadcrumb items={breadcrumbItems} baseUrl={getBaseUrl()} />
+      <Breadcrumb items={breadcrumbItems} baseUrl={SITE_PUBLIC_URL} />
       <div className="max-w-3xl mx-auto space-y-8">
         <div className="space-y-4 pb-8 border-b">
           <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">Cookie Policy</h1>

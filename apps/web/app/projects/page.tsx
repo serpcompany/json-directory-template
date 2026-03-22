@@ -1,13 +1,13 @@
 import { Badge } from '@thedaviddias/design-system/badge'
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
 import { Button } from '@thedaviddias/design-system/button'
-import { getBaseUrl } from '@thedaviddias/utils/get-base-url'
 import { ArrowRight, ExternalLink, Github, Hash, Plus } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { getRoute } from '@/lib/routes'
-import { generateBaseMetadata } from '@/lib/seo/seo-config'
+import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
+import { siteConfig } from '@/lib/site-config'
 
 const GITHUB_RESOURCES = [
   {
@@ -26,7 +26,7 @@ const GITHUB_RESOURCES = [
   },
   {
     description: 'See the directory source, starter structure, and contribution workflow.',
-    href: 'https://github.com/thedaviddias/llms-txt-hub',
+    href: siteConfig.githubRepoUrl,
     icon: Github,
     label: 'Repository',
     title: 'Starter repository'
@@ -45,7 +45,7 @@ export default function ProjectsPage() {
   return (
     <div className="container mx-auto py-8">
       <div className="space-y-12">
-        <Breadcrumb items={[{ name: 'Projects', href: '/projects' }]} baseUrl={getBaseUrl()} />
+        <Breadcrumb items={[{ name: 'Projects', href: '/projects' }]} baseUrl={SITE_PUBLIC_URL} />
 
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight flex items-center gap-3">
@@ -136,7 +136,7 @@ export default function ProjectsPage() {
                 </Button>
                 <Button variant="outline" asChild className="rounded-none h-9 font-bold">
                   <Link
-                    href="https://github.com/thedaviddias/llms-txt-hub"
+                    href={siteConfig.githubRepoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
