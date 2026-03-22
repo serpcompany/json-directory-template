@@ -21,7 +21,7 @@ const PRIMARY_CATEGORIES = [
   'ai-ml',
   'developer-tools',
   'data-analytics',
-  'integration-automation',
+  'automation-workflow',
   'infrastructure-cloud',
   'security-identity'
 ]

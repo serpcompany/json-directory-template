@@ -40,6 +40,8 @@ Turn this repo into a simpler directory starter that keeps the current visual de
 - [x] `pnpm --filter web typecheck`
 - [x] `pnpm --filter web build`
 - [x] Playwright smoke coverage updated for the static starter routes and flows
+- [x] Docs explain the GitHub issue submit flow and the active JSON data shapes
+- [x] Docs include a rebrand checklist for replacing brand text, assets, links, and legal copy
 
 ## Follow-Up Ideas
 

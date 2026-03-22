@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@thedaviddias/design-system/lib/utils'
-import { BookOpen, Bot, Terminal } from 'lucide-react'
+import { BookOpen, Bot, FileJson, Github, SwatchBook, Terminal } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { DocMetadata } from '@/lib/content-loader'
@@ -9,7 +9,10 @@ import type { DocMetadata } from '@/lib/content-loader'
 const DOC_ICONS: Record<string, typeof BookOpen> = {
   'getting-started': BookOpen,
   commands: Terminal,
-  agents: Bot
+  agents: Bot,
+  'submit-workflow': Github,
+  'json-shapes': FileJson,
+  'rebrand-checklist': SwatchBook
 }
 
 interface DocsSidebarProps {

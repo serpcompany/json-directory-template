@@ -1,0 +1,75 @@
+---
+title: 'Submit Workflow'
+description: 'How the static starter turns the /submit page into a prefilled GitHub issue review flow'
+order: 4
+published: true
+---
+
+# Submit Workflow
+
+<p className="mt-2 text-xl text-muted-foreground">The active starter keeps submissions simple. The site gathers the basics, then sends the user to a prefilled GitHub issue for review.</p>
+
+## Why the starter uses GitHub issues
+
+The current starter does not run a submissions backend. It stays static-friendly by using GitHub as the review queue.
+
+That means the active app does not need:
+
+- Site auth
+- A database
+- A server action or API route for submissions
+- A moderation dashboard in the app itself
+
+Instead, the repo becomes the source of truth and GitHub becomes the audit trail.
+
+## What happens when someone submits
+
+1. The user opens `/submit`.
+2. The form collects the project name, category, website URL, and any optional notes.
+3. When the website field loses focus, the form suggests `llms.txt` and `llms-full.txt` URLs from the same origin.
+4. When the user clicks **Continue on GitHub**, the client builds a GitHub issue URL.
+5. The browser navigates to the GitHub issue composer with a template, title, and prefilled body.
+6. A maintainer reviews the issue and, if approved, updates repo data such as `data/websites.json` or the website content files.
+
+## Example GitHub issue URL
+
+```txt
+https://github.com/thedaviddias/llms-txt-hub/issues/new
+  ?template=submit-website.yml
+  &title=Submit llms.txt: Example Project
+  &body=...
+```
+
+## Example prefilled issue body
+
+```md
+## Website details
+
+Name: Example Project
+Website: https://example.com
+llms.txt URL: https://example.com/llms.txt
+Category: developer-tools
+
+## Description
+
+A short summary of what the project does and why its llms.txt is useful.
+
+## Additional notes
+
+Optional reviewer context.
+```
+
+## Files that control the flow
+
+- `apps/web/app/submit/page.tsx` renders the public submit page.
+- `apps/web/components/forms/github-issue-submit-form.tsx` renders the form and handles the client-side redirect.
+- `apps/web/components/forms/submit-form-utils.ts` suggests `llms.txt` and `llms-full.txt` URLs from the website origin.
+- `apps/web/lib/github-issue.ts` builds the final GitHub issue URL, template, title, and body.
+
+## What to change if you customize it
+
+- Change the GitHub owner, repo, or template in `apps/web/lib/github-issue.ts`.
+- Add or remove fields in `apps/web/components/forms/github-issue-submit-form.tsx`.
+- Keep the GitHub issue handoff if you want to stay static-friendly with no runtime infrastructure.
+
+If you also need the active data contract for accepted entries, see [JSON Shapes](/docs/json-shapes).

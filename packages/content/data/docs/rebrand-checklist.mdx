@@ -1,0 +1,98 @@
+---
+title: 'Rebrand Checklist'
+description: 'A practical checklist for replacing the starter brand, assets, links, and legal copy'
+order: 6
+published: true
+---
+
+# Rebrand Checklist
+
+<p className="mt-2 text-xl text-muted-foreground">Use this checklist when turning the starter into your own brand. It covers the active app shell, SEO, assets, links, and legal copy.</p>
+
+## What to replace first
+
+- Site name and tagline
+- Default SEO title and description
+- Social links and repository references
+- Favicon and Open Graph image
+- Legal company and contact details
+- Any leftover starter wording in public-facing pages
+
+## Brand shell checklist
+
+- [ ] Update the default title and description in `apps/web/app/layout.tsx`
+- [ ] Update the global SEO constants in `apps/web/lib/seo/seo-config.ts`
+- [ ] Update the header wordmark in `apps/web/components/layout/header.tsx`
+- [ ] Update the footer brand name, links, and attribution in `apps/web/components/layout/footer.tsx`
+
+## Asset checklist
+
+- [ ] Replace `apps/web/app/favicon.ico`
+- [ ] Replace `apps/web/app/opengraph-image.png`
+- [ ] Update `apps/web/app/opengraph-image.alt.txt`
+- [ ] Review branded images in `apps/web/public/img/**`
+- [ ] Review guide screenshots in `apps/web/public/guides/**` if they still show the old brand
+
+## Product copy checklist
+
+- [ ] Review `apps/web/app/about/page.tsx`
+- [ ] Review `apps/web/components/sections/hero-section.tsx`
+- [ ] Review `apps/web/components/sections/faq-section.tsx`
+- [ ] Review starter-facing docs in `packages/content/data/docs/**`
+- [ ] Review any public page copy that still names the original starter brand
+
+## External links and handles checklist
+
+- [ ] Update social handles and `sameAs` links in `apps/web/lib/seo/seo-config.ts`
+- [ ] Update footer social links in `apps/web/components/layout/footer.tsx`
+- [ ] Update the submit destination in `apps/web/lib/github-issue.ts`
+- [ ] Update project and repo links in `apps/web/app/projects/page.tsx`
+- [ ] Update any docs or guides that still point at the old domain or repository
+
+## Legal and contact checklist
+
+- [ ] Review and update `packages/content/data/legal/privacy.mdx`
+- [ ] Review and update `packages/content/data/legal/terms.mdx`
+- [ ] Review and update `packages/content/data/legal/cookies.mdx`
+- [ ] Replace domains, emails, company/operator names, and contact details
+- [ ] Update the “Last updated” date whenever legal copy changes
+
+## Runtime details worth deciding
+
+- [ ] Decide whether to rename the favorites storage key in `apps/web/contexts/favorites-context.tsx`
+- [ ] Decide whether to keep or replace the existing guide screenshots and starter example copy
+- [ ] Decide whether internal package names need to change now or can stay internal until later
+
+## Do not bulk-replace blindly
+
+- `data/websites.json` and `packages/content/data/websites/**` contain third-party names that should stay intact
+- Some guide screenshots may need to be re-recorded rather than string-replaced
+- GitHub links in docs and guides may be intentional examples, so verify them before changing
+
+## Suggested order
+
+1. Replace the shell and SEO strings
+2. Replace the repo, social, and submit links
+3. Replace the visual assets
+4. Update legal copy and contact details
+5. Run one final string sweep for old brand references
+6. Build and manually verify the public pages
+
+## Fast search commands
+
+```bash
+rg -n "llms.txt Hub|llms.txt hub|llmstxthub|thedaviddias|David Dias|llms-txt-hub" apps/web packages/content
+```
+
+```bash
+rg -n "privacy@|legal@|support@|contact@" packages/content/data/legal apps/web
+```
+
+## Verification checklist
+
+- [ ] The homepage title and description use the new brand
+- [ ] The header and footer show the new brand and external links
+- [ ] The favicon and Open Graph image are replaced
+- [ ] `/about`, `/privacy`, `/terms`, and `/cookies` no longer mention the old brand
+- [ ] `/submit` points to the correct repository and issue flow
+- [ ] `pnpm --filter web build` passes cleanly

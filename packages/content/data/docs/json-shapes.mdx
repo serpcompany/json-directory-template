@@ -1,0 +1,122 @@
+---
+title: 'JSON Shapes'
+description: 'The active data shapes for the static starter, including data/websites.json and the compatibility rules used by the loader'
+order: 5
+published: true
+---
+
+# JSON Shapes
+
+<p className="mt-2 text-xl text-muted-foreground">The active starter uses local data first. The main source of truth is `data/websites.json`, while docs and guides still come from MDX content files.</p>
+
+## `data/websites.json`
+
+This file is an array of website entries.
+
+```json
+[
+  {
+    "slug": "example-project-llms-txt",
+    "name": "Example Project",
+    "website": "https://example.com",
+    "description": "Short summary of the project and its docs.",
+    "llmsUrl": "https://example.com/llms.txt",
+    "llmsFullUrl": "https://example.com/llms-full.txt",
+    "category": "developer-tools",
+    "favicon": "https://www.google.com/s2/favicons?domain=example.com&sz=128",
+    "featured": true,
+    "publishedAt": "2026-03-22"
+  }
+]
+```
+
+### Website entry fields
+
+| Field | Required | Notes |
+|------|------|------|
+| `slug` | Recommended | Stable URL segment for `/websites/[slug]`. The loader can derive it from `name` if it is missing. |
+| `name` | Yes | Display name used in cards, search, and detail pages. |
+| `website` | Yes | Canonical site URL. The loader also accepts the legacy `domain` field. |
+| `description` | Yes | Plain text summary. The loader strips HTML if older content included markup. |
+| `llmsUrl` | Yes | Primary `llms.txt` URL. The loader also accepts the legacy `llmsTxtUrl` alias. |
+| `llmsFullUrl` | No | Optional `llms-full.txt` URL. |
+| `category` | Yes | Category slug used by the starter UI. |
+| `featured` | No | Marks the entry for featured lists. |
+| `favicon` | No | Generated convenience field. The current UI does not require it to render. |
+| `publishedAt` | Yes | Date string used for sorting and “recently added” sections. |
+
+## Loader compatibility rules
+
+The website loader currently accepts a few migration-friendly variations:
+
+- `website` or `domain`
+- `llmsUrl` or `llmsTxtUrl`
+- Missing `slug`, as long as `name` is present
+
+The loader also:
+
+- Sanitizes descriptions into plain text
+- Sorts entries by `publishedAt`, newest first
+- Maps the JSON entry into the active `WebsiteMetadata` shape used by the app
+
+## Recommended category slugs
+
+Use the same category slugs that the active app understands:
+
+- `ai-ml`
+- `developer-tools`
+- `data-analytics`
+- `automation-workflow`
+- `infrastructure-cloud`
+- `security-identity`
+
+During the current migration, some older local content may still contain legacy automation slugs. Prefer `automation-workflow` for new entries.
+
+## Submit form payload shape
+
+The `/submit` form does not write JSON directly. It builds a GitHub issue URL from this client-side shape:
+
+```json
+{
+  "name": "Example Project",
+  "website": "https://example.com",
+  "llmsUrl": "https://example.com/llms.txt",
+  "llmsFullUrl": "https://example.com/llms-full.txt",
+  "category": "developer-tools",
+  "description": "Short summary of the project.",
+  "notes": "Optional reviewer context."
+}
+```
+
+That payload is converted into a prefilled GitHub issue. See [Submit Workflow](/docs/submit-workflow) for the full handoff.
+
+## Other content shapes
+
+The starter is JSON-first for the directory, but docs and guides still use MDX frontmatter.
+
+### Docs frontmatter
+
+```md
+---
+title: 'Page title'
+description: 'Short summary'
+order: 1
+published: true
+---
+```
+
+### Guides frontmatter
+
+```md
+---
+title: 'Guide title'
+description: 'Short summary'
+date: '2026-03-22'
+image: '/guides/example.webp'
+authors:
+  - name: 'Your Name'
+difficulty: 'beginner'
+category: 'getting-started'
+published: true
+---
+```

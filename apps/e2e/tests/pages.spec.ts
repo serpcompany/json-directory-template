@@ -90,11 +90,67 @@ test.describe('Category Pages', () => {
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   })
 
+  test('automation-workflow category should load active entries', async ({ page }) => {
+    await page.goto('/automation-workflow', {
+      timeout: 120000,
+      waitUntil: 'domcontentloaded'
+    })
+
+    await expect(page).toHaveTitle(/Automation & Workflow.*llms\.txt hub/i)
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    await expect(page.getByRole('link', { name: /Zapier/i })).toBeVisible()
+  })
+
   test('featured category should load', async ({ page }) => {
     await page.goto('/featured')
 
     await expect(page).toHaveTitle(/Featured.*llms\.txt hub/i)
     await expect(page.getByRole('heading', { level: 1, name: /featured websites/i })).toBeVisible()
+  })
+})
+
+test.describe('Docs Pages', () => {
+  test('submit workflow docs page should load', async ({ page }) => {
+    await page.goto('/docs/submit-workflow', {
+      timeout: 120000,
+      waitUntil: 'domcontentloaded'
+    })
+
+    await expect(page).toHaveTitle(/Submit Workflow/i)
+    await expect(
+      page.getByRole('heading', { level: 1, name: /submit workflow/i })
+    ).toBeVisible()
+    await expect(
+      page.getByRole('heading', { level: 2, name: /why the starter uses github issues/i })
+    ).toBeVisible()
+  })
+
+  test('json shapes docs page should load', async ({ page }) => {
+    await page.goto('/docs/json-shapes', {
+      timeout: 120000,
+      waitUntil: 'domcontentloaded'
+    })
+
+    await expect(page).toHaveTitle(/JSON Shapes/i)
+    await expect(page.getByRole('heading', { level: 1, name: /json shapes/i })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { level: 2, name: /data\/websites\.json/i })
+    ).toBeVisible()
+  })
+
+  test('rebrand checklist docs page should load', async ({ page }) => {
+    await page.goto('/docs/rebrand-checklist', {
+      timeout: 120000,
+      waitUntil: 'domcontentloaded'
+    })
+
+    await expect(page).toHaveTitle(/Rebrand Checklist/i)
+    await expect(
+      page.getByRole('heading', { level: 1, name: /rebrand checklist/i })
+    ).toBeVisible()
+    await expect(
+      page.getByRole('heading', { level: 2, name: /brand shell checklist/i })
+    ).toBeVisible()
   })
 })
 

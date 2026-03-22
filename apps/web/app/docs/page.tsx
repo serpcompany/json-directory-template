@@ -10,9 +10,9 @@ import { getRoute } from '@/lib/routes'
 import { generateBaseMetadata } from '@/lib/seo/seo-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: 'CLI Documentation - llmstxt-cli',
+  title: 'Documentation - llms.txt hub',
   description:
-    'Learn how to use llmstxt-cli to install llms.txt skills into your AI coding agents. Getting started guide, command reference, and supported agents.',
+    'Learn how to use llmstxt-cli, how the static starter submit flow works, and how local JSON and MDX data power the active directory.',
   path: '/docs',
   keywords: [
     'llmstxt-cli',
@@ -20,7 +20,9 @@ export const metadata: Metadata = generateBaseMetadata({
     'AI agent skills',
     'CLI documentation',
     'llms.txt install',
-    'developer tools'
+    'developer tools',
+    'static starter',
+    'json-first starter'
   ]
 })
 

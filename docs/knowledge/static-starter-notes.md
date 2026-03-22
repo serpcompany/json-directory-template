@@ -10,6 +10,20 @@
 
 - `pnpm generate-websites` refreshes `data/websites.json` into the current JSON-first schema.
 - The active loader now expects `slug`, `website`, `llmsUrl`, optional `llmsFullUrl`, and metadata like `featured` / `priority`.
+- Prefer `automation-workflow` as the automation category slug. The loader still normalizes the older `integration-automation` value during the transition.
+
+## Docs Content
+
+- Public docs pages live in `packages/content/data/docs`.
+- Docs are ordered by the frontmatter `order` field and rendered through the `/docs` routes.
+- Use that folder for starter-facing docs such as submit flow, JSON shape references, and rebrand runbooks.
+
+## Rebrand Touchpoints
+
+- The main shell brand strings live in `apps/web/app/layout.tsx`, `apps/web/lib/seo/seo-config.ts`, `apps/web/components/layout/header.tsx`, and `apps/web/components/layout/footer.tsx`.
+- The main visual brand assets live in `apps/web/app/favicon.ico`, `apps/web/app/opengraph-image.png`, `apps/web/app/opengraph-image.alt.txt`, and `apps/web/public/img/**`.
+- Legal contact details live in `packages/content/data/legal/**`.
+- The submit flow points at a GitHub repo from `apps/web/lib/github-issue.ts`, so rebrands usually need that updated too.
 
 ## Agent Verification Quirk
 

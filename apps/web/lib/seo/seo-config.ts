@@ -173,7 +173,7 @@ export function generateDynamicMetadata(options: {
       break
     case 'doc':
       path = `/docs/${slug}`
-      title = `${name} - CLI Documentation`
+      title = `${name} - Documentation`
       break
   }
 

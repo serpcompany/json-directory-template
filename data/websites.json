@@ -11,6 +11,29 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "02ai-dev-llms-txt",
+    "name": "02AI.DEV",
+    "website": "https://02ai.dev",
+    "description": "Affordable AI planning, setup, maintenance, and development for solopreneurs.",
+    "llmsUrl": "https://02ai.dev/llms.txt",
+    "llmsFullUrl": "https://02ai.dev/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=02ai.dev&sz=128",
+    "featured": false,
+    "publishedAt": "2025-04-20"
+  },
+  {
+    "slug": "abstract-api-llms-txt",
+    "name": "Abstract API",
+    "website": "https://abstractapi.com",
+    "description": "abstractapi.com - Information and resources",
+    "llmsUrl": "https://abstractapi.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=abstractapi.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-08-26"
+  },
+  {
     "slug": "aceessay-ai-llms-txt",
     "name": "AceEssay.ai",
     "website": "https://aceessay.ai/",
@@ -32,6 +55,19 @@
     "favicon": "https://www.google.com/s2/favicons?domain=acrcloud.com&sz=128",
     "featured": false,
     "publishedAt": "2025-08-26"
+  },
+  {
+    "slug": "activepieces-llms-txt",
+    "name": "Activepieces",
+    "website": "https://activepieces.com",
+    "description": "Open source no-code business automation tool",
+    "llmsUrl": "https://www.activepieces.com/docs/llms.txt",
+    "llmsFullUrl": "https://www.activepieces.com/docs/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=activepieces.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
   },
   {
     "slug": "acurast-hub-llms-txt",
@@ -535,6 +571,18 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "aps-sdk-s-openapi-llms-txt",
+    "name": "APS SDK’s OpenAPI Specification | aps",
+    "website": "https://wallabyway.github.io/aps-sdk-openapi/",
+    "description": "OpenAPI specifications used for generating the APS SDKs.",
+    "llmsUrl": "https://wallabyway.github.io/aps-sdk-openapi/llms.txt",
+    "llmsFullUrl": "https://wallabyway.github.io/aps-sdk-openapi/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=wallabyway.github.io/aps-sdk-openapi&sz=128",
+    "featured": false,
+    "publishedAt": "2025-05-08"
+  },
+  {
     "slug": "aptible-llms-txt",
     "name": "Aptible",
     "website": "https://aptible.com",
@@ -688,6 +736,18 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "automatio-ai-llms-txt",
+    "name": "Automatio AI",
+    "website": "https://automatio.ai",
+    "description": "11 specialized AI agents and 50+ tools to automate web scraping, email, spreadsheets, calendars, and more. Just describe what you need in plain English.",
+    "llmsUrl": "https://automatio.ai/llms.txt",
+    "llmsFullUrl": "https://automatio.ai/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=automatio.ai&sz=128",
+    "featured": false,
+    "publishedAt": "2026-03-06"
+  },
+  {
     "slug": "avaamo-llms-txt",
     "name": "Avaamo",
     "website": "https://avaamo.com",
@@ -770,6 +830,18 @@
     "publishedAt": "2025-02-24"
   },
   {
+    "slug": "axle-llms-txt",
+    "name": "Axle",
+    "website": "https://axle.insure",
+    "description": "Insurance technology platform",
+    "llmsUrl": "https://docs.axle.insure/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=axle.insure&sz=128",
+    "featured": false,
+    "priority": "low",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "azumuta-llms-txt",
     "name": "Azumuta",
     "website": "https://www.azumuta.com",
@@ -828,6 +900,17 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "best-app-development-company-llms-txt",
+    "name": "Best App Development Company",
+    "website": "https://quokkalabs.com/",
+    "description": "Quokka Labs is a custom app development company in India, US, UAE & UK, offering solutions for startups and enterprises. Get expert consulting today.",
+    "llmsUrl": "https://quokkalabs.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=quokkalabs.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-06-24"
+  },
+  {
     "slug": "best-boat-lifts-llms-txt",
     "name": "Best Boat Lifts",
     "website": "https://iqboatlifts.com/",
@@ -839,6 +922,17 @@
     "featured": false,
     "priority": "high",
     "publishedAt": "2025-03-24"
+  },
+  {
+    "slug": "beta-three-professional-audio-llms-txt",
+    "name": "Beta Three Professional Audio",
+    "website": "https://www.beta3pro.com",
+    "description": "Beta Three was founded in 1988, Beta Three is professional audio manufacturer with R&D and producing;imported high precision auto-production equipment.",
+    "llmsUrl": "https://www.beta3pro.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.beta3pro.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-08-19"
   },
   {
     "slug": "better-auth-llms-txt",
@@ -953,6 +1047,18 @@
     "favicon": "https://www.google.com/s2/favicons?domain=bixgrow.com&sz=128",
     "featured": false,
     "publishedAt": "2025-08-26"
+  },
+  {
+    "slug": "blacknet-llms-txt",
+    "name": "Blacknet",
+    "website": "https://blacknet.ninja/",
+    "description": "Blacknet: 'Decentralized Zero-Knowledge Finance Application Platform with Proof of Stake Consensus",
+    "llmsUrl": "https://blacknet.ninja/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=blacknet.ninja&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-03-29"
   },
   {
     "slug": "blue-media-services-llms-txt",
@@ -1169,6 +1275,18 @@
     "favicon": "https://www.google.com/s2/favicons?domain=www.callback.com&sz=128",
     "featured": false,
     "publishedAt": "2025-06-04"
+  },
+  {
+    "slug": "campsite-llms-txt",
+    "name": "Campsite",
+    "website": "https://developers.campsite.com",
+    "description": "Organized team communication platform that replaces chaotic chat with structured discussions",
+    "llmsUrl": "https://developers.campsite.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=developers.campsite.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
   },
   {
     "slug": "captivaterecipes-llms-txt",
@@ -1739,6 +1857,31 @@
     "favicon": "https://www.google.com/s2/favicons?domain=comparisonator.com&sz=128",
     "featured": false,
     "publishedAt": "2025-08-26"
+  },
+  {
+    "slug": "concept-designs-marketing-llms-txt",
+    "name": "Concept Designs & Marketing",
+    "website": "https://www.concept-designs.com.au/",
+    "description": "Top digital marketing agency in Gold Coast & Northern Beaches, offering full branding solutions and strategic marketing for business success.",
+    "llmsUrl": "https://www.concept-designs.com.au/llms.txt",
+    "llmsFullUrl": "https://www.concept-designs.com.au/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.concept-designs.com.au&sz=128",
+    "featured": false,
+    "publishedAt": "2025-05-21"
+  },
+  {
+    "slug": "conductor-llms-txt",
+    "name": "Conductor",
+    "website": "https://docs.conductor.is",
+    "description": "Real-time API integration for QuickBooks Desktop with multi-language support",
+    "llmsUrl": "https://docs.conductor.is/llms.txt",
+    "llmsFullUrl": "https://docs.conductor.is/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=docs.conductor.is&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
   },
   {
     "slug": "configcat-llms-txt",
@@ -2367,6 +2510,18 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "dopp-finance-llms-txt",
+    "name": "Dopp Finance",
+    "website": "https://dopp.finance",
+    "description": "Decentralized finance and trading platform",
+    "llmsUrl": "https://docs.dopp.finance/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=dopp.finance&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "dotenvx-llms-txt",
     "name": "dotenvx",
     "website": "https://dotenvx.com",
@@ -2502,6 +2657,29 @@
     "publishedAt": "2025-12-06"
   },
   {
+    "slug": "emailgic-llms-txt",
+    "name": "Emailgic",
+    "website": "https://emailgic.com",
+    "description": "Email automation and management platform",
+    "llmsUrl": "https://emailgic.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=emailgic.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
+    "slug": "embed-notion-pages-into-your-llms-txt",
+    "name": "Embed Notion Pages Into Your Website",
+    "website": "https://embednotionpages.com/",
+    "description": "Embed your Notion pages into your website with a simple iframe. Full customisation, password protection & more. Free plan available.",
+    "llmsUrl": "https://embednotionpages.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=embednotionpages.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-05-19"
+  },
+  {
     "slug": "embedchain-llms-txt",
     "name": "EmbedChain",
     "website": "https://embedchain.ai",
@@ -2575,6 +2753,19 @@
     "publishedAt": "2025-04-10"
   },
   {
+    "slug": "fabric-llms-txt",
+    "name": "Fabric",
+    "website": "https://fabric.inc",
+    "description": "E-commerce platform and infrastructure",
+    "llmsUrl": "https://developer.fabric.inc/llms.txt",
+    "llmsFullUrl": "https://developer.fabric.inc/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=fabric.inc&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "facets-llms-txt",
     "name": "Facets",
     "website": "https://www.facets.cloud",
@@ -2633,6 +2824,18 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "fibery-llms-txt",
+    "name": "Fibery",
+    "website": "https://fibery.io",
+    "description": "Fibery is a work platform that replaces scattered tools and connects teams.' Chosen by nerds, appreciated by everyone.",
+    "llmsUrl": "https://fibery.io/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=fibery.io&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-04-22"
+  },
+  {
     "slug": "film-and-screenwriter-school-llms-txt",
     "name": "Film and Screenwriter School",
     "website": "https://www.filmconnection.com/ ",
@@ -2645,6 +2848,18 @@
     "publishedAt": "2025-06-15"
   },
   {
+    "slug": "finch-llms-txt",
+    "name": "Finch",
+    "website": "https://tryfinch.com",
+    "description": "Universal API for employment systems",
+    "llmsUrl": "https://developer.tryfinch.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=tryfinch.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "fireproof-llms-txt",
     "name": "Fireproof",
     "website": "https://use-fireproof.com",
@@ -2655,6 +2870,18 @@
     "favicon": "https://www.google.com/s2/favicons?domain=use-fireproof.com&sz=128",
     "featured": false,
     "publishedAt": "2025-08-26"
+  },
+  {
+    "slug": "firerpa-llms-txt",
+    "name": "FIRERPA",
+    "website": "https://device-farm.com/",
+    "description": "Enterprise-grade Android remote control and automation platform. Combining UI automation, reverse engineering, MITM capture, AI Agent, and more.",
+    "llmsUrl": "https://device-farm.com/llms.txt",
+    "llmsFullUrl": "https://device-farm.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=device-farm.com&sz=128",
+    "featured": false,
+    "publishedAt": "2026-03-09"
   },
   {
     "slug": "fireworks-ai-llms-txt",
@@ -2717,6 +2944,31 @@
     "publishedAt": "2025-06-17"
   },
   {
+    "slug": "flowx-llms-txt",
+    "name": "FlowX",
+    "website": "https://flowx.ai",
+    "description": "Business process automation platform",
+    "llmsUrl": "https://docs.flowx.ai/llms.txt",
+    "llmsFullUrl": "https://docs.flowx.ai/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=flowx.ai&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
+    "slug": "fork-force-australia-llms-txt",
+    "name": "Fork Force Australia",
+    "website": "https://www.forkforce.com.au/",
+    "description": "Explore Forklifts Australia for quality new & used forklifts. Hire & sales at great value across Brisbane, Sydney, Melbourne, Adelaide & more.",
+    "llmsUrl": "https://www.forkforce.com.au/llms.txt",
+    "llmsFullUrl": "https://www.forkforce.com.au/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.forkforce.com.au&sz=128",
+    "featured": false,
+    "publishedAt": "2025-05-26"
+  },
+  {
     "slug": "formo-llms-txt",
     "name": "Formo",
     "website": "https://formo.so",
@@ -2739,6 +2991,18 @@
     "favicon": "https://www.google.com/s2/favicons?domain=formwerk.dev&sz=128",
     "featured": false,
     "publishedAt": "2025-08-26"
+  },
+  {
+    "slug": "fractalpay-llms-txt",
+    "name": "FractalPay",
+    "website": "https://fractalpay.com",
+    "description": "Modern payment processing platform",
+    "llmsUrl": "https://docs.fractalpay.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=fractalpay.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
   },
   {
     "slug": "fraction-ai-llms-txt",
@@ -2984,6 +3248,30 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "goody-llms-txt",
+    "name": "Goody",
+    "website": "https://ongoody.com",
+    "description": "Corporate gifting and rewards platform",
+    "llmsUrl": "https://developer.ongoody.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=ongoody.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
+    "slug": "gorules-rules-engine-llms-txt",
+    "name": "GoRules - Rules Engine",
+    "website": "https://gorules.io",
+    "description": "Build, test, and deploy business rules without writing code. GoRules empowers business teams while giving developers the control they need.",
+    "llmsUrl": "https://gorules.io/llms.txt",
+    "llmsFullUrl": "https://gorules.io/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=gorules.io&sz=128",
+    "featured": false,
+    "publishedAt": "2026-01-23"
+  },
+  {
     "slug": "gradio-llms-txt",
     "name": "Gradio",
     "website": "https://www.gradio.app",
@@ -3027,6 +3315,17 @@
     "favicon": "https://www.google.com/s2/favicons?domain=www.greecevacationsearch.com&sz=128",
     "featured": false,
     "publishedAt": "2025-06-20"
+  },
+  {
+    "slug": "green-apple-travel-tourism-llms-txt",
+    "name": "Green Apple Travel & Tourism",
+    "website": "https://greenappletravel.ae",
+    "description": "Global visa service, Attestation and Tour packages.",
+    "llmsUrl": "https://greenappletravel.ae/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=greenappletravel.ae&sz=128",
+    "featured": false,
+    "publishedAt": "2025-06-03"
   },
   {
     "slug": "groqcloud-llms-txt",
@@ -3100,6 +3399,18 @@
     "publishedAt": "2025-02-24"
   },
   {
+    "slug": "help-for-erectile-dysfunction-llms-txt",
+    "name": "Help for Erectile Dysfunction",
+    "website": "https://edtreatment.info/",
+    "description": "The ED Treatment Information Center provides resources and support for Erectile Dysfunction sufferers and their partners.",
+    "llmsUrl": "https://edtreatment.info/llms.txt",
+    "llmsFullUrl": "https://edtreatment.info/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=edtreatment.info&sz=128",
+    "featured": false,
+    "publishedAt": "2025-08-16"
+  },
+  {
     "slug": "henan-pengfei-pvp-k30-povidone-llms-txt",
     "name": "HENAN PENGFEI-PVP-K30-povidone",
     "website": "https://www.pf-pvp.com/",
@@ -3135,6 +3446,18 @@
     "publishedAt": "2025-06-17"
   },
   {
+    "slug": "heyflow-llms-txt",
+    "name": "Heyflow",
+    "website": "https://heyflow.com/",
+    "description": "Create interactive lead funnels, multi-step forms and customized landing pages that drive conversions and engage your website visitors—without writing any code.",
+    "llmsUrl": "https://heyflow.com/llms.txt",
+    "llmsFullUrl": "https://heyflow.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=heyflow.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-07-31"
+  },
+  {
     "slug": "hola-llms-txt",
     "name": "Hola",
     "website": "https://hola.org",
@@ -3144,6 +3467,18 @@
     "favicon": "https://www.google.com/s2/favicons?domain=hola.org&sz=128",
     "featured": false,
     "publishedAt": "2025-08-26"
+  },
+  {
+    "slug": "home-1-llms-txt",
+    "name": "Home",
+    "website": "https://mondorobot.com",
+    "description": "Mondo Robot is a digital product design & innovation agency. We create meaningful native apps, websites and experiences.",
+    "llmsUrl": "https://mondorobot.com/llms.txt",
+    "llmsFullUrl": "https://mondorobot.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=mondorobot.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-03-26"
   },
   {
     "slug": "home-llms-txt",
@@ -3539,6 +3874,17 @@
     "publishedAt": "2025-11-13"
   },
   {
+    "slug": "inro-llms-txt",
+    "name": "Inrō",
+    "website": "https://www.inro.social/",
+    "description": "Inrō is a Instagram DM automation platform with an AI Agent, DM campaigns and automations that turn every comment and DM into growth and sales.",
+    "llmsUrl": "https://www.inro.social/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.inro.social&sz=128",
+    "featured": false,
+    "publishedAt": "2026-01-19"
+  },
+  {
     "slug": "inspector-llms-txt",
     "name": "Inspector",
     "website": "https://inspector.dev",
@@ -3890,6 +4236,19 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "lago-llms-txt",
+    "name": "Lago",
+    "website": "https://getlago.com",
+    "description": "Open-source metering and usage-based billing platform",
+    "llmsUrl": "https://getlago.com/docs/llms.txt",
+    "llmsFullUrl": "https://getlago.com/docs/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=getlago.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "lambdatest-llms-txt",
     "name": "LambdaTest",
     "website": "https://www.lambdatest.com",
@@ -3993,6 +4352,17 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "law-firm-digital-marketing-llms-txt",
+    "name": "Law Firm Digital Marketing Agency",
+    "website": "https://lawdigitalsolution.com/",
+    "description": "Law Digital Solution is your Trusted Law Firm Digital Marketing Agency, helps law firms with digital marketing services, including SEO and web design.",
+    "llmsUrl": "https://lawdigitalsolution.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=lawdigitalsolution.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-07-23"
+  },
+  {
     "slug": "layouthub-llms-txt",
     "name": "LayoutHub",
     "website": "https://layouthub.com",
@@ -4059,6 +4429,28 @@
     "favicon": "https://www.google.com/s2/favicons?domain=legittai.com&sz=128",
     "featured": false,
     "publishedAt": "2025-08-26"
+  },
+  {
+    "slug": "leomayn-llms-txt",
+    "name": "Leomayn",
+    "website": "https://leomayn.com",
+    "description": "We redesign knowledge work and use AI to free-up humans to focus on work which creates value.",
+    "llmsUrl": "https://leomayn.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=leomayn.com&sz=128",
+    "featured": false,
+    "publishedAt": "2026-01-12"
+  },
+  {
+    "slug": "lettermint-llms-txt",
+    "name": "Lettermint",
+    "website": "https://lettermint.co",
+    "description": "Based in Europe, we ensure your transactional emails are secure, reliable, and always reach your customers. Never worry about email delivery again.",
+    "llmsUrl": "https://lettermint.co/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=lettermint.co&sz=128",
+    "featured": false,
+    "publishedAt": "2025-06-17"
   },
   {
     "slug": "liam-erd-llms-txt",
@@ -4284,6 +4676,19 @@
     "publishedAt": "2025-04-14"
   },
   {
+    "slug": "loops-llms-txt",
+    "name": "Loops",
+    "website": "https://loops.so",
+    "description": "Customer communication and engagement platform",
+    "llmsUrl": "https://loops.so/docs/llms.txt",
+    "llmsFullUrl": "https://loops.so/docs/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=loops.so&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "lots-of-csvs-llms-txt",
     "name": "Lots of CSVs",
     "website": "https://lotsofcsvs.com",
@@ -4332,6 +4737,17 @@
     "publishedAt": "2025-02-24"
   },
   {
+    "slug": "luxid-llms-txt",
+    "name": "Luxid",
+    "website": "https://www.luxidgroup.com",
+    "description": "Luxid helps clients break open silos to create customer experiences and end-to-end journeys that drive sales and support buyers.",
+    "llmsUrl": "https://www.luxidgroup.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.luxidgroup.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-07-01"
+  },
+  {
     "slug": "lynx-llms-txt",
     "name": "Lynx",
     "website": "https://lynxjs.org",
@@ -4344,6 +4760,18 @@
     "publishedAt": "2025-08-13"
   },
   {
+    "slug": "mailmodo-llms-txt",
+    "name": "Mailmodo",
+    "website": "https://www.mailmodo.com/",
+    "description": "Mailmodo is an AI email marketing platform that offers a complete engagement suite comprising automations, a modern AI-powered email editor, and interactive emails that boost conversions and engagement.",
+    "llmsUrl": "https://www.mailmodo.com/llms.txt",
+    "llmsFullUrl": "https://www.mailmodo.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.mailmodo.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-04-23"
+  },
+  {
     "slug": "mako-llms-txt",
     "name": "Mako",
     "website": "https://makojs.dev/",
@@ -4353,6 +4781,19 @@
     "favicon": "https://www.google.com/s2/favicons?domain=makojs.dev&sz=128",
     "featured": false,
     "publishedAt": "2025-08-26"
+  },
+  {
+    "slug": "mangopay-llms-txt",
+    "name": "Mangopay",
+    "website": "https://mangopay.com",
+    "description": "Payment infrastructure and marketplace solutions",
+    "llmsUrl": "https://docs.mangopay.com/llms.txt",
+    "llmsFullUrl": "https://docs.mangopay.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=mangopay.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
   },
   {
     "slug": "manifestly-checklists-llms-txt",
@@ -4387,6 +4828,28 @@
     "favicon": "https://www.google.com/s2/favicons?domain=marimo.io&sz=128",
     "featured": false,
     "publishedAt": "2025-08-26"
+  },
+  {
+    "slug": "marketing-doctors-llms-txt",
+    "name": "Marketing Doctors",
+    "website": "https://marketingdrs.com",
+    "description": "Marketing Doctors helps businesses grow with data-backed, honest marketing tactics that attract the right customers at the right time.",
+    "llmsUrl": "https://marketingdrs.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=marketingdrs.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-08-09"
+  },
+  {
+    "slug": "marketing-integration-and-llms-txt",
+    "name": "Marketing Integration and Automation",
+    "website": "https://www.mambomedia.com/",
+    "description": "Mambo Media is a full-service digital marketing agency for demand generation and revenue-producing programs with an emphasis on modern marketing best practices.",
+    "llmsUrl": "https://www.mambomedia.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.mambomedia.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-06-12"
   },
   {
     "slug": "massive-llms-txt",
@@ -4519,6 +4982,19 @@
     "publishedAt": "2025-05-21"
   },
   {
+    "slug": "meshconnect-llms-txt",
+    "name": "MeshConnect",
+    "website": "https://meshconnect.com",
+    "description": "Integration and connectivity platform",
+    "llmsUrl": "https://docs.meshconnect.com/llms.txt",
+    "llmsFullUrl": "https://docs.meshconnect.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=meshconnect.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "metabase-llms-txt",
     "name": "Metabase",
     "website": "https://www.metabase.com",
@@ -4528,6 +5004,19 @@
     "favicon": "https://www.google.com/s2/favicons?domain=www.metabase.com&sz=128",
     "featured": false,
     "publishedAt": "2026-03-04"
+  },
+  {
+    "slug": "method-financial-llms-txt",
+    "name": "Method Financial",
+    "website": "https://methodfi.com",
+    "description": "Financial data and payment solutions platform",
+    "llmsUrl": "https://docs.methodfi.com/llms.txt",
+    "llmsFullUrl": "https://docs.methodfi.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=methodfi.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
   },
   {
     "slug": "micro1-llms-txt",
@@ -4555,6 +5044,18 @@
     "publishedAt": "2025-02-24"
   },
   {
+    "slug": "mirusuite-llms-txt",
+    "name": "MiruSuite",
+    "website": "https://mirusuite.com",
+    "description": "MiruSuite AI-powered live production automation software for PTZ cameras. Streamline video production workflows with automatic tracking and intelligent cutting.",
+    "llmsUrl": "https://mirusuite.com/llms.txt",
+    "llmsFullUrl": "https://mirusuite.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=mirusuite.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-10-21"
+  },
+  {
     "slug": "mixo-llms-txt",
     "name": "Mixo",
     "website": "https://www.mixo.io",
@@ -4577,6 +5078,17 @@
     "featured": false,
     "priority": "high",
     "publishedAt": "2025-03-20"
+  },
+  {
+    "slug": "monitor-servers-websites-llms-txt",
+    "name": "Monitor Servers & Websites",
+    "website": "https://zuzia.app",
+    "description": "Track server metrics and uptime, monitor SSL, schedule tasks and run remote commands — simple setup, Free plan, no credit card required.",
+    "llmsUrl": "https://zuzia.app/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=zuzia.app&sz=128",
+    "featured": false,
+    "publishedAt": "2026-02-13"
   },
   {
     "slug": "monster-ui-llms-txt",
@@ -4951,6 +5463,18 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "openphone-llms-txt",
+    "name": "OpenPhone",
+    "website": "https://openphone.com",
+    "description": "Modern business phone system and communication platform",
+    "llmsUrl": "https://www.openphone.com/docs/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=openphone.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "openpipe-llms-txt",
     "name": "OpenPipe",
     "website": "https://openpipe.ai",
@@ -5071,6 +5595,17 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "parcelcube-static-llms-txt",
+    "name": "Parcelcube Static Dimensioning Systems",
+    "website": "https://parcelcube.com",
+    "description": "Logistics companies, warehouses, and e-commerce businesses use the Parcelcube dimensioning system to increase efficiency and reduce costs.",
+    "llmsUrl": "https://parcelcube.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=parcelcube.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-07-26"
+  },
+  {
     "slug": "parseable-llms-txt",
     "name": "Parseable",
     "website": "https://www.parseable.com",
@@ -5102,6 +5637,17 @@
     "favicon": "https://www.google.com/s2/favicons?domain=payperfax.com&sz=128",
     "featured": false,
     "publishedAt": "2025-10-09"
+  },
+  {
+    "slug": "payrollrabbit-llms-txt",
+    "name": "PayrollRabbit",
+    "website": "https://www.payrollrabbit.com",
+    "description": "Generate Compliant Payslips in 60 seconds.\\r\\nInstantly compliant. Highly accurate. Fully automated.",
+    "llmsUrl": "https://www.payrollrabbit.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.payrollrabbit.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-06-07"
   },
   {
     "slug": "pentesting-red-teaming-company-llms-txt",
@@ -5138,6 +5684,17 @@
     "favicon": "https://www.google.com/s2/favicons?domain=pixonstudio.com&sz=128",
     "featured": false,
     "publishedAt": "2025-05-13"
+  },
+  {
+    "slug": "petite-box-llms-txt",
+    "name": "Petite Box",
+    "website": "https://www.petitebox.it",
+    "description": "“Petite Box” offre box letterarie a tema, abbinando romanzi selezionati con gadget unici, snack locali e bevande tematiche.",
+    "llmsUrl": "https://www.petitebox.it/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.petitebox.it&sz=128",
+    "featured": false,
+    "publishedAt": "2025-04-13"
   },
   {
     "slug": "pgflow-llms-txt",
@@ -5200,6 +5757,19 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "plain-llms-txt",
+    "name": "Plain",
+    "website": "https://plain.com",
+    "description": "Customer support and communication platform",
+    "llmsUrl": "https://www.plain.com/docs/llms.txt",
+    "llmsFullUrl": "https://www.plain.com/docs/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=plain.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "plan-harmony-travel-planning-llms-txt",
     "name": "Plan Harmony | Travel Planning",
     "website": "https://planharmony.com/",
@@ -5236,19 +5806,6 @@
     "publishedAt": "2025-08-26"
   },
   {
-    "slug": "poo-llms-txt",
-    "name": "poo",
-    "website": "https://got.d",
-    "description": "dog",
-    "llmsUrl": "https://got.d/llms.txt",
-    "llmsFullUrl": "https://got.d/llms.txt",
-    "category": "integration-automation",
-    "favicon": "https://www.google.com/s2/favicons?domain=got.d&sz=128",
-    "featured": false,
-    "priority": "medium",
-    "publishedAt": "2026-03-22"
-  },
-  {
     "slug": "poof",
     "name": "Poof",
     "website": "https://poof.bg",
@@ -5261,6 +5818,19 @@
     "publishedAt": "2026-02-13"
   },
   {
+    "slug": "popsmash-llms-txt",
+    "name": "POPSMASH",
+    "website": "https://www.popsmash.com",
+    "description": "Social gaming and community platform",
+    "llmsUrl": "https://www.popsmash.com/llms.txt",
+    "llmsFullUrl": "https://www.popsmash.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.popsmash.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "posicionamiento-web-barcelona-llms-txt",
     "name": "Posicionamiento Web Barcelona",
     "website": "https://posicionamiento-web-barcelona.com",
@@ -5270,6 +5840,19 @@
     "favicon": "https://www.google.com/s2/favicons?domain=posicionamiento-web-barcelona.com&sz=128",
     "featured": false,
     "publishedAt": "2026-03-08"
+  },
+  {
+    "slug": "postfast-llms-txt",
+    "name": "PostFast",
+    "website": "https://postfa.st",
+    "description": "PostFast - Social Media Management Tool. Cross-post across multiple platforms like - X, LinkedIn, TikTok, Facebook, Instagram, BlueSky, and YouTube.",
+    "llmsUrl": "https://postfa.st/llms.txt",
+    "llmsFullUrl": "https://postfa.st/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=postfa.st&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-03-24"
   },
   {
     "slug": "preact-llms-txt",
@@ -5464,6 +6047,19 @@
     "publishedAt": "2025-02-24"
   },
   {
+    "slug": "qwikrank-llms-txt",
+    "name": "Qwikrank",
+    "website": "https://qwikrank.com",
+    "description": "Generate SEO-Optimized Content with AI in Minutes.",
+    "llmsUrl": "https://qwikrank.com/llms.txt",
+    "llmsFullUrl": "https://qwikrank.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=qwikrank.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-04-18"
+  },
+  {
     "slug": "rainbowkit-llms-txt",
     "name": "RainbowKit",
     "website": "https://rainbowkit.com",
@@ -5547,6 +6143,17 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "regal-llms-txt",
+    "name": "REGAL",
+    "website": "https://www.regal.ai",
+    "description": "Regal helps businesses build, improve, and manage voice AI Agents.",
+    "llmsUrl": "https://www.regal.ai/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.regal.ai&sz=128",
+    "featured": false,
+    "publishedAt": "2026-01-13"
+  },
+  {
     "slug": "rememberizer-llms-txt",
     "name": "Rememberizer",
     "website": "https://docs.rememberizer.ai",
@@ -5628,6 +6235,41 @@
     "favicon": "https://www.google.com/s2/favicons?domain=replit.com&sz=128",
     "featured": false,
     "publishedAt": "2025-08-26"
+  },
+  {
+    "slug": "resend-llms-txt",
+    "name": "Resend",
+    "website": "https://resend.com",
+    "description": "Modern email delivery platform",
+    "llmsUrl": "https://resend.com/docs/llms.txt",
+    "llmsFullUrl": "https://resend.com/docs/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=resend.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
+    "slug": "respond-io-llms-txt",
+    "name": "Respond.io",
+    "website": "https://respond.io",
+    "description": "Respond.io is an AI-powered customer conversation platform that helps B2Cs capture, convert, and retain customers over chat, calls and email at scale.",
+    "llmsUrl": "https://respond.io/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=respond.io&sz=128",
+    "featured": false,
+    "publishedAt": "2025-05-30"
+  },
+  {
+    "slug": "retainful-llms-txt",
+    "name": "Retainful",
+    "website": "https://www.retainful.com/",
+    "description": "Acquire, nuture and retain customers with the most easy-to-use email marketing software for Ecommerce - Retainful.",
+    "llmsUrl": "https://www.retainful.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.retainful.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-05-14"
   },
   {
     "slug": "reve-ai-llms-txt",
@@ -5787,6 +6429,32 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "salesbricks-llms-txt",
+    "name": "Salesbricks",
+    "website": "https://salesbricks.com",
+    "description": "Sales automation and management platform",
+    "llmsUrl": "https://docs.salesbricks.com/llms.txt",
+    "llmsFullUrl": "https://docs.salesbricks.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=salesbricks.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
+    "slug": "salesforce-marketing-cloud-llms-txt",
+    "name": "Salesforce Marketing Cloud Consultants",
+    "website": "https://marcloudconsulting.com/",
+    "description": "Boost ROI with Salesforce Marketing Cloud. Meet your team of certified Marketing Cloud consultants and specialists in Sales Cloud and Data Cloud.",
+    "llmsUrl": "https://marcloudconsulting.com/llms.txt",
+    "llmsFullUrl": "https://marcloudconsulting.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=marcloudconsulting.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-04-17"
+  },
+  {
     "slug": "samsung-food-llms-txt",
     "name": "Samsung Food",
     "website": "https://whisk.com",
@@ -5877,6 +6545,17 @@
     "favicon": "https://www.google.com/s2/favicons?domain=sealos.io&sz=128",
     "featured": false,
     "publishedAt": "2025-08-26"
+  },
+  {
+    "slug": "secure-fast-online-money-llms-txt",
+    "name": "Secure & Fast Online Money Transfers",
+    "website": "http://acemoneytransfer.com",
+    "description": "Send money home at the best rates and low fee with a highly secure and quick platform. Sign-up today on ACE Money Transfer website.",
+    "llmsUrl": "http://acemoneytransfer.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=acemoneytransfer.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-07-02"
   },
   {
     "slug": "sekhlo-pk-llms-txt",
@@ -6089,6 +6768,18 @@
     "publishedAt": "2025-02-24"
   },
   {
+    "slug": "skywork-the-ai-workspace-llms-txt",
+    "name": "Skywork︱The  AI Workspace Agents",
+    "website": "https://skywork.ai/",
+    "description": "Skywork - Skywork turns simple input into multimodal content - docs, slides, sheets with deep research, podcasts & webpages.",
+    "llmsUrl": "https://skywork.ai/llms.txt",
+    "llmsFullUrl": "https://skywork.ai/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=skywork.ai&sz=128",
+    "featured": false,
+    "publishedAt": "2025-08-10"
+  },
+  {
     "slug": "smailander-llms-txt",
     "name": "Smailander",
     "website": "https://smailander.com",
@@ -6098,6 +6789,19 @@
     "favicon": "https://www.google.com/s2/favicons?domain=smailander.com&sz=128",
     "featured": false,
     "publishedAt": "2026-03-16"
+  },
+  {
+    "slug": "smartcar-llms-txt",
+    "name": "Smartcar",
+    "website": "https://smartcar.com",
+    "description": "Connected car API platform",
+    "llmsUrl": "https://smartcar.com/docs/llms.txt",
+    "llmsFullUrl": "https://smartcar.com/docs/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=smartcar.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
   },
   {
     "slug": "social-llms-txt",
@@ -6111,6 +6815,29 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "sociality-io-llms-txt",
+    "name": "Sociality.io",
+    "website": "https://sociality.io/",
+    "description": "Sociality.io is an AI‑first, human‑in‑the‑loop platform for social media analytics, engagement, social listening, competitor analysis and publishing automation.",
+    "llmsUrl": "https://sociality.io/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=sociality.io&sz=128",
+    "featured": false,
+    "publishedAt": "2025-05-14"
+  },
+  {
+    "slug": "solid-llms-txt",
+    "name": "Solid",
+    "website": "https://solidfi.com",
+    "description": "Banking and financial infrastructure platform",
+    "llmsUrl": "https://docs.solidfi.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=solidfi.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "sourcegraph-llms-txt",
     "name": "Sourcegraph",
     "website": "https://sourcegraph.com",
@@ -6121,6 +6848,18 @@
     "featured": false,
     "priority": "high",
     "publishedAt": "2025-02-24"
+  },
+  {
+    "slug": "spaceprompts-llms-txt",
+    "name": "SpacePrompts",
+    "website": "https://www.spaceprompts.com/",
+    "description": "Save and organize AI prompts in one place with SpacePrompts. Sync your AI prompts across all devices with our free prompt manager and Chrome extension.",
+    "llmsUrl": "https://www.spaceprompts.com/llms.txt",
+    "llmsFullUrl": "https://www.spaceprompts.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=www.spaceprompts.com&sz=128",
+    "featured": false,
+    "publishedAt": "2026-02-26"
   },
   {
     "slug": "spacetimedb-llms-txt",
@@ -6180,6 +6919,19 @@
     "publishedAt": "2025-06-21"
   },
   {
+    "slug": "stedi-llms-txt",
+    "name": "Stedi",
+    "website": "https://stedi.com",
+    "description": "B2B data integration and EDI platform",
+    "llmsUrl": "https://www.stedi.com/docs/llms.txt",
+    "llmsFullUrl": "https://www.stedi.com/docs/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=stedi.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "stephanie-kabi-llms-txt",
     "name": "Stephanie Kabi",
     "website": "https://stephaniekabi.com/",
@@ -6212,6 +6964,18 @@
     "favicon": "https://www.google.com/s2/favicons?domain=strale.dev&sz=128",
     "featured": false,
     "publishedAt": "2026-03-14"
+  },
+  {
+    "slug": "stripe-llms-txt",
+    "name": "Stripe",
+    "website": "https://stripe.com",
+    "description": "Stripe powers online and in-person payment processing and financial solutions for businesses of all sizes. Accept payments, send payouts, and automate financial processes with a suite of APIs and no-code tools.",
+    "llmsUrl": "http://docs.stripe.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=stripe.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-03-20"
   },
   {
     "slug": "study-fetch-llms-txt",
@@ -6317,6 +7081,17 @@
     "favicon": "https://www.google.com/s2/favicons?domain=www.ethswarm.org&sz=128",
     "featured": false,
     "publishedAt": "2026-01-06"
+  },
+  {
+    "slug": "swipe-llms-txt",
+    "name": "Swipe, Simple Invoicing and Payments app",
+    "website": "https://getswipe.in/",
+    "description": "Swipe is simple & fast GST billing software for small businesses. Manage Invoices, Quotations, Purchase Orders, Payments, and Inventory.",
+    "llmsUrl": "https://getswipe.in/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=getswipe.in&sz=128",
+    "featured": false,
+    "publishedAt": "2025-07-01"
   },
   {
     "slug": "swisscarinfo",
@@ -6614,6 +7389,19 @@
     "publishedAt": "2025-07-14"
   },
   {
+    "slug": "trigger-dev-llms-txt",
+    "name": "Trigger.dev",
+    "website": "https://trigger.dev",
+    "description": "Background job and workflow automation platform",
+    "llmsUrl": "https://trigger.dev/docs/llms.txt",
+    "llmsFullUrl": "https://trigger.dev/docs/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=trigger.dev&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "triplit-llms-txt",
     "name": "Triplit",
     "website": "https://www.triplit.dev",
@@ -6669,6 +7457,18 @@
     "featured": true,
     "priority": "high",
     "publishedAt": "2025-02-25"
+  },
+  {
+    "slug": "turbo-docx-llms-txt",
+    "name": "TurboDocx",
+    "website": "https://turbodocx.com",
+    "description": "TurboDocx is an AI-powered document and slide deck automation platform. It helps businesses generate professional documents—like statements of work, runbooks, reports, and sales presentations—by pulling structured data from tools like CRMs, project management systems, and spreadsheets. Users can use their own branded templates, and TurboDocx takes care of the formatting, content population, and even e-signatures. It works via web app, API, SDK, and integrations—making it ideal for teams and software platforms that want to eliminate manual copy-paste and deliver polished outputs at scale.",
+    "llmsUrl": "https://docs.turbodocx.com/llms.txt",
+    "llmsFullUrl": "https://docs.turbodocx.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=turbodocx.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-07-16"
   },
   {
     "slug": "turso-llms-txt",
@@ -6740,6 +7540,29 @@
     "favicon": "https://www.google.com/s2/favicons?domain=mcp.umin.ai&sz=128",
     "featured": false,
     "publishedAt": "2025-06-24"
+  },
+  {
+    "slug": "underrun-io-llms-txt",
+    "name": "underrun.io",
+    "website": "https://underrun.io",
+    "description": "Convince Customers from Day One with Public Onboarding Plans.",
+    "llmsUrl": "https://underrun.io/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=underrun.io&sz=128",
+    "featured": false,
+    "publishedAt": "2025-05-09"
+  },
+  {
+    "slug": "unifygtm-llms-txt",
+    "name": "UnifyGTM",
+    "website": "https://unifygtm.com",
+    "description": "Go-to-market strategy and execution platform",
+    "llmsUrl": "https://docs.unifygtm.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=unifygtm.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
   },
   {
     "slug": "unistyles-llms-txt",
@@ -6920,6 +7743,19 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "velt-llms-txt",
+    "name": "Velt",
+    "website": "https://velt.dev",
+    "description": "Real-time collaboration platform",
+    "llmsUrl": "https://docs.velt.dev/llms.txt",
+    "llmsFullUrl": "https://docs.velt.dev/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=velt.dev&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "vendure-llms-txt",
     "name": "Vendure",
     "website": "https://vendure.io/",
@@ -7038,6 +7874,31 @@
     "featured": false,
     "priority": "high",
     "publishedAt": "2025-03-01"
+  },
+  {
+    "slug": "vignette-id-llms-txt",
+    "name": "Vignette ID",
+    "website": "https://e-vignettes.eu",
+    "description": "Vignette ID is the first multi-country road toll app in Europe. Buy vignettes for multiple cars and countries in just a few clicks.",
+    "llmsUrl": "https://e-vignettes.eu/llms.txt",
+    "llmsFullUrl": "https://e-vignettes.eu/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=e-vignettes.eu&sz=128",
+    "featured": false,
+    "publishedAt": "2025-06-19"
+  },
+  {
+    "slug": "vital-llms-txt",
+    "name": "Vital",
+    "website": "https://tryvital.io",
+    "description": "Health data integration platform",
+    "llmsUrl": "https://docs.tryvital.io/llms.txt",
+    "llmsFullUrl": "https://docs.tryvital.io/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=tryvital.io&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
   },
   {
     "slug": "voidmob-llms-txt",
@@ -7249,6 +8110,17 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "wild-in-africa-llms-txt",
+    "name": "Wild In Africa",
+    "website": "https://wildinafrica.store/",
+    "description": "Handmade beaded bracelets supporting wildlife conservation. Founded by National Geographic filmmaker Shannon Wild. Order now & #WearYourKarma.",
+    "llmsUrl": "https://wildinafrica.store/apps/llmstxt/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=wildinafrica.store&sz=128",
+    "featured": false,
+    "publishedAt": "2025-05-30"
+  },
+  {
     "slug": "wized-llms-txt",
     "name": "Wized",
     "website": "https://www.wized.com/",
@@ -7301,6 +8173,30 @@
     "llmsUrl": "https://wordlift.io/llms.txt",
     "category": "ai-ml",
     "favicon": "https://www.google.com/s2/favicons?domain=wordlift.io&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
+    "slug": "workbookly-llms-txt",
+    "name": "Workbookly",
+    "website": "https://workbookly.app",
+    "description": "Transform YouTube videos into interactive workbooks for educators and learners.",
+    "llmsUrl": "https://workbookly.app/llms.txt",
+    "llmsFullUrl": "https://workbookly.app/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=workbookly.app&sz=128",
+    "featured": false,
+    "publishedAt": "2025-08-10"
+  },
+  {
+    "slug": "workflow-llms-txt",
+    "name": "Workflow",
+    "website": "https://workflow.design",
+    "description": "Design and workflow automation platform",
+    "llmsUrl": "https://docs.workflow.design/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=workflow.design&sz=128",
     "featured": false,
     "priority": "high",
     "publishedAt": "2025-02-24"
@@ -7446,6 +8342,19 @@
     "publishedAt": "2025-03-14"
   },
   {
+    "slug": "zapier-llms-txt",
+    "name": "Zapier",
+    "website": "https://zapier.com",
+    "description": "Workflow automation and integration platform",
+    "llmsUrl": "https://docs.zapier.com/llms.txt",
+    "llmsFullUrl": "https://docs.zapier.com/llms-full.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=zapier.com&sz=128",
+    "featured": false,
+    "priority": "high",
+    "publishedAt": "2025-02-24"
+  },
+  {
     "slug": "zeffy-llms-txt",
     "name": "Zeffy",
     "website": "https://zeffy.com",
@@ -7512,6 +8421,17 @@
     "publishedAt": "2025-08-26"
   },
   {
+    "slug": "zodori-llms-txt",
+    "name": "ZODORI",
+    "website": "https://zodoristudio.com",
+    "description": "Zodori creates artisan jewelry from rare woods and fine gemstones, each piece inspired by ancient wisdom and heritage, crafted into meaningful wearable art.",
+    "llmsUrl": "https://zodoristudio.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=zodoristudio.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-06-29"
+  },
+  {
     "slug": "zoko-llms-txt",
     "name": "Zoko",
     "website": "https://zoko.io",
@@ -7521,5 +8441,16 @@
     "favicon": "https://www.google.com/s2/favicons?domain=zoko.io&sz=128",
     "featured": false,
     "publishedAt": "2025-08-26"
+  },
+  {
+    "slug": "zoomry-llms-txt",
+    "name": "Zoomry_conveyor_shiploader manufacturer",
+    "website": "https://zoomry-ind.com",
+    "description": "Zoomry is a global provider of bulk material handling solutions. specialize in telescopic stacker, belt conveyor and ship loaders.",
+    "llmsUrl": "https://zoomry-ind.com/llms.txt",
+    "category": "automation-workflow",
+    "favicon": "https://www.google.com/s2/favicons?domain=zoomry-ind.com&sz=128",
+    "featured": false,
+    "publishedAt": "2025-06-19"
   }
 ]

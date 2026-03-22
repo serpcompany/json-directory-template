@@ -175,6 +175,14 @@ interface JsonWebsiteEntry {
   domain?: string
 }
 
+function normalizeJsonCategory(category: string): string {
+  if (category === 'integration-automation') {
+    return 'automation-workflow'
+  }
+
+  return category
+}
+
 function sanitizeWebsiteDescription(description: string): string {
   return description.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
 }
@@ -191,7 +199,7 @@ function mapJsonWebsite(website: JsonWebsiteEntry): WebsiteMetadata {
       .replace(/--+/g, '-')
 
   return {
-    category: website.category,
+    category: normalizeJsonCategory(website.category),
     description: sanitizeWebsiteDescription(website.description),
     featured: website.featured,
     llmsFullUrl: website.llmsFullUrl || null,
