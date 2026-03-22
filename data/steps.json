@@ -1,0 +1,17 @@
+[
+  {
+    "step": 1,
+    "title": "Create JSON entries",
+    "description": "Add websites, guides, members, and projects as flat files that can be reviewed directly in pull requests."
+  },
+  {
+    "step": 2,
+    "title": "Generate static pages",
+    "description": "Build category pages, list pages, and detail pages from the data so every URL can be exported and deployed."
+  },
+  {
+    "step": 3,
+    "title": "Deploy to any static host",
+    "description": "Ship the build output to GitHub Pages or a similar static host without introducing a database or platform lock-in."
+  }
+]
