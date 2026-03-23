@@ -6,20 +6,13 @@ import { categories } from '@/lib/categories'
 import { getWebsites } from '@/lib/content-loader'
 import { SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
 
-/**
- * Map of content paths that should be overridden to different URLs
- */
-const URL_OVERRIDES: Record<string, string> = {
-  'legal/privacy': 'privacy',
-  'legal/terms': 'terms',
-  'legal/cookies': 'cookies'
-}
+export const dynamic = 'force-static'
 
 /**
  * Static routes that should be included in the sitemap
  * Excludes: 'news' (redirects to /), 'submit' (noindex)
  */
-const STATIC_ROUTES = ['faq', 'projects', 'websites', 'guides', 'about', 'members']
+const STATIC_ROUTES = ['projects', 'websites', 'guides', 'about', 'members']
 
 /**
  * Stable build date used for static route lastModified instead of calling new Date() per entry
@@ -57,9 +50,6 @@ function getContentPages(dir: string, baseDir = ''): string[] {
       } else if (item.endsWith('.mdx') && !item.startsWith('_')) {
         // Remove .mdx extension and index becomes empty string
         let pagePath = item === 'index.mdx' ? baseDir : join(baseDir, item.replace('.mdx', ''))
-
-        // Check if this path should be overridden
-        pagePath = URL_OVERRIDES[pagePath] || pagePath
 
         pages.push(pagePath)
       }

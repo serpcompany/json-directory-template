@@ -1,5 +1,3 @@
-'use server'
-
 import { getGuides, getWebsites } from '@/lib/content-loader'
 import { getFeaturedProjects, getRecentlyUpdatedProjects } from '@/lib/project-utils'
 

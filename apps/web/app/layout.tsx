@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ReactElement, ReactNode } from 'react'
 import '../../../packages/design-system/styles/globals.css'
 import { fonts } from '@thedaviddias/design-system/lib/fonts'
 import { DesignSystemProvider } from '@thedaviddias/design-system/theme-provider'
@@ -11,6 +11,7 @@ import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
 import { BackToTop } from '@/components/ui/back-to-top'
 import { FavoritesProvider } from '@/contexts/favorites-context'
+import { getHeaderAuthState } from '@/lib/auth'
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from '@/lib/seo/seo-config'
 
 export const metadata: import('next').Metadata = {
@@ -26,8 +27,9 @@ type RootLayoutProps = {
   children: ReactNode
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps): Promise<ReactElement> {
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID
+  const authState = await getHeaderAuthState()
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -46,7 +48,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <FavoritesProvider>
             <AnalyticsTracker />
             <div className="flex min-h-screen flex-col">
-              <Header />
+              <Header authState={authState} />
               <main className="flex flex-1 flex-col">{children}</main>
               <Footer />
             </div>

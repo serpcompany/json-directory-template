@@ -37,10 +37,10 @@ export function WebsiteCliSection({ website }: WebsiteCliSectionProps) {
           </div>
           <div>
             <h2 className="text-xl font-bold text-pretty scroll-mt-20" id="install">
-              Install into your AI coding agent
+              CLI Install Command
             </h2>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Add this documentation directly to your development environment
+              Add this documentation source directly to your environment
             </p>
           </div>
         </div>

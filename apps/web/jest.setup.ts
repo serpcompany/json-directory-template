@@ -175,18 +175,6 @@ jest.mock('@thedaviddias/observability', () => ({
   withScope: jest.fn()
 }))
 
-// Mock @thedaviddias/auth
-jest.mock('@thedaviddias/auth', () => ({
-  auth: jest.fn().mockResolvedValue(null),
-  AuthProviderComponent: ({ children }: { children: React.ReactNode }) => children,
-  useAuth: () => ({
-    user: null,
-    isLoading: false,
-    signIn: jest.fn(),
-    signOut: jest.fn()
-  })
-}))
-
 // Mock @clerk/backend to avoid ESM issues
 jest.mock('@clerk/backend', () => ({
   createClerkClient: jest.fn(() => ({

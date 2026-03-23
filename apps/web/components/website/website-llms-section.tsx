@@ -23,10 +23,10 @@ export function WebsiteLLMsSection({ website }: WebsiteLLMsSectionProps) {
           </div>
           <div>
             <h2 className="text-xl font-bold text-pretty scroll-mt-20" id="documentation">
-              AI Documentation Files
+              Documentation Links
             </h2>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Access the llms.txt files for this website
+              Open the published llms.txt files for this entry
             </p>
           </div>
         </div>

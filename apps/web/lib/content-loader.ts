@@ -1,9 +1,17 @@
+import {
+  normalizeJsonWebsite,
+  parseJsonWebsiteEntries,
+  type WebsiteJsonEntry,
+  type WebsitePriority
+} from './website-schema'
+
 // Import content-collections with fallback for CI
 let allGuides: any[] = []
 let allLegals: any[] = []
 let allResources: any[] = []
 let allWebsites: any[] = []
 let allDocs: any[] = []
+let allAboutPages: any[] = []
 let allJsonWebsites: any[] = []
 
 try {
@@ -13,6 +21,7 @@ try {
   allResources = collections.allResources || []
   allWebsites = collections.allWebsites || []
   allDocs = collections.allDocs || []
+  allAboutPages = collections.allAboutPages || []
 } catch {
   // Fallback for CI/build environments where content-collections hasn't been generated yet
   // Only warn if not in test environment
@@ -32,6 +41,7 @@ const collectionLegals = allLegals
 const collectionResources = allResources
 const collectionWebsites = allWebsites
 const collectionDocs = allDocs
+const collectionAboutPages = allAboutPages
 
 // Define types compatible with content-collections schema
 interface Website {
@@ -44,7 +54,7 @@ interface Website {
   category: string
   publishedAt: string
   isUnofficial?: boolean
-  priority?: 'high' | 'medium' | 'low'
+  priority?: WebsitePriority
   featured?: boolean
   content?: string
   relatedWebsites?: WebsiteMetadata[]
@@ -101,6 +111,38 @@ interface Legal {
   _meta?: ContentMeta
 }
 
+interface AboutPage {
+  slug: string
+  title: string
+  description: string
+  metaTitle: string
+  metaDescription: string
+  keywords: string[]
+  introTitle: string
+  introBody: string
+  whatIsTitle: string
+  whatIsBody: string
+  missionTitle: string
+  missionIntro: string
+  missionItems: string[]
+  stepsTitle: string
+  steps: Array<{
+    icon: 'file-text' | 'code' | 'zap'
+    title: string
+    body: string
+  }>
+  communityTitle: string
+  communityBody: string
+  primaryCtaLabel: string
+  secondaryCtaLabel: string
+  contactTitle: string
+  contactBody: string
+  contactEmail: string
+  published: boolean
+  content?: string
+  _meta?: ContentMeta
+}
+
 /**
  * Interface for the _meta property found in content-collections items
  */
@@ -127,7 +169,7 @@ export interface WebsiteMetadata {
   publishedAt: string
   isUnofficial?: boolean
   featured?: boolean
-  priority?: 'high' | 'medium' | 'low'
+  priority?: WebsitePriority
   content?: string
   relatedWebsites?: WebsiteMetadata[]
   previousWebsite?: WebsiteMetadata | null
@@ -161,54 +203,35 @@ export interface DocMetadata {
   content?: string
 }
 
-interface JsonWebsiteEntry {
-  category: string
+export interface AboutPageMetadata {
+  slug: string
+  title: string
   description: string
-  featured?: boolean
-  llmsFullUrl?: string
-  llmsTxtUrl?: string
-  llmsUrl?: string
-  name: string
-  publishedAt: string
-  slug?: string
-  website?: string
-  domain?: string
-}
-
-function normalizeJsonCategory(category: string): string {
-  if (category === 'integration-automation') {
-    return 'automation-workflow'
-  }
-
-  return category
-}
-
-function sanitizeWebsiteDescription(description: string): string {
-  return description.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-}
-
-function mapJsonWebsite(website: JsonWebsiteEntry): WebsiteMetadata {
-  const websiteUrl = website.website || website.domain || ''
-  const llmsUrl = website.llmsUrl || website.llmsTxtUrl || ''
-  const slug =
-    website.slug ||
-    website.name
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/--+/g, '-')
-
-  return {
-    category: normalizeJsonCategory(website.category),
-    description: sanitizeWebsiteDescription(website.description),
-    featured: website.featured,
-    llmsFullUrl: website.llmsFullUrl || null,
-    llmsUrl,
-    name: website.name,
-    publishedAt: website.publishedAt,
-    slug,
-    website: websiteUrl
-  }
+  metaTitle: string
+  metaDescription: string
+  keywords: string[]
+  introTitle: string
+  introBody: string
+  whatIsTitle: string
+  whatIsBody: string
+  missionTitle: string
+  missionIntro: string
+  missionItems: string[]
+  stepsTitle: string
+  steps: Array<{
+    icon: 'file-text' | 'code' | 'zap'
+    title: string
+    body: string
+  }>
+  communityTitle: string
+  communityBody: string
+  primaryCtaLabel: string
+  secondaryCtaLabel: string
+  contactTitle: string
+  contactBody: string
+  contactEmail: string
+  published: boolean
+  content?: string
 }
 
 /**
@@ -218,7 +241,9 @@ function mapJsonWebsite(website: JsonWebsiteEntry): WebsiteMetadata {
  */
 export function getWebsites(): WebsiteMetadata[] {
   if (Array.isArray(allJsonWebsites) && allJsonWebsites.length > 0) {
-    return allJsonWebsites.map(mapJsonWebsite).sort((a, b) => {
+    const parsedJsonWebsites = parseJsonWebsiteEntries(allJsonWebsites)
+
+    return parsedJsonWebsites.map(normalizeJsonWebsite).sort((a, b) => {
       return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     })
   }
@@ -457,5 +482,47 @@ export async function getDocBySlug(slug: string): Promise<DocMetadata | null> {
     order: doc.order ?? 0,
     published: doc.published !== false,
     content
+  }
+}
+
+/**
+ * Get the about page content
+ *
+ * @returns About page metadata with structured content, or null if not found
+ */
+export async function getAboutPage(): Promise<AboutPageMetadata | null> {
+  const aboutPage = collectionAboutPages.find(
+    (page: AboutPage) => page.slug === 'about' && page.published
+  )
+
+  if (!aboutPage) {
+    return null
+  }
+
+  return {
+    slug: aboutPage.slug || 'about',
+    title: aboutPage.title || 'About',
+    description: aboutPage.description || '',
+    metaTitle: aboutPage.metaTitle || aboutPage.title || 'About',
+    metaDescription: aboutPage.metaDescription || aboutPage.description || '',
+    keywords: aboutPage.keywords || [],
+    introTitle: aboutPage.introTitle || aboutPage.title || 'About',
+    introBody: aboutPage.introBody || '',
+    whatIsTitle: aboutPage.whatIsTitle || '',
+    whatIsBody: aboutPage.whatIsBody || '',
+    missionTitle: aboutPage.missionTitle || '',
+    missionIntro: aboutPage.missionIntro || '',
+    missionItems: aboutPage.missionItems || [],
+    stepsTitle: aboutPage.stepsTitle || '',
+    steps: aboutPage.steps || [],
+    communityTitle: aboutPage.communityTitle || '',
+    communityBody: aboutPage.communityBody || '',
+    primaryCtaLabel: aboutPage.primaryCtaLabel || 'Learn More',
+    secondaryCtaLabel: aboutPage.secondaryCtaLabel || 'Browse',
+    contactTitle: aboutPage.contactTitle || '',
+    contactBody: aboutPage.contactBody || '',
+    contactEmail: aboutPage.contactEmail || '',
+    published: aboutPage.published !== false,
+    content: aboutPage.content || aboutPage._meta?.content || ''
   }
 }

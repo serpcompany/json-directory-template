@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - 'data/websites.json'
+      - 'tmp/serpdownloaders.com/products.json'
+      - 'apps/web/**'
+      - 'scripts/**'
+      - '.github/workflows/build-and-deploy.yml'
   workflow_dispatch:
     inputs:
       deploy_repo:
@@ -14,6 +18,10 @@ on:
         description: 'Deploy target branch'
         required: false
         default: 'main'
+      trial_source_json:
+        description: 'Optional source JSON to transform into data/websites.json before build'
+        required: false
+        default: 'tmp/serpdownloaders.com/products.json'
 
 concurrency:
   group: build-deploy-${{ github.ref }}
@@ -22,10 +30,18 @@ concurrency:
 jobs:
   validate:
     name: Validate Data
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/install
+
+      - name: Build trial data
+        env:
+          TRIAL_SOURCE_JSON: ${{ github.event.inputs.trial_source_json || vars.TRIAL_SOURCE_JSON || 'tmp/serpdownloaders.com/products.json' }}
+        run: |
+          if [ -n "$TRIAL_SOURCE_JSON" ] && [ -f "$TRIAL_SOURCE_JSON" ]; then
+            pnpm tsx scripts/trial-build.ts "$TRIAL_SOURCE_JSON" data/websites.json
+          fi
 
       - name: Validate websites.json
         run: pnpm tsx scripts/validate-data.ts data/websites.json
@@ -33,30 +49,36 @@ jobs:
   build:
     name: Build
     needs: validate
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/install
 
-      - name: Build
-        run: pnpm build
+      - name: Build static Pages site
+        env:
+          TRIAL_SOURCE_JSON: ${{ github.event.inputs.trial_source_json || vars.TRIAL_SOURCE_JSON || 'tmp/serpdownloaders.com/products.json' }}
+          SITE_NAME: ${{ vars.SITE_NAME || 'SERP Downloaders' }}
+          SITE_DOMAIN: ${{ vars.SITE_DOMAIN || 'serpdownloaders.com' }}
+          SITE_DESCRIPTION: ${{ vars.SITE_DESCRIPTION || 'Directory of download-focused browser tools.' }}
+          SITE_TAGLINE: ${{ vars.SITE_TAGLINE || 'Download-focused product directory' }}
+          SITE_GITHUB_URL: ${{ vars.SITE_GITHUB_URL || 'https://github.com/serpcompany' }}
+          SITE_GITHUB_REPO_URL: ${{ vars.SITE_GITHUB_REPO_URL || 'https://github.com/serpcompany/json-directory-template' }}
+          SITE_GITHUB_ISSUE_OWNER: ${{ vars.SITE_GITHUB_ISSUE_OWNER || 'serpcompany' }}
+          SITE_GITHUB_ISSUE_REPO: ${{ vars.SITE_GITHUB_ISSUE_REPO || 'json-directory-template' }}
+          SITE_GITHUB_ISSUES_URL: ${{ vars.SITE_GITHUB_ISSUES_URL || 'https://github.com/serpcompany/json-directory-template/issues/new/choose' }}
+        run: pnpm build:pages
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-output
-          path: |
-            apps/web/.next/
-            apps/web/package.json
-            apps/web/next.config.ts
-            apps/web/public/
-            data/websites.json
+          path: apps/web/out/
           retention-days: 1
 
   deploy:
     name: Deploy to Repo
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     if: vars.DEPLOY_REPO_URL != '' || github.event.inputs.deploy_repo != ''
     steps:
       - uses: actions/checkout@v6
@@ -67,11 +89,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-output
-          path: .
+          path: apps/web/out
 
       - name: Deploy
         env:
           DEPLOY_REPO_URL: ${{ github.event.inputs.deploy_repo || vars.DEPLOY_REPO_URL }}
           DEPLOY_BRANCH: ${{ github.event.inputs.deploy_branch || vars.DEPLOY_BRANCH || 'main' }}
           DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+          DEPLOY_BUILD_DIR: ${{ github.workspace }}/apps/web/out
         run: bash scripts/deploy-to-repo.sh "$DEPLOY_REPO_URL" "$DEPLOY_BRANCH"

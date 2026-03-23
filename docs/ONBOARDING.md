@@ -1,0 +1,5 @@
+- site-wide brand/content settings -> apps/web/lib/site-config.ts
+- individual entries/items -> data/websites.json
+- category
+- content
+- slug

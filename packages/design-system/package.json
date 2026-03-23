@@ -74,7 +74,6 @@
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tailwindcss/typography": "^0.5.19",
-    "@thedaviddias/auth": "workspace:*",
     "@thedaviddias/observability": "workspace:*",
     "@vercel/toolbar": "catalog:",
     "class-variance-authority": "^0.7.1",
@@ -99,7 +98,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@thedaviddias/analytics": "workspace:*",
     "@thedaviddias/config-typescript": "workspace:*",
     "@thedaviddias/utils": "workspace:*",
     "@types/node": "catalog:",

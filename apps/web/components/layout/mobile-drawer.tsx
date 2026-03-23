@@ -5,12 +5,15 @@ import { ExternalLink, Home as HomeIcon, Trophy, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
+import { SignOutButton } from '@/components/auth/sign-out-button'
 import { FavoritesLink } from '@/components/ui/favorites-link'
+import type { HeaderAuthState } from '@/lib/auth'
 import { categories } from '@/lib/categories'
 import { getRoute } from '@/lib/routes'
 import { tools } from '@/lib/tools'
 
 interface MobileDrawerProps {
+  authState?: HeaderAuthState
   isOpen: boolean
   onClose: () => void
   featuredCount?: number
@@ -19,8 +22,15 @@ interface MobileDrawerProps {
 /**
  * Mobile navigation drawer component
  */
-export function MobileDrawer({ isOpen, onClose, featuredCount }: MobileDrawerProps) {
+export function MobileDrawer({
+  authState,
+  isOpen,
+  onClose,
+  featuredCount
+}: MobileDrawerProps) {
   const pathname = usePathname()
+  const isAuthenticated = authState?.isAuthenticated ?? false
+  const isAuthConfigured = authState?.isConfigured ?? true
 
   // Close drawer when route changes
   useEffect(() => {
@@ -109,6 +119,21 @@ export function MobileDrawer({ isOpen, onClose, featuredCount }: MobileDrawerPro
           <div>
             <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Navigation</h3>
             <nav className="space-y-1">
+              {isAuthenticated ? (
+                <Link
+                  href={getRoute('account')}
+                  className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                >
+                  Account
+                </Link>
+              ) : isAuthConfigured ? (
+                <Link
+                  href={getRoute('login')}
+                  className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                >
+                  Sign up / Sign in
+                </Link>
+              ) : null}
               <Link
                 href={getRoute('projects')}
                 className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
@@ -139,6 +164,9 @@ export function MobileDrawer({ isOpen, onClose, featuredCount }: MobileDrawerPro
               >
                 News
               </Link> */}
+              {isAuthenticated ? (
+                <SignOutButton className="w-full justify-start rounded-md px-2 py-1.5 text-sm font-normal" />
+              ) : null}
             </nav>
           </div>
 

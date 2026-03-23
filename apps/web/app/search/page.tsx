@@ -8,47 +8,21 @@ import { getRoute } from '@/lib/routes'
 import { SITE_NAME, generateBaseMetadata } from '@/lib/seo/seo-config'
 import { tools } from '@/lib/tools'
 
-export const dynamic = 'force-dynamic'
-
 /**
- * Generate dynamic metadata for the search page based on search parameters
- * @param searchParams - Object containing search query parameters
- * @param searchParams.q - The search query string
+ * Generate metadata for the static search shell.
  * @returns Promise resolving to Next.js Metadata object
  */
-export async function generateMetadata({
-  searchParams
-}: {
-  searchParams: Promise<{ q?: string }>
-}): Promise<Metadata> {
-  const { q } = await searchParams
-
-  const query = q || ''
-  const shouldNoIndex = !!query // Don't index search results to avoid duplicate content
-
-  const title = query ? `Search Results for "${query}"` : 'Search'
-  const description = query
-    ? `Search results for "${query}" in ${SITE_NAME}.`
-    : `Search for AI-ready websites and tools in ${SITE_NAME}.`
-
+export async function generateMetadata(): Promise<Metadata> {
   return generateBaseMetadata({
-    title,
-    description,
+    title: 'Search',
+    description: `Search for AI-ready websites and tools in ${SITE_NAME}.`,
     path: '/search',
     keywords: ['search', 'find', 'llms.txt', 'AI tools', 'documentation'],
-    noindex: shouldNoIndex
+    noindex: true
   })
 }
 
-export default async function SearchPage({
-  searchParams
-}: {
-  searchParams: Promise<{ q?: string }>
-}) {
-  const { q } = await searchParams
-
-  const query = q || ''
-
+export default function SearchPage() {
   return (
     <div className="border-t">
       <div className="relative flex h-full w-full max-w-full flex-row flex-nowrap">
@@ -106,14 +80,8 @@ export default async function SearchPage({
         <div className="relative flex h-full w-full flex-col gap-3 px-6 pt-6">
           <section className="space-y-6">
             <div className="sticky top-16 z-35 bg-background border-b py-4 -mx-6 px-6">
-              <h1 className="text-2xl font-bold">
-                {query ? `Search Results for "${query}"` : 'Search'}
-              </h1>
-              {query && (
-                <p className="text-muted-foreground mt-1">
-                  Searching across all websites and tools
-                </p>
-              )}
+              <h1 className="text-2xl font-bold">Search</h1>
+              <p className="text-muted-foreground mt-1">Searching across all websites and tools</p>
             </div>
 
             <Suspense

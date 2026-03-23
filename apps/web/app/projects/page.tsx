@@ -34,9 +34,9 @@ const GITHUB_RESOURCES = [
 ] as const
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: 'Open Source Projects',
+  title: 'Our Brands',
   description:
-    'Browse GitHub topics and starter resources for open-source projects implementing the llms.txt standard.',
+    '',
   path: '/projects',
   keywords: ['open source', 'GitHub projects', 'llms.txt tools', 'libraries', 'implementations']
 })

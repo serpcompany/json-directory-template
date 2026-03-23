@@ -6,25 +6,25 @@ import { CreatorProjectsSection } from '@/components/sections/creator-projects-s
 import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section'
 import { FeaturedProjectsSection } from '@/components/sections/featured-projects-section'
 import { HeroSection } from '@/components/sections/hero-section'
-import { HowItWorksSection } from '@/components/sections/how-it-works-section'
 import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { RecentlyAddedSection } from '@/components/sections/recently-added-section'
 import { ToolsSection } from '@/components/sections/tools-section'
 import { StaticWebsitesList } from '@/components/static-websites-list'
 import { generateBaseMetadata, generateWebsiteSchema, KEYWORDS } from '@/lib/seo/seo-config'
+import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: 'Directory of AI-Ready Documentation & llms.txt Examples',
+  title: `${siteConfig.name} Directory of Websites, Tools, and Resources`,
   description:
-    'Discover 500+ websites implementing the llms.txt standard. Browse real llms.txt examples, learn the specification, and find AI-ready documentation for APIs, platforms, and developer tools.',
+    `${siteConfig.tagline}. Browse curated websites, tools, and documentation links in one searchable directory.`,
   keywords: [
     ...KEYWORDS.homepage,
     ...KEYWORDS.global,
-    'llms.txt directory',
-    'llms.txt examples',
-    'llms.txt standard',
-    'llms.txt file',
-    'llms.txt specification'
+    'website directory',
+    'curated tools',
+    'documentation links',
+    'resource directory',
+    'searchable directory'
   ],
   path: '/'
 })
@@ -68,7 +68,6 @@ export default async function Home() {
 
             <ToolsSection />
             <FeaturedGuidesSection guides={featuredGuides} />
-            <HowItWorksSection />
             <CreatorProjectsSection />
             <NewsletterSection />
           </div>

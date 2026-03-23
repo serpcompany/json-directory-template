@@ -2,6 +2,7 @@ import { withContentCollections } from '@content-collections/next'
 import withMDX from '@next/mdx'
 import { baseConfig, withAnalyzer } from '@thedaviddias/config-next'
 import type { NextConfig } from 'next'
+import { isStaticExportBuild } from './lib/runtime-mode'
 
 export const INTERNAL_PACKAGES = [
   '@thedaviddias/design-system',
@@ -46,6 +47,7 @@ let nextConfig: NextConfig = {
   },
 
   images: {
+    unoptimized: isStaticExportBuild(),
     remotePatterns: [
       {
         protocol: 'https',
@@ -84,6 +86,14 @@ let nextConfig: NextConfig = {
         permanent: true
       }
     ]
+  }
+}
+
+if (isStaticExportBuild()) {
+  nextConfig = {
+    ...nextConfig,
+    output: 'export',
+    trailingSlash: true
   }
 }
 

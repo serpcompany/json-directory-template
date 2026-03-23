@@ -36,7 +36,7 @@ apps/e2e/
 ## 🧪 Test Categories
 
 ### 1. **Page Tests** (`pages.spec.ts`)
-- **Main Pages**: Homepage, About, Guides, Websites, Members, Projects, FAQ, News
+- **Main Pages**: Homepage, About, Guides, Websites, Members, Projects, News
 - **Category Pages**: Developer Tools, Featured categories
 - **Search Functionality**: Search page with query parameters  
 - **Legal Pages**: Privacy, Terms, Cookies

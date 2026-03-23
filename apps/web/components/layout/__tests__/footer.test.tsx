@@ -32,8 +32,15 @@ describe('Footer', () => {
     expect(screen.getByRole('link', { name: 'Projects' })).toHaveAttribute('href', '/projects')
     expect(screen.getByRole('link', { name: 'Submit' })).toHaveAttribute('href', '/submit')
     expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about')
-    expect(screen.getByRole('link', { name: 'Privacy' })).toHaveAttribute('href', '/privacy')
-    expect(screen.getByRole('link', { name: 'Terms' })).toHaveAttribute('href', '/terms')
-    expect(screen.getByRole('link', { name: 'Cookies' })).toHaveAttribute('href', '/cookies')
+    expect(screen.queryByRole('link', { name: 'FAQ' })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Privacy' })).toHaveAttribute(
+      'href',
+      '/legal/privacy'
+    )
+    expect(screen.getByRole('link', { name: 'Terms' })).toHaveAttribute('href', '/legal/terms')
+    expect(screen.getByRole('link', { name: 'Cookies' })).toHaveAttribute(
+      'href',
+      '/legal/cookies'
+    )
   })
 })

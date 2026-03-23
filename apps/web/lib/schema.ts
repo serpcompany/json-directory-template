@@ -54,18 +54,6 @@ export interface GuideSchema extends SchemaOrg {
   timeRequired: string
 }
 
-export interface FAQPageSchema extends SchemaOrg {
-  '@type': 'FAQPage'
-  mainEntity: Array<{
-    '@type': 'Question'
-    name: string
-    acceptedAnswer: {
-      '@type': 'Answer'
-      text: string
-    }
-  }>
-}
-
 /**
  * Generates schema.org structured data for a website
  *
@@ -301,28 +289,5 @@ export function generateGuideSchema(guide: GuideMetadata): GuideSchema {
     articleSection: guide.category,
     timeRequired: `PT${Math.ceil(guide.readingTime || 5)}M`,
     difficulty: guide.difficulty
-  }
-}
-
-/**
- * Generates schema.org structured data for FAQ page
- *
- * @param items - Array of FAQ items with questions and answers
- * @returns Schema.org FAQPage structured data
- */
-export function generateFAQSchema(
-  items: Array<{ question: string; answer: string }>
-): FAQPageSchema {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: items.map(item => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.answer
-      }
-    }))
   }
 }

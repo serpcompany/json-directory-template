@@ -17,6 +17,7 @@ export const routes = {
     page: '/[category]'
   },
   about: '/about',
+  account: '/account',
   favorites: '/favorites',
   docs: {
     list: '/docs',
@@ -26,19 +27,20 @@ export const routes = {
     list: '/guides',
     guide: '/guides/[slug]'
   },
-  faq: '/faq',
   news: '/news',
-  privacy: '/privacy',
-  cookies: '/cookies',
+  privacy: '/legal/privacy',
+  cookies: '/legal/cookies',
   projects: '/projects',
   search: '/search',
+  login: '/login',
   submit: '/submit',
-  terms: '/terms',
+  terms: '/legal/terms',
   rss: '/rss.xml'
 } as const
 
 type StaticRoutes =
   | 'home'
+  | 'account'
   | 'llmsTxt'
   | 'website.list'
   | 'website.featured'
@@ -47,10 +49,10 @@ type StaticRoutes =
   | 'docs.list'
   | 'favorites'
   | 'guides.list'
-  | 'faq'
   | 'news'
   | 'privacy'
   | 'cookies'
+  | 'login'
   | 'projects'
   | 'search'
   | 'submit'

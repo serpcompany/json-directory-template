@@ -6,6 +6,7 @@ const guidesPath = '../../packages/content/data/guides'
 const resourcesPath = '../../packages/content/data/resources'
 const legalPath = '../../packages/content/data/legal'
 const docsPath = '../../packages/content/data/docs'
+const aboutPath = '../../packages/content/data/about'
 const extensionUpdatesPath = '../../packages/content/data/extension-updates'
 
 const websites = defineCollection({
@@ -120,6 +121,48 @@ const docs = defineCollection({
   })
 })
 
+const aboutPages = defineCollection({
+  name: 'AboutPage',
+  directory: aboutPath,
+  include: '**/*.mdx',
+  schema: z => ({
+    title: z.string(),
+    description: z.string(),
+    metaTitle: z.string(),
+    metaDescription: z.string(),
+    keywords: z.array(z.string()).default([]),
+    introTitle: z.string(),
+    introBody: z.string(),
+    whatIsTitle: z.string(),
+    whatIsBody: z.string(),
+    missionTitle: z.string(),
+    missionIntro: z.string(),
+    missionItems: z.array(z.string()).default([]),
+    stepsTitle: z.string(),
+    steps: z
+      .array(
+        z.object({
+          icon: z.enum(['file-text', 'code', 'zap']),
+          title: z.string(),
+          body: z.string()
+        })
+      )
+      .default([]),
+    communityTitle: z.string(),
+    communityBody: z.string(),
+    primaryCtaLabel: z.string(),
+    secondaryCtaLabel: z.string(),
+    contactTitle: z.string(),
+    contactBody: z.string(),
+    contactEmail: z.string().email(),
+    published: z.boolean().default(true)
+  }),
+  transform: document => ({
+    ...document,
+    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, '')
+  })
+})
+
 const extensionUpdates = defineCollection({
   name: 'ExtensionUpdate',
   directory: extensionUpdatesPath,
@@ -139,5 +182,5 @@ const extensionUpdates = defineCollection({
 })
 
 export default defineConfig({
-  collections: [websites, guides, resources, legal, docs, extensionUpdates]
+  collections: [websites, guides, resources, legal, docs, aboutPages, extensionUpdates]
 })

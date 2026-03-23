@@ -75,8 +75,8 @@ test.describe('Navigation Interactions', () => {
       const privacyLink = page.getByRole('link', { name: /privacy/i })
       if (await privacyLink.isVisible()) {
         await privacyLink.click()
-        await page.waitForURL('**/privacy')
-        await expect(page).toHaveURL(/\/privacy/)
+        await page.waitForURL('**/legal/privacy')
+        await expect(page).toHaveURL(/\/legal\/privacy/)
       }
     }
   })

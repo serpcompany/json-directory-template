@@ -2,9 +2,11 @@
 import { Menu, Plus, Search } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
+import { SignOutButton } from '@/components/auth/sign-out-button'
 import { useAnalyticsEvents } from '@/components/analytics-tracker'
 import { GithubStars } from '@/components/stats/github-stars'
 import { useSearch } from '@/hooks/use-search'
+import type { HeaderAuthState } from '@/lib/auth'
 import { getRoute } from '@/lib/routes'
 import { siteConfig } from '@/lib/site-config'
 import { NavLink } from './header-nav-link'
@@ -16,13 +18,15 @@ import { MobileDrawer } from './mobile-drawer'
  *
  * @returns JSX.Element - Header component
  */
-export function Header() {
+export function Header({ authState }: { authState?: HeaderAuthState }) {
   const [showMobileSearch, setShowMobileSearch] = useState(false)
   const [showMobileDrawer, setShowMobileDrawer] = useState(false)
   const [showAutocomplete, setShowAutocomplete] = useState(false)
   const [showMobileAutocomplete, setShowMobileAutocomplete] = useState(false)
   const { searchQuery, setSearchQuery, handleSearch } = useSearch()
   const { trackSearch } = useAnalyticsEvents()
+  const isAuthenticated = authState?.isAuthenticated ?? false
+  const isAuthConfigured = authState?.isConfigured ?? true
 
   // Auto-focus mobile search input when it appears and handle escape key
   useEffect(() => {
@@ -141,7 +145,6 @@ export function Header() {
               <NavLink href={getRoute('projects')}>Projects</NavLink>
               {/* <NavLink href={getRoute('docs.list')}>Docs</NavLink> */}
               <NavLink href={getRoute('guides.list')}>Guides</NavLink>
-              <NavLink href={getRoute('submit')}>Submit</NavLink>
               {/* <NavLink href={getRoute('news')}>News</NavLink> */}
             </nav>
 
@@ -168,6 +171,25 @@ export function Header() {
               <Plus className="h-4 w-4 sm:hidden" />
               <span className="hidden sm:inline">Submit</span>
             </Link>
+
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href={getRoute('account')}
+                  className="hidden sm:inline-flex items-center justify-center rounded-none text-sm font-bold h-9 px-4 border border-border hover:bg-accent transition-colors"
+                >
+                  Account
+                </Link>
+                <SignOutButton className="hidden sm:inline-flex rounded-none text-sm font-bold h-9 px-4" />
+              </>
+            ) : isAuthConfigured ? (
+              <Link
+                href={getRoute('login')}
+                className="hidden sm:inline-flex items-center justify-center rounded-none text-sm font-bold h-9 px-4 border border-border hover:bg-accent transition-colors"
+              >
+                Sign up / Sign in
+              </Link>
+            ) : null}
           </div>
         </div>
 
@@ -196,6 +218,7 @@ export function Header() {
         isOpen={showMobileDrawer}
         onClose={() => setShowMobileDrawer(false)}
         featuredCount={6}
+        authState={authState}
       />
     </>
   )

@@ -11,11 +11,14 @@ jest.mock('@/components/ui/animated-background', () => ({
 }))
 
 describe('HeroSection', () => {
-  it('renders the configured site name and tagline', async () => {
+  it('renders the configured site name with generic directory copy', async () => {
     render(await HeroSection())
 
     expect(screen.getByRole('heading', { name: siteConfig.name })).toBeInTheDocument()
     expect(screen.getByText(new RegExp(siteConfig.tagline, 'i'))).toBeInTheDocument()
     expect(screen.getByText('42')).toBeInTheDocument()
+    expect(screen.getByText(/entries in directory/i)).toBeInTheDocument()
+    expect(screen.getByText(/searchable directory/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /submit a website/i })).toBeInTheDocument()
   })
 })

@@ -8,9 +8,9 @@ import { generateGuideSchema } from '@/lib/schema'
 import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: 'llms.txt Guides - How to Create & Implement llms.txt Files',
+  title: '',
   description:
-    'Step-by-step guides on how to create llms.txt files, implement the llms.txt standard, and optimize your documentation for AI. Tutorials for developers and content creators.',
+    '',
   path: '/guides',
   keywords: [
     'how to create llms.txt',

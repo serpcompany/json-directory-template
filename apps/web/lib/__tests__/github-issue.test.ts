@@ -18,7 +18,7 @@ describe('buildSubmissionIssueUrl', () => {
       `/${siteConfig.githubIssueOwner}/${siteConfig.githubIssueRepo}/issues/new`
     )
     expect(parsedUrl.searchParams.get('template')).toBe('submit-website.yml')
-    expect(parsedUrl.searchParams.get('title')).toBe('Submit llms.txt: Example Project')
+    expect(parsedUrl.searchParams.get('title')).toBe('Submit website: Example Project')
 
     const body = parsedUrl.searchParams.get('body')
     expect(body).toContain('## Website details')

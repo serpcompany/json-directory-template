@@ -2,6 +2,8 @@ import { logger } from '@thedaviddias/logging'
 import { NextResponse } from 'next/server'
 import { getResources, getWebsites } from '@/lib/content-loader'
 
+export const dynamic = 'force-static'
+
 /**
  * GET /llms.txt - Generates a text file listing all websites implementing llms.txt
  * @returns Text response with website directory and resources

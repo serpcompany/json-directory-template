@@ -18,6 +18,12 @@ Turn this repo into a simpler directory starter that keeps the current visual de
 - [x] GitHub issue submit/report flows use centralized repo config instead of hardcoded owner/repo strings
 - [x] Hero, search, community, and recently-added UI copy use centralized site name and social values where low-risk
 - [x] Active app TypeScript excludes `_archive` so typecheck/build verify the starter, not parked legacy code
+- [x] Old app-only workspace packages (`analytics`, `auth`, `api-utils`, `caching`, `security`, `flags`) are no longer part of the active build surface
+- [x] First rebrand pass uses neutral directory copy on home, website detail, submit, and favorites without changing routes or data fields
+- [x] Legal pages now live under `/legal/*`, with redirects preserved from `/privacy`, `/terms`, and `/cookies`
+- [x] FAQ page and footer link removed from the active starter surface
+- [x] About page content now lives in a content-backed collection while preserving the existing frontend layout
+- [x] Lightweight GitHub auth now supports sign up / sign in without adding a starter database
 
 ## Archived Product Features
 
@@ -38,6 +44,8 @@ Turn this repo into a simpler directory starter that keeps the current visual de
 - [x] optional `featured`
 - [x] optional `priority`
 - [x] `publishedAt`
+- [x] Formal website entry schema lives at `apps/web/lib/website-schema.ts`
+- [x] JSON website loader validates entries and supports optional long-form `content` for detail pages
 
 ## Verification
 
@@ -45,13 +53,22 @@ Turn this repo into a simpler directory starter that keeps the current visual de
 - [x] `pnpm --filter web typecheck`
 - [x] `pnpm --filter web build`
 - [x] Playwright smoke coverage updated for the static starter routes and flows
+- [x] GitHub auth has targeted Jest coverage for login/header behavior
+- [x] GitHub auth has Playwright smoke coverage for signed-out redirect and auth flow kickoff
+- [x] GitHub Pages static export build works for the serpdownloaders.com POC path
+- [x] Trial data from `tmp/serpdownloaders.com/products.json` can be transformed into `data/websites.json`
 - [x] Docs explain the GitHub issue submit flow and the active JSON data shapes
 - [x] Internal knowledge docs capture the starter site config fields
+- [x] Internal knowledge docs capture one representative page per major active and archived surface for later reference
+- [x] Internal knowledge docs classify those surfaces into keep/rebrand, reference-only, and drop
 - [x] Docs include a rebrand checklist for replacing brand text, assets, links, and legal copy
 - [x] Root `package.json` no longer references missing generator scripts
+- [x] Internal docs explain the current website/detail-page data contract and schema location
+- [x] Internal docs explain why starter GitHub auth uses signed sessions instead of a database
+- [x] Internal docs capture the GitHub Pages static-export constraints for this starter
 
 ## Follow-Up Ideas
 
-- [ ] Add lightweight GitHub auth later if profile attribution becomes important
+- [x] Add lightweight GitHub auth later if profile attribution becomes important
 - [ ] Store public profile overrides in repo data such as `data/users.json`
 - [ ] Add a GitHub issue or PR workflow for user-submitted profile/tool updates

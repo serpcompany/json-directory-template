@@ -9,7 +9,7 @@ jobs:
       contents: read
       issues: write
       pull-requests: write
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     if: github.repository_owner == 'devinschumacher'
     steps:

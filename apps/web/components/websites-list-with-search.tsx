@@ -19,8 +19,8 @@ interface WebsitesListWithSearchProps {
 
 export function WebsitesListWithSearch({
   initialWebsites,
-  emptyTitle = 'No websites found',
-  emptyDescription = 'There are no websites available. Try checking back later or submit a new website.',
+  emptyTitle = 'No entries found',
+  emptyDescription = 'There are no directory entries available. Try checking back later or submit a website.',
   initialShowFavoritesOnly = false,
   totalCount
 }: WebsitesListWithSearchProps) {
@@ -82,7 +82,7 @@ export function WebsitesListWithSearch({
       <EmptyState
         title={emptyTitle}
         description={emptyDescription}
-        actionLabel="Add Your llms.txt"
+        actionLabel="Submit a Website"
         actionHref={getRoute('submit')}
       />
     )
@@ -107,7 +107,7 @@ export function WebsitesListWithSearch({
         searchQuery.trim() ? (
           <EmptyState
             title="No results found"
-            description={`No websites found matching "${searchQuery}". Try a different search term.`}
+            description={`No entries found matching "${searchQuery}". Try a different search term.`}
             actionLabel="Clear Search"
             onAction={() => setSearchQuery('')}
           />
@@ -116,7 +116,7 @@ export function WebsitesListWithSearch({
         )
       ) : (
         <div>
-          <h2 className="mb-6 text-2xl font-semibold sr-only">Websites</h2>
+          <h2 className="mb-6 text-2xl font-semibold sr-only">Directory Entries</h2>
           {searchQuery && (
             <p className="mb-4 text-sm text-muted-foreground">
               Showing {filteredAndSortedWebsites.length} result
@@ -139,10 +139,10 @@ export function WebsitesListWithSearch({
 
           <div className="mt-8 text-center" aria-live="polite">
             <div className="text-sm text-muted-foreground">
-              <p>Showing all {filteredAndSortedWebsites.length} matching websites.</p>
+              <p>Showing all {filteredAndSortedWebsites.length} matching entries.</p>
             </div>
             <p className="mt-3 text-xs text-muted-foreground">
-              Directory size: {totalCount || allWebsites.length} websites
+              Directory size: {totalCount || allWebsites.length} entries
             </p>
           </div>
         </div>

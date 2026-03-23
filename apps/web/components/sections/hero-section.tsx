@@ -27,7 +27,7 @@ export async function HeroSection() {
             <span className="inline-flex items-center rounded-full bg-foreground px-2.5 py-0.5 text-xs font-bold text-background tabular-nums">
               {websiteCount}
             </span>
-            <span className="text-muted-foreground">Websites in directory</span>
+            <span className="text-muted-foreground">Entries in directory</span>
           </Link>
         </div>
 
@@ -43,7 +43,7 @@ export async function HeroSection() {
         {/* Description - stagger 3 */}
         <p className="animate-fade-in-up opacity-0 stagger-3 text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
           <span className="text-foreground font-medium">{siteConfig.tagline}</span> and browse
-          tools implementing the proposed llms.txt standard
+          curated websites, tools, and documentation links in one searchable directory
         </p>
 
         {/* CTA Buttons - stagger 4 */}
@@ -52,7 +52,7 @@ export async function HeroSection() {
             href={getRoute('submit')}
             className="group inline-flex items-center justify-center gap-2 rounded-none text-sm md:text-base font-bold py-3 md:py-4 px-6 md:px-8 bg-foreground text-background transition-all duration-300 hover:bg-foreground/90 hover:gap-3 press-effect"
           >
-            Add Your llms.txt
+            Submit a Website
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <Link

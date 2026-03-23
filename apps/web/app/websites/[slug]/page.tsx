@@ -13,6 +13,7 @@ import { getWebsiteBySlug, getWebsites, type WebsiteMetadata } from '@/lib/conte
 import { getRoute } from '@/lib/routes'
 import { generateWebsiteDetailSchema } from '@/lib/schema'
 import { SITE_NAME, generateDynamicMetadata } from '@/lib/seo/seo-config'
+import { siteConfig } from '@/lib/site-config'
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>
@@ -40,17 +41,17 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
       : null
 
     // Create an SEO-optimized description
-    const seoDescription = `${project.description} Explore ${project.name}'s llms.txt implementation for AI-ready documentation.${categoryFormatted ? ` Category: ${categoryFormatted}.` : ''}`
+    const seoDescription = `${project.description} Explore ${project.name} in the ${siteConfig.name} directory, with documentation links, category details, and related entries.${categoryFormatted ? ` Category: ${categoryFormatted}.` : ''}`
 
     // Generate comprehensive keywords
     const keywords = [
       project.name,
-      `${project.name} llms.txt`,
-      `${project.name} AI documentation`,
+      `${project.name} website`,
+      `${project.name} documentation`,
       project.category,
-      'llms.txt',
-      'AI documentation',
-      'LLM integration',
+      'directory entry',
+      'website directory',
+      'documentation links',
       categoryFormatted
     ].filter(Boolean) as string[]
 
@@ -64,8 +65,8 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     })
   } catch (_error) {
     return {
-      title: `Website | ${SITE_NAME}`,
-      description: 'Website information'
+      title: `Entry | ${SITE_NAME}`,
+      description: 'Directory entry'
     }
   }
 }
@@ -113,7 +114,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     }
 
     const breadcrumbItems = [
-      { name: 'Websites', href: getRoute('website.list') },
+      { name: 'Directory', href: getRoute('website.list') },
       { name: project.name, href: getRoute('website.detail', { slug: project.slug }) }
     ]
 

@@ -84,15 +84,16 @@ export function GitHubIssueSubmitForm() {
   return (
     <div className="space-y-8">
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold">Submit your llms.txt</h1>
+        <h1 className="text-3xl font-bold">Submit a Website</h1>
         <p className="text-muted-foreground">
-          Fill in the basics and we&apos;ll open a prefilled GitHub issue for review. No account is
+          Share the basics and we&apos;ll open a prefilled GitHub issue for review. No account is
           required on this site.
         </p>
       </div>
 
       <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-100">
-        Submissions are reviewed through GitHub issues so the starter can stay static and simple.
+        Submissions are reviewed through GitHub issues so the site can stay simple and easy to
+        host.
       </div>
 
       <form className="space-y-6" onSubmit={handleSubmit}>

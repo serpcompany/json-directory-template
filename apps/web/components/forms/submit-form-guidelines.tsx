@@ -6,23 +6,23 @@
 export function SubmitFormGuidelines() {
   return (
     <div className="mt-12 border-t border-muted pt-12">
-      <h2 className="text-xl font-semibold mb-6">Guidelines & Requirements</h2>
+      <h2 className="text-xl font-semibold mb-6">Submission Tips</h2>
 
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-4">
-          <h3 className="font-medium text-base">What is llms.txt?</h3>
+          <h3 className="font-medium text-base">What reviewers need</h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-start">
               <span className="text-primary mr-2 mt-1">•</span>
-              <span>A standardized file that helps AI assistants understand your project</span>
+              <span>A public llms.txt file that AI assistants can access</span>
             </li>
             <li className="flex items-start">
               <span className="text-primary mr-2 mt-1">•</span>
-              <span>Should be placed at /llms.txt</span>
+              <span>The main website URL for the entry you are submitting</span>
             </li>
             <li className="flex items-start">
               <span className="text-primary mr-2 mt-1">•</span>
-              <span>Contains key information about your project's purpose and structure</span>
+              <span>A short description that explains why the entry belongs in the directory</span>
             </li>
           </ul>
         </div>
@@ -68,7 +68,7 @@ export function SubmitFormGuidelines() {
             />
           </svg>
           <div className="text-sm text-amber-800 dark:text-amber-200">
-            <p className="font-medium mb-1">Need help creating your llms.txt?</p>
+            <p className="font-medium mb-1">Need help publishing llms.txt files?</p>
             <p className="text-amber-700 dark:text-amber-300">
               Check out the{' '}
               <a

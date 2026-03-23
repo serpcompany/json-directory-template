@@ -13,7 +13,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@thedaviddias/auth": "workspace:*",
     "@thedaviddias/config-typescript": "workspace:*",
     "@thedaviddias/logging": "workspace:*",
     "@thedaviddias/utils": "workspace:*",

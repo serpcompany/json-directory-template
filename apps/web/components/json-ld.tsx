@@ -1,4 +1,5 @@
 import { headers } from 'next/headers'
+import { isStaticExportBuild } from '@/lib/runtime-mode'
 
 interface JsonLdProps {
   data: Record<string, any>
@@ -10,7 +11,7 @@ interface JsonLdProps {
  * Escapes `<` as `\u003c` to prevent script tag breakout from content-derived fields.
  */
 export async function JsonLd({ data }: JsonLdProps) {
-  const nonce = (await headers()).get('x-nonce') ?? undefined
+  const nonce = isStaticExportBuild() ? undefined : (await headers()).get('x-nonce') ?? undefined
   const safeJson = JSON.stringify(data).replace(/</g, '\\u003c')
   return (
     <script

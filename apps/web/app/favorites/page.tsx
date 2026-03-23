@@ -11,10 +11,10 @@ import { getGuides } from '@/lib/content-loader'
 import { SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: `Your Favorite Websites - ${SITE_NAME}`,
+  title: `Saved Favorites - ${SITE_NAME}`,
   description:
-    'View and manage your collection of favorite AI-ready websites and tools implementing the llms.txt standard.',
-  keywords: ['favorites', 'saved websites', 'bookmarks', 'llms.txt', 'AI documentation'],
+    'View and manage the websites, tools, and resources you have saved from the directory.',
+  keywords: ['favorites', 'saved websites', 'bookmarks', 'directory entries', 'resources'],
   path: '/favorites'
 })
 
@@ -29,7 +29,7 @@ export default async function FavoritesPage() {
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
           name: `Favorites - ${SITE_NAME}`,
-          description: 'Your personal collection of favorite AI-ready websites',
+          description: 'Your saved directory entries',
           url: `${SITE_PUBLIC_URL}/favorites`
         }}
       />
@@ -50,10 +50,10 @@ export default async function FavoritesPage() {
             <div className="mb-6">
               <div className="flex items-center gap-3 mb-3">
                 <Heart className="h-8 w-8 text-red-500 fill-red-500" />
-                <h1 className="text-3xl font-bold">Your Favorites</h1>
+                <h1 className="text-3xl font-bold">Saved Favorites</h1>
               </div>
               <p className="text-muted-foreground">
-                Your personal collection of favorite AI-ready websites and tools
+                Your saved websites, tools, and resources from the directory
               </p>
             </div>
 

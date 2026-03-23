@@ -19,7 +19,7 @@ export function RecentlyAddedSection({ websites, maxItems = 8 }: RecentlyAddedSe
   return (
     <Section
       title="Recently Added"
-      description={`Discover the latest websites and platforms that have joined ${siteConfig.name}`}
+      description={`See the newest entries added to ${siteConfig.name}`}
     >
       <LLMGrid
         items={recentWebsites}

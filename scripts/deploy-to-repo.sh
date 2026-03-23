@@ -10,6 +10,7 @@ set -euo pipefail
 #   DEPLOY_REPO_URL  — fallback if not passed as $1
 #   DEPLOY_BRANCH    — fallback if not passed as $2 (default: main)
 #   DEPLOY_TOKEN     — optional GitHub token for auth (used in CI)
+#   DEPLOY_BUILD_DIR — optional build artifact directory (default: apps/web/out)
 
 DEPLOY_REPO="${1:-${DEPLOY_REPO_URL:-}}"
 DEPLOY_BRANCH="${2:-${DEPLOY_BRANCH:-main}}"
@@ -22,10 +23,11 @@ if [[ -z "$DEPLOY_REPO" ]]; then
 fi
 
 WORKSPACE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-BUILD_DIR="$WORKSPACE_ROOT/apps/web/.next"
-DEPLOY_TMP="$(mktemp -d)"
+BUILD_DIR="${DEPLOY_BUILD_DIR:-$WORKSPACE_ROOT/apps/web/out}"
+DEPLOY_TMP="$WORKSPACE_ROOT/tmp/deploy/$(date -u '+%Y%m%d-%H%M%S')"
+TARGET_PAGES_WORKFLOW_TEMPLATE="$WORKSPACE_ROOT/scripts/templates/target-pages-deploy.yml"
 
-trap 'rm -rf "$DEPLOY_TMP"' EXIT
+mkdir -p "$DEPLOY_TMP"
 
 echo "==> Checking build output..."
 if [[ ! -d "$BUILD_DIR" ]]; then
@@ -55,35 +57,13 @@ echo "==> Syncing build output..."
 # Clear old content (keep .git)
 find "$DEPLOY_TMP" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
 
-# Copy the standalone build output
-if [[ -d "$BUILD_DIR/standalone" ]]; then
-  # Next.js standalone output mode
-  cp -R "$BUILD_DIR/standalone/." "$DEPLOY_TMP/"
-  # Static assets must be copied separately in standalone mode
-  if [[ -d "$BUILD_DIR/static" ]]; then
-    mkdir -p "$DEPLOY_TMP/.next/static"
-    cp -R "$BUILD_DIR/static/." "$DEPLOY_TMP/.next/static/"
-  fi
-else
-  # Full project copy for standard Next.js deployments (exclude dev cache and bloat)
-  cp -R "$WORKSPACE_ROOT/apps/web/package.json" "$DEPLOY_TMP/"
-  cp -R "$WORKSPACE_ROOT/apps/web/next.config.ts" "$DEPLOY_TMP/" 2>/dev/null || true
-  cp -R "$WORKSPACE_ROOT/apps/web/public" "$DEPLOY_TMP/" 2>/dev/null || true
-  mkdir -p "$DEPLOY_TMP/.next"
-  # Copy only production-relevant build output, skip dev cache and diagnostics
-  for item in "$BUILD_DIR"/*; do
-    basename="$(basename "$item")"
-    case "$basename" in
-      dev|cache|diagnostics) continue ;;
-      *.nft.json) continue ;;
-      *) cp -R "$item" "$DEPLOY_TMP/.next/" ;;
-    esac
-  done
-fi
+cp -R "$BUILD_DIR/." "$DEPLOY_TMP/"
 
-# Copy the data file so the deploy repo has the validated JSON
-mkdir -p "$DEPLOY_TMP/data"
-cp "$WORKSPACE_ROOT/data/websites.json" "$DEPLOY_TMP/data/" 2>/dev/null || true
+if [[ -f "$TARGET_PAGES_WORKFLOW_TEMPLATE" ]]; then
+  echo "==> Installing target GitHub Pages workflow..."
+  mkdir -p "$DEPLOY_TMP/.github/workflows"
+  cp "$TARGET_PAGES_WORKFLOW_TEMPLATE" "$DEPLOY_TMP/.github/workflows/deploy.yml"
+fi
 
 echo "==> Committing and pushing..."
 cd "$DEPLOY_TMP"

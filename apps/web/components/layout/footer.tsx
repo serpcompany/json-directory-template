@@ -79,21 +79,21 @@ export function Footer() {
                     Submit
                   </Link>
                 </li>
-                <li>
-                  <Link href={getRoute('faq')} className="hover:text-foreground">
-                    FAQ
-                  </Link>
-                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-4">
-                Contribute
+                Resources
               </h4>
               <ul className="space-y-2 text-sm">
                 <li>
                   <Link href={getRoute('submit')} className="hover:text-foreground">
-                    Submit Your Site
+                    Advertise
+                  </Link>
+                </li>
+                <li>
+                  <Link href={getRoute('submit')} className="hover:text-foreground">
+                    Brands
                   </Link>
                 </li>
               </ul>

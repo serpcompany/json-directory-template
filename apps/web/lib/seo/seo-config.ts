@@ -272,24 +272,6 @@ export function generateCollectionSchema(options: {
   }
 }
 
-/**
- * Generate FAQ schema
- */
-export function generateFAQSchema(faqs: Array<{ question: string; answer: string }>) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map(faq => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer
-      }
-    }))
-  }
-}
-
 // Additional SEO helpers live in ./seo-helpers.ts to keep this file under the function-count limit.
 // Re-export for consumers that already import from this module.
 export { formatPageTitle, generateAltText, optimizeMetaDescription } from './seo-helpers'

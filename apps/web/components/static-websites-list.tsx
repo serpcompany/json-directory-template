@@ -13,14 +13,14 @@ interface StaticWebsitesListProps {
 export function StaticWebsitesList({ websites, totalCount }: StaticWebsitesListProps) {
   return (
     <Section
-      title="All Websites"
-      description="Browse the complete directory of websites implementing the llms.txt standard. Scroll down to load more websites automatically."
+      title="Browse the Directory"
+      description="Explore the complete directory and search by name, category, or description."
     >
       <WebsitesListWithSearch
         initialWebsites={websites}
         totalCount={totalCount}
-        emptyTitle="No websites found"
-        emptyDescription="There are no websites available. Try checking back later or submit a new website."
+        emptyTitle="No entries found"
+        emptyDescription="There are no directory entries available. Try checking back later or submit a website."
       />
     </Section>
   )

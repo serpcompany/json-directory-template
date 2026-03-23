@@ -64,14 +64,6 @@ test.describe('Main Pages', () => {
     await expect(page.getByRole('link', { name: /submit website/i })).toBeVisible()
   })
 
-  test('faq page should load and display FAQ content', async ({ page }) => {
-    await page.goto('/faq')
-
-    await expect(page).toHaveTitle(/FAQ.*llms\.txt hub/i)
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-    await expect(page.getByRole('main')).toBeVisible()
-  })
-
   test('news page should load and display the news section', async ({ page }) => {
     const response = await page.goto('/news')
 
@@ -193,31 +185,48 @@ test.describe('Search and Navigation', () => {
 
 test.describe('Legal Pages', () => {
   test('privacy policy should load', async ({ page }) => {
-    await page.goto('/privacy')
+    await page.goto('/legal/privacy')
 
-    await expect(page).toHaveTitle(/Privacy.*llms\.txt hub/i)
+    await expect(page).toHaveTitle(/Privacy Policy.*SERP/i)
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page.getByRole('main')).toBeVisible()
   })
 
   test('terms of service should load', async ({ page }) => {
-    await page.goto('/terms')
+    await page.goto('/legal/terms')
 
-    await expect(page).toHaveTitle(/Terms.*llms\.txt hub/i)
+    await expect(page).toHaveTitle(/Terms of Service.*SERP/i)
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page.getByRole('main')).toBeVisible()
   })
 
   test('cookies policy should load', async ({ page }) => {
-    await page.goto('/cookies')
+    await page.goto('/legal/cookies')
 
-    await expect(page).toHaveTitle(/Cookie.*llms\.txt/i)
+    await expect(page).toHaveTitle(/Cookie Policy.*SERP/i)
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page.getByRole('main')).toBeVisible()
+  })
+
+  test('legacy legal routes should redirect to the canonical /legal URLs', async ({ page }) => {
+    await page.goto('/privacy')
+    await expect(page).toHaveURL(/\/legal\/privacy$/)
+
+    await page.goto('/terms')
+    await expect(page).toHaveURL(/\/legal\/terms$/)
+
+    await page.goto('/cookies')
+    await expect(page).toHaveURL(/\/legal\/cookies$/)
   })
 })
 
 test.describe('Error Pages', () => {
+  test('faq route should no longer exist', async ({ page }) => {
+    const response = await page.goto('/faq')
+
+    expect(response?.status()).toBe(404)
+  })
+
   test('404 page should display for non-existent routes', async ({ page }) => {
     const response = await page.goto('/non-existent-page')
 

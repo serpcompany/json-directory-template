@@ -3,6 +3,8 @@ import { SITE_NAME, SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
 
 const baseUrl = SITE_PUBLIC_URL
 
+export const dynamic = 'force-static'
+
 /**
  * Handles GET requests to generate the RSS feed as JSON
  */

@@ -89,9 +89,12 @@ export default defineConfig({
       SENTRY_ORG: process.env.SENTRY_ORG || 'dummy_org',
       SENTRY_PROJECT: process.env.SENTRY_PROJECT || 'dummy_project',
       LOG_LEVEL: process.env.LOG_LEVEL || 'error',
-      // Clerk test keys (if needed for auth testing)
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '',
-      CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY || '',
+      GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID || 'playwright-github-client-id',
+      GITHUB_CLIENT_SECRET:
+        process.env.GITHUB_CLIENT_SECRET || 'playwright-github-client-secret',
+      NEXTAUTH_SECRET:
+        process.env.NEXTAUTH_SECRET || 'playwright-nextauth-secret-playwright-nextauth-secret',
+      NEXTAUTH_URL: process.env.NEXTAUTH_URL || baseUrl,
       // Faster builds
       NEXT_TELEMETRY_DISABLED: '1'
     }

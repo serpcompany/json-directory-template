@@ -41,7 +41,7 @@ export function buildSubmissionIssueUrl(input: SubmissionIssueInput): string {
   )
 
   url.searchParams.set('template', siteConfig.githubIssueTemplate)
-  url.searchParams.set('title', `Submit llms.txt: ${input.name}`)
+  url.searchParams.set('title', `Submit website: ${input.name}`)
   url.searchParams.set('body', buildIssueBody(input))
 
   return url.toString()

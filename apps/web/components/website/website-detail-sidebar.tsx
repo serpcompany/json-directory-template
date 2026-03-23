@@ -28,7 +28,7 @@ export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
           <div>
             <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
               <Download className="size-3" aria-hidden />
-              CLI Registry
+              CLI Slug
             </span>
             <p className="mt-1 text-sm font-mono text-foreground">{cliSlug}</p>
           </div>

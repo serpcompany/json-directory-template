@@ -14,14 +14,14 @@ test.describe('Static starter smoke tests', () => {
   test('kept public pages load successfully', async ({ page }) => {
     const pages = [
       '/',
+      '/login',
       '/about',
       '/guides',
       '/projects',
       '/news',
-      '/faq',
-      '/privacy',
-      '/terms',
-      '/cookies',
+      '/legal/privacy',
+      '/legal/terms',
+      '/legal/cookies',
       '/favorites',
       '/submit'
     ] as const
@@ -104,6 +104,33 @@ test.describe('Static starter smoke tests', () => {
 
     await expect(page).toHaveURL(/\/$/)
     await expect(page.getByRole('heading', { level: 1, name: /llms\.txt hub/i })).toBeVisible()
+  })
+
+  test('account redirects to login when signed out', async ({ page }) => {
+    await page.goto('/account', { waitUntil: 'domcontentloaded' })
+
+    await expect(page).toHaveURL(/\/login\?callbackUrl=%2Faccount/)
+    await expect(page.getByRole('heading', { level: 1, name: /sign up \/ sign in/i })).toBeVisible()
+  })
+
+  test('login page starts the GitHub auth flow', async ({ page }) => {
+    let githubAuthorizeUrl = ''
+
+    await page.route('https://github.com/**', async route => {
+      githubAuthorizeUrl = route.request().url()
+      await route.fulfill({
+        body: '<html><body>stub</body></html>',
+        contentType: 'text/html',
+        status: 200
+      })
+    })
+
+    await page.goto('/login', { waitUntil: 'domcontentloaded' })
+
+    await page.getByRole('button', { name: /continue with github/i }).click()
+
+    await expect(page).toHaveURL(/github\.com\/login\/oauth\/authorize/)
+    await expect.poll(() => githubAuthorizeUrl).toContain('client_id=playwright-github-client-id')
   })
 
   test('homepage works on mobile', async ({ page }) => {

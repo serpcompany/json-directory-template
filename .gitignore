@@ -8,6 +8,7 @@
 
 # next.js
 .next/
+apps/web/out/
 
 # production
 /build
@@ -55,6 +56,7 @@ lychee-out.md
 
 CLAUDE.local.md
 sessions/
+tmp/deploy/
 
 # llms.txt files
 .llms/

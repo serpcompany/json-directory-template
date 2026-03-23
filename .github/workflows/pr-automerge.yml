@@ -12,7 +12,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Collect PR context
         id: context

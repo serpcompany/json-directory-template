@@ -11,7 +11,7 @@ env:
 
 jobs:
   links-checker:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     name: Links Checker
     permissions:
       issues: write

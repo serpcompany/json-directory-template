@@ -20,10 +20,10 @@ export function WebsiteRelatedProjects({ websites }: WebsiteRelatedProjectsProps
   return (
     <section className="animate-fade-in-up opacity-0 stagger-7">
       <Section
-        title="Related Projects"
-        description="Discover similar websites implementing llms.txt"
+        title="Related Entries"
+        description="Discover similar entries in the directory"
         viewAllHref={getRoute('website.list')}
-        viewAllText="Browse all websites"
+        viewAllText="Browse the directory"
         titleId="related-projects"
       >
         <LLMGrid
