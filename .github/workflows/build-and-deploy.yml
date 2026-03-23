@@ -1,0 +1,77 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/websites.json'
+  workflow_dispatch:
+    inputs:
+      deploy_repo:
+        description: 'Deploy target repo (owner/repo)'
+        required: false
+      deploy_branch:
+        description: 'Deploy target branch'
+        required: false
+        default: 'main'
+
+concurrency:
+  group: build-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate Data
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/install
+
+      - name: Validate websites.json
+        run: pnpm tsx scripts/validate-data.ts data/websites.json
+
+  build:
+    name: Build
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/install
+
+      - name: Build
+        run: pnpm build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            apps/web/.next/
+            apps/web/package.json
+            apps/web/next.config.ts
+            apps/web/public/
+            data/websites.json
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Repo
+    needs: build
+    runs-on: ubuntu-latest
+    if: vars.DEPLOY_REPO_URL != '' || github.event.inputs.deploy_repo != ''
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: scripts
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: .
+
+      - name: Deploy
+        env:
+          DEPLOY_REPO_URL: ${{ github.event.inputs.deploy_repo || vars.DEPLOY_REPO_URL }}
+          DEPLOY_BRANCH: ${{ github.event.inputs.deploy_branch || vars.DEPLOY_BRANCH || 'main' }}
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: bash scripts/deploy-to-repo.sh "$DEPLOY_REPO_URL" "$DEPLOY_BRANCH"
