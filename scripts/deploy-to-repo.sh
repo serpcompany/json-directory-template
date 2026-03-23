@@ -65,12 +65,20 @@ if [[ -d "$BUILD_DIR/standalone" ]]; then
     cp -R "$BUILD_DIR/static/." "$DEPLOY_TMP/.next/static/"
   fi
 else
-  # Full project copy for standard Next.js deployments
+  # Full project copy for standard Next.js deployments (exclude dev cache and bloat)
   cp -R "$WORKSPACE_ROOT/apps/web/package.json" "$DEPLOY_TMP/"
   cp -R "$WORKSPACE_ROOT/apps/web/next.config.ts" "$DEPLOY_TMP/" 2>/dev/null || true
   cp -R "$WORKSPACE_ROOT/apps/web/public" "$DEPLOY_TMP/" 2>/dev/null || true
   mkdir -p "$DEPLOY_TMP/.next"
-  cp -R "$BUILD_DIR/." "$DEPLOY_TMP/.next/"
+  # Copy only production-relevant build output, skip dev cache and diagnostics
+  for item in "$BUILD_DIR"/*; do
+    basename="$(basename "$item")"
+    case "$basename" in
+      dev|cache|diagnostics) continue ;;
+      *.nft.json) continue ;;
+      *) cp -R "$item" "$DEPLOY_TMP/.next/" ;;
+    esac
+  done
 fi
 
 # Copy the data file so the deploy repo has the validated JSON
