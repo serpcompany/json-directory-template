@@ -8,7 +8,7 @@ on:
 jobs:
   intake:
     name: Intake
-    if: github.repository_owner == 'devinschumacher' && startsWith(github.event.pull_request.title, 'feat(community):')
+    if: startsWith(github.event.pull_request.title, 'feat(community):')
     permissions:
       contents: read
       issues: write

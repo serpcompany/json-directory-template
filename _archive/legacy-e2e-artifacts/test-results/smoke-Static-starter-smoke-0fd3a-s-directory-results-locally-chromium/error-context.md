@@ -1,0 +1,583 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "SERP" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e8]:
+          - textbox "Search websites, tools, and platforms..." [ref=e9]
+          - button "Search" [ref=e10]:
+            - img [ref=e11]
+        - generic [ref=e14]:
+          - navigation [ref=e15]:
+            - link "Projects" [ref=e16] [cursor=pointer]:
+              - /url: /projects
+            - link "Guides" [ref=e17] [cursor=pointer]:
+              - /url: /guides
+          - link "View the project on GitHub" [ref=e20] [cursor=pointer]:
+            - /url: https://github.com/serpcompany/
+            - img [ref=e21]
+            - img [ref=e23]
+            - generic [ref=e25]: GitHub
+          - link "Submit a website" [ref=e26] [cursor=pointer]:
+            - /url: /submit
+            - generic [ref=e27]: Submit
+          - link "Sign up / Sign in" [ref=e28] [cursor=pointer]:
+            - /url: /login
+    - main [ref=e29]:
+      - generic [ref=e34]:
+        - link "725 Entries in directory" [ref=e36] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e37]: "725"
+          - generic [ref=e38]: Entries in directory
+        - heading "SERP" [level=1] [ref=e39]:
+          - generic [ref=e40]: SERP
+        - paragraph [ref=e41]: Discover AI-Ready Documentation and browse curated websites, tools, and documentation links in one searchable directory
+        - generic [ref=e42]:
+          - link "Submit a Website" [ref=e43] [cursor=pointer]:
+            - /url: /submit
+            - text: Submit a Website
+            - img [ref=e44]
+          - link "Learn More" [ref=e46] [cursor=pointer]:
+            - /url: /about
+      - generic [ref=e48]:
+        - generic [ref=e50]:
+          - heading "Navigation" [level=2] [ref=e51]
+          - generic [ref=e52]:
+            - heading "My Collection" [level=3] [ref=e53]
+            - navigation [ref=e54]:
+              - link "Favorites" [ref=e55] [cursor=pointer]:
+                - /url: /favorites
+                - generic [ref=e56]:
+                  - img [ref=e57]
+                  - generic [ref=e59]: Favorites
+          - generic [ref=e60]:
+            - heading "Categories" [level=3] [ref=e61]
+            - navigation [ref=e62]:
+              - link "All Websites" [ref=e63] [cursor=pointer]:
+                - /url: "#all-websites"
+                - img [ref=e64]
+                - text: All Websites
+              - link "Featured 8" [ref=e67] [cursor=pointer]:
+                - /url: /featured
+                - generic [ref=e68]:
+                  - img [ref=e69]
+                  - text: Featured
+                - generic [ref=e75]: "8"
+              - link "Developer Tools" [ref=e76] [cursor=pointer]:
+                - /url: /developer-tools
+                - img [ref=e77]
+                - text: Developer Tools
+              - link "AI & Machine Learning" [ref=e81] [cursor=pointer]:
+                - /url: /ai-ml
+                - img [ref=e82]
+                - text: AI & Machine Learning
+              - link "Data & Analytics" [ref=e92] [cursor=pointer]:
+                - /url: /data-analytics
+                - img [ref=e93]
+                - text: Data & Analytics
+              - link "Infrastructure & Cloud" [ref=e97] [cursor=pointer]:
+                - /url: /infrastructure-cloud
+                - img [ref=e98]
+                - text: Infrastructure & Cloud
+              - link "Security & Identity" [ref=e101] [cursor=pointer]:
+                - /url: /security-identity
+                - img [ref=e102]
+                - text: Security & Identity
+              - link "Automation & Workflow" [ref=e105] [cursor=pointer]:
+                - /url: /automation-workflow
+                - img [ref=e106]
+                - text: Automation & Workflow
+              - link "Finance & Fintech" [ref=e110] [cursor=pointer]:
+                - /url: /finance-fintech
+                - img [ref=e111]
+                - text: Finance & Fintech
+              - link "Marketing & Sales" [ref=e114] [cursor=pointer]:
+                - /url: /marketing-sales
+                - img [ref=e115]
+                - text: Marketing & Sales
+              - link "E-commerce" [ref=e118] [cursor=pointer]:
+                - /url: /ecommerce-retail
+                - img [ref=e119]
+                - text: E-commerce
+              - link "Content & Media" [ref=e123] [cursor=pointer]:
+                - /url: /content-media
+                - img [ref=e124]
+                - text: Content & Media
+              - link "Business Operations" [ref=e127] [cursor=pointer]:
+                - /url: /business-operations
+                - img [ref=e128]
+                - text: Business Operations
+              - link "Personal" [ref=e131] [cursor=pointer]:
+                - /url: /personal
+                - img [ref=e132]
+                - text: Personal
+              - link "Agency & Services" [ref=e135] [cursor=pointer]:
+                - /url: /agency-services
+                - img [ref=e136]
+                - text: Agency & Services
+              - link "International" [ref=e139] [cursor=pointer]:
+                - /url: /international
+                - img [ref=e140]
+                - text: International
+              - link "Other" [ref=e143] [cursor=pointer]:
+                - /url: /other
+                - img [ref=e144]
+                - text: Other
+          - generic [ref=e148]:
+            - heading "Tools" [level=3] [ref=e149]
+            - navigation [ref=e150]:
+              - link "Chrome Extension" [ref=e151] [cursor=pointer]:
+                - /url: https://chromewebstore.google.com/detail/llmstxt-checker/klcihkijejcgnaiinaehcjbggamippej
+                - generic [ref=e152]:
+                  - img [ref=e153]
+                  - generic [ref=e158]: Chrome Extension
+                - img [ref=e159]
+              - link "VS Code Extension" [ref=e163] [cursor=pointer]:
+                - /url: https://marketplace.visualstudio.com/items?itemName=TheDavidDias.vscode-llms-txt
+                - generic [ref=e164]:
+                  - img [ref=e165]
+                  - generic [ref=e169]: VS Code Extension
+                - img [ref=e170]
+              - link "MCP Explorer" [ref=e174] [cursor=pointer]:
+                - /url: https://github.com/thedaviddias/mcp-llms-txt-explorer
+                - generic [ref=e175]:
+                  - img [ref=e176]
+                  - generic [ref=e180]: MCP Explorer
+                - img [ref=e181]
+              - link "Raycast Extension" [ref=e185] [cursor=pointer]:
+                - /url: https://www.raycast.com/thedaviddias/llms-txt
+                - generic [ref=e186]:
+                  - img [ref=e187]
+                  - generic [ref=e189]: Raycast Extension
+                - img [ref=e190]
+              - link "CLI" [ref=e194] [cursor=pointer]:
+                - /url: https://www.npmjs.com/package/llmstxt-cli
+                - generic [ref=e195]:
+                  - img [ref=e196]
+                  - generic [ref=e198]: CLI
+                - img [ref=e199]
+        - generic [ref=e203]:
+          - generic [ref=e205]:
+            - generic [ref=e206]:
+              - generic [ref=e207]:
+                - heading "Featured Tools & Platforms" [level=2] [ref=e208]: Featured Tools & Platforms
+                - paragraph [ref=e210]: Discover the most popular AI-ready websites and development tools
+              - link "All featured" [ref=e212] [cursor=pointer]:
+                - /url: /featured
+                - generic [ref=e213]: All featured
+                - img [ref=e214]
+            - generic [ref=e216]:
+              - generic [ref=e220]:
+                - generic [ref=e221]:
+                  - img "Alcazar Security favicon" [ref=e222]
+                  - button "Add to favorites" [ref=e223] [cursor=pointer]:
+                    - img [ref=e224]
+                - heading "Alcazar Security" [level=3] [ref=e227]:
+                  - link "Alcazar Security" [ref=e228] [cursor=pointer]:
+                    - /url: /websites/alcazar-sec-llms-txt
+                - paragraph [ref=e229]: Technology-security company building products for personal security, crypto self-custody, and digital legacy.
+              - generic [ref=e233]:
+                - generic [ref=e234]:
+                  - img "LangChain (Python docs) favicon" [ref=e235]
+                  - button "Add to favorites" [ref=e236] [cursor=pointer]:
+                    - img [ref=e237]
+                - heading "LangChain (Python docs)" [level=3] [ref=e240]:
+                  - link "LangChain (Python docs)" [ref=e241] [cursor=pointer]:
+                    - /url: /websites/langchain-python-docs-llms-txt
+                - paragraph [ref=e242]: LangChain is a framework for developing applications powered by large language models (LLMs).
+              - generic [ref=e246]:
+                - generic [ref=e247]:
+                  - img "AI SDK favicon" [ref=e248]
+                  - button "Add to favorites" [ref=e249] [cursor=pointer]:
+                    - img [ref=e250]
+                - heading "AI SDK" [level=3] [ref=e253]:
+                  - link "AI SDK" [ref=e254] [cursor=pointer]:
+                    - /url: /websites/ai-sdk-llms-txt
+                - paragraph [ref=e255]: The AI Toolkit for TypeScript, from the creators of Next.js.
+              - generic [ref=e259]:
+                - generic [ref=e260]:
+                  - img "Docker Docs favicon" [ref=e261]
+                  - button "Add to favorites" [ref=e262] [cursor=pointer]:
+                    - img [ref=e263]
+                - heading "Docker Docs" [level=3] [ref=e266]:
+                  - link "Docker Docs" [ref=e267] [cursor=pointer]:
+                    - /url: /websites/docker-docs-llms-txt
+                - paragraph [ref=e268]: Official Docker library of resources, manuals, and guides to help you containerize applications.
+              - generic [ref=e272]:
+                - generic [ref=e273]:
+                  - img "Cloudflare favicon" [ref=e274]
+                  - button "Add to favorites" [ref=e275] [cursor=pointer]:
+                    - img [ref=e276]
+                - heading "Cloudflare" [level=3] [ref=e279]:
+                  - link "Cloudflare" [ref=e280] [cursor=pointer]:
+                    - /url: /websites/cloudflare-llms-txt
+                - paragraph [ref=e281]: Make employees, applications and networks faster and more secure everywhere,' while reducing complexity and cost.
+              - generic [ref=e285]:
+                - generic [ref=e286]:
+                  - img "Vercel's AI SDK favicon" [ref=e287]
+                  - button "Add to favorites" [ref=e288] [cursor=pointer]:
+                    - img [ref=e289]
+                - heading "Vercel's AI SDK" [level=3] [ref=e292]:
+                  - link "Vercel's AI SDK" [ref=e293] [cursor=pointer]:
+                    - /url: /websites/vercel-ai-sdk-llms-txt
+                - paragraph [ref=e294]: From the creators of Next.js, the AI SDK is a free open-source library that gives you the tools you need to build AI-powered products.
+          - generic [ref=e296]:
+            - generic [ref=e298]:
+              - heading "Recently Added" [level=2] [ref=e299]: Recently Added
+              - paragraph [ref=e301]: See the newest entries added to SERP
+            - generic [ref=e302]:
+              - generic [ref=e306]:
+                - generic [ref=e307]:
+                  - img "LLMGenerator favicon" [ref=e308]
+                  - button "Add to favorites" [ref=e309] [cursor=pointer]:
+                    - img [ref=e310]
+                - heading "LLMGenerator" [level=3] [ref=e313]:
+                  - link "LLMGenerator" [ref=e314] [cursor=pointer]:
+                    - /url: /websites/llmgenerator-llms-txt
+                - paragraph [ref=e315]: Generate llms.txt files for your website to make it extractable, citable, and authoritative to AI systems like ChatGPT, Claude, Gemini, and Perplexity.
+              - generic [ref=e319]:
+                - generic [ref=e320]:
+                  - img "gray.gift favicon" [ref=e321]
+                  - button "Add to favorites" [ref=e322] [cursor=pointer]:
+                    - img [ref=e323]
+                - heading "gray.gift" [level=3] [ref=e326]:
+                  - link "gray.gift" [ref=e327] [cursor=pointer]:
+                    - /url: /websites/gray-gift-llms-txt
+                - paragraph [ref=e328]: Gray.Gift is the first creative storytelling reader and writer platform built for humans and AIs.
+              - generic [ref=e332]:
+                - generic [ref=e333]:
+                  - img "Haruspex favicon" [ref=e334]
+                  - button "Add to favorites" [ref=e335] [cursor=pointer]:
+                    - img [ref=e336]
+                - heading "Haruspex" [level=3] [ref=e339]:
+                  - link "Haruspex" [ref=e340] [cursor=pointer]:
+                    - /url: /websites/haruspex-llms-txt
+                - paragraph [ref=e341]: AI-powered investment intelligence platform analyzing stocks across 21 dimensions including fundamentals, geopolitics, supply chain, and sentiment
+              - generic [ref=e345]:
+                - generic [ref=e346]:
+                  - img "Smailander favicon" [ref=e347]
+                  - button "Add to favorites" [ref=e348] [cursor=pointer]:
+                    - img [ref=e349]
+                - heading "Smailander" [level=3] [ref=e352]:
+                  - link "Smailander" [ref=e353] [cursor=pointer]:
+                    - /url: /websites/smailander-llms-txt
+                - paragraph [ref=e354]: Monitor email leaks, phishing attempts, and security threats through honeypot email addresses. Real-time analytics, advanced threat detection, GDPR compliance.
+              - generic [ref=e358]:
+                - generic [ref=e359]:
+                  - img "Strale favicon" [ref=e360]
+                  - button "Add to favorites" [ref=e361] [cursor=pointer]:
+                    - img [ref=e362]
+                - heading "Strale" [level=3] [ref=e365]:
+                  - link "Strale" [ref=e366] [cursor=pointer]:
+                    - /url: /websites/strale-llms-txt
+                - paragraph [ref=e367]: Your agent calls strale.do() and gets company data, compliance checks, financial validation — structured JSON with audit trails. 233+ capabilities, one API key.
+              - generic [ref=e371]:
+                - generic [ref=e372]:
+                  - img "Agoragentic favicon" [ref=e373]
+                  - button "Add to favorites" [ref=e374] [cursor=pointer]:
+                    - img [ref=e375]
+                - heading "Agoragentic" [level=3] [ref=e378]:
+                  - link "Agoragentic" [ref=e379] [cursor=pointer]:
+                    - /url: /websites/agoragentic
+                - paragraph [ref=e380]: Capability router for autonomous agents. Discover, invoke, and pay for AI services through one API with USDC settlement on Base L2.
+          - generic [ref=e382]:
+            - generic [ref=e384]:
+              - heading "Browse the Directory" [level=2] [ref=e385]: Browse the Directory
+              - paragraph [ref=e387]: Explore the complete directory and search by name, category, or description.
+            - generic [ref=e388]:
+              - generic [ref=e389]:
+                - generic [ref=e390]:
+                  - textbox "Search the directory..." [ref=e391]
+                  - button "Search" [ref=e392]:
+                    - img [ref=e393]
+                - generic [ref=e397]:
+                  - generic [ref=e398]: "Sort by:"
+                  - group [ref=e399]:
+                    - radio "Name" [ref=e400] [cursor=pointer]:
+                      - img [ref=e401]
+                      - generic [ref=e403]: Name
+                    - radio "Latest" [checked] [ref=e404] [cursor=pointer]:
+                      - img [ref=e405]
+                      - generic [ref=e408]: Latest
+              - generic [ref=e409]:
+                - heading "Directory Entries" [level=2] [ref=e410]
+                - generic [ref=e413]:
+                  - generic [ref=e417]:
+                    - generic [ref=e418]:
+                      - img "LLMGenerator favicon" [ref=e419]
+                      - button "Add to favorites" [ref=e420] [cursor=pointer]:
+                        - img [ref=e421]
+                    - heading "LLMGenerator" [level=3] [ref=e424]:
+                      - link "LLMGenerator" [ref=e425] [cursor=pointer]:
+                        - /url: /websites/llmgenerator-llms-txt
+                    - paragraph [ref=e426]: Generate llms.txt files for your website to make it extractable, citable, and authoritative to AI systems like ChatGPT, Claude, Gemini, and Perplexity.
+                  - generic [ref=e430]:
+                    - generic [ref=e431]:
+                      - img "gray.gift favicon" [ref=e432]
+                      - button "Add to favorites" [ref=e433] [cursor=pointer]:
+                        - img [ref=e434]
+                    - heading "gray.gift" [level=3] [ref=e437]:
+                      - link "gray.gift" [ref=e438] [cursor=pointer]:
+                        - /url: /websites/gray-gift-llms-txt
+                    - paragraph [ref=e439]: Gray.Gift is the first creative storytelling reader and writer platform built for humans and AIs.
+                  - generic [ref=e443]:
+                    - generic [ref=e444]:
+                      - img "Haruspex favicon" [ref=e445]
+                      - button "Add to favorites" [ref=e446] [cursor=pointer]:
+                        - img [ref=e447]
+                    - heading "Haruspex" [level=3] [ref=e450]:
+                      - link "Haruspex" [ref=e451] [cursor=pointer]:
+                        - /url: /websites/haruspex-llms-txt
+                    - paragraph [ref=e452]: AI-powered investment intelligence platform analyzing stocks across 21 dimensions including fundamentals, geopolitics, supply chain, and sentiment
+                  - generic [ref=e456]:
+                    - generic [ref=e457]:
+                      - img "Smailander favicon" [ref=e458]
+                      - button "Add to favorites" [ref=e459] [cursor=pointer]:
+                        - img [ref=e460]
+                    - heading "Smailander" [level=3] [ref=e463]:
+                      - link "Smailander" [ref=e464] [cursor=pointer]:
+                        - /url: /websites/smailander-llms-txt
+                    - paragraph [ref=e465]: Monitor email leaks, phishing attempts, and security threats through honeypot email addresses. Real-time analytics, advanced threat detection, GDPR compliance.
+                  - generic [ref=e469]:
+                    - generic [ref=e470]:
+                      - img "Strale favicon" [ref=e471]
+                      - button "Add to favorites" [ref=e472] [cursor=pointer]:
+                        - img [ref=e473]
+                    - heading "Strale" [level=3] [ref=e476]:
+                      - link "Strale" [ref=e477] [cursor=pointer]:
+                        - /url: /websites/strale-llms-txt
+                    - paragraph [ref=e478]: Your agent calls strale.do() and gets company data, compliance checks, financial validation — structured JSON with audit trails. 233+ capabilities, one API key.
+                  - generic [ref=e482]:
+                    - generic [ref=e483]:
+                      - img "Agoragentic favicon" [ref=e484]
+                      - button "Add to favorites" [ref=e485] [cursor=pointer]:
+                        - img [ref=e486]
+                    - heading "Agoragentic" [level=3] [ref=e489]:
+                      - link "Agoragentic" [ref=e490] [cursor=pointer]:
+                        - /url: /websites/agoragentic
+                    - paragraph [ref=e491]: Capability router for autonomous agents. Discover, invoke, and pay for AI services through one API with USDC settlement on Base L2.
+                - generic [ref=e492]:
+                  - paragraph [ref=e494]: Showing all 725 matching entries.
+                  - paragraph [ref=e495]: "Directory size: 725 entries"
+          - region "Developer Tools" [ref=e496]:
+            - generic [ref=e497]:
+              - generic [ref=e498]:
+                - heading "Developer Tools" [level=2] [ref=e499]: Developer Tools
+                - paragraph [ref=e501]: Explore tools created to help you work with llms.txt
+              - link "All tools" [ref=e503] [cursor=pointer]:
+                - /url: /developer-tools
+                - generic [ref=e504]: All tools
+                - img [ref=e505]
+            - generic [ref=e508]:
+              - link "LLMs.txt Checker Chrome Extension Check if websites implement llms.txt and llms-full.txt files LLMs.txt Checker Screenshot" [ref=e509] [cursor=pointer]:
+                - /url: https://chromewebstore.google.com/detail/llmstxt-checker/klcihkijejcgnaiinaehcjbggamippej
+                - generic [ref=e510]:
+                  - generic [ref=e511]:
+                    - generic [ref=e512]:
+                      - text: LLMs.txt Checker Chrome Extension
+                      - img [ref=e513]
+                    - generic [ref=e517]: Check if websites implement llms.txt and llms-full.txt files
+                  - img "LLMs.txt Checker Screenshot" [ref=e520]
+              - link "LLMS.txt VSCode Extension Search and explore llms.txt files directly in VS Code VS Code Extension Screenshot" [ref=e521] [cursor=pointer]:
+                - /url: https://marketplace.visualstudio.com/items?itemName=TheDavidDias.vscode-llms-txt
+                - generic [ref=e522]:
+                  - generic [ref=e523]:
+                    - generic [ref=e524]:
+                      - text: LLMS.txt VSCode Extension
+                      - img [ref=e525]
+                    - generic [ref=e529]: Search and explore llms.txt files directly in VS Code
+                  - img "VS Code Extension Screenshot" [ref=e532]
+              - link "MCP LLMS.txt Explorer Explore and analyze llms.txt files using MCP MCP LLMS.txt Explorer Screenshot" [ref=e533] [cursor=pointer]:
+                - /url: https://github.com/thedaviddias/mcp-llms-txt-explorer
+                - generic [ref=e534]:
+                  - generic [ref=e535]:
+                    - generic [ref=e536]:
+                      - text: MCP LLMS.txt Explorer
+                      - img [ref=e537]
+                    - generic [ref=e541]: Explore and analyze llms.txt files using MCP
+                  - img "MCP LLMS.txt Explorer Screenshot" [ref=e544]
+              - link "LLMs Txt Raycast Extension Search and explore llms.txt files directly in Raycast Raycast Extension Screenshot" [ref=e545] [cursor=pointer]:
+                - /url: https://www.raycast.com/thedaviddias/llms-txt
+                - generic [ref=e546]:
+                  - generic [ref=e547]:
+                    - generic [ref=e548]:
+                      - text: LLMs Txt Raycast Extension
+                      - img [ref=e549]
+                    - generic [ref=e553]: Search and explore llms.txt files directly in Raycast
+                  - img "Raycast Extension Screenshot" [ref=e556]
+              - link "llmstxt CLI Install llms.txt documentation directly into your AI coding agents llmstxt CLI Screenshot" [ref=e557] [cursor=pointer]:
+                - /url: https://www.npmjs.com/package/llmstxt-cli
+                - generic [ref=e558]:
+                  - generic [ref=e559]:
+                    - generic [ref=e560]:
+                      - text: llmstxt CLI
+                      - img [ref=e561]
+                    - generic [ref=e565]: Install llms.txt documentation directly into your AI coding agents
+                  - img "llmstxt CLI Screenshot" [ref=e568]
+          - generic [ref=e570]:
+            - generic [ref=e571]:
+              - heading "Featured Guides" [level=2] [ref=e572]: Featured Guides
+              - paragraph [ref=e574]: Learn how to implement and optimize llms.txt for your documentation
+            - link "All guides" [ref=e576] [cursor=pointer]:
+              - /url: /guides
+              - generic [ref=e577]: All guides
+              - img [ref=e578]
+          - generic [ref=e580]:
+            - generic [ref=e582]:
+              - heading "More Projects by the Creator" [level=2] [ref=e583]: More Projects by the Creator
+              - paragraph [ref=e585]: Explore other open-source projects and resources by David Dias
+            - generic [ref=e586]:
+              - generic [ref=e587]:
+                - generic [ref=e588]:
+                  - generic [ref=e589]:
+                    - generic [ref=e591]:
+                      - generic [ref=e592]: Front-End Checklist
+                      - generic [ref=e593]:
+                        - generic [ref=e594]:
+                          - img [ref=e595]
+                          - generic [ref=e597]: 71,954
+                        - generic [ref=e598]:
+                          - generic [ref=e599]: Frontend
+                          - generic [ref=e600]: Checklist
+                    - generic [ref=e601]: The perfect Front-End Checklist for modern websites and meticulous developers.
+                  - generic [ref=e603]:
+                    - link "Visit Site" [ref=e604] [cursor=pointer]:
+                      - /url: https://frontendchecklist.io
+                      - img [ref=e605]
+                      - text: Visit Site
+                    - link "GitHub" [ref=e609] [cursor=pointer]:
+                      - /url: https://github.com/thedaviddias/Front-End-Checklist
+                      - img [ref=e610]
+                      - text: GitHub
+                - generic [ref=e613]:
+                  - generic [ref=e614]:
+                    - generic [ref=e616]:
+                      - generic [ref=e617]: UX Patterns for Developers
+                      - generic [ref=e618]:
+                        - generic [ref=e619]:
+                          - img [ref=e620]
+                          - generic [ref=e622]: "155"
+                        - generic [ref=e623]:
+                          - generic [ref=e624]: UX
+                          - generic [ref=e625]: Design Patterns
+                    - generic [ref=e626]: Collection of UX patterns for everyone but specially towards developers who want to understand how to build effective UI components accessible and usable.
+                  - generic [ref=e628]:
+                    - link "Visit Site" [ref=e629] [cursor=pointer]:
+                      - /url: https://github.com/thedaviddias/ux-patterns-for-developers
+                      - img [ref=e630]
+                      - text: Visit Site
+                    - link "GitHub" [ref=e634] [cursor=pointer]:
+                      - /url: https://github.com/thedaviddias/ux-patterns-for-developers
+                      - img [ref=e635]
+                      - text: GitHub
+                - generic [ref=e638]:
+                  - generic [ref=e639]:
+                    - generic [ref=e641]:
+                      - generic [ref=e642]: Indie Dev Toolkit
+                      - generic [ref=e643]:
+                        - generic [ref=e644]:
+                          - img [ref=e645]
+                          - generic [ref=e647]: "222"
+                        - generic [ref=e648]:
+                          - generic [ref=e649]: Toolkit
+                          - generic [ref=e650]: Indie Hacking
+                    - generic [ref=e651]: A curated list of tools and resources for indie hackers, solo founders, and bootstrapped startups.
+                  - generic [ref=e653]:
+                    - link "Visit Site" [ref=e654] [cursor=pointer]:
+                      - /url: https://github.com/thedaviddias/indie-dev-toolkit
+                      - img [ref=e655]
+                      - text: Visit Site
+                    - link "GitHub" [ref=e659] [cursor=pointer]:
+                      - /url: https://github.com/thedaviddias/indie-dev-toolkit
+                      - img [ref=e660]
+                      - text: GitHub
+              - generic [ref=e663]:
+                - paragraph [ref=e664]: Like these projects? Check out David's GitHub for more open-source contributions.
+                - link "Follow on GitHub" [ref=e665] [cursor=pointer]:
+                  - /url: https://github.com/thedaviddias
+                  - img [ref=e666]
+                  - text: Follow on GitHub
+          - generic [ref=e670]:
+            - paragraph [ref=e671]: Keep The Directory Growing
+            - generic [ref=e672]:
+              - heading "Know a site that should be listed?" [level=2] [ref=e673]
+              - paragraph [ref=e674]: Submit it through GitHub and keep the directory fully reviewable, low-cost, and static-friendly.
+            - link "Submit a Website" [ref=e676] [cursor=pointer]:
+              - /url: /submit
+    - contentinfo [ref=e677]:
+      - heading "Footer" [level=2] [ref=e678]
+      - generic [ref=e680]:
+        - generic [ref=e681]:
+          - heading "SERP" [level=3] [ref=e682]
+          - paragraph [ref=e683]: Discover AI-Ready Documentation
+          - generic [ref=e684]:
+            - button "Toggle theme" [ref=e685] [cursor=pointer]:
+              - img [ref=e686]
+              - img
+              - generic [ref=e692]: Toggle theme
+            - link "GitHub GitHub" [ref=e693] [cursor=pointer]:
+              - /url: https://github.com/devinschumacher
+              - img "GitHub" [ref=e694]
+              - generic [ref=e696]: GitHub
+            - link "Reddit Reddit" [ref=e697] [cursor=pointer]:
+              - /url: https://www.reddit.com/user/devinschumacher/
+              - img "Reddit" [ref=e698]
+              - generic [ref=e700]: Reddit
+            - link "X X (Twitter)" [ref=e701] [cursor=pointer]:
+              - /url: https://x.com/dvnschmchr
+              - img "X" [ref=e702]
+              - generic [ref=e704]: X (Twitter)
+          - link "Verified DR 78 for serp.co" [ref=e705] [cursor=pointer]:
+            - /url: https://dr.serp.co/
+            - img "Verified DR 78 for serp.co" [ref=e706]
+        - generic [ref=e707]:
+          - generic [ref=e708]:
+            - heading "Directory" [level=4] [ref=e709]
+            - list [ref=e710]:
+              - listitem [ref=e711]:
+                - link "Projects" [ref=e712] [cursor=pointer]:
+                  - /url: /projects
+              - listitem [ref=e713]:
+                - link "Guides" [ref=e714] [cursor=pointer]:
+                  - /url: /guides
+              - listitem [ref=e715]:
+                - link "Submit" [ref=e716] [cursor=pointer]:
+                  - /url: /submit
+          - generic [ref=e717]:
+            - heading "Resources" [level=4] [ref=e718]
+            - list [ref=e719]:
+              - listitem [ref=e720]:
+                - link "Advertise" [ref=e721] [cursor=pointer]:
+                  - /url: /submit
+              - listitem [ref=e722]:
+                - link "Brands" [ref=e723] [cursor=pointer]:
+                  - /url: /submit
+          - generic [ref=e724]:
+            - heading "Legal" [level=4] [ref=e725]
+            - list [ref=e726]:
+              - listitem [ref=e727]:
+                - link "About" [ref=e728] [cursor=pointer]:
+                  - /url: /about
+              - listitem [ref=e729]:
+                - link "Privacy" [ref=e730] [cursor=pointer]:
+                  - /url: /legal/privacy
+              - listitem [ref=e731]:
+                - link "Terms" [ref=e732] [cursor=pointer]:
+                  - /url: /legal/terms
+              - listitem [ref=e733]:
+                - link "Cookies" [ref=e734] [cursor=pointer]:
+                  - /url: /legal/cookies
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e741] [cursor=pointer]:
+    - generic [ref=e744]:
+      - text: Compiling
+      - generic [ref=e745]:
+        - generic [ref=e746]: .
+        - generic [ref=e747]: .
+        - generic [ref=e748]: .
+  - alert [ref=e749]
+```

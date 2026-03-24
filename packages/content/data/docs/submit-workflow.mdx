@@ -7,7 +7,10 @@ published: true
 
 # Submit Workflow
 
-<p className="mt-2 text-xl text-muted-foreground">The active starter keeps submissions simple. The site gathers the basics, then sends the user to a prefilled GitHub issue for review.</p>
+<p className="mt-2 text-xl text-muted-foreground">
+  The active starter keeps submissions simple. The site gathers the basics, then
+  sends the user to a prefilled GitHub issue for review.
+</p>
 
 ## Why the starter uses GitHub issues
 
@@ -29,6 +32,7 @@ Instead, the repo becomes the source of truth and GitHub becomes the audit trail
 3. When the user clicks **Continue on GitHub**, the client builds a GitHub issue URL.
 4. The browser navigates to the GitHub issue composer with a template, title, and prefilled body.
 5. A maintainer reviews the issue and, if approved, updates repo data such as `data/websites.json`.
+6. If that accepted change becomes a PR, CI validates `data/websites.json` before merge.
 
 ## Example GitHub issue URL
 
@@ -63,6 +67,17 @@ Helpful reviewer context.
 - `apps/web/components/forms/github-issue-submit-form.tsx` renders the form and handles the client-side redirect.
 - `apps/web/lib/github-issue.ts` builds the final GitHub issue URL, template, title, and body.
 - `sites/site-config.default.ts` plus `sites/<id>/site-config.ts` provide the checked-in owner, repo, issue URL, and template values.
+- `.github/workflows/update-websites-json.yml` validates accepted listing changes when `data/websites.json` is edited in a PR or on `main`.
+
+## How accepted listing changes are gated
+
+The current starter treats GitHub issues as intake and pull requests as the write path.
+
+That means:
+
+- the public site does not write listing JSON directly
+- maintainers review submissions in GitHub first
+- any accepted edit to `data/websites.json` must pass the dedicated listing-data validation workflow before merge
 
 ## What to change if you customize it
 

@@ -105,42 +105,42 @@ graph TD
 - [x] A clean split between canonical checked-in site inputs under `sites/**` and temporary intake under `tmp/sites/**`
 - [x] An audit of what the current starter already treats as configurable vs what still needs to move into the site/build contract
 - [x] A field-type pass for the active build contract:
-  boolean vs enum vs free text vs URL vs file reference vs provider payload
+      boolean vs enum vs free text vs URL vs file reference vs provider payload
 - [x] A cleaner operator-facing DR badge input shape:
-  provider-style payload first, raw badge fields only as compatibility
+      provider-style payload first, raw badge fields only as compatibility
 - [x] A first classification pass for starter defaults vs site-owned content vs contract-driven surfaces
 - [x] A working checked-in site-config build and deploy trial for `serpdownloaders`
 
 ## Where we are now
 
 - [x] The static multi-site path is in a usable state:
-  checked-in site config -> validate -> build -> deploy
+      checked-in site config -> validate -> build -> deploy
 - [x] The operator workflow is defined:
-  maintain `sites/site-config.default.ts` plus `sites/<site-id>/site-config.ts`, keep canonical assets/data beside that site config, then run validate/build/deploy
+      maintain `sites/site-config.default.ts` plus `sites/<site-id>/site-config.ts`, keep canonical assets/data beside that site config, then run validate/build/deploy
 - [x] The build contract is now explicit enough to keep expanding without mixing internal implementation details into operator inputs
 - [x] The starter cleanup pass is far enough along that the remaining work is mostly:
-  optional hosted/product direction, deeper content ownership decisions, and follow-up polish
+      optional hosted/product direction, deeper content ownership decisions, and follow-up polish
 
 ## Current recommended source of truth for status
 
 - [x] [docs/IMPLEMENTATION_TRACKER.md](/Users/devin/dev/repos/json-directory-template/docs/IMPLEMENTATION_TRACKER.md)
-  is the current execution/status doc
+      is the current execution/status doc
 - [x] This file is the higher-level roadmap and should stay in sync with the tracker, not compete with it
 - [x] [BUILD_PIPELINE.md](/Users/devin/dev/repos/json-directory-template/docs/BUILD_PIPELINE.md)
-  is the current static-first pipeline doc and boundary statement
+      is the current static-first pipeline doc and boundary statement
 
 ## First step before finalizing the plan
 
 ### 0. Plan-shaping audit against target state
 
 - [x] Run a focused plan-shaping audit against the target outcome:
-  deterministic multi-site build and deploy template for directory sites
+      deterministic multi-site build and deploy template for directory sites
 - [x] Capture only plan-shaping findings now:
-  source-of-truth assumptions, single-site build/deploy assumptions, hardcoded starter defaults, and workflow/docs mismatches
+      source-of-truth assumptions, single-site build/deploy assumptions, hardcoded starter defaults, and workflow/docs mismatches
 - [x] Update this plan with any findings that would change scope, phase order, or issue structure
 - [x] Include test tasks and doc update tasks in the audit output so plan changes do not become code-only work
 - [x] Decide which audit findings are:
-  immediate cleanup, deferred cleanup, or reference-only legacy
+      immediate cleanup, deferred cleanup, or reference-only legacy
 - [x] Leave detailed cleanup inventory for a later implementation audit sweep once branch work starts
 
 ## Main planning tracks
@@ -149,7 +149,7 @@ graph TD
 
 - [x] Define the checked-in site config convention for `sites/site-config.default.ts` plus `sites/<site-id>/site-config.ts`
 - [x] Define the minimum required fields for the checked-in site config:
-  target repo, branch, deploy strategy, source JSON path, domain, brand config, content overrides, asset overrides
+      target repo, branch, deploy strategy, source JSON path, domain, brand config, content overrides, asset overrides
 - [x] Replace one-off env-driven site overrides with a deterministic checked-in site config loader
 - [x] Move from one shared output folder to per-site output such as `dist/sites/<site-id>/`
 - [x] Separate validate, build, and deploy into explicit site-aware commands
@@ -157,7 +157,7 @@ graph TD
 - [x] Decide where per-site assets, page-content overrides, and auxiliary site files live and how they are staged into each build
 - [x] Consolidate the canonical build contract into the checked-in site config model instead of a separate build manifest layer
 - [x] Define how target repo requirements are managed:
-  preserved files, Pages workflow, CNAME, branch/path assumptions
+      preserved files, Pages workflow, CNAME, branch/path assumptions
 - [x] Add a dry-run deploy mode that shows what would be pushed to the target repo
 - [x] Decide whether one workflow run should build one site only or support controlled multi-site batches later
 - [x] Define how non-website generated artifacts such as search indexes and feeds become site-aware
@@ -170,13 +170,13 @@ graph TD
 
 - [x] Audit remaining hardcoded brand and owner values that should move behind site config
 - [x] Audit project-specific sections that may need to be optional or replaceable:
-  creator projects, tools section, submit copy, legal copy, social links, metadata defaults, OG text, author/publisher defaults
+      creator projects, tools section, submit copy, legal copy, social links, metadata defaults, OG text, author/publisher defaults
 - [x] Audit residual `llms.txt`/legacy brand language that still leaks through the active starter and decide whether it should be rebranded, generalized, or archived
 - [x] Decide which items belong in:
-  shared starter defaults, per-site config, per-site content, or removable optional modules
+      shared starter defaults, per-site config, per-site content, or removable optional modules
 - [x] Document which hardcoded values are intentionally left as starter defaults versus true bugs
 - [x] Centralize remaining SEO ownership values:
-  author, creator, publisher defaults, social handles, verification copy, and public docs copy
+      author, creator, publisher defaults, social handles, verification copy, and public docs copy
 - [x] Decide whether testimonials, homepage social proof, and other marketing sections are starter defaults or per-site content blocks
 - [x] Add tests for site-config-driven rendering in the shell and core landing pages
 - [x] Update docs so starter customization guidance matches the current code reality
@@ -184,15 +184,15 @@ graph TD
 - [x] Harden temp/output paths so concurrent local or CI runs for the same site cannot collide
 - [x] Finish the next pass on active metadata/logo consumers so all public metadata surfaces consistently use staged asset outputs
 - [x] Decide the long-term treatment of tools, communities, guides, docs, and website-doc/llms surfaces:
-  starter default, optional module, or site-owned content
+      starter default, optional module, or site-owned content
 
 ### 3. Clarify the current MDX -> JSON workflow
 
 - [x] Resolve the current mismatch between the old authored-content docs and the new JSON-first reality
 - [x] Decide the intended source of truth for websites:
-  MDX-authored entries, JSON-authored entries, or both through one normalized ingestion layer
+      MDX-authored entries, JSON-authored entries, or both through one normalized ingestion layer
 - [x] Document whether `data/websites.json` is:
-  generated output only, checked-in editable source, or site-build intermediate
+      generated output only, checked-in editable source, or site-build intermediate
 - [x] Review workflows, PR checks, and labels that still assume `packages/content/data/websites/**` is the only valid authoring path
 - [x] Decide whether the legacy `scripts/generate-websites.ts` flow stays, changes, or gets retired
 - [x] Define how per-site source JSON should coexist with any starter-default MDX content
@@ -200,47 +200,49 @@ graph TD
 - [x] Review helper scripts and CI rules that still block or classify changes based on MDX-only assumptions
 - [x] Include tests for the intended ingestion path and schema normalization
 - [x] Update `data/README.md`, docs, and workflow notes once the intended model is chosen
+- [x] Add an explicit PR/main validation gate for `data/websites.json` so accepted listing changes fail early
 
 ### 4. Future submit / sign up / login flow
 
 Boundary for now:
+
 - hosted/auth/submission is future-only and intentionally out of active pipeline scope
 - the current build system should remain static-first and additive-extension friendly
 - do not couple build behavior to user accounts, sessions, moderation state, or runtime write paths while finishing the static pipeline
 
 - [ ] Decide the long-term product model:
-  fully static starter only, optional hosted mode, or both
+      fully static starter only, optional hosted mode, or both
 - [ ] Decide whether auth and submissions belong in:
-  this repo, a hosted control plane, or a separate service
+      this repo, a hosted control plane, or a separate service
 - [ ] Define the minimal user flow for “submit a new product”
 - [ ] Define moderation flow:
-  direct publish, queue for review, GitHub issue handoff, PR handoff, or hosted approval queue
+      direct publish, queue for review, GitHub issue handoff, PR handoff, or hosted approval queue
 - [ ] Define the data write target for approved submissions:
-  source JSON, PR branch, database, or CMS-like service
+      source JSON, PR branch, database, or CMS-like service
 - [ ] Define whether profile/account data remains optional and external to the directory data
 - [ ] Define anti-spam, abuse, and rate-limiting expectations before any public submission flow ships
 - [ ] Include tests for any future auth/submission path and end-to-end verification requirements
 - [ ] Add docs describing the supported mode:
-  static-only mode vs hosted submissions mode
+      static-only mode vs hosted submissions mode
 - [ ] Decide whether the current GitHub issue submit flow is a long-term starter feature, a temporary bridge, or a hosted-only feature later
 
 ### 5. Deploy customization while staying deterministic
 
 - [x] Define deploy strategies as explicit types instead of hardcoding GitHub Pages repo sync
 - [x] Start with a stable strategy list:
-  `github-pages-repo-sync`, `github-pages-artifact`, future hosted deploy
+      `github-pages-repo-sync`, `github-pages-artifact`, future hosted deploy
 - [x] Define what every deploy strategy must implement:
-  preconditions, artifact expectations, target config, verification hooks, rollback notes
+      preconditions, artifact expectations, target config, verification hooks, rollback notes
 - [x] Decide how target secrets/vars are managed between source repo and target repo
 - [x] Define preserve rules for target repo contents instead of using a blanket replace model
 - [x] Decide how target workflows are installed, updated, versioned, or preserved when syncing output
 - [x] Decide what verification is required after deploy:
-  workflow success, target repo content shape, live URL health, canonical HTML checks
+      workflow success, target repo content shape, live URL health, canonical HTML checks
 - [x] Add deterministic post-deploy checks per strategy
 - [x] Define repair behavior when target repo drift or partial deploy failures are detected
 - [x] Define rollback behavior and last-known-good recovery for bad deploys
 - [x] Define target repo lifecycle actions:
-  bootstrap, update, repair, teardown
+      bootstrap, update, repair, teardown
 - [x] Document which parts are strategy-specific versus shared
 
 ### 6. Operational cleanup you may be forgetting
@@ -262,9 +264,9 @@ Boundary for now:
 
 - [x] Run a lightweight audit and capture only the gaps that would materially change the plan
 - [x] Group findings into:
-  core pipeline, template cleanup, content model, deploy model, future hosted/product features
+      core pipeline, template cleanup, content model, deploy model, future hosted/product features
 - [x] Mark each finding as:
-  now, next, later, or archive/reference only
+      now, next, later, or archive/reference only
 - [x] Update this plan based on the audit findings
 - [x] Review the revised plan and lock scope before creating execution issues
 
@@ -285,6 +287,8 @@ Boundary for now:
 - [x] Make workflows accept `site_id`
 - [x] Make generated side artifacts such as search/feed output site-aware
 - [x] Update docs and runbooks
+- [x] Add a concise rebrand runbook for site owners
+- [x] Add a concise deploy/redeploy runbook for the current Pages flow
 
 ### Phase 3. Generalize deploys
 
@@ -313,7 +317,7 @@ Boundary for now:
 - [x] Do a deeper repo audit once branch work starts to catch cleanup items that did not need to shape the plan
 - [ ] Add newly discovered cleanup tasks into the active tracking doc or issue set instead of leaving them as loose notes
 - [ ] Keep implementation audit findings categorized as:
-  do now, do in this branch later, or defer
+      do now, do in this branch later, or defer
 - [ ] Update tests and docs alongside any cleanup tasks promoted into active work
 
 ## Decision list to resolve early
@@ -333,4 +337,4 @@ Boundary for now:
 - [ ] Every planning and implementation phase should include test tasks
 - [ ] Every planning and implementation phase should include doc update tasks
 - [ ] Before calling any deploy flow “done”, verify:
-  local artifact build, target repo sync shape, target workflow success, and live URL response
+      local artifact build, target repo sync shape, target workflow success, and live URL response

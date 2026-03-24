@@ -8,7 +8,7 @@ on:
 jobs:
   automerge:
     name: Auto-merge
-    if: github.repository_owner == 'devinschumacher' && github.event.workflow_run.conclusion == 'success'
+    if: github.event.workflow_run.conclusion == 'success'
     permissions:
       contents: write
       pull-requests: write

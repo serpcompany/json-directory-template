@@ -11,7 +11,6 @@ jobs:
       pull-requests: write
     runs-on: self-hosted
 
-    if: github.repository_owner == 'devinschumacher'
     steps:
       - name: Ensure managed labels exist
         uses: actions/github-script@v8
@@ -109,5 +108,5 @@ jobs:
 
       - uses: actions/labeler@v6
         with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
           sync-labels: true

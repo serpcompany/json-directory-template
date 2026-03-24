@@ -34,6 +34,7 @@
 - Use that folder for starter-facing docs such as submit flow, JSON shape references, and rebrand runbooks.
 - Keep internal starter/operator notes such as `siteConfig` shapes in `docs/knowledge/**`, not in public `/docs`.
 - Keep representative page references in `docs/knowledge/reference-surfaces.md` when you want to preserve old patterns without leaving whole features active.
+- Use `docs/knowledge/legacy-reference-boundary.md` when deciding whether an older repo area is still active starter input or only reference material.
 - Use the decision labels in `docs/knowledge/reference-surfaces.md` to drive cleanup order: `Keep + rebrand first`, then `Keep + rebrand later`, then `Reference only`.
 - The checked-in site config source of truth now lives under `sites/**`, with `apps/web/lib/site-config.ts` acting as the app-facing adapter layer.
 - The runtime starter config now also owns optional shell feature flags, including whether to render creator-project, featured-guides, external-resources, and newsletter sections.
@@ -43,6 +44,7 @@
 - The current website/entity data contract is documented in `docs/knowledge/entity-data-shape.md`.
 - The config now covers both public social links and repo-specific submit/report fields, so shell links and GitHub issue flows can move without hardcoded owner/repo strings.
 - The active app `tsconfig.json` now excludes `_archive`, which keeps typecheck and build focused on the starter instead of parked legacy code.
+- Keep the active favorites browser storage key `llms-txt-hub-favorites` unchanged for now. Treat any rename as a future migration task, not a silent cleanup.
 
 ## Sitemaps
 
