@@ -21,10 +21,15 @@ const textFieldSchema = z.string().min(1)
 const domainFieldSchema = z.string().min(1)
 
 const featureFlagsSchema = z.object({
+  showAuth: z.boolean().default(false),
   showCreatorProjects: z.boolean().default(false),
+  showDocs: z.boolean().default(false),
   showDeveloperTools: z.boolean().default(false),
+  showFavorites: z.boolean().default(false),
   showFeaturedGuides: z.boolean().default(false),
-  showNewsletter: z.boolean().default(true)
+  showGuides: z.boolean().default(false),
+  showNewsletter: z.boolean().default(true),
+  showProjects: z.boolean().default(false)
 })
 
 const drBadgeProviderSchema = z.object({
@@ -130,10 +135,15 @@ export const buildSpecFieldTypes: Record<string, BuildSpecFieldType> = {
   'deploy.preserve': 'free-text',
   'deploy.repoUrl': 'url',
   'deploy.strategy': 'enum',
+  'features.showAuth': 'boolean',
   'features.showCreatorProjects': 'boolean',
+  'features.showDocs': 'boolean',
   'features.showDeveloperTools': 'boolean',
+  'features.showFavorites': 'boolean',
   'features.showFeaturedGuides': 'boolean',
+  'features.showGuides': 'boolean',
   'features.showNewsletter': 'boolean',
+  'features.showProjects': 'boolean',
   'site.description': 'free-text',
   'site.domain': 'free-text',
   'site.name': 'free-text',

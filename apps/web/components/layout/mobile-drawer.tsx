@@ -10,6 +10,7 @@ import { FavoritesLink } from '@/components/ui/favorites-link'
 import type { HeaderAuthState } from '@/lib/auth'
 import { categories } from '@/lib/categories'
 import { getRoute } from '@/lib/routes'
+import { siteConfig } from '@/lib/site-config'
 import { tools } from '@/lib/tools'
 
 interface MobileDrawerProps {
@@ -119,14 +120,14 @@ export function MobileDrawer({
           <div>
             <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Navigation</h3>
             <nav className="space-y-1">
-              {isAuthenticated ? (
+              {siteConfig.features.showAuth && isAuthenticated ? (
                 <Link
                   href={getRoute('account')}
                   className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
                 >
                   Account
                 </Link>
-              ) : isAuthConfigured ? (
+              ) : siteConfig.features.showAuth && isAuthConfigured ? (
                 <Link
                   href={getRoute('login')}
                   className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
@@ -134,24 +135,30 @@ export function MobileDrawer({
                   Sign up / Sign in
                 </Link>
               ) : null}
-              <Link
-                href={getRoute('projects')}
-                className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-              >
-                Projects
-              </Link>
-              <Link
-                href={getRoute('docs.list')}
-                className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-              >
-                Docs
-              </Link>
-              <Link
-                href={getRoute('guides.list')}
-                className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-              >
-                Guides
-              </Link>
+              {siteConfig.features.showProjects ? (
+                <Link
+                  href={getRoute('projects')}
+                  className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                >
+                  Projects
+                </Link>
+              ) : null}
+              {siteConfig.features.showDocs ? (
+                <Link
+                  href={getRoute('docs.list')}
+                  className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                >
+                  Docs
+                </Link>
+              ) : null}
+              {siteConfig.features.showGuides ? (
+                <Link
+                  href={getRoute('guides.list')}
+                  className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                >
+                  Guides
+                </Link>
+              ) : null}
               <Link
                 href={getRoute('submit')}
                 className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
@@ -164,19 +171,21 @@ export function MobileDrawer({
               >
                 News
               </Link> */}
-              {isAuthenticated ? (
+              {siteConfig.features.showAuth && isAuthenticated ? (
                 <SignOutButton className="w-full justify-start rounded-md px-2 py-1.5 text-sm font-normal" />
               ) : null}
             </nav>
           </div>
 
           {/* My Collection Section */}
+          {siteConfig.features.showFavorites ? (
           <div>
             <h3 className="font-semibold text-sm mb-3 text-muted-foreground">My Collection</h3>
             <nav className="space-y-1">
               <FavoritesLink isMobile />
             </nav>
           </div>
+          ) : null}
 
           {/* Categories */}
           <div>

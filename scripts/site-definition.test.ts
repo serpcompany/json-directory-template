@@ -13,8 +13,13 @@ describe('loadSiteDefinition', () => {
     expect(definition.id).toBe('serpdownloaders')
     expect(definition.source.kind).toBe('trial-products-json')
     expect(definition.site.domain).toBe('serpdownloaders.com')
+    expect(definition.site.features.showAuth).toBe(false)
+    expect(definition.site.features.showDocs).toBe(false)
     expect(definition.site.features.showDeveloperTools).toBe(false)
+    expect(definition.site.features.showFavorites).toBe(false)
+    expect(definition.site.features.showGuides).toBe(false)
     expect(definition.site.features.showNewsletter).toBe(true)
+    expect(definition.site.features.showProjects).toBe(false)
     expect(definition.deploy?.strategy).toBe('github-pages-repo-sync')
   })
 })
@@ -39,8 +44,13 @@ describe('buildSiteEnvironment', () => {
       SITE_GITHUB_ISSUE_REPO: 'json-directory-template',
       SITE_ID: 'serpdownloaders',
       SITE_NAME: 'SERP Downloaders',
+      SITE_SHOW_AUTH: 'false',
+      SITE_SHOW_DOCS: 'false',
       SITE_SHOW_DEVELOPER_TOOLS: 'false',
+      SITE_SHOW_FAVORITES: 'false',
+      SITE_SHOW_GUIDES: 'false',
       SITE_SHOW_NEWSLETTER: 'true',
+      SITE_SHOW_PROJECTS: 'false',
       SITE_TAGLINE: 'Download-focused product directory'
     })
   })

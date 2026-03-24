@@ -142,9 +142,15 @@ export function Header({ authState }: { authState?: HeaderAuthState }) {
           <div className="flex items-center gap-2 sm:gap-4 2xl:justify-end">
             {/* Desktop navigation */}
             <nav className="hidden lg:flex items-center gap-4">
-              <NavLink href={getRoute('projects')}>Projects</NavLink>
-              {/* <NavLink href={getRoute('docs.list')}>Docs</NavLink> */}
-              <NavLink href={getRoute('guides.list')}>Guides</NavLink>
+              {siteConfig.features.showProjects ? (
+                <NavLink href={getRoute('projects')}>Projects</NavLink>
+              ) : null}
+              {siteConfig.features.showDocs ? (
+                <NavLink href={getRoute('docs.list')}>Docs</NavLink>
+              ) : null}
+              {siteConfig.features.showGuides ? (
+                <NavLink href={getRoute('guides.list')}>Guides</NavLink>
+              ) : null}
               {/* <NavLink href={getRoute('news')}>News</NavLink> */}
             </nav>
 
@@ -172,7 +178,7 @@ export function Header({ authState }: { authState?: HeaderAuthState }) {
               <span className="hidden sm:inline">Submit</span>
             </Link>
 
-            {isAuthenticated ? (
+            {siteConfig.features.showAuth && isAuthenticated ? (
               <>
                 <Link
                   href={getRoute('account')}
@@ -182,7 +188,7 @@ export function Header({ authState }: { authState?: HeaderAuthState }) {
                 </Link>
                 <SignOutButton className="hidden sm:inline-flex rounded-none text-sm font-bold h-9 px-4" />
               </>
-            ) : isAuthConfigured ? (
+            ) : siteConfig.features.showAuth && isAuthConfigured ? (
               <Link
                 href={getRoute('login')}
                 className="hidden sm:inline-flex items-center justify-center rounded-none text-sm font-bold h-9 px-4 border border-border hover:bg-accent transition-colors"

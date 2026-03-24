@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { FavoritesLink } from '@/components/ui/favorites-link'
 import { categories } from '@/lib/categories'
 import { getRoute } from '@/lib/routes'
+import { siteConfig } from '@/lib/site-config'
 import { tools } from '@/lib/tools'
 
 interface AppSidebarProps {
@@ -29,12 +30,14 @@ export function AppSidebar({ currentCategory, featuredCount = 0 }: AppSidebarPro
         <h2 className="sr-only">Navigation</h2>
 
         {/* My Collection Section */}
+        {siteConfig.features.showFavorites ? (
         <div>
           <h3 className="font-semibold text-sm mb-4 text-muted-foreground">My Collection</h3>
           <nav className="space-y-1">
             <FavoritesLink />
           </nav>
         </div>
+        ) : null}
 
         {/* Categories Section */}
         <div>
@@ -87,6 +90,7 @@ export function AppSidebar({ currentCategory, featuredCount = 0 }: AppSidebarPro
         </div>
 
         {/* Tools Section */}
+        {siteConfig.features.showDeveloperTools ? (
         <div>
           <h3 className="font-semibold text-sm mb-4 text-muted-foreground">Tools</h3>
           <nav className="space-y-1">
@@ -107,6 +111,7 @@ export function AppSidebar({ currentCategory, featuredCount = 0 }: AppSidebarPro
             ))}
           </nav>
         </div>
+        ) : null}
       </div>
     </div>
   )

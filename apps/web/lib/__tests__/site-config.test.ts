@@ -3,6 +3,7 @@ import { resolveSiteConfig } from '@/lib/site-config'
 describe('resolveSiteConfig', () => {
   it('prefers environment overrides for deploy-specific branding', () => {
     const config = resolveSiteConfig({
+      SITE_SHOW_AUTH: 'false',
       SITE_DESCRIPTION: 'A focused downloader directory.',
       SITE_DOMAIN: 'serpdownloaders.com',
       SITE_GITHUB_ISSUE_OWNER: 'serpcompany',
@@ -13,9 +14,13 @@ describe('resolveSiteConfig', () => {
       SITE_NAME: 'SERP Downloaders',
       SITE_REDDIT_URL: 'https://reddit.com/r/serp',
       SITE_SHOW_CREATOR_PROJECTS: 'true',
+      SITE_SHOW_DOCS: 'false',
       SITE_SHOW_DEVELOPER_TOOLS: 'true',
+      SITE_SHOW_FAVORITES: 'false',
       SITE_SHOW_FEATURED_GUIDES: 'false',
+      SITE_SHOW_GUIDES: 'true',
       SITE_SHOW_NEWSLETTER: 'false',
+      SITE_SHOW_PROJECTS: 'false',
       SITE_TAGLINE: 'Download-focused product directory',
       SITE_TWITTER_URL: 'https://x.com/serpcompany'
     })
@@ -29,10 +34,15 @@ describe('resolveSiteConfig', () => {
       'https://github.com/serpcompany/json-directory-template/issues'
     )
     expect(config.features).toEqual({
+      showAuth: false,
       showCreatorProjects: true,
+      showDocs: false,
       showDeveloperTools: true,
+      showFavorites: false,
       showFeaturedGuides: false,
-      showNewsletter: false
+      showGuides: true,
+      showNewsletter: false,
+      showProjects: false
     })
   })
 })

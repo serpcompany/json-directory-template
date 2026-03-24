@@ -102,6 +102,9 @@ Acceptance:
 - [x] Complete a first classification pass for `/projects`, `/guides`, `/docs`, RSS, tools, communities, and website-doc surfaces
 - [x] Finish the metadata/logo pass so public metadata surfaces share the staged asset URLs
 - [x] Decide the long-term treatment of tools, communities, guides, docs, and website-doc/llms surfaces
+- [x] Strip sourcemaps and export-debug text artifacts from the public deploy artifact by default
+- [x] Remove auth, favorites, projects, docs, and guides routes from the default static artifact unless explicitly enabled
+- [ ] Complete the deeper upstream audit for placeholder/demo routes against `thedaviddias/llms-txt-hub`
 
 Acceptance:
 - [x] The active starter shell is largely site-config/content driven instead of repo-brand driven

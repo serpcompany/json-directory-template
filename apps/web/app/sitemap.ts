@@ -5,6 +5,7 @@ import type { MetadataRoute } from 'next'
 import { categories } from '@/lib/categories'
 import { getWebsites } from '@/lib/content-loader'
 import { SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
+import { siteConfig } from '@/lib/site-config'
 
 export const dynamic = 'force-static'
 
@@ -12,7 +13,14 @@ export const dynamic = 'force-static'
  * Static routes that should be included in the sitemap
  * Excludes: 'news' (redirects to /), 'submit' (noindex)
  */
-const STATIC_ROUTES = ['projects', 'websites', 'guides', 'about', 'members']
+function getStaticRouteSlugs(): string[] {
+  return [
+    ...(siteConfig.features.showProjects ? ['projects'] : []),
+    'websites',
+    ...(siteConfig.features.showGuides ? ['guides'] : []),
+    'about'
+  ]
+}
 
 /**
  * Stable build date used for static route lastModified instead of calling new Date() per entry
@@ -80,7 +88,7 @@ function getPriority(path: string): number {
 
   if (path.startsWith('guides/')) return 0.8
   if (path.startsWith('resources/')) return 0.7
-  if (STATIC_ROUTES.includes(path)) return 0.9 // High priority for main static routes
+  if (getStaticRouteSlugs().includes(path)) return 0.9 // High priority for main static routes
   return 0.5 // Other pages
 }
 
@@ -91,7 +99,7 @@ function getPriority(path: string): number {
  * @returns Array of sitemap entries for static routes
  */
 function getStaticRoutes(baseUrl: string): MetadataRoute.Sitemap {
-  return STATIC_ROUTES.map(route => ({
+  return getStaticRouteSlugs().map(route => ({
     url: `${baseUrl}/${route}`,
     lastModified: BUILD_DATE,
     changeFrequency: 'weekly',
@@ -142,6 +150,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const page of pages) {
       // Skip u/ paths (user profiles are disallowed in robots.txt)
       if (page.startsWith('u/')) continue
+      if (!siteConfig.features.showDocs && (page === 'docs' || page.startsWith('docs/'))) continue
+      if (!siteConfig.features.showGuides && (page === 'guides' || page.startsWith('guides/'))) continue
 
       routes.push({
         url: `${baseUrl}/${page}`,

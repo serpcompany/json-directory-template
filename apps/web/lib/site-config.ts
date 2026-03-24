@@ -7,10 +7,15 @@ export type SiteDrBadge = {
 }
 
 export type SiteFeatureFlags = {
+  showAuth: boolean
   showCreatorProjects: boolean
+  showDocs: boolean
   showDeveloperTools: boolean
+  showFavorites: boolean
   showFeaturedGuides: boolean
+  showGuides: boolean
   showNewsletter: boolean
+  showProjects: boolean
 }
 
 export type SiteConfig = {
@@ -69,10 +74,15 @@ const defaultSiteConfig: SiteConfig = {
     height: 50
   },
   features: {
+    showAuth: false,
     showCreatorProjects: false,
+    showDocs: false,
     showDeveloperTools: false,
+    showFavorites: false,
     showFeaturedGuides: false,
-    showNewsletter: true
+    showGuides: false,
+    showNewsletter: true,
+    showProjects: false
   }
 }
 
@@ -112,21 +122,41 @@ export function resolveSiteConfig(env: SiteConfigEnv = process.env): SiteConfig 
       height: Number(env.SITE_DR_BADGE_HEIGHT || defaultSiteConfig.drBadge.height)
     },
     features: {
+      showAuth: parseBooleanEnv(
+        env.SITE_SHOW_AUTH,
+        defaultSiteConfig.features.showAuth
+      ),
       showCreatorProjects: parseBooleanEnv(
         env.SITE_SHOW_CREATOR_PROJECTS,
         defaultSiteConfig.features.showCreatorProjects
+      ),
+      showDocs: parseBooleanEnv(
+        env.SITE_SHOW_DOCS,
+        defaultSiteConfig.features.showDocs
       ),
       showDeveloperTools: parseBooleanEnv(
         env.SITE_SHOW_DEVELOPER_TOOLS,
         defaultSiteConfig.features.showDeveloperTools
       ),
+      showFavorites: parseBooleanEnv(
+        env.SITE_SHOW_FAVORITES,
+        defaultSiteConfig.features.showFavorites
+      ),
       showFeaturedGuides: parseBooleanEnv(
         env.SITE_SHOW_FEATURED_GUIDES,
         defaultSiteConfig.features.showFeaturedGuides
       ),
+      showGuides: parseBooleanEnv(
+        env.SITE_SHOW_GUIDES,
+        defaultSiteConfig.features.showGuides
+      ),
       showNewsletter: parseBooleanEnv(
         env.SITE_SHOW_NEWSLETTER,
         defaultSiteConfig.features.showNewsletter
+      ),
+      showProjects: parseBooleanEnv(
+        env.SITE_SHOW_PROJECTS,
+        defaultSiteConfig.features.showProjects
       )
     }
   }

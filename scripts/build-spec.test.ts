@@ -35,10 +35,16 @@ const exampleBuildSpec = {
     strategy: 'github-pages-repo-sync'
   },
   features: {
+    showAuth: false,
     showCreatorProjects: false,
+    showDocs: false,
     showDeveloperTools: false,
+    showFavorites: false,
     showFeaturedGuides: false,
+    showGuides: false,
     showNewsletter: true
+    ,
+    showProjects: false
   },
   site: {
     description: 'Directory of download-focused browser tools.',
@@ -110,8 +116,14 @@ describe('buildSiteDefinitionFromBuildSpec', () => {
           width: 200
         },
         features: {
+          showAuth: false,
           showDeveloperTools: false,
+          showDocs: false,
+          showFavorites: false,
+          showGuides: false,
           showNewsletter: true
+          ,
+          showProjects: false
         },
         name: 'SERP Downloaders'
       },
@@ -127,6 +139,7 @@ describe('buildSiteDefinitionFromBuildSpec', () => {
 describe('buildSpecFieldTypes', () => {
   it('classifies the operator-facing build contract fields', () => {
     expect(buildSpecFieldTypes['branding.drBadge']).toBe('provider-payload')
+    expect(buildSpecFieldTypes['features.showAuth']).toBe('boolean')
     expect(buildSpecFieldTypes['features.showNewsletter']).toBe('boolean')
     expect(buildSpecFieldTypes['social.githubUrl']).toBe('url')
     expect(buildSpecFieldTypes['branding.logo']).toBe('file-reference')

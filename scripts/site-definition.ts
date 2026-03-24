@@ -11,10 +11,15 @@ const drBadgeSchema = z.object({
 })
 
 const siteFeaturesSchema = z.object({
+  showAuth: z.boolean().default(false),
   showCreatorProjects: z.boolean().default(false),
+  showDocs: z.boolean().default(false),
   showDeveloperTools: z.boolean().default(false),
+  showFavorites: z.boolean().default(false),
   showFeaturedGuides: z.boolean().default(false),
-  showNewsletter: z.boolean().default(true)
+  showGuides: z.boolean().default(false),
+  showNewsletter: z.boolean().default(true),
+  showProjects: z.boolean().default(false)
 })
 
 const siteSurfaceSchema = z.object({
@@ -120,10 +125,15 @@ export function buildSiteEnvironment(definition: SiteDefinition): Record<string,
     SITE_ID: definition.id,
     SITE_NAME: definition.site.name,
     SITE_REDDIT_URL: definition.site.redditUrl,
+    SITE_SHOW_AUTH: String(definition.site.features.showAuth),
     SITE_SHOW_CREATOR_PROJECTS: String(definition.site.features.showCreatorProjects),
+    SITE_SHOW_DOCS: String(definition.site.features.showDocs),
     SITE_SHOW_DEVELOPER_TOOLS: String(definition.site.features.showDeveloperTools),
+    SITE_SHOW_FAVORITES: String(definition.site.features.showFavorites),
     SITE_SHOW_FEATURED_GUIDES: String(definition.site.features.showFeaturedGuides),
+    SITE_SHOW_GUIDES: String(definition.site.features.showGuides),
     SITE_SHOW_NEWSLETTER: String(definition.site.features.showNewsletter),
+    SITE_SHOW_PROJECTS: String(definition.site.features.showProjects),
     SITE_TAGLINE: definition.site.tagline,
     SITE_TWITTER_URL: definition.site.twitterUrl
   }

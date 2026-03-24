@@ -5,6 +5,7 @@ import {
   existsSync,
   mkdirSync,
   openSync,
+  readdirSync,
   readFileSync,
   renameSync,
   rmSync,
@@ -90,7 +91,7 @@ function prepareSourceData(input: BuildInputTarget): { restore: () => void } {
   ensureParentDir(outputPath)
 
   if (sourcePlan.kind === 'trial-products-json') {
-    writeTrialWebsiteEntries(sourcePlan.path, sourcePlan.outputPath, {
+  writeTrialWebsiteEntries(sourcePlan.path, sourcePlan.outputPath, {
       category: sourcePlan.category,
       featuredCount: sourcePlan.featuredCount,
       publishedAt: sourcePlan.publishedAt
@@ -231,6 +232,73 @@ function restoreAuthRouteAfterStaticExport(): void {
   renameSync(authRouteBackupPath, authRoutePath)
 }
 
+type ArtifactSurfaceFlags = {
+  showAuth: boolean
+  showDocs: boolean
+  showFavorites: boolean
+  showGuides: boolean
+  showProjects: boolean
+}
+
+function removeArtifactPath(path: string): void {
+  if (existsSync(path)) {
+    rmSync(path, { force: true, recursive: true })
+  }
+}
+
+function pruneArtifactTree(path: string): void {
+  for (const entry of readdirSync(path, { withFileTypes: true })) {
+    const entryPath = resolve(path, entry.name)
+
+    if (entry.isDirectory()) {
+      pruneArtifactTree(entryPath)
+      continue
+    }
+
+    if (entry.name.endsWith('.map')) {
+      rmSync(entryPath, { force: true })
+      continue
+    }
+
+    if (entry.name.startsWith('__next') && entry.name.endsWith('.txt')) {
+      rmSync(entryPath, { force: true })
+      continue
+    }
+
+    if (entry.name === 'index.txt') {
+      rmSync(entryPath, { force: true })
+    }
+  }
+}
+
+export function pruneStaticArtifactDir(artifactDir: string, flags: ArtifactSurfaceFlags): void {
+  pruneArtifactTree(artifactDir)
+
+  removeArtifactPath(resolve(artifactDir, '_not-found'))
+  removeArtifactPath(resolve(artifactDir, '404'))
+
+  if (!flags.showAuth) {
+    removeArtifactPath(resolve(artifactDir, 'account'))
+    removeArtifactPath(resolve(artifactDir, 'login'))
+  }
+
+  if (!flags.showFavorites) {
+    removeArtifactPath(resolve(artifactDir, 'favorites'))
+  }
+
+  if (!flags.showProjects) {
+    removeArtifactPath(resolve(artifactDir, 'projects'))
+  }
+
+  if (!flags.showDocs) {
+    removeArtifactPath(resolve(artifactDir, 'docs'))
+  }
+
+  if (!flags.showGuides) {
+    removeArtifactPath(resolve(artifactDir, 'guides'))
+  }
+}
+
 function finalizeArtifactDir(input: BuildInputTarget): void {
   const definition = loadSiteDefinitionFromInput(input)
   const appOutDir = resolveSiteAppOutDir(definition)
@@ -247,6 +315,14 @@ function finalizeArtifactDir(input: BuildInputTarget): void {
   if (existsSync(notFoundSourcePath)) {
     copyFileSync(notFoundSourcePath, notFoundTargetPath)
   }
+
+  pruneStaticArtifactDir(artifactDir, {
+    showAuth: definition.site.features.showAuth,
+    showDocs: definition.site.features.showDocs,
+    showFavorites: definition.site.features.showFavorites,
+    showGuides: definition.site.features.showGuides,
+    showProjects: definition.site.features.showProjects
+  })
 
   closeSync(openSync(noJekyllPath, 'w'))
   writeFileSync(cnamePath, `${definition.site.domain}\n`)
