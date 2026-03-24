@@ -18,6 +18,8 @@
 - Optional `content` in `data/websites.json` now flows through the JSON loader and can power the detail page body.
 - Optional `resourceLinks` in `data/websites.json` can power the detail-page Resources card without introducing special-case `llms.txt` fields.
 - Prefer `automation-workflow` as the automation category slug. The loader still normalizes the older `integration-automation` value during the transition.
+- `pnpm validate:site -- --site <id>` now rejects unknown category slugs up front and reports the active category set derived from real listing data.
+- Public category pages and category navigation should only come from categories that actually have attached listings; empty taxonomy buckets should not generate pages or nav links.
 - Treat `packages/content/data/websites/**` as legacy/reference website content unless and until a future migration path is formalized.
 
 ## Docs Content
@@ -41,6 +43,13 @@
 - The current website/entity data contract is documented in `docs/knowledge/entity-data-shape.md`.
 - The config now covers both public social links and repo-specific submit/report fields, so shell links and GitHub issue flows can move without hardcoded owner/repo strings.
 - The active app `tsconfig.json` now excludes `_archive`, which keeps typecheck and build focused on the starter instead of parked legacy code.
+
+## Sitemaps
+
+- The final static artifact now rewrites the exported `sitemap.xml` into a sitemap index and also writes an explicit `sitemap-index.xml` compatibility twin.
+- Split sitemap families are emitted as `pages-index.xml`, `listing-index.xml`, and `categories-index.xml`, with `10,000` URLs per leaf file by default.
+- Category sitemap files are emitted only when the final artifact actually contains category pages.
+- The sitemap split runs against the finalized static artifact, so it reflects the shipped public route map after pruning and public path remaps.
 
 ## Rebrand Touchpoints
 

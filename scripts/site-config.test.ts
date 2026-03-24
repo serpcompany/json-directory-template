@@ -1,10 +1,17 @@
+import { ZodError } from 'zod'
 import { describe, expect, it } from 'vitest'
+import { defaultSiteConfig } from '../sites/site-config.default.ts'
 import {
   buildSiteEnvironment,
   loadCheckedInSite,
   resolveResolvedSiteConfig,
-  resolveSiteArtifactDir
+  resolveSiteArtifactDir,
+  validateCheckedInSiteConfig
 } from './site-config.ts'
+
+function cloneDefaultSiteConfig() {
+  return structuredClone(defaultSiteConfig)
+}
 
 describe('loadCheckedInSite', () => {
   it('loads the checked-in serpdownloaders site config', () => {
@@ -64,6 +71,56 @@ describe('loadCheckedInSite', () => {
     expect(config.copy.listingName.singular).toBe('listing')
     expect(config.copy.docsLabel).toBe('Docs')
     expect(config.copy.networkLabel).toBe('Network')
+  })
+})
+
+describe('validateCheckedInSiteConfig', () => {
+  it('rejects duplicate public route base paths', () => {
+    const invalidConfig = cloneDefaultSiteConfig()
+    invalidConfig.routes.listingBasePath = invalidConfig.routes.docsBasePath
+
+    let error: unknown
+
+    try {
+      validateCheckedInSiteConfig(invalidConfig)
+    } catch (caughtError) {
+      error = caughtError
+    }
+
+    expect(error).toBeInstanceOf(ZodError)
+    expect((error as ZodError).issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message:
+            'routes.listingBasePath cannot reuse "docs" because routes.docsBasePath already uses it.',
+          path: ['routes', 'listingBasePath']
+        })
+      ])
+    )
+  })
+
+  it('rejects reserved public route base paths', () => {
+    const invalidConfig = cloneDefaultSiteConfig()
+    invalidConfig.routes.networkBasePath = 'tools'
+
+    let error: unknown
+
+    try {
+      validateCheckedInSiteConfig(invalidConfig)
+    } catch (caughtError) {
+      error = caughtError
+    }
+
+    expect(error).toBeInstanceOf(ZodError)
+    expect((error as ZodError).issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message:
+            'routes.networkBasePath cannot use "tools". /tools is reserved for future first-party tool pages.',
+          path: ['routes', 'networkBasePath']
+        })
+      ])
+    )
   })
 })
 

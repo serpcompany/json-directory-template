@@ -6,6 +6,16 @@ import {
 } from '../sites/index.ts'
 import { resolveDrBadgeConfig } from '../sites/types.ts'
 
+const reservedPublicRouteBasePaths = {
+  categories: 'Public category pages always use /categories/[slug].',
+  posts: 'Public editorial posts always use /posts/[slug] when enabled.',
+  tools: '/tools is reserved for future first-party tool pages.'
+} as const
+
+function normalizePublicRouteBasePath(basePath: string): string {
+  return basePath.replace(/^\/+|\/+$/g, '')
+}
+
 const assetSourceSchema = z.union([
   z.object({
     path: z.string().min(1),
@@ -103,11 +113,47 @@ const checkedInSiteConfigSchema = z.object({
     .optional(),
   features: featureFlagsSchema.default({}),
   id: z.string().min(1),
-  routes: z.object({
-    docsBasePath: z.string().regex(/^[a-z0-9-]+$/).default('docs'),
-    listingBasePath: z.string().regex(/^[a-z0-9-]+$/).default('listing'),
-    networkBasePath: z.string().regex(/^[a-z0-9-]+$/).default('network')
-  }),
+  routes: z
+    .object({
+      docsBasePath: z.string().regex(/^[a-z0-9-]+$/).default('docs'),
+      listingBasePath: z.string().regex(/^[a-z0-9-]+$/).default('listing'),
+      networkBasePath: z.string().regex(/^[a-z0-9-]+$/).default('network')
+    })
+    .superRefine((routes, ctx) => {
+      const routeFields = [
+        ['docsBasePath', normalizePublicRouteBasePath(routes.docsBasePath)],
+        ['listingBasePath', normalizePublicRouteBasePath(routes.listingBasePath)],
+        ['networkBasePath', normalizePublicRouteBasePath(routes.networkBasePath)]
+      ] as const
+
+      const seenRouteFields = new Map<string, (typeof routeFields)[number][0]>()
+
+      for (const [fieldName, fieldValue] of routeFields) {
+        const reservedMessage =
+          reservedPublicRouteBasePaths[fieldValue as keyof typeof reservedPublicRouteBasePaths]
+
+        if (reservedMessage) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `routes.${fieldName} cannot use "${fieldValue}". ${reservedMessage}`,
+            path: [fieldName]
+          })
+        }
+
+        const existingField = seenRouteFields.get(fieldValue)
+
+        if (existingField) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `routes.${fieldName} cannot reuse "${fieldValue}" because routes.${existingField} already uses it.`,
+            path: [fieldName]
+          })
+          continue
+        }
+
+        seenRouteFields.set(fieldValue, fieldName)
+      }
+    }),
   site: z.object({
     description: z.string().min(1),
     domain: z.string().min(1),
@@ -133,6 +179,12 @@ export type SiteInputTarget = {
   siteId?: string
 }
 
+export function validateCheckedInSiteConfig(
+  siteConfig: CheckedInSiteConfig
+): CheckedInSiteConfigRecord {
+  return checkedInSiteConfigSchema.parse(siteConfig)
+}
+
 export function parseSiteInputArgs(
   argv: string[],
   env: NodeJS.ProcessEnv = process.env
@@ -149,7 +201,7 @@ export function parseSiteInputArgs(
 }
 
 export function loadCheckedInSite(siteId?: string): CheckedInSiteConfigRecord {
-  return checkedInSiteConfigSchema.parse(resolveCheckedInSiteConfig(siteId))
+  return validateCheckedInSiteConfig(resolveCheckedInSiteConfig(siteId))
 }
 
 export function loadCheckedInSiteFromInput(

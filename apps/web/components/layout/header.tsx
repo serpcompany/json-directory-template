@@ -19,7 +19,15 @@ import { MobileDrawer } from './mobile-drawer'
  *
  * @returns JSX.Element - Header component
  */
-export function Header({ authState }: { authState?: HeaderAuthState }) {
+export function Header({
+  activeCategorySlugs = [],
+  authState,
+  featuredCount = 0
+}: {
+  activeCategorySlugs?: string[]
+  authState?: HeaderAuthState
+  featuredCount?: number
+}) {
   const [showMobileSearch, setShowMobileSearch] = useState(false)
   const [showMobileDrawer, setShowMobileDrawer] = useState(false)
   const [showAutocomplete, setShowAutocomplete] = useState(false)
@@ -127,6 +135,7 @@ export function Header({ authState }: { authState?: HeaderAuthState }) {
 
           {/* Search - Center (prominent on desktop) */}
           <DesktopSearchForm
+            availableCategorySlugs={activeCategorySlugs}
             searchQuery={searchQuery}
             onSearchChange={handleSearchChange}
             onInputFocus={handleInputFocus}
@@ -202,6 +211,7 @@ export function Header({ authState }: { authState?: HeaderAuthState }) {
 
         {/* Mobile search overlay */}
         <MobileSearchOverlay
+          availableCategorySlugs={activeCategorySlugs}
           showMobileSearch={showMobileSearch}
           searchQuery={searchQuery}
           onSearchChange={handleMobileSearchChange}
@@ -222,9 +232,11 @@ export function Header({ authState }: { authState?: HeaderAuthState }) {
 
       {/* Mobile Drawer */}
       <MobileDrawer
+        availableCategorySlugs={activeCategorySlugs}
         isOpen={showMobileDrawer}
         onClose={() => setShowMobileDrawer(false)}
-        featuredCount={6}
+        featuredCount={featuredCount}
+        showFeaturedCategory={featuredCount > 0}
         authState={authState}
       />
     </>

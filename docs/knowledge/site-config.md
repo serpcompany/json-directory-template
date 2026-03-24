@@ -41,6 +41,8 @@ Terminology rule:
 - keep `routes.listingBasePath` configurable, with `listing` as the current starter default public path
 - keep public category pages at `/categories/[slug]`
 - keep public posts at `/posts/[slug]` when the optional editorial surface is enabled
+- keep `routes.docsBasePath`, `routes.listingBasePath`, and `routes.networkBasePath` unique; do not reuse one public base path for another
+- treat `/posts`, `/categories`, and reserved `/tools` as starter-owned paths that checked-in route base config cannot override
 - keep raw/internal names like `website`, `websites`, and `Website*` only where they still describe compatibility fields or internal implementation details
 - the raw JSON field `website` still specifically means the listing destination URL; that field does not force the UI copy to say `website`
 - keep `routes.projects` and `website.*` as internal compatibility route keys in code for now, but treat `network` and `listing` as the public product concepts

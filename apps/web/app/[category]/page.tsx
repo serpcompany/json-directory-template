@@ -9,7 +9,8 @@ import { FeaturedGuidesSection } from '@/components/sections/featured-guides-sec
 import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
 import { categories, getCategoryBySlug } from '@/lib/categories'
-import { getGuides } from '@/lib/content-loader'
+import { getGuides, getWebsites } from '@/lib/content-loader'
+import { getActiveCategories, getFeaturedListingCount } from '@/lib/category-navigation'
 import { getRoute } from '@/lib/routes'
 import { getCategorySEO } from '@/lib/seo/category-seo'
 import {
@@ -30,8 +31,7 @@ interface CategoryPageProps {
  * Generates static params for all category pages
  */
 export async function generateStaticParams() {
-  // Generate static params for all categories
-  return categories.map(category => ({
+  return getActiveCategories(getWebsites()).map(category => ({
     category: category.slug
   }))
 }
@@ -92,6 +92,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const seoContent = getCategorySEO(category.slug, category)
   const categoryPath = getRoute('category.page', { category: category.slug })
   const categoryUrl = `${SITE_PUBLIC_URL}${categoryPath}`
+  const activeCategories = getActiveCategories(allProjects)
+  const activeCategorySlugs = activeCategories.map(activeCategory => activeCategory.slug)
 
   // Special handling for featured category
   let categoryProjects = []
@@ -105,6 +107,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     categoryProjects = allProjects
       .filter(project => project.category === category.slug)
       .sort((a, b) => a.name.localeCompare(b.name))
+  }
+
+  if (categoryProjects.length === 0) {
+    notFound()
   }
 
   return (
@@ -196,7 +202,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
       <div className="border-t">
         <div className="relative flex h-full w-full max-w-full flex-row flex-nowrap">
-          <AppSidebar currentCategory={category.slug} featuredCount={featuredProjects.length} />
+          <AppSidebar
+            availableCategorySlugs={activeCategorySlugs}
+            currentCategory={category.slug}
+            featuredCount={getFeaturedListingCount(featuredProjects)}
+          />
 
           <div className="relative flex h-full w-full flex-col gap-3 px-6 pt-6">
             {/* Breadcrumb Navigation */}

@@ -12,6 +12,8 @@ import { Header } from '@/components/layout/header'
 import { BackToTop } from '@/components/ui/back-to-top'
 import { FavoritesProvider } from '@/contexts/favorites-context'
 import { getHeaderAuthState } from '@/lib/auth'
+import { getActiveCategories, getFeaturedListingCount } from '@/lib/category-navigation'
+import { getWebsites } from '@/lib/content-loader'
 import {
   SITE_APPLE_TOUCH_ICON_URL,
   SITE_DESCRIPTION,
@@ -42,6 +44,10 @@ type RootLayoutProps = {
 export default async function RootLayout({ children }: RootLayoutProps): Promise<ReactElement> {
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID
   const authState = await getHeaderAuthState()
+  const allListings = getWebsites()
+  const activeCategories = getActiveCategories(allListings)
+  const activeCategorySlugs = activeCategories.map(category => category.slug)
+  const featuredCount = getFeaturedListingCount(allListings)
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -60,7 +66,11 @@ export default async function RootLayout({ children }: RootLayoutProps): Promise
           <FavoritesProvider>
             <AnalyticsTracker />
             <div className="flex min-h-screen flex-col">
-              <Header authState={authState} />
+              <Header
+                activeCategorySlugs={activeCategorySlugs}
+                authState={authState}
+                featuredCount={featuredCount}
+              />
               <main className="flex flex-1 flex-col">{children}</main>
               <Footer />
             </div>

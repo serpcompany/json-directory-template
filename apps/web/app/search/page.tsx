@@ -3,7 +3,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { SearchResults } from '@/components/search/search-results'
-import { categories } from '@/lib/categories'
+import { getActiveCategories } from '@/lib/category-navigation'
+import { getWebsites } from '@/lib/content-loader'
 import { externalResources } from '@/lib/external-resources'
 import { getRoute } from '@/lib/routes'
 import { generateBaseMetadata } from '@/lib/seo/seo-config'
@@ -34,6 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function SearchPage() {
   const showExternalResources =
     siteConfig.features.showExternalResources && externalResources.length > 0
+  const activeCategories = getActiveCategories(getWebsites())
 
   return (
     <div className="border-t">
@@ -53,7 +55,7 @@ export default function SearchPage() {
                   <HomeIcon className="h-4 w-4" />
                   {siteCopy.allLabel}
                 </Link>
-                {categories.map(category => (
+                {activeCategories.map(category => (
                   <Link
                     key={category.slug}
                     href={getRoute('category.page', { category: category.slug })}

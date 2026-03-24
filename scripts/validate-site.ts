@@ -9,7 +9,11 @@ import {
 } from './site-config.ts'
 import { createRunTempDir } from './run-context.ts'
 import { writeTrialWebsiteEntries } from './trial-build.ts'
-import { websiteJsonEntriesSchema } from '../apps/web/lib/website-schema.ts'
+import { getActiveCategories, getUnknownCategorySlugs } from '../apps/web/lib/category-navigation.ts'
+import {
+  normalizeJsonWebsite,
+  websiteJsonEntriesSchema
+} from '../apps/web/lib/website-schema.ts'
 
 const workspaceRoot = resolve(process.cwd())
 
@@ -50,6 +54,20 @@ export function validateSite(input: SiteInputTarget): void {
     }
 
     console.log(`Valid site data for ${definition.id} — ${result.data.length} entries`)
+
+    const normalizedListings = result.data.map(normalizeJsonWebsite)
+    const unknownCategorySlugs = getUnknownCategorySlugs(normalizedListings)
+
+    if (unknownCategorySlugs.length > 0) {
+      throw new Error(
+        `Validation failed for site ${definition.id}\nUnknown category slugs: ${unknownCategorySlugs.join(', ')}`
+      )
+    }
+
+    const activeCategories = getActiveCategories(normalizedListings)
+    console.log(
+      `Active categories for ${definition.id}: ${activeCategories.map(category => category.slug).join(', ')}`
+    )
   } finally {
     runTempDir.cleanup()
   }

@@ -24,6 +24,7 @@ import {
   type SiteInputTarget
 } from './site-config.ts'
 import { createRunTempDir } from './run-context.ts'
+import { writeSplitSitemaps } from './sitemap-files.ts'
 import { writeTrialWebsiteEntries } from './trial-build.ts'
 import { validateSite } from './validate-site.ts'
 
@@ -388,6 +389,10 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     docsBasePath: definition.routes.docsBasePath,
     listingBasePath: definition.routes.listingBasePath,
     networkBasePath: definition.routes.networkBasePath
+  })
+  writeSplitSitemaps(artifactDir, {
+    baseUrl: definition.site.publicUrl,
+    listingBasePath: definition.routes.listingBasePath
   })
 
   closeSync(openSync(noJekyllPath, 'w'))

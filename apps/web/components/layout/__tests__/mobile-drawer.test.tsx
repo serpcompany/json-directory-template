@@ -1,5 +1,6 @@
 import { render, screen } from '@/test/test-utils'
 import { MobileDrawer } from '@/components/layout/mobile-drawer'
+import { categories } from '@/lib/categories'
 import { siteCopy } from '@/lib/site-copy'
 
 jest.mock('@/components/auth/sign-out-button', () => ({
@@ -29,5 +30,20 @@ describe('MobileDrawer', () => {
 
     expect(screen.queryByRole('heading', { name: 'Resources' })).not.toBeInTheDocument()
     expect(screen.queryByText('Chrome Extension')).not.toBeInTheDocument()
+  })
+
+  it('renders only active categories and hides the featured shortcut when there are no featured listings', () => {
+    render(
+      <MobileDrawer
+        isOpen={true}
+        onClose={jest.fn()}
+        availableCategorySlugs={[categories[0]!.slug]}
+        showFeaturedCategory={false}
+      />
+    )
+
+    expect(screen.getByRole('link', { name: categories[0]!.name })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'AI & Machine Learning' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /featured/i })).not.toBeInTheDocument()
   })
 })

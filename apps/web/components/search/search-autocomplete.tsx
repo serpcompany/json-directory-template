@@ -22,6 +22,7 @@ interface SearchSuggestion {
 }
 
 interface SearchAutocompleteProps {
+  availableCategorySlugs: string[]
   searchQuery: string
   onSelect?: (suggestion: SearchSuggestion) => void
   isOpen: boolean
@@ -33,6 +34,7 @@ interface SearchAutocompleteProps {
  * Renders a search autocomplete dropdown with suggestions, recent searches, and categories
  */
 export function SearchAutocomplete({
+  availableCategorySlugs,
   searchQuery,
   onSelect,
   isOpen,
@@ -45,6 +47,9 @@ export function SearchAutocomplete({
   const router = useRouter()
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { trackSearch, trackSearchAutocomplete } = useAnalyticsEvents()
+  const availableCategories = categories.filter(category =>
+    availableCategorySlugs.includes(category.slug)
+  )
 
   const getRecentSearches = useCallback((): string[] => {
     if (typeof window === 'undefined') return []
@@ -71,7 +76,7 @@ export function SearchAutocomplete({
           title: search,
           icon: Clock
         }))
-        const categoryMatches = categories.slice(0, 3).map(cat => ({
+        const categoryMatches = availableCategories.slice(0, 3).map(cat => ({
           type: 'category' as const,
           title: `Browse ${cat.name}`,
           description: `View all ${cat.name.toLowerCase()} listings`,
@@ -104,7 +109,7 @@ export function SearchAutocomplete({
             category: item.category,
             website: item.website
           }))
-        const categoryMatches = categories
+        const categoryMatches = availableCategories
           .filter(cat => cat.name.toLowerCase().includes(query) || cat.slug.includes(query))
           .slice(0, 2)
           .map(cat => ({
@@ -127,7 +132,7 @@ export function SearchAutocomplete({
 
     const debounceTimer = setTimeout(fetchSuggestions, 150)
     return () => clearTimeout(debounceTimer)
-  }, [searchQuery, getRecentSearches])
+  }, [availableCategories, searchQuery, getRecentSearches])
 
   useEffect(() => {
     if (!isOpen) return

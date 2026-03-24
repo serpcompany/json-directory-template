@@ -5,6 +5,7 @@ import { SearchAutocomplete } from '@/components/search/search-autocomplete'
 import { siteCopy } from '@/lib/site-copy'
 
 interface DesktopSearchFormProps {
+  availableCategorySlugs: string[]
   searchQuery: string
   onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onInputFocus: () => void
@@ -27,6 +28,7 @@ interface DesktopSearchFormProps {
  * @returns JSX.Element - Desktop search form
  */
 export function DesktopSearchForm({
+  availableCategorySlugs,
   searchQuery,
   onSearchChange,
   onInputFocus,
@@ -57,6 +59,7 @@ export function DesktopSearchForm({
           <Search className="h-4 w-4" />
         </button>
         <SearchAutocomplete
+          availableCategorySlugs={availableCategorySlugs}
           searchQuery={searchQuery}
           isOpen={showAutocomplete}
           onClose={onAutocompleteClose}
@@ -69,6 +72,7 @@ export function DesktopSearchForm({
 }
 
 interface MobileSearchOverlayProps {
+  availableCategorySlugs: string[]
   showMobileSearch: boolean
   searchQuery: string
   onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -93,6 +97,7 @@ interface MobileSearchOverlayProps {
  * @returns JSX.Element - Mobile search overlay
  */
 export function MobileSearchOverlay({
+  availableCategorySlugs,
   showMobileSearch,
   searchQuery,
   onSearchChange,
@@ -136,6 +141,7 @@ export function MobileSearchOverlay({
               <Search className="h-4 w-4" />
             </button>
             <SearchAutocomplete
+              availableCategorySlugs={availableCategorySlugs}
               searchQuery={searchQuery}
               isOpen={showMobileAutocomplete}
               onClose={() => onMobileSearchClose()}

@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { logger } from '@thedaviddias/logging'
 import type { MetadataRoute } from 'next'
 import { categories } from '@/lib/categories'
+import { getActiveCategories, hasFeaturedListings } from '@/lib/category-navigation'
 import { getWebsites } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
 import { SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
@@ -158,7 +159,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
 
     // Add category pages with proper SEO metadata
-    categories.forEach(category => {
+    const websites = getWebsites()
+    const activeCategories = getActiveCategories(websites)
+
+    activeCategories.forEach(category => {
       routes.push({
         url: `${baseUrl}${getRoute('category.page', { category: category.slug })}`,
         lastModified: BUILD_DATE,
@@ -167,18 +171,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       })
     })
 
-    routes.push({
-      url: `${baseUrl}${getRoute('category.page', { category: 'featured' })}`,
-      lastModified: BUILD_DATE,
-      changeFrequency: 'daily',
-      priority: getPriority(stripLeadingSlash(getRoute('category.page', { category: 'featured' })))
-    })
+    if (hasFeaturedListings(websites)) {
+      routes.push({
+        url: `${baseUrl}${getRoute('category.page', { category: 'featured' })}`,
+        lastModified: BUILD_DATE,
+        changeFrequency: 'daily',
+        priority: getPriority(
+          stripLeadingSlash(getRoute('category.page', { category: 'featured' }))
+        )
+      })
+    }
 
     // Add static routes
     routes.push(...getStaticRoutes(baseUrl))
 
     // Add all listing detail pages (the core content)
-    const websites = getWebsites()
     for (const website of websites) {
       routes.push({
         url: `${baseUrl}${getRoute('listing.detail', { slug: website.slug })}`,

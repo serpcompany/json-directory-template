@@ -15,26 +15,33 @@ import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
 interface MobileDrawerProps {
+  availableCategorySlugs?: string[]
   authState?: HeaderAuthState
   isOpen: boolean
   onClose: () => void
   featuredCount?: number
+  showFeaturedCategory?: boolean
 }
 
 /**
  * Mobile navigation drawer component
  */
 export function MobileDrawer({
+  availableCategorySlugs,
   authState,
   isOpen,
   onClose,
-  featuredCount
+  featuredCount,
+  showFeaturedCategory = Boolean(featuredCount)
 }: MobileDrawerProps) {
   const pathname = usePathname()
   const isAuthenticated = authState?.isAuthenticated ?? false
   const isAuthConfigured = authState?.isConfigured ?? true
   const showExternalResources =
     siteConfig.features.showExternalResources && externalResources.length > 0
+  const availableCategories = availableCategorySlugs
+    ? categories.filter(category => availableCategorySlugs.includes(category.slug))
+    : categories
 
   // Close drawer when route changes
   useEffect(() => {
@@ -215,31 +222,33 @@ export function MobileDrawer({
                 <HomeIcon className="h-4 w-4" />
                 {siteCopy.allLabel}
               </a>
-              <button
-                type="button"
-                onClick={() => {
-                  if (pathname === '/') {
-                    onClose()
-                    setTimeout(() => {
-                      document.getElementById('featured')?.scrollIntoView()
-                    }, 100)
-                  } else {
-                    window.location.href = '/#featured'
-                  }
-                }}
-                className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors w-full text-left"
-              >
-                <div className="flex items-center gap-2">
-                  <Trophy className="h-4 w-4" />
-                  Featured
-                </div>
-                {featuredCount && (
-                  <span className="text-xs bg-muted px-1.5 py-0.5 rounded-full">
-                    {featuredCount}
-                  </span>
-                )}
-              </button>
-              {categories.map(category => (
+              {showFeaturedCategory ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (pathname === '/') {
+                      onClose()
+                      setTimeout(() => {
+                        document.getElementById('featured')?.scrollIntoView()
+                      }, 100)
+                    } else {
+                      window.location.href = '/#featured'
+                    }
+                  }}
+                  className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors w-full text-left"
+                >
+                  <div className="flex items-center gap-2">
+                    <Trophy className="h-4 w-4" />
+                    Featured
+                  </div>
+                  {featuredCount && (
+                    <span className="text-xs bg-muted px-1.5 py-0.5 rounded-full">
+                      {featuredCount}
+                    </span>
+                  )}
+                </button>
+              ) : null}
+              {availableCategories.map(category => (
                 <Link
                   key={category.slug}
                   href={getRoute('category.page', { category: category.slug })}

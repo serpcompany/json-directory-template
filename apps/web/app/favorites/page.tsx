@@ -7,6 +7,7 @@ import { AppSidebar } from '@/components/layout/app-sidebar'
 import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section'
 import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { WebsitesListWithSearch } from '@/components/websites-list-with-search'
+import { getActiveCategories } from '@/lib/category-navigation'
 import { getGuides } from '@/lib/content-loader'
 import { SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 import { siteCopy } from '@/lib/site-copy'
@@ -21,6 +22,8 @@ export const metadata: Metadata = generateBaseMetadata({
 export default async function FavoritesPage() {
   const { allProjects, featuredProjects, totalCount } = await getHomePageData()
   const featuredGuides = await getGuides()
+  const activeCategories = getActiveCategories(allProjects)
+  const activeCategorySlugs = activeCategories.map(category => category.slug)
 
   return (
     <>
@@ -36,7 +39,10 @@ export default async function FavoritesPage() {
 
       <div className="border-t">
         <div className="relative flex h-full w-full max-w-full flex-row flex-nowrap">
-          <AppSidebar featuredCount={featuredProjects.length} />
+          <AppSidebar
+            availableCategorySlugs={activeCategorySlugs}
+            featuredCount={featuredProjects.length}
+          />
 
           {/* Main Content */}
           <div className="relative flex h-full w-full flex-col gap-3 px-6 pt-6 pb-16">

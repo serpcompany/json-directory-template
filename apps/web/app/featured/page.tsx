@@ -1,6 +1,7 @@
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
 import { Trophy } from 'lucide-react'
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { getHomePageData } from '@/actions/get-home-page-data'
 import { CategoryWebsitesList } from '@/components/category-websites-list'
 import { JsonLd } from '@/components/json-ld'
@@ -8,6 +9,7 @@ import { AppSidebar } from '@/components/layout/app-sidebar'
 import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section'
 import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
+import { getActiveCategories, getFeaturedListingCount } from '@/lib/category-navigation'
 import { getGuides } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
 import { SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
@@ -22,10 +24,16 @@ export const metadata: Metadata = generateBaseMetadata({
 })
 
 export default async function FeaturedPage() {
-  const { featuredProjects } = await getHomePageData()
+  const { allProjects, featuredProjects } = await getHomePageData()
   const featuredGuides = await getGuides()
   const featuredPath = getRoute('category.page', { category: 'featured' })
   const featuredUrl = `${SITE_PUBLIC_URL}${featuredPath}`
+  const activeCategories = getActiveCategories(allProjects)
+  const activeCategorySlugs = activeCategories.map(category => category.slug)
+
+  if (getFeaturedListingCount(featuredProjects) === 0) {
+    notFound()
+  }
 
   return (
     <>
@@ -100,7 +108,10 @@ export default async function FeaturedPage() {
 
       <div className="border-t">
         <div className="relative flex h-full w-full max-w-full flex-row flex-nowrap">
-          <AppSidebar featuredCount={featuredProjects.length} />
+          <AppSidebar
+            availableCategorySlugs={activeCategorySlugs}
+            featuredCount={featuredProjects.length}
+          />
 
           <div className="relative flex h-full w-full flex-col gap-3 px-6 pt-6">
             {/* Breadcrumb Navigation */}

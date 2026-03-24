@@ -10,6 +10,7 @@ import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { RecentlyAddedSection } from '@/components/sections/recently-added-section'
 import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
 import { StaticWebsitesList } from '@/components/static-websites-list'
+import { getActiveCategories } from '@/lib/category-navigation'
 import { generateBaseMetadata, generateWebsiteSchema, KEYWORDS } from '@/lib/seo/seo-config'
 import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
@@ -41,6 +42,8 @@ export default async function Home() {
 
   // Sort projects alphabetically by name server-side
   const sortedProjects = [...allProjects].sort((a, b) => a.name.localeCompare(b.name))
+  const activeCategories = getActiveCategories(allProjects)
+  const activeCategorySlugs = activeCategories.map(category => category.slug)
 
   return (
     <>
@@ -50,7 +53,10 @@ export default async function Home() {
       </div>
       <div className="border-t">
         <div className="relative flex h-full w-full max-w-full flex-row flex-nowrap">
-          <AppSidebar featuredCount={featuredProjects.length} />
+          <AppSidebar
+            availableCategorySlugs={activeCategorySlugs}
+            featuredCount={featuredProjects.length}
+          />
 
           <div className="relative flex h-full w-full flex-col px-6 pt-6 pb-16 space-y-8">
             <section>
