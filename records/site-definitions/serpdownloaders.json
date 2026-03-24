@@ -2,7 +2,7 @@
   "id": "serpdownloaders",
   "source": {
     "kind": "trial-products-json",
-    "path": "tmp/serpdownloaders.com/products.json",
+    "path": "records/build-inputs/serpdownloaders/products.json",
     "outputPath": "data/websites.json",
     "category": "automation-workflow",
     "featuredCount": 6,
