@@ -47,12 +47,12 @@ describe('build-and-deploy workflow', () => {
     })
   })
 
-  it('uses the repo deploy secret with a GH_PAT fallback for repo sync pushes', () => {
+  it('uses the configured GH_PAT secret for repo sync pushes', () => {
     const workflow = loadWorkflow()
     const deployJob = workflow.jobs.deploy
     const deployStep = deployJob.steps?.find(step => step.name === 'Deploy')
 
     expect(deployStep).toBeDefined()
-    expect(deployStep?.env?.DEPLOY_TOKEN).toBe('${{ secrets.DEPLOY_TOKEN || secrets.GH_PAT }}')
+    expect(deployStep?.env?.DEPLOY_TOKEN).toBe('${{ secrets.GH_PAT }}')
   })
 })

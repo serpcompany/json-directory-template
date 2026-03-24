@@ -92,11 +92,20 @@ jobs:
           name: build-output
           path: ${{ needs.validate.outputs.artifact_dir }}
 
+      - name: Verify deploy auth
+        env:
+          DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          if [ -z "$DEPLOY_TOKEN" ]; then
+            echo "Missing GH_PAT secret required for cross-repo deploy."
+            exit 1
+          fi
+
       - name: Deploy
         env:
           BUILD_SPEC_PATH: ${{ needs.validate.outputs.spec_path }}
           DEPLOY_REPO_URL: ${{ github.event.inputs.deploy_repo || vars.DEPLOY_REPO_URL || '' }}
           DEPLOY_BRANCH: ${{ github.event.inputs.deploy_branch || vars.DEPLOY_BRANCH || 'main' }}
-          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN || secrets.GH_PAT }}
+          DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
           SITE_ID: ${{ needs.validate.outputs.site_id }}
         run: pnpm deploy:site
