@@ -3,6 +3,7 @@
 Use checked-in site config files under `sites/**` to centralize reusable brand and shell values instead of hardcoding them across the header, footer, metadata, and social links.
 
 Important distinction:
+
 - `sites/site-config.default.ts` and `sites/<id>/site-config.ts` are the checked-in source of truth
 - `sites/site-config.default.ts` is the full starter config, while `sites/<id>/site-config.ts` should stay as a sparse override-only file
 - `apps/web/lib/site-config.ts` is the internal app-facing adapter that resolves those checked-in files into the runtime shape the app uses
@@ -51,95 +52,101 @@ Checked-in source-of-truth shape:
 
 ```ts
 export type CheckedInSiteConfig = {
-  id: string
-  version: 1
+  id: string;
+  version: 1;
   site: {
-    name: string
-    domain: string
-    description: string
-    publicUrl: string
-    tagline: string
-  }
+    name: string;
+    domain: string;
+    description: string;
+    publicUrl: string;
+    tagline: string;
+  };
   social: {
-    githubUrl: string
-    githubRepoUrl: string
-    githubIssueOwner: string
-    githubIssueRepo: string
-    githubIssuesUrl: string
-    githubIssueTemplate: string
-    redditUrl: string
-    twitterUrl: string
-  }
+    githubUrl: string;
+    githubRepoUrl: string;
+    githubIssueOwner: string;
+    githubIssueRepo: string;
+    githubIssuesUrl: string;
+    githubIssueTemplate: string;
+    redditUrl: string;
+    twitterUrl: string;
+  };
   branding: {
     drBadge: {
-      provider: 'serp-dr'
-      domain: string
-      style?: 'serp-dr-v3'
-      alt?: string
-    }
-    favicon?: { source: 'local-path'; path: string }
-    logo?: { source: 'local-path'; path: string }
-    opengraphImage?: { source: 'local-path'; path: string }
-  }
+      provider: 'serp-dr';
+      domain: string;
+      style?: 'serp-dr-v3';
+      alt?: string;
+    };
+    favicon?:
+      | { source: 'local-path'; path: string }
+      | { source: 'url'; url: string };
+    logo?:
+      | { source: 'local-path'; path: string }
+      | { source: 'url'; url: string };
+    opengraphImage?:
+      | { source: 'local-path'; path: string }
+      | { source: 'url'; url: string };
+  };
   content: {
     listingSource:
       | { kind: 'listing-json'; path: string; outputPath?: string }
       | {
-          kind: 'trial-products-json'
-          path: string
-          outputPath?: string
-          category: string
-          featuredCount: number
-          publishedAt: string
-        }
-  }
+          kind: 'trial-products-json';
+          path: string;
+          outputPath?: string;
+          category: string;
+          featuredCount: number;
+          publishedAt: string;
+        };
+  };
   copy: {
-    docsLabel: string
+    docsLabel: string;
     listingName: {
-      singular: string
-      plural: string
-    }
-    networkLabel: string
-    submitLabel: string
-  }
+      singular: string;
+      plural: string;
+    };
+    networkLabel: string;
+    submitLabel: string;
+  };
   routes: {
-    docsBasePath: string
-    listingBasePath: string
-    networkBasePath: string
-  }
+    docsBasePath: string;
+    listingBasePath: string;
+    networkBasePath: string;
+  };
   features: {
-    showAuth: boolean
-    showDocs: boolean
-    showFavorites: boolean
-    showGuides: boolean
-    showProjects: boolean
-    showCreatorProjects: boolean
-    showFeaturedGuides: boolean
-    showExternalResources: boolean
-    showNewsletter: boolean
-  }
+    showAuth: boolean;
+    showDocs: boolean;
+    showFavorites: boolean;
+    showGuides: boolean;
+    showProjects: boolean;
+    showCreatorProjects: boolean;
+    showFeaturedGuides: boolean;
+    showExternalResources: boolean;
+    showNewsletter: boolean;
+  };
   deploy?: {
-    strategy: 'github-pages-repo-sync'
-    repoUrl: string
-    branch: string
-    preserve: string[]
-  }
-}
+    strategy: 'github-pages-repo-sync';
+    repoUrl: string;
+    branch: string;
+    preserve: string[];
+  };
+};
 ```
 
 ## Field meanings
 
-| Field | Required | Notes |
-|------|------|------|
-| `site.*` | Yes | Main public identity and metadata values for the site. |
-| `social.*` | Yes | Public social links and submit/report helper destinations. |
-| `branding.drBadge` | Yes | Current trust badge input. Provider-first shape is preferred. |
-| `branding.favicon/logo/opengraphImage` | No | Canonical asset references when a site owns those assets. |
-| `content.listingSource` | Yes | Declares where the site's listing data comes from. |
-| `copy.*` | Yes | Small site-facing wording contract for listing terminology plus configurable docs/network labels. |
-| `routes.*` | Yes | Controls the public base paths for listings, docs, and the site-owned network page. |
-| `features.*` | Yes | Controls starter-owned optional surfaces. |
-| `deploy.*` | No | Required for deploy runs; omitted only for non-deploy examples. |
+| Field                                  | Required | Notes                                                                                                                   |
+| -------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `site.*`                               | Yes      | Main public identity and metadata values for the site.                                                                  |
+| `social.*`                             | Yes      | Public social links and submit/report helper destinations.                                                              |
+| `branding.drBadge`                     | Yes      | Current trust badge input. Provider-first shape is preferred.                                                           |
+| `branding.favicon/logo/opengraphImage` | No       | Canonical asset references when a site owns those assets. Supports checked-in local paths and staged remote URL inputs. |
+| `content.listingSource`                | Yes      | Declares where the site's listing data comes from.                                                                      |
+| `copy.*`                               | Yes      | Small site-facing wording contract for listing terminology plus configurable docs/network labels.                       |
+| `routes.*`                             | Yes      | Controls the public base paths for listings, docs, and the site-owned network page.                                     |
+| `features.*`                           | Yes      | Controls starter-owned optional surfaces.                                                                               |
+| `deploy.*`                             | No       | Required for deploy runs; omitted only for non-deploy examples.                                                         |
 
 ## Minimum Real-Site Input Checklist
 
@@ -196,6 +203,30 @@ Starter defaults worth knowing:
 - public posts live at `/posts` when `features.showGuides` is enabled
 - public category pages live at `/categories/[slug]`
 - the network page automatically includes a reusable default link set derived from `social.githubRepoUrl`, `social.githubIssuesUrl`, and `social.githubUrl`, then appends any site-owned `networkLinks`
+
+## Brand asset staging
+
+The build treats brand assets as staged local inputs even when the site config points at a remote file.
+
+How it works:
+
+- `source: 'local-path'` keeps using the checked-in asset directly from `sites/<site-id>/assets/*`
+- `source: 'url'` downloads the remote asset before the build, writes it into the deterministic checked-in-style staging path under `sites/<site-id>/assets/*`, and then builds from that staged local file
+- if a non-empty staged file already exists at that deterministic path, the build intentionally reuses it instead of downloading the remote asset again
+- the final built site never hotlinks the remote branding asset just because the input source was remote
+
+Current file constraints:
+
+- `branding.favicon` must stage to `favicon.ico`
+- `branding.logo` must stage to `logo.png`
+- `branding.opengraphImage` must stage to `opengraph-image.png`
+- remote inputs fail early if the download fails, the file is empty, or the content type / filename does not match the expected staged file shape
+
+Operational guidance:
+
+- prefer `local-path` for canonical long-lived assets you want versioned in the repo
+- use `url` when operators need a temporary or externally managed source, but still want the static build to stage and pin the file locally before export
+- after a successful remote-asset build, treat the staged file in `sites/<site-id>/assets/*` as the local cached copy the next build may intentionally reuse
 
 ## Known Gaps
 

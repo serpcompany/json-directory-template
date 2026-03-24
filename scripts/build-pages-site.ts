@@ -1,4 +1,4 @@
-import { parseSiteInputArgs } from './site-config.ts'
-import { runBuildSite } from './build-site.ts'
+import { parseSiteInputArgs } from './site-config.ts';
+import { runBuildSite } from './build-site.ts';
 
-runBuildSite(parseSiteInputArgs(process.argv.slice(2)))
+await runBuildSite(parseSiteInputArgs(process.argv.slice(2)));

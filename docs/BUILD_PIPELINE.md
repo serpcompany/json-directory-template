@@ -7,6 +7,7 @@ The goal is to take checked-in site config plus site-owned assets and data, prod
 ## Current scope
 
 In scope now:
+
 - checked-in site config via `sites/site-config.default.ts` and `sites/<site-id>/site-config.ts`
 - checked-in canonical site assets in `sites/<site-id>/assets/*`
 - validate -> build -> deploy for one site per run
@@ -14,6 +15,7 @@ In scope now:
 - repo-to-repo deploy sync with preserve rules
 
 Out of scope for the active pipeline:
+
 - hosted auth
 - user accounts
 - runtime submissions
@@ -40,10 +42,12 @@ If required inputs are missing, the pipeline should fail early and say exactly w
 ### 1. Define the site
 
 Canonical checked-in files:
+
 - `sites/site-config.default.ts`
 - `sites/<site-id>/site-config.ts`
 
 Authoring rule:
+
 - add new fields to the default config once
 - keep per-site config files override-only
 - inherit unchanged values through the central resolver instead of copying the full config into every site file
@@ -61,8 +65,10 @@ pnpm validate:site -- --site serpdownloaders
 ```
 
 Validation checks:
+
 - the checked-in site config resolves cleanly against the default config
 - referenced local files exist
+- referenced remote brand assets can be staged into the expected local asset shape before build
 - source JSON can be normalized into valid listing entries
 
 ### 3. Build
@@ -72,14 +78,30 @@ pnpm build:site -- --site serpdownloaders
 ```
 
 Build behavior:
+
 - loads `sites/site-config.default.ts`
 - loads `sites/<site-id>/site-config.ts`
 - resolves the final site/runtime config
 - prepares `data/websites.json` for the active site
 - generates site-aware side artifacts such as search index output
 - stages supported brand assets into the app build when configured
+- if a configured brand asset uses `source: 'url'`, the pipeline downloads it once into the deterministic `sites/<site-id>/assets/*` staging path, validates the file shape, and then builds from that staged local copy
+- if that staged local file already exists and is non-empty, the pipeline reuses it intentionally instead of redownloading the remote asset
 - runs the static export build
 - writes the final artifact to `dist/sites/<site-id>`
+
+Current supported staged asset shapes:
+
+- favicon -> `sites/<site-id>/assets/favicon.ico`
+- logo -> `sites/<site-id>/assets/logo.png`
+- Open Graph image -> `sites/<site-id>/assets/opengraph-image.png`
+
+Failure behavior:
+
+- fail early if the remote fetch fails
+- fail early if the downloaded asset is empty
+- fail early if the asset does not match the expected file constraints for the staged target
+- never ship a runtime hotlink to the remote asset in the final built site
 
 ### 4. Deploy
 
@@ -88,6 +110,7 @@ pnpm deploy:site -- --site serpdownloaders
 ```
 
 Deploy behavior:
+
 - reads the deploy target from the checked-in site config
 - syncs the built artifact into the target repo
 - preserves configured target-managed files such as `CNAME` and required Pages workflow files
@@ -108,6 +131,7 @@ We should treat hosted/auth/submission as a future extension path, not active sc
 The goal now is to keep the static pipeline clean enough that adding hosted features later is an additive layer, not a rewrite.
 
 What that means in practice:
+
 - keep checked-in site config focused on build/deploy/site inputs, not user-account concepts
 - keep target repos static-only and dumb
 - keep submit/auth flows out of the core pipeline
