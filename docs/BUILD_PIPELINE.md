@@ -159,3 +159,4 @@ What that means in practice:
 - [IMPLEMENTATION_TRACKER.md](/Users/devin/dev/repos/json-directory-template/docs/IMPLEMENTATION_TRACKER.md)
 - [SITE_CONFIG_INVENTORY.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_INVENTORY.md)
 - [github-pages-static-export.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/github-pages-static-export.md)
+- [large-site-scale-strategy.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/large-site-scale-strategy.md)

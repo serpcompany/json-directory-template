@@ -90,6 +90,8 @@ Acceptance:
 - [x] Add preserve rules, dry-run support, repair behavior, and rollback notes
 - [x] Add deterministic post-deploy verification hooks
 - [x] Document target repo lifecycle expectations
+- [x] Document the practical scale limits of the current GitHub Pages plus repo-sync path and the next-step hosting recommendation:
+      [docs/knowledge/large-site-scale-strategy.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/large-site-scale-strategy.md)
 
 Acceptance:
 
