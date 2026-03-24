@@ -211,21 +211,21 @@ Boundary for now:
 - the current build system should remain static-first and additive-extension friendly
 - do not couple build behavior to user accounts, sessions, moderation state, or runtime write paths while finishing the static pipeline
 
-- [ ] Decide the long-term product model:
+- [x] Decide the long-term product model:
       fully static starter only, optional hosted mode, or both
-- [ ] Decide whether auth and submissions belong in:
+- [x] Decide whether auth and submissions belong in:
       this repo, a hosted control plane, or a separate service
-- [ ] Define the minimal user flow for “submit a new product”
-- [ ] Define moderation flow:
+- [x] Define the minimal user flow for “submit a new product”
+- [x] Define moderation flow:
       direct publish, queue for review, GitHub issue handoff, PR handoff, or hosted approval queue
-- [ ] Define the data write target for approved submissions:
+- [x] Define the data write target for approved submissions:
       source JSON, PR branch, database, or CMS-like service
-- [ ] Define whether profile/account data remains optional and external to the directory data
-- [ ] Define anti-spam, abuse, and rate-limiting expectations before any public submission flow ships
+- [x] Define whether profile/account data remains optional and external to the directory data
+- [x] Define anti-spam, abuse, and rate-limiting expectations before any public submission flow ships
 - [ ] Include tests for any future auth/submission path and end-to-end verification requirements
-- [ ] Add docs describing the supported mode:
+- [x] Add docs describing the supported mode:
       static-only mode vs hosted submissions mode
-- [ ] Decide whether the current GitHub issue submit flow is a long-term starter feature, a temporary bridge, or a hosted-only feature later
+- [x] Decide whether the current GitHub issue submit flow is a long-term starter feature, a temporary bridge, or a hosted-only feature later
 
 ### 5. Deploy customization while staying deterministic
 

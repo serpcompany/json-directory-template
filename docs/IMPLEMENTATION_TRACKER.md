@@ -142,8 +142,10 @@ Acceptance:
 
 ### Chunk 6. Optional hosted/product workflows
 
-- [ ] Decide whether hosted auth/submission work belongs in this repo or a separate control plane
-- [ ] Define the future moderation and write-back model
+- [x] Decide whether hosted auth/submission work belongs in this repo or a separate control plane
+- [x] Define the future moderation and write-back model
+- [x] Document the supported boundary between static starter mode and future hosted mode:
+      [docs/knowledge/hosted-submission-extension-path.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/hosted-submission-extension-path.md)
 - [x] Keep this chunk blocked until the static multi-site pipeline is stable
 
 Acceptance:

@@ -25,6 +25,7 @@ This keeps the current strategy explicit:
 - GitHub issue intake is the public submission handoff
 - PRs are the reviewable write path
 - `data/websites.json` is the checked-in listing source that must validate before merge
+- this is the current static-starter bridge flow, not the long-term hosted auth/submission architecture
 
 ## What fails early
 
@@ -53,3 +54,4 @@ If the problem came from a GitHub issue submission, fix the checked-in JSON in t
 - `.github/workflows/update-websites-json.yml`
 - `scripts/validate-data.ts`
 - `packages/content/data/docs/submit-workflow.mdx`
+- [hosted-submission-extension-path.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/hosted-submission-extension-path.md)
