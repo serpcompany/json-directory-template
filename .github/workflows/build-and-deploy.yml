@@ -79,7 +79,7 @@ jobs:
 
   deploy:
     name: Deploy to Repo
-    needs: build
+    needs: [validate, build]
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v6

@@ -55,7 +55,7 @@ describe('resolveSiteSourcePlan', () => {
       featuredCount: 6,
       kind: 'trial-products-json',
       outputPath: 'data/websites.json',
-      path: 'tmp/serpdownloaders.com/products.json',
+      path: 'records/build-inputs/serpdownloaders/products.json',
       publishedAt: '2026-03-23'
     })
   })
