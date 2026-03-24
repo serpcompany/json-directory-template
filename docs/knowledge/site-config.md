@@ -38,7 +38,9 @@ Site-owned content boundary:
 Terminology rule:
 
 - use `listing` as the canonical user-facing directory-item term in starter copy and config-backed labels
-- keep `routes.listingBasePath` configurable, with `websites` as the current starter default public path
+- keep `routes.listingBasePath` configurable, with `listing` as the current starter default public path
+- keep public category pages at `/categories/[slug]`
+- keep public posts at `/posts/[slug]` when the optional editorial surface is enabled
 - keep raw/internal names like `website`, `websites`, and `Website*` only where they still describe compatibility fields or internal implementation details
 - the raw JSON field `website` still specifically means the listing destination URL; that field does not force the UI copy to say `website`
 - keep `routes.projects` and `website.*` as internal compatibility route keys in code for now, but treat `network` and `listing` as the public product concepts
@@ -186,8 +188,11 @@ Starter defaults worth knowing:
 
 - `copy.docsLabel` defaults to `Docs`
 - `copy.networkLabel` defaults to `Network`
+- `routes.listingBasePath` defaults to `listing`
 - `routes.docsBasePath` defaults to `docs`
 - `routes.networkBasePath` defaults to `network`
+- public posts live at `/posts` when `features.showGuides` is enabled
+- public category pages live at `/categories/[slug]`
 - the network page automatically includes a reusable default link set derived from `social.githubRepoUrl`, `social.githubIssuesUrl`, and `social.githubUrl`, then appends any site-owned `networkLinks`
 
 ## Known Gaps

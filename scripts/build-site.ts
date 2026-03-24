@@ -14,6 +14,7 @@ import {
 import { dirname, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import { categories } from '../apps/web/lib/categories.ts'
 import {
   buildSiteEnvironment,
   loadCheckedInSiteFromInput,
@@ -236,6 +237,8 @@ type ArtifactSurfaceFlags = {
   showProjects: boolean
 }
 
+const categoryArtifactSlugs = ['featured', ...categories.map(category => category.slug)]
+
 function removeArtifactPath(path: string): void {
   if (existsSync(path)) {
     rmSync(path, { force: true, recursive: true })
@@ -244,6 +247,24 @@ function removeArtifactPath(path: string): void {
 
 export function applyListingRouteBasePath(artifactDir: string, listingBasePath: string): void {
   applyPublicRouteBasePath(artifactDir, 'websites', listingBasePath)
+}
+
+function applyCategoryRoutePaths(artifactDir: string): void {
+  const categoryBasePath = resolve(artifactDir, 'categories')
+
+  mkdirSync(categoryBasePath, { recursive: true })
+
+  for (const slug of categoryArtifactSlugs) {
+    const sourcePath = resolve(artifactDir, slug)
+    const targetPath = resolve(categoryBasePath, slug)
+
+    if (!existsSync(sourcePath)) {
+      continue
+    }
+
+    removeArtifactPath(targetPath)
+    renameSync(sourcePath, targetPath)
+  }
 }
 
 function applyPublicRouteBasePath(
@@ -280,7 +301,9 @@ export function applyConfiguredPublicRoutePaths(
 ): void {
   applyListingRouteBasePath(artifactDir, paths.listingBasePath)
   applyPublicRouteBasePath(artifactDir, 'docs', paths.docsBasePath)
+  applyPublicRouteBasePath(artifactDir, 'guides', 'posts')
   applyPublicRouteBasePath(artifactDir, 'projects', paths.networkBasePath)
+  applyCategoryRoutePaths(artifactDir)
 }
 
 function pruneArtifactTree(path: string): void {
@@ -333,6 +356,7 @@ export function pruneStaticArtifactDir(artifactDir: string, flags: ArtifactSurfa
 
   if (!flags.showGuides) {
     removeArtifactPath(resolve(artifactDir, 'guides'))
+    removeArtifactPath(resolve(artifactDir, 'posts'))
   }
 }
 

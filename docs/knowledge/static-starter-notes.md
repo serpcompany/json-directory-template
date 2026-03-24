@@ -26,6 +26,9 @@
 - The About page now reads from `packages/content/data/about/about.mdx` through a dedicated content collection while keeping the existing route layout in `apps/web/app/about/page.tsx`.
 - Docs are ordered by the frontmatter `order` field and rendered through the `/docs` routes.
 - The public docs route base path and nav label now come from checked-in site config, with `docs` and `Docs` as the starter defaults.
+- The starter's public listing route now defaults to `/listing`, while the internal filesystem route stays compatibility-oriented.
+- Category pages are public at `/categories/[slug]`.
+- Editorial guide content is public at `/posts` and `/posts/[slug]` when `features.showGuides` is enabled; otherwise that surface is pruned from the default static artifact.
 - Use that folder for starter-facing docs such as submit flow, JSON shape references, and rebrand runbooks.
 - Keep internal starter/operator notes such as `siteConfig` shapes in `docs/knowledge/**`, not in public `/docs`.
 - Keep representative page references in `docs/knowledge/reference-surfaces.md` when you want to preserve old patterns without leaving whole features active.

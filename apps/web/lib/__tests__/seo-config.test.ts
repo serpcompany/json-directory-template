@@ -65,4 +65,24 @@ describe('seo-config', () => {
     expect(metadata.title).toBe('Developer Tools Listings')
     expect(metadata.title).not.toBe('Developer Tools Listings AI Tools & Platforms')
   })
+
+  it('uses the prelaunch public route map for category and post metadata', () => {
+    const categoryMetadata = generateDynamicMetadata({
+      type: 'category',
+      name: 'Automation Listings',
+      description: 'Automation category page.',
+      slug: 'automation-workflow'
+    })
+    const postMetadata = generateDynamicMetadata({
+      type: 'guide',
+      name: 'Launch Notes',
+      description: 'Post body.',
+      slug: 'launch-notes'
+    })
+
+    expect(categoryMetadata.alternates?.canonical).toBe(
+      'https://example.com/categories/automation-workflow'
+    )
+    expect(postMetadata.alternates?.canonical).toBe('https://example.com/posts/launch-notes')
+  })
 })

@@ -53,6 +53,7 @@ interface Website {
   website: string
   category: string
   publishedAt: string
+  entityType?: string
   isUnofficial?: boolean
   priority?: WebsitePriority
   featured?: boolean
@@ -166,6 +167,7 @@ export interface WebsiteMetadata {
   website: string
   category: string
   publishedAt: string
+  entityType?: string
   isUnofficial?: boolean
   featured?: boolean
   priority?: WebsitePriority

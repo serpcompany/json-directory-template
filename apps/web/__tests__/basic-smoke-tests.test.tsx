@@ -185,9 +185,15 @@ describe('Basic Component Rendering', () => {
       const result = getRoute('home')
       expect(typeof result).toBe('string')
       expect(result).toBe('/')
-      expect(getRoute('listing.detail', { slug: 'example' })).toBe('/websites/example')
+      expect(getRoute('listing.list')).toBe('/listing')
+      expect(getRoute('listing.detail', { slug: 'example' })).toBe('/listing/example')
       expect(getRoute('docs.list')).toBe('/docs')
       expect(getRoute('docs.doc', { slug: 'getting-started' })).toBe('/docs/getting-started')
+      expect(getRoute('guides.list')).toBe('/posts')
+      expect(getRoute('guides.guide', { slug: 'launch-notes' })).toBe('/posts/launch-notes')
+      expect(getRoute('category.page', { category: 'developer-tools' })).toBe(
+        '/categories/developer-tools'
+      )
       expect(getRoute('projects')).toBe('/network')
     })
 

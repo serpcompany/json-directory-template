@@ -13,7 +13,7 @@ describe('loadCheckedInSite', () => {
     expect(config.id).toBe('serpdownloaders')
     expect(config.content.listingSource.kind).toBe('trial-products-json')
     expect(config.site.domain).toBe('serpdownloaders.com')
-    expect(config.routes.listingBasePath).toBe('websites')
+    expect(config.routes.listingBasePath).toBe('listing')
     expect(config.routes.docsBasePath).toBe('docs')
     expect(config.routes.networkBasePath).toBe('network')
     expect(config.copy).toEqual({
@@ -43,7 +43,7 @@ describe('loadCheckedInSite', () => {
     expect(config.social.githubIssuesUrl).toBe(
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     )
-    expect(config.routes.listingBasePath).toBe('websites')
+    expect(config.routes.listingBasePath).toBe('listing')
     expect(config.routes.docsBasePath).toBe('docs')
     expect(config.routes.networkBasePath).toBe('network')
     expect(config.copy.submitLabel).toBe('Submit a Listing')
@@ -58,7 +58,7 @@ describe('loadCheckedInSite', () => {
     expect(config.id).toBe('default')
     expect(config.site.domain).toBe('example.com')
     expect(config.content.listingSource.kind).toBe('listing-json')
-    expect(config.routes.listingBasePath).toBe('websites')
+    expect(config.routes.listingBasePath).toBe('listing')
     expect(config.routes.docsBasePath).toBe('docs')
     expect(config.routes.networkBasePath).toBe('network')
     expect(config.copy.listingName.singular).toBe('listing')
@@ -78,8 +78,8 @@ describe('resolveSiteArtifactDir', () => {
 describe('buildSiteEnvironment', () => {
   it('maps a checked-in site config to the minimal app env contract', () => {
     expect(buildSiteEnvironment(loadCheckedInSite('serpdownloaders'))).toEqual({
-      LISTING_ROUTE_BASE_PATH: 'websites',
-      NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'websites',
+      LISTING_ROUTE_BASE_PATH: 'listing',
+      NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'listing',
       NEXT_PUBLIC_SITE_ID: 'serpdownloaders',
       SITE_ID: 'serpdownloaders'
     })
@@ -102,7 +102,7 @@ describe('resolveResolvedSiteConfig', () => {
       githubIssueRepo: 'json-directory-template',
       id: 'serpdownloaders',
       docsRouteBasePath: 'docs',
-      listingRouteBasePath: 'websites',
+      listingRouteBasePath: 'listing',
       name: 'SERP Downloaders',
       networkRouteBasePath: 'network',
       publicUrl: 'https://serpdownloaders.com',

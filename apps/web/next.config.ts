@@ -4,6 +4,7 @@ import withMDX from '@next/mdx'
 import { baseConfig, withAnalyzer } from '@thedaviddias/config-next'
 import type { NextConfig } from 'next'
 import { defaultSiteConfig, resolveCheckedInSiteConfig } from '../../sites'
+import { categories } from './lib/categories'
 import { isStaticExportBuild } from './lib/runtime-mode'
 
 export const INTERNAL_PACKAGES = [
@@ -38,6 +39,23 @@ function createAliasRewrites(sourceBasePath: string, destinationBasePath: string
       destination: `${buildPublicRoute(destinationBasePath)}/:path*`
     }
   ]
+}
+
+const categoryRouteSlugs = ['featured', ...categories.map(category => category.slug)]
+
+function createCategoryAliasRewrites() {
+  return categoryRouteSlugs.map(slug => ({
+    source: `/categories/${slug}`,
+    destination: `/${slug}`
+  }))
+}
+
+function createLegacyCategoryRedirects() {
+  return categoryRouteSlugs.map(slug => ({
+    source: `/${slug}`,
+    destination: `/categories/${slug}`,
+    permanent: true
+  }))
 }
 
 const runtimeSiteConfig = resolveCheckedInSiteConfig(
@@ -106,7 +124,9 @@ let nextConfig: NextConfig = {
     beforeFiles: [
       ...createAliasRewrites(listingBasePath, 'websites'),
       ...createAliasRewrites(docsBasePath, 'docs'),
-      ...createAliasRewrites(networkBasePath, 'projects')
+      ...createAliasRewrites(networkBasePath, 'projects'),
+      ...createAliasRewrites('posts', 'guides'),
+      ...createCategoryAliasRewrites()
     ]
   }),
 
@@ -133,7 +153,12 @@ let nextConfig: NextConfig = {
       ...createAliasRewrites('projects', networkBasePath).map(rule => ({
         ...rule,
         permanent: true
-      }))
+      })),
+      ...createAliasRewrites('guides', 'posts').map(rule => ({
+        ...rule,
+        permanent: true
+      })),
+      ...createLegacyCategoryRedirects()
     ]
   }
 }

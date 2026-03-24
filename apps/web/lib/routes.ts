@@ -48,7 +48,7 @@ export const routes = {
     withCategory: `${buildListingRoute()}?category=[category]`
   },
   category: {
-    page: '/[category]'
+    page: '/categories/[category]'
   },
   about: '/about',
   account: '/account',
@@ -58,8 +58,8 @@ export const routes = {
     doc: buildDocsRoute('[slug]')
   },
   guides: {
-    list: '/guides',
-    guide: '/guides/[slug]'
+    list: '/posts',
+    guide: '/posts/[slug]'
   },
   news: '/news',
   privacy: '/legal/privacy',

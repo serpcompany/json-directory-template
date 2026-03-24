@@ -150,7 +150,7 @@ export function Header({ authState }: { authState?: HeaderAuthState }) {
                 <NavLink href={getRoute('docs.list')}>{siteCopy.docsLabel}</NavLink>
               ) : null}
               {siteConfig.features.showGuides ? (
-                <NavLink href={getRoute('guides.list')}>Guides</NavLink>
+                <NavLink href={getRoute('guides.list')}>Posts</NavLink>
               ) : null}
               {/* <NavLink href={getRoute('news')}>News</NavLink> */}
             </nav>

@@ -58,7 +58,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
   }
 
   const breadcrumbItems = [
-    { name: 'Guides', href: getRoute('guides.list') },
+    { name: 'Posts', href: getRoute('guides.list') },
     { name: guide.title, href: getRoute('guides.guide', { slug }) }
   ]
 

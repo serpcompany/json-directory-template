@@ -15,24 +15,22 @@ jest.mock('@/lib/content-loader', () => ({
 }))
 
 describe('GuidesPage', () => {
-  it('uses generic guide metadata instead of llms-specific wrapper copy', () => {
-    expect(metadata.title).toBe('Guides')
+  it('uses post metadata instead of the old guides route copy', () => {
+    expect(metadata.title).toBe('Posts')
     expect(metadata.description).toBe(
-      `Browse implementation guides, walkthroughs, and reference notes for ${siteConfig.name}.`
+      `Browse posts, walkthroughs, and reference notes for ${siteConfig.name}.`
     )
     expect(metadata.keywords).not.toContain('llms.txt guides')
   })
 
-  it('renders listing-neutral wrapper copy for the guides index', async () => {
+  it('renders post-oriented wrapper copy for the public posts index', async () => {
     render(await GuidesPage())
 
-    expect(screen.getByRole('heading', { name: /^guides$/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /^posts$/i })).toBeInTheDocument()
     expect(
-      screen.getByText(/browse walkthroughs, implementation notes, and reference guides for this directory/i)
+      screen.getByText(/browse posts, walkthroughs, and reference notes for this directory/i)
     ).toBeInTheDocument()
-    expect(
-      screen.getByText(/guides will appear here when this site publishes them/i)
-    ).toBeInTheDocument()
+    expect(screen.getByText(/posts will appear here when this site publishes them/i)).toBeInTheDocument()
     expect(screen.queryByText(/llms\.txt/i)).not.toBeInTheDocument()
   })
 })

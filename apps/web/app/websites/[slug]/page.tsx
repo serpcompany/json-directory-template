@@ -10,6 +10,7 @@ import { WebsiteHero } from '@/components/website/website-hero'
 import { WebsiteRelatedProjects } from '@/components/website/website-related-projects'
 import { WebsiteResourcesSection } from '@/components/website/website-resources-section'
 import { getWebsiteBySlug, getWebsites, type WebsiteMetadata } from '@/lib/content-loader'
+import { resolveListingDetailTemplate } from '@/lib/listing-detail-template'
 import { getRoute } from '@/lib/routes'
 import { generateWebsiteDetailSchema } from '@/lib/schema'
 import { SITE_NAME, generateDynamicMetadata } from '@/lib/seo/seo-config'
@@ -118,9 +119,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       { name: 'Directory', href: getRoute('listing.list') },
       { name: project.name, href: getRoute('listing.detail', { slug: project.slug }) }
     ]
+    const detailTemplate = resolveListingDetailTemplate(project.entityType)
 
-    return (
-      <div className="min-h-screen">
+    const detailPage = (
+      <div
+        className="min-h-screen"
+        data-entity-type={project.entityType || 'listing'}
+        data-listing-template={detailTemplate}
+      >
         <JsonLd data={generateWebsiteDetailSchema(project)} />
 
         {/* Hero Section */}
@@ -183,6 +189,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
       </div>
     )
+
+    switch (detailTemplate) {
+      case 'movie':
+      case 'person':
+      case 'product':
+      case 'default':
+      default:
+        return detailPage
+    }
   } catch (_error) {
     return <WebsiteError />
   }

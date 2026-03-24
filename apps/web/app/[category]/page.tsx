@@ -10,6 +10,7 @@ import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
 import { categories, getCategoryBySlug } from '@/lib/categories'
 import { getGuides } from '@/lib/content-loader'
+import { getRoute } from '@/lib/routes'
 import { getCategorySEO } from '@/lib/seo/category-seo'
 import {
   SITE_LOGO_URL,
@@ -89,6 +90,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const { allProjects, featuredProjects } = await getHomePageData()
   const featuredGuides = await getGuides()
   const seoContent = getCategorySEO(category.slug, category)
+  const categoryPath = getRoute('category.page', { category: category.slug })
+  const categoryUrl = `${SITE_PUBLIC_URL}${categoryPath}`
 
   // Special handling for featured category
   let categoryProjects = []
@@ -110,11 +113,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         data={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          '@id': `${SITE_PUBLIC_URL}/${category.slug}`,
+          '@id': categoryUrl,
           name: `${category.name} - ${SITE_NAME}`,
           headline: `${categoryProjects.length}+ ${category.name} ${siteCopy.listingName.pluralTitle}`,
           description: `Explore ${categoryProjects.length}+ curated ${category.name.toLowerCase()} ${siteCopy.listingName.plural} from ${SITE_NAME}. ${category.description}`,
-          url: `${SITE_PUBLIC_URL}/${category.slug}`,
+          url: categoryUrl,
           inLanguage: 'en-US',
           isPartOf: {
             '@type': 'WebSite',
@@ -136,7 +139,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 '@type': 'ListItem',
                 position: 2,
                 name: category.name,
-                item: `${SITE_PUBLIC_URL}/${category.slug}`
+                item: categoryUrl
               }
             ]
           },
@@ -198,7 +201,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           <div className="relative flex h-full w-full flex-col gap-3 px-6 pt-6">
             {/* Breadcrumb Navigation */}
             <Breadcrumb
-              items={[{ name: category.name, href: `/${category.slug}` }]}
+              items={[{ name: category.name, href: categoryPath }]}
               baseUrl={SITE_PUBLIC_URL}
             />
 

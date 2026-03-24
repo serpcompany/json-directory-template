@@ -13,7 +13,7 @@ describe('resolveSiteConfig', () => {
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     )
     expect(config.publicUrl).toBe('https://serpdownloaders.com')
-    expect(config.listingRouteBasePath).toBe('websites')
+    expect(config.listingRouteBasePath).toBe('listing')
     expect(config.docsRouteBasePath).toBe('docs')
     expect(config.networkRouteBasePath).toBe('network')
     expect(config.copy).toEqual({
@@ -46,7 +46,7 @@ describe('resolveSiteConfig', () => {
     expect(config.githubIssuesUrl).toBe(
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     )
-    expect(config.listingRouteBasePath).toBe('websites')
+    expect(config.listingRouteBasePath).toBe('listing')
     expect(config.docsRouteBasePath).toBe('docs')
     expect(config.networkRouteBasePath).toBe('network')
     expect(config.copy.docsLabel).toBe('Docs')
@@ -60,7 +60,7 @@ describe('resolveSiteConfig', () => {
     expect(config.id).toBe('default')
     expect(config.name).toBe('Directory Starter')
     expect(config.domain).toBe('example.com')
-    expect(config.listingRouteBasePath).toBe('websites')
+    expect(config.listingRouteBasePath).toBe('listing')
     expect(config.docsRouteBasePath).toBe('docs')
     expect(config.networkRouteBasePath).toBe('network')
     expect(config.copy).toEqual({

@@ -40,6 +40,7 @@ describe('pruneStaticArtifactDir', () => {
     writeFile(resolve(artifactDir, 'projects/index.html'))
     writeFile(resolve(artifactDir, 'docs/index.html'))
     writeFile(resolve(artifactDir, 'guides/index.html'))
+    writeFile(resolve(artifactDir, 'posts/index.html'))
     writeFile(resolve(artifactDir, '_not-found/index.html'))
     writeFile(resolve(artifactDir, '404/index.html'))
 
@@ -59,6 +60,7 @@ describe('pruneStaticArtifactDir', () => {
     expect(existsSync(resolve(artifactDir, 'projects'))).toBe(false)
     expect(existsSync(resolve(artifactDir, 'docs'))).toBe(false)
     expect(existsSync(resolve(artifactDir, 'guides'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'posts'))).toBe(false)
     expect(existsSync(resolve(artifactDir, '_not-found'))).toBe(false)
     expect(existsSync(resolve(artifactDir, '404'))).toBe(false)
     expect(existsSync(resolve(artifactDir, 'about'))).toBe(true)
@@ -70,6 +72,8 @@ describe('pruneStaticArtifactDir', () => {
     writeFile(resolve(artifactDir, 'projects/index.html'))
     writeFile(resolve(artifactDir, 'docs/index.html'))
     writeFile(resolve(artifactDir, 'guides/index.html'))
+    writeFile(resolve(artifactDir, 'featured/index.html'))
+    writeFile(resolve(artifactDir, 'developer-tools/index.html'))
 
     pruneStaticArtifactDir(artifactDir, {
       showAuth: false,
@@ -82,6 +86,8 @@ describe('pruneStaticArtifactDir', () => {
     expect(existsSync(resolve(artifactDir, 'projects'))).toBe(true)
     expect(existsSync(resolve(artifactDir, 'docs'))).toBe(true)
     expect(existsSync(resolve(artifactDir, 'guides'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'featured'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'developer-tools'))).toBe(true)
   })
 })
 
@@ -99,36 +105,47 @@ describe('applyListingRouteBasePath', () => {
     expect(existsSync(resolve(artifactDir, 'directory/example/index.html'))).toBe(true)
   })
 
-  it('keeps the default artifact path when the configured public base path is websites', () => {
+  it('keeps the public default artifact path when the configured public base path is listing', () => {
     const artifactDir = makeTempArtifactDir()
 
     writeFile(resolve(artifactDir, 'websites/index.html'))
 
-    applyListingRouteBasePath(artifactDir, 'websites')
+    applyListingRouteBasePath(artifactDir, 'listing')
 
-    expect(existsSync(resolve(artifactDir, 'websites/index.html'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'websites'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'listing/index.html'))).toBe(true)
   })
 })
 
 describe('applyConfiguredPublicRoutePaths', () => {
-  it('renames docs and network artifact paths when custom public base paths are configured', () => {
+  it('renames docs, posts, categories, and network artifact paths when public paths are configured', () => {
     const artifactDir = makeTempArtifactDir()
 
     writeFile(resolve(artifactDir, 'docs/index.html'))
     writeFile(resolve(artifactDir, 'docs/getting-started/index.html'))
+    writeFile(resolve(artifactDir, 'guides/index.html'))
+    writeFile(resolve(artifactDir, 'guides/launch-notes/index.html'))
     writeFile(resolve(artifactDir, 'projects/index.html'))
     writeFile(resolve(artifactDir, 'projects/repository/index.html'))
+    writeFile(resolve(artifactDir, 'featured/index.html'))
+    writeFile(resolve(artifactDir, 'developer-tools/index.html'))
 
     applyConfiguredPublicRoutePaths(artifactDir, {
       docsBasePath: 'seo-docs',
-      listingBasePath: 'websites',
+      listingBasePath: 'listing',
       networkBasePath: 'network'
     })
 
     expect(existsSync(resolve(artifactDir, 'docs'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'guides'))).toBe(false)
     expect(existsSync(resolve(artifactDir, 'projects'))).toBe(false)
     expect(existsSync(resolve(artifactDir, 'seo-docs/index.html'))).toBe(true)
     expect(existsSync(resolve(artifactDir, 'seo-docs/getting-started/index.html'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'posts/index.html'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'posts/launch-notes/index.html'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'categories/featured/index.html'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'categories/developer-tools/index.html'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'listing'))).toBe(false)
     expect(existsSync(resolve(artifactDir, 'network/index.html'))).toBe(true)
     expect(existsSync(resolve(artifactDir, 'network/repository/index.html'))).toBe(true)
   })

@@ -43,7 +43,7 @@ export const defaultSiteConfig: CheckedInSiteConfig = {
   id: 'default',
   routes: {
     docsBasePath: 'docs',
-    listingBasePath: 'websites',
+    listingBasePath: 'listing',
     networkBasePath: 'network'
   },
   site: {

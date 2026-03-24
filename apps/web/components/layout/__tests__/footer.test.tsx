@@ -40,9 +40,12 @@ describe('Footer', () => {
     )
 
     if (siteConfig.features.showProjects) {
-      expect(screen.getByRole('link', { name: 'Projects' })).toHaveAttribute('href', '/projects')
+      expect(screen.getByRole('link', { name: siteCopy.networkLabel })).toHaveAttribute(
+        'href',
+        '/network'
+      )
     } else {
-      expect(screen.queryByRole('link', { name: 'Projects' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('link', { name: siteCopy.networkLabel })).not.toBeInTheDocument()
     }
 
     if (siteConfig.features.showDocs) {
@@ -52,9 +55,9 @@ describe('Footer', () => {
     }
 
     if (siteConfig.features.showGuides) {
-      expect(screen.getByRole('link', { name: 'Guides' })).toHaveAttribute('href', '/guides')
+      expect(screen.getByRole('link', { name: 'Posts' })).toHaveAttribute('href', '/posts')
     } else {
-      expect(screen.queryByRole('link', { name: 'Guides' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('link', { name: 'Posts' })).not.toBeInTheDocument()
     }
 
     expect(screen.queryByRole('link', { name: 'Advertise' })).not.toBeInTheDocument()

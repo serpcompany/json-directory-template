@@ -98,7 +98,7 @@ Acceptance:
 - [x] Create a source-of-truth inventory doc for site-facing configuration and hardcoded surfaces:
   [docs/SITE_CONFIG_INVENTORY.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_INVENTORY.md)
 - [x] Audit and normalize the core directory-item vocabulary:
-  use `listing` as the canonical user-facing term, keep `/websites/...` as the current default route shape, and keep that route prefix configurable through checked-in site config
+  use `listing` as the canonical user-facing term, keep `/listing/...` as the current default route shape, and keep that route prefix configurable through checked-in site config
 - [x] Record the highest-visibility remaining copy surfaces that still say `website` / `project` / `websites` so they can be classified deliberately instead of changed ad hoc
 - [x] Normalize the active search-index contract around one canonical record shape and make generated URL ownership explicit
 - [x] Derive the submit-form category options from the canonical taxonomy instead of keeping a duplicated subset
@@ -108,7 +108,7 @@ Acceptance:
 - [x] Keep legacy creator/tool/guide content disabled by default for starter-safe builds
 - [x] Reserve `/tools` for future first-party utility pages and rename the current starter-owned outbound link surface to `externalResources`
 - [x] Remove `llms.txt` / `llms-full.txt` as first-class listing fields and route listing extras through generic `resourceLinks`
-- [x] Move the public listing route base path behind checked-in site config while keeping `websites` as the current default
+- [x] Move the public listing route base path behind checked-in site config while keeping `listing` as the current default
 - [x] Make the public docs label and docs route base path configurable through checked-in site config
 - [x] Recast the old `/projects` surface as a site-owned network page with a configurable public route and reusable default links
 - [x] Centralize the active search-index contract and stop duplicating submit-category options outside the shared taxonomy

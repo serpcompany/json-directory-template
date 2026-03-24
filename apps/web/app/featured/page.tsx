@@ -9,6 +9,7 @@ import { FeaturedGuidesSection } from '@/components/sections/featured-guides-sec
 import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
 import { getGuides } from '@/lib/content-loader'
+import { getRoute } from '@/lib/routes'
 import { SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
@@ -17,12 +18,14 @@ export const metadata: Metadata = generateBaseMetadata({
   title: `Featured ${siteCopy.listingName.pluralTitle} - ${SITE_NAME}`,
   description: `Discover our curated selection of featured ${siteCopy.listingName.plural} and related resources.`,
   keywords: ['featured', 'curated', `featured ${siteCopy.listingName.plural}`, 'directory', 'resources'],
-  path: '/featured'
+  path: getRoute('category.page', { category: 'featured' })
 })
 
 export default async function FeaturedPage() {
   const { featuredProjects } = await getHomePageData()
   const featuredGuides = await getGuides()
+  const featuredPath = getRoute('category.page', { category: 'featured' })
+  const featuredUrl = `${SITE_PUBLIC_URL}${featuredPath}`
 
   return (
     <>
@@ -30,11 +33,11 @@ export default async function FeaturedPage() {
         data={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          '@id': `${SITE_PUBLIC_URL}/featured`,
+          '@id': featuredUrl,
           name: `Featured - ${SITE_NAME}`,
           headline: `${featuredProjects.length}+ Featured ${siteCopy.listingName.pluralTitle}`,
           description: `Explore ${featuredProjects.length}+ curated featured ${siteCopy.listingName.plural} from ${SITE_NAME}. Hand-picked for quality and relevance.`,
-          url: `${SITE_PUBLIC_URL}/featured`,
+          url: featuredUrl,
           inLanguage: 'en-US',
           isPartOf: {
             '@type': 'WebSite',
@@ -56,7 +59,7 @@ export default async function FeaturedPage() {
                 '@type': 'ListItem',
                 position: 2,
                 name: 'Featured',
-                item: `${SITE_PUBLIC_URL}/featured`
+                item: featuredUrl
               }
             ]
           },
@@ -102,7 +105,7 @@ export default async function FeaturedPage() {
           <div className="relative flex h-full w-full flex-col gap-3 px-6 pt-6">
             {/* Breadcrumb Navigation */}
             <Breadcrumb
-              items={[{ name: 'Featured', href: '/featured' }]}
+              items={[{ name: 'Featured', href: featuredPath }]}
               baseUrl={SITE_PUBLIC_URL}
             />
 

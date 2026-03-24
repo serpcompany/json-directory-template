@@ -65,7 +65,7 @@ export function AppSidebar({ currentCategory, featuredCount = 0 }: AppSidebarPro
               {siteCopy.allLabel}
             </a>
             <Link
-              href="/featured"
+              href={getRoute('category.page', { category: 'featured' })}
               className="flex items-center justify-between gap-2 px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-2">

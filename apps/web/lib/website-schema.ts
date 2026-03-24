@@ -15,6 +15,7 @@ export const websiteJsonEntrySchema = z
     content: z.string().min(1, 'content must not be empty').optional(),
     description: z.string().trim().min(1, 'description is required'),
     domain: z.string().url('domain must be a valid URL').optional(),
+    entityType: z.string().trim().regex(/^[a-z0-9-]+$/, 'entityType must use kebab-case').optional(),
     favicon: z.string().url('favicon must be a valid URL').optional(),
     featured: z.boolean().optional(),
     isUnofficial: z.boolean().optional(),
@@ -47,6 +48,7 @@ export interface NormalizedWebsiteEntry {
   category: string
   content?: string
   description: string
+  entityType?: string
   featured?: boolean
   isUnofficial?: boolean
   name: string
@@ -95,6 +97,7 @@ export function normalizeJsonWebsite(entry: WebsiteJsonEntry): NormalizedWebsite
     category: normalizeJsonCategory(entry.category),
     content: entry.content,
     description: sanitizeWebsiteDescription(entry.description),
+    entityType: entry.entityType,
     featured: entry.featured,
     isUnofficial: entry.isUnofficial,
     name: entry.name,

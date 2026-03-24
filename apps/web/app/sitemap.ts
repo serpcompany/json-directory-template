@@ -19,7 +19,7 @@ function getStaticRouteSlugs(): string[] {
     ...(siteConfig.features.showProjects ? [stripLeadingSlash(getRoute('projects'))] : []),
     ...(siteConfig.features.showDocs ? [stripLeadingSlash(getRoute('docs.list'))] : []),
     siteConfig.listingRouteBasePath,
-    ...(siteConfig.features.showGuides ? ['guides'] : []),
+    ...(siteConfig.features.showGuides ? [stripLeadingSlash(getRoute('guides.list'))] : []),
     'about'
   ]
 }
@@ -37,6 +37,14 @@ function mapContentPageToPublicPath(page: string): string {
     return stripLeadingSlash(
       getRoute('docs.doc', {
         slug: page.slice('docs/'.length)
+      })
+    )
+  }
+
+  if (page.startsWith('guides/')) {
+    return stripLeadingSlash(
+      getRoute('guides.guide', {
+        slug: page.slice('guides/'.length)
       })
     )
   }
@@ -101,14 +109,20 @@ function getPriority(path: string): number {
   if (!path) return 1 // Homepage
 
   // Category pages get high priority based on their type
-  const category = categories.find(c => c.slug === path)
+  const categorySlug = path.startsWith('categories/') ? path.slice('categories/'.length) : path
+
+  if (categorySlug === 'featured') {
+    return 0.9
+  }
+
+  const category = categories.find(c => c.slug === categorySlug)
   if (category) {
     if (category.priority === 'high') return 0.9
     if (category.priority === 'medium') return 0.8
     return 0.7 // low priority categories
   }
 
-  if (path.startsWith('guides/')) return 0.8
+  if (path.startsWith('posts/')) return 0.8
   if (path.startsWith('resources/')) return 0.7
   if (getStaticRouteSlugs().includes(path)) return 0.9 // High priority for main static routes
   return 0.5 // Other pages
@@ -146,11 +160,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Add category pages with proper SEO metadata
     categories.forEach(category => {
       routes.push({
-        url: `${baseUrl}/${category.slug}`,
+        url: `${baseUrl}${getRoute('category.page', { category: category.slug })}`,
         lastModified: BUILD_DATE,
         changeFrequency: category.priority === 'high' ? 'daily' : 'weekly',
-        priority: getPriority(category.slug)
+        priority: getPriority(stripLeadingSlash(getRoute('category.page', { category: category.slug })))
       })
+    })
+
+    routes.push({
+      url: `${baseUrl}${getRoute('category.page', { category: 'featured' })}`,
+      lastModified: BUILD_DATE,
+      changeFrequency: 'daily',
+      priority: getPriority(stripLeadingSlash(getRoute('category.page', { category: 'featured' })))
     })
 
     // Add static routes

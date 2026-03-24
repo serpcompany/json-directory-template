@@ -105,7 +105,7 @@ const checkedInSiteConfigSchema = z.object({
   id: z.string().min(1),
   routes: z.object({
     docsBasePath: z.string().regex(/^[a-z0-9-]+$/).default('docs'),
-    listingBasePath: z.string().regex(/^[a-z0-9-]+$/).default('websites'),
+    listingBasePath: z.string().regex(/^[a-z0-9-]+$/).default('listing'),
     networkBasePath: z.string().regex(/^[a-z0-9-]+$/).default('network')
   }),
   site: z.object({

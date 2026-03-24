@@ -45,7 +45,7 @@ export function Footer() {
   if (siteConfig.features.showGuides) {
     resourceLinks.push({
       href: getRoute('guides.list'),
-      label: 'Guides'
+      label: 'Posts'
     })
   }
 

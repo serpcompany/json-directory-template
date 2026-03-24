@@ -20,6 +20,7 @@ describe('parseJsonWebsiteEntries', () => {
     const entries = parseJsonWebsiteEntries([
       buildWebsiteEntry({
         content: '## Overview\n\nThis is long-form detail page content.',
+        entityType: 'movie',
         featured: true,
         priority: 'high',
         resourceLinks: [
@@ -33,6 +34,7 @@ describe('parseJsonWebsiteEntries', () => {
 
     expect(entries).toHaveLength(1)
     expect(entries[0]?.content).toContain('Overview')
+    expect(entries[0]?.entityType).toBe('movie')
     expect(entries[0]?.priority).toBe('high')
     expect(entries[0]?.resourceLinks).toEqual([
       {
@@ -62,6 +64,7 @@ describe('normalizeJsonWebsite', () => {
         content: '## Details\n\nRendered on the detail page.',
         description: '<p>Supports <strong>HTML</strong> descriptions.</p>',
         domain: 'https://example.com',
+        entityType: 'person',
         name: 'Example Project',
         resourceLinks: [
           {
@@ -78,6 +81,7 @@ describe('normalizeJsonWebsite', () => {
     expect(normalized.category).toBe('automation-workflow')
     expect(normalized.content).toBe('## Details\n\nRendered on the detail page.')
     expect(normalized.description).toBe('Supports HTML descriptions.')
+    expect(normalized.entityType).toBe('person')
     expect(normalized.resourceLinks).toEqual([
       {
         label: 'Support',

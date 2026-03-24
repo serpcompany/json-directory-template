@@ -163,7 +163,7 @@ export function generateDynamicMetadata(options: {
       title = `${name} - ${siteCopy.listingName.singularTitle}`
       break
     case 'category':
-      path = `/${slug}`
+      path = getRoute('category.page', { category: slug })
       title = name
       break
     case 'member':
@@ -171,7 +171,7 @@ export function generateDynamicMetadata(options: {
       title = `${name} - Community Member`
       break
     case 'guide':
-      path = `/guides/${slug}`
+      path = getRoute('guides.guide', { slug })
       title = `${name} - Developer Guide`
       break
     case 'news':

@@ -75,7 +75,7 @@ export function MobileDrawer({
   /**
    * Checks if current page is a category page
    */
-  const isCategoryPage = (slug: string) => pathname === `/category/${slug}`
+  const isCategoryPage = (slug: string) => pathname === getRoute('category.page', { category: slug })
 
   return (
     <>
@@ -159,7 +159,7 @@ export function MobileDrawer({
                   href={getRoute('guides.list')}
                   className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
                 >
-                  Guides
+                  Posts
                 </Link>
               ) : null}
               <Link

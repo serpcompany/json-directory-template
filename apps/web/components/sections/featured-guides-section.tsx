@@ -21,10 +21,10 @@ export function FeaturedGuidesSection({ guides }: FeaturedGuidesSectionProps) {
 
   return (
     <Section
-      title="Featured Guides"
-      description="Explore walkthroughs, implementation notes, and reference guides for this directory."
+      title="Featured Posts"
+      description="Explore posts, walkthroughs, and reference notes for this directory."
       viewAllHref={getRoute('guides.list')}
-      viewAllText="All guides"
+      viewAllText="All posts"
     >
       <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6">
         {guides.map(guide => (
