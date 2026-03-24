@@ -97,6 +97,7 @@ graph TD
 - [x] A static export build path via `pnpm build:pages`
 - [x] A target-repo sync deploy path via `scripts/deploy-to-repo.sh`
 - [x] A checked-in site config for `serpdownloaders`
+- [x] A second real checked-in site exercise for `extensions.serp.co`
 - [x] Site-aware validate/build/deploy commands driven by one site id
 - [x] Per-site build artifacts under `dist/sites/<site-id>`
 - [x] Internal docs for the current Pages/export flow
