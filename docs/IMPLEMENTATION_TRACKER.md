@@ -91,6 +91,8 @@ Acceptance:
 - [x] Remove or move remaining hardcoded brand, ownership, and marketing assumptions
 - [x] Decide which content blocks are starter defaults vs per-site content
 - [x] Continue cleaning residual `llms.txt`-specific language where it should now be generic
+- [x] Create a source-of-truth inventory doc for site-facing configuration and hardcoded surfaces:
+  [docs/SITE_CONFIG_INVENTORY.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_INVENTORY.md)
 - [ ] Audit and normalize the core directory-item vocabulary:
   replace loose `website` / `product` wording with one canonical term, and decide whether the generated `/websites/...` route should stay fixed or become configurable
 - [x] Update tests and starter docs to match the generalized model
