@@ -4,9 +4,12 @@ import yaml from 'js-yaml'
 import { describe, expect, it } from 'vitest'
 
 interface WorkflowJob {
+  environment?: Record<string, string>
   env?: Record<string, string>
   needs?: string | string[]
   steps?: Array<{
+    env?: Record<string, string>
+    name?: string
     uses?: string
     with?: Record<string, string>
   }>
@@ -42,5 +45,14 @@ describe('build-and-deploy workflow', () => {
       name: 'build-output',
       path: '${{ needs.validate.outputs.artifact_dir }}'
     })
+  })
+
+  it('uses the repo deploy secret with a GH_PAT fallback for repo sync pushes', () => {
+    const workflow = loadWorkflow()
+    const deployJob = workflow.jobs.deploy
+    const deployStep = deployJob.steps?.find(step => step.name === 'Deploy')
+
+    expect(deployStep).toBeDefined()
+    expect(deployStep?.env?.DEPLOY_TOKEN).toBe('${{ secrets.DEPLOY_TOKEN || secrets.GH_PAT }}')
   })
 })

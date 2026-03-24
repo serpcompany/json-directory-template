@@ -97,6 +97,6 @@ jobs:
           BUILD_SPEC_PATH: ${{ needs.validate.outputs.spec_path }}
           DEPLOY_REPO_URL: ${{ github.event.inputs.deploy_repo || vars.DEPLOY_REPO_URL || '' }}
           DEPLOY_BRANCH: ${{ github.event.inputs.deploy_branch || vars.DEPLOY_BRANCH || 'main' }}
-          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN || secrets.GH_PAT }}
           SITE_ID: ${{ needs.validate.outputs.site_id }}
         run: pnpm deploy:site
