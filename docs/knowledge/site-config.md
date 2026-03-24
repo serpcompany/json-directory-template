@@ -34,6 +34,13 @@ Site-owned content boundary:
 - use the site-content layer for things like external tool cards or optional listing CLI install mappings that are too site-specific to belong in the shared starter contract
 - default site content should stay empty/safe so enabling a starter feature does not automatically ship old llms-specific residue
 
+Terminology rule:
+
+- use `listing` as the canonical user-facing directory-item term in starter copy and config-backed labels
+- keep `routes.listingBasePath` configurable, with `websites` as the current starter default public path
+- keep raw/internal names like `website`, `websites`, and `Website*` only where they still describe compatibility fields or internal implementation details
+- the raw JSON field `website` still specifically means the listing destination URL; that field does not force the UI copy to say `website`
+
 Checked-in source-of-truth shape:
 
 ```ts

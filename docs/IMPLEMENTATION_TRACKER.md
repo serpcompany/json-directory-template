@@ -97,8 +97,8 @@ Acceptance:
 - [x] Continue cleaning residual `llms.txt`-specific language where it should now be generic
 - [x] Create a source-of-truth inventory doc for site-facing configuration and hardcoded surfaces:
   [docs/SITE_CONFIG_INVENTORY.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_INVENTORY.md)
-- [ ] Audit and normalize the core directory-item vocabulary:
-  replace loose `website` / `product` wording with one canonical term, and decide whether the generated `/websites/...` route should stay fixed or become configurable
+- [x] Audit and normalize the core directory-item vocabulary:
+  use `listing` as the canonical user-facing term, keep `/websites/...` as the current default route shape, and keep that route prefix configurable through checked-in site config
 - [x] Record the highest-visibility remaining copy surfaces that still say `website` / `project` / `websites` so they can be classified deliberately instead of changed ad hoc
 - [x] Normalize the active search-index contract around one canonical record shape and make generated URL ownership explicit
 - [x] Derive the submit-form category options from the canonical taxonomy instead of keeping a duplicated subset
@@ -120,7 +120,7 @@ Acceptance:
 - [x] Add site-config-backed listing terminology and submit CTA copy for the core home/search/submit starter surfaces
 - [x] Make the default local web dev loop stable, repo-scoped, and debugger-optional:
   default `next dev --webpack`, explicit `turbopack.root`, plus opt-in `dev:inspect`
-- [ ] Complete the deeper upstream audit for placeholder/demo routes against `thedaviddias/llms-txt-hub`
+- [x] Complete the deeper upstream audit for placeholder/demo routes against `thedaviddias/llms-txt-hub`
 
 Acceptance:
 - [x] The active starter shell is largely site-config/content driven instead of repo-brand driven

@@ -91,3 +91,5 @@ They are added in `apps/web/lib/content-loader.ts` when `getWebsiteBySlug()` bui
 - `favicon` exists in the raw JSON today but is not part of the normalized detail-page contract.
 - The loader sanitizes HTML out of `description`.
 - The loader still normalizes the legacy category slug `integration-automation` to `automation-workflow`.
+- The raw field name `website` is kept for compatibility and still means the destination URL for a listing.
+- The starter's canonical user-facing term is now `listing`, so UI copy and config-backed labels should prefer `listing` even when the underlying JSON field remains `website`.

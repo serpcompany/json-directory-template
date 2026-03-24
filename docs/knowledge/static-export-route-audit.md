@@ -61,3 +61,39 @@ We still need a deeper upstream comparison against `thedaviddias/llms-txt-hub` f
 - restore from upstream behavior
 - keep as a static-safe optional route
 - remove from default export entirely
+
+## Upstream comparison
+
+Checked against `thedaviddias/llms-txt-hub` `main` on March 24, 2026.
+
+### Route classification
+
+- `/account`
+  remove from default export entirely
+  Upstream `main` does not have `apps/web/app/account/page.tsx` at all. This is not an upstream route we are temporarily diverging from; it is local Pages-era placeholder behavior and should stay out of starter-safe static output unless a future hosted account model is intentionally restored.
+- `/login`
+  keep as a static-safe optional route
+  Upstream still has a real authenticated login flow, but it is Clerk-based and runtime-auth dependent. The starter should keep login behind the existing feature flag and continue excluding it from default static artifacts.
+- `/favorites`
+  keep as a static-safe optional route
+  Upstream has a real favorites page, so this is not just a local placeholder. The current starter version is a simplified/safer variant and should remain optional rather than default-on for exported static sites.
+- `/projects`
+  keep as a static-safe optional route
+  Upstream has a real projects page driven by GitHub-topic discovery. Our current page is no longer a Pages placeholder problem; it is a generalized starter module and can remain optional/default-off in the static artifact.
+- `/guides`
+  keep as a static-safe optional route
+  Upstream has a real guides index. The current generalized version should be treated as an optional editorial surface, not removed as fake placeholder content.
+- `/docs`
+  keep as a static-safe optional route
+  Upstream has a real docs route, but it is tightly tied to the old `llmstxt-cli` product. The starter-safe path is to keep docs optional and site-owned rather than deleting the surface entirely.
+- `/featured`
+  restore from upstream behavior
+  Upstream still treats featured listings as a first-class public route. This route is not part of the placeholder-route problem and should stay in the active app.
+
+### Conclusion
+
+The deeper upstream audit changes the interpretation of the static-export cleanup:
+
+- `/account` is the only audited route in this bucket that clearly falls into "local placeholder/demo surface, remove from default export entirely".
+- `/login`, `/favorites`, `/projects`, `/guides`, and `/docs` are real upstream product surfaces and should be treated as optional starter modules, not mistaken for temporary placeholder pages.
+- `/featured` belongs with the active public directory surface, not the placeholder cleanup bucket.
