@@ -4,8 +4,8 @@ import { SITE_NAME, SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Websites - ${SITE_NAME}`,
-    description: 'Discover a curated list of websites, tools, and directory entries.',
+    title: `Directory - ${SITE_NAME}`,
+    description: 'Discover a curated list of directory listings, tools, and resources.',
     alternates: {
       canonical: `${SITE_PUBLIC_URL}/`
     }
@@ -13,6 +13,6 @@ export function generateMetadata(): Metadata {
 }
 
 export default function ProjectsPage() {
-  // Redirect to homepage where all websites are now displayed
+  // Redirect to homepage where all listings are now displayed
   redirect('/')
 }

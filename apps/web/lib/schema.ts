@@ -104,7 +104,7 @@ export function generateArticleSchema(website: WebsiteMetadata): ArticleSchema {
  * @returns Schema.org structured data graph
  */
 export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
-  const pageUrl = `${SITE_URL}/websites/${website.slug}`
+  const pageUrl = `${SITE_URL}${getRoute('listing.detail', { slug: website.slug })}`
   const categoryFormatted = website.category
     ? website.category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
     : 'Developer Tools'
@@ -147,7 +147,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
             '@type': 'ListItem',
             position: 2,
             name: 'Websites',
-            item: `${SITE_URL}${getRoute('website.list')}`
+            item: `${SITE_URL}${getRoute('listing.list')}`
           },
           {
             '@type': 'ListItem',

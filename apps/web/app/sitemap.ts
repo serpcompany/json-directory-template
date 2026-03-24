@@ -4,6 +4,7 @@ import { logger } from '@thedaviddias/logging'
 import type { MetadataRoute } from 'next'
 import { categories } from '@/lib/categories'
 import { getWebsites } from '@/lib/content-loader'
+import { getRoute } from '@/lib/routes'
 import { SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
 import { siteConfig } from '@/lib/site-config'
 
@@ -16,7 +17,7 @@ export const dynamic = 'force-static'
 function getStaticRouteSlugs(): string[] {
   return [
     ...(siteConfig.features.showProjects ? ['projects'] : []),
-    'websites',
+    siteConfig.listingRouteBasePath,
     ...(siteConfig.features.showGuides ? ['guides'] : []),
     'about'
   ]
@@ -134,11 +135,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Add static routes
     routes.push(...getStaticRoutes(baseUrl))
 
-    // Add all website detail pages (the core content)
+    // Add all listing detail pages (the core content)
     const websites = getWebsites()
     for (const website of websites) {
       routes.push({
-        url: `${baseUrl}/websites/${website.slug}`,
+        url: `${baseUrl}${getRoute('listing.detail', { slug: website.slug })}`,
         lastModified: new Date(website.publishedAt),
         changeFrequency: 'monthly',
         priority: 0.8

@@ -15,9 +15,9 @@ This is intentionally broader than naming and URLs. It covers terminology, route
 ## Current recommendation
 
 - canonical directory-item term: `listing`
-- current public route prefix: keep `/websites/[slug]` as the starter default for now
+- current public route prefix: keep `/websites/[slug]` as the starter default for now, but treat it as a checked-in site-config value rather than a hardcoded constant
 - source-of-truth split:
-  - `BuildSpec` / `siteConfig` for true site-facing inputs
+  - checked-in site config under `sites/**` for true site-facing inputs
   - site-owned content for larger page/copy/legal/tool datasets
   - starter defaults for shared implementation behavior
   - internal-only for schema/analytics/helper naming
@@ -65,16 +65,16 @@ Why:
 ### Current recommendation
 
 - keep `/websites/[slug]` as the starter default for now
-- treat route-prefix configurability as a product decision, not a casual refactor
+- route prefix is now a checked-in site-config decision through `routes.listingBasePath`
 
 ### Inventory
 
 | Surface | Status | Recommendation | File references | Notes |
 | --- | --- | --- | --- | --- |
-| Listing routes hardcoded to `/websites` | Needs product decision | Decide whether `/websites` is durable or future-configurable | [routes.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/routes.ts#L6), [seo-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/seo/seo-config.ts#L157), [page.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/websites/[slug]/page.tsx#L22) | Public URL decision |
+| Listing route base path | Configurable now | Keep `websites` as the starter default, but allow each site to override it through checked-in site config | [types.ts](/Users/devin/dev/repos/json-directory-template/sites/types.ts), [site-config.default.ts](/Users/devin/dev/repos/json-directory-template/sites/site-config.default.ts), [routes.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/routes.ts) | Public URL path now comes from site config |
 | Singular redirect `/website/:path*` -> `/websites/:path*` | Keep as starter default | Keep only if the legacy alias is still worth preserving | [next.config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/next.config.ts#L70) | Legacy alias |
-| Search index URL fallback assumes `/websites/${slug}` | Needs product decision | If route prefix changes, this generator must follow the same source of truth | [search-index-generator.cjs](/Users/devin/dev/repos/json-directory-template/scripts/search-index-generator.cjs) | Route coupling |
-| Optional routes like auth/docs/guides/projects/favorites | Keep as starter default | Continue treating them as starter-controlled surfaces gated by site config | [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts#L9), [build-site.ts](/Users/devin/dev/repos/json-directory-template/scripts/build-site.ts) | Export/pruning now works |
+| Search index URL fallback | Configurable now | Search index generation should keep following `routes.listingBasePath` as the source of truth | [search-index-generator.ts](/Users/devin/dev/repos/json-directory-template/scripts/search-index-generator.ts) | Route coupling removed from hardcoded `/websites` strings |
+| Optional routes like auth/docs/guides/projects/favorites | Keep as starter default | Continue treating them as starter-controlled surfaces gated by checked-in site config | [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts), [build-site.ts](/Users/devin/dev/repos/json-directory-template/scripts/build-site.ts) | Export/pruning now works |
 
 ## 3. Branding and assets
 
@@ -82,8 +82,8 @@ Why:
 
 | Surface | Status | File references | Notes |
 | --- | --- | --- | --- |
-| favicon/logo/Open Graph image references | Configurable now | [build-spec.ts](/Users/devin/dev/repos/json-directory-template/scripts/build-spec.ts#L35), [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts#L34), [layout.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/layout.tsx#L24) | Asset references are modeled and staged |
-| DR badge provider payload | Configurable now | [build-spec.ts](/Users/devin/dev/repos/json-directory-template/scripts/build-spec.ts#L35), [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts#L115) | Provider-first shape is already in place |
+| favicon/logo/Open Graph image references | Configurable now | [types.ts](/Users/devin/dev/repos/json-directory-template/sites/types.ts), [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts), [layout.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/layout.tsx#L24) | Asset references are modeled and staged |
+| DR badge provider payload | Configurable now | [types.ts](/Users/devin/dev/repos/json-directory-template/sites/types.ts), [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts) | Provider-first shape is already in place |
 
 ### Should become configurable next
 
@@ -97,8 +97,8 @@ Why:
 
 | Surface | Status | File references | Notes |
 | --- | --- | --- | --- |
-| `site.name`, `site.domain`, `site.publicUrl`, `site.description`, `site.tagline` | Configurable now | [build-spec.ts](/Users/devin/dev/repos/json-directory-template/scripts/build-spec.ts#L53), [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts#L21) | Core site identity is in the active contract |
-| Social and repo links | Configurable now | [build-spec.ts](/Users/devin/dev/repos/json-directory-template/scripts/build-spec.ts#L64), [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts#L56) | Already site-configurable |
+| `site.name`, `site.domain`, `site.publicUrl`, `site.description`, `site.tagline` | Configurable now | [site-config.default.ts](/Users/devin/dev/repos/json-directory-template/sites/site-config.default.ts), [site-config.ts](/Users/devin/dev/repos/json-directory-template/sites/serpdownloaders/site-config.ts), [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts) | Core site identity is in the active contract |
+| Social and repo links | Configurable now | [site-config.default.ts](/Users/devin/dev/repos/json-directory-template/sites/site-config.default.ts), [site-config.ts](/Users/devin/dev/repos/json-directory-template/sites/serpdownloaders/site-config.ts), [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts) | Already site-configurable |
 
 ### Keep as starter default
 
@@ -122,6 +122,7 @@ Why:
 | Homepage hero copy | Should become configurable | Move to site-owned content or config-backed copy blocks | [hero-section.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/sections/hero-section.tsx#L22) | Includes `Submit a Website` and directory phrasing |
 | Newsletter section copy | Should become configurable | Move to site-owned content or config-backed copy blocks | [newsletter-section.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/sections/newsletter-section.tsx#L8) | Still starter pitch copy |
 | Search empty-state and search-page wording | Should become configurable | Move visible wording out of hardcoded `website/project/tool` language | [search/page.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/search/page.tsx#L42), [search-results.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/search/search-results.tsx#L96) | Tied to terminology cleanup |
+| Legacy `/websites` redirect shell page copy | Should become configurable | Keep the redirect behavior if needed, but avoid baking route-specific wording into metadata/copy without site-level control | [page.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/websites/page.tsx#L5) | Public route wording still starter-owned |
 
 ## 6. Content modules and optional surfaces
 
@@ -136,22 +137,22 @@ Why:
 | Surface | Status | Recommendation | File references | Notes |
 | --- | --- | --- | --- | --- |
 | Privacy and terms content with old brand/domain/email/dates | Should become configurable | Move to site-owned content or explicit config-backed content source | [privacy.mdx](/Users/devin/dev/repos/json-directory-template/apps/web/content/legal/privacy.mdx#L3), [privacy.mdx](/Users/devin/dev/repos/json-directory-template/apps/web/content/legal/privacy.mdx#L29), [terms.mdx](/Users/devin/dev/repos/json-directory-template/apps/web/content/legal/terms.mdx#L3), [terms.mdx](/Users/devin/dev/repos/json-directory-template/apps/web/content/legal/terms.mdx#L37) | High-priority gap |
-| Submit/report/support destinations and issue template assumptions | Needs product decision | Keep in config inventory until submit flow direction is locked | [build-spec.ts](/Users/devin/dev/repos/json-directory-template/scripts/build-spec.ts#L53), [github-issue-submit-form.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/forms/github-issue-submit-form.tsx#L28) | Tied to submit workflow direction |
+| Submit/report/support destinations and issue template assumptions | Needs product decision | Keep in config inventory until submit flow direction is locked | [site-config.default.ts](/Users/devin/dev/repos/json-directory-template/sites/site-config.default.ts), [github-issue-submit-form.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/forms/github-issue-submit-form.tsx#L28) | Tied to submit workflow direction |
 
 ## 8. Data, search, categories, and listing schema assumptions
 
 | Surface | Status | Recommendation | File references | Notes |
 | --- | --- | --- | --- | --- |
-| `content.websiteSource`, `website-json`, `trial-products-json` naming | Needs product decision | Decide whether these remain durable operator-facing names or get washed into listing-neutral terms | [build-spec.ts](/Users/devin/dev/repos/json-directory-template/scripts/build-spec.ts#L79), [site-definition.ts](/Users/devin/dev/repos/json-directory-template/scripts/site-definition.ts#L43) | Operator-facing terminology debt |
-| Category taxonomy and labels | Needs product decision | Decide whether taxonomy stays shared starter default or becomes partially site-owned/configurable | [categories.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/categories.ts) | Core issue `#23` |
+| `content.listingSource`, `listing-json`, `trial-products-json` naming | Needs product decision | Decide whether these remain durable operator-facing names or get washed into listing-neutral terms | [types.ts](/Users/devin/dev/repos/json-directory-template/sites/types.ts), [site-config.ts](/Users/devin/dev/repos/json-directory-template/sites/serpdownloaders/site-config.ts) | Operator-facing terminology debt |
+| Category taxonomy and labels | Keep as starter default for now | Keep one shared canonical taxonomy for the starter, then decide later whether sites can override or subset it | [categories.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/categories.ts) | Submit flow now derives options from this source instead of duplicating a subset |
 | Category normalization special case | Keep internal only | Track and review `integration-automation` -> `automation-workflow` rule | [website-schema.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/website-schema.ts) | Hidden taxonomy rule |
-| Search index contract | Needs product decision | Document source file, output path, record shape, and route fallback behavior | [search-index-generator.cjs](/Users/devin/dev/repos/json-directory-template/scripts/search-index-generator.cjs), [search-index.json](/Users/devin/dev/repos/json-directory-template/apps/web/public/search/search-index.json) | Core issue `#23` |
+| Search index contract | Keep as starter default for now | Current contract is generated from listing JSON into `/search/search-index.json` with canonical `url` ownership in each record; clients should consume that URL instead of rebuilding it | [search-index-generator.ts](/Users/devin/dev/repos/json-directory-template/scripts/search-index-generator.ts), [search-index.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/search-index.ts), [search-index.json](/Users/devin/dev/repos/json-directory-template/apps/web/public/search/search-index.json) | Record shape: `category`, `content`, `description`, `llmsFullUrl`, `llmsUrl`, `name`, `slug`, `url`, `website` |
 
 ## 9. Build and deploy assumptions
 
 | Surface | Status | Recommendation | File references | Notes |
 | --- | --- | --- | --- | --- |
-| Workflow fallback to `site_id` / default `serpdownloaders` | Needs product decision | Decide whether compatibility fallback remains supported and whether a default site should exist at all | [build-and-deploy.yml](/Users/devin/dev/repos/json-directory-template/.github/workflows/build-and-deploy.yml), [resolve-build-run.ts](/Users/devin/dev/repos/json-directory-template/scripts/resolve-build-run.ts) | Transition-state workflow model |
+| Workflow `site_id` input and local `default` fallback | Needs product decision | Decide whether the local default site should continue to exist or whether all flows should require an explicit site id | [build-and-deploy.yml](/Users/devin/dev/repos/json-directory-template/.github/workflows/build-and-deploy.yml), [resolve-build-run.ts](/Users/devin/dev/repos/json-directory-template/scripts/resolve-build-run.ts), [site-config.ts](/Users/devin/dev/repos/json-directory-template/scripts/site-config.ts) | Transition-state workflow model |
 | Target repo preserve/install policy (`CNAME`, Pages workflow) | Keep as starter default for now | Keep explicit and documented until another deploy strategy exists | [deploy-to-repo.sh](/Users/devin/dev/repos/json-directory-template/scripts/deploy-to-repo.sh) | Current Pages-factory assumption |
 | `github-pages-repo-sync` as only deploy strategy | Keep as starter default for now | Fine for current scope; document as intentional | [deploy-site.ts](/Users/devin/dev/repos/json-directory-template/scripts/deploy-site.ts) | Future extension point only |
 

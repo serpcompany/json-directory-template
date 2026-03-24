@@ -96,27 +96,27 @@ graph TD
 - [x] One working proof that source JSON can be validated, transformed, built here, and deployed to another GitHub repo for GitHub Pages
 - [x] A static export build path via `pnpm build:pages`
 - [x] A target-repo sync deploy path via `scripts/deploy-to-repo.sh`
-- [x] A compatibility/reference site definition for `serpdownloaders`
+- [x] A checked-in site config for `serpdownloaders`
 - [x] Site-aware validate/build/deploy commands driven by one site id
 - [x] Per-site build artifacts under `dist/sites/<site-id>`
 - [x] Internal docs for the current Pages/export flow
 - [x] Starter-shell feature flags so site-specific sidecar sections can be deterministic and opt-in
-- [x] A first explicit `BuildSpec` path so build-time requirements can be provided as input instead of inferred from checked-in site folders
-- [x] A gitignored `sites/<site-id>/` operator staging model plus `build-spec:init`
+- [x] A checked-in site config model via `sites/site-config.default.ts` plus `sites/<site-id>/site-config.ts`
+- [x] A clean split between canonical checked-in site inputs under `sites/**` and temporary intake under `tmp/sites/**`
 - [x] An audit of what the current starter already treats as configurable vs what still needs to move into the site/build contract
 - [x] A field-type pass for the active build contract:
   boolean vs enum vs free text vs URL vs file reference vs provider payload
 - [x] A cleaner operator-facing DR badge input shape:
   provider-style payload first, raw badge fields only as compatibility
 - [x] A first classification pass for starter defaults vs site-owned content vs contract-driven surfaces
-- [x] A working staged-input build and deploy trial for `serpdownloaders` using `sites/serpdownloaders/build-spec.json`
+- [x] A working checked-in site-config build and deploy trial for `serpdownloaders`
 
 ## Where we are now
 
 - [x] The static multi-site path is in a usable state:
-  `BuildSpec` -> validate -> build -> deploy
+  checked-in site config -> validate -> build -> deploy
 - [x] The operator workflow is defined:
-  stage inputs in `sites/<site-id>/`, generate/review `build-spec.json`, then run validate/build/deploy
+  maintain `sites/site-config.default.ts` plus `sites/<site-id>/site-config.ts`, keep canonical assets/data beside that site config, then run validate/build/deploy
 - [x] The build contract is now explicit enough to keep expanding without mixing internal implementation details into operator inputs
 - [x] The starter cleanup pass is far enough along that the remaining work is mostly:
   optional hosted/product direction, deeper content ownership decisions, and follow-up polish
@@ -147,15 +147,15 @@ graph TD
 
 ### 1. Multi-site build and config flow
 
-- [x] Define the operator staging convention for `sites/<site-id>/`
-- [x] Define the minimum required fields for `BuildSpec`:
+- [x] Define the checked-in site config convention for `sites/site-config.default.ts` plus `sites/<site-id>/site-config.ts`
+- [x] Define the minimum required fields for the checked-in site config:
   target repo, branch, deploy strategy, source JSON path, domain, brand config, content overrides, asset overrides
-- [x] Replace one-off env-driven site overrides with a deterministic `BuildSpec` loader
+- [x] Replace one-off env-driven site overrides with a deterministic checked-in site config loader
 - [x] Move from one shared output folder to per-site output such as `dist/sites/<site-id>/`
 - [x] Separate validate, build, and deploy into explicit site-aware commands
 - [x] Replace single-site trial naming such as `TRIAL_SOURCE_JSON` with generic site-aware inputs
 - [x] Decide where per-site assets, page-content overrides, and auxiliary site files live and how they are staged into each build
-- [x] Add a `build-spec:init` or equivalent helper that scaffolds the required spec from staged local inputs
+- [x] Consolidate the canonical build contract into the checked-in site config model instead of a separate build manifest layer
 - [x] Define how target repo requirements are managed:
   preserved files, Pages workflow, CNAME, branch/path assumptions
 - [x] Add a dry-run deploy mode that shows what would be pushed to the target repo
@@ -163,7 +163,7 @@ graph TD
 - [x] Define how non-website generated artifacts such as search indexes and feeds become site-aware
 - [x] Include test coverage for site config parsing, output paths, and deploy planning
 - [x] Include docs for adding a new site target end to end
-- [x] Wire the workflow entrypoints fully around the explicit `BuildSpec` operator path while keeping `--site` compatibility fallback
+- [x] Wire the workflow entrypoints fully around checked-in site config resolution via `--site`
 - [x] Harden temp/output paths so concurrent local or CI runs for the same site cannot collide
 
 ### 2. Continue templatizing the original project
@@ -180,7 +180,7 @@ graph TD
 - [x] Decide whether testimonials, homepage social proof, and other marketing sections are starter defaults or per-site content blocks
 - [x] Add tests for site-config-driven rendering in the shell and core landing pages
 - [x] Update docs so starter customization guidance matches the current code reality
-- [x] Wire the workflow entrypoints fully around the explicit `BuildSpec` operator path while keeping `--site` compatibility fallback for CI-safe runs
+- [x] Wire the workflow entrypoints fully around checked-in site config resolution via `--site`
 - [x] Harden temp/output paths so concurrent local or CI runs for the same site cannot collide
 - [x] Finish the next pass on active metadata/logo consumers so all public metadata surfaces consistently use staged asset outputs
 - [x] Decide the long-term treatment of tools, communities, guides, docs, and website-doc/llms surfaces:
@@ -252,7 +252,7 @@ Boundary for now:
 - [x] Decide whether one repo should be able to build multiple sites in one run or one site per run only
 - [x] Define source repo and target repo repair runbooks so broken deploys can be recovered without improvising
 - [x] Decide how temporary trial inputs and generated local artifacts should be organized so operator workflow stays clean
-- [x] Keep the local operator staging workspace gitignored so staged files do not become implied source of truth
+- [x] Keep temporary intake under `tmp/sites/**` gitignored so scratch files do not become implied source of truth
 - [x] Recommend any missing MCP/server/tooling that would make repo-to-repo deploy workflows safer and easier
 - [x] Add workflow-level concurrency and per-run temp-path safety so validate/build/deploy automation is safe under overlapping runs
 

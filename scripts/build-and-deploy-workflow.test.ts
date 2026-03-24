@@ -47,6 +47,17 @@ describe('build-and-deploy workflow', () => {
     })
   })
 
+  it('requires a checked-in site id instead of an explicit build spec path', () => {
+    const workflow = loadWorkflow()
+    const dispatchInputs = (workflow as WorkflowDefinition & {
+      on: { workflow_dispatch: { inputs: Record<string, { required?: boolean }> } }
+    }).on.workflow_dispatch.inputs
+
+    expect(dispatchInputs.site_id).toBeDefined()
+    expect(dispatchInputs.site_id?.required).toBe(true)
+    expect(dispatchInputs.build_spec_path).toBeUndefined()
+  })
+
   it('uses the configured GH_PAT secret for repo sync pushes', () => {
     const workflow = loadWorkflow()
     const deployJob = workflow.jobs.deploy

@@ -146,6 +146,10 @@ export const categories: Category[] = [
   }
 ]
 
+export const categoryAliases: Record<string, string> = {
+  'integration-automation': 'automation-workflow'
+}
+
 // Helper functions
 export const toolCategories = categories.filter(c => c.type === 'tool')
 export const nonToolCategories = categories.filter(c => c.type === 'non-tool')
@@ -154,7 +158,15 @@ export const getCategoryBySlug = (slug: string): Category | undefined => {
   return categories.find(c => c.slug === slug)
 }
 
+export const getCategoryLabel = (slug: string): string => {
+  return getCategoryBySlug(slug)?.name || slug
+}
+
 export const getCategoryIcon = (slug: string): LucideIcon => {
   const category = getCategoryBySlug(slug)
   return category?.icon || Package
+}
+
+export const normalizeCategorySlug = (slug: string): string => {
+  return categoryAliases[slug] || slug
 }

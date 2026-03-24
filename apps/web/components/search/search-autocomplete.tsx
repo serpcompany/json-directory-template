@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAnalyticsEvents } from '@/components/analytics-tracker'
 import { categories } from '@/lib/categories'
+import { SEARCH_INDEX_PUBLIC_PATH, searchIndexSchema } from '@/lib/search-index'
 import { getRoute } from '@/lib/routes'
 import { Favicon } from './favicon'
 
@@ -73,7 +74,7 @@ export function SearchAutocomplete({
         const categoryMatches = categories.slice(0, 3).map(cat => ({
           type: 'category' as const,
           title: `Browse ${cat.name}`,
-          description: `View all ${cat.name.toLowerCase()} websites`,
+          description: `View all ${cat.name.toLowerCase()} listings`,
           icon: cat.icon,
           url: getRoute('category.page', { category: cat.slug })
         }))
@@ -84,22 +85,22 @@ export function SearchAutocomplete({
       }
       setLoading(true)
       try {
-        const response = await fetch('/search/search-index.json')
+        const response = await fetch(SEARCH_INDEX_PUBLIC_PATH)
         if (!response.ok) throw new Error('Failed to fetch search index')
 
-        const searchIndex = await response.json()
+        const searchIndex = searchIndexSchema.parse(await response.json())
         const query = searchQuery.toLowerCase()
         const websiteMatches = searchIndex
-          .filter((item: any) => {
+          .filter(item => {
             const searchableText = `${item.name} ${item.description} ${item.category}`.toLowerCase()
             return searchableText.includes(query)
           })
           .slice(0, 5)
-          .map((item: any) => ({
+          .map(item => ({
             type: 'website' as const,
             title: item.name,
             description: item.description,
-            url: getRoute('website.detail', { slug: item.slug }),
+            url: item.url,
             category: item.category,
             website: item.website
           }))
@@ -109,7 +110,7 @@ export function SearchAutocomplete({
           .map(cat => ({
             type: 'category' as const,
             title: `Browse ${cat.name}`,
-            description: `View all ${cat.name.toLowerCase()} websites`,
+            description: `View all ${cat.name.toLowerCase()} listings`,
             icon: cat.icon,
             url: getRoute('category.page', { category: cat.slug })
           }))

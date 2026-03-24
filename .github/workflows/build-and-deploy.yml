@@ -13,12 +13,9 @@ on:
   workflow_dispatch:
     inputs:
       site_id:
-        description: 'Checked-in site definition id'
-        required: false
+        description: 'Checked-in site config id'
+        required: true
         default: 'serpdownloaders'
-      build_spec_path:
-        description: 'Explicit BuildSpec path when using a checked-in or supplied spec'
-        required: false
       deploy_repo:
         description: 'Deploy target repo (owner/repo)'
         required: false
@@ -28,7 +25,7 @@ on:
         default: 'main'
 
 concurrency:
-  group: build-deploy-${{ github.ref }}-${{ github.event.inputs.build_spec_path || github.event.inputs.site_id || vars.SITE_ID || 'serpdownloaders' }}
+  group: build-deploy-${{ github.ref }}-${{ github.event.inputs.site_id || vars.SITE_ID || 'serpdownloaders' }}
   cancel-in-progress: true
 
 jobs:
@@ -38,7 +35,6 @@ jobs:
     outputs:
       artifact_dir: ${{ steps.resolve.outputs.artifact_dir }}
       site_id: ${{ steps.resolve.outputs.site_id }}
-      spec_path: ${{ steps.resolve.outputs.spec_path }}
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/install
@@ -46,13 +42,11 @@ jobs:
       - name: Resolve build input
         id: resolve
         env:
-          BUILD_SPEC_PATH: ${{ github.event.inputs.build_spec_path || vars.BUILD_SPEC_PATH || '' }}
           SITE_ID: ${{ github.event.inputs.site_id || vars.SITE_ID || 'serpdownloaders' }}
         run: ./node_modules/.bin/tsx scripts/resolve-build-run.ts >> "$GITHUB_OUTPUT"
 
       - name: Validate site data
         env:
-          BUILD_SPEC_PATH: ${{ steps.resolve.outputs.spec_path }}
           SITE_ID: ${{ steps.resolve.outputs.site_id }}
         run: pnpm validate:site
 
@@ -66,7 +60,6 @@ jobs:
 
       - name: Build static site
         env:
-          BUILD_SPEC_PATH: ${{ needs.validate.outputs.spec_path }}
           SITE_ID: ${{ needs.validate.outputs.site_id }}
         run: pnpm build:site
 
@@ -103,7 +96,6 @@ jobs:
 
       - name: Deploy
         env:
-          BUILD_SPEC_PATH: ${{ needs.validate.outputs.spec_path }}
           DEPLOY_REPO_URL: ${{ github.event.inputs.deploy_repo || vars.DEPLOY_REPO_URL || '' }}
           DEPLOY_BRANCH: ${{ github.event.inputs.deploy_branch || vars.DEPLOY_BRANCH || 'main' }}
           DEPLOY_TOKEN: ${{ secrets.GH_PAT }}

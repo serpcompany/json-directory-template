@@ -17,7 +17,7 @@ export function WebsiteError() {
         <AlertTitle>Error loading website</AlertTitle>
         <AlertDescription>
           There was a problem loading this website. Please try again later or{' '}
-          <Link href={getRoute('website.list')} className="underline font-medium">
+          <Link href={getRoute('listing.list')} className="underline font-medium">
             return to the websites list
           </Link>
           .

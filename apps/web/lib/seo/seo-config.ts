@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { getRoute } from '@/lib/routes'
 import { getTwitterHandleFromUrl, siteConfig } from '@/lib/site-config'
 
 /**
@@ -12,7 +13,7 @@ import { getTwitterHandleFromUrl, siteConfig } from '@/lib/site-config'
 export const SITE_NAME = siteConfig.name
 export const SITE_TAGLINE = siteConfig.tagline
 export const SITE_DESCRIPTION = siteConfig.description
-export const SITE_PUBLIC_URL = process.env.NEXT_PUBLIC_APP_URL || `https://${siteConfig.domain}`
+export const SITE_PUBLIC_URL = siteConfig.publicUrl
 export const SITE_URL = SITE_PUBLIC_URL
 export const SITE_TWITTER_HANDLE = getTwitterHandleFromUrl(siteConfig.twitterUrl)
 export const SITE_FAVICON_URL = `${SITE_URL}/favicon.ico`
@@ -130,7 +131,7 @@ export function generateBaseMetadata(options: {
  * Generate metadata for dynamic pages (websites, categories, etc.)
  */
 export function generateDynamicMetadata(options: {
-  type: 'website' | 'category' | 'member' | 'guide' | 'news' | 'doc'
+  type: 'website' | 'listing' | 'category' | 'member' | 'guide' | 'news' | 'doc'
   name: string
   description: string
   slug: string
@@ -155,7 +156,8 @@ export function generateDynamicMetadata(options: {
 
   switch (type) {
     case 'website':
-      path = `/websites/${slug}`
+    case 'listing':
+      path = getRoute('listing.detail', { slug })
       title = `${name} - Directory Entry`
       break
     case 'category':
@@ -189,14 +191,14 @@ export function generateDynamicMetadata(options: {
   })
 
   // Add article metadata for guides, news, and websites
-  if ((type === 'guide' || type === 'news' || type === 'website') && publishedAt) {
+  if ((type === 'guide' || type === 'news' || type === 'website' || type === 'listing') && publishedAt) {
     metadata.openGraph = {
       ...metadata.openGraph,
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: updatedAt || publishedAt,
       authors: [SITE_NAME],
-      section: type === 'website' ? 'Directory Entry' : undefined
+      section: type === 'website' || type === 'listing' ? 'Directory Entry' : undefined
     }
   }
 

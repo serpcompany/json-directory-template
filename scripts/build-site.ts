@@ -16,15 +16,12 @@ import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import {
   buildSiteEnvironment,
+  loadCheckedInSiteFromInput,
+  parseSiteInputArgs,
   resolveSiteAppOutDir,
-  resolveSiteArtifactDir
-} from './site-definition.ts'
-import {
-  loadBuildSpecFromInput,
-  loadSiteDefinitionFromInput,
-  parseBuildInputArgs,
-  type BuildInputTarget
-} from './build-spec.ts'
+  resolveSiteArtifactDir,
+  type SiteInputTarget
+} from './site-config.ts'
 import { createRunTempDir } from './run-context.ts'
 import { writeTrialWebsiteEntries } from './trial-build.ts'
 import { validateSite } from './validate-site.ts'
@@ -80,9 +77,9 @@ function restoreFileOrDelete(path: string, backupPath: string, hadOriginal: bool
   }
 }
 
-function prepareSourceData(input: BuildInputTarget): { restore: () => void } {
-  const definition = loadSiteDefinitionFromInput(input)
-  const sourcePlan = definition.source
+function prepareSourceData(input: SiteInputTarget): { restore: () => void } {
+  const definition = loadCheckedInSiteFromInput(input)
+  const sourcePlan = definition.content.listingSource
   const restoreDir = createRunTempDir('build-site-source', definition.id)
   const outputPath = resolve(workspaceRoot, sourcePlan.outputPath)
   const backupPath = resolve(restoreDir.path, 'data-websites.json.backup')
@@ -108,13 +105,13 @@ function prepareSourceData(input: BuildInputTarget): { restore: () => void } {
   }
 }
 
-function prepareSearchIndex(input: BuildInputTarget, env: NodeJS.ProcessEnv): { restore: () => void } {
-  const definition = loadSiteDefinitionFromInput(input)
+function prepareSearchIndex(input: SiteInputTarget, env: NodeJS.ProcessEnv): { restore: () => void } {
+  const definition = loadCheckedInSiteFromInput(input)
   const restoreDir = createRunTempDir('build-site-search', definition.id)
   const backupPath = resolve(restoreDir.path, 'search-index.json.backup')
   const hadOriginal = backupFile(searchIndexPath, backupPath)
 
-  run('node', ['scripts/search-index-generator.cjs'], env)
+  run('pnpm', ['tsx', 'scripts/search-index-generator.ts'], env)
 
   return {
     restore: () => {
@@ -142,20 +139,17 @@ function stageLocalAsset(sourcePath: string, targetPath: string, backupPath: str
   }
 }
 
-function prepareBrandAssets(input: BuildInputTarget): { restore: () => void } {
-  const spec = loadBuildSpecFromInput(input)
-
-  if (!spec) {
-    return { restore: () => {} }
-  }
-
-  const restoreDir = createRunTempDir('build-site-assets', spec.build.siteId)
+function prepareBrandAssets(input: SiteInputTarget): { restore: () => void } {
+  const siteConfig = loadCheckedInSiteFromInput(input)
+  const restoreDir = createRunTempDir('build-site-assets', siteConfig.id)
   const stages: AssetStage[] = []
 
-  const favicon = spec.branding.favicon
+  const favicon = siteConfig.branding.favicon
   if (favicon?.source === 'local-path') {
     if (!favicon.path.endsWith('.ico')) {
-      throw new Error('Build currently supports favicon staging only from .ico files. Use sites/<site-id>/favicon.ico.')
+      throw new Error(
+        'Build currently supports favicon staging only from .ico files. Use sites/<site-id>/assets/favicon.ico.'
+      )
     }
 
     stages.push(
@@ -167,10 +161,12 @@ function prepareBrandAssets(input: BuildInputTarget): { restore: () => void } {
     )
   }
 
-  const logo = spec.branding.logo
+  const logo = siteConfig.branding.logo
   if (logo?.source === 'local-path') {
     if (!logo.path.endsWith('.png')) {
-      throw new Error('Build currently supports logo staging only from .png files. Use sites/<site-id>/logo.png.')
+      throw new Error(
+        'Build currently supports logo staging only from .png files. Use sites/<site-id>/assets/logo.png.'
+      )
     }
 
     stages.push(
@@ -189,11 +185,11 @@ function prepareBrandAssets(input: BuildInputTarget): { restore: () => void } {
     )
   }
 
-  const opengraphImage = spec.branding.opengraphImage
+  const opengraphImage = siteConfig.branding.opengraphImage
   if (opengraphImage?.source === 'local-path') {
     if (!opengraphImage.path.endsWith('.png')) {
       throw new Error(
-        'Build currently supports Open Graph image staging only from .png files. Use sites/<site-id>/opengraph-image.png.'
+        'Build currently supports Open Graph image staging only from .png files. Use sites/<site-id>/assets/opengraph-image.png.'
       )
     }
 
@@ -244,6 +240,24 @@ function removeArtifactPath(path: string): void {
   if (existsSync(path)) {
     rmSync(path, { force: true, recursive: true })
   }
+}
+
+export function applyListingRouteBasePath(artifactDir: string, listingBasePath: string): void {
+  const normalizedBasePath = listingBasePath.replace(/^\/+|\/+$/g, '')
+
+  if (!normalizedBasePath || normalizedBasePath === 'websites') {
+    return
+  }
+
+  const defaultListingsPath = resolve(artifactDir, 'websites')
+  const targetListingsPath = resolve(artifactDir, normalizedBasePath)
+
+  if (!existsSync(defaultListingsPath)) {
+    return
+  }
+
+  removeArtifactPath(targetListingsPath)
+  renameSync(defaultListingsPath, targetListingsPath)
 }
 
 function pruneArtifactTree(path: string): void {
@@ -299,8 +313,8 @@ export function pruneStaticArtifactDir(artifactDir: string, flags: ArtifactSurfa
   }
 }
 
-function finalizeArtifactDir(input: BuildInputTarget): void {
-  const definition = loadSiteDefinitionFromInput(input)
+function finalizeArtifactDir(input: SiteInputTarget): void {
+  const definition = loadCheckedInSiteFromInput(input)
   const appOutDir = resolveSiteAppOutDir(definition)
   const artifactDir = resolveSiteArtifactDir(definition)
   const notFoundSourcePath = resolve(appOutDir, '_not-found/index.html')
@@ -317,25 +331,26 @@ function finalizeArtifactDir(input: BuildInputTarget): void {
   }
 
   pruneStaticArtifactDir(artifactDir, {
-    showAuth: definition.site.features.showAuth,
-    showDocs: definition.site.features.showDocs,
-    showFavorites: definition.site.features.showFavorites,
-    showGuides: definition.site.features.showGuides,
-    showProjects: definition.site.features.showProjects
+    showAuth: definition.features.showAuth,
+    showDocs: definition.features.showDocs,
+    showFavorites: definition.features.showFavorites,
+    showGuides: definition.features.showGuides,
+    showProjects: definition.features.showProjects
   })
+  applyListingRouteBasePath(artifactDir, definition.routes.listingBasePath)
 
   closeSync(openSync(noJekyllPath, 'w'))
   writeFileSync(cnamePath, `${definition.site.domain}\n`)
 }
 
-export function runBuildSite(input: BuildInputTarget): void {
-  const definition = loadSiteDefinitionFromInput(input)
+export function runBuildSite(input: SiteInputTarget): void {
+  const definition = loadCheckedInSiteFromInput(input)
   validateSite(input)
   const env = {
     ...process.env,
     ...buildSiteEnvironment(definition),
     STATIC_EXPORT: 'true',
-    WEBSITE_DATA_PATH: definition.source.outputPath
+    WEBSITE_DATA_PATH: definition.content.listingSource.outputPath
   }
 
   const sourceState = prepareSourceData(input)
@@ -356,6 +371,6 @@ export function runBuildSite(input: BuildInputTarget): void {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
-  const input = parseBuildInputArgs(process.argv.slice(2))
+  const input = parseSiteInputArgs(process.argv.slice(2))
   runBuildSite(input)
 }

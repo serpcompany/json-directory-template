@@ -15,9 +15,9 @@ import { tools } from '@/lib/tools'
 export async function generateMetadata(): Promise<Metadata> {
   return generateBaseMetadata({
     title: 'Search',
-    description: `Search for websites, tools, and directory entries in ${SITE_NAME}.`,
+    description: `Search for listings, tools, and resources in ${SITE_NAME}.`,
     path: '/search',
-    keywords: ['search', 'find', 'website directory', 'tools', 'resources'],
+    keywords: ['search', 'find', 'directory listings', 'tools', 'resources'],
     noindex: true
   })
 }
@@ -39,7 +39,7 @@ export default function SearchPage() {
                   className="flex items-center gap-2 px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
                 >
                   <HomeIcon className="h-4 w-4" />
-                  All Websites
+                  All Listings
                 </Link>
                 {categories.map(category => (
                   <Link
@@ -81,7 +81,7 @@ export default function SearchPage() {
           <section className="space-y-6">
             <div className="sticky top-16 z-35 bg-background border-b py-4 -mx-6 px-6">
               <h1 className="text-2xl font-bold">Search</h1>
-              <p className="text-muted-foreground mt-1">Searching across all websites and tools</p>
+              <p className="text-muted-foreground mt-1">Searching across all listings and tools</p>
             </div>
 
             <Suspense

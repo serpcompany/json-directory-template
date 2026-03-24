@@ -3,20 +3,18 @@ import { mkdirSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
-  loadSiteDefinitionFromInput,
-  loadBuildSpecFromInput,
-  parseBuildInputArgs,
-  type BuildInputTarget
-} from './build-spec.ts'
+  loadCheckedInSiteFromInput,
+  parseSiteInputArgs,
+  type SiteInputTarget
+} from './site-config.ts'
 import { createRunTempDir } from './run-context.ts'
 import { writeTrialWebsiteEntries } from './trial-build.ts'
 import { websiteJsonEntriesSchema } from '../apps/web/lib/website-schema.ts'
 
 const workspaceRoot = resolve(process.cwd())
 
-export function validateSite(input: BuildInputTarget): void {
-  loadBuildSpecFromInput(input)
-  const definition = loadSiteDefinitionFromInput(input)
+export function validateSite(input: SiteInputTarget): void {
+  const definition = loadCheckedInSiteFromInput(input)
   const runTempDir = createRunTempDir('validate-site', definition.id)
   const validateDir = runTempDir.path
   const validatePath = resolve(validateDir, 'websites.json')
@@ -24,14 +22,17 @@ export function validateSite(input: BuildInputTarget): void {
   try {
     mkdirSync(dirname(validatePath), { recursive: true })
 
-    if (definition.source.kind === 'trial-products-json') {
-      writeTrialWebsiteEntries(definition.source.path, validatePath, {
-        category: definition.source.category,
-        featuredCount: definition.source.featuredCount,
-        publishedAt: definition.source.publishedAt
+    if (definition.content.listingSource.kind === 'trial-products-json') {
+      writeTrialWebsiteEntries(definition.content.listingSource.path, validatePath, {
+        category: definition.content.listingSource.category,
+        featuredCount: definition.content.listingSource.featuredCount,
+        publishedAt: definition.content.listingSource.publishedAt
       })
     } else {
-      writeFileSync(validatePath, readFileSync(resolve(workspaceRoot, definition.source.path)))
+      writeFileSync(
+        validatePath,
+        readFileSync(resolve(workspaceRoot, definition.content.listingSource.path))
+      )
     }
 
     const parsed = JSON.parse(readFileSync(validatePath, 'utf8')) as unknown
@@ -55,5 +56,5 @@ export function validateSite(input: BuildInputTarget): void {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
-  validateSite(parseBuildInputArgs(process.argv.slice(2)))
+  validateSite(parseSiteInputArgs(process.argv.slice(2)))
 }

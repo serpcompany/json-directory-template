@@ -5,6 +5,7 @@ import {
   SITE_NAME,
   SITE_PUBLIC_URL
 } from '@/lib/seo/seo-config'
+import { getRoute } from '@/lib/routes'
 
 const baseUrl = SITE_PUBLIC_URL
 
@@ -34,7 +35,7 @@ export async function GET() {
     items: [
       ...websitesData.map((site: WebsiteMetadata) => ({
         id: site.slug,
-        url: `${baseUrl}/websites/${site.slug}`,
+        url: `${baseUrl}${getRoute('listing.detail', { slug: site.slug })}`,
         title: site.name,
         content_html: site.description,
         date_published: site.publishedAt,

@@ -3,8 +3,10 @@
  */
 
 import { logger } from '@thedaviddias/logging'
+import type { SearchIndexEntry } from '@/lib/search-index'
 
 export interface WebsiteMetadata {
+  url: string
   slug: string
   website: string
   name: string
@@ -17,22 +19,6 @@ export interface WebsiteMetadata {
   publishedAt: string
 }
 
-export interface SearchIndexEntry {
-  url?: string
-  title?: string
-  description?: string
-  category?: string
-  categories?: string[]
-  tags?: string[]
-  tag?: string
-  name?: string
-  slug?: string
-  website?: string
-  llmsUrl?: string
-  llmsFullUrl?: string
-  publishedAt?: string
-}
-
 /**
  * Check if an entry can be transformed to WebsiteMetadata
  *
@@ -41,18 +27,13 @@ export interface SearchIndexEntry {
  */
 export function canTransformToWebsiteMetadata(entry: SearchIndexEntry): boolean {
   try {
-    if (!entry) return false
-
     // Explicitly exclude .DS_Store entries
-    if (entry.slug?.includes('.DS_Store') || entry.url?.includes('.DS_Store')) {
+    if (entry.slug.includes('.DS_Store') || entry.url.includes('.DS_Store')) {
       return false
     }
 
-    // Must have at least a URL or website
-    if (!entry.url && !entry.website) return false
-
-    // Must have some content (title, name, or description)
-    if (!entry.title && !entry.name && !entry.description) return false
+    if (!entry.url || !entry.website) return false
+    if (!entry.name && !entry.description) return false
 
     return true
   } catch (error) {
@@ -72,32 +53,23 @@ export function canTransformToWebsiteMetadata(entry: SearchIndexEntry): boolean 
  */
 export function transformToWebsiteMetadata(entry: SearchIndexEntry): WebsiteMetadata {
   try {
-    // Generate a slug from URL if not available
-    let slug = entry.slug
-    if (!slug && entry.url) {
-      slug = entry.url
-        .replace(/https?:\/\//, '')
-        .replace(/[^a-zA-Z0-9-]/g, '-')
-        .toLowerCase()
-    }
-
-    const website = entry.website || entry.url || ''
-    const name = entry.name || entry.title || 'Untitled'
+    const website = entry.website || ''
+    const name = entry.name || 'Untitled'
     const description = entry.description || ''
-    const categories = entry.categories || (entry.category ? [entry.category] : [])
-    const tags = entry.tags || (entry.tag ? [entry.tag] : [])
+    const categories = entry.category ? [entry.category] : []
 
     return {
-      slug: slug || '',
+      url: entry.url,
+      slug: entry.slug || '',
       website,
       name,
       description,
       categories,
-      tags,
+      tags: [],
       llmsUrl: entry.llmsUrl || '',
       llmsFullUrl: entry.llmsFullUrl || '',
       category: categories[0] || '',
-      publishedAt: entry.publishedAt || ''
+      publishedAt: ''
     }
   } catch (error) {
     logger.error('Error transforming entry:', {
@@ -107,6 +79,7 @@ export function transformToWebsiteMetadata(entry: SearchIndexEntry): WebsiteMeta
 
     // Return a safe fallback
     return {
+      url: '',
       slug: '',
       website: '',
       name: 'Unknown',
@@ -130,21 +103,18 @@ export function transformToWebsiteMetadata(entry: SearchIndexEntry): WebsiteMeta
  */
 export function matchesSearchQuery(entry: SearchIndexEntry, query: string): boolean {
   try {
-    if (!entry || !query) return false
+    if (!query) return false
 
     // Normalize the query
     const searchTerms = query.toLowerCase().trim().split(/\s+/)
 
     // Fields to search in
     const searchableFields = [
-      entry.title?.toLowerCase(),
       entry.name?.toLowerCase(),
       entry.description?.toLowerCase(),
       entry.category?.toLowerCase(),
       entry.website?.toLowerCase(),
-      entry.url?.toLowerCase(),
-      ...(entry.tags || []).map(tag => tag.toLowerCase()),
-      ...(entry.categories || []).map(cat => cat.toLowerCase())
+      entry.url?.toLowerCase()
     ].filter(Boolean)
 
     // Check if all search terms match at least one field

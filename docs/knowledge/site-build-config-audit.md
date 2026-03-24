@@ -6,13 +6,13 @@ Use this as the working checklist for expanding the site-facing build contract w
 
 ## Current decision
 
-- `sites/<site-id>/` is a local, gitignored operator staging workspace
-- `BuildSpec` is the only trusted build contract for a run
-- `records/site-definitions/**` is compatibility/reference only
+- `sites/site-config.default.ts` plus `sites/<site-id>/site-config.ts` are the trusted checked-in build contract
+- `sites/<site-id>/assets/*` holds canonical checked-in site assets
+- `tmp/sites/<site-id>/` is scratch space only and should not become implied source of truth
 
 ## Already configurable today
 
-These are already part of the active site/build contract through `BuildSpec` -> `siteDefinition` -> `siteConfig`.
+These are already part of the active site/build contract through checked-in site config -> app/build adapters -> `siteConfig`.
 
 ### Site identity
 
@@ -36,7 +36,7 @@ These are already part of the active site/build contract through `BuildSpec` -> 
 ### Simple branding
 
 Status note:
-- the operator-facing `BuildSpec` now treats `drBadge` as a provider payload first
+- the checked-in site config now treats `drBadge` as a provider payload first
 - preferred shape:
   - `branding.drBadge.provider`
   - `branding.drBadge.domain`
@@ -49,11 +49,11 @@ Status note:
 
 ### Content/data source
 
-- `content.websiteSource.kind`
-- `content.websiteSource.path`
-- `content.websiteSource.category` for trial product inputs
-- `content.websiteSource.featuredCount`
-- `content.websiteSource.publishedAt`
+- `content.listingSource.kind`
+- `content.listingSource.path`
+- `content.listingSource.category` for trial product inputs
+- `content.listingSource.featuredCount`
+- `content.listingSource.publishedAt`
 
 ### Optional shell modules
 
@@ -82,13 +82,13 @@ Field-type note:
 
 ## Field-type pass
 
-This is the current recommended field classification for the active operator-facing contract.
+This is the current recommended field classification for the active checked-in site config contract.
 
 ### Enum
 
 - `version`
 - `build.mode`
-- `content.websiteSource.kind`
+- `content.listingSource.kind`
 - `deploy.strategy`
 
 ### Boolean
@@ -100,7 +100,6 @@ This is the current recommended field classification for the active operator-fac
 
 ### Free text
 
-- `build.siteId`
 - `build.artifactDir`
 - `site.name`
 - `site.domain`
@@ -111,8 +110,8 @@ This is the current recommended field classification for the active operator-fac
 - `social.githubIssueTemplate`
 - `deploy.branch`
 - `deploy.preserve[]`
-- `content.websiteSource.category`
-- `content.websiteSource.publishedAt`
+- `content.listingSource.category`
+- `content.listingSource.publishedAt`
 
 ### URL
 
@@ -128,14 +127,14 @@ This is the current recommended field classification for the active operator-fac
 - `branding.favicon`
 - `branding.logo`
 - `branding.opengraphImage`
-- `content.websiteSource.path`
+- `content.listingSource.path`
 
 ### Provider payload
 
 - `branding.drBadge`
 
 Note:
-- `content.websiteSource.featuredCount` is still numeric in code.
+- `content.listingSource.featuredCount` is still numeric in code.
 - keep that as a small structured numeric field, not a free-text UI field.
 
 ## Should be added to the site-facing build contract next
@@ -151,7 +150,7 @@ These are still effectively hardcoded, inferred, or only partially wired.
 - optional site/share image fallbacks
 
 Status:
-- local/url asset references are supported in `BuildSpec`
+- local/url asset references are supported in checked-in site config
 - staged asset validation exists
 - staged asset application into the build is working for the current favicon/logo/OG image flow
 - broader metadata consumers still need to finish reading those staged outputs consistently
@@ -234,7 +233,7 @@ These are the main active areas still worth cleaning up or explicitly deciding t
 
 These files are not all bugs. Some are starter defaults. The follow-up work is to sort each one into:
 
-- move into `BuildSpec`
+- move into checked-in site config
 - keep as shared starter default
 - move into site-owned content later
 - archive/remove from the active starter
@@ -258,7 +257,7 @@ These are useful shared defaults and do not need to become direct operator input
 - `apps/web/app/(files)/rss.xml/route.ts`
   Keep as a starter default with branding wired from the site contract and staged assets.
 - `apps/web/lib/seo/seo-config.ts`
-  Keep as internal translation logic from `BuildSpec`/site config into metadata, not a direct user input surface.
+  Keep as internal translation logic from checked-in site config/site config into metadata, not a direct user input surface.
 - `apps/web/lib/schema.ts`
   Keep as internal structured-data generation logic, with only selected content/branding values fed from config.
 - `apps/web/components/sections/tools-section.tsx`
@@ -277,7 +276,7 @@ These should likely remain part of the product surface, but the actual page mess
 
 Reason:
 - these are more content/editorial than infrastructure
-- trying to flatten them into many raw `BuildSpec` fields will make the contract noisy and brittle
+- trying to flatten them into many raw checked-in site config fields will make the contract noisy and brittle
 
 ### Needs decision before more config expansion
 
@@ -289,7 +288,7 @@ These sit in the middle and should be decided explicitly before we add more fiel
   - site-owned content list later,
   - or optional module disabled unless configured
 - `apps/web/lib/tools.ts`
-  Same decision as above; probably not a free-text `BuildSpec` surface
+  Same decision as above; probably not a free-text checked-in site config surface
 - `apps/web/components/forms/github-issue-submit-form.tsx`
   Keep the wiring contract-driven now, but leave most copy as a starter default until submit flows become a first-class product surface
 - `apps/web/components/website/website-docs-section.tsx`
@@ -311,7 +310,7 @@ Better as site-owned content later:
 
 ## Current decision snapshot
 
-These are the decisions to use now so the static pipeline can keep moving without over-expanding `BuildSpec`.
+These are the decisions to use now so the static pipeline can keep moving without over-expanding checked-in site config.
 
 ### Starter defaults
 
@@ -331,15 +330,15 @@ These are the decisions to use now so the static pipeline can keep moving withou
 - website docs and llms surfaces
   keep them as optional surfaces that appear only when the entry/content supports them
 - tools/community datasets
-  do not turn these into raw `BuildSpec` fields; treat them as optional content modules if they stay in the product
+  do not turn these into raw checked-in site config fields; treat them as optional content modules if they stay in the product
 
 ## Contract guidance from this pass
 
-Do not turn every active page or text block into `BuildSpec`.
+Do not turn every active page or text block into checked-in site config.
 
 Preferred layering:
 
-- `BuildSpec`
+- checked-in site config
   site identity, source inputs, feature flags, deploy target, asset references, selected public metadata
 - starter defaults
   generic page structures, fallback copy, feed/SEO wiring logic
@@ -348,7 +347,7 @@ Preferred layering:
 
 ## Intentionally internal-only
 
-These should not become user/operator-facing `BuildSpec` fields unless a real need appears.
+These should not become user/operator-facing checked-in site config fields unless a real need appears.
 
 - `apps/web/out`
 - internal temp restore paths

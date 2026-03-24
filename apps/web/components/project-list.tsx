@@ -50,7 +50,7 @@ export function ProjectList({ items = [] }: ProjectListProps) {
                     <div className="flex items-center gap-2">
                       <h3 className="text-lg font-semibold group-hover:underline">
                         <Link
-                          href={getRoute('website.detail', { slug: item.slug })}
+                          href={getRoute('listing.detail', { slug: item.slug })}
                           className="z-10 after:absolute after:inset-0 after:content-[''] z-10"
                         >
                           {item.name}

@@ -3,12 +3,13 @@
  */
 
 import { logger } from '@thedaviddias/logging'
-import type { SearchIndexEntry, WebsiteMetadata } from '@/components/search/search-utils'
+import type { WebsiteMetadata } from '@/components/search/search-utils'
 import {
   canTransformToWebsiteMetadata,
   matchesSearchQuery,
   transformToWebsiteMetadata
 } from '@/components/search/search-utils'
+import type { SearchIndexEntry } from '@/lib/search-index'
 
 /**
  * Filter and sort entries by relevance to query
@@ -36,8 +37,8 @@ export function filterAndSortEntries(
       }
     })
     .sort((a, b) => {
-      const aTitle = (a.name || a.title || '').toLowerCase()
-      const bTitle = (b.name || b.title || '').toLowerCase()
+      const aTitle = a.name.toLowerCase()
+      const bTitle = b.name.toLowerCase()
 
       // Exact title matches first
       if (aTitle === queryLower && bTitle !== queryLower) return -1
@@ -93,6 +94,7 @@ export function transformAndSanitizeEntries(entries: SearchIndexEntry[]): Websit
           tags: { type: 'component' }
         })
         return {
+          url: '',
           slug: 'error',
           name: 'Error processing result',
           description: '',

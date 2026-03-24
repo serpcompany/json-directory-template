@@ -22,7 +22,7 @@ export function ProjectNavigation({ previousWebsite, nextWebsite }: ProjectNavig
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
       {previousWebsite ? (
         <Link
-          href={getRoute('website.detail', { slug: previousWebsite.slug })}
+          href={getRoute('listing.detail', { slug: previousWebsite.slug })}
           className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/50 hover:bg-card transition-all duration-200 hover:scale-[1.02] hover:shadow-lg backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -57,7 +57,7 @@ export function ProjectNavigation({ previousWebsite, nextWebsite }: ProjectNavig
 
       {nextWebsite ? (
         <Link
-          href={getRoute('website.detail', { slug: nextWebsite.slug })}
+          href={getRoute('listing.detail', { slug: nextWebsite.slug })}
           className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/50 hover:bg-card transition-all duration-200 hover:scale-[1.02] hover:shadow-lg backdrop-blur-sm md:col-start-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

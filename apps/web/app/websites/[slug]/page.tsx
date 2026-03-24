@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     ].filter(Boolean) as string[]
 
     return generateDynamicMetadata({
-      type: 'website',
+      type: 'listing',
       name: project.name,
       description: seoDescription.length > 160 ? project.description : seoDescription,
       slug: project.slug,
@@ -114,8 +114,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     }
 
     const breadcrumbItems = [
-      { name: 'Directory', href: getRoute('website.list') },
-      { name: project.name, href: getRoute('website.detail', { slug: project.slug }) }
+      { name: 'Directory', href: getRoute('listing.list') },
+      { name: project.name, href: getRoute('listing.detail', { slug: project.slug }) }
     ]
 
     return (

@@ -6,6 +6,7 @@ import { EmptyState } from '@/components/empty-state'
 import { SearchFilters } from '@/components/search/search-filters'
 import { useSearch } from '@/components/search/use-search'
 import { WebsitesListWithSort } from '@/components/websites-list-with-sort'
+import { getCategoryLabel } from '@/lib/categories'
 import { getRoute } from '@/lib/routes'
 import { siteConfig } from '@/lib/site-config'
 
@@ -160,7 +161,7 @@ export function SearchResults() {
                 onClick={() => setSelectedCategories([category])}
                 className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-background border hover:bg-muted/50 transition-colors cursor-pointer"
               >
-                {category} ({count})
+                {getCategoryLabel(category)} ({count})
               </button>
             ))}
           </div>

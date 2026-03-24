@@ -22,7 +22,7 @@ export function WebsiteRelatedProjects({ websites }: WebsiteRelatedProjectsProps
       <Section
         title="Related Entries"
         description="Discover similar entries in the directory"
-        viewAllHref={getRoute('website.list')}
+        viewAllHref={getRoute('listing.list')}
         viewAllText="Browse the directory"
         titleId="related-projects"
       >

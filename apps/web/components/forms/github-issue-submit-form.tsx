@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { buildSubmissionIssueUrl } from '@/lib/github-issue'
+import { categories } from '@/lib/categories'
 import { generateLlmsFullUrl, generateLlmsUrl } from './submit-form-utils'
 import { SubmitFormGuidelines } from './submit-form-guidelines'
 
@@ -24,15 +25,6 @@ const INITIAL_FORM_STATE: SubmissionFormState = {
   notes: '',
   website: ''
 }
-
-const CATEGORY_OPTIONS = [
-  'ai-ml',
-  'automation-workflow',
-  'data-analytics',
-  'developer-tools',
-  'infrastructure-cloud',
-  'security-identity'
-] as const
 
 export function GitHubIssueSubmitForm() {
   const [formState, setFormState] = useState<SubmissionFormState>(INITIAL_FORM_STATE)
@@ -119,9 +111,9 @@ export function GitHubIssueSubmitForm() {
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <option value="">Choose a category</option>
-              {CATEGORY_OPTIONS.map(category => (
-                <option key={category} value={category}>
-                  {category}
+              {categories.map(category => (
+                <option key={category.slug} value={category.slug}>
+                  {category.name}
                 </option>
               ))}
             </select>

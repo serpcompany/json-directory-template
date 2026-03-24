@@ -2,16 +2,38 @@
  * Application route constants
  * Use these constants instead of hardcoding routes in components
  */
+import { siteConfig } from '@/lib/site-config'
+
+function getListingBasePath(): string {
+  return `/${siteConfig.listingRouteBasePath}`
+}
+
+function buildListingRoute(pattern = ''): string {
+  const basePath = getListingBasePath()
+
+  if (!pattern) {
+    return basePath
+  }
+
+  return `${basePath}/${pattern}`
+}
 
 export const routes = {
   home: '/',
   llmsTxt: '/llms.txt',
+  listing: {
+    list: buildListingRoute(),
+    detail: buildListingRoute('[slug]'),
+    featured: buildListingRoute(),
+    latest: `${buildListingRoute()}?sort=latest`,
+    withCategory: `${buildListingRoute()}?category=[category]`
+  },
   website: {
-    list: '/websites',
-    detail: '/websites/[slug]',
-    featured: '/websites',
-    latest: '/websites?sort=latest',
-    withCategory: '/websites?category=[category]'
+    list: buildListingRoute(),
+    detail: buildListingRoute('[slug]'),
+    featured: buildListingRoute(),
+    latest: `${buildListingRoute()}?sort=latest`,
+    withCategory: `${buildListingRoute()}?category=[category]`
   },
   category: {
     page: '/[category]'
@@ -42,6 +64,9 @@ type StaticRoutes =
   | 'home'
   | 'account'
   | 'llmsTxt'
+  | 'listing.list'
+  | 'listing.featured'
+  | 'listing.latest'
   | 'website.list'
   | 'website.featured'
   | 'website.latest'
@@ -60,6 +85,8 @@ type StaticRoutes =
   | 'rss'
 
 type DynamicRoutes =
+  | 'listing.detail'
+  | 'listing.withCategory'
   | 'website.detail'
   | 'website.withCategory'
   | 'docs.doc'
@@ -69,6 +96,8 @@ type DynamicRoutes =
 type Routes = StaticRoutes | DynamicRoutes
 
 type DynamicRouteParams = {
+  'listing.detail': { slug: string }
+  'listing.withCategory': { category: string }
   'website.detail': { slug: string }
   'website.withCategory': { category: string }
   'docs.doc': { slug: string }

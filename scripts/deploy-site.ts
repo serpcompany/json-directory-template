@@ -2,8 +2,12 @@ import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
-import { resolveSiteArtifactDir } from './site-definition.ts'
-import { loadSiteDefinitionFromInput, parseBuildInputArgs, type BuildInputTarget } from './build-spec.ts'
+import {
+  loadCheckedInSiteFromInput,
+  parseSiteInputArgs,
+  resolveSiteArtifactDir,
+  type SiteInputTarget
+} from './site-config.ts'
 
 const workspaceRoot = resolve(process.cwd())
 
@@ -16,17 +20,17 @@ export interface DeployPlan {
   strategy: 'github-pages-repo-sync'
 }
 
-export function parseDeployArgs(argv: string[], env: NodeJS.ProcessEnv = process.env): BuildInputTarget & {
+export function parseDeployArgs(argv: string[], env: NodeJS.ProcessEnv = process.env): SiteInputTarget & {
   dryRun: boolean
 } {
   return {
-    ...parseBuildInputArgs(argv, env),
+    ...parseSiteInputArgs(argv, env),
     dryRun: argv.includes('--dry-run')
   }
 }
 
-export function buildDeployPlan(input: BuildInputTarget): DeployPlan {
-  const definition = loadSiteDefinitionFromInput(input)
+export function buildDeployPlan(input: SiteInputTarget): DeployPlan {
+  const definition = loadCheckedInSiteFromInput(input)
 
   if (!definition.deploy) {
     throw new Error(`Site ${definition.id} does not define a deploy target`)
@@ -42,13 +46,11 @@ export function buildDeployPlan(input: BuildInputTarget): DeployPlan {
   }
 }
 
-export function runDeploySite(input: BuildInputTarget, dryRun = false): void {
+export function runDeploySite(input: SiteInputTarget, dryRun = false): void {
   const plan = buildDeployPlan(input)
 
   if (!existsSync(plan.buildDir)) {
-    const targetHint = input.specPath
-      ? `pnpm build:site -- --spec ${input.specPath}`
-      : `pnpm build:site -- --site ${plan.siteId}`
+    const targetHint = `pnpm build:site -- --site ${plan.siteId}`
     throw new Error(`Build artifact not found at ${plan.buildDir}. Run ${targetHint} first.`)
   }
 

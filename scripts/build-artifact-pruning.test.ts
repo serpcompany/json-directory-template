@@ -1,7 +1,7 @@
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync, existsSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { pruneStaticArtifactDir } from './build-site.ts'
+import { applyListingRouteBasePath, pruneStaticArtifactDir } from './build-site.ts'
 
 const tempDirs: string[] = []
 
@@ -80,5 +80,30 @@ describe('pruneStaticArtifactDir', () => {
     expect(existsSync(resolve(artifactDir, 'projects'))).toBe(true)
     expect(existsSync(resolve(artifactDir, 'docs'))).toBe(true)
     expect(existsSync(resolve(artifactDir, 'guides'))).toBe(true)
+  })
+})
+
+describe('applyListingRouteBasePath', () => {
+  it('renames the default listing artifact path when a custom public base path is configured', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    writeFile(resolve(artifactDir, 'websites/index.html'))
+    writeFile(resolve(artifactDir, 'websites/example/index.html'))
+
+    applyListingRouteBasePath(artifactDir, 'directory')
+
+    expect(existsSync(resolve(artifactDir, 'websites'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'directory/index.html'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'directory/example/index.html'))).toBe(true)
+  })
+
+  it('keeps the default artifact path when the configured public base path is websites', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    writeFile(resolve(artifactDir, 'websites/index.html'))
+
+    applyListingRouteBasePath(artifactDir, 'websites')
+
+    expect(existsSync(resolve(artifactDir, 'websites/index.html'))).toBe(true)
   })
 })

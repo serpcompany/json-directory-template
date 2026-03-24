@@ -183,6 +183,7 @@ describe('Basic Component Rendering', () => {
       const result = getRoute('home')
       expect(typeof result).toBe('string')
       expect(result).toBe('/')
+      expect(getRoute('listing.detail', { slug: 'example' })).toBe('/websites/example')
     })
 
     it('should export categories data', async () => {

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { normalizeCategorySlug } from './categories'
 
 const publishedAtPattern = /^\d{4}-\d{2}-\d{2}$/
 
@@ -71,11 +72,7 @@ function slugifyWebsiteName(name: string): string {
 }
 
 function normalizeJsonCategory(category: string): string {
-  if (category === 'integration-automation') {
-    return 'automation-workflow'
-  }
-
-  return category
+  return normalizeCategorySlug(category)
 }
 
 function sanitizeWebsiteDescription(description: string): string {

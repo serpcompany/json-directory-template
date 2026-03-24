@@ -4,7 +4,8 @@
 
 import { logger } from '@thedaviddias/logging'
 import { useEffect, useState } from 'react'
-import type { SearchIndexEntry, WebsiteMetadata } from '@/components/search/search-utils'
+import type { WebsiteMetadata } from '@/components/search/search-utils'
+import { SEARCH_INDEX_PUBLIC_PATH, searchIndexSchema, type SearchIndexEntry } from '@/lib/search-index'
 import {
   filterAndSortEntries,
   transformAndSanitizeEntries,
@@ -36,7 +37,7 @@ export function useSearch(query: string) {
      */
     async function loadSearchIndex() {
       try {
-        const response = await fetch('/search/search-index.json', {
+        const response = await fetch(SEARCH_INDEX_PUBLIC_PATH, {
           headers: {
             'Cache-Control': 'max-age=300'
           }
@@ -47,7 +48,7 @@ export function useSearch(query: string) {
         }
 
         const data = await response.json()
-        const index = Array.isArray(data) ? data : []
+        const index = searchIndexSchema.parse(data)
 
         if (isMounted) {
           setSearchIndex(index)

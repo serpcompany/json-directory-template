@@ -26,7 +26,7 @@
 - Keep internal starter/operator notes such as `siteConfig` shapes in `docs/knowledge/**`, not in public `/docs`.
 - Keep representative page references in `docs/knowledge/reference-surfaces.md` when you want to preserve old patterns without leaving whole features active.
 - Use the decision labels in `docs/knowledge/reference-surfaces.md` to drive cleanup order: `Keep + rebrand first`, then `Keep + rebrand later`, then `Reference only`.
-- The runtime starter config now lives at `apps/web/lib/site-config.ts`.
+- The checked-in site config source of truth now lives under `sites/**`, with `apps/web/lib/site-config.ts` acting as the app-facing adapter layer.
 - The runtime starter config now also owns optional shell feature flags, including whether to render creator-project, featured-guides, developer-tools, and newsletter sections.
 - The current website/entity data contract is documented in `docs/knowledge/entity-data-shape.md`.
 - The config now covers both public social links and repo-specific submit/report fields, so shell links and GitHub issue flows can move without hardcoded owner/repo strings.
@@ -35,10 +35,10 @@
 ## Rebrand Touchpoints
 
 - The main shell brand strings live in `apps/web/app/layout.tsx`, `apps/web/lib/seo/seo-config.ts`, `apps/web/components/layout/header.tsx`, and `apps/web/components/layout/footer.tsx`.
-- When you add a starter-level `siteConfig`, centralize `name`, `domain`, `tagline`, social URLs, and the optional DR badge there before wiring those values into the shell. The internal reference now lives in `docs/knowledge/site-config.md`.
+- When you add starter-level site config, centralize `name`, `domain`, `tagline`, social URLs, and the optional DR badge in `sites/site-config.default.ts` and per-site overrides before wiring those values into the shell. The internal reference now lives in `docs/knowledge/site-config.md`.
 - The first active rebrand pass is complete for `apps/web/app/page.tsx`, `apps/web/app/websites/[slug]/page.tsx`, `apps/web/app/submit/page.tsx`, and `apps/web/app/favorites/page.tsx`.
 - That pass keeps the existing `website` and `llmsUrl` data fields, but shifts visible copy toward generic directory language such as `directory`, `entries`, and `submit a website`.
-- Starter-safe builds should keep legacy creator/tool/guide sidebars disabled unless a site explicitly enables them through `siteConfig` / site-definition feature flags.
+- Starter-safe builds should keep legacy creator/tool/guide sidebars disabled unless a site explicitly enables them through checked-in site config feature flags.
 - The standalone FAQ route was removed from the active starter. Do not keep `/faq` in nav, sitemap, or smoke-test coverage unless a future site explicitly needs it.
 - Legal content pages are now canonical at `/legal/privacy`, `/legal/terms`, and `/legal/cookies`.
 - The legacy root routes `/privacy`, `/terms`, and `/cookies` still exist only as redirects so existing links do not break.
@@ -60,7 +60,7 @@
 
 ## Root Package Scripts
 
-- The root `generate-search-index` script should target `scripts/search-index-generator.cjs`; the `.js` entry was stale.
+- The root `generate-search-index` script should target `scripts/search-index-generator.ts`; the older `.js` and `.cjs` references were stale.
 - The old `generate-llms-chatbot-index` root script pointed at a missing file and was removed.
 - Keep the root package name as `llms-txt-hub` until workspace-root discovery in internal tooling is made template-neutral.
 

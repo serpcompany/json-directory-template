@@ -79,7 +79,7 @@ export function WebsitesListWithSort({
           <div className="flex items-center gap-2">
             <h3 className="font-semibold">
               <Link
-                href={getRoute('website.detail', { slug: website.slug })}
+                href={getRoute('listing.detail', { slug: website.slug })}
                 className="block after:absolute after:inset-0 after:content-[''] z-10 hover:text-primary transition-colors"
               >
                 {website.name}

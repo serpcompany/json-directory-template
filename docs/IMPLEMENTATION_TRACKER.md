@@ -4,9 +4,11 @@ This doc turns [docs/PLAN.md](/Users/devin/dev/repos/json-directory-template/doc
 
 ## Current branch
 
-- [x] Working branch: `plan/multi-site-directory-next`
+- [x] Working branch: `feat/config-inventory-next-batch`
 - [x] Finalize early decisions below before starting implementation
 - [ ] Split the first 3 execution chunks into GitHub issues if we want issue-level tracking
+- [x] Add a branch QA checklist for the checked-in site-config refactor:
+  [docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md)
 
 ## Recommended decisions
 
@@ -51,9 +53,8 @@ Acceptance:
 - [x] Replace special-case env naming with generic site-aware inputs
 - [x] Add tests for config parsing and validation
 - [x] Update runbooks for adding a new site
-- [x] Add a first explicit `BuildSpec` input path for operator-provided build bundles
-- [x] Define `sites/<site-id>/` as a local, gitignored operator staging area
-- [x] Add `build-spec:init` to scaffold `BuildSpec` from staged inputs
+- [x] Define `sites/site-config.default.ts` plus `sites/<site-id>/site-config.ts` as the canonical checked-in site config model
+- [x] Keep temporary intake files out of the canonical model by using `tmp/sites/<site-id>/` only for scratch work
 - [x] Audit what is already configurable vs what still needs to move into the site/build contract
 - [x] Add a field-type pass for the contract:
   boolean vs enum vs free text vs URL vs file reference vs provider payload
@@ -69,7 +70,7 @@ Acceptance:
 - [x] Make generated side artifacts site-aware where needed
 - [x] Remove or isolate single-site assumptions in the current Pages build path
 - [x] Add build verification coverage
-- [x] Allow workflow/script entrypoints to prefer explicit `BuildSpec` input via `BUILD_SPEC_PATH`
+- [x] Make workflow/script entrypoints resolve a checked-in site config directly from `site_id`
 - [x] Add concurrency-safe temp/output paths so overlapping local or CI runs do not share scratch files
 
 Acceptance:
@@ -95,10 +96,15 @@ Acceptance:
   [docs/SITE_CONFIG_INVENTORY.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_INVENTORY.md)
 - [ ] Audit and normalize the core directory-item vocabulary:
   replace loose `website` / `product` wording with one canonical term, and decide whether the generated `/websites/...` route should stay fixed or become configurable
+- [x] Record the highest-visibility remaining copy surfaces that still say `website` / `project` / `websites` so they can be classified deliberately instead of changed ad hoc
+- [x] Normalize the active search-index contract around one canonical record shape and make generated URL ownership explicit
+- [x] Derive the submit-form category options from the canonical taxonomy instead of keeping a duplicated subset
 - [x] Update tests and starter docs to match the generalized model
 - [x] Add site-config-driven feature flags for optional shell sections:
   creator projects, featured guides, developer tools, newsletter
 - [x] Keep legacy creator/tool/guide content disabled by default for starter-safe builds
+- [x] Move the public listing route base path behind checked-in site config while keeping `websites` as the current default
+- [x] Centralize the active search-index contract and stop duplicating submit-category options outside the shared taxonomy
 - [x] Finish asset staging so staged favicon/logo/OG image inputs can actually affect the build
 - [x] Audit remaining active route/content surfaces and decide:
   build contract vs starter default vs site-owned content
