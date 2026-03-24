@@ -6,6 +6,7 @@ Use this checklist before merging or building on top of the checked-in site-conf
 
 - [ ] `sites/site-config.default.ts` is the starter default source of truth
 - [ ] each active site has its own checked-in config under `sites/<site-id>/site-config.ts`
+- [ ] site config files under `sites/<site-id>/` stay sparse override-only instead of full copied configs
 - [ ] canonical site-owned assets live under `sites/<site-id>/assets/*`
 - [ ] temporary intake files are not being treated as source of truth
 

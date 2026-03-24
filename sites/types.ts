@@ -99,6 +99,22 @@ export type CheckedInSiteConfig = {
   version: 1
 }
 
+type Primitive = boolean | null | number | string | undefined
+
+export type DeepPartial<T> = T extends Primitive
+  ? T
+  : T extends Array<infer U>
+    ? Array<DeepPartial<U>>
+    : {
+        [K in keyof T]?: DeepPartial<T[K]>
+      }
+
+export type CheckedInSiteConfigOverride = DeepPartial<
+  Omit<CheckedInSiteConfig, 'id'>
+> & {
+  id: string
+}
+
 export type ResolvedDrBadge = {
   alt: string
   height: number

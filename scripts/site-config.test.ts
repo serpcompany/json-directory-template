@@ -24,6 +24,18 @@ describe('loadCheckedInSite', () => {
     expect(config.deploy?.strategy).toBe('github-pages-repo-sync')
   })
 
+  it('inherits default values when a site override does not redefine them', () => {
+    const config = loadCheckedInSite('serpdownloaders')
+
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('json-directory-template')
+    expect(config.social.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/json-directory-template/issues/new/choose'
+    )
+    expect(config.routes.listingBasePath).toBe('websites')
+    expect(config.features.showNewsletter).toBe(true)
+  })
+
   it('loads the checked-in default site config when no site id is provided', () => {
     const config = loadCheckedInSite()
 

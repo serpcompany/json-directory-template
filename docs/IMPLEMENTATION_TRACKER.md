@@ -9,6 +9,7 @@ This doc turns [docs/PLAN.md](/Users/devin/dev/repos/json-directory-template/doc
 - [ ] Split the first 3 execution chunks into GitHub issues if we want issue-level tracking
 - [x] Add a branch QA checklist for the checked-in site-config refactor:
   [docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md)
+- [x] Make per-site checked-in config files sparse overrides instead of full copied configs
 
 ## Recommended decisions
 

@@ -4,6 +4,7 @@ Use checked-in site config files under `sites/**` to centralize reusable brand a
 
 Important distinction:
 - `sites/site-config.default.ts` and `sites/<id>/site-config.ts` are the checked-in source of truth
+- `sites/site-config.default.ts` is the full starter config, while `sites/<id>/site-config.ts` should stay as a sparse override-only file
 - `apps/web/lib/site-config.ts` is the internal app-facing adapter that resolves those checked-in files into the runtime shape the app uses
 - example: checked-in `branding.drBadge` prefers a provider payload, while the app-facing `siteConfig.drBadge` still holds the resolved raw badge values the footer renders
 
@@ -11,6 +12,13 @@ Source-of-truth files:
 
 - `sites/site-config.default.ts`
 - `sites/<id>/site-config.ts`
+
+Recommended authoring rule:
+
+- add new configurable fields to `sites/types.ts`
+- set the default value once in `sites/site-config.default.ts`
+- only add the field to `sites/<id>/site-config.ts` when that site needs a non-default override
+- let the central resolver merge defaults plus overrides before validation
 
 Adapter file:
 

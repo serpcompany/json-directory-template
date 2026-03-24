@@ -27,8 +27,8 @@ Those are future extension paths, not current build responsibilities.
 
 The pipeline works from one canonical checked-in config model:
 
-1. the repo defines starter defaults in `sites/site-config.default.ts`
-2. each site defines its own checked-in override in `sites/<site-id>/site-config.ts`
+1. the repo defines the full starter config in `sites/site-config.default.ts`
+2. each site defines its own sparse checked-in override in `sites/<site-id>/site-config.ts`
 3. the pipeline validates the resolved site config and source data
 4. the pipeline builds one static artifact
 5. the pipeline deploys that artifact to the configured target
@@ -42,6 +42,11 @@ If required inputs are missing, the pipeline should fail early and say exactly w
 Canonical checked-in files:
 - `sites/site-config.default.ts`
 - `sites/<site-id>/site-config.ts`
+
+Authoring rule:
+- add new fields to the default config once
+- keep per-site config files override-only
+- inherit unchanged values through the central resolver instead of copying the full config into every site file
 - `sites/<site-id>/products.json` or `websites.json`
 - `sites/<site-id>/assets/logo.png`
 - `sites/<site-id>/assets/opengraph-image.png`

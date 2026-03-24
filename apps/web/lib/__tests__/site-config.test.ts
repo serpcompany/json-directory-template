@@ -27,6 +27,17 @@ describe('resolveSiteConfig', () => {
     })
   })
 
+  it('inherits default social and route values for sparse site overrides', () => {
+    const config = resolveSiteConfig('serpdownloaders')
+
+    expect(config.githubIssueOwner).toBe('serpcompany')
+    expect(config.githubIssueRepo).toBe('json-directory-template')
+    expect(config.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/json-directory-template/issues/new/choose'
+    )
+    expect(config.listingRouteBasePath).toBe('websites')
+  })
+
   it('falls back to the checked-in default site config', () => {
     const config = resolveSiteConfig('unknown-site')
 

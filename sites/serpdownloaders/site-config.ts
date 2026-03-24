@@ -1,10 +1,7 @@
-import { defaultSiteConfig } from '../site-config.default'
-import type { CheckedInSiteConfig } from '../types'
+import type { CheckedInSiteConfigOverride } from '../types'
 
-export const serpdownloadersSiteConfig: CheckedInSiteConfig = {
-  ...defaultSiteConfig,
+export const serpdownloadersSiteConfig: CheckedInSiteConfigOverride = {
   branding: {
-    ...defaultSiteConfig.branding,
     drBadge: {
       domain: 'serpdownloaders.com',
       provider: 'serp-dr',
@@ -24,7 +21,6 @@ export const serpdownloadersSiteConfig: CheckedInSiteConfig = {
     }
   },
   build: {
-    ...defaultSiteConfig.build,
     artifactDir: 'dist/sites/serpdownloaders'
   },
   content: {
@@ -43,22 +39,7 @@ export const serpdownloadersSiteConfig: CheckedInSiteConfig = {
     repoUrl: 'https://github.com/serpcompany/serpdownloaders.com.git',
     strategy: 'github-pages-repo-sync'
   },
-  features: {
-    ...defaultSiteConfig.features,
-    showAuth: false,
-    showCreatorProjects: false,
-    showDocs: false,
-    showDeveloperTools: false,
-    showFavorites: false,
-    showFeaturedGuides: false,
-    showGuides: false,
-    showNewsletter: true,
-    showProjects: false
-  },
   id: 'serpdownloaders',
-  routes: {
-    listingBasePath: defaultSiteConfig.routes.listingBasePath
-  },
   site: {
     description: 'Directory of download-focused browser tools.',
     domain: 'serpdownloaders.com',
@@ -67,12 +48,6 @@ export const serpdownloadersSiteConfig: CheckedInSiteConfig = {
     tagline: 'Download-focused product directory'
   },
   social: {
-    githubIssueOwner: 'serpcompany',
-    githubIssueRepo: 'json-directory-template',
-    githubIssueTemplate: 'submit-website.yml',
-    githubIssuesUrl: 'https://github.com/serpcompany/json-directory-template/issues/new/choose',
-    githubRepoUrl: 'https://github.com/serpcompany/json-directory-template',
-    githubUrl: 'https://github.com/serpcompany',
     redditUrl: 'https://www.reddit.com/r/serp/',
     twitterUrl: 'https://x.com/serpcompany'
   }
