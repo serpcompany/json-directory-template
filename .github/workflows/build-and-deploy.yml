@@ -15,7 +15,7 @@ on:
       site_id:
         description: 'Checked-in site config id'
         required: true
-        default: 'serpdownloaders'
+        default: 'default'
       deploy_repo:
         description: 'Deploy target repo (owner/repo)'
         required: false
@@ -25,7 +25,7 @@ on:
         default: 'main'
 
 concurrency:
-  group: build-deploy-${{ github.ref }}-${{ github.event.inputs.site_id || vars.SITE_ID || 'serpdownloaders' }}
+  group: build-deploy-${{ github.ref }}-${{ github.event.inputs.site_id || vars.SITE_ID || 'default' }}
   cancel-in-progress: true
 
 jobs:
@@ -42,7 +42,7 @@ jobs:
       - name: Resolve build input
         id: resolve
         env:
-          SITE_ID: ${{ github.event.inputs.site_id || vars.SITE_ID || 'serpdownloaders' }}
+          SITE_ID: ${{ github.event.inputs.site_id || vars.SITE_ID || 'default' }}
         run: ./node_modules/.bin/tsx scripts/resolve-build-run.ts >> "$GITHUB_OUTPUT"
 
       - name: Validate site data

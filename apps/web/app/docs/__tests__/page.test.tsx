@@ -8,10 +8,10 @@ import { metadata } from '@/app/docs/page'
 import { siteConfig } from '@/lib/site-config'
 
 describe('DocsPage', () => {
-  it('uses generic documentation metadata instead of llmstxt-cli-specific route copy', () => {
-    expect(metadata.title).toBe(`Documentation - ${siteConfig.name}`)
+  it('uses the configured docs label in metadata instead of hardcoded documentation copy', () => {
+    expect(metadata.title).toBe(`${siteConfig.copy.docsLabel} - ${siteConfig.name}`)
     expect(metadata.description).toBe(
-      `Reference documentation, setup notes, and workflow details for ${siteConfig.name}.`
+      `Reference docs, setup notes, and workflow details for ${siteConfig.name}.`
     )
     expect(metadata.keywords).not.toContain('llmstxt-cli')
   })

@@ -1,6 +1,6 @@
 ---
 title: 'JSON Shapes'
-description: 'The active data shapes for the static starter, including data/websites.json and the compatibility rules used by the loader'
+description: 'The active data shapes for the static starter, including data/websites.json and the current submit payload'
 order: 5
 published: true
 ---
@@ -11,20 +11,24 @@ published: true
 
 ## `data/websites.json`
 
-This file is an array of website entries.
+This file is an array of listing entries.
 
 ```json
 [
   {
-    "slug": "example-project-llms-txt",
+    "slug": "example-project",
     "name": "Example Project",
     "website": "https://example.com",
-    "description": "Short summary of the project and its docs.",
-    "llmsUrl": "https://example.com/llms.txt",
-    "llmsFullUrl": "https://example.com/llms-full.txt",
+    "description": "Short summary of the project.",
     "category": "developer-tools",
     "favicon": "https://www.google.com/s2/favicons?domain=example.com&sz=128",
     "featured": true,
+    "resourceLinks": [
+      {
+        "label": "Help Center",
+        "url": "https://example.com/help"
+      }
+    ],
     "publishedAt": "2026-03-22"
   }
 ]
@@ -38,11 +42,13 @@ This file is an array of website entries.
 | `name` | Yes | Display name used in cards, search, and detail pages. |
 | `website` | Yes | Canonical site URL. The loader also accepts the legacy `domain` field. |
 | `description` | Yes | Plain text summary. The loader strips HTML if older content included markup. |
-| `llmsUrl` | Yes | Primary `llms.txt` URL. The loader also accepts the legacy `llmsTxtUrl` alias. |
-| `llmsFullUrl` | No | Optional `llms-full.txt` URL. |
 | `category` | Yes | Category slug used by the starter UI. |
 | `featured` | No | Marks the entry for featured lists. |
 | `favicon` | No | Generated convenience field. The current UI does not require it to render. |
+| `resourceLinks` | No | Optional label/URL pairs rendered under the listing detail Resources section. |
+| `content` | No | Optional body content rendered on the listing detail page. |
+| `priority` | No | Optional internal ordering hint used by some list views. |
+| `isUnofficial` | No | Marks community-maintained or non-official entries. |
 | `publishedAt` | Yes | Date string used for sorting and “recently added” sections. |
 
 ## Loader compatibility rules
@@ -50,7 +56,6 @@ This file is an array of website entries.
 The website loader currently accepts a few migration-friendly variations:
 
 - `website` or `domain`
-- `llmsUrl` or `llmsTxtUrl`
 - Missing `slug`, as long as `name` is present
 
 The loader also:
@@ -80,11 +85,9 @@ The `/submit` form does not write JSON directly. It builds a GitHub issue URL fr
 {
   "name": "Example Project",
   "website": "https://example.com",
-  "llmsUrl": "https://example.com/llms.txt",
-  "llmsFullUrl": "https://example.com/llms-full.txt",
   "category": "developer-tools",
   "description": "Short summary of the project.",
-  "notes": "Optional reviewer context."
+  "notes": "Helpful reviewer context."
 }
 ```
 

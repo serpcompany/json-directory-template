@@ -1,59 +1,39 @@
 import { Badge } from '@thedaviddias/design-system/badge'
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
 import { Button } from '@thedaviddias/design-system/button'
-import { ArrowRight, ExternalLink, Github, Hash, Plus } from 'lucide-react'
+import { ArrowRight, ExternalLink, Plus } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
+import { networkLinks } from '@/lib/network-links'
 import { getRoute } from '@/lib/routes'
 import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
-const GITHUB_RESOURCES = [
-  {
-    description: 'Browse repositories already tagged for the standard.',
-    href: 'https://github.com/topics/llms-txt',
-    icon: Hash,
-    label: 'Topic',
-    title: 'llms-txt topic'
-  },
-  {
-    description: 'Catch alternate topic usage that still appears across GitHub.',
-    href: 'https://github.com/topics/llmstxt',
-    icon: Hash,
-    label: 'Topic',
-    title: 'llmstxt topic'
-  },
-  {
-    description: 'See the directory source, starter structure, and contribution workflow.',
-    href: siteConfig.githubRepoUrl,
-    icon: Github,
-    label: 'Repository',
-    title: 'Site repository'
-  }
-] as const
-
 export const metadata: Metadata = generateBaseMetadata({
-  title: 'Projects',
-  description: `Explore related projects, repositories, and contribution links for ${siteConfig.name}.`,
-  path: '/projects',
-  keywords: ['projects', 'resources', 'repositories', 'open source', siteConfig.name]
+  title: siteConfig.copy.networkLabel,
+  description: `Explore related brands, repositories, partners, and contribution links for ${siteConfig.name}.`,
+  path: getRoute('projects'),
+  keywords: ['network', 'resources', 'repositories', 'partners', siteConfig.name]
 })
 
 export default function ProjectsPage() {
   return (
     <div className="container mx-auto py-8">
       <div className="space-y-12">
-        <Breadcrumb items={[{ name: 'Projects', href: '/projects' }]} baseUrl={SITE_PUBLIC_URL} />
+        <Breadcrumb
+          items={[{ name: siteCopy.networkLabel, href: getRoute('projects') }]}
+          baseUrl={SITE_PUBLIC_URL}
+        />
 
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight flex items-center gap-3">
             <span className="size-2 bg-primary rounded-full" />
-            Projects
+            {siteCopy.networkLabel}
           </h1>
           <p className="text-lg text-muted-foreground max-w-3xl">
-            Browse related repositories and external resources connected to this directory.
+            Browse linked brands, repositories, partner sites, and related resources.
           </p>
         </div>
 
@@ -64,16 +44,16 @@ export default function ProjectsPage() {
                 <Badge variant="secondary" className="bg-primary/10 text-primary">
                   Static-Friendly
                 </Badge>
-                <Github className="size-5 text-muted-foreground" />
+                <ExternalLink className="size-5 text-muted-foreground" />
               </div>
 
               <div className="space-y-3">
                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
-                  Browse linked resources and repositories
+                  Browse linked brands and related resources
                 </h2>
                 <p className="text-muted-foreground">
-                  Use the links below to explore public topic pages, the site repository, and other
-                  resource entry points this directory wants to surface.
+                  Use the links below to surface partner destinations, repositories, issue flows,
+                  and other related pages connected to this directory.
                 </p>
               </div>
 
@@ -89,10 +69,10 @@ export default function ProjectsPage() {
 
         <section className="space-y-6">
           <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-            GitHub Resources ({GITHUB_RESOURCES.length})
+            {siteCopy.networkLabel} Resources ({networkLinks.length})
           </h2>
           <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {GITHUB_RESOURCES.map(resource => (
+            {networkLinks.map(resource => (
               <Card
                 key={resource.href}
                 className="transition-all hover:border-primary hover:bg-muted/50"
@@ -100,7 +80,7 @@ export default function ProjectsPage() {
                 <CardContent className="p-6 space-y-4">
                   <div className="flex items-center justify-between">
                     <Badge variant="outline">{resource.label}</Badge>
-                    <resource.icon className="size-5 text-muted-foreground" />
+                    <ExternalLink className="size-5 text-muted-foreground" />
                   </div>
                   <div className="space-y-2">
                     <h3 className="text-lg font-semibold tracking-tight">{resource.title}</h3>
@@ -108,7 +88,7 @@ export default function ProjectsPage() {
                   </div>
                   <Button variant="outline" asChild className="rounded-none h-9 font-bold w-full">
                     <Link href={resource.href} target="_blank" rel="noopener noreferrer">
-                      Open on GitHub
+                      Open link
                       <ExternalLink className="ml-2 size-4" />
                     </Link>
                   </Button>

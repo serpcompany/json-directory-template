@@ -24,10 +24,10 @@ describe('MobileDrawer', () => {
     )
   })
 
-  it('hides external tool links when developer tools are disabled for the site', () => {
+  it('hides external resource links when external resources are disabled for the site', () => {
     render(<MobileDrawer isOpen={true} onClose={jest.fn()} />)
 
-    expect(screen.queryByRole('heading', { name: 'Tools' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Resources' })).not.toBeInTheDocument()
     expect(screen.queryByText('Chrome Extension')).not.toBeInTheDocument()
   })
 })

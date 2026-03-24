@@ -9,8 +9,6 @@ const entry: SearchIndexEntry = {
   category: 'automation-workflow',
   content: 'Helpful content',
   description: 'Browser automation listing',
-  llmsFullUrl: 'https://example.com/llms-full.txt',
-  llmsUrl: 'https://example.com/llms.txt',
   name: 'Example Listing',
   slug: 'example-listing',
   url: '/websites/example-listing',
@@ -31,8 +29,6 @@ describe('search-utils', () => {
       description: 'Browser automation listing',
       categories: ['automation-workflow'],
       tags: [],
-      llmsUrl: 'https://example.com/llms.txt',
-      llmsFullUrl: 'https://example.com/llms-full.txt',
       category: 'automation-workflow',
       publishedAt: ''
     })

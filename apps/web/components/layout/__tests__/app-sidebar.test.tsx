@@ -15,4 +15,11 @@ describe('AppSidebar', () => {
       '#all-listings'
     )
   })
+
+  it('hides the external resources group when no external resources are configured', () => {
+    render(<AppSidebar />)
+
+    expect(screen.queryByRole('heading', { name: 'Resources' })).not.toBeInTheDocument()
+    expect(screen.queryByText('Chrome Extension')).not.toBeInTheDocument()
+  })
 })

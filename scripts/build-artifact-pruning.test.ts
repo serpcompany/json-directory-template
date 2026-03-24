@@ -1,7 +1,11 @@
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync, existsSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { applyListingRouteBasePath, pruneStaticArtifactDir } from './build-site.ts'
+import {
+  applyConfiguredPublicRoutePaths,
+  applyListingRouteBasePath,
+  pruneStaticArtifactDir
+} from './build-site.ts'
 
 const tempDirs: string[] = []
 
@@ -38,7 +42,6 @@ describe('pruneStaticArtifactDir', () => {
     writeFile(resolve(artifactDir, 'guides/index.html'))
     writeFile(resolve(artifactDir, '_not-found/index.html'))
     writeFile(resolve(artifactDir, '404/index.html'))
-    writeFile(resolve(artifactDir, 'llms.txt'))
 
     pruneStaticArtifactDir(artifactDir, {
       showAuth: false,
@@ -59,7 +62,6 @@ describe('pruneStaticArtifactDir', () => {
     expect(existsSync(resolve(artifactDir, '_not-found'))).toBe(false)
     expect(existsSync(resolve(artifactDir, '404'))).toBe(false)
     expect(existsSync(resolve(artifactDir, 'about'))).toBe(true)
-    expect(existsSync(resolve(artifactDir, 'llms.txt'))).toBe(true)
   })
 
   it('keeps explicitly enabled route surfaces', () => {
@@ -105,5 +107,29 @@ describe('applyListingRouteBasePath', () => {
     applyListingRouteBasePath(artifactDir, 'websites')
 
     expect(existsSync(resolve(artifactDir, 'websites/index.html'))).toBe(true)
+  })
+})
+
+describe('applyConfiguredPublicRoutePaths', () => {
+  it('renames docs and network artifact paths when custom public base paths are configured', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    writeFile(resolve(artifactDir, 'docs/index.html'))
+    writeFile(resolve(artifactDir, 'docs/getting-started/index.html'))
+    writeFile(resolve(artifactDir, 'projects/index.html'))
+    writeFile(resolve(artifactDir, 'projects/repository/index.html'))
+
+    applyConfiguredPublicRoutePaths(artifactDir, {
+      docsBasePath: 'seo-docs',
+      listingBasePath: 'websites',
+      networkBasePath: 'network'
+    })
+
+    expect(existsSync(resolve(artifactDir, 'docs'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'projects'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'seo-docs/index.html'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'seo-docs/getting-started/index.html'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'network/index.html'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'network/repository/index.html'))).toBe(true)
   })
 })

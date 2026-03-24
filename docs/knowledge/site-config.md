@@ -26,6 +26,7 @@ Adapter file:
 - `apps/web/lib/site-config.ts`
 - `apps/web/lib/site-copy.ts`
 - `apps/web/lib/site-content.ts`
+- `apps/web/lib/network-links.ts`
 
 Site-owned content boundary:
 
@@ -40,6 +41,7 @@ Terminology rule:
 - keep `routes.listingBasePath` configurable, with `websites` as the current starter default public path
 - keep raw/internal names like `website`, `websites`, and `Website*` only where they still describe compatibility fields or internal implementation details
 - the raw JSON field `website` still specifically means the listing destination URL; that field does not force the UI copy to say `website`
+- keep `routes.projects` and `website.*` as internal compatibility route keys in code for now, but treat `network` and `listing` as the public product concepts
 
 Checked-in source-of-truth shape:
 
@@ -88,14 +90,18 @@ export type CheckedInSiteConfig = {
         }
   }
   copy: {
+    docsLabel: string
     listingName: {
       singular: string
       plural: string
     }
+    networkLabel: string
     submitLabel: string
   }
   routes: {
+    docsBasePath: string
     listingBasePath: string
+    networkBasePath: string
   }
   features: {
     showAuth: boolean
@@ -105,7 +111,7 @@ export type CheckedInSiteConfig = {
     showProjects: boolean
     showCreatorProjects: boolean
     showFeaturedGuides: boolean
-    showDeveloperTools: boolean
+    showExternalResources: boolean
     showNewsletter: boolean
   }
   deploy?: {
@@ -126,10 +132,70 @@ export type CheckedInSiteConfig = {
 | `branding.drBadge` | Yes | Current trust badge input. Provider-first shape is preferred. |
 | `branding.favicon/logo/opengraphImage` | No | Canonical asset references when a site owns those assets. |
 | `content.listingSource` | Yes | Declares where the site's listing data comes from. |
-| `copy.*` | Yes | Small site-facing wording contract for the canonical listing term and submit CTA label. |
-| `routes.listingBasePath` | Yes | Controls the public listing route base path. Current default is `websites`. |
+| `copy.*` | Yes | Small site-facing wording contract for listing terminology plus configurable docs/network labels. |
+| `routes.*` | Yes | Controls the public base paths for listings, docs, and the site-owned network page. |
 | `features.*` | Yes | Controls starter-owned optional surfaces. |
 | `deploy.*` | No | Required for deploy runs; omitted only for non-deploy examples. |
+
+## Minimum Real-Site Input Checklist
+
+For a real site build, the site owner should supply meaningful values for these checked-in fields even though the starter defaults let the app compile without them:
+
+- `id`
+- `site.name`
+- `site.domain`
+- `site.publicUrl`
+- `site.description`
+- `site.tagline`
+- `branding.drBadge`
+- `social.githubUrl`
+- `social.githubRepoUrl`
+- `social.githubIssueOwner`
+- `social.githubIssueRepo`
+- `social.githubIssuesUrl`
+- `social.githubIssueTemplate`
+- `social.twitterUrl`
+- `social.redditUrl`
+- `content.listingSource`
+- `build.artifactDir`
+- `copy.docsLabel`
+- `copy.networkLabel`
+- `routes.docsBasePath`
+- `routes.networkBasePath`
+
+Depending on the chosen source:
+
+- `content.listingSource.kind = "trial-products-json"` also needs `category`, `featuredCount`, and `publishedAt`
+- deploy runs also need `deploy.repoUrl`, `deploy.branch`, and `deploy.preserve`
+
+Usually customized, but safe to inherit from the starter if they fit:
+
+- `copy.listingName.singular`
+- `copy.listingName.plural`
+- `copy.submitLabel`
+- `routes.listingBasePath`
+- `features.*`
+
+Optional site-owned content modules live outside `site-config`:
+
+- `sites/<id>/site-content.ts` for `externalResources`
+- `sites/<id>/site-content.ts` for `listingCliInstall`
+- `sites/<id>/site-content.ts` for `networkLinks`
+
+Starter defaults worth knowing:
+
+- `copy.docsLabel` defaults to `Docs`
+- `copy.networkLabel` defaults to `Network`
+- `routes.docsBasePath` defaults to `docs`
+- `routes.networkBasePath` defaults to `network`
+- the network page automatically includes a reusable default link set derived from `social.githubRepoUrl`, `social.githubIssuesUrl`, and `social.githubUrl`, then appends any site-owned `networkLinks`
+
+## Known Gaps
+
+- Legal/privacy contact emails are not first-class site-config fields yet; the legal content currently derives them from `site.domain`.
+- About-page copy is still content-owned in `packages/content/data/about/about.mdx`, not part of `site-config`.
+- Future first-party `/tools` pages are reserved conceptually, but there is no dedicated `site-config` surface for them yet.
+- Newsletter copy is still starter-owned; only its on/off behavior is configurable today via `features.showNewsletter`.
 
 ## Usage notes
 

@@ -7,22 +7,31 @@ jest.mock('@thedaviddias/design-system/breadcrumb', () => ({
 }))
 
 describe('ProjectsPage', () => {
-  it('uses generic resource-page metadata instead of starter brand residue', () => {
-    expect(metadata.title).toBe('Projects')
+  it('uses the configured public network metadata instead of the old projects copy', () => {
+    expect(metadata.title).toBe(siteConfig.copy.networkLabel)
     expect(metadata.description).toBe(
-      `Explore related projects, repositories, and contribution links for ${siteConfig.name}.`
+      `Explore related brands, repositories, partners, and contribution links for ${siteConfig.name}.`
     )
   })
 
-  it('renders listing-neutral wrapper copy for the projects page', () => {
+  it('renders listing-neutral network copy for the public route', () => {
     render(<ProjectsPage />)
 
-    expect(screen.getByRole('heading', { name: /^projects$/i })).toBeInTheDocument()
     expect(
-      screen.getByText(/browse related repositories and external resources connected to this directory/i)
+      screen.getByRole('heading', { name: new RegExp(`^${siteConfig.copy.networkLabel}$`, 'i') })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(/browse linked brands, repositories, partner sites, and related resources/i)
     ).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /submit a listing/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /issue tracker/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /view repository/i })).toHaveAttribute(
+      'href',
+      siteConfig.githubRepoUrl
+    )
     expect(screen.queryByText(/our brands/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/llms-txt topic/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/llmstxt topic/i)).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /submit website/i })).not.toBeInTheDocument()
   })
 })

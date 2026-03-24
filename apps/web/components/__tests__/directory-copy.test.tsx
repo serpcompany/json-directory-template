@@ -28,8 +28,6 @@ const sampleWebsite = {
   name: 'Example Project',
   description: 'A test directory entry',
   website: 'https://example.com',
-  llmsUrl: 'https://example.com/llms.txt',
-  llmsFullUrl: null,
   category: 'developer-tools',
   publishedAt: '2026-03-22'
 }

@@ -45,7 +45,7 @@ export async function HeroSection() {
         <p className="animate-fade-in-up opacity-0 stagger-3 text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
           <span className="text-foreground font-medium">{siteConfig.tagline}</span> and browse
           {' '}
-          curated {siteCopy.listingName.plural}, tools, and documentation links in one searchable
+          curated {siteCopy.listingName.plural}, resources, and documentation links in one searchable
           directory
         </p>
 

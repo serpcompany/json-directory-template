@@ -14,7 +14,6 @@ describe('rss route', () => {
       {
         category: 'developer-tools',
         description: 'A concise description for the example listing.',
-        llmsUrl: 'https://example.com/llms.txt',
         name: 'Example Project',
         publishedAt: '2026-03-22',
         slug: 'example-project',

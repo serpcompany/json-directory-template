@@ -7,7 +7,6 @@ describe('buildSubmissionIssueUrl', () => {
     const url = buildSubmissionIssueUrl({
       category: 'developer-tools',
       description: 'A fast test project',
-      llmsUrl: 'https://example.com/llms.txt',
       name: 'Example Project',
       website: 'https://example.com'
     })
@@ -27,7 +26,6 @@ describe('buildSubmissionIssueUrl', () => {
     expect(body).toContain(`## ${siteCopy.listingName.singularTitle} details`)
     expect(body).toContain('Name: Example Project')
     expect(body).toContain(`${siteCopy.listingName.singularTitle} URL: https://example.com`)
-    expect(body).toContain('llms.txt URL: https://example.com/llms.txt')
     expect(body).toContain('Category: developer-tools')
   })
 
@@ -35,8 +33,6 @@ describe('buildSubmissionIssueUrl', () => {
     const url = buildSubmissionIssueUrl({
       category: 'ai-ml',
       description: 'Short description',
-      llmsFullUrl: '',
-      llmsUrl: 'https://example.com/llms.txt',
       name: 'Example Project',
       notes: '',
       website: 'https://example.com'
@@ -45,7 +41,6 @@ describe('buildSubmissionIssueUrl', () => {
     const parsedUrl = new URL(url)
     const body = parsedUrl.searchParams.get('body')
 
-    expect(body).not.toContain('llms-full URL:')
     expect(body).not.toContain('Additional notes:')
   })
 })

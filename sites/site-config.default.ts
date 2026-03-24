@@ -14,10 +14,12 @@ export const defaultSiteConfig: CheckedInSiteConfig = {
     mode: 'static-directory'
   },
   copy: {
+    docsLabel: 'Docs',
     listingName: {
       plural: 'listings',
       singular: 'listing'
     },
+    networkLabel: 'Network',
     submitLabel: 'Submit a Listing'
   },
   content: {
@@ -31,7 +33,7 @@ export const defaultSiteConfig: CheckedInSiteConfig = {
     showAuth: false,
     showCreatorProjects: false,
     showDocs: false,
-    showDeveloperTools: false,
+    showExternalResources: false,
     showFavorites: false,
     showFeaturedGuides: false,
     showGuides: false,
@@ -40,14 +42,16 @@ export const defaultSiteConfig: CheckedInSiteConfig = {
   },
   id: 'default',
   routes: {
-    listingBasePath: 'websites'
+    docsBasePath: 'docs',
+    listingBasePath: 'websites',
+    networkBasePath: 'network'
   },
   site: {
-    description: 'Curated directory of websites, tools, and resources.',
+    description: 'Curated directory of listings and resources.',
     domain: 'example.com',
     name: 'Directory Starter',
     publicUrl: 'https://example.com',
-    tagline: 'Discover websites, tools, and resources'
+    tagline: 'Discover listings and resources'
   },
   social: {
     githubIssueOwner: 'serpcompany',

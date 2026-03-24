@@ -18,6 +18,8 @@ describe('HeroSection', () => {
     expect(screen.getByText(new RegExp(siteConfig.tagline, 'i'))).toBeInTheDocument()
     expect(screen.getByText('42')).toBeInTheDocument()
     expect(screen.getByText(/listings in directory/i)).toBeInTheDocument()
+    expect(screen.getByText(/resources, and documentation links/i)).toBeInTheDocument()
+    expect(screen.queryByText(/tools, and documentation links/i)).not.toBeInTheDocument()
     expect(screen.getByText(/searchable directory/i)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /submit a listing/i })).toBeInTheDocument()
   })

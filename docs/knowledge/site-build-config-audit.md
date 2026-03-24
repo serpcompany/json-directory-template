@@ -69,7 +69,7 @@ Field-type note:
 - current `features.*` fields are already boolean in code, but the audit should treat the whole config surface this way, not just feature flags
 
 - `features.showCreatorProjects`
-- `features.showDeveloperTools`
+- `features.showExternalResources`
 - `features.showFeaturedGuides`
 - `features.showNewsletter`
 
@@ -94,7 +94,7 @@ This is the current recommended field classification for the active checked-in s
 ### Boolean
 
 - `features.showCreatorProjects`
-- `features.showDeveloperTools`
+- `features.showExternalResources`
 - `features.showFeaturedGuides`
 - `features.showNewsletter`
 
@@ -219,13 +219,12 @@ These are the main active areas still worth cleaning up or explicitly deciding t
 
 ### Active components and helpers
 
-- `apps/web/components/sections/tools-section.tsx`
+- `apps/web/components/sections/external-resources-section.tsx`
 - `apps/web/components/sections/communities-section.tsx`
 - `apps/web/components/forms/github-issue-submit-form.tsx`
 - `apps/web/components/forms/submit-form-guidelines.tsx`
-- `apps/web/components/website/website-docs-section.tsx`
-- `apps/web/components/website/website-llms-section.tsx`
-- `apps/web/lib/tools.ts`
+- `apps/web/components/website/website-resources-section.tsx`
+- `apps/web/lib/external-resources.ts`
 - `apps/web/lib/seo/seo-config.ts`
 - `apps/web/lib/schema.ts`
 
@@ -260,8 +259,8 @@ These are useful shared defaults and do not need to become direct operator input
   Keep as internal translation logic from checked-in site config/site config into metadata, not a direct user input surface.
 - `apps/web/lib/schema.ts`
   Keep as internal structured-data generation logic, with only selected content/branding values fed from config.
-- `apps/web/components/sections/tools-section.tsx`
-  Keep disabled by default unless a later content-owned tools dataset is introduced.
+- `apps/web/components/sections/external-resources-section.tsx`
+  Keep disabled by default unless a site explicitly owns an outbound/reference resource dataset.
 
 ### Better as site-owned content later
 
@@ -282,18 +281,14 @@ Reason:
 
 These sit in the middle and should be decided explicitly before we add more fields.
 
-- `apps/web/components/sections/tools-section.tsx`
-  Likely either:
-  - starter default dataset,
-  - site-owned content list later,
-  - or optional module disabled unless configured
-- `apps/web/lib/tools.ts`
-  Same decision as above; probably not a free-text checked-in site config surface
+- `apps/web/components/sections/external-resources-section.tsx`
+  Keep as a site-owned content module for outbound/reference links, not as a future first-party `/tools` surface
+- `apps/web/lib/external-resources.ts`
+  Same decision as above; keep it as an adapter around site-owned content rather than a checked-in free-text config surface
 - `apps/web/components/forms/github-issue-submit-form.tsx`
   Keep the wiring contract-driven now, but leave most copy as a starter default until submit flows become a first-class product surface
-- `apps/web/components/website/website-docs-section.tsx`
-- `apps/web/components/website/website-llms-section.tsx`
-  These may stay starter-specific if the project remains documentation/llms-aware, or become optional modules if the starter broadens further
+- `apps/web/components/website/website-resources-section.tsx`
+  Keep this as the neutral detail-page bucket for optional CLI install links and generic per-listing resource links
 
 ### Metadata and marketing decision
 
@@ -306,7 +301,7 @@ Better as site-owned content later:
 - communities content
 - guides/docs editorial messaging
 - richer marketing copy blocks beyond the core hero/tagline
-- curated tools/community datasets if they remain part of the starter
+- curated external-resource/community datasets if they remain part of the starter
 
 ## Current decision snapshot
 
@@ -317,7 +312,7 @@ These are the decisions to use now so the static pipeline can keep moving withou
 - RSS, sitemap, robots, and structured-data wiring
 - generic submit-flow fallback copy
 - projects page structure
-- tools section as a starter-owned optional/default-disabled module
+- external resources section as an optional/default-disabled site-owned module
 
 ### Site-owned content later
 
@@ -329,8 +324,13 @@ These are the decisions to use now so the static pipeline can keep moving withou
 
 - website docs and llms surfaces
   keep them as optional surfaces that appear only when the entry/content supports them
-- tools/community datasets
+- external-resource/community datasets
   do not turn these into raw checked-in site config fields; treat them as optional content modules if they stay in the product
+
+Route reservation note:
+
+- reserve `/tools` for future first-party utility/tool pages
+- do not reuse the `externalResources` module or naming for that route family
 
 ## Contract guidance from this pass
 

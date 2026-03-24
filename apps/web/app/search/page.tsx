@@ -4,34 +4,36 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { SearchResults } from '@/components/search/search-results'
 import { categories } from '@/lib/categories'
+import { externalResources } from '@/lib/external-resources'
 import { getRoute } from '@/lib/routes'
 import { generateBaseMetadata } from '@/lib/seo/seo-config'
 import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
-import { tools } from '@/lib/tools'
 
 /**
  * Generate metadata for the static search shell.
  * @returns Promise resolving to Next.js Metadata object
  */
 export async function generateMetadata(): Promise<Metadata> {
-  const showExternalTools = siteConfig.features.showDeveloperTools && tools.length > 0
+  const showExternalResources =
+    siteConfig.features.showExternalResources && externalResources.length > 0
 
   return generateBaseMetadata({
     title: 'Search',
-    description: showExternalTools
-      ? `Search for listings, tools, and resources in ${siteConfig.name}.`
+    description: showExternalResources
+      ? `Search for listings and external resources in ${siteConfig.name}.`
       : `Search for listings and resources in ${siteConfig.name}.`,
     path: '/search',
-    keywords: showExternalTools
-      ? ['search', 'find', 'directory listings', 'tools', 'resources']
+    keywords: showExternalResources
+      ? ['search', 'find', 'directory listings', 'external resources', 'resources']
       : ['search', 'find', 'directory listings', 'resources'],
     noindex: true
   })
 }
 
 export default function SearchPage() {
-  const showExternalTools = siteConfig.features.showDeveloperTools && tools.length > 0
+  const showExternalResources =
+    siteConfig.features.showExternalResources && externalResources.length > 0
 
   return (
     <div className="border-t">
@@ -64,21 +66,21 @@ export default function SearchPage() {
               </nav>
             </div>
 
-            {showExternalTools ? (
+            {showExternalResources ? (
               <div>
-                <h3 className="font-semibold text-sm mb-4 text-muted-foreground">Tools</h3>
+                <h3 className="font-semibold text-sm mb-4 text-muted-foreground">Resources</h3>
                 <nav className="space-y-1">
-                  {tools.map(tool => (
+                  {externalResources.map(resource => (
                     <Link
-                      key={tool.slug}
-                      href={tool.url}
+                      key={resource.slug}
+                      href={resource.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-between gap-2 px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors group"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <tool.icon className="h-4 w-4 flex-shrink-0" />
-                        <span className="truncate">{tool.name}</span>
+                        <resource.icon className="h-4 w-4 flex-shrink-0" />
+                        <span className="truncate">{resource.name}</span>
                       </div>
                       <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                     </Link>
@@ -94,8 +96,8 @@ export default function SearchPage() {
             <div className="sticky top-16 z-35 bg-background border-b py-4 -mx-6 px-6">
               <h1 className="text-2xl font-bold">Search</h1>
               <p className="text-muted-foreground mt-1">
-                {showExternalTools
-                  ? `Searching across all ${siteCopy.listingName.plural} and tools`
+                {showExternalResources
+                  ? `Searching across all ${siteCopy.listingName.plural} and resources`
                   : `Searching across all ${siteCopy.listingName.plural}`}
               </p>
             </div>

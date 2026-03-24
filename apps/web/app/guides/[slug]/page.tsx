@@ -34,7 +34,7 @@ export async function generateMetadata(props: GuidePageProps): Promise<Metadata>
     description: guide.description || `Learn about ${guide.title} in our comprehensive guide`,
     slug: guide.slug,
     publishedAt: guide.date,
-    additionalKeywords: ['guide', 'tutorial', 'how-to', 'llms.txt implementation']
+    additionalKeywords: ['guide', 'tutorial', 'how-to', 'implementation']
   })
 }
 

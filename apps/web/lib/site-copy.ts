@@ -5,6 +5,7 @@ export type ResolvedSiteCopy = {
   allAnchorId: string
   categoryEmptyDescription: string
   categoryEmptyTitle: string
+  docsLabel: string
   exploreAllLabel: string
   listingCountLabel: string
   listingName: SiteConfig['copy']['listingName'] & {
@@ -12,6 +13,7 @@ export type ResolvedSiteCopy = {
     singularTitle: string
   }
   listingSearchPlaceholder: string
+  networkLabel: string
   submitLabelSentence: string
   submitLabel: string
 }
@@ -39,6 +41,7 @@ export function resolveSiteCopy(config: SiteConfig = siteConfig): ResolvedSiteCo
     allAnchorId: `all-${toAnchorId(plural)}`,
     categoryEmptyDescription: `There are no ${plural} in this category yet. Try checking back later or ${submitLabelSentence}.`,
     categoryEmptyTitle: `No ${plural} found`,
+    docsLabel: config.copy.docsLabel,
     exploreAllLabel: `Explore All ${pluralTitle}`,
     listingCountLabel: `${pluralTitle} in directory`,
     listingName: {
@@ -48,6 +51,7 @@ export function resolveSiteCopy(config: SiteConfig = siteConfig): ResolvedSiteCo
       singularTitle
     },
     listingSearchPlaceholder: `Search ${plural}, categories, and descriptions...`,
+    networkLabel: config.copy.networkLabel,
     submitLabelSentence,
     submitLabel: config.copy.submitLabel
   }

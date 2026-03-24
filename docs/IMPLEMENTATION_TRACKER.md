@@ -106,7 +106,11 @@ Acceptance:
 - [x] Add site-config-driven feature flags for optional shell sections:
   creator projects, featured guides, developer tools, newsletter
 - [x] Keep legacy creator/tool/guide content disabled by default for starter-safe builds
+- [x] Reserve `/tools` for future first-party utility pages and rename the current starter-owned outbound link surface to `externalResources`
+- [x] Remove `llms.txt` / `llms-full.txt` as first-class listing fields and route listing extras through generic `resourceLinks`
 - [x] Move the public listing route base path behind checked-in site config while keeping `websites` as the current default
+- [x] Make the public docs label and docs route base path configurable through checked-in site config
+- [x] Recast the old `/projects` surface as a site-owned network page with a configurable public route and reusable default links
 - [x] Centralize the active search-index contract and stop duplicating submit-category options outside the shared taxonomy
 - [x] Finish asset staging so staged favicon/logo/OG image inputs can actually affect the build
 - [x] Audit remaining active route/content surfaces and decide:
@@ -121,6 +125,7 @@ Acceptance:
 - [x] Make the default local web dev loop stable, repo-scoped, and debugger-optional:
   default `next dev --webpack`, explicit `turbopack.root`, plus opt-in `dev:inspect`
 - [x] Complete the deeper upstream audit for placeholder/demo routes against `thedaviddias/llms-txt-hub`
+- [x] Remove hardcoded `serpdownloaders` fallback assumptions from the default build workflow
 
 Acceptance:
 - [x] The active starter shell is largely site-config/content driven instead of repo-brand driven

@@ -20,21 +20,17 @@ const websites = defineCollection({
     name: z.string(),
     description: z.string(),
     website: z.string().url(),
-    llmsUrl: z.string().url(),
-    // Even more flexible validation for llmsFullUrl
-    llmsFullUrl: z
-      .union([
-        z.string().url(),
-        z.string().refine(val => val === '', {
-          message: 'Empty string is allowed'
-        }),
-        z.null(),
-        z.undefined()
-      ])
-      .optional(),
     category: z.string(),
     publishedAt: z.string(),
-    isUnofficial: z.boolean().optional().default(false)
+    isUnofficial: z.boolean().optional().default(false),
+    resourceLinks: z
+      .array(
+        z.object({
+          label: z.string(),
+          url: z.string().url()
+        })
+      )
+      .optional()
   })
 })
 

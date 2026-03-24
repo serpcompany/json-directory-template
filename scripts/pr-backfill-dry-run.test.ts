@@ -76,8 +76,6 @@ describe('parseSubmissionFrontmatter', () => {
 name: 'Example'
 description: 'Example is a developer platform with API docs for AI agents.'
 website: 'https://example.com'
-llmsUrl: 'https://example.com/llms.txt'
-llmsFullUrl: 'https://example.com/llms-full.txt'
 category: 'developer-tools'
 publishedAt: '2026-03-14'
 ---
@@ -88,8 +86,6 @@ publishedAt: '2026-03-14'
     expect(result).toEqual({
       category: 'developer-tools',
       description: 'Example is a developer platform with API docs for AI agents.',
-      llmsFullUrl: 'https://example.com/llms-full.txt',
-      llmsUrl: 'https://example.com/llms.txt',
       name: 'Example',
       publishedAt: '2026-03-14',
       website: 'https://example.com'
@@ -101,8 +97,6 @@ describe('assessSubmissionGuidelines', () => {
   const baseFrontmatter = {
     category: 'developer-tools',
     description: 'Example is a developer platform with API docs for AI agents.',
-    llmsFullUrl: '',
-    llmsUrl: 'https://example.com/llms.txt',
     name: 'Example',
     website: 'https://example.com'
   }
@@ -116,13 +110,6 @@ describe('assessSubmissionGuidelines', () => {
         status: 200,
         text: 'Example is a developer platform with API docs and SDK references.',
         url: 'https://example.com'
-      },
-      llmsInspection: {
-        contentType: 'text/plain',
-        ok: true,
-        status: 200,
-        text: 'Example docs for API integration, SDK usage, and developer workflows.'.repeat(4),
-        url: 'https://example.com/llms.txt'
       }
     })
 
@@ -145,13 +132,6 @@ describe('assessSubmissionGuidelines', () => {
         status: 200,
         text: 'A personal website and blog.',
         url: 'https://example.com'
-      },
-      llmsInspection: {
-        contentType: 'text/plain',
-        ok: true,
-        status: 200,
-        text: 'This personal site includes some notes and posts.'.repeat(4),
-        url: 'https://example.com/llms.txt'
       }
     })
 
@@ -160,28 +140,23 @@ describe('assessSubmissionGuidelines', () => {
     expect(result.guidelineReasons).toEqual(['No guideline concerns detected.'])
   })
 
-  it('fails when llms.txt is inaccessible', () => {
+  it('warns when the homepage is inaccessible', () => {
     const result = assessSubmissionGuidelines({
       frontmatter: baseFrontmatter,
       homepageInspection: {
-        contentType: 'text/html',
-        ok: true,
-        status: 200,
-        text: 'Example is a developer platform.',
-        url: 'https://example.com'
-      },
-      llmsInspection: {
         contentType: null,
         error: 'fetch failed',
         ok: false,
         text: '',
-        url: 'https://example.com/llms.txt'
+        url: 'https://example.com'
       }
     })
 
-    expect(result.guidelineStatus).toBe('fail')
+    expect(result.guidelineStatus).toBe('warn')
     expect(result.policyEligible).toBe(false)
-    expect(result.guidelineReasons).toContain('llms.txt is not accessible (fetch failed).')
+    expect(result.guidelineReasons).toContain(
+      'Website homepage could not be inspected (fetch failed).'
+    )
   })
 
   it('does not block service-oriented wording on its own anymore', () => {
@@ -193,13 +168,6 @@ describe('assessSubmissionGuidelines', () => {
         status: 200,
         text: 'We are a digital agency providing consulting services for local businesses.',
         url: 'https://example.com'
-      },
-      llmsInspection: {
-        contentType: 'text/plain',
-        ok: true,
-        status: 200,
-        text: 'We provide consulting services and agency work for clients.'.repeat(4),
-        url: 'https://example.com/llms.txt'
       }
     })
 
@@ -220,13 +188,6 @@ describe('assessSubmissionGuidelines', () => {
         status: 200,
         text: 'Adult learning programs for career growth and continuing education.',
         url: 'https://example.com'
-      },
-      llmsInspection: {
-        contentType: 'text/plain',
-        ok: true,
-        status: 200,
-        text: 'Adult education resources and professional development courses.'.repeat(4),
-        url: 'https://example.com/llms.txt'
       }
     })
 
@@ -243,13 +204,6 @@ describe('assessSubmissionGuidelines', () => {
         status: 200,
         text: 'This casino platform offers betting, gambling, and bonus promotions.',
         url: 'https://example.com'
-      },
-      llmsInspection: {
-        contentType: 'text/plain',
-        ok: true,
-        status: 200,
-        text: 'Casino betting gambling promotions and slots.'.repeat(4),
-        url: 'https://example.com/llms.txt'
       }
     })
 

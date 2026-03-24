@@ -5,7 +5,9 @@ describe('resolveSiteCopy', () => {
     const copy = resolveSiteCopy()
 
     expect(copy.allAnchorId).toBe('all-listings')
+    expect(copy.docsLabel).toBe('Docs')
     expect(copy.listingSearchPlaceholder).toBe('Search listings, categories, and descriptions...')
+    expect(copy.networkLabel).toBe('Network')
     expect(copy.submitLabelSentence).toBe('submit a listing')
   })
 })

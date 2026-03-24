@@ -11,7 +11,6 @@ jest.mock('remark-gfm', () => jest.fn())
 const baseWebsite: WebsiteMetadata = {
   category: 'developer-tools',
   description: 'Useful developer tooling.',
-  llmsUrl: 'https://example.com/llms.txt',
   name: 'Example Project',
   publishedAt: '2026-03-22',
   slug: 'example-project',
@@ -38,7 +37,7 @@ describe('WebsiteContentSection', () => {
   it('uses listing-neutral fallback copy when long-form content is missing', () => {
     render(<WebsiteContentSection website={baseWebsite} />)
 
-    expect(screen.getByText(/browse this listing for documentation links/i)).toBeInTheDocument()
+    expect(screen.getByText(/browse this listing for resource links/i)).toBeInTheDocument()
     expect(screen.getByText(/^Listing$/)).toBeInTheDocument()
     expect(screen.queryByText(/directory entry/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/^Website$/)).not.toBeInTheDocument()

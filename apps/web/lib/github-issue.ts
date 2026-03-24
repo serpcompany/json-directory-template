@@ -4,8 +4,6 @@ import { siteConfig } from '@/lib/site-config'
 export interface SubmissionIssueInput {
   category: string
   description: string
-  llmsFullUrl?: string
-  llmsUrl: string
   name: string
   notes?: string
   website: string
@@ -18,17 +16,12 @@ function buildIssueBody(input: SubmissionIssueInput): string {
     '',
     `Name: ${input.name}`,
     `${listingLabel} URL: ${input.website}`,
-    `llms.txt URL: ${input.llmsUrl}`,
     `Category: ${input.category}`,
     '',
     '## Description',
     '',
     input.description
   ]
-
-  if (input.llmsFullUrl) {
-    lines.push('', `llms-full URL: ${input.llmsFullUrl}`)
-  }
 
   if (input.notes) {
     lines.push('', '## Additional notes', '', input.notes)

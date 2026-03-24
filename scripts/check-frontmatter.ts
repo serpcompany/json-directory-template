@@ -41,7 +41,6 @@ async function checkFrontmatter(filePath?: string) {
         'name',
         'description',
         'website',
-        'llmsUrl',
         'category',
         'publishedAt'
       ]
@@ -68,13 +67,6 @@ async function checkFrontmatter(filePath?: string) {
         needsUpdate = true
         hasFixed = true
         console.log(chalk.green(`Fixed website URL in ${file}`))
-      }
-
-      if (data.llmsUrl && !data.llmsUrl.startsWith('http')) {
-        data.llmsUrl = `https://${data.llmsUrl}`
-        needsUpdate = true
-        hasFixed = true
-        console.log(chalk.green(`Fixed llmsUrl in ${file}`))
       }
 
       // If we made any changes, update the file

@@ -5,10 +5,14 @@ import type { WebsiteMetadata } from '@/lib/content-loader'
 const sampleWebsite: WebsiteMetadata = {
   category: 'developer-tools',
   description: 'A concise description for the example listing.',
-  llmsFullUrl: 'https://example.com/llms-full.txt',
-  llmsUrl: 'https://example.com/llms.txt',
   name: 'Example Project',
   publishedAt: '2026-03-22',
+  resourceLinks: [
+    {
+      label: 'Support Docs',
+      url: 'https://example.com/docs'
+    }
+  ],
   slug: 'example-project',
   website: 'https://example.com'
 }

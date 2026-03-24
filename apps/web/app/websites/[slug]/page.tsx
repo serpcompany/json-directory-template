@@ -2,13 +2,13 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { JsonLd } from '@/components/json-ld'
 import { ProjectNavigation } from '@/components/project-navigation'
-import { ToolsSection } from '@/components/sections/tools-section'
+import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
 import { WebsiteContentSection } from '@/components/website/website-content-section'
 import { WebsiteDetailSidebar } from '@/components/website/website-detail-sidebar'
-import { WebsiteDocsSection } from '@/components/website/website-docs-section'
 import { WebsiteError } from '@/components/website/website-error'
 import { WebsiteHero } from '@/components/website/website-hero'
 import { WebsiteRelatedProjects } from '@/components/website/website-related-projects'
+import { WebsiteResourcesSection } from '@/components/website/website-resources-section'
 import { getWebsiteBySlug, getWebsites, type WebsiteMetadata } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
 import { generateWebsiteDetailSchema } from '@/lib/schema'
@@ -42,17 +42,17 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
       : null
 
     // Create an SEO-optimized description
-    const seoDescription = `${project.description} Explore ${project.name} in the ${siteConfig.name} directory, with documentation links, category details, and related entries.${categoryFormatted ? ` Category: ${categoryFormatted}.` : ''}`
+    const seoDescription = `${project.description} Explore ${project.name} in the ${siteConfig.name} directory, with resource links, category details, and related entries.${categoryFormatted ? ` Category: ${categoryFormatted}.` : ''}`
 
     // Generate comprehensive keywords
     const keywords = [
       project.name,
       `${project.name} ${siteCopy.listingName.singular}`,
-      `${project.name} documentation`,
+      `${project.name} resources`,
       project.category,
       `${siteCopy.listingName.singular} details`,
       'directory listings',
-      'documentation links',
+      'resource links',
       categoryFormatted
     ].filter(Boolean) as string[]
 
@@ -133,16 +133,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
               {/* Main content column */}
               <div className="lg:col-span-8 space-y-14 md:space-y-16">
-                {/* CLI Install + LLMs.txt Files */}
-                <WebsiteDocsSection website={project} />
+                {/* Supplemental resources */}
+                <WebsiteResourcesSection website={project} />
 
                 {/* Content Section */}
                 <WebsiteContentSection website={project} />
 
-                {/* Tools Section */}
-                {siteConfig.features.showDeveloperTools && (
+                {/* External resources section */}
+                {siteConfig.features.showExternalResources && (
                   <section className="animate-fade-in-up opacity-0 stagger-5">
-                    <ToolsSection layout="default" showImages={false} />
+                    <ExternalResourcesSection layout="default" showImages={false} />
                   </section>
                 )}
               </div>

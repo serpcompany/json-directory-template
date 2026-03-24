@@ -41,10 +41,14 @@ describe('buildTrialWebsiteEntries', () => {
         description: 'Download videos from ExampleVideo in one click.',
         favicon: 'https://www.google.com/s2/favicons?domain=serp.ly&sz=128',
         featured: true,
-        llmsFullUrl: 'https://serp.ly/example-downloader/llms-full.txt',
-        llmsUrl: 'https://serp.ly/example-downloader/llms.txt',
         name: 'SERP Example Downloader',
         publishedAt: '2026-03-23',
+        resourceLinks: [
+          {
+            label: 'Help Center',
+            url: 'https://help.serp.co/en/'
+          }
+        ],
         slug: 'example-downloader',
         website: 'https://serp.ly/example-downloader'
       }

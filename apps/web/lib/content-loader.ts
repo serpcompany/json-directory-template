@@ -2,8 +2,10 @@ import {
   normalizeJsonWebsite,
   parseJsonWebsiteEntries,
   type WebsiteJsonEntry,
-  type WebsitePriority
+  type WebsitePriority,
+  type WebsiteResourceLink
 } from './website-schema'
+import { siteConfig } from './site-config'
 
 // Import content-collections with fallback for CI
 let allGuides: any[] = []
@@ -49,14 +51,13 @@ interface Website {
   name: string
   description: string
   website: string
-  llmsUrl: string
-  llmsFullUrl?: string | null
   category: string
   publishedAt: string
   isUnofficial?: boolean
   priority?: WebsitePriority
   featured?: boolean
   content?: string
+  resourceLinks?: WebsiteResourceLink[]
   relatedWebsites?: WebsiteMetadata[]
   previousWebsite?: WebsiteMetadata | null
   nextWebsite?: WebsiteMetadata | null
@@ -163,14 +164,13 @@ export interface WebsiteMetadata {
   name: string
   description: string
   website: string
-  llmsUrl: string
-  llmsFullUrl?: string | null
   category: string
   publishedAt: string
   isUnofficial?: boolean
   featured?: boolean
   priority?: WebsitePriority
   content?: string
+  resourceLinks?: WebsiteResourceLink[]
   relatedWebsites?: WebsiteMetadata[]
   previousWebsite?: WebsiteMetadata | null
   nextWebsite?: WebsiteMetadata | null
@@ -404,7 +404,13 @@ export async function getLegalContent(key: string): Promise<string> {
     throw new Error(`Legal content "${key}" not found`)
   }
 
-  return legal.content || legal._meta?.content || ''
+  const content = legal.content || legal._meta?.content || ''
+
+  return content
+    .replace(/privacy@serp\.co/gi, `privacy@${siteConfig.domain}`)
+    .replace(/legal@serp\.co/gi, `legal@${siteConfig.domain}`)
+    .replace(/serp\.co/gi, siteConfig.domain)
+    .replace(/\bSERP\b/g, siteConfig.name)
 }
 
 /**

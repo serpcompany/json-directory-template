@@ -25,50 +25,48 @@ Instead, the repo becomes the source of truth and GitHub becomes the audit trail
 ## What happens when someone submits
 
 1. The user opens `/submit`.
-2. The form collects the project name, category, website URL, and any optional notes.
-3. When the website field loses focus, the form suggests `llms.txt` and `llms-full.txt` URLs from the same origin.
-4. When the user clicks **Continue on GitHub**, the client builds a GitHub issue URL.
-5. The browser navigates to the GitHub issue composer with a template, title, and prefilled body.
-6. A maintainer reviews the issue and, if approved, updates repo data such as `data/websites.json` or the website content files.
+2. The form collects the listing name, category, website URL, description, and any optional notes.
+3. When the user clicks **Continue on GitHub**, the client builds a GitHub issue URL.
+4. The browser navigates to the GitHub issue composer with a template, title, and prefilled body.
+5. A maintainer reviews the issue and, if approved, updates repo data such as `data/websites.json`.
 
 ## Example GitHub issue URL
 
 ```txt
-https://github.com/thedaviddias/llms-txt-hub/issues/new
+https://github.com/OWNER/REPO/issues/new
   ?template=submit-website.yml
-  &title=Submit llms.txt: Example Project
+  &title=Submit listing: Example Project
   &body=...
 ```
 
 ## Example prefilled issue body
 
 ```md
-## Website details
+## Listing details
 
 Name: Example Project
 Website: https://example.com
-llms.txt URL: https://example.com/llms.txt
 Category: developer-tools
 
 ## Description
 
-A short summary of what the project does and why its llms.txt is useful.
+A short summary of what the project does.
 
 ## Additional notes
 
-Optional reviewer context.
+Helpful reviewer context.
 ```
 
 ## Files that control the flow
 
 - `apps/web/app/submit/page.tsx` renders the public submit page.
 - `apps/web/components/forms/github-issue-submit-form.tsx` renders the form and handles the client-side redirect.
-- `apps/web/components/forms/submit-form-utils.ts` suggests `llms.txt` and `llms-full.txt` URLs from the website origin.
 - `apps/web/lib/github-issue.ts` builds the final GitHub issue URL, template, title, and body.
+- `sites/site-config.default.ts` plus `sites/<id>/site-config.ts` provide the checked-in owner, repo, issue URL, and template values.
 
 ## What to change if you customize it
 
-- Change the GitHub owner, repo, or template in `apps/web/lib/github-issue.ts`.
+- Change the GitHub owner, repo, or template in the checked-in site config.
 - Add or remove fields in `apps/web/components/forms/github-issue-submit-form.tsx`.
 - Keep the GitHub issue handoff if you want to stay static-friendly with no runtime infrastructure.
 

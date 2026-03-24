@@ -73,7 +73,7 @@ export function SearchResults() {
     return (
       <EmptyState
         title="Start Your Search"
-        description={`Type something in the search bar above to find ${siteCopy.listingName.plural}, tools, and resources.`}
+        description={`Type something in the search bar above to find ${siteCopy.listingName.plural} and resources.`}
         actionLabel={siteCopy.exploreAllLabel}
         actionHref={getRoute('home')}
       />

@@ -16,12 +16,16 @@ Use this shape when preparing rows to replace the placeholder data:
   "name": "Example Project",
   "website": "https://example.com",
   "description": "Short plain-English description of the project.",
-  "llmsUrl": "https://example.com/llms.txt",
-  "llmsFullUrl": "https://example.com/llms-full.txt",
   "category": "developer-tools",
   "featured": false,
   "priority": "high",
   "publishedAt": "2026-03-22",
+  "resourceLinks": [
+    {
+      "label": "Docs",
+      "url": "https://example.com/docs"
+    }
+  ],
   "content": "## Overview\n\nLong-form detail page content in Markdown."
 }
 ```
@@ -33,16 +37,15 @@ Use this shape when preparing rows to replace the placeholder data:
 - `category`
 - `publishedAt`
 - either `website` or `domain`
-- either `llmsUrl` or `llmsTxtUrl`
 
 ## Optional Fields
 
 - `slug`
-- `llmsFullUrl`
 - `featured`
 - `priority`
 - `favicon`
 - `isUnofficial`
+- `resourceLinks`
 - `content`
 
 ## Formatting Rules
@@ -62,13 +65,15 @@ type WebsiteDetailPageData = {
   name: string
   website: string
   description: string
-  llmsUrl: string
-  llmsFullUrl?: string | null
   category: string
   publishedAt: string
   featured?: boolean
   priority?: 'high' | 'medium' | 'low'
   isUnofficial?: boolean
+  resourceLinks?: Array<{
+    label: string
+    url: string
+  }>
   content?: string
   relatedWebsites?: WebsiteDetailPageData[]
   previousWebsite?: WebsiteDetailPageData | null
@@ -92,4 +97,5 @@ They are added in `apps/web/lib/content-loader.ts` when `getWebsiteBySlug()` bui
 - The loader sanitizes HTML out of `description`.
 - The loader still normalizes the legacy category slug `integration-automation` to `automation-workflow`.
 - The raw field name `website` is kept for compatibility and still means the destination URL for a listing.
+- `resourceLinks` is the generic path for optional per-listing docs, support, or example links. Avoid bringing back special `llms.txt`-specific fields.
 - The starter's canonical user-facing term is now `listing`, so UI copy and config-backed labels should prefer `listing` even when the underlying JSON field remains `website`.

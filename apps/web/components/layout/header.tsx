@@ -144,10 +144,10 @@ export function Header({ authState }: { authState?: HeaderAuthState }) {
             {/* Desktop navigation */}
             <nav className="hidden lg:flex items-center gap-4">
               {siteConfig.features.showProjects ? (
-                <NavLink href={getRoute('projects')}>Projects</NavLink>
+                <NavLink href={getRoute('projects')}>{siteCopy.networkLabel}</NavLink>
               ) : null}
               {siteConfig.features.showDocs ? (
-                <NavLink href={getRoute('docs.list')}>Docs</NavLink>
+                <NavLink href={getRoute('docs.list')}>{siteCopy.docsLabel}</NavLink>
               ) : null}
               {siteConfig.features.showGuides ? (
                 <NavLink href={getRoute('guides.list')}>Guides</NavLink>

@@ -12,8 +12,8 @@ export function FeaturedProjectsSection({ projects }: FeaturedProjectsSectionPro
   // Shows 6 on smaller screens, 8 on 4xl+ (handled via CSS in LLMGrid)
   return (
     <Section
-      title="Featured Tools & Platforms"
-      description="Discover the most popular AI-ready websites and development tools"
+      title="Featured Listings"
+      description="Discover standout listings from this directory"
       viewAllHref={getRoute('category.page', { category: 'featured' })}
       viewAllText="All featured"
     >

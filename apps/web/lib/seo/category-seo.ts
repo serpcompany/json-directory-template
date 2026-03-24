@@ -22,13 +22,13 @@ export function getCategorySEO(_slug: string, category: Category): CategorySEOCo
   const categoryDescription = category.description
 
   return {
-    metaTitle: `${categoryName} ${siteCopy.listingName.pluralTitle} & Tools Directory`,
-    metaDescription: `Discover curated ${toKeywordValue(categoryName)} ${siteCopy.listingName.plural}, tools, and resources. ${categoryDescription}`,
+    metaTitle: `${categoryName} ${siteCopy.listingName.pluralTitle} Directory`,
+    metaDescription: `Discover curated ${toKeywordValue(categoryName)} ${siteCopy.listingName.plural} and resources. ${categoryDescription}`,
     keywords: [
       toKeywordValue(categoryName),
       `${toKeywordValue(categoryName)} ${siteCopy.listingName.plural}`,
       `directory ${siteCopy.listingName.plural}`,
-      'tools directory',
+      'listing directory',
       'curated resources'
     ],
     h1Title: categoryName,

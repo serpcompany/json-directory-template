@@ -40,8 +40,12 @@ describe('seo-config', () => {
   it('uses listing-neutral starter keywords for directory metadata', () => {
     expect(KEYWORDS.global).toContain('directory listings')
     expect(KEYWORDS.homepage).toContain('directory listings')
+    expect(KEYWORDS.global).toContain('listing directory')
+    expect(KEYWORDS.homepage).toContain('listing directory')
     expect(KEYWORDS.global).not.toContain('website directory')
     expect(KEYWORDS.homepage).not.toContain('website directory')
+    expect(KEYWORDS.global).not.toContain('tools directory')
+    expect(KEYWORDS.homepage).not.toContain('tools directory')
   })
 
   it('uses listing-neutral alt text helpers', () => {

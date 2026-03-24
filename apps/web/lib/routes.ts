@@ -4,23 +4,35 @@
  */
 import { siteConfig } from '@/lib/site-config'
 
-function getListingBasePath(): string {
-  return `/${siteConfig.listingRouteBasePath}`
+function normalizeBasePath(basePath: string): string {
+  return basePath.replace(/^\/+|\/+$/g, '')
+}
+
+function buildRouteFromBase(basePath: string, pattern = ''): string {
+  const normalizedBasePath = normalizeBasePath(basePath)
+  const routeBasePath = `/${normalizedBasePath}`
+
+  if (!pattern) {
+    return routeBasePath
+  }
+
+  return `${routeBasePath}/${pattern}`
 }
 
 function buildListingRoute(pattern = ''): string {
-  const basePath = getListingBasePath()
+  return buildRouteFromBase(siteConfig.listingRouteBasePath, pattern)
+}
 
-  if (!pattern) {
-    return basePath
-  }
+function buildDocsRoute(pattern = ''): string {
+  return buildRouteFromBase(siteConfig.docsRouteBasePath, pattern)
+}
 
-  return `${basePath}/${pattern}`
+function buildNetworkRoute(pattern = ''): string {
+  return buildRouteFromBase(siteConfig.networkRouteBasePath, pattern)
 }
 
 export const routes = {
   home: '/',
-  llmsTxt: '/llms.txt',
   listing: {
     list: buildListingRoute(),
     detail: buildListingRoute('[slug]'),
@@ -42,8 +54,8 @@ export const routes = {
   account: '/account',
   favorites: '/favorites',
   docs: {
-    list: '/docs',
-    doc: '/docs/[slug]'
+    list: buildDocsRoute(),
+    doc: buildDocsRoute('[slug]')
   },
   guides: {
     list: '/guides',
@@ -52,7 +64,7 @@ export const routes = {
   news: '/news',
   privacy: '/legal/privacy',
   cookies: '/legal/cookies',
-  projects: '/projects',
+  projects: buildNetworkRoute(),
   search: '/search',
   login: '/login',
   submit: '/submit',
@@ -63,7 +75,6 @@ export const routes = {
 type StaticRoutes =
   | 'home'
   | 'account'
-  | 'llmsTxt'
   | 'listing.list'
   | 'listing.featured'
   | 'listing.latest'

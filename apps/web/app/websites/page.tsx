@@ -5,7 +5,7 @@ import { SITE_NAME, SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
 export function generateMetadata(): Metadata {
   return {
     title: `Directory - ${SITE_NAME}`,
-    description: 'Discover a curated list of directory listings, tools, and resources.',
+    description: 'Discover a curated list of directory listings and resources.',
     alternates: {
       canonical: `${SITE_PUBLIC_URL}/`
     }

@@ -5,6 +5,8 @@ import { BookOpen, Bot, FileJson, Github, SwatchBook, Terminal } from 'lucide-re
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { DocMetadata } from '@/lib/content-loader'
+import { getRoute } from '@/lib/routes'
+import { siteCopy } from '@/lib/site-copy'
 
 const DOC_ICONS: Record<string, typeof BookOpen> = {
   'getting-started': BookOpen,
@@ -29,14 +31,16 @@ export function DocsSidebar({ docs }: DocsSidebarProps) {
     <aside className="lg:sticky lg:top-20 lg:self-start">
       <nav className="space-y-1">
         <h3 className="font-semibold text-sm mb-3 text-muted-foreground uppercase tracking-wider">
-          Documentation
+          {siteCopy.docsLabel}
         </h3>
         {docs.map(doc => {
-          const href = doc.slug === 'getting-started' ? '/docs' : `/docs/${doc.slug}`
+          const href =
+            doc.slug === 'getting-started'
+              ? getRoute('docs.list')
+              : getRoute('docs.doc', { slug: doc.slug })
           const isActive =
             pathname === href ||
-            (pathname === '/docs' && doc.slug === 'getting-started') ||
-            pathname === `/docs/${doc.slug}`
+            (pathname === getRoute('docs.list') && doc.slug === 'getting-started')
           const Icon = DOC_ICONS[doc.slug] || BookOpen
 
           return (

@@ -1,29 +1,26 @@
 ---
-title: Getting Started with llms.txt
-description: Learn how to implement llms.txt in your project
+title: Starter Setup Checklist
+description: Quick checklist for cloning, configuring, and building the directory starter
 category: getting-started
 featured: true
 ---
 
-# Getting Started with llms.txt
+# Starter Setup Checklist
 
-This guide will help you implement llms.txt in your project to make it AI-friendly.
+Use this quick checklist when spinning up a new site from the starter.
 
-## What is llms.txt?
+## Core steps
 
-The llms.txt file is a standardized way to provide information about how LLM-powered tools and services should interact with your documentation and codebase.
+1. Install the repo dependencies with `nvm use` and `pnpm install`
+2. Create or update `sites/<id>/site-config.ts`
+3. Add any site-owned extras in `sites/<id>/site-content.ts`
+4. Populate or generate `data/websites.json`
+5. Run `pnpm dev` to review the site locally
+6. Run `pnpm build:site -- --site <id>` before deploying
 
-## Benefits
+## Recommended follow-up
 
-- Guide AI models on how to interpret your documentation
-- Standardize documentation access for LLM-powered tools
-- Improve accuracy of AI responses about your project
-- Enhance developer experience with AI-powered tools
-- Set clear boundaries for AI interaction with your content
-
-## Implementation
-
-1. Create a `llms.txt` file in your project root
-2. Add structured information about your project
-3. Include relevant documentation links
-4. Submit your implementation to the llms.txt hub
+- Review the public docs in `/docs`
+- Update the About and legal content
+- Verify listing detail pages and submit flow
+- Check the final artifact under `dist/sites/<id>`

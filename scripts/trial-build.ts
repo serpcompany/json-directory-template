@@ -38,10 +38,12 @@ type WebsiteJsonEntry = {
   description: string
   favicon: string
   featured?: boolean
-  llmsFullUrl: string
-  llmsUrl: string
   name: string
   publishedAt: string
+  resourceLinks?: Array<{
+    label: string
+    url: string
+  }>
   slug: string
   website: string
 }
@@ -68,6 +70,21 @@ function buildContent(product: TrialProduct, websiteUrl: string): string | undef
   ].filter(Boolean)
 
   return sections.length > 0 ? sections.join('\n\n') : undefined
+}
+
+function buildResourceLinks(product: TrialProduct): WebsiteJsonEntry['resourceLinks'] {
+  const helpCenter = product.technicalInfo?.storeAndDistribution?.helpCenter?.trim()
+
+  if (!helpCenter) {
+    return undefined
+  }
+
+  return [
+    {
+      label: 'Help Center',
+      url: helpCenter
+    }
+  ]
 }
 
 export function buildTrialWebsiteEntries(
@@ -105,10 +122,9 @@ export function buildTrialWebsiteEntries(
         description,
         favicon: buildFaviconUrl(normalizedWebsiteUrl),
         featured: index < (options.featuredCount ?? 6),
-        llmsFullUrl: `${normalizedWebsiteUrl}/llms-full.txt`,
-        llmsUrl: `${normalizedWebsiteUrl}/llms.txt`,
         name,
         publishedAt: options.publishedAt,
+        resourceLinks: buildResourceLinks(product),
         slug,
         website: normalizedWebsiteUrl
       }

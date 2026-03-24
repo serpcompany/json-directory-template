@@ -7,86 +7,81 @@ published: true
 
 # Rebrand Checklist
 
-<p className="mt-2 text-xl text-muted-foreground">Use this checklist when turning the starter into your own brand. It covers the active app shell, SEO, assets, links, and legal copy.</p>
+<p className="mt-2 text-xl text-muted-foreground">Use this checklist when turning the starter into your own brand. It covers the checked-in config, public content, assets, links, and legal copy.</p>
 
 ## What to replace first
 
-- Site name and tagline
-- Default SEO title and description
+- Site name, domain, and tagline
 - Social links and repository references
-- Favicon and Open Graph image
-- Legal company and contact details
-- Any leftover starter wording in public-facing pages
+- Submit destination and GitHub issue settings
+- Favicon, logo, and Open Graph image
+- About and legal content
+- Any leftover starter wording in public pages
 
-## Brand shell checklist
+## Checked-in config checklist
 
-- [ ] Update the default title and description in `apps/web/app/layout.tsx`
-- [ ] Update the global SEO constants in `apps/web/lib/seo/seo-config.ts`
-- [ ] Update the header wordmark in `apps/web/components/layout/header.tsx`
-- [ ] Update the footer brand name, links, and attribution in `apps/web/components/layout/footer.tsx`
+- [ ] Set `site.*` in `sites/<id>/site-config.ts`
+- [ ] Set `copy.*`, `routes.*`, and `features.*` in `sites/<id>/site-config.ts`
+- [ ] Review `social.*` in `sites/<id>/site-config.ts`
+- [ ] Review `build.*` and any deploy settings in `sites/<id>/site-config.ts`
+- [ ] Review `sites/<id>/site-content.ts` for optional outbound resources
 
 ## Asset checklist
 
-- [ ] Replace `apps/web/app/favicon.ico`
-- [ ] Replace `apps/web/app/opengraph-image.png`
-- [ ] Update `apps/web/app/opengraph-image.alt.txt`
-- [ ] Review branded images in `apps/web/public/img/**`
-- [ ] Review guide screenshots in `apps/web/public/guides/**` if they still show the old brand
+- [ ] Add or replace site assets under `sites/<id>/assets/**`
+- [ ] Wire `branding.favicon`, `branding.logo`, and `branding.opengraphImage` in `sites/<id>/site-config.ts`
+- [ ] Review screenshots or public images in `apps/web/public/**` if they still show starter branding
 
 ## Product copy checklist
 
-- [x] Move About page copy out of `apps/web/app/about/page.tsx` and into content-backed data
 - [ ] Review `packages/content/data/about/about.mdx`
-- [ ] Review `apps/web/components/sections/hero-section.tsx`
-- [ ] Review `apps/web/components/sections/faq-section.tsx`
-- [ ] Review starter-facing docs in `packages/content/data/docs/**`
-- [ ] Review any public page copy that still names the original starter brand
+- [ ] Review `packages/content/data/docs/**`
+- [ ] Review `packages/content/data/guides/**`
+- [ ] Review `packages/content/data/resources/**`
+- [ ] Review homepage section copy such as hero, FAQ, and footer text
 
-## External links and handles checklist
+## External links checklist
 
-- [ ] Update social handles and `sameAs` links in `apps/web/lib/seo/seo-config.ts`
-- [ ] Update footer social links in `apps/web/components/layout/footer.tsx`
-- [ ] Update the submit destination in `apps/web/lib/github-issue.ts`
-- [ ] Update project and repo links in `apps/web/app/projects/page.tsx`
-- [ ] Update any docs or guides that still point at the old domain or repository
+- [ ] Update `social.githubUrl`, `social.githubRepoUrl`, `social.githubIssuesUrl`, and issue-template settings
+- [ ] Review any links surfaced on `/projects`
+- [ ] Review any outbound entries in `sites/<id>/site-content.ts`
 
 ## Legal and contact checklist
 
-- [x] Review and update `packages/content/data/legal/privacy.mdx`
-- [x] Review and update `packages/content/data/legal/terms.mdx`
-- [x] Review and update `packages/content/data/legal/cookies.mdx`
+- [ ] Review `packages/content/data/legal/privacy.mdx`
+- [ ] Review `packages/content/data/legal/terms.mdx`
+- [ ] Review `packages/content/data/legal/cookies.mdx`
 - [ ] Replace domains, emails, company/operator names, and contact details
 - [ ] Update the “Last updated” date whenever legal copy changes
 
 ## Runtime details worth deciding
 
-- [ ] Decide whether to rename the favorites storage key in `apps/web/contexts/favorites-context.tsx`
-- [ ] Decide whether to keep or replace the existing guide screenshots and starter example copy
+- [ ] Decide whether to rename the favorites storage key for your production brand
+- [ ] Decide whether any optional routes should stay off by default for your site
 - [ ] Decide whether internal package names need to change now or can stay internal until later
 
 ## Do not bulk-replace blindly
 
-- `data/websites.json` and `packages/content/data/websites/**` contain third-party names that should stay intact
-- Some guide screenshots may need to be re-recorded rather than string-replaced
-- GitHub links in docs and guides may be intentional examples, so verify them before changing
+- `data/websites.json` contains third-party names that should stay intact
+- Some screenshots may need to be re-recorded rather than string-replaced
+- Example links in docs and guides may be intentional placeholders, so verify them before changing
 
 ## Suggested order
 
-1. Replace the shell and SEO strings
-2. Replace the repo, social, and submit links
-3. Replace the visual assets
-4. Update legal copy and contact details
-5. Run one final string sweep for old brand references
-6. Build and manually verify the public pages
+1. Replace site config values and shell links
+2. Replace public content and legal copy
+3. Replace visual assets
+4. Run one final string sweep for starter residue
+5. Build and manually verify the public pages
 
 ## Fast search commands
 
 ```bash
-rg -n "llms.txt Hub|llms.txt hub|llmstxthub|thedaviddias|David Dias|llms-txt-hub" apps/web packages/content
+rg -n "Directory Starter|json-directory-template|serpcompany|example.com" apps/web packages/content sites
 ```
 
 ```bash
-rg -n "privacy@|legal@|support@|contact@" packages/content/data/legal apps/web
+rg -n "privacy@|legal@|support@|contact@" packages/content/data/legal apps/web sites
 ```
 
 ## Verification checklist
@@ -94,6 +89,7 @@ rg -n "privacy@|legal@|support@|contact@" packages/content/data/legal apps/web
 - [ ] The homepage title and description use the new brand
 - [ ] The header and footer show the new brand and external links
 - [ ] The favicon and Open Graph image are replaced
-- [ ] `/about`, `/privacy`, `/terms`, and `/cookies` no longer mention the old brand
+- [ ] `/about`, `/legal/privacy`, `/legal/terms`, and `/legal/cookies` match the new brand
 - [ ] `/submit` points to the correct repository and issue flow
-- [ ] `pnpm --filter web build` passes cleanly
+- [ ] `/docs/getting-started` reflects your current site setup
+- [ ] `pnpm build:site -- --site <id>` passes

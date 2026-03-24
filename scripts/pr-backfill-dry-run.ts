@@ -149,8 +149,6 @@ interface GitHubWorkflowRunsResponse {
 export interface SubmissionFrontmatter {
   category: string
   description: string
-  llmsFullUrl?: string | null
-  llmsUrl: string
   name: string
   publishedAt?: string
   website: string
@@ -254,8 +252,6 @@ export function parseSubmissionFrontmatter(content: string): SubmissionFrontmatt
   const frontmatter: SubmissionFrontmatter = {
     category: readRequiredString(data, 'category'),
     description: readRequiredString(data, 'description'),
-    llmsFullUrl: readOptionalString(data, 'llmsFullUrl'),
-    llmsUrl: readRequiredString(data, 'llmsUrl'),
     name: readRequiredString(data, 'name'),
     publishedAt: readOptionalString(data, 'publishedAt') ?? undefined,
     website: readRequiredString(data, 'website')
@@ -443,8 +439,6 @@ export function calculateManagedLabelSync(
 export function assessSubmissionGuidelines(input: {
   frontmatter: SubmissionFrontmatter
   homepageInspection: UrlInspection
-  llmsFullInspection?: UrlInspection | null
-  llmsInspection: UrlInspection
 }): GuidelineAssessment {
   const reasons: string[] = []
   let guidelineStatus: GuidelineStatus = 'pass'
@@ -452,15 +446,6 @@ export function assessSubmissionGuidelines(input: {
   if (!categoryBySlug.has(input.frontmatter.category)) {
     addGuidelineReason(reasons, 'Invalid category slug in frontmatter.', 'fail')
     guidelineStatus = mergeGuidelineStatus(guidelineStatus, 'fail')
-  }
-
-  if (!sameWebsiteFamily(input.frontmatter.website, input.frontmatter.llmsUrl)) {
-    addGuidelineReason(
-      reasons,
-      'Website URL and llms.txt URL do not appear to belong to the same site.',
-      'warn'
-    )
-    guidelineStatus = mergeGuidelineStatus(guidelineStatus, 'warn')
   }
 
   if (!input.homepageInspection.ok) {
@@ -472,46 +457,8 @@ export function assessSubmissionGuidelines(input: {
     guidelineStatus = mergeGuidelineStatus(guidelineStatus, 'warn')
   }
 
-  if (!input.llmsInspection.ok) {
-    addGuidelineReason(
-      reasons,
-      `llms.txt is not accessible (${input.llmsInspection.error ?? `HTTP ${input.llmsInspection.status ?? 'unknown'}`}).`,
-      'fail'
-    )
-    guidelineStatus = mergeGuidelineStatus(guidelineStatus, 'fail')
-  } else {
-    if (looksLikeHtmlResponse(input.llmsInspection)) {
-      addGuidelineReason(
-        reasons,
-        'llms.txt URL appears to return HTML instead of plain text.',
-        'fail'
-      )
-      guidelineStatus = mergeGuidelineStatus(guidelineStatus, 'fail')
-    }
-
-    if (input.llmsInspection.text.trim().length < 80) {
-      addGuidelineReason(reasons, 'llms.txt content is unusually short.', 'warn')
-      guidelineStatus = mergeGuidelineStatus(guidelineStatus, 'warn')
-    }
-  }
-
-  if (input.frontmatter.llmsFullUrl && input.llmsFullInspection && !input.llmsFullInspection.ok) {
-    addGuidelineReason(
-      reasons,
-      `llms-full.txt could not be inspected (${input.llmsFullInspection.error ?? `HTTP ${input.llmsFullInspection.status ?? 'unknown'}`}).`,
-      'warn'
-    )
-    guidelineStatus = mergeGuidelineStatus(guidelineStatus, 'warn')
-  }
-
   const combinedText = normalizeText(
-    [
-      input.frontmatter.name,
-      input.frontmatter.description,
-      input.homepageInspection.text,
-      input.llmsInspection.text,
-      input.llmsFullInspection?.text ?? ''
-    ].join(' ')
+    [input.frontmatter.name, input.frontmatter.description, input.homepageInspection.text].join(' ')
   )
 
   const failTerm = findMatchedTerm(combinedText, SUSPICIOUS_FAIL_TERMS)
@@ -1095,16 +1042,10 @@ async function moderatePullRequest(input: {
   for (const file of mdxFiles) {
     const fileContent = await fetchRepositoryFileContent(input.repo, file.filename, input.sha)
     const frontmatter = parseSubmissionFrontmatter(fileContent)
-    const [homepageInspection, llmsInspection, llmsFullInspection] = await Promise.all([
-      inspectUrl(frontmatter.website, 'html'),
-      inspectUrl(frontmatter.llmsUrl, 'text'),
-      frontmatter.llmsFullUrl ? inspectUrl(frontmatter.llmsFullUrl, 'text') : Promise.resolve(null)
-    ])
+    const homepageInspection = await inspectUrl(frontmatter.website, 'html')
     const assessment = assessSubmissionGuidelines({
       frontmatter,
-      homepageInspection,
-      llmsFullInspection,
-      llmsInspection
+      homepageInspection
     })
 
     mergedStatus = mergeGuidelineStatus(mergedStatus, assessment.guidelineStatus)
@@ -1436,14 +1377,6 @@ function addGuidelineReason(
 }
 
 /**
- * Return true when the fetched llms.txt payload appears to be HTML.
- */
-function looksLikeHtmlResponse(result: UrlInspection): boolean {
-  const contentType = result.contentType?.toLowerCase() ?? ''
-  return contentType.includes('text/html') || /<html[\s>]/i.test(result.text)
-}
-
-/**
  * Return the first matched moderation term, if any.
  */
 function findMatchedTerm(text: string, terms: string[]): string | null {
@@ -1455,23 +1388,6 @@ function findMatchedTerm(text: string, terms: string[]): string | null {
  */
 function normalizeText(value: string): string {
   return value.toLowerCase().replace(/\s+/g, ' ').trim()
-}
-
-/**
- * Return true when the website and llms URLs appear to belong to the same site family.
- */
-function sameWebsiteFamily(website: string, llmsUrl: string): boolean {
-  try {
-    const websiteHost = new URL(website).hostname.toLowerCase()
-    const llmsHost = new URL(llmsUrl).hostname.toLowerCase()
-    return (
-      websiteHost === llmsHost ||
-      websiteHost.endsWith(`.${llmsHost}`) ||
-      llmsHost.endsWith(`.${websiteHost}`)
-    )
-  } catch {
-    return false
-  }
 }
 
 /**

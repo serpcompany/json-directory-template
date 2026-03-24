@@ -1,192 +1,90 @@
 ---
-title: 'Commands'
-description: 'Complete reference for all llmstxt-cli commands, flags, and usage examples'
+title: 'Common Commands'
+description: 'The main workspace commands for local development, validation, and static site builds'
 order: 2
 published: true
 ---
 
-# Commands
+# Common Commands
 
-<p className="mt-2 text-xl text-muted-foreground">Complete reference for every llmstxt-cli command.</p>
+<p className="mt-2 text-xl text-muted-foreground">These are the commands you will use most while developing, validating, and exporting a site from the starter.</p>
 
-## init
+## Local development
 
-Auto-detect project dependencies and install matching llms.txt skills through an interactive wizard.
-
-```bash
-llmstxt init [options]
-```
-
-| Flag | Description |
-|------|-------------|
-| `--category <categories>` | Filter by categories (comma-separated) |
-| `--all-categories` | Include entries from all categories |
-| `--dry-run` | Preview what would be installed without writing files |
-| `--full` | Prefer `llms-full.txt` when available |
-| `-y, --yes` | Skip confirmation prompts (non-interactive mode) |
-
-**Examples:**
+Run just the web app:
 
 ```bash
-# Interactive wizard (default)
-llmstxt init
-
-# Non-interactive, install everything detected
-llmstxt init --yes
-
-# Preview without installing
-llmstxt init --dry-run
-
-# Only show AI/ML category matches
-llmstxt init --category ai-ml
+pnpm dev
 ```
 
-## install
-
-Install one or more llms.txt skills by name or slug.
+Run the older multi-workspace loop:
 
 ```bash
-llmstxt install <names...> [options]
+pnpm dev:all
 ```
 
-| Flag | Description |
-|------|-------------|
-| `--full` | Prefer `llms-full.txt` when available |
-| `--force` | Re-download even if already installed |
-
-**Examples:**
+Run the web app with the Node inspector attached:
 
 ```bash
-# Install a single skill
-llmstxt install stripe
-
-# Install multiple skills
-llmstxt install react next-js tailwindcss
-
-# Force re-download
-llmstxt install stripe --force
-
-# Prefer extended docs
-llmstxt install vercel-ai-sdk --full
+pnpm --filter web dev:inspect
 ```
 
-## search
+## Validation and tests
 
-Search the registry for llms.txt entries matching a query. Returns up to 10 results.
+Validate the active listing JSON shape:
 
 ```bash
-llmstxt search <query> [options]
+pnpm tsx scripts/validate-data.ts data/websites.json
 ```
 
-| Flag | Description |
-|------|-------------|
-| `--category <categories>` | Filter by categories (comma-separated) |
-| `--all-categories` | Search across all categories |
-
-By default, search is scoped to the 6 primary categories. Use `--all-categories` to broaden the search.
-
-**Examples:**
+Run the full repo tests:
 
 ```bash
-# Search for authentication libraries
-llmstxt search auth
-
-# Search only in developer-tools category
-llmstxt search testing --category developer-tools
-
-# Search everything
-llmstxt search payment --all-categories
+pnpm test
 ```
 
-## list / ls
-
-Show all llms.txt skills currently installed in the project. Displays the name, age, and size of each entry. Entries older than 30 days are flagged as stale.
+Run focused web tests:
 
 ```bash
-llmstxt list
-# or
-llmstxt ls
+pnpm --filter web exec jest --runInBand --runTestsByPath app/docs/__tests__/page.test.tsx
 ```
 
-No flags. Run it in your project root to see what's installed.
+## Build output
 
-## update
-
-Update installed llms.txt skills to their latest versions. Uses etag-based caching to skip files that haven't changed on the server.
+Build the workspace:
 
 ```bash
-llmstxt update [name] [options]
+pnpm build
 ```
 
-| Flag | Description |
-|------|-------------|
-| `--force` | Force re-download even if the etag hasn't changed |
-
-**Examples:**
+Build one static site artifact:
 
 ```bash
-# Update all installed skills
-llmstxt update
-
-# Update a specific skill
-llmstxt update stripe
-
-# Force re-download everything
-llmstxt update --force
+pnpm build:site -- --site your-site-id
 ```
 
-## remove / rm
-
-Uninstall an llms.txt skill from all agent directories. Prompts for confirmation before deleting.
+Generate the search index directly:
 
 ```bash
-llmstxt remove <name>
-# or
-llmstxt rm <name>
+pnpm generate-search-index
 ```
 
-No additional flags. The command removes the skill from `.agents/skills/` and cleans up any agent symlinks.
+## Data generation helpers
 
-**Examples:**
+Transform a site-specific JSON source into `data/websites.json`:
 
 ```bash
-# Remove a skill
-llmstxt remove stripe
-
-# Using the alias
-llmstxt rm tailwindcss
+pnpm exec tsx scripts/trial-build.ts sites/your-site/products.json data/websites.json
 ```
 
-## info
-
-Display detailed information about a registry entry, including its category, domain, llms.txt URLs, and whether it's currently installed.
+Generate the search artifact after data changes:
 
 ```bash
-llmstxt info <name>
+pnpm exec tsx scripts/search-index-generator.ts
 ```
 
-**Examples:**
+## Notes
 
-```bash
-# Show info for a skill
-llmstxt info react
-
-# Works with slugs too
-llmstxt info vercel-ai-sdk
-```
-
-## Telemetry
-
-By default, the CLI collects anonymous telemetry data to help rank skills on the leaderboard. The data sent includes the command name, skill slugs, detected agent names, and the CLI version. No IP addresses, device identifiers, or personal information are collected or stored.
-
-To opt out, set either of these environment variables:
-
-```bash
-# Console Do Not Track standard (https://consoledonottrack.com)
-export DO_NOT_TRACK=1
-
-# Or the CLI-specific flag
-export LLMSTXT_TELEMETRY_DISABLED=1
-```
-
-When either variable is set to `1`, no network requests are made.
+- `pnpm dev` is the stable local default. The repo keeps `pnpm dev:all` for the heavier multi-workspace loop.
+- The starter expects Node `24.x`.
+- When you are working on one site, prefer `build:site` over the broader root `build`.

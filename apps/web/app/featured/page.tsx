@@ -7,7 +7,7 @@ import { JsonLd } from '@/components/json-ld'
 import { AppSidebar } from '@/components/layout/app-sidebar'
 import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section'
 import { NewsletterSection } from '@/components/sections/newsletter-section'
-import { ToolsSection } from '@/components/sections/tools-section'
+import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
 import { getGuides } from '@/lib/content-loader'
 import { SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 import { siteCopy } from '@/lib/site-copy'
@@ -122,7 +122,7 @@ export default async function FeaturedPage() {
               <CategoryWebsitesList initialWebsites={featuredProjects} categoryType="non-tool" />
             </section>
 
-            {siteConfig.features.showDeveloperTools && <ToolsSection />}
+            {siteConfig.features.showExternalResources && <ExternalResourcesSection />}
             {siteConfig.features.showFeaturedGuides && (
               <FeaturedGuidesSection guides={featuredGuides} />
             )}

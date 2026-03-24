@@ -1,9 +1,9 @@
 import { render, screen } from '@/test/test-utils'
-import { ToolsSection } from '@/components/sections/tools-section'
+import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
 
-describe('ToolsSection', () => {
+describe('ExternalResourcesSection', () => {
   it('does not ship llms-specific external tool cards in the default starter', () => {
-    render(<ToolsSection />)
+    render(<ExternalResourcesSection />)
 
     expect(screen.queryByText(/llms\.txt checker/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/llmstxt cli/i)).not.toBeInTheDocument()

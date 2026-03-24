@@ -8,7 +8,6 @@ describe('buildSearchIndex', () => {
         {
           category: 'automation-workflow',
           description: 'Example description',
-          llmsUrl: 'https://example.com/llms.txt',
           name: 'Example Listing',
           publishedAt: '2026-03-23',
           website: 'https://example.com'
@@ -22,8 +21,6 @@ describe('buildSearchIndex', () => {
         category: 'automation-workflow',
         content: '',
         description: 'Example description',
-        llmsFullUrl: '',
-        llmsUrl: 'https://example.com/llms.txt',
         name: 'Example Listing',
         slug: 'example-listing',
         url: '/directory/example-listing',
@@ -38,7 +35,6 @@ describe('buildSearchIndex', () => {
         {
           category: 'developer-tools',
           description: 'Explicit route entry',
-          llmsUrl: 'https://example.com/llms.txt',
           name: 'Explicit Listing',
           publishedAt: '2026-03-23',
           slug: 'explicit-listing',

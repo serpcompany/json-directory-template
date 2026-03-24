@@ -7,6 +7,7 @@ import { components } from '@/components/mdx'
 import { type DocMetadata, getDocBySlug, getDocs } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
 import { SITE_PUBLIC_URL, generateDynamicMetadata } from '@/lib/seo/seo-config'
+import { siteCopy } from '@/lib/site-copy'
 
 interface DocPageProps {
   params: Promise<{
@@ -30,7 +31,7 @@ export async function generateMetadata(props: DocPageProps): Promise<Metadata> {
     name: doc.title,
     description: doc.description,
     slug: doc.slug,
-    additionalKeywords: ['llmstxt-cli', 'CLI documentation', 'AI agent skills']
+    additionalKeywords: ['documentation', 'reference', 'workflow notes']
   })
 }
 
@@ -56,7 +57,7 @@ export default async function DocPage({ params }: DocPageProps) {
   }
 
   const breadcrumbItems = [
-    { name: 'Docs', href: getRoute('docs.list') },
+    { name: siteCopy.docsLabel, href: getRoute('docs.list') },
     { name: doc.title, href: getRoute('docs.doc', { slug }) }
   ]
 

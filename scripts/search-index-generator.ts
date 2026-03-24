@@ -7,9 +7,6 @@ interface SearchSourceEntry {
   category?: string
   content?: string
   description?: string
-  llmsFullUrl?: string
-  llmsTxtUrl?: string
-  llmsUrl?: string
   name?: string
   slug?: string
   url?: string
@@ -43,8 +40,6 @@ export function buildSearchIndex(
         category: entry.category || '',
         content: entry.content || '',
         description: entry.description || '',
-        llmsFullUrl: entry.llmsFullUrl || '',
-        llmsUrl: entry.llmsUrl || entry.llmsTxtUrl || '',
         name: entry.name || '',
         slug,
         url: entry.url || `${normalizedListingBasePath}/${slug}`,

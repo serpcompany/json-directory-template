@@ -243,13 +243,21 @@ function removeArtifactPath(path: string): void {
 }
 
 export function applyListingRouteBasePath(artifactDir: string, listingBasePath: string): void {
-  const normalizedBasePath = listingBasePath.replace(/^\/+|\/+$/g, '')
+  applyPublicRouteBasePath(artifactDir, 'websites', listingBasePath)
+}
 
-  if (!normalizedBasePath || normalizedBasePath === 'websites') {
+function applyPublicRouteBasePath(
+  artifactDir: string,
+  defaultBasePath: string,
+  publicBasePath: string
+): void {
+  const normalizedBasePath = publicBasePath.replace(/^\/+|\/+$/g, '')
+
+  if (!normalizedBasePath || normalizedBasePath === defaultBasePath) {
     return
   }
 
-  const defaultListingsPath = resolve(artifactDir, 'websites')
+  const defaultListingsPath = resolve(artifactDir, defaultBasePath)
   const targetListingsPath = resolve(artifactDir, normalizedBasePath)
 
   if (!existsSync(defaultListingsPath)) {
@@ -258,6 +266,21 @@ export function applyListingRouteBasePath(artifactDir: string, listingBasePath: 
 
   removeArtifactPath(targetListingsPath)
   renameSync(defaultListingsPath, targetListingsPath)
+}
+
+type ArtifactPublicRoutePaths = {
+  docsBasePath: string
+  listingBasePath: string
+  networkBasePath: string
+}
+
+export function applyConfiguredPublicRoutePaths(
+  artifactDir: string,
+  paths: ArtifactPublicRoutePaths
+): void {
+  applyListingRouteBasePath(artifactDir, paths.listingBasePath)
+  applyPublicRouteBasePath(artifactDir, 'docs', paths.docsBasePath)
+  applyPublicRouteBasePath(artifactDir, 'projects', paths.networkBasePath)
 }
 
 function pruneArtifactTree(path: string): void {
@@ -337,7 +360,11 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     showGuides: definition.features.showGuides,
     showProjects: definition.features.showProjects
   })
-  applyListingRouteBasePath(artifactDir, definition.routes.listingBasePath)
+  applyConfiguredPublicRoutePaths(artifactDir, {
+    docsBasePath: definition.routes.docsBasePath,
+    listingBasePath: definition.routes.listingBasePath,
+    networkBasePath: definition.routes.networkBasePath
+  })
 
   closeSync(openSync(noJekyllPath, 'w'))
   writeFileSync(cnamePath, `${definition.site.domain}\n`)

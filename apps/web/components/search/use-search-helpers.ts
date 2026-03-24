@@ -99,8 +99,6 @@ export function transformAndSanitizeEntries(entries: SearchIndexEntry[]): Websit
           name: 'Error processing result',
           description: '',
           website: '#',
-          llmsUrl: '#',
-          llmsFullUrl: '',
           category: '',
           publishedAt: '',
           categories: [],

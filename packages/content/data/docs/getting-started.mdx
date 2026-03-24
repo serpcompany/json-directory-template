@@ -1,108 +1,87 @@
 ---
 title: 'Getting Started'
-description: 'Install llmstxt-cli and set up AI agent skills in your project'
+description: 'Run the directory starter locally, configure a site, and build a static artifact'
 order: 1
 published: true
 ---
 
 # Getting Started
 
-<p className="mt-2 text-xl text-muted-foreground">Install llmstxt-cli and set up AI agent skills in your project in under a minute.</p>
+<p className="mt-2 text-xl text-muted-foreground">Get the starter running locally, point it at a checked-in site config, and ship a static build artifact.</p>
 
-## What is llmstxt-cli?
+## Before you start
 
-`llmstxt-cli` is a command-line tool that installs llms.txt documentation files from the [llms-txt-hub registry](/websites) directly into your project. These files give AI coding agents (Claude Code, GitHub Copilot, Cursor, etc.) up-to-date knowledge about the libraries and frameworks you use.
+- Use Node `24.13.1` from the repo `.nvmrc`
+- Use `pnpm` `10`
+- Decide which checked-in site you are building under `sites/<id>/`
 
-Instead of relying on training data that may be months old, your AI agent reads the latest docs as local skill files and produces more accurate, idiomatic code.
-
-## Installation
-
-You can run the CLI without installing it globally:
+## Install dependencies
 
 ```bash
-npx llmstxt-cli init
+nvm use
+pnpm install
 ```
 
-Or install it globally for repeated use:
+## Run the app locally
+
+For normal UI work, use the web app only:
 
 ```bash
-npm install -g llmstxt-cli
+pnpm dev
 ```
 
-## Quick start with `init`
+That starts the app on `http://localhost:3005`.
 
-The `init` command is the fastest way to get started. It scans your project's `package.json` (and other config files), finds matching llms.txt entries in the registry, and installs them:
+Use these variants when you need them:
+
+- `pnpm dev:all` runs the older full Turbo workspace loop
+- `pnpm --filter web dev:inspect` starts the web app with the Node inspector attached
+
+## Understand the checked-in site inputs
+
+The active starter keeps site identity and shell behavior in checked-in config files:
+
+- `sites/site-config.default.ts` defines the starter defaults
+- `sites/<id>/site-config.ts` holds sparse per-site overrides
+- `sites/<id>/site-content.ts` holds optional site-owned modules such as `externalResources` and `listingCliInstall`
+
+The current listing source of truth is usually `data/websites.json`, though a site-specific build step can transform another JSON file into that shape before export.
+
+## Build a static site artifact
+
+Build one site at a time:
 
 ```bash
-cd your-project
-npx llmstxt-cli init
+pnpm build:site -- --site your-site-id
 ```
 
-The interactive wizard will:
+The output lands under `dist/sites/<site-id>` based on the checked-in build config.
 
-1. **Detect your dependencies** - scans `package.json` for known libraries
-2. **Show matches** - lists registry entries that match your stack
-3. **Let you pick** - select which skills to install (all are selected by default)
-4. **Detect AI agents** - finds which agents are installed on your machine
-5. **Install files** - downloads llms.txt content into `.agents/skills/`
+## Useful checks
 
-### Non-interactive mode
-
-For CI or scripting, skip the prompts with `--yes`:
+Validate listing data before building:
 
 ```bash
-npx llmstxt-cli init --yes
+pnpm tsx scripts/validate-data.ts data/websites.json
 ```
 
-## What gets created
-
-After running `init`, your project will have:
-
-```
-your-project/
-  .agents/
-    skills/
-      react/
-        SKILL.md          # llms.txt content for React
-      next-js/
-        SKILL.md          # llms.txt content for Next.js
-      ...
-  .claude/
-    skills/
-      react -> ../../.agents/skills/react    # symlink for Claude Code
-      ...
-  CLAUDE.md               # updated with skill references
-```
-
-- **`.agents/skills/`** is the canonical location shared by universal agents (Codex, Gemini CLI, GitHub Copilot, Amp, Kimi Code CLI, OpenCode)
-- **Agent-specific directories** (e.g., `.claude/skills/`, `.cursor/skills/`) get symlinks pointing back to `.agents/skills/`
-- **`CLAUDE.md`** (and similar config files) are updated with references so your agent knows the skills exist
-
-## Installing a single skill
-
-If you already know which skill you want, use `install` directly:
+Run the main test suite:
 
 ```bash
-npx llmstxt-cli install stripe
+pnpm test
 ```
 
-Install multiple at once:
+Refresh the search index explicitly when you need to inspect the generated artifact:
 
 ```bash
-npx llmstxt-cli install react next-js tailwindcss
-```
-
-Use `--full` to prefer the extended `llms-full.txt` version when available:
-
-```bash
-npx llmstxt-cli install vercel-ai-sdk --full
+pnpm generate-search-index
 ```
 
 ## Next steps
 
-- See all available [commands](/docs/commands) and their options
-- Learn about [supported AI agents](/docs/agents) and how detection works
-- Review the [submit workflow](/docs/submit-workflow) if you are using the static starter without a backend
+- Review the [commands reference](/docs/commands) for the day-to-day scripts
+- Use the [AI-assisted workflow notes](/docs/agents) if you are making changes with coding agents
 - Check [JSON shapes](/docs/json-shapes) before editing `data/websites.json`
+- Review the [submit workflow](/docs/submit-workflow) before changing the GitHub handoff
 - Use the [rebrand checklist](/docs/rebrand-checklist) before swapping names, assets, or legal copy
-- Browse the [registry](/websites) to discover available skills
+- Browse the [directory](/websites) to review listing output

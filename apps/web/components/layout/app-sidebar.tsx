@@ -5,10 +5,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { FavoritesLink } from '@/components/ui/favorites-link'
 import { categories } from '@/lib/categories'
+import { externalResources } from '@/lib/external-resources'
 import { getRoute } from '@/lib/routes'
 import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
-import { tools } from '@/lib/tools'
 
 interface AppSidebarProps {
   currentCategory?: string
@@ -24,6 +24,9 @@ interface AppSidebarProps {
 export function AppSidebar({ currentCategory, featuredCount = 0 }: AppSidebarProps) {
   const pathname = usePathname()
   const isHomePage = pathname === '/'
+  const showExternalResources =
+    siteConfig.features.showExternalResources && externalResources.length > 0
+
   return (
     <div className="sticky top-16 hidden w-[240px] max-w-[240px] min-w-[240px] overflow-hidden sm:block h-screen border-r">
       <div className="p-4 space-y-6">
@@ -32,12 +35,12 @@ export function AppSidebar({ currentCategory, featuredCount = 0 }: AppSidebarPro
 
         {/* My Collection Section */}
         {siteConfig.features.showFavorites ? (
-        <div>
-          <h3 className="font-semibold text-sm mb-4 text-muted-foreground">My Collection</h3>
-          <nav className="space-y-1">
-            <FavoritesLink />
-          </nav>
-        </div>
+          <div>
+            <h3 className="font-semibold text-sm mb-4 text-muted-foreground">My Collection</h3>
+            <nav className="space-y-1">
+              <FavoritesLink />
+            </nav>
+          </div>
         ) : null}
 
         {/* Categories Section */}
@@ -57,9 +60,9 @@ export function AppSidebar({ currentCategory, featuredCount = 0 }: AppSidebarPro
                   ? 'text-foreground font-medium bg-accent'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
               }`}
-              >
-                <HomeIcon className="h-4 w-4" />
-                {siteCopy.allLabel}
+            >
+              <HomeIcon className="h-4 w-4" />
+              {siteCopy.allLabel}
             </a>
             <Link
               href="/featured"
@@ -90,28 +93,28 @@ export function AppSidebar({ currentCategory, featuredCount = 0 }: AppSidebarPro
           </nav>
         </div>
 
-        {/* Tools Section */}
-        {siteConfig.features.showDeveloperTools ? (
-        <div>
-          <h3 className="font-semibold text-sm mb-4 text-muted-foreground">Tools</h3>
-          <nav className="space-y-1">
-            {tools.map(tool => (
-              <Link
-                key={tool.slug}
-                href={tool.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between gap-2 px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors group"
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  <tool.icon className="h-4 w-4 flex-shrink-0" />
-                  <span className="truncate">{tool.name}</span>
-                </div>
-                <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-              </Link>
-            ))}
-          </nav>
-        </div>
+        {/* External resources section */}
+        {showExternalResources ? (
+          <div>
+            <h3 className="font-semibold text-sm mb-4 text-muted-foreground">Resources</h3>
+            <nav className="space-y-1">
+              {externalResources.map(resource => (
+                <Link
+                  key={resource.slug}
+                  href={resource.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between gap-2 px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors group"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <resource.icon className="h-4 w-4 flex-shrink-0" />
+                    <span className="truncate">{resource.name}</span>
+                  </div>
+                  <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                </Link>
+              ))}
+            </nav>
+          </div>
         ) : null}
       </div>
     </div>

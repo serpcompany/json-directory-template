@@ -9,10 +9,10 @@ import { SignOutButton } from '@/components/auth/sign-out-button'
 import { FavoritesLink } from '@/components/ui/favorites-link'
 import type { HeaderAuthState } from '@/lib/auth'
 import { categories } from '@/lib/categories'
+import { externalResources } from '@/lib/external-resources'
 import { getRoute } from '@/lib/routes'
 import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
-import { tools } from '@/lib/tools'
 
 interface MobileDrawerProps {
   authState?: HeaderAuthState
@@ -33,7 +33,8 @@ export function MobileDrawer({
   const pathname = usePathname()
   const isAuthenticated = authState?.isAuthenticated ?? false
   const isAuthConfigured = authState?.isConfigured ?? true
-  const showExternalTools = siteConfig.features.showDeveloperTools && tools.length > 0
+  const showExternalResources =
+    siteConfig.features.showExternalResources && externalResources.length > 0
 
   // Close drawer when route changes
   useEffect(() => {
@@ -142,7 +143,7 @@ export function MobileDrawer({
                   href={getRoute('projects')}
                   className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
                 >
-                  Projects
+                  {siteCopy.networkLabel}
                 </Link>
               ) : null}
               {siteConfig.features.showDocs ? (
@@ -150,7 +151,7 @@ export function MobileDrawer({
                   href={getRoute('docs.list')}
                   className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
                 >
-                  Docs
+                  {siteCopy.docsLabel}
                 </Link>
               ) : null}
               {siteConfig.features.showGuides ? (
@@ -181,12 +182,12 @@ export function MobileDrawer({
 
           {/* My Collection Section */}
           {siteConfig.features.showFavorites ? (
-          <div>
-            <h3 className="font-semibold text-sm mb-3 text-muted-foreground">My Collection</h3>
-            <nav className="space-y-1">
-              <FavoritesLink isMobile />
-            </nav>
-          </div>
+            <div>
+              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">My Collection</h3>
+              <nav className="space-y-1">
+                <FavoritesLink isMobile />
+              </nav>
+            </div>
           ) : null}
 
           {/* Categories */}
@@ -256,21 +257,21 @@ export function MobileDrawer({
             </nav>
           </div>
 
-          {showExternalTools ? (
+          {showExternalResources ? (
             <div>
-              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Tools</h3>
+              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Resources</h3>
               <nav className="space-y-1">
-                {tools.map(tool => (
+                {externalResources.map(resource => (
                   <Link
-                    key={tool.slug}
-                    href={tool.url}
+                    key={resource.slug}
+                    href={resource.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors group"
                   >
                     <div className="flex items-center gap-2 min-w-0">
-                      <tool.icon className="h-4 w-4 flex-shrink-0" />
-                      <span className="truncate">{tool.name}</span>
+                      <resource.icon className="h-4 w-4 flex-shrink-0" />
+                      <span className="truncate">{resource.name}</span>
                     </div>
                     <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                   </Link>

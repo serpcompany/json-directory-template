@@ -14,11 +14,15 @@ describe('loadCheckedInSite', () => {
     expect(config.content.listingSource.kind).toBe('trial-products-json')
     expect(config.site.domain).toBe('serpdownloaders.com')
     expect(config.routes.listingBasePath).toBe('websites')
+    expect(config.routes.docsBasePath).toBe('docs')
+    expect(config.routes.networkBasePath).toBe('network')
     expect(config.copy).toEqual({
+      docsLabel: 'Docs',
       listingName: {
         plural: 'listings',
         singular: 'listing'
       },
+      networkLabel: 'Network',
       submitLabel: 'Submit a Listing'
     })
     expect(config.features.showAuth).toBe(false)
@@ -40,7 +44,11 @@ describe('loadCheckedInSite', () => {
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     )
     expect(config.routes.listingBasePath).toBe('websites')
+    expect(config.routes.docsBasePath).toBe('docs')
+    expect(config.routes.networkBasePath).toBe('network')
     expect(config.copy.submitLabel).toBe('Submit a Listing')
+    expect(config.copy.docsLabel).toBe('Docs')
+    expect(config.copy.networkLabel).toBe('Network')
     expect(config.features.showNewsletter).toBe(true)
   })
 
@@ -51,7 +59,11 @@ describe('loadCheckedInSite', () => {
     expect(config.site.domain).toBe('example.com')
     expect(config.content.listingSource.kind).toBe('listing-json')
     expect(config.routes.listingBasePath).toBe('websites')
+    expect(config.routes.docsBasePath).toBe('docs')
+    expect(config.routes.networkBasePath).toBe('network')
     expect(config.copy.listingName.singular).toBe('listing')
+    expect(config.copy.docsLabel).toBe('Docs')
+    expect(config.copy.networkLabel).toBe('Network')
   })
 })
 
@@ -89,8 +101,10 @@ describe('resolveResolvedSiteConfig', () => {
       githubIssueOwner: 'serpcompany',
       githubIssueRepo: 'json-directory-template',
       id: 'serpdownloaders',
+      docsRouteBasePath: 'docs',
       listingRouteBasePath: 'websites',
       name: 'SERP Downloaders',
+      networkRouteBasePath: 'network',
       publicUrl: 'https://serpdownloaders.com',
       tagline: 'Download-focused product directory'
     })

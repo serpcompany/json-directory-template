@@ -57,7 +57,7 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
         </div>
         <p className="text-muted-foreground leading-relaxed text-pretty">
           {stripHtmlTags(website.description)} Browse this {siteCopy.listingName.singular} for
-          documentation links, category context, and key details that help visitors evaluate it
+          resource links, category context, and key details that help visitors evaluate it
           quickly.
         </p>
       </div>
@@ -71,7 +71,7 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
             className: 'capitalize'
           },
           { label: 'Type', value: siteCopy.listingName.singularTitle },
-          { label: 'Documentation', value: 'Linked resources available' },
+          { label: 'Resources', value: 'Helpful links and context' },
           {
             label: 'Added',
             value: website.publishedAt

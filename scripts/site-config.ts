@@ -52,12 +52,14 @@ const trialProductsSourceSchema = z.object({
 const siteCopyDefaults = defaultSiteConfig.copy
 
 const siteCopySchema = z.object({
+  docsLabel: z.string().min(1).default(siteCopyDefaults.docsLabel),
   listingName: z
     .object({
       plural: z.string().min(1).default(siteCopyDefaults.listingName.plural),
       singular: z.string().min(1).default(siteCopyDefaults.listingName.singular)
     })
     .default(siteCopyDefaults.listingName),
+  networkLabel: z.string().min(1).default(siteCopyDefaults.networkLabel),
   submitLabel: z.string().min(1).default(siteCopyDefaults.submitLabel)
 })
 
@@ -102,7 +104,9 @@ const checkedInSiteConfigSchema = z.object({
   features: featureFlagsSchema.default({}),
   id: z.string().min(1),
   routes: z.object({
-    listingBasePath: z.string().regex(/^[a-z0-9-]+$/).default('websites')
+    docsBasePath: z.string().regex(/^[a-z0-9-]+$/).default('docs'),
+    listingBasePath: z.string().regex(/^[a-z0-9-]+$/).default('websites'),
+    networkBasePath: z.string().regex(/^[a-z0-9-]+$/).default('network')
   }),
   site: z.object({
     description: z.string().min(1),
@@ -177,6 +181,7 @@ export function resolveResolvedSiteConfig(siteConfig: CheckedInSiteConfig) {
   return {
     copy: siteConfig.copy,
     description: siteConfig.site.description,
+    docsRouteBasePath: siteConfig.routes.docsBasePath,
     domain: siteConfig.site.domain,
     drBadge: resolveDrBadgeConfig(siteConfig.branding.drBadge),
     features: siteConfig.features,
@@ -189,6 +194,7 @@ export function resolveResolvedSiteConfig(siteConfig: CheckedInSiteConfig) {
     id: siteConfig.id,
     listingRouteBasePath: siteConfig.routes.listingBasePath,
     name: siteConfig.site.name,
+    networkRouteBasePath: siteConfig.routes.networkBasePath,
     publicUrl: siteConfig.site.publicUrl,
     redditUrl: siteConfig.social.redditUrl,
     tagline: siteConfig.site.tagline,

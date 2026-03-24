@@ -5,10 +5,9 @@ import type { WebsiteMetadata } from '@/lib/content-loader'
 const website: WebsiteMetadata = {
   category: 'developer-tools',
   description: 'Test website description',
-  llmsUrl: 'https://example.com/llms.txt',
-  name: 'Agent llms.txt',
+  name: 'Agent Docs',
   publishedAt: '2026-03-24',
-  slug: 'agent-llms-txt',
+  slug: 'agent-docs',
   website: 'https://example.com'
 }
 

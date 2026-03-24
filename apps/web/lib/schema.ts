@@ -179,17 +179,14 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
           '@type': 'Organization',
           name: website.name,
           url: website.website
-        },
-        ...(website.llmsUrl && {
-          documentation: website.llmsUrl
-        })
+        }
       },
       // TechArticle about the implementation
       {
         '@type': 'TechArticle',
         '@id': `${pageUrl}#article`,
         headline: `${website.name} Overview`,
-        description: `${website.description} Explore ${website.name}'s ${listingLabel}, documentation links, and related resources.`,
+        description: `${website.description} Explore ${website.name}'s ${listingLabel}, resource links, and related context.`,
         datePublished: website.publishedAt,
         dateModified: website.publishedAt,
         author: {
@@ -215,7 +212,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
         keywords: [
           website.name,
           `${listingLabel} details`,
-          'documentation links',
+          'resource links',
           categoryFormatted
         ].join(', ')
       },
@@ -229,7 +226,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
             name: `What is included in ${website.name}'s ${listingLabel}?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: `${website.name}'s ${listingLabel} includes its summary, category details, primary link, and any published documentation links included with the ${listingLabel}.`
+              text: `${website.name}'s ${listingLabel} includes its summary, category details, primary link, and any supplemental resources included with the ${listingLabel}.`
             }
           },
           {
@@ -237,7 +234,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
             name: `How do I access ${website.name}'s published links?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: `You can visit ${website.name} directly at ${website.website}.${website.llmsUrl ? ` This entry also links to published documentation at ${website.llmsUrl}.` : ''}${website.llmsFullUrl ? ` Additional extended documentation is linked at ${website.llmsFullUrl}.` : ''}`
+              text: `You can visit ${website.name} directly at ${website.website}.${website.resourceLinks && website.resourceLinks.length > 0 ? ' This entry also includes supplemental resource links alongside the main destination.' : ''}`
             }
           },
           {
@@ -265,7 +262,7 @@ export function generateCollectionSchema(websites: WebsiteMetadata[]): Collectio
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: `${SITE_NAME} Directory`,
-    description: 'Directory of websites, tools, and resources',
+    description: 'Directory of listings and resources',
     hasPart: websites.map(site => generateWebsiteSchema(site))
   }
 }

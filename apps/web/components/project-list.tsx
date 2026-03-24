@@ -1,6 +1,5 @@
 import { Badge } from '@thedaviddias/design-system/badge'
 import Link from 'next/link'
-import { LLMButton } from '@/components/buttons/llm-button'
 import { FaviconWithFallback } from '@/components/ui/favicon-with-fallback'
 import { getRoute } from '@/lib/routes'
 import { stripHtmlTags } from '@/lib/utils'
@@ -11,8 +10,10 @@ interface ProjectListProps {
     name: string
     description: string
     website: string
-    llmsUrl: string
-    llmsFullUrl?: string | null
+    resourceLinks?: Array<{
+      label: string
+      url: string
+    }>
     category?: string
     isUnofficial?: boolean
   }>
@@ -71,15 +72,17 @@ export function ProjectList({ items = [] }: ProjectListProps) {
                   </div>
                 </div>
                 <div className="mt-2 flex items-center gap-2">
-                  <LLMButton href={item.llmsUrl} type="llms" size="sm" className="relative z-20" />
-                  {item.llmsFullUrl && (
-                    <LLMButton
-                      href={item.llmsFullUrl}
-                      type="llms-full"
-                      size="sm"
-                      className="relative z-20"
-                    />
-                  )}
+                  {item.resourceLinks?.map(link => (
+                    <a
+                      key={`${link.label}-${link.url}`}
+                      href={link.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="relative z-20 rounded-full border border-border px-3 py-1 text-xs font-medium transition-colors hover:bg-muted"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
                   {item.category && (
                     <Badge variant="secondary" className="ml-2">
                       {item.category}

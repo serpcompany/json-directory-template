@@ -74,7 +74,7 @@ export function WebsitesWithLoadMore({
     <EmptyState
       title="No websites found"
       description="There are no websites available. Try checking back later or submit a new website."
-      actionLabel="Submit llms.txt"
+      actionLabel="Submit a Listing"
       actionHref={getRoute('submit')}
     />
   )

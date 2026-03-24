@@ -23,8 +23,8 @@ export function MDXTextarea({ value, onChange, placeholder }: MDXTextareaProps) 
 - **Developer Tools**: Build tools, SDKs, and integrations
 - **Data Processing**: How data is handled and transformed
 
-## About llms.txt Implementation
-Our llms.txt file provides comprehensive documentation about our platform's AI-ready content structure, making it easy for language models to understand and work with our system.`
+## Helpful Resources
+Highlight the docs, examples, support pages, or product details that help someone understand this listing quickly.`
 
   return (
     <div className="space-y-4">
@@ -80,9 +80,7 @@ Our llms.txt file provides comprehensive documentation about our platform's AI-r
             <Textarea
               value={value}
               onChange={e => onChange(e.target.value)}
-              placeholder={
-                placeholder || 'Describe the key aspects of the llms.txt implementation...'
-              }
+              placeholder={placeholder || 'Describe the key aspects of this listing...'}
               className="min-h-[200px] font-mono text-sm"
             />
             <div className="flex justify-end">

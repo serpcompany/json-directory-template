@@ -31,14 +31,14 @@ export function Footer() {
   if (siteConfig.features.showProjects) {
     resourceLinks.push({
       href: getRoute('projects'),
-      label: 'Projects'
+      label: siteCopy.networkLabel
     })
   }
 
   if (siteConfig.features.showDocs) {
     resourceLinks.push({
       href: getRoute('docs.list'),
-      label: 'Docs'
+      label: siteCopy.docsLabel
     })
   }
 

@@ -6,8 +6,8 @@ describe('about content', () => {
 
     expect(aboutPage).not.toBeNull()
     expect(aboutPage?.slug).toBe('about')
-    expect(aboutPage?.introTitle).toMatch(/about llms\.txt hub/i)
+    expect(aboutPage?.introTitle).toMatch(/about this directory/i)
     expect(aboutPage?.steps).toHaveLength(3)
-    expect(aboutPage?.primaryCtaLabel).toBe('Submit Your llms.txt')
+    expect(aboutPage?.primaryCtaLabel).toBe('Submit a Listing')
   })
 })

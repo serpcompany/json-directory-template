@@ -15,12 +15,17 @@ const websiteJsonEntrySchema = z
     favicon: z.string().url('favicon must be a valid URL').optional(),
     featured: z.boolean().optional(),
     isUnofficial: z.boolean().optional(),
-    llmsFullUrl: z.string().url('llmsFullUrl must be a valid URL').optional(),
-    llmsTxtUrl: z.string().url('llmsTxtUrl must be a valid URL').optional(),
-    llmsUrl: z.string().url('llmsUrl must be a valid URL').optional(),
     name: z.string().trim().min(1, 'name is required'),
     priority: websitePrioritySchema.optional(),
     publishedAt: z.string().regex(publishedAtPattern, 'publishedAt must use YYYY-MM-DD format'),
+    resourceLinks: z
+      .array(
+        z.object({
+          label: z.string().trim().min(1, 'resourceLinks.label is required'),
+          url: z.string().url('resourceLinks.url must be a valid URL')
+        })
+      )
+      .optional(),
     slug: z.string().trim().min(1, 'slug must not be empty').optional(),
     website: z.string().url('website must be a valid URL').optional()
   })
@@ -30,13 +35,6 @@ const websiteJsonEntrySchema = z
         code: z.ZodIssueCode.custom,
         message: 'website or domain is required',
         path: ['website']
-      })
-    }
-    if (!entry.llmsUrl && !entry.llmsTxtUrl) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'llmsUrl or llmsTxtUrl is required',
-        path: ['llmsUrl']
       })
     }
   })

@@ -16,11 +16,32 @@ export const dynamic = 'force-static'
  */
 function getStaticRouteSlugs(): string[] {
   return [
-    ...(siteConfig.features.showProjects ? ['projects'] : []),
+    ...(siteConfig.features.showProjects ? [stripLeadingSlash(getRoute('projects'))] : []),
+    ...(siteConfig.features.showDocs ? [stripLeadingSlash(getRoute('docs.list'))] : []),
     siteConfig.listingRouteBasePath,
     ...(siteConfig.features.showGuides ? ['guides'] : []),
     'about'
   ]
+}
+
+function stripLeadingSlash(path: string): string {
+  return path.replace(/^\/+/, '')
+}
+
+function mapContentPageToPublicPath(page: string): string {
+  if (page === 'docs/getting-started') {
+    return stripLeadingSlash(getRoute('docs.list'))
+  }
+
+  if (page.startsWith('docs/')) {
+    return stripLeadingSlash(
+      getRoute('docs.doc', {
+        slug: page.slice('docs/'.length)
+      })
+    )
+  }
+
+  return page
 }
 
 /**
@@ -153,12 +174,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       if (page.startsWith('u/')) continue
       if (!siteConfig.features.showDocs && (page === 'docs' || page.startsWith('docs/'))) continue
       if (!siteConfig.features.showGuides && (page === 'guides' || page.startsWith('guides/'))) continue
+      if (page === 'docs/getting-started' && siteConfig.features.showDocs) continue
+
+      const publicPagePath = mapContentPageToPublicPath(page)
 
       routes.push({
-        url: `${baseUrl}/${page}`,
+        url: `${baseUrl}/${publicPagePath}`,
         lastModified: BUILD_DATE,
         changeFrequency: 'weekly',
-        priority: getPriority(page)
+        priority: getPriority(publicPagePath)
       })
     }
   } catch (error) {

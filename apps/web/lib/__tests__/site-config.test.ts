@@ -14,18 +14,22 @@ describe('resolveSiteConfig', () => {
     )
     expect(config.publicUrl).toBe('https://serpdownloaders.com')
     expect(config.listingRouteBasePath).toBe('websites')
+    expect(config.docsRouteBasePath).toBe('docs')
+    expect(config.networkRouteBasePath).toBe('network')
     expect(config.copy).toEqual({
+      docsLabel: 'Docs',
       listingName: {
         plural: 'listings',
         singular: 'listing'
       },
+      networkLabel: 'Network',
       submitLabel: 'Submit a Listing'
     })
     expect(config.features).toEqual({
       showAuth: false,
       showCreatorProjects: false,
       showDocs: false,
-      showDeveloperTools: false,
+      showExternalResources: false,
       showFavorites: false,
       showFeaturedGuides: false,
       showGuides: false,
@@ -43,6 +47,10 @@ describe('resolveSiteConfig', () => {
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     )
     expect(config.listingRouteBasePath).toBe('websites')
+    expect(config.docsRouteBasePath).toBe('docs')
+    expect(config.networkRouteBasePath).toBe('network')
+    expect(config.copy.docsLabel).toBe('Docs')
+    expect(config.copy.networkLabel).toBe('Network')
     expect(config.copy.submitLabel).toBe('Submit a Listing')
   })
 
@@ -53,11 +61,15 @@ describe('resolveSiteConfig', () => {
     expect(config.name).toBe('Directory Starter')
     expect(config.domain).toBe('example.com')
     expect(config.listingRouteBasePath).toBe('websites')
+    expect(config.docsRouteBasePath).toBe('docs')
+    expect(config.networkRouteBasePath).toBe('network')
     expect(config.copy).toEqual({
+      docsLabel: 'Docs',
       listingName: {
         plural: 'listings',
         singular: 'listing'
       },
+      networkLabel: 'Network',
       submitLabel: 'Submit a Listing'
     })
   })

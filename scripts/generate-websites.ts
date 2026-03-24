@@ -7,13 +7,15 @@ interface Website {
   name: string
   website: string
   description: string
-  llmsUrl: string
-  llmsFullUrl?: string
   category: string
   favicon: string
   featured?: boolean
   priority?: 'high' | 'low' | 'medium'
   publishedAt: string
+  resourceLinks?: Array<{
+    label: string
+    url: string
+  }>
 }
 
 // Primary categories (tools and platforms only)
@@ -86,13 +88,12 @@ function generateWebsitesJson(): void {
         name: data.name,
         website: data.website,
         description: data.description,
-        llmsUrl: data.llmsUrl,
-        ...(data.llmsFullUrl && { llmsFullUrl: data.llmsFullUrl }),
         category: data.category?.replace(/'/g, ''), // Remove quotes from category
         favicon: getFaviconUrl(data.website),
         featured: Boolean(data.featured),
         priority: data.priority,
-        publishedAt: data.publishedAt
+        publishedAt: data.publishedAt,
+        resourceLinks: data.resourceLinks
       }
     })
     .filter(website => {

@@ -8,21 +8,21 @@ import { FeaturedProjectsSection } from '@/components/sections/featured-projects
 import { HeroSection } from '@/components/sections/hero-section'
 import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { RecentlyAddedSection } from '@/components/sections/recently-added-section'
-import { ToolsSection } from '@/components/sections/tools-section'
+import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
 import { StaticWebsitesList } from '@/components/static-websites-list'
 import { generateBaseMetadata, generateWebsiteSchema, KEYWORDS } from '@/lib/seo/seo-config'
 import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: `${siteConfig.name} Directory of ${siteCopy.listingName.pluralTitle}, Tools, and Resources`,
+  title: `${siteConfig.name} Directory of ${siteCopy.listingName.pluralTitle} and Resources`,
   description:
-    `${siteConfig.tagline}. Browse curated ${siteCopy.listingName.plural}, tools, and documentation links in one searchable directory.`,
+    `${siteConfig.tagline}. Browse curated ${siteCopy.listingName.plural}, resources, and documentation links in one searchable directory.`,
   keywords: [
     ...KEYWORDS.homepage,
     ...KEYWORDS.global,
     'directory listings',
-    'curated tools',
+    'curated resources',
     'documentation links',
     'resource directory',
     'searchable directory'
@@ -67,7 +67,7 @@ export default async function Home() {
               <StaticWebsitesList websites={sortedProjects} totalCount={totalCount} />
             </section>
 
-            {siteConfig.features.showDeveloperTools && <ToolsSection />}
+            {siteConfig.features.showExternalResources && <ExternalResourcesSection />}
             {siteConfig.features.showFeaturedGuides && (
               <FeaturedGuidesSection guides={featuredGuides} />
             )}

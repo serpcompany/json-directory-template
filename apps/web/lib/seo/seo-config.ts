@@ -47,8 +47,8 @@ export const ROBOTS_CONFIG = {
 
 // Keywords by page type
 export const KEYWORDS = {
-  global: [DIRECTORY_LISTINGS_KEYWORD, 'tools directory', 'resources', 'documentation', 'discover'],
-  homepage: [SITE_NAME, DIRECTORY_LISTINGS_KEYWORD, 'tools directory', 'resources'],
+  global: [DIRECTORY_LISTINGS_KEYWORD, 'listing directory', 'resources', 'documentation', 'discover'],
+  homepage: [SITE_NAME, DIRECTORY_LISTINGS_KEYWORD, 'listing directory', 'resources'],
   categories: {
     ai: ['AI tools', 'artificial intelligence', 'machine learning', 'neural networks'],
     'developer-tools': ['developer tools', 'programming', 'software development', 'coding tools'],
@@ -179,8 +179,8 @@ export function generateDynamicMetadata(options: {
       title = `${name} - News & Updates`
       break
     case 'doc':
-      path = `/docs/${slug}`
-      title = `${name} - Documentation`
+      path = getRoute('docs.doc', { slug })
+      title = `${name} - ${siteCopy.docsLabel}`
       break
   }
 
@@ -193,7 +193,10 @@ export function generateDynamicMetadata(options: {
   })
 
   // Add article metadata for guides, news, and websites
-  if ((type === 'guide' || type === 'news' || type === 'website' || type === 'listing') && publishedAt) {
+  if (
+    (type === 'guide' || type === 'news' || type === 'website' || type === 'listing') &&
+    publishedAt
+  ) {
     metadata.openGraph = {
       ...metadata.openGraph,
       type: 'article',

@@ -13,8 +13,6 @@ export interface WebsiteMetadata {
   description: string
   categories: string[]
   tags: string[]
-  llmsUrl: string
-  llmsFullUrl: string
   category: string
   publishedAt: string
 }
@@ -66,8 +64,6 @@ export function transformToWebsiteMetadata(entry: SearchIndexEntry): WebsiteMeta
       description,
       categories,
       tags: [],
-      llmsUrl: entry.llmsUrl || '',
-      llmsFullUrl: entry.llmsFullUrl || '',
       category: categories[0] || '',
       publishedAt: ''
     }
@@ -86,8 +82,6 @@ export function transformToWebsiteMetadata(entry: SearchIndexEntry): WebsiteMeta
       description: '',
       categories: [],
       tags: [],
-      llmsUrl: '',
-      llmsFullUrl: '',
       category: '',
       publishedAt: ''
     }

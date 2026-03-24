@@ -12,6 +12,7 @@ import {
 export type SiteConfig = {
   copy: SiteCopyConfig
   description: string
+  docsRouteBasePath: string
   domain: string
   drBadge: ResolvedDrBadge
   features: SiteFeatureFlags
@@ -24,6 +25,7 @@ export type SiteConfig = {
   id: string
   listingRouteBasePath: string
   name: string
+  networkRouteBasePath: string
   publicUrl: string
   redditUrl: string
   tagline: string
@@ -54,6 +56,7 @@ export function resolveSiteConfig(
   return {
     copy: configuredSite.copy,
     description: configuredSite.site.description,
+    docsRouteBasePath: configuredSite.routes.docsBasePath,
     domain: configuredSite.site.domain,
     drBadge: resolveDrBadgeConfig(configuredSite.branding.drBadge),
     features: configuredSite.features,
@@ -66,6 +69,7 @@ export function resolveSiteConfig(
     id: configuredSite.id,
     listingRouteBasePath: configuredSite.routes.listingBasePath,
     name: configuredSite.site.name,
+    networkRouteBasePath: configuredSite.routes.networkBasePath,
     publicUrl: configuredSite.site.publicUrl,
     redditUrl: configuredSite.social.redditUrl,
     tagline: configuredSite.site.tagline,

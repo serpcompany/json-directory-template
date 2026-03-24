@@ -4,14 +4,11 @@ import { useState } from 'react'
 import { buildSubmissionIssueUrl } from '@/lib/github-issue'
 import { categories } from '@/lib/categories'
 import { siteCopy } from '@/lib/site-copy'
-import { generateLlmsFullUrl, generateLlmsUrl } from './submit-form-utils'
 import { SubmitFormGuidelines } from './submit-form-guidelines'
 
 interface SubmissionFormState {
   category: string
   description: string
-  llmsFullUrl: string
-  llmsUrl: string
   name: string
   notes: string
   website: string
@@ -20,8 +17,6 @@ interface SubmissionFormState {
 const INITIAL_FORM_STATE: SubmissionFormState = {
   category: '',
   description: '',
-  llmsFullUrl: '',
-  llmsUrl: '',
   name: '',
   notes: '',
   website: ''
@@ -41,29 +36,12 @@ export function GitHubIssueSubmitForm() {
     }))
   }
 
-  function autofillLlmsFields(): void {
-    if (!formState.website) {
-      return
-    }
-
-    const suggestedLlmsUrl = generateLlmsUrl(formState.website)
-    const suggestedLlmsFullUrl = generateLlmsFullUrl(formState.website)
-
-    setFormState(currentState => ({
-      ...currentState,
-      llmsUrl: currentState.llmsUrl || suggestedLlmsUrl,
-      llmsFullUrl: currentState.llmsFullUrl || suggestedLlmsFullUrl
-    }))
-  }
-
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault()
 
     const issueUrl = buildSubmissionIssueUrl({
       category: formState.category,
       description: formState.description,
-      llmsFullUrl: formState.llmsFullUrl,
-      llmsUrl: formState.llmsUrl,
       name: formState.name,
       notes: formState.notes,
       website: formState.website
@@ -72,8 +50,7 @@ export function GitHubIssueSubmitForm() {
     window.location.assign(issueUrl)
   }
 
-  const isSubmitDisabled =
-    !formState.name || !formState.website || !formState.llmsUrl || !formState.category
+  const isSubmitDisabled = !formState.name || !formState.website || !formState.category
 
   return (
     <div className="space-y-8">
@@ -127,33 +104,9 @@ export function GitHubIssueSubmitForm() {
               required
               type="url"
               value={formState.website}
-              onBlur={autofillLlmsFields}
               onChange={event => updateField('website', event.target.value)}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               placeholder="https://example.com"
-            />
-          </label>
-
-          <label className="space-y-2">
-            <span className="text-sm font-medium">llms.txt URL</span>
-            <input
-              required
-              type="url"
-              value={formState.llmsUrl}
-              onChange={event => updateField('llmsUrl', event.target.value)}
-              className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              placeholder="https://example.com/llms.txt"
-            />
-          </label>
-
-          <label className="space-y-2">
-            <span className="text-sm font-medium">llms-full URL</span>
-            <input
-              type="url"
-              value={formState.llmsFullUrl}
-              onChange={event => updateField('llmsFullUrl', event.target.value)}
-              className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              placeholder="https://example.com/llms-full.txt"
             />
           </label>
         </div>
@@ -164,7 +117,7 @@ export function GitHubIssueSubmitForm() {
             value={formState.description}
             onChange={event => updateField('description', event.target.value)}
             className="min-h-32 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            placeholder={`A short summary of what this ${siteCopy.listingName.singular} covers and why its llms.txt is useful.`}
+            placeholder={`A short summary of what this ${siteCopy.listingName.singular} covers and why it is useful.`}
           />
         </label>
 

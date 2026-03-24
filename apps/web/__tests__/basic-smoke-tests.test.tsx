@@ -162,9 +162,11 @@ describe('Basic Component Rendering', () => {
       expect(container).toBeInTheDocument()
     })
 
-    it('should render ToolsSection component', async () => {
-      const { ToolsSection } = await import('../components/sections/tools-section')
-      const { container } = render(<ToolsSection />)
+    it('should render ExternalResourcesSection component', async () => {
+      const { ExternalResourcesSection } = await import(
+        '../components/sections/external-resources-section'
+      )
+      const { container } = render(<ExternalResourcesSection />)
       expect(container).toBeInTheDocument()
     })
   })
@@ -184,6 +186,9 @@ describe('Basic Component Rendering', () => {
       expect(typeof result).toBe('string')
       expect(result).toBe('/')
       expect(getRoute('listing.detail', { slug: 'example' })).toBe('/websites/example')
+      expect(getRoute('docs.list')).toBe('/docs')
+      expect(getRoute('docs.doc', { slug: 'getting-started' })).toBe('/docs/getting-started')
+      expect(getRoute('projects')).toBe('/network')
     })
 
     it('should export categories data', async () => {

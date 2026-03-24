@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { WebsiteLLMsSection } from '@/components/website/website-llms-section'
+import { WebsiteResourcesSection } from '@/components/website/website-resources-section'
 import { WebsiteRelatedProjects } from '@/components/website/website-related-projects'
 
 jest.mock('@/components/ui/favorite-button', () => ({
@@ -10,19 +10,27 @@ const sampleWebsite = {
   slug: 'example-project',
   name: 'Example Project',
   description: 'A test directory entry',
+  resourceLinks: [
+    {
+      label: 'Support Docs',
+      url: 'https://example.com/docs'
+    }
+  ],
   website: 'https://example.com',
-  llmsUrl: 'https://example.com/llms.txt',
-  llmsFullUrl: 'https://example.com/llms-full.txt',
   category: 'developer-tools',
   publishedAt: '2026-03-22'
 }
 
 describe('website surface copy', () => {
-  it('uses generic documentation copy for file links', () => {
-    render(<WebsiteLLMsSection website={sampleWebsite} />)
+  it('uses generic resource copy for supplemental links', () => {
+    render(<WebsiteResourcesSection website={sampleWebsite} />)
 
-    expect(screen.getByRole('heading', { name: /documentation links/i })).toBeInTheDocument()
-    expect(screen.getByText(/published llms\.txt files for this entry/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /resources/i })).toBeInTheDocument()
+    expect(screen.getByText(/helpful links for this entry/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /support docs/i })).toHaveAttribute(
+      'href',
+      'https://example.com/docs'
+    )
   })
 
   it('uses generic related-entry copy on website detail pages', () => {

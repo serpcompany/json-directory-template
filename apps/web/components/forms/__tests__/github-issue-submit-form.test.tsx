@@ -11,6 +11,7 @@ describe('GitHubIssueSubmitForm', () => {
     expect(screen.getByLabelText(/^name$/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/listing url/i)).toBeInTheDocument()
     expect(screen.getByText(/the main url for the listing you are submitting/i)).toBeInTheDocument()
+    expect(screen.queryByLabelText(/llms/i)).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/project name/i)).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/website url/i)).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /llmstxt\\.org/i })).not.toBeInTheDocument()

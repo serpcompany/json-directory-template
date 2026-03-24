@@ -6,18 +6,20 @@ import remarkGfm from 'remark-gfm'
 import { components } from '@/components/mdx'
 import { getDocBySlug } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
-import { SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
+import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
+import { siteCopy } from '@/lib/site-copy'
+import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: `Documentation - ${SITE_NAME}`,
-  description: `Reference documentation, setup notes, and workflow details for ${SITE_NAME}.`,
-  path: '/docs',
+  title: `${siteCopy.docsLabel} - ${siteConfig.name}`,
+  description: `Reference docs, setup notes, and workflow details for ${siteConfig.name}.`,
+  path: getRoute('docs.list'),
   keywords: [
     'documentation',
     'setup notes',
     'workflow reference',
     'starter docs',
-    `${SITE_NAME} documentation`
+    `${siteConfig.name} documentation`
   ]
 })
 
@@ -30,7 +32,10 @@ export default async function DocsPage() {
 
   return (
     <article>
-      <Breadcrumb items={[{ name: 'Docs', href: getRoute('docs.list') }]} baseUrl={SITE_PUBLIC_URL} />
+      <Breadcrumb
+        items={[{ name: siteCopy.docsLabel, href: getRoute('docs.list') }]}
+        baseUrl={SITE_PUBLIC_URL}
+      />
       <div className="space-y-2 mt-6 mb-8">
         <h1 className="text-4xl font-bold tracking-tight">{doc.title}</h1>
         <p className="text-lg text-muted-foreground">{doc.description}</p>

@@ -40,24 +40,26 @@ export type ListingSourceConfig =
     }
 
 export type SiteCopyConfig = {
+  docsLabel: string
   listingName: {
     plural: string
     singular: string
   }
+  networkLabel: string
   submitLabel: string
 }
 
-export type SiteToolIcon =
+export type SiteExternalResourceIcon =
   | 'chrome'
   | 'code2'
   | 'command'
   | 'gitBranch'
   | 'terminal'
 
-export type SiteTool = {
+export type SiteExternalResource = {
   description: string
   href: string
-  icon: SiteToolIcon
+  icon: SiteExternalResourceIcon
   imageAlt?: string
   imageSrc?: string
   name: string
@@ -69,9 +71,17 @@ export type SiteListingCliInstall = {
   installTargetByListingSlug: Record<string, string>
 }
 
+export type SiteNetworkLink = {
+  description: string
+  href: string
+  label: string
+  title: string
+}
+
 export type SiteOwnedContent = {
-  externalTools: SiteTool[]
+  externalResources: SiteExternalResource[]
   listingCliInstall: SiteListingCliInstall | null
+  networkLinks: SiteNetworkLink[]
 }
 
 export type DeployConfig = {
@@ -85,7 +95,7 @@ export type SiteFeatureFlags = {
   showAuth: boolean
   showCreatorProjects: boolean
   showDocs: boolean
-  showDeveloperTools: boolean
+  showExternalResources: boolean
   showFavorites: boolean
   showFeaturedGuides: boolean
   showGuides: boolean
@@ -113,7 +123,9 @@ export type CheckedInSiteConfig = {
   features: SiteFeatureFlags
   id: string
   routes: {
+    docsBasePath: string
     listingBasePath: string
+    networkBasePath: string
   }
   site: {
     description: string

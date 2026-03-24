@@ -18,15 +18,15 @@ export function SubmitFormGuidelines() {
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-start">
               <span className="text-primary mr-2 mt-1">•</span>
-              <span>A public llms.txt file that AI assistants can access</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-primary mr-2 mt-1">•</span>
               <span>The main URL for the {listingLabel} you are submitting</span>
             </li>
             <li className="flex items-start">
               <span className="text-primary mr-2 mt-1">•</span>
               <span>A short description that explains what the {listingLabel} covers</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-primary mr-2 mt-1">•</span>
+              <span>Any helpful docs, examples, or support links in your reviewer notes</span>
             </li>
           </ul>
         </div>

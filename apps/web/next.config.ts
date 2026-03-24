@@ -3,6 +3,7 @@ import { withContentCollections } from '@content-collections/next'
 import withMDX from '@next/mdx'
 import { baseConfig, withAnalyzer } from '@thedaviddias/config-next'
 import type { NextConfig } from 'next'
+import { defaultSiteConfig, resolveCheckedInSiteConfig } from '../../sites'
 import { isStaticExportBuild } from './lib/runtime-mode'
 
 export const INTERNAL_PACKAGES = [
@@ -13,6 +14,38 @@ export const INTERNAL_PACKAGES = [
   '@thedaviddias/logging',
   '@thedaviddias/utils'
 ]
+
+function normalizeBasePath(basePath: string): string {
+  return basePath.replace(/^\/+|\/+$/g, '')
+}
+
+function buildPublicRoute(basePath: string): string {
+  return `/${normalizeBasePath(basePath)}`
+}
+
+function createAliasRewrites(sourceBasePath: string, destinationBasePath: string) {
+  if (sourceBasePath === destinationBasePath) {
+    return []
+  }
+
+  return [
+    {
+      source: buildPublicRoute(sourceBasePath),
+      destination: buildPublicRoute(destinationBasePath)
+    },
+    {
+      source: `${buildPublicRoute(sourceBasePath)}/:path*`,
+      destination: `${buildPublicRoute(destinationBasePath)}/:path*`
+    }
+  ]
+}
+
+const runtimeSiteConfig = resolveCheckedInSiteConfig(
+  process.env.NEXT_PUBLIC_SITE_ID || process.env.SITE_ID || defaultSiteConfig.id
+)
+const listingBasePath = normalizeBasePath(runtimeSiteConfig.routes.listingBasePath)
+const docsBasePath = normalizeBasePath(runtimeSiteConfig.routes.docsBasePath)
+const networkBasePath = normalizeBasePath(runtimeSiteConfig.routes.networkBasePath)
 
 let nextConfig: NextConfig = {
   ...baseConfig,
@@ -69,6 +102,14 @@ let nextConfig: NextConfig = {
     ]
   },
 
+  rewrites: async () => ({
+    beforeFiles: [
+      ...createAliasRewrites(listingBasePath, 'websites'),
+      ...createAliasRewrites(docsBasePath, 'docs'),
+      ...createAliasRewrites(networkBasePath, 'projects')
+    ]
+  }),
+
   redirects: async () => {
     return [
       {
@@ -78,9 +119,21 @@ let nextConfig: NextConfig = {
       },
       {
         source: '/website/:path*',
-        destination: '/websites/:path*',
+        destination: `${buildPublicRoute(listingBasePath)}/:path*`,
         permanent: true
-      }
+      },
+      ...createAliasRewrites('websites', listingBasePath).map(rule => ({
+        ...rule,
+        permanent: true
+      })),
+      ...createAliasRewrites('docs', docsBasePath).map(rule => ({
+        ...rule,
+        permanent: true
+      })),
+      ...createAliasRewrites('projects', networkBasePath).map(rule => ({
+        ...rule,
+        permanent: true
+      }))
     ]
   }
 }

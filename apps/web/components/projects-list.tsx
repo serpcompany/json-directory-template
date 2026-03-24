@@ -30,7 +30,6 @@ function isValidWebsite(website: any): website is WebsiteMetadata {
     typeof website.name === 'string' &&
     typeof website.description === 'string' &&
     typeof website.website === 'string' &&
-    typeof website.llmsUrl === 'string' &&
     typeof website.category === 'string' &&
     typeof website.publishedAt === 'string'
 

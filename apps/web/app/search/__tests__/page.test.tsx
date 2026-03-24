@@ -7,10 +7,10 @@ jest.mock('@/components/search/search-results', () => ({
 }))
 
 describe('SearchPage', () => {
-  it('omits the external tools nav when developer tools are disabled', () => {
+  it('omits the external resources nav when external resources are disabled', () => {
     render(<SearchPage />)
 
-    expect(screen.queryByRole('heading', { name: 'Tools' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Resources' })).not.toBeInTheDocument()
     expect(screen.queryByText('Chrome Extension')).not.toBeInTheDocument()
     expect(screen.getByText(/searching across all listings/i)).toBeInTheDocument()
     expect(screen.queryByText(/searching across all listings and tools/i)).not.toBeInTheDocument()

@@ -64,8 +64,6 @@ const mockResults = [
     category: 'Tools',
     categories: ['Tools'],
     tags: ['test', 'example'],
-    llmsUrl: 'https://example.com/llms.txt',
-    llmsFullUrl: 'https://example.com/llms-full.txt',
     publishedAt: '2023-01-01'
   },
   {
@@ -77,8 +75,6 @@ const mockResults = [
     category: 'Education',
     categories: ['Education'],
     tags: ['learning', 'education'],
-    llmsUrl: 'https://another.com/llms.txt',
-    llmsFullUrl: 'https://another.com/llms-full.txt',
     publishedAt: '2023-01-02'
   },
   {
@@ -90,8 +86,6 @@ const mockResults = [
     category: 'Tools',
     categories: ['Tools'],
     tags: ['utility', 'tools'],
-    llmsUrl: 'https://third.com/llms.txt',
-    llmsFullUrl: 'https://third.com/llms-full.txt',
     publishedAt: '2023-01-03'
   }
 ]
@@ -152,7 +146,10 @@ describe('SearchResults', () => {
     render(<SearchResults />)
 
     expect(screen.getByText('Start Your Search')).toBeInTheDocument()
-    expect(screen.getByText(/Type something in the search bar above/)).toBeInTheDocument()
+    expect(
+      screen.getByText('Type something in the search bar above to find listings and resources.')
+    ).toBeInTheDocument()
+    expect(screen.queryByText(/tools, and resources/i)).not.toBeInTheDocument()
     expect(screen.getByText('Explore All Listings')).toBeInTheDocument()
   })
 
@@ -207,8 +204,6 @@ describe('SearchResults', () => {
         category: 'Education',
         categories: ['Education'],
         tags: ['learning'],
-        llmsUrl: 'https://fourth.com/llms.txt',
-        llmsFullUrl: 'https://fourth.com/llms-full.txt',
         publishedAt: '2023-01-04'
       }
     ]

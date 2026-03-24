@@ -36,7 +36,7 @@ export function HeroSearch() {
       <div className="relative">
         <input
           type="text"
-          placeholder="Find AI-ready documentation and tools..."
+          placeholder="Find listings, resources, and docs..."
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           className="w-full rounded-lg border border-input bg-background px-4 py-3 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 shadow-sm"

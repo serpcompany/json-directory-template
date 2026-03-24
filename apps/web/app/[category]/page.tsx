@@ -7,7 +7,7 @@ import { JsonLd } from '@/components/json-ld'
 import { AppSidebar } from '@/components/layout/app-sidebar'
 import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section'
 import { NewsletterSection } from '@/components/sections/newsletter-section'
-import { ToolsSection } from '@/components/sections/tools-section'
+import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
 import { categories, getCategoryBySlug } from '@/lib/categories'
 import { getGuides } from '@/lib/content-loader'
 import { getCategorySEO } from '@/lib/seo/category-seo'
@@ -217,7 +217,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               />
             </section>
 
-            {siteConfig.features.showDeveloperTools && <ToolsSection />}
+            {siteConfig.features.showExternalResources && <ExternalResourcesSection />}
             {siteConfig.features.showFeaturedGuides && (
               <FeaturedGuidesSection guides={featuredGuides} />
             )}
