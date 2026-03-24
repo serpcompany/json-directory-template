@@ -139,9 +139,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 <WebsiteContentSection website={project} />
 
                 {/* Tools Section */}
-                <section className="animate-fade-in-up opacity-0 stagger-5">
-                  <ToolsSection layout="default" showImages={false} />
-                </section>
+                {siteConfig.features.showDeveloperTools && (
+                  <section className="animate-fade-in-up opacity-0 stagger-5">
+                    <ToolsSection layout="default" showImages={false} />
+                  </section>
+                )}
               </div>
 
               {/* Sidebar column */}

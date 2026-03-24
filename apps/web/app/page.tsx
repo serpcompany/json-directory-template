@@ -66,10 +66,12 @@ export default async function Home() {
               <StaticWebsitesList websites={sortedProjects} totalCount={totalCount} />
             </section>
 
-            <ToolsSection />
-            <FeaturedGuidesSection guides={featuredGuides} />
-            <CreatorProjectsSection />
-            <NewsletterSection />
+            {siteConfig.features.showDeveloperTools && <ToolsSection />}
+            {siteConfig.features.showFeaturedGuides && (
+              <FeaturedGuidesSection guides={featuredGuides} />
+            )}
+            {siteConfig.features.showCreatorProjects && <CreatorProjectsSection />}
+            {siteConfig.features.showNewsletter && <NewsletterSection />}
           </div>
         </div>
       </div>

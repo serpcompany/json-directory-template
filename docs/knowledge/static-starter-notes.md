@@ -8,11 +8,14 @@
 
 ## Website Data
 
-- `pnpm generate-websites` refreshes `data/websites.json` into the current JSON-first schema.
+- `data/websites.json` is the active website-entry source for the current starter.
+- `pnpm tsx scripts/validate-data.ts data/websites.json` validates the active JSON source.
+- Site-specific build flows can transform alternative JSON inputs into this same shape during build time.
 - The active loader now expects `slug`, `website`, `llmsUrl`, optional `llmsFullUrl`, and metadata like `featured` / `priority`.
 - The formal schema for raw JSON website entries now lives in `apps/web/lib/website-schema.ts`.
 - Optional `content` in `data/websites.json` now flows through the JSON loader and can power the detail page body.
 - Prefer `automation-workflow` as the automation category slug. The loader still normalizes the older `integration-automation` value during the transition.
+- Treat `packages/content/data/websites/**` as legacy/reference website content unless and until a future migration path is formalized.
 
 ## Docs Content
 
@@ -24,6 +27,7 @@
 - Keep representative page references in `docs/knowledge/reference-surfaces.md` when you want to preserve old patterns without leaving whole features active.
 - Use the decision labels in `docs/knowledge/reference-surfaces.md` to drive cleanup order: `Keep + rebrand first`, then `Keep + rebrand later`, then `Reference only`.
 - The runtime starter config now lives at `apps/web/lib/site-config.ts`.
+- The runtime starter config now also owns optional shell feature flags, including whether to render creator-project, featured-guides, developer-tools, and newsletter sections.
 - The current website/entity data contract is documented in `docs/knowledge/entity-data-shape.md`.
 - The config now covers both public social links and repo-specific submit/report fields, so shell links and GitHub issue flows can move without hardcoded owner/repo strings.
 - The active app `tsconfig.json` now excludes `_archive`, which keeps typecheck and build focused on the starter instead of parked legacy code.
@@ -34,6 +38,7 @@
 - When you add a starter-level `siteConfig`, centralize `name`, `domain`, `tagline`, social URLs, and the optional DR badge there before wiring those values into the shell. The internal reference now lives in `docs/knowledge/site-config.md`.
 - The first active rebrand pass is complete for `apps/web/app/page.tsx`, `apps/web/app/websites/[slug]/page.tsx`, `apps/web/app/submit/page.tsx`, and `apps/web/app/favorites/page.tsx`.
 - That pass keeps the existing `website` and `llmsUrl` data fields, but shifts visible copy toward generic directory language such as `directory`, `entries`, and `submit a website`.
+- Starter-safe builds should keep legacy creator/tool/guide sidebars disabled unless a site explicitly enables them through `siteConfig` / site-definition feature flags.
 - The standalone FAQ route was removed from the active starter. Do not keep `/faq` in nav, sitemap, or smoke-test coverage unless a future site explicitly needs it.
 - Legal content pages are now canonical at `/legal/privacy`, `/legal/terms`, and `/legal/cookies`.
 - The legacy root routes `/privacy`, `/terms`, and `/cookies` still exist only as redirects so existing links do not break.

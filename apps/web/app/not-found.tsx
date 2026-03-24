@@ -7,7 +7,7 @@ import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: 'Page Not Found',
-  description: `The page you are looking for does not exist. Browse ${siteConfig.name} to find AI-ready documentation.`,
+  description: `The page you are looking for does not exist. Browse ${siteConfig.name} to explore the directory.`,
   path: '/404',
   noindex: true
 })

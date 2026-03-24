@@ -15,10 +15,14 @@ interface FeaturedGuidesSectionProps {
  * @returns React component
  */
 export function FeaturedGuidesSection({ guides }: FeaturedGuidesSectionProps) {
+  if (guides.length === 0) {
+    return null
+  }
+
   return (
     <Section
       title="Featured Guides"
-      description="Learn how to implement and optimize llms.txt for your documentation"
+      description="Explore walkthroughs, implementation notes, and reference guides for this directory."
       viewAllHref={getRoute('guides.list')}
       viewAllText="All guides"
     >

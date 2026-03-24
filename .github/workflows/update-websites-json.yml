@@ -1,4 +1,4 @@
-name: Update websites.json
+name: Validate Website Data
 
 on:
   workflow_dispatch:
@@ -6,49 +6,24 @@ on:
     branches:
       - main
     paths:
-      - "packages/content/data/websites/**"
+      - "data/websites.json"
 
 concurrency:
-  group: update-websites-json-${{ github.ref }}
+  group: validate-website-data-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  update-websites-json:
+  validate-website-data:
     runs-on: self-hosted
-    if: github.actor != 'github-actions[bot]'
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
         uses: ./.github/actions/install
 
-      - name: Generate websites.json
-        run: |
-          pnpm generate-websites
-
-      - name: Check for changes
-        id: git-check
-        run: |
-          git diff --quiet data/websites.json || echo "changes=true" >> $GITHUB_OUTPUT
-
-      - name: Create Pull Request
-        if: steps.git-check.outputs.changes == 'true'
-        uses: peter-evans/create-pull-request@v8
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: update websites.json [skip ci]"
-          title: "chore: update websites.json"
-          body: |
-            This PR updates `data/websites.json` based on the current state of website entries.
-          branch: update-websites-json
-          base: main
-          delete-branch: true
-          committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
-          author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+      - name: Validate websites.json
+        run: pnpm tsx scripts/validate-data.ts data/websites.json

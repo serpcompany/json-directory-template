@@ -9,13 +9,13 @@ export function generateAltText(
 ): string {
   switch (type) {
     case 'favicon':
-      return `${name} website favicon - Visit ${name}'s llms.txt documentation`
+      return `${name} website favicon`
     case 'avatar':
       return `${name}'s profile picture - ${SITE_NAME} community member`
     case 'logo':
-      return `${SITE_NAME} logo - The largest directory of AI-ready documentation`
+      return `${SITE_NAME} logo`
     case 'website':
-      return `${name} - AI-ready documentation and llms.txt implementation`
+      return `${name} directory entry`
     default:
       return name
   }

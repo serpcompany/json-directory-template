@@ -15,9 +15,9 @@ import { tools } from '@/lib/tools'
 export async function generateMetadata(): Promise<Metadata> {
   return generateBaseMetadata({
     title: 'Search',
-    description: `Search for AI-ready websites and tools in ${SITE_NAME}.`,
+    description: `Search for websites, tools, and directory entries in ${SITE_NAME}.`,
     path: '/search',
-    keywords: ['search', 'find', 'llms.txt', 'AI tools', 'documentation'],
+    keywords: ['search', 'find', 'website directory', 'tools', 'resources'],
     noindex: true
   })
 }

@@ -2,6 +2,11 @@
 
 Use a starter-level `siteConfig` to centralize reusable brand and shell values instead of hardcoding them across the header, footer, metadata, and social links.
 
+Important distinction:
+- `siteConfig` is the internal runtime shape used by the app
+- the operator-facing `BuildSpec` can be simpler than this and may translate provider-style inputs into these runtime fields
+- example: `BuildSpec.branding.drBadge` now prefers a provider payload, while `siteConfig.drBadge` still holds the resolved raw badge values the footer renders
+
 Runtime file:
 
 - `apps/web/lib/site-config.ts`

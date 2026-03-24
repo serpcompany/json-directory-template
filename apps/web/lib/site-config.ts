@@ -6,6 +6,13 @@ export type SiteDrBadge = {
   height: number
 }
 
+export type SiteFeatureFlags = {
+  showCreatorProjects: boolean
+  showDeveloperTools: boolean
+  showFeaturedGuides: boolean
+  showNewsletter: boolean
+}
+
 export type SiteConfig = {
   name: string
   domain: string
@@ -20,6 +27,7 @@ export type SiteConfig = {
   redditUrl: string
   twitterUrl: string
   drBadge: SiteDrBadge
+  features: SiteFeatureFlags
 }
 
 type SiteConfigEnv = Partial<Record<string, string | undefined>>
@@ -41,26 +49,39 @@ export function getTwitterHandleFromUrl(url: string): string | null {
 }
 
 const defaultSiteConfig: SiteConfig = {
-  name: 'SERP',
-  domain: 'serp.co',
-  description:
-    'Find the best products for building & growing abusiness online.',
-  tagline: 'Discover AI-Ready Documentation',
-  githubUrl: 'https://github.com/devinschumacher',
-  githubRepoUrl: 'https://github.com/serpcompany/',
-  githubIssueOwner: 'devinschumacher',
-  githubIssueRepo: 'devinschumacher',
-  githubIssuesUrl: 'https://github.com/serpapps/j/issues/new/choose',
+  name: 'Directory Starter',
+  domain: 'example.com',
+  description: 'Curated directory of websites, tools, and resources.',
+  tagline: 'Discover websites, tools, and resources',
+  githubUrl: 'https://github.com/serpcompany',
+  githubRepoUrl: 'https://github.com/serpcompany/json-directory-template',
+  githubIssueOwner: 'serpcompany',
+  githubIssueRepo: 'json-directory-template',
+  githubIssuesUrl: 'https://github.com/serpcompany/json-directory-template/issues/new/choose',
   githubIssueTemplate: 'submit-website.yml',
-  redditUrl: 'https://www.reddit.com/user/devinschumacher/',
-  twitterUrl: 'https://x.com/dvnschmchr',
+  redditUrl: 'https://www.reddit.com/r/webdev/',
+  twitterUrl: 'https://x.com/serpcompany',
   drBadge: {
     href: 'https://dr.serp.co/',
-    imageSrc: 'https://dr.serp.co/badge/serp.co?style=serp-dr-v3',
-    alt: 'Verified DR 78 for serp.co',
+    imageSrc: 'https://dr.serp.co/badge/example.com?style=serp-dr-v3',
+    alt: 'Verified DR badge for example.com',
     width: 200,
     height: 50
+  },
+  features: {
+    showCreatorProjects: false,
+    showDeveloperTools: false,
+    showFeaturedGuides: false,
+    showNewsletter: true
   }
+}
+
+function parseBooleanEnv(value: string | undefined, fallback: boolean): boolean {
+  if (value === undefined) {
+    return fallback
+  }
+
+  return value === 'true'
 }
 
 export function resolveSiteConfig(env: SiteConfigEnv = process.env): SiteConfig {
@@ -89,6 +110,24 @@ export function resolveSiteConfig(env: SiteConfigEnv = process.env): SiteConfig 
       alt: env.SITE_DR_BADGE_ALT || `Verified DR badge for ${domain}`,
       width: Number(env.SITE_DR_BADGE_WIDTH || defaultSiteConfig.drBadge.width),
       height: Number(env.SITE_DR_BADGE_HEIGHT || defaultSiteConfig.drBadge.height)
+    },
+    features: {
+      showCreatorProjects: parseBooleanEnv(
+        env.SITE_SHOW_CREATOR_PROJECTS,
+        defaultSiteConfig.features.showCreatorProjects
+      ),
+      showDeveloperTools: parseBooleanEnv(
+        env.SITE_SHOW_DEVELOPER_TOOLS,
+        defaultSiteConfig.features.showDeveloperTools
+      ),
+      showFeaturedGuides: parseBooleanEnv(
+        env.SITE_SHOW_FEATURED_GUIDES,
+        defaultSiteConfig.features.showFeaturedGuides
+      ),
+      showNewsletter: parseBooleanEnv(
+        env.SITE_SHOW_NEWSLETTER,
+        defaultSiteConfig.features.showNewsletter
+      )
     }
   }
 }

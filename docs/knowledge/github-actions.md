@@ -1,11 +1,8 @@
 - area:content
-    - gets added when a PR changes files under packages/content/data/websites
-    - meaning: “this PR touches source content entries”
-- generated:websites-json
-    - gets added when a PR changes data/websites.json
-    - meaning: “this PR touches the generated website index/data file”
+    - should be used for PRs that touch editable website data or related content sources
+    - meaning: “this PR touches website/content sources that affect the directory”
 
 So the intent is:
 
-- one label for the editable/source content
-- one label for the generated output file
+- one label for editable website/content source changes
+- avoid treating `data/websites.json` as generated output in the active starter flow

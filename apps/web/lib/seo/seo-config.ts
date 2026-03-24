@@ -15,10 +15,14 @@ export const SITE_DESCRIPTION = siteConfig.description
 export const SITE_PUBLIC_URL = process.env.NEXT_PUBLIC_APP_URL || `https://${siteConfig.domain}`
 export const SITE_URL = SITE_PUBLIC_URL
 export const SITE_TWITTER_HANDLE = getTwitterHandleFromUrl(siteConfig.twitterUrl)
+export const SITE_FAVICON_URL = `${SITE_URL}/favicon.ico`
+export const SITE_APPLE_TOUCH_ICON_URL = `${SITE_URL}/apple-touch-icon.png`
+export const SITE_LOGO_URL = `${SITE_URL}/logo.png`
+export const SITE_OG_IMAGE_URL = `${SITE_URL}/opengraph-image.png`
 
 // SEO Defaults
 export const DEFAULT_OG_IMAGE = {
-  url: `${SITE_URL}/opengraph-image.png`,
+  url: SITE_OG_IMAGE_URL,
   width: 1200,
   height: 630,
   alt: `${SITE_NAME} - ${SITE_TAGLINE}`
@@ -40,8 +44,8 @@ export const ROBOTS_CONFIG = {
 
 // Keywords by page type
 export const KEYWORDS = {
-  global: ['llms.txt', 'AI documentation', 'LLM integration', 'API documentation', 'AI-ready'],
-  homepage: [SITE_NAME, 'AI tools directory', 'LLM documentation', 'developer tools'],
+  global: ['website directory', 'tools directory', 'resources', 'documentation', 'discover'],
+  homepage: [SITE_NAME, 'website directory', 'tools directory', 'resources'],
   categories: {
     ai: ['AI tools', 'artificial intelligence', 'machine learning', 'neural networks'],
     'developer-tools': ['developer tools', 'programming', 'software development', 'coding tools'],
@@ -78,8 +82,8 @@ export function generateBaseMetadata(options: {
     title,
     description,
     keywords: keywords.join(', '),
-    authors: [{ name: 'David Dias', url: 'https://thedaviddias.com' }],
-    creator: 'David Dias',
+    authors: [{ name: SITE_NAME, url: SITE_URL }],
+    creator: SITE_NAME,
     publisher: SITE_NAME,
     metadataBase: new URL(SITE_URL),
     alternates: {
@@ -152,7 +156,7 @@ export function generateDynamicMetadata(options: {
   switch (type) {
     case 'website':
       path = `/websites/${slug}`
-      title = `${name} - llms.txt Documentation`
+      title = `${name} - Directory Entry`
       break
     case 'category':
       path = `/${slug}`
@@ -191,8 +195,8 @@ export function generateDynamicMetadata(options: {
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: updatedAt || publishedAt,
-      authors: type === 'website' ? [SITE_NAME] : ['David Dias'],
-      section: type === 'website' ? 'AI Documentation' : undefined
+      authors: [SITE_NAME],
+      section: type === 'website' ? 'Directory Entry' : undefined
     }
   }
 
@@ -241,7 +245,7 @@ export function generateWebsiteSchema() {
       url: SITE_PUBLIC_URL,
       logo: {
         '@type': 'ImageObject',
-        url: `${SITE_PUBLIC_URL}/logo.png`
+        url: SITE_LOGO_URL
       },
       sameAs: [siteConfig.githubUrl, siteConfig.redditUrl, siteConfig.twitterUrl]
     }

@@ -1,0 +1,52 @@
+{
+  "id": "serpdownloaders",
+  "source": {
+    "kind": "trial-products-json",
+    "path": "tmp/serpdownloaders.com/products.json",
+    "outputPath": "data/websites.json",
+    "category": "automation-workflow",
+    "featuredCount": 6,
+    "publishedAt": "2026-03-23"
+  },
+  "site": {
+    "name": "SERP Downloaders",
+    "domain": "serpdownloaders.com",
+    "publicUrl": "https://serpdownloaders.com",
+    "description": "Directory of download-focused browser tools.",
+    "tagline": "Download-focused product directory",
+    "githubUrl": "https://github.com/serpcompany",
+    "githubRepoUrl": "https://github.com/serpcompany/json-directory-template",
+    "githubIssueOwner": "serpcompany",
+    "githubIssueRepo": "json-directory-template",
+    "githubIssuesUrl": "https://github.com/serpcompany/json-directory-template/issues/new/choose",
+    "githubIssueTemplate": "submit-website.yml",
+    "redditUrl": "https://www.reddit.com/r/serp/",
+    "twitterUrl": "https://x.com/serpcompany",
+    "features": {
+      "showCreatorProjects": false,
+      "showDeveloperTools": false,
+      "showFeaturedGuides": false,
+      "showNewsletter": true
+    },
+    "drBadge": {
+      "href": "https://dr.serp.co/",
+      "imageSrc": "https://dr.serp.co/badge/serpdownloaders.com?style=serp-dr-v3",
+      "alt": "Verified DR badge for serpdownloaders.com",
+      "width": 200,
+      "height": 50
+    }
+  },
+  "build": {
+    "artifactDir": "dist/sites/serpdownloaders",
+    "appOutDir": "apps/web/out"
+  },
+  "deploy": {
+    "strategy": "github-pages-repo-sync",
+    "repoUrl": "https://github.com/serpcompany/serpdownloaders.com.git",
+    "branch": "main",
+    "preserve": [
+      ".github/workflows/deploy.yml",
+      "CNAME"
+    ]
+  }
+}

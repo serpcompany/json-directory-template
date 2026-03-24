@@ -12,6 +12,10 @@ describe('resolveSiteConfig', () => {
       SITE_GITHUB_URL: 'https://github.com/serpcompany',
       SITE_NAME: 'SERP Downloaders',
       SITE_REDDIT_URL: 'https://reddit.com/r/serp',
+      SITE_SHOW_CREATOR_PROJECTS: 'true',
+      SITE_SHOW_DEVELOPER_TOOLS: 'true',
+      SITE_SHOW_FEATURED_GUIDES: 'false',
+      SITE_SHOW_NEWSLETTER: 'false',
       SITE_TAGLINE: 'Download-focused product directory',
       SITE_TWITTER_URL: 'https://x.com/serpcompany'
     })
@@ -24,5 +28,11 @@ describe('resolveSiteConfig', () => {
     expect(config.githubIssuesUrl).toBe(
       'https://github.com/serpcompany/json-directory-template/issues'
     )
+    expect(config.features).toEqual({
+      showCreatorProjects: true,
+      showDeveloperTools: true,
+      showFeaturedGuides: false,
+      showNewsletter: false
+    })
   })
 })

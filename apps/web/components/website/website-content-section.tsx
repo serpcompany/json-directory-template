@@ -55,9 +55,8 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
           </div>
         </div>
         <p className="text-muted-foreground leading-relaxed text-pretty">
-          {stripHtmlTags(website.description)} This platform provides AI-ready documentation through
-          the llms.txt standard, making it easy for AI assistants to understand and interact with
-          their services.
+          {stripHtmlTags(website.description)} Browse this directory entry for documentation links,
+          category context, and key details that help visitors evaluate the site quickly.
         </p>
       </div>
 
@@ -70,7 +69,7 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
             className: 'capitalize'
           },
           { label: 'Type', value: 'Website' },
-          { label: 'Documentation', value: 'llms.txt compatible' },
+          { label: 'Documentation', value: 'Linked resources available' },
           {
             label: 'Added',
             value: website.publishedAt

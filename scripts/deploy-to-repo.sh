@@ -11,6 +11,7 @@ set -euo pipefail
 #   DEPLOY_BRANCH    — fallback if not passed as $2 (default: main)
 #   DEPLOY_TOKEN     — optional GitHub token for auth (used in CI)
 #   DEPLOY_BUILD_DIR — optional build artifact directory (default: apps/web/out)
+#   DEPLOY_PRESERVE_PATHS — newline-delimited paths to preserve across sync
 
 DEPLOY_REPO="${1:-${DEPLOY_REPO_URL:-}}"
 DEPLOY_BRANCH="${2:-${DEPLOY_BRANCH:-main}}"
@@ -26,6 +27,7 @@ WORKSPACE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BUILD_DIR="${DEPLOY_BUILD_DIR:-$WORKSPACE_ROOT/apps/web/out}"
 DEPLOY_TMP="$WORKSPACE_ROOT/tmp/deploy/$(date -u '+%Y%m%d-%H%M%S')"
 TARGET_PAGES_WORKFLOW_TEMPLATE="$WORKSPACE_ROOT/scripts/templates/target-pages-deploy.yml"
+PRESERVE_TMP="$DEPLOY_TMP/.preserve"
 
 mkdir -p "$DEPLOY_TMP"
 
@@ -54,10 +56,28 @@ git clone --depth 1 --branch "$DEPLOY_BRANCH" "$PUSH_URL" "$DEPLOY_TMP" 2>/dev/n
 
 echo "==> Syncing build output..."
 
-# Clear old content (keep .git)
-find "$DEPLOY_TMP" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+if [[ -n "${DEPLOY_PRESERVE_PATHS:-}" ]]; then
+  echo "==> Preserving configured target paths..."
+  mkdir -p "$PRESERVE_TMP"
+
+  while IFS= read -r preserve_path; do
+    [[ -z "$preserve_path" ]] && continue
+    if [[ -e "$DEPLOY_TMP/$preserve_path" ]]; then
+      mkdir -p "$PRESERVE_TMP/$(dirname "$preserve_path")"
+      cp -R "$DEPLOY_TMP/$preserve_path" "$PRESERVE_TMP/$preserve_path"
+    fi
+  done <<< "$DEPLOY_PRESERVE_PATHS"
+fi
+
+# Clear old content (keep .git and temporary preserve cache)
+find "$DEPLOY_TMP" -mindepth 1 -maxdepth 1 ! -name '.git' ! -name '.preserve' -exec rm -rf {} +
 
 cp -R "$BUILD_DIR/." "$DEPLOY_TMP/"
+
+if [[ -d "$PRESERVE_TMP" ]]; then
+  echo "==> Restoring preserved target paths..."
+  cp -R "$PRESERVE_TMP/." "$DEPLOY_TMP/"
+fi
 
 if [[ -f "$TARGET_PAGES_WORKFLOW_TEMPLATE" ]]; then
   echo "==> Installing target GitHub Pages workflow..."

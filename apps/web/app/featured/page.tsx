@@ -9,13 +9,14 @@ import { FeaturedGuidesSection } from '@/components/sections/featured-guides-sec
 import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { ToolsSection } from '@/components/sections/tools-section'
 import { getGuides } from '@/lib/content-loader'
-import { SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
+import { SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
+import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: `Featured AI-Ready Websites - ${SITE_NAME}`,
+  title: `Featured Websites - ${SITE_NAME}`,
   description:
-    'Discover our curated selection of the best AI-ready websites and tools implementing the llms.txt standard.',
-  keywords: ['featured', 'curated', 'best websites', 'llms.txt', 'AI documentation'],
+    'Discover our curated selection of featured websites, tools, and directory entries.',
+  keywords: ['featured', 'curated', 'best websites', 'directory', 'tools'],
   path: '/featured'
 })
 
@@ -31,16 +32,15 @@ export default async function FeaturedPage() {
           '@type': 'CollectionPage',
           '@id': `${SITE_PUBLIC_URL}/featured`,
           name: `Featured - ${SITE_NAME}`,
-          headline: `${featuredProjects.length}+ Featured AI-Ready Sites & Tools`,
-          description: `Explore ${featuredProjects.length}+ curated featured websites and tools implementing the llms.txt standard. Hand-picked for quality and innovation.`,
+          headline: `${featuredProjects.length}+ Featured Sites & Tools`,
+          description: `Explore ${featuredProjects.length}+ curated featured websites and tools from ${SITE_NAME}. Hand-picked for quality and relevance.`,
           url: `${SITE_PUBLIC_URL}/featured`,
           inLanguage: 'en-US',
           isPartOf: {
             '@type': 'WebSite',
             '@id': SITE_PUBLIC_URL,
             name: SITE_NAME,
-            description:
-              "The world's largest open-source directory of LLM-optimized tools and documentation",
+            description: siteConfig.description,
             url: SITE_PUBLIC_URL
           },
           breadcrumb: {
@@ -71,7 +71,7 @@ export default async function FeaturedPage() {
           mainEntity: {
             '@type': 'ItemList',
             name: 'Featured Websites and Tools',
-            description: 'Curated selection of the best AI-ready websites and tools',
+            description: 'Curated selection of featured websites and tools',
             numberOfItems: featuredProjects.length,
             itemListOrder: 'https://schema.org/ItemListOrderAscending',
             itemListElement: featuredProjects.slice(0, 20).map((project, index) => ({
@@ -87,7 +87,7 @@ export default async function FeaturedPage() {
             url: SITE_PUBLIC_URL,
             logo: {
               '@type': 'ImageObject',
-              url: `${SITE_PUBLIC_URL}/logo.png`
+              url: SITE_LOGO_URL
             }
           },
           datePublished: new Date().toISOString(),
@@ -114,16 +114,17 @@ export default async function FeaturedPage() {
                   <h1 className="text-2xl font-bold">Featured Websites & Tools</h1>
                 </div>
                 <p className="text-muted-foreground mt-1">
-                  Our curated selection of the best AI-ready websites and tools implementing the
-                  llms.txt standard
+                  Curated directory entries highlighted for quality, usefulness, and relevance
                 </p>
               </div>
               <CategoryWebsitesList initialWebsites={featuredProjects} categoryType="non-tool" />
             </section>
 
-            <ToolsSection />
-            <FeaturedGuidesSection guides={featuredGuides} />
-            <NewsletterSection />
+            {siteConfig.features.showDeveloperTools && <ToolsSection />}
+            {siteConfig.features.showFeaturedGuides && (
+              <FeaturedGuidesSection guides={featuredGuides} />
+            )}
+            {siteConfig.features.showNewsletter && <NewsletterSection />}
           </div>
         </div>
       </div>

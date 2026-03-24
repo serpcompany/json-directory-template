@@ -1,68 +1,55 @@
 const fs = require('node:fs')
 const path = require('node:path')
-const glob = require('glob')
-const matter = require('gray-matter')
 
-// Use the correct content directory
-const contentDir = 'packages/content/data/websites'
-const outputPath = 'apps/web/public/search/search-index.json'
+const inputPath = process.env.WEBSITE_DATA_PATH || 'data/websites.json'
+const outputPath = process.env.SEARCH_INDEX_OUTPUT_PATH || 'apps/web/public/search/search-index.json'
 
-// Check if directory exists
-if (!fs.existsSync(contentDir)) {
-  console.error(`Content directory not found: ${contentDir}`)
+if (!fs.existsSync(inputPath)) {
+  console.error(`Website data file not found: ${inputPath}`)
   process.exit(1)
 }
 
-// Get all markdown files
-const files = glob.sync(`${contentDir}/**/*.{md,mdx}`)
-console.log(`Found ${files.length} content files in ${contentDir}`)
-
-if (files.length === 0) {
-  console.error('No markdown files found in content directory')
+let parsed
+try {
+  parsed = JSON.parse(fs.readFileSync(inputPath, 'utf8'))
+} catch (error) {
+  console.error(`Failed to parse website data from ${inputPath}:`, error)
   process.exit(1)
 }
 
-// Process each file to extract searchable data
-const searchIndex = files
-  .map(filePath => {
-    try {
-      // Skip .DS_Store files
-      if (path.basename(filePath) === '.DS_Store') {
-        return null
-      }
+if (!Array.isArray(parsed)) {
+  console.error(`Expected an array in ${inputPath}`)
+  process.exit(1)
+}
 
-      const fileContent = fs.readFileSync(filePath, 'utf8')
-      const { data, content } = matter(fileContent)
+const searchIndex = parsed
+  .map(entry => {
+    const slug = entry.slug || String(entry.name || '')
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/--+/g, '-')
 
-      // Extract slug from file path
-      const slug = path.basename(filePath, path.extname(filePath))
-
-      return {
-        name: data.name || data.title || '',
-        description: data.description || '',
-        url: data.url || `/${slug}`,
-        content: content.trim() || '',
-        category: data.category || '',
-        slug: slug,
-        website: data.website || '',
-        llmsUrl: data.llmsUrl || '',
-        llmsFullUrl: data.llmsFullUrl || ''
-      }
-    } catch (error) {
-      console.error(`Error processing file ${filePath}:`, error)
-      return null
+    return {
+      category: entry.category || '',
+      content: entry.content || '',
+      description: entry.description || '',
+      llmsFullUrl: entry.llmsFullUrl || '',
+      llmsUrl: entry.llmsUrl || entry.llmsTxtUrl || '',
+      name: entry.name || '',
+      slug,
+      url: entry.url || `/websites/${slug}`,
+      website: entry.website || entry.domain || ''
     }
   })
-  .filter(Boolean)
-  .sort((a, b) => a.name.localeCompare(b.name))
+  .filter(entry => entry.name && entry.slug)
+  .sort((left, right) => left.name.localeCompare(right.name))
 
-// Ensure the output directory exists
 const outputDir = path.dirname(outputPath)
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true })
 }
 
-// Write the search index to the output file
-fs.writeFileSync(outputPath, JSON.stringify(searchIndex, null, 2))
+fs.writeFileSync(outputPath, `${JSON.stringify(searchIndex, null, 2)}\n`)
 
 console.log(`Search index generated with ${searchIndex.length} entries at ${outputPath}`)

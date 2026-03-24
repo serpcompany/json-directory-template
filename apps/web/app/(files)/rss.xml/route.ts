@@ -1,5 +1,10 @@
 import { getWebsites, type WebsiteMetadata } from '@/lib/content-loader'
-import { SITE_NAME, SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
+import {
+  SITE_APPLE_TOUCH_ICON_URL,
+  SITE_FAVICON_URL,
+  SITE_NAME,
+  SITE_PUBLIC_URL
+} from '@/lib/seo/seo-config'
 
 const baseUrl = SITE_PUBLIC_URL
 
@@ -17,8 +22,8 @@ export async function GET() {
     home_page_url: baseUrl,
     feed_url: `${baseUrl}/rss.xml`,
     description: `Latest updates from ${SITE_NAME}`,
-    icon: `${baseUrl}/apple-touch-icon.png`,
-    favicon: `${baseUrl}/favicon.ico`,
+    icon: SITE_APPLE_TOUCH_ICON_URL,
+    favicon: SITE_FAVICON_URL,
     authors: [
       {
         name: SITE_NAME,

@@ -106,7 +106,7 @@ export function WebsitesListWithSort({
     <EmptyState
       title={emptyTitle}
       description={emptyDescription}
-      actionLabel="Add Your llms.txt"
+      actionLabel="Submit a Website"
       actionHref={getRoute('submit')}
     />
   )

@@ -1,5 +1,5 @@
 import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url'
-import { SITE_NAME, SITE_PUBLIC_URL, SITE_URL } from '@/lib/seo/seo-config'
+import { SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL, SITE_URL } from '@/lib/seo/seo-config'
 import type { GuideMetadata, WebsiteMetadata } from './content-loader'
 import { getRoute } from './routes'
 
@@ -86,7 +86,7 @@ export function generateArticleSchema(website: WebsiteMetadata): ArticleSchema {
   return {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
-    headline: `${website.name} - llms.txt Implementation`,
+    headline: `${website.name} Directory Entry`,
     description: website.description,
     datePublished: website.publishedAt,
     author: {
@@ -117,7 +117,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
         '@type': 'WebPage',
         '@id': `${pageUrl}#webpage`,
         url: pageUrl,
-        name: `${website.name} - llms.txt Documentation`,
+        name: `${website.name} Directory Entry`,
         description: website.description,
         isPartOf: {
           '@id': `${SITE_URL}/#website`
@@ -185,8 +185,8 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
       {
         '@type': 'TechArticle',
         '@id': `${pageUrl}#article`,
-        headline: `${website.name} llms.txt Implementation Guide`,
-        description: `${website.description} Learn how ${website.name} implements the llms.txt standard for AI-ready documentation.`,
+        headline: `${website.name} Directory Overview`,
+        description: `${website.description} Explore ${website.name}'s directory entry, documentation links, and related resources.`,
         datePublished: website.publishedAt,
         dateModified: website.publishedAt,
         author: {
@@ -200,7 +200,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
           url: SITE_PUBLIC_URL,
           logo: {
             '@type': 'ImageObject',
-            url: `${SITE_PUBLIC_URL}/logo.png`
+            url: SITE_LOGO_URL
           }
         },
         mainEntityOfPage: {
@@ -210,10 +210,9 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
           '@id': `${pageUrl}#software`
         },
         keywords: [
-          'llms.txt',
           website.name,
-          'AI documentation',
-          'LLM integration',
+          'directory entry',
+          'documentation links',
           categoryFormatted
         ].join(', ')
       },
@@ -224,18 +223,18 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
         mainEntity: [
           {
             '@type': 'Question',
-            name: `What is ${website.name}'s llms.txt file?`,
+            name: `What is included in ${website.name}'s directory entry?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: `${website.name} provides an llms.txt file that contains AI-ready documentation. This file helps AI assistants and LLMs understand ${website.name}'s services and API documentation in a structured format.`
+              text: `${website.name}'s directory entry includes its summary, category details, website link, and any published documentation links included with the listing.`
             }
           },
           {
             '@type': 'Question',
-            name: `How do I access ${website.name}'s llms.txt?`,
+            name: `How do I access ${website.name}'s published links?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: `You can access ${website.name}'s llms.txt file directly at ${website.llmsUrl || `${website.website}/llms.txt`}. This file provides concise, AI-optimized documentation${website.llmsFullUrl ? ', and a more comprehensive version is available at llms-full.txt.' : '.'}`
+              text: `You can visit ${website.name} directly at ${website.website}.${website.llmsUrl ? ` This entry also links to published documentation at ${website.llmsUrl}.` : ''}${website.llmsFullUrl ? ` Additional extended documentation is linked at ${website.llmsFullUrl}.` : ''}`
             }
           },
           {
@@ -262,8 +261,8 @@ export function generateCollectionSchema(websites: WebsiteMetadata[]): Collectio
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: 'LLMs.txt Implementations',
-    description: 'Directory of websites implementing llms.txt specification',
+    name: `${SITE_NAME} Directory`,
+    description: 'Directory of websites, tools, and resources',
     hasPart: websites.map(site => generateWebsiteSchema(site))
   }
 }

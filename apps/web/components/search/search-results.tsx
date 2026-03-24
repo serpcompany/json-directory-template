@@ -71,7 +71,7 @@ export function SearchResults() {
     return (
       <EmptyState
         title="Start Your Search"
-        description="Type something in the search bar above to find AI documentation and tools."
+        description="Type something in the search bar above to find websites, tools, and resources."
         actionLabel="Explore All Projects"
         actionHref={getRoute('home')}
       />
@@ -93,14 +93,14 @@ export function SearchResults() {
               <li>Check for typos in your search terms</li>
               <li>Try more general keywords (e.g., "AI" instead of "artificial intelligence")</li>
               <li>Browse by category using the sidebar</li>
-              <li>Submit your own llms.txt if you have one</li>
+              <li>Submit a new website or tool if you do not see it listed</li>
             </ul>
           </div>
         </div>
         <EmptyState
-          title="Add Your llms.txt"
-          description={`Don't see your project listed? Submit your llms.txt to be included in ${siteConfig.name}.`}
-          actionLabel="Add Your llms.txt"
+          title="Submit a Website"
+          description={`Don't see your project listed? Submit a website or tool to be included in ${siteConfig.name}.`}
+          actionLabel="Submit a Website"
           actionHref={getRoute('submit')}
         />
       </div>

@@ -5,7 +5,7 @@ import { SITE_NAME, SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
 export function generateMetadata(): Metadata {
   return {
     title: `Websites - ${SITE_NAME}`,
-    description: 'Discover a curated list of websites that implement the llms.txt standard.',
+    description: 'Discover a curated list of websites, tools, and directory entries.',
     alternates: {
       canonical: `${SITE_PUBLIC_URL}/`
     }

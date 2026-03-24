@@ -94,7 +94,7 @@ export function HomepageWebsitesList({ initialWebsites }: HomepageWebsitesListPr
         <EmptyState
           title="No websites found"
           description="There are no websites matching your current filters. Try adjusting your filters or add a new website."
-          actionLabel="Add Your llms.txt"
+          actionLabel="Submit a Website"
           actionHref={getRoute('submit')}
         />
       ) : (

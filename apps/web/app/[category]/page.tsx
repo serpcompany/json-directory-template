@@ -12,11 +12,13 @@ import { categories, getCategoryBySlug } from '@/lib/categories'
 import { getGuides } from '@/lib/content-loader'
 import { getCategorySEO } from '@/lib/seo/category-seo'
 import {
+  SITE_LOGO_URL,
   SITE_NAME,
   SITE_PUBLIC_URL,
   generateDynamicMetadata,
   optimizeMetaDescription
 } from '@/lib/seo/seo-config'
+import { siteConfig } from '@/lib/site-config'
 
 interface CategoryPageProps {
   params: Promise<{ category: string }>
@@ -110,15 +112,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           '@id': `${SITE_PUBLIC_URL}/${category.slug}`,
           name: `${category.name} - ${SITE_NAME}`,
           headline: `${categoryProjects.length}+ ${category.name} Sites & Tools`,
-          description: `Explore ${categoryProjects.length}+ curated ${category.name.toLowerCase()} websites and tools implementing the llms.txt standard. ${category.description}`,
+          description: `Explore ${categoryProjects.length}+ curated ${category.name.toLowerCase()} websites and tools. ${category.description}`,
           url: `${SITE_PUBLIC_URL}/${category.slug}`,
           inLanguage: 'en-US',
           isPartOf: {
             '@type': 'WebSite',
             '@id': SITE_PUBLIC_URL,
             name: SITE_NAME,
-            description:
-              "The world's largest open-source directory of LLM-optimized tools and documentation",
+            description: siteConfig.description,
             url: SITE_PUBLIC_URL
           },
           breadcrumb: {
@@ -165,7 +166,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             url: SITE_PUBLIC_URL,
             logo: {
               '@type': 'ImageObject',
-              url: `${SITE_PUBLIC_URL}/logo.png`
+              url: SITE_LOGO_URL
             }
           },
           datePublished: new Date().toISOString(),
@@ -215,9 +216,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               />
             </section>
 
-            <ToolsSection />
-            <FeaturedGuidesSection guides={featuredGuides} />
-            <NewsletterSection />
+            {siteConfig.features.showDeveloperTools && <ToolsSection />}
+            {siteConfig.features.showFeaturedGuides && (
+              <FeaturedGuidesSection guides={featuredGuides} />
+            )}
+            {siteConfig.features.showNewsletter && <NewsletterSection />}
           </div>
         </div>
       </div>

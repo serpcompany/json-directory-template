@@ -65,8 +65,8 @@ export function ToolsSection({ layout = 'default', showImages = true }: ToolsSec
   if (!showImages) {
     return (
       <Section
-        title="Developer Tools"
-        description="Explore tools created to help you work with llms.txt"
+        title="Related Tools"
+        description="Explore related tools and reference links configured for this site."
         viewAllHref={getRoute('category.page', { category: 'developer-tools' })}
         viewAllText="All tools"
         titleId="developer-tools"
@@ -104,8 +104,8 @@ export function ToolsSection({ layout = 'default', showImages = true }: ToolsSec
 
   return (
     <Section
-      title="Developer Tools"
-      description="Explore tools created to help you work with llms.txt"
+      title="Related Tools"
+      description="Explore related tools and reference links configured for this site."
       viewAllHref={getRoute('category.page', { category: 'developer-tools' })}
       viewAllText="All tools"
       titleId="developer-tools"

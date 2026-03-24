@@ -12,7 +12,14 @@ import { Header } from '@/components/layout/header'
 import { BackToTop } from '@/components/ui/back-to-top'
 import { FavoritesProvider } from '@/contexts/favorites-context'
 import { getHeaderAuthState } from '@/lib/auth'
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from '@/lib/seo/seo-config'
+import {
+  SITE_APPLE_TOUCH_ICON_URL,
+  SITE_DESCRIPTION,
+  SITE_FAVICON_URL,
+  SITE_NAME,
+  SITE_TAGLINE,
+  SITE_URL
+} from '@/lib/seo/seo-config'
 
 export const metadata: import('next').Metadata = {
   title: {
@@ -20,7 +27,11 @@ export const metadata: import('next').Metadata = {
     template: `%s | ${SITE_NAME}`
   },
   description: SITE_DESCRIPTION,
-  metadataBase: new URL(SITE_URL)
+  metadataBase: new URL(SITE_URL),
+  icons: {
+    icon: SITE_FAVICON_URL,
+    apple: SITE_APPLE_TOUCH_ICON_URL
+  }
 }
 
 type RootLayoutProps = {
