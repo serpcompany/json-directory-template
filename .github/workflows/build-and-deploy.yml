@@ -48,7 +48,7 @@ jobs:
         env:
           BUILD_SPEC_PATH: ${{ github.event.inputs.build_spec_path || vars.BUILD_SPEC_PATH || '' }}
           SITE_ID: ${{ github.event.inputs.site_id || vars.SITE_ID || 'serpdownloaders' }}
-        run: pnpm tsx scripts/resolve-build-run.ts >> "$GITHUB_OUTPUT"
+        run: ./node_modules/.bin/tsx scripts/resolve-build-run.ts >> "$GITHUB_OUTPUT"
 
       - name: Validate site data
         env:
@@ -83,8 +83,8 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v6
-        with:
-          sparse-checkout: scripts
+
+      - uses: ./.github/actions/install
 
       - name: Download build artifact
         uses: actions/download-artifact@v4
