@@ -1,6 +1,21 @@
 import { render, screen } from '@/test/test-utils'
 import { Header } from '@/components/layout/header'
 
+jest.mock('@/lib/site-config', () => {
+  const actual = jest.requireActual('@/lib/site-config')
+
+  return {
+    ...actual,
+    siteConfig: {
+      ...actual.siteConfig,
+      features: {
+        ...actual.siteConfig.features,
+        showAuth: true
+      }
+    }
+  }
+})
+
 jest.mock('next-auth/react', () => ({
   signIn: jest.fn(),
   signOut: jest.fn()

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { getRoute } from '@/lib/routes'
+import { siteCopy } from '@/lib/site-copy'
 import { getTwitterHandleFromUrl, siteConfig } from '@/lib/site-config'
 
 /**
@@ -20,6 +21,7 @@ export const SITE_FAVICON_URL = `${SITE_URL}/favicon.ico`
 export const SITE_APPLE_TOUCH_ICON_URL = `${SITE_URL}/apple-touch-icon.png`
 export const SITE_LOGO_URL = `${SITE_URL}/logo.png`
 export const SITE_OG_IMAGE_URL = `${SITE_URL}/opengraph-image.png`
+export const DIRECTORY_LISTINGS_KEYWORD = `directory ${siteCopy.listingName.plural}`
 
 // SEO Defaults
 export const DEFAULT_OG_IMAGE = {
@@ -45,8 +47,8 @@ export const ROBOTS_CONFIG = {
 
 // Keywords by page type
 export const KEYWORDS = {
-  global: ['website directory', 'tools directory', 'resources', 'documentation', 'discover'],
-  homepage: [SITE_NAME, 'website directory', 'tools directory', 'resources'],
+  global: [DIRECTORY_LISTINGS_KEYWORD, 'tools directory', 'resources', 'documentation', 'discover'],
+  homepage: [SITE_NAME, DIRECTORY_LISTINGS_KEYWORD, 'tools directory', 'resources'],
   categories: {
     ai: ['AI tools', 'artificial intelligence', 'machine learning', 'neural networks'],
     'developer-tools': ['developer tools', 'programming', 'software development', 'coding tools'],
@@ -158,11 +160,11 @@ export function generateDynamicMetadata(options: {
     case 'website':
     case 'listing':
       path = getRoute('listing.detail', { slug })
-      title = `${name} - Directory Entry`
+      title = `${name} - ${siteCopy.listingName.singularTitle}`
       break
     case 'category':
       path = `/${slug}`
-      title = `${name} AI Tools & Platforms`
+      title = name
       break
     case 'member':
       path = `/u/${slug}`
@@ -198,7 +200,7 @@ export function generateDynamicMetadata(options: {
       publishedTime: publishedAt,
       modifiedTime: updatedAt || publishedAt,
       authors: [SITE_NAME],
-      section: type === 'website' || type === 'listing' ? 'Directory Entry' : undefined
+      section: type === 'website' || type === 'listing' ? siteCopy.listingName.singularTitle : undefined
     }
   }
 

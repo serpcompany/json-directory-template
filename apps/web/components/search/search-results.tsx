@@ -8,6 +8,7 @@ import { useSearch } from '@/components/search/use-search'
 import { WebsitesListWithSort } from '@/components/websites-list-with-sort'
 import { getCategoryLabel } from '@/lib/categories'
 import { getRoute } from '@/lib/routes'
+import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
 /**
@@ -72,8 +73,8 @@ export function SearchResults() {
     return (
       <EmptyState
         title="Start Your Search"
-        description="Type something in the search bar above to find websites, tools, and resources."
-        actionLabel="Explore All Projects"
+        description={`Type something in the search bar above to find ${siteCopy.listingName.plural}, tools, and resources.`}
+        actionLabel={siteCopy.exploreAllLabel}
         actionHref={getRoute('home')}
       />
     )
@@ -94,14 +95,14 @@ export function SearchResults() {
               <li>Check for typos in your search terms</li>
               <li>Try more general keywords (e.g., "AI" instead of "artificial intelligence")</li>
               <li>Browse by category using the sidebar</li>
-              <li>Submit a new website or tool if you do not see it listed</li>
+              <li>Submit a new {siteCopy.listingName.singular} if you do not see it listed</li>
             </ul>
           </div>
         </div>
         <EmptyState
-          title="Submit a Website"
-          description={`Don't see your project listed? Submit a website or tool to be included in ${siteConfig.name}.`}
-          actionLabel="Submit a Website"
+          title={siteCopy.submitLabel}
+          description={`Don't see your ${siteCopy.listingName.singular} listed? Submit a ${siteCopy.listingName.singular} to be included in ${siteConfig.name}.`}
+          actionLabel={siteCopy.submitLabel}
           actionHref={getRoute('submit')}
         />
       </div>

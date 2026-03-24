@@ -49,6 +49,18 @@ const trialProductsSourceSchema = z.object({
   publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
 })
 
+const siteCopyDefaults = defaultSiteConfig.copy
+
+const siteCopySchema = z.object({
+  listingName: z
+    .object({
+      plural: z.string().min(1).default(siteCopyDefaults.listingName.plural),
+      singular: z.string().min(1).default(siteCopyDefaults.listingName.singular)
+    })
+    .default(siteCopyDefaults.listingName),
+  submitLabel: z.string().min(1).default(siteCopyDefaults.submitLabel)
+})
+
 const featureFlagsSchema = z.object({
   showAuth: z.boolean().default(false),
   showCreatorProjects: z.boolean().default(false),
@@ -73,6 +85,7 @@ const checkedInSiteConfigSchema = z.object({
     artifactDir: z.string().min(1),
     mode: z.literal('static-directory').default('static-directory')
   }),
+  copy: siteCopySchema.default(siteCopyDefaults),
   content: z.object({
     listingSource: z.union([listingJsonSourceSchema, trialProductsSourceSchema])
   }),
@@ -162,6 +175,7 @@ export function resolveSiteAppOutDir(siteConfig: CheckedInSiteConfig): string {
 
 export function resolveResolvedSiteConfig(siteConfig: CheckedInSiteConfig) {
   return {
+    copy: siteConfig.copy,
     description: siteConfig.site.description,
     domain: siteConfig.site.domain,
     drBadge: resolveDrBadgeConfig(siteConfig.branding.drBadge),

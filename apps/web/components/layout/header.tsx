@@ -8,6 +8,7 @@ import { GithubStars } from '@/components/stats/github-stars'
 import { useSearch } from '@/hooks/use-search'
 import type { HeaderAuthState } from '@/lib/auth'
 import { getRoute } from '@/lib/routes'
+import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 import { NavLink } from './header-nav-link'
 import { DesktopSearchForm, MobileSearchOverlay } from './header-search'
@@ -171,11 +172,11 @@ export function Header({ authState }: { authState?: HeaderAuthState }) {
             <Link
               href={getRoute('submit')}
               className="inline-flex items-center justify-center rounded-none text-sm font-bold h-9 px-4 bg-foreground text-background hover:bg-foreground/90 transition-all duration-200 press-effect"
-              aria-label="Submit a website"
-              title="Submit a website"
+              aria-label={siteCopy.submitLabel}
+              title={siteCopy.submitLabel}
             >
               <Plus className="h-4 w-4 sm:hidden" />
-              <span className="hidden sm:inline">Submit</span>
+              <span className="hidden sm:inline">{siteCopy.submitLabel}</span>
             </Link>
 
             {siteConfig.features.showAuth && isAuthenticated ? (

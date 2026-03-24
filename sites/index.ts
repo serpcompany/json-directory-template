@@ -1,4 +1,5 @@
 import { defaultSiteConfig } from './site-config.default'
+import { defaultSiteContent, resolveSiteContent } from './site-content'
 import { serpdownloadersSiteConfig } from './serpdownloaders/site-config'
 import type { CheckedInSiteConfig, CheckedInSiteConfigOverride, DeepPartial } from './types'
 
@@ -64,4 +65,5 @@ export function resolveCheckedInSiteConfig(siteId?: string): CheckedInSiteConfig
 }
 
 export { defaultSiteConfig }
+export { defaultSiteContent, resolveSiteContent }
 export type { CheckedInSiteConfig, CheckedInSiteConfigOverride } from './types'

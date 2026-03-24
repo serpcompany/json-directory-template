@@ -39,6 +39,41 @@ export type ListingSourceConfig =
       publishedAt: string
     }
 
+export type SiteCopyConfig = {
+  listingName: {
+    plural: string
+    singular: string
+  }
+  submitLabel: string
+}
+
+export type SiteToolIcon =
+  | 'chrome'
+  | 'code2'
+  | 'command'
+  | 'gitBranch'
+  | 'terminal'
+
+export type SiteTool = {
+  description: string
+  href: string
+  icon: SiteToolIcon
+  imageAlt?: string
+  imageSrc?: string
+  name: string
+  slug: string
+}
+
+export type SiteListingCliInstall = {
+  commandPrefix: string
+  installTargetByListingSlug: Record<string, string>
+}
+
+export type SiteOwnedContent = {
+  externalTools: SiteTool[]
+  listingCliInstall: SiteListingCliInstall | null
+}
+
 export type DeployConfig = {
   branch: string
   preserve: string[]
@@ -70,6 +105,7 @@ export type CheckedInSiteConfig = {
     artifactDir: string
     mode: 'static-directory'
   }
+  copy: SiteCopyConfig
   content: {
     listingSource: ListingSourceConfig
   }

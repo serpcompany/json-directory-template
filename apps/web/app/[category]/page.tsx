@@ -18,6 +18,7 @@ import {
   generateDynamicMetadata,
   optimizeMetaDescription
 } from '@/lib/seo/seo-config'
+import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
 interface CategoryPageProps {
@@ -65,7 +66,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   // Use SEO-optimized description
   const description =
     categoryProjectsCount > 0
-      ? `${categoryProjectsCount}+ websites. ${seoContent.metaDescription}`
+      ? `${categoryProjectsCount}+ ${siteCopy.listingName.plural}. ${seoContent.metaDescription}`
       : seoContent.metaDescription
 
   return generateDynamicMetadata({
@@ -111,8 +112,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           '@type': 'CollectionPage',
           '@id': `${SITE_PUBLIC_URL}/${category.slug}`,
           name: `${category.name} - ${SITE_NAME}`,
-          headline: `${categoryProjects.length}+ ${category.name} Sites & Tools`,
-          description: `Explore ${categoryProjects.length}+ curated ${category.name.toLowerCase()} websites and tools. ${category.description}`,
+          headline: `${categoryProjects.length}+ ${category.name} ${siteCopy.listingName.pluralTitle}`,
+          description: `Explore ${categoryProjects.length}+ curated ${category.name.toLowerCase()} ${siteCopy.listingName.plural} from ${SITE_NAME}. ${category.description}`,
           url: `${SITE_PUBLIC_URL}/${category.slug}`,
           inLanguage: 'en-US',
           isPartOf: {
@@ -149,7 +150,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           })),
           mainEntity: {
             '@type': 'ItemList',
-            name: `${category.name} Websites and Tools`,
+            name: `${category.name} ${siteCopy.listingName.pluralTitle}`,
             description: category.description,
             numberOfItems: categoryProjects.length,
             itemListOrder: 'https://schema.org/ItemListOrderAscending',

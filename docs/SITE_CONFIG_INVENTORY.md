@@ -115,13 +115,19 @@ Why:
 
 ## 5. Navigation, shell, and CTA copy
 
+### Already configurable
+
+| Surface | Status | Recommendation | File references | Notes |
+| --- | --- | --- | --- | --- |
+| Primary listing terminology and submit CTA copy for core home/search/submit surfaces | Configurable now | Keep using checked-in `copy.*` fields for high-traffic wording and expand only when a site truly needs larger custom marketing blocks | [site-config.default.ts](/Users/devin/dev/repos/json-directory-template/sites/site-config.default.ts), [site-copy.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-copy.ts), [hero-section.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/sections/hero-section.tsx), [search-results.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/search/search-results.tsx), [github-issue-submit-form.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/forms/github-issue-submit-form.tsx), [layout.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/submit/layout.tsx) | Current contract: `copy.listingName.singular`, `copy.listingName.plural`, `copy.submitLabel` |
+
 | Surface | Status | Recommendation | File references | Notes |
 | --- | --- | --- | --- | --- |
 | Header CTA and nav labels | Needs product decision | Track explicitly; may stay starter default or become site copy config | [header.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/layout/header.tsx#L144), [header.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/layout/header.tsx#L171) | High-visibility shell copy |
 | Footer marketing/nav labels and links | Should become configurable | Make site content/config or intentionally freeze as starter default | [footer.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/layout/footer.tsx#L61) | Currently hardcoded |
-| Homepage hero copy | Should become configurable | Move to site-owned content or config-backed copy blocks | [hero-section.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/sections/hero-section.tsx#L22) | Includes `Submit a Website` and directory phrasing |
+| Homepage hero marketing copy beyond the primary listing/submit labels | Should become configurable | Keep the new terminology/CTA on `copy.*`, but move longer hero marketing copy to site-owned content or richer config blocks if sites start diverging | [hero-section.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/sections/hero-section.tsx#L22) | Primary listing count label and submit CTA now follow checked-in copy |
 | Newsletter section copy | Should become configurable | Move to site-owned content or config-backed copy blocks | [newsletter-section.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/sections/newsletter-section.tsx#L8) | Still starter pitch copy |
-| Search empty-state and search-page wording | Should become configurable | Move visible wording out of hardcoded `website/project/tool` language | [search/page.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/search/page.tsx#L42), [search-results.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/search/search-results.tsx#L96) | Tied to terminology cleanup |
+| Search page marketing copy beyond the primary listing/submit labels | Should become configurable | Keep the new terminology/submit wording on `copy.*`, but move any site-specific search marketing copy into richer site-owned content if needed | [search/page.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/search/page.tsx#L42), [search-results.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/search/search-results.tsx#L96) | Primary search empty-state terminology now follows checked-in copy |
 | Legacy `/websites` redirect shell page copy | Should become configurable | Keep the redirect behavior if needed, but avoid baking route-specific wording into metadata/copy without site-level control | [page.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/websites/page.tsx#L5) | Public route wording still starter-owned |
 
 ## 6. Content modules and optional surfaces
@@ -163,3 +169,5 @@ Why:
 - `#22` restore placeholder/demo routes to real pages
 - `#23` categories and site index
 - `#24` broaden from URL cleanup into a full hardcoded-surface audit and terminology/config inventory pass
+  source of truth:
+  [Issue #24](https://github.com/serpcompany/json-directory-template/issues/24)

@@ -1,12 +1,14 @@
 import { logger } from '@thedaviddias/logging'
 import { NextResponse } from 'next/server'
 import { getResources, getWebsites } from '@/lib/content-loader'
+import { siteCopy } from '@/lib/site-copy'
+import { siteConfig } from '@/lib/site-config'
 
 export const dynamic = 'force-static'
 
 /**
- * GET /llms.txt - Generates a text file listing all websites implementing llms.txt
- * @returns Text response with website directory and resources
+ * GET /llms.txt - Generates a text export of directory listings and resources
+ * @returns Text response with directory data and contribution links
  */
 export async function GET() {
   try {
@@ -14,13 +16,13 @@ export async function GET() {
     const resources = getResources()
 
     // Generate the text content
-    let content = `# LLMs.txt Hub Directory
+    let content = `# ${siteConfig.name}
 
 ## Overview
-This is an automatically generated list of all websites implementing llms.txt, along with related blog posts and resources.
+This is an automatically generated text export of the current ${siteCopy.listingName.plural} and related resources.
 
-## Websites
-The following websites have implemented llms.txt:\n\n`
+## ${siteCopy.listingName.pluralTitle}
+The following ${siteCopy.listingName.plural} are currently published:\n\n`
 
     // Add websites
     for (const website of websites) {
@@ -42,9 +44,8 @@ The following websites have implemented llms.txt:\n\n`
     }
 
     content += `\n## Contributing
-- Want to add your website? Submit a PR to our GitHub repository
-- Found a bug? Open an issue
-- Have questions? Join our community`
+- ${siteCopy.submitLabel}: ${siteConfig.githubIssuesUrl}
+- Repository: ${siteConfig.githubRepoUrl}`
 
     return new NextResponse(content, {
       headers: {

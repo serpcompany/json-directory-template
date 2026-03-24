@@ -2,9 +2,11 @@
 
 ## Dev Port
 
-- Running `pnpm dev -- --port 3002` from the repo root forwards `--port` to every Turbo workspace.
-- That breaks the CLI package because `tsup --watch` does not accept `--port`.
-- Use `pnpm --filter web dev -- --port 3002` when you want a different local port for the web app only.
+- Root `pnpm dev` now targets the web app only through `pnpm --filter web dev`.
+- The default web dev script now uses `next dev --webpack` because Turbopack can hang on the first `/` compile in this repo's current Tailwind/PostCSS setup.
+- The web package no longer forces `--inspect` during normal local dev; use `pnpm --filter web dev:inspect` when you explicitly want the Node inspector.
+- Use `pnpm dev:all` when you explicitly want the old Turbo parallel workspace behavior.
+- `apps/web/next.config.ts` still pins `turbopack.root` to this repo root so future Turbopack runs do not walk up to unrelated parent lockfiles during dev.
 
 ## Website Data
 

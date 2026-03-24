@@ -11,6 +11,7 @@ import { useWebsiteFilters } from '@/hooks/use-website-filters'
 import { categories } from '@/lib/categories'
 import type { WebsiteMetadata } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
+import { siteCopy } from '@/lib/site-copy'
 
 interface ClientProjectsListProps {
   initialWebsites: WebsiteMetadata[]
@@ -57,8 +58,8 @@ export function ClientProjectsList({ initialWebsites }: ClientProjectsListProps)
   // Get current category name for heading
   const currentCategoryName =
     categoryFilter === 'all'
-      ? 'All LLMs Websites'
-      : `${categories.find(cat => cat.slug === categoryFilter)?.name || 'Unknown'} Websites`
+      ? `All ${siteCopy.listingName.pluralTitle}`
+      : `${categories.find(cat => cat.slug === categoryFilter)?.name || 'Unknown'} ${siteCopy.listingName.pluralTitle}`
 
   // Update filtered and sorted websites when filters or initial websites change
   useEffect(() => {
@@ -151,19 +152,19 @@ export function ClientProjectsList({ initialWebsites }: ClientProjectsListProps)
       </div>
       {websites.length === 0 ? (
         <EmptyState
-          title="No websites found"
-          description="There are no websites matching your current filters. Try adjusting your filters or add a new website."
-          actionLabel="Submit a Website"
+          title={siteCopy.categoryEmptyTitle}
+          description={`There are no ${siteCopy.listingName.plural} matching your current filters. Try adjusting your filters or ${siteCopy.submitLabelSentence}.`}
+          actionLabel={siteCopy.submitLabel}
           actionHref={getRoute('submit')}
         />
       ) : viewMode === 'grid' ? (
         <ErrorBoundaryCustom>
-          <h2 className="text-2xl font-semibold mb-6 sr-only">Websites list</h2>
+          <h2 className="text-2xl font-semibold mb-6 sr-only">{siteCopy.listingCountLabel}</h2>
           <LLMGrid items={websites} />
         </ErrorBoundaryCustom>
       ) : (
         <ErrorBoundaryCustom>
-          <h2 className="text-2xl font-semibold mb-6 sr-only">Websites list</h2>
+          <h2 className="text-2xl font-semibold mb-6 sr-only">{siteCopy.listingCountLabel}</h2>
           <LLMGrid items={websites} variant="compact" />
         </ErrorBoundaryCustom>
       )}

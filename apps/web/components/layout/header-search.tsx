@@ -2,6 +2,7 @@
 import { Search } from 'lucide-react'
 import { useRef } from 'react'
 import { SearchAutocomplete } from '@/components/search/search-autocomplete'
+import { siteCopy } from '@/lib/site-copy'
 
 interface DesktopSearchFormProps {
   searchQuery: string
@@ -42,7 +43,7 @@ export function DesktopSearchForm({
         <input
           ref={searchInputRef}
           type="text"
-          placeholder="Search websites, tools, and platforms..."
+          placeholder={siteCopy.listingSearchPlaceholder}
           value={searchQuery}
           onChange={onSearchChange}
           onFocus={onInputFocus}
@@ -121,7 +122,7 @@ export function MobileSearchOverlay({
             <input
               ref={mobileSearchInputRef}
               type="text"
-              placeholder="Search AI documentation and tools..."
+              placeholder={siteCopy.listingSearchPlaceholder}
               value={searchQuery}
               onChange={onSearchChange}
               onFocus={onInputFocus}

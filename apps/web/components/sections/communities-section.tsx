@@ -1,40 +1,39 @@
-import { SiReddit, SiX } from '@icons-pack/react-simple-icons'
-import { Linkedin } from 'lucide-react'
+import { SiGithub, SiReddit, SiX } from '@icons-pack/react-simple-icons'
 import { Section } from '@/components/layout/section'
 import { Card } from '@/components/ui/card'
+import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
 const communities = [
   {
     name: 'Reddit',
     description:
-      'Join our Reddit community to discuss llms.txt implementation and share your experiences.',
+      `Follow new ${siteCopy.listingName.plural}, questions, and feedback from the broader community.`,
     icon: SiReddit,
     url: siteConfig.redditUrl
   },
   {
-    name: 'X Community',
-    description: 'Follow us on X for the latest updates, tips, and community highlights.',
+    name: 'X',
+    description: `Get quick updates, launches, and highlights from ${siteConfig.name}.`,
     icon: SiX,
     url: siteConfig.twitterUrl
   },
   {
-    name: 'LinkedIn',
-    description:
-      'Connect with professionals implementing llms.txt and stay updated with industry news.',
-    icon: Linkedin,
-    url: 'https://www.linkedin.com/groups/14615106/'
+    name: 'GitHub',
+    description: 'Track submissions, starter changes, and review activity in the open.',
+    icon: SiGithub,
+    url: siteConfig.githubRepoUrl
   }
 ]
 
 /**
- * Renders the communities section with links to Reddit, X, and LinkedIn
+ * Renders the starter community links section
  */
 export function CommunitiesSection() {
   return (
     <Section
-      title="Join Our Communities"
-      description={`Connect with other developers and stay updated with the latest ${siteConfig.name} news and discussions.`}
+      title="Follow The Project"
+      description={`Stay close to ${siteConfig.name} across the channels where updates, submissions, and discussion already happen.`}
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {communities.map(community => {
@@ -53,7 +52,7 @@ export function CommunitiesSection() {
                 </div>
                 <h3 className="text-lg font-semibold">{community.name}</h3>
                 <p className="text-sm text-muted-foreground">{community.description}</p>
-                <span className="text-sm font-medium text-primary">Join Community →</span>
+                <span className="text-sm font-medium text-primary">Open Link →</span>
               </Card>
             </a>
           )

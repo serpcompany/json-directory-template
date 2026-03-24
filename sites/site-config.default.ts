@@ -13,6 +13,13 @@ export const defaultSiteConfig: CheckedInSiteConfig = {
     artifactDir: 'dist/sites/default',
     mode: 'static-directory'
   },
+  copy: {
+    listingName: {
+      plural: 'listings',
+      singular: 'listing'
+    },
+    submitLabel: 'Submit a Listing'
+  },
   content: {
     listingSource: {
       kind: 'listing-json',

@@ -1,15 +1,7 @@
-import registryData from '@cli-data/registry.json'
 import { Terminal } from 'lucide-react'
 import { CopyButton } from '@/components/ui/copy-button'
 import type { WebsiteMetadata } from '@/lib/content-loader'
-
-// Build lookup: webSlug -> CLI slug (runs once at module load / build time)
-const webSlugToCliSlug = new Map<string, string>()
-for (const entry of registryData as { slug: string; webSlug?: string }[]) {
-  if (entry.webSlug) {
-    webSlugToCliSlug.set(entry.webSlug, entry.slug)
-  }
-}
+import { siteContent } from '@/lib/site-content'
 
 interface WebsiteCliSectionProps {
   website: WebsiteMetadata
@@ -24,9 +16,17 @@ interface WebsiteCliSectionProps {
  * @returns CLI install card or null if no CLI slug
  */
 export function WebsiteCliSection({ website }: WebsiteCliSectionProps) {
-  const cliSlug = webSlugToCliSlug.get(website.slug)
+  const cliInstall = siteContent.listingCliInstall
+
+  if (!cliInstall) {
+    return null
+  }
+
+  const cliSlug = cliInstall.installTargetByListingSlug[website.slug]
 
   if (!cliSlug) return null
+
+  const installCommand = `${cliInstall.commandPrefix} ${cliSlug}`
 
   return (
     <section className="animate-fade-in-up opacity-0 stagger-2">
@@ -53,9 +53,9 @@ export function WebsiteCliSection({ website }: WebsiteCliSectionProps) {
             $
           </span>
           <span className="flex-1 text-zinc-800 dark:text-zinc-100 font-mono text-sm truncate">
-            npx llmstxt-cli install {cliSlug}
+            {installCommand}
           </span>
-          <CopyButton text={`npx llmstxt-cli install ${cliSlug}`} variant="terminal" />
+          <CopyButton text={installCommand} variant="terminal" />
         </div>
       </div>
     </section>

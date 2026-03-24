@@ -14,6 +14,13 @@ describe('resolveSiteConfig', () => {
     )
     expect(config.publicUrl).toBe('https://serpdownloaders.com')
     expect(config.listingRouteBasePath).toBe('websites')
+    expect(config.copy).toEqual({
+      listingName: {
+        plural: 'listings',
+        singular: 'listing'
+      },
+      submitLabel: 'Submit a Listing'
+    })
     expect(config.features).toEqual({
       showAuth: false,
       showCreatorProjects: false,
@@ -36,6 +43,7 @@ describe('resolveSiteConfig', () => {
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     )
     expect(config.listingRouteBasePath).toBe('websites')
+    expect(config.copy.submitLabel).toBe('Submit a Listing')
   })
 
   it('falls back to the checked-in default site config', () => {
@@ -45,5 +53,12 @@ describe('resolveSiteConfig', () => {
     expect(config.name).toBe('Directory Starter')
     expect(config.domain).toBe('example.com')
     expect(config.listingRouteBasePath).toBe('websites')
+    expect(config.copy).toEqual({
+      listingName: {
+        plural: 'listings',
+        singular: 'listing'
+      },
+      submitLabel: 'Submit a Listing'
+    })
   })
 })

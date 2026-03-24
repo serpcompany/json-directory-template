@@ -9,6 +9,7 @@ import { LLMGrid } from '@/components/llm/llm-grid'
 import { useWebsiteFilters } from '@/hooks/use-website-filters'
 import type { WebsiteMetadata } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
+import { siteCopy } from '@/lib/site-copy'
 
 interface HomepageWebsitesListProps {
   initialWebsites: WebsiteMetadata[]
@@ -92,14 +93,14 @@ export function HomepageWebsitesList({ initialWebsites }: HomepageWebsitesListPr
       {/* Results - Always Grid */}
       {websites.length === 0 ? (
         <EmptyState
-          title="No websites found"
-          description="There are no websites matching your current filters. Try adjusting your filters or add a new website."
-          actionLabel="Submit a Website"
+          title={`No ${siteCopy.listingName.plural} found`}
+          description={`There are no ${siteCopy.listingName.plural} matching your current filters. Try adjusting your filters or add a new ${siteCopy.listingName.singular}.`}
+          actionLabel={siteCopy.submitLabel}
           actionHref={getRoute('submit')}
         />
       ) : (
         <ErrorBoundaryCustom>
-          <h2 className="text-2xl font-semibold mb-6 sr-only">All Websites</h2>
+          <h2 className="text-2xl font-semibold mb-6 sr-only">{siteCopy.allLabel}</h2>
           <LLMGrid items={websites} />
         </ErrorBoundaryCustom>
       )}

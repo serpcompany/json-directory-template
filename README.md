@@ -1248,11 +1248,18 @@ cp .env.example .env.local
 
 3. Start the development server:
 ```bash
-# Start the development server
+# Start the web app only
+# Uses Webpack by default for a stable local dev loop
 pnpm dev
+
+# Start the web app with the Node inspector
+pnpm --filter web dev:inspect
+
+# Start all workspace dev tasks
+pnpm dev:all
 ```
 
-The app should now be running at [http://localhost:3000](http://localhost:3000)
+The web app should now be running at [http://localhost:3005](http://localhost:3005)
 
 
 ### Building for Production

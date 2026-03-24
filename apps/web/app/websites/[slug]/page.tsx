@@ -13,6 +13,7 @@ import { getWebsiteBySlug, getWebsites, type WebsiteMetadata } from '@/lib/conte
 import { getRoute } from '@/lib/routes'
 import { generateWebsiteDetailSchema } from '@/lib/schema'
 import { SITE_NAME, generateDynamicMetadata } from '@/lib/seo/seo-config'
+import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
 interface ProjectPageProps {
@@ -46,11 +47,11 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     // Generate comprehensive keywords
     const keywords = [
       project.name,
-      `${project.name} website`,
+      `${project.name} ${siteCopy.listingName.singular}`,
       `${project.name} documentation`,
       project.category,
-      'directory entry',
-      'website directory',
+      `${siteCopy.listingName.singular} details`,
+      'directory listings',
       'documentation links',
       categoryFormatted
     ].filter(Boolean) as string[]
@@ -65,8 +66,8 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     })
   } catch (_error) {
     return {
-      title: `Entry | ${SITE_NAME}`,
-      description: 'Directory entry'
+      title: `${siteCopy.listingName.singularTitle} | ${SITE_NAME}`,
+      description: siteCopy.listingName.singularTitle
     }
   }
 }

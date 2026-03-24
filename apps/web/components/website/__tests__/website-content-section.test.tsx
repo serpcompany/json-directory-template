@@ -34,4 +34,13 @@ describe('WebsiteContentSection', () => {
     )
     expect(screen.queryByText('About Example Project')).not.toBeInTheDocument()
   })
+
+  it('uses listing-neutral fallback copy when long-form content is missing', () => {
+    render(<WebsiteContentSection website={baseWebsite} />)
+
+    expect(screen.getByText(/browse this listing for documentation links/i)).toBeInTheDocument()
+    expect(screen.getByText(/^Listing$/)).toBeInTheDocument()
+    expect(screen.queryByText(/directory entry/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^Website$/)).not.toBeInTheDocument()
+  })
 })

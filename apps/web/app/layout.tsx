@@ -20,6 +20,7 @@ import {
   SITE_TAGLINE,
   SITE_URL
 } from '@/lib/seo/seo-config'
+import { siteCopy } from '@/lib/site-copy'
 
 export const metadata: import('next').Metadata = {
   title: {
@@ -49,7 +50,7 @@ export default async function RootLayout({ children }: RootLayoutProps): Promise
         <link
           rel="alternate"
           type="application/feed+json"
-          title={`${SITE_NAME} - New Websites`}
+          title={`${SITE_NAME} - New ${siteCopy.listingName.pluralTitle}`}
           href="/rss.xml"
         />
       </head>

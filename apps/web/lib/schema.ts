@@ -1,5 +1,6 @@
 import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url'
 import { SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL, SITE_URL } from '@/lib/seo/seo-config'
+import { siteCopy } from '@/lib/site-copy'
 import type { GuideMetadata, WebsiteMetadata } from './content-loader'
 import { getRoute } from './routes'
 
@@ -86,7 +87,7 @@ export function generateArticleSchema(website: WebsiteMetadata): ArticleSchema {
   return {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
-    headline: `${website.name} Directory Entry`,
+    headline: `${website.name} ${siteCopy.listingName.singularTitle}`,
     description: website.description,
     datePublished: website.publishedAt,
     author: {
@@ -108,6 +109,8 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
   const categoryFormatted = website.category
     ? website.category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
     : 'Developer Tools'
+  const listingLabel = siteCopy.listingName.singular
+  const listingLabelTitle = siteCopy.listingName.singularTitle
 
   return {
     '@context': 'https://schema.org',
@@ -117,7 +120,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
         '@type': 'WebPage',
         '@id': `${pageUrl}#webpage`,
         url: pageUrl,
-        name: `${website.name} Directory Entry`,
+        name: `${website.name} ${listingLabelTitle}`,
         description: website.description,
         isPartOf: {
           '@id': `${SITE_URL}/#website`
@@ -146,7 +149,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
           {
             '@type': 'ListItem',
             position: 2,
-            name: 'Websites',
+            name: siteCopy.allLabel,
             item: `${SITE_URL}${getRoute('listing.list')}`
           },
           {
@@ -185,8 +188,8 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
       {
         '@type': 'TechArticle',
         '@id': `${pageUrl}#article`,
-        headline: `${website.name} Directory Overview`,
-        description: `${website.description} Explore ${website.name}'s directory entry, documentation links, and related resources.`,
+        headline: `${website.name} Overview`,
+        description: `${website.description} Explore ${website.name}'s ${listingLabel}, documentation links, and related resources.`,
         datePublished: website.publishedAt,
         dateModified: website.publishedAt,
         author: {
@@ -211,7 +214,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
         },
         keywords: [
           website.name,
-          'directory entry',
+          `${listingLabel} details`,
           'documentation links',
           categoryFormatted
         ].join(', ')
@@ -223,10 +226,10 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
         mainEntity: [
           {
             '@type': 'Question',
-            name: `What is included in ${website.name}'s directory entry?`,
+            name: `What is included in ${website.name}'s ${listingLabel}?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: `${website.name}'s directory entry includes its summary, category details, website link, and any published documentation links included with the listing.`
+              text: `${website.name}'s ${listingLabel} includes its summary, category details, primary link, and any published documentation links included with the ${listingLabel}.`
             }
           },
           {

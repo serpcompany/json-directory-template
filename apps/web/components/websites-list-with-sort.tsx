@@ -11,6 +11,7 @@ import { Card } from '@/components/ui/card'
 import { FaviconWithFallback } from '@/components/ui/favicon-with-fallback'
 import type { WebsiteMetadata } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
+import { siteCopy } from '@/lib/site-copy'
 import { stripHtmlTags } from '@/lib/utils'
 
 interface WebsitesListWithSortProps {
@@ -26,9 +27,8 @@ interface WebsitesListWithSortProps {
  */
 export function WebsitesListWithSort({
   initialWebsites,
-  emptyTitle = 'No websites found',
-  emptyDescription = 'There are no websites available. Try checking back later or submit a new website.',
-  categoryType = 'non-tool'
+  emptyTitle = siteCopy.categoryEmptyTitle,
+  emptyDescription = siteCopy.categoryEmptyDescription
 }: WebsitesListWithSortProps) {
   const [sortBy, setSortBy] = useState<'name' | 'latest'>('name')
   const [isClient, setIsClient] = useState(false)
@@ -106,7 +106,7 @@ export function WebsitesListWithSort({
     <EmptyState
       title={emptyTitle}
       description={emptyDescription}
-      actionLabel="Submit a Website"
+      actionLabel={siteCopy.submitLabel}
       actionHref={getRoute('submit')}
     />
   )
@@ -118,8 +118,7 @@ export function WebsitesListWithSort({
         <div className="text-sm text-muted-foreground">
           {initialWebsites.length > 0 && (
             <>
-              Showing {sortedWebsites.length} {categoryType === 'tool' ? 'tools' : 'websites'} in
-              this category
+              Showing {sortedWebsites.length} {siteCopy.listingName.plural} in this category
             </>
           )}
         </div>

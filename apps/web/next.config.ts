@@ -1,3 +1,4 @@
+import path from 'node:path'
 import { withContentCollections } from '@content-collections/next'
 import withMDX from '@next/mdx'
 import { baseConfig, withAnalyzer } from '@thedaviddias/config-next'
@@ -29,6 +30,7 @@ let nextConfig: NextConfig = {
 
   // Configure Turbopack (default bundler in Next.js 16)
   turbopack: {
+    root: path.resolve(process.cwd(), '../..'),
     resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
     resolveAlias: {
       crypto: { browser: './turbopack-empty.ts' },

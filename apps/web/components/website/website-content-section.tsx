@@ -3,6 +3,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
 import { components } from '@/components/mdx'
 import type { WebsiteMetadata } from '@/lib/content-loader'
+import { siteCopy } from '@/lib/site-copy'
 import { stripHtmlTags } from '@/lib/utils'
 
 interface WebsiteContentSectionProps {
@@ -55,8 +56,9 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
           </div>
         </div>
         <p className="text-muted-foreground leading-relaxed text-pretty">
-          {stripHtmlTags(website.description)} Browse this directory entry for documentation links,
-          category context, and key details that help visitors evaluate the site quickly.
+          {stripHtmlTags(website.description)} Browse this {siteCopy.listingName.singular} for
+          documentation links, category context, and key details that help visitors evaluate it
+          quickly.
         </p>
       </div>
 
@@ -68,7 +70,7 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
             value: website.category ? website.category.replace(/-/g, ' ') : 'General',
             className: 'capitalize'
           },
-          { label: 'Type', value: 'Website' },
+          { label: 'Type', value: siteCopy.listingName.singularTitle },
           { label: 'Documentation', value: 'Linked resources available' },
           {
             label: 'Added',

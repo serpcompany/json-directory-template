@@ -11,16 +11,17 @@ import { RecentlyAddedSection } from '@/components/sections/recently-added-secti
 import { ToolsSection } from '@/components/sections/tools-section'
 import { StaticWebsitesList } from '@/components/static-websites-list'
 import { generateBaseMetadata, generateWebsiteSchema, KEYWORDS } from '@/lib/seo/seo-config'
+import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: `${siteConfig.name} Directory of Websites, Tools, and Resources`,
+  title: `${siteConfig.name} Directory of ${siteCopy.listingName.pluralTitle}, Tools, and Resources`,
   description:
-    `${siteConfig.tagline}. Browse curated websites, tools, and documentation links in one searchable directory.`,
+    `${siteConfig.tagline}. Browse curated ${siteCopy.listingName.plural}, tools, and documentation links in one searchable directory.`,
   keywords: [
     ...KEYWORDS.homepage,
     ...KEYWORDS.global,
-    'website directory',
+    'directory listings',
     'curated tools',
     'documentation links',
     'resource directory',

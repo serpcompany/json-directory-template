@@ -6,20 +6,18 @@ import { GuideCard } from '@/components/sections/guide-card'
 import { type GuideMetadata, getGuides } from '@/lib/content-loader'
 import { generateGuideSchema } from '@/lib/schema'
 import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
+import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: '',
-  description:
-    '',
+  title: 'Guides',
+  description: `Browse implementation guides, walkthroughs, and reference notes for ${siteConfig.name}.`,
   path: '/guides',
   keywords: [
-    'how to create llms.txt',
-    'llms.txt tutorial',
-    'llms.txt implementation guide',
-    'create llms.txt file',
-    'llms.txt guides',
-    'AI documentation tutorial',
-    'llms.txt best practices'
+    'implementation guides',
+    'product walkthroughs',
+    'reference guides',
+    'directory guides',
+    `${siteConfig.name} guides`
   ]
 })
 
@@ -41,10 +39,10 @@ export default async function GuidesPage() {
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight flex items-center gap-3">
             <span className="size-2 bg-primary rounded-full" />
-            llms.txt Guides
+            Guides
           </h1>
           <p className="text-lg text-muted-foreground">
-            Learn how to implement and use llms.txt effectively with our comprehensive guides.
+            Browse walkthroughs, implementation notes, and reference guides for this directory.
           </p>
         </div>
 
@@ -62,7 +60,7 @@ export default async function GuidesPage() {
         ) : (
           <EmptyState
             title="No guides yet"
-            description="We're working on comprehensive guides to help you implement llms.txt. Check back soon!"
+            description="Guides will appear here when this site publishes them."
           />
         )}
       </div>

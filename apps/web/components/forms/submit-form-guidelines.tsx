@@ -1,9 +1,13 @@
 'use client'
 
+import { siteCopy } from '@/lib/site-copy'
+
 /**
  * Guidelines section for the submit form
  */
 export function SubmitFormGuidelines() {
+  const listingLabel = siteCopy.listingName.singular
+
   return (
     <div className="mt-12 border-t border-muted pt-12">
       <h2 className="text-xl font-semibold mb-6">Submission Tips</h2>
@@ -18,11 +22,11 @@ export function SubmitFormGuidelines() {
             </li>
             <li className="flex items-start">
               <span className="text-primary mr-2 mt-1">•</span>
-              <span>The main website URL for the entry you are submitting</span>
+              <span>The main URL for the {listingLabel} you are submitting</span>
             </li>
             <li className="flex items-start">
               <span className="text-primary mr-2 mt-1">•</span>
-              <span>A short description that explains why the entry belongs in the directory</span>
+              <span>A short description that explains what the {listingLabel} covers</span>
             </li>
           </ul>
         </div>
@@ -36,7 +40,7 @@ export function SubmitFormGuidelines() {
             </li>
             <li className="flex items-start">
               <span className="text-green-500 mr-2 mt-1">✓</span>
-              <span>Include API documentation and usage examples</span>
+              <span>Link to docs, examples, or support pages when they help reviewers</span>
             </li>
             <li className="flex items-start">
               <span className="text-green-500 mr-2 mt-1">✓</span>
@@ -44,7 +48,7 @@ export function SubmitFormGuidelines() {
             </li>
             <li className="flex items-start">
               <span className="text-green-500 mr-2 mt-1">✓</span>
-              <span>Update regularly as your project evolves</span>
+              <span>Add reviewer notes when a submission needs extra context</span>
             </li>
           </ul>
         </div>
@@ -68,18 +72,10 @@ export function SubmitFormGuidelines() {
             />
           </svg>
           <div className="text-sm text-amber-800 dark:text-amber-200">
-            <p className="font-medium mb-1">Need help publishing llms.txt files?</p>
+            <p className="font-medium mb-1">Before you submit</p>
             <p className="text-amber-700 dark:text-amber-300">
-              Check out the{' '}
-              <a
-                href="https://llmstxt.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-amber-900 dark:hover:text-amber-100"
-              >
-                llmstxt.org
-              </a>{' '}
-              for documentation and examples.
+              Make sure the public URLs in this form are live and ready for review so the
+              submission can be checked without follow-up.
             </p>
           </div>
         </div>

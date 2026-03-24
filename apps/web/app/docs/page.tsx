@@ -10,18 +10,14 @@ import { SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-
 
 export const metadata: Metadata = generateBaseMetadata({
   title: `Documentation - ${SITE_NAME}`,
-  description:
-    'Learn how to use llmstxt-cli, how the static starter submit flow works, and how local JSON and MDX data power the active directory.',
+  description: `Reference documentation, setup notes, and workflow details for ${SITE_NAME}.`,
   path: '/docs',
   keywords: [
-    'llmstxt-cli',
-    'llms.txt CLI',
-    'AI agent skills',
-    'CLI documentation',
-    'llms.txt install',
-    'developer tools',
-    'static starter',
-    'json-first starter'
+    'documentation',
+    'setup notes',
+    'workflow reference',
+    'starter docs',
+    `${SITE_NAME} documentation`
   ]
 })
 

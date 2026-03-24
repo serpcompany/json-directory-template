@@ -1,4 +1,5 @@
 import type { Category } from '@/lib/categories'
+import { siteCopy } from '@/lib/site-copy'
 
 interface CategorySEOConfig {
   metaTitle: string
@@ -21,12 +22,12 @@ export function getCategorySEO(_slug: string, category: Category): CategorySEOCo
   const categoryDescription = category.description
 
   return {
-    metaTitle: `${categoryName} Websites & Tools Directory`,
-    metaDescription: `Discover curated ${toKeywordValue(categoryName)} websites, tools, and resources. ${categoryDescription}`,
+    metaTitle: `${categoryName} ${siteCopy.listingName.pluralTitle} & Tools Directory`,
+    metaDescription: `Discover curated ${toKeywordValue(categoryName)} ${siteCopy.listingName.plural}, tools, and resources. ${categoryDescription}`,
     keywords: [
       toKeywordValue(categoryName),
-      `${toKeywordValue(categoryName)} directory`,
-      'website directory',
+      `${toKeywordValue(categoryName)} ${siteCopy.listingName.plural}`,
+      `directory ${siteCopy.listingName.plural}`,
       'tools directory',
       'curated resources'
     ],

@@ -6,8 +6,14 @@ describe('GitHubIssueSubmitForm', () => {
   it('uses neutral starter copy for the submit flow', () => {
     render(<GitHubIssueSubmitForm />)
 
-    expect(screen.getByRole('heading', { name: /submit a website/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /submit a listing/i })).toBeInTheDocument()
     expect(screen.getByText(/reviewed through github issues/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/^name$/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/listing url/i)).toBeInTheDocument()
+    expect(screen.getByText(/the main url for the listing you are submitting/i)).toBeInTheDocument()
+    expect(screen.queryByLabelText(/project name/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/website url/i)).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /llmstxt\\.org/i })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /continue on github/i })).toBeDisabled()
   })
 

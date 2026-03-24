@@ -153,7 +153,7 @@ describe('SearchResults', () => {
 
     expect(screen.getByText('Start Your Search')).toBeInTheDocument()
     expect(screen.getByText(/Type something in the search bar above/)).toBeInTheDocument()
-    expect(screen.getByText('Explore All Projects')).toBeInTheDocument()
+    expect(screen.getByText('Explore All Listings')).toBeInTheDocument()
   })
 
   it('should display no results found when query returns empty', () => {
@@ -170,6 +170,7 @@ describe('SearchResults', () => {
 
     expect(screen.getByText('Nothing Found')).toBeInTheDocument()
     expect(screen.getByText(/We couldn't find any results for/)).toBeInTheDocument()
+    expect(screen.getAllByText('Submit a Listing')).toHaveLength(2)
     expect(document.title).toBe(`Search Results for "nonexistent" | ${siteConfig.name}`)
   })
 

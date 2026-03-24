@@ -1,5 +1,6 @@
 import { buildSubmissionIssueUrl } from '@/lib/github-issue'
 import { siteConfig } from '@/lib/site-config'
+import { siteCopy } from '@/lib/site-copy'
 
 describe('buildSubmissionIssueUrl', () => {
   it('builds a prefilled GitHub issue URL with the required submission fields', () => {
@@ -18,12 +19,14 @@ describe('buildSubmissionIssueUrl', () => {
       `/${siteConfig.githubIssueOwner}/${siteConfig.githubIssueRepo}/issues/new`
     )
     expect(parsedUrl.searchParams.get('template')).toBe('submit-website.yml')
-    expect(parsedUrl.searchParams.get('title')).toBe('Submit website: Example Project')
+    expect(parsedUrl.searchParams.get('title')).toBe(
+      `Submit ${siteCopy.listingName.singularTitle}: Example Project`
+    )
 
     const body = parsedUrl.searchParams.get('body')
-    expect(body).toContain('## Website details')
+    expect(body).toContain(`## ${siteCopy.listingName.singularTitle} details`)
     expect(body).toContain('Name: Example Project')
-    expect(body).toContain('Website: https://example.com')
+    expect(body).toContain(`${siteCopy.listingName.singularTitle} URL: https://example.com`)
     expect(body).toContain('llms.txt URL: https://example.com/llms.txt')
     expect(body).toContain('Category: developer-tools')
   })

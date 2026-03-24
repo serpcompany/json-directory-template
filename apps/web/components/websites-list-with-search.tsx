@@ -8,6 +8,7 @@ import { WebsitesSearchControls } from '@/components/websites-search-controls'
 import { useFavoritesFilter } from '@/hooks/use-favorites-filter'
 import type { WebsiteMetadata } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
+import { siteCopy } from '@/lib/site-copy'
 
 interface WebsitesListWithSearchProps {
   initialWebsites: WebsiteMetadata[]
@@ -20,7 +21,7 @@ interface WebsitesListWithSearchProps {
 export function WebsitesListWithSearch({
   initialWebsites,
   emptyTitle = 'No entries found',
-  emptyDescription = 'There are no directory entries available. Try checking back later or submit a website.',
+  emptyDescription = `There are no directory entries available. Try checking back later or ${siteCopy.submitLabelSentence}.`,
   initialShowFavoritesOnly = false,
   totalCount
 }: WebsitesListWithSearchProps) {
@@ -82,7 +83,7 @@ export function WebsitesListWithSearch({
       <EmptyState
         title={emptyTitle}
         description={emptyDescription}
-        actionLabel="Submit a Website"
+        actionLabel={siteCopy.submitLabel}
         actionHref={getRoute('submit')}
       />
     )
@@ -116,7 +117,7 @@ export function WebsitesListWithSearch({
         )
       ) : (
         <div>
-          <h2 className="mb-6 text-2xl font-semibold sr-only">Directory Entries</h2>
+          <h2 className="mb-6 text-2xl font-semibold sr-only">{siteCopy.listingName.pluralTitle}</h2>
           {searchQuery && (
             <p className="mb-4 text-sm text-muted-foreground">
               Showing {filteredAndSortedWebsites.length} result
@@ -139,10 +140,13 @@ export function WebsitesListWithSearch({
 
           <div className="mt-8 text-center" aria-live="polite">
             <div className="text-sm text-muted-foreground">
-              <p>Showing all {filteredAndSortedWebsites.length} matching entries.</p>
+              <p>
+                Showing all {filteredAndSortedWebsites.length} matching{' '}
+                {siteCopy.listingName.plural}.
+              </p>
             </div>
             <p className="mt-3 text-xs text-muted-foreground">
-              Directory size: {totalCount || allWebsites.length} entries
+              Directory size: {totalCount || allWebsites.length} {siteCopy.listingName.plural}
             </p>
           </div>
         </div>

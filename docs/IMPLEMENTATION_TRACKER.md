@@ -7,6 +7,8 @@ This doc turns [docs/PLAN.md](/Users/devin/dev/repos/json-directory-template/doc
 - [x] Working branch: `feat/config-inventory-next-batch`
 - [x] Finalize early decisions below before starting implementation
 - [ ] Split the first 3 execution chunks into GitHub issues if we want issue-level tracking
+- [x] Move the broader site-audit checklist into GitHub issue `#24`:
+  [Issue #24](https://github.com/serpcompany/json-directory-template/issues/24)
 - [x] Add a branch QA checklist for the checked-in site-config refactor:
   [docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md)
 - [x] Make per-site checked-in config files sparse overrides instead of full copied configs
@@ -115,6 +117,9 @@ Acceptance:
 - [x] Decide the long-term treatment of tools, communities, guides, docs, and website-doc/llms surfaces
 - [x] Strip sourcemaps and export-debug text artifacts from the public deploy artifact by default
 - [x] Remove auth, favorites, projects, docs, and guides routes from the default static artifact unless explicitly enabled
+- [x] Add site-config-backed listing terminology and submit CTA copy for the core home/search/submit starter surfaces
+- [x] Make the default local web dev loop stable, repo-scoped, and debugger-optional:
+  default `next dev --webpack`, explicit `turbopack.root`, plus opt-in `dev:inspect`
 - [ ] Complete the deeper upstream audit for placeholder/demo routes against `thedaviddias/llms-txt-hub`
 
 Acceptance:
@@ -159,6 +164,8 @@ Acceptance:
 ### Issue 6. Template cleanup sweep
 
 - [x] Remove hardcoded starter branding and ownership assumptions from active surfaces
+- [x] Capture the broader site-audit scope, experiments, and initial findings in:
+  [Issue #24](https://github.com/serpcompany/json-directory-template/issues/24)
 
 ## Working rules for this branch
 

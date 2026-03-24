@@ -1,11 +1,16 @@
 import { render, screen } from '@/test/test-utils'
 import { Header } from '@/components/layout/header'
+import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
 jest.mock('@/components/analytics-tracker', () => ({
   useAnalyticsEvents: () => ({
     trackSearch: jest.fn()
   })
+}))
+
+jest.mock('@/components/auth/sign-out-button', () => ({
+  SignOutButton: () => <button type="button">Sign out</button>
 }))
 
 jest.mock('@/hooks/use-search', () => ({
@@ -40,5 +45,14 @@ describe('Header', () => {
     render(<Header />)
 
     expect(screen.getByRole('link', { name: siteConfig.name })).toHaveAttribute('href', '/')
+  })
+
+  it('uses the configured submit label for the primary CTA', () => {
+    render(<Header />)
+
+    expect(screen.getByRole('link', { name: siteCopy.submitLabel })).toHaveAttribute(
+      'href',
+      '/submit'
+    )
   })
 })

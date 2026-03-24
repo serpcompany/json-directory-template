@@ -1,3 +1,4 @@
+import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
 export interface SubmissionIssueInput {
@@ -11,11 +12,12 @@ export interface SubmissionIssueInput {
 }
 
 function buildIssueBody(input: SubmissionIssueInput): string {
+  const listingLabel = siteCopy.listingName.singularTitle
   const lines = [
-    '## Website details',
+    `## ${listingLabel} details`,
     '',
     `Name: ${input.name}`,
-    `Website: ${input.website}`,
+    `${listingLabel} URL: ${input.website}`,
     `llms.txt URL: ${input.llmsUrl}`,
     `Category: ${input.category}`,
     '',
@@ -41,7 +43,7 @@ export function buildSubmissionIssueUrl(input: SubmissionIssueInput): string {
   )
 
   url.searchParams.set('template', siteConfig.githubIssueTemplate)
-  url.searchParams.set('title', `Submit website: ${input.name}`)
+  url.searchParams.set('title', `Submit ${siteCopy.listingName.singularTitle}: ${input.name}`)
   url.searchParams.set('body', buildIssueBody(input))
 
   return url.toString()

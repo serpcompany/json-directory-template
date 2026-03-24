@@ -14,6 +14,13 @@ describe('loadCheckedInSite', () => {
     expect(config.content.listingSource.kind).toBe('trial-products-json')
     expect(config.site.domain).toBe('serpdownloaders.com')
     expect(config.routes.listingBasePath).toBe('websites')
+    expect(config.copy).toEqual({
+      listingName: {
+        plural: 'listings',
+        singular: 'listing'
+      },
+      submitLabel: 'Submit a Listing'
+    })
     expect(config.features.showAuth).toBe(false)
     expect(config.features.showDocs).toBe(false)
     expect(config.features.showDeveloperTools).toBe(false)
@@ -33,6 +40,7 @@ describe('loadCheckedInSite', () => {
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     )
     expect(config.routes.listingBasePath).toBe('websites')
+    expect(config.copy.submitLabel).toBe('Submit a Listing')
     expect(config.features.showNewsletter).toBe(true)
   })
 
@@ -43,6 +51,7 @@ describe('loadCheckedInSite', () => {
     expect(config.site.domain).toBe('example.com')
     expect(config.content.listingSource.kind).toBe('listing-json')
     expect(config.routes.listingBasePath).toBe('websites')
+    expect(config.copy.listingName.singular).toBe('listing')
   })
 })
 
@@ -68,6 +77,13 @@ describe('buildSiteEnvironment', () => {
 describe('resolveResolvedSiteConfig', () => {
   it('resolves the checked-in site config into the app-facing shape', () => {
     expect(resolveResolvedSiteConfig(loadCheckedInSite('serpdownloaders'))).toMatchObject({
+      copy: {
+        listingName: {
+          plural: 'listings',
+          singular: 'listing'
+        },
+        submitLabel: 'Submit a Listing'
+      },
       description: 'Directory of download-focused browser tools.',
       domain: 'serpdownloaders.com',
       githubIssueOwner: 'serpcompany',

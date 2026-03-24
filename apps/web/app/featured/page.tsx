@@ -10,13 +10,13 @@ import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { ToolsSection } from '@/components/sections/tools-section'
 import { getGuides } from '@/lib/content-loader'
 import { SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
+import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: `Featured Websites - ${SITE_NAME}`,
-  description:
-    'Discover our curated selection of featured websites, tools, and directory entries.',
-  keywords: ['featured', 'curated', 'best websites', 'directory', 'tools'],
+  title: `Featured ${siteCopy.listingName.pluralTitle} - ${SITE_NAME}`,
+  description: `Discover our curated selection of featured ${siteCopy.listingName.plural} and related resources.`,
+  keywords: ['featured', 'curated', `featured ${siteCopy.listingName.plural}`, 'directory', 'resources'],
   path: '/featured'
 })
 
@@ -32,8 +32,8 @@ export default async function FeaturedPage() {
           '@type': 'CollectionPage',
           '@id': `${SITE_PUBLIC_URL}/featured`,
           name: `Featured - ${SITE_NAME}`,
-          headline: `${featuredProjects.length}+ Featured Sites & Tools`,
-          description: `Explore ${featuredProjects.length}+ curated featured websites and tools from ${SITE_NAME}. Hand-picked for quality and relevance.`,
+          headline: `${featuredProjects.length}+ Featured ${siteCopy.listingName.pluralTitle}`,
+          description: `Explore ${featuredProjects.length}+ curated featured ${siteCopy.listingName.plural} from ${SITE_NAME}. Hand-picked for quality and relevance.`,
           url: `${SITE_PUBLIC_URL}/featured`,
           inLanguage: 'en-US',
           isPartOf: {
@@ -70,8 +70,8 @@ export default async function FeaturedPage() {
           })),
           mainEntity: {
             '@type': 'ItemList',
-            name: 'Featured Websites and Tools',
-            description: 'Curated selection of featured websites and tools',
+            name: `Featured ${siteCopy.listingName.pluralTitle}`,
+            description: `Curated selection of featured ${siteCopy.listingName.plural} and resources`,
             numberOfItems: featuredProjects.length,
             itemListOrder: 'https://schema.org/ItemListOrderAscending',
             itemListElement: featuredProjects.slice(0, 20).map((project, index) => ({
@@ -111,10 +111,12 @@ export default async function FeaturedPage() {
               <div className="sticky top-16 z-35 bg-background border-b py-4 -mx-6 px-6">
                 <div className="flex items-center gap-3">
                   <Trophy className="h-6 w-6 text-yellow-500" />
-                  <h1 className="text-2xl font-bold">Featured Websites & Tools</h1>
+                  <h1 className="text-2xl font-bold">
+                    Featured {siteCopy.listingName.pluralTitle}
+                  </h1>
                 </div>
                 <p className="text-muted-foreground mt-1">
-                  Curated directory entries highlighted for quality, usefulness, and relevance
+                  Curated listings highlighted for quality, usefulness, and relevance
                 </p>
               </div>
               <CategoryWebsitesList initialWebsites={featuredProjects} categoryType="non-tool" />

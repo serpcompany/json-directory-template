@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getRoute } from '@/lib/routes'
+import { siteCopy } from '@/lib/site-copy'
 
 export function NewsletterSection() {
   return (
@@ -22,7 +23,7 @@ export function NewsletterSection() {
             href={getRoute('submit')}
             className="inline-flex items-center justify-center rounded-none bg-foreground px-5 py-2.5 text-sm font-bold text-background transition-colors hover:bg-foreground/90"
           >
-            Submit a Website
+            {siteCopy.submitLabel}
           </Link>
         </div>
       </div>

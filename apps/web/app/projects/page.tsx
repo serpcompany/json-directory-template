@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { getRoute } from '@/lib/routes'
 import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
+import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
 const GITHUB_RESOURCES = [
@@ -29,16 +30,15 @@ const GITHUB_RESOURCES = [
     href: siteConfig.githubRepoUrl,
     icon: Github,
     label: 'Repository',
-    title: 'Starter repository'
+    title: 'Site repository'
   }
 ] as const
 
 export const metadata: Metadata = generateBaseMetadata({
-  title: 'Our Brands',
-  description:
-    '',
+  title: 'Projects',
+  description: `Explore related projects, repositories, and contribution links for ${siteConfig.name}.`,
   path: '/projects',
-  keywords: ['open source', 'GitHub projects', 'llms.txt tools', 'libraries', 'implementations']
+  keywords: ['projects', 'resources', 'repositories', 'open source', siteConfig.name]
 })
 
 export default function ProjectsPage() {
@@ -50,11 +50,10 @@ export default function ProjectsPage() {
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight flex items-center gap-3">
             <span className="size-2 bg-primary rounded-full" />
-            Open Source Projects
+            Projects
           </h1>
           <p className="text-lg text-muted-foreground max-w-3xl">
-            This starter keeps the projects area static-friendly. Instead of calling the GitHub API
-            at runtime, it points to the main public topic pages and contribution entry points.
+            Browse related repositories and external resources connected to this directory.
           </p>
         </div>
 
@@ -70,11 +69,11 @@ export default function ProjectsPage() {
 
               <div className="space-y-3">
                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
-                  Browse GitHub topics for live project discovery
+                  Browse linked resources and repositories
                 </h2>
                 <p className="text-muted-foreground">
-                  GitHub remains the discovery layer, while the site itself stays simple to export
-                  and host. Use the topic pages below to see the wider ecosystem.
+                  Use the links below to explore public topic pages, the site repository, and other
+                  resource entry points this directory wants to surface.
                 </p>
               </div>
 
@@ -125,14 +124,14 @@ export default function ProjectsPage() {
               <div className="size-12 rounded-full bg-muted flex items-center justify-center mx-auto">
                 <Plus className="size-6 text-muted-foreground" />
               </div>
-              <h2 className="text-2xl font-bold tracking-tight">Have a Project to Share?</h2>
+              <h2 className="text-2xl font-bold tracking-tight">Have a listing to submit?</h2>
               <p className="text-muted-foreground">
-                Submit a website through GitHub issues and keep the directory transparent, reviewable,
-                and easy to host anywhere.
+                Submit through GitHub issues and keep the directory transparent, reviewable, and
+                easy to host anywhere.
               </p>
               <div className="flex justify-center gap-3 pt-2">
                 <Button asChild className="rounded-none h-9 font-bold">
-                  <Link href={getRoute('submit')}>Submit Website</Link>
+                  <Link href={getRoute('submit')}>{siteCopy.submitLabel}</Link>
                 </Button>
                 <Button variant="outline" asChild className="rounded-none h-9 font-bold">
                   <Link

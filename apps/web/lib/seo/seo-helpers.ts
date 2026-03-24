@@ -1,4 +1,5 @@
 import { SITE_NAME } from './seo-config'
+import { siteCopy } from '@/lib/site-copy'
 
 /**
  * Helper to generate optimized alt text for images
@@ -9,13 +10,13 @@ export function generateAltText(
 ): string {
   switch (type) {
     case 'favicon':
-      return `${name} website favicon`
+      return `${name} favicon`
     case 'avatar':
-      return `${name}'s profile picture - ${SITE_NAME} community member`
+      return `${name} profile picture`
     case 'logo':
       return `${SITE_NAME} logo`
     case 'website':
-      return `${name} directory entry`
+      return `${name} ${siteCopy.listingName.singular}`
     default:
       return name
   }

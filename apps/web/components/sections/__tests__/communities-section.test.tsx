@@ -3,17 +3,23 @@ import { CommunitiesSection } from '@/components/sections/communities-section'
 import { siteConfig } from '@/lib/site-config'
 
 describe('CommunitiesSection', () => {
-  it('uses configured Reddit and X URLs', () => {
+  it('uses configured social and repo URLs', () => {
     render(<CommunitiesSection />)
 
-    expect(screen.getByRole('link', { name: /Reddit/i })).toHaveAttribute(
+    expect(screen.getByRole('heading', { name: /^reddit$/i }).closest('a')).toHaveAttribute(
       'href',
       siteConfig.redditUrl
     )
-    expect(screen.getByRole('link', { name: /X Community/i })).toHaveAttribute(
+    expect(screen.getByRole('heading', { name: /^x$/i }).closest('a')).toHaveAttribute(
       'href',
       siteConfig.twitterUrl
     )
-    expect(screen.getByText(new RegExp(siteConfig.name, 'i'))).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /^github$/i }).closest('a')).toHaveAttribute(
+      'href',
+      siteConfig.githubRepoUrl
+    )
+    expect(
+      screen.getByText(new RegExp(`Stay close to ${siteConfig.name}`, 'i'))
+    ).toBeInTheDocument()
   })
 })

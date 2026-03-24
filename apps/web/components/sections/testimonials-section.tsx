@@ -1,26 +1,37 @@
-import { TestimonialCard } from '@/components/testimonials/testimonial-card'
+import { Section } from '@/components/layout/section'
+import { Card, CardContent } from '@/components/ui/card'
+
+const proofPoints = [
+  {
+    body: 'New submissions go through a visible review flow instead of a hidden admin panel.',
+    title: 'Clear submission flow'
+  },
+  {
+    body: 'Core directory wording can be retargeted site by site without rewriting the whole starter.',
+    title: 'Reusable copy surface'
+  },
+  {
+    body: 'Optional routes and content areas can be classified, pruned, or replaced as each site matures.',
+    title: 'Flexible starter boundaries'
+  }
+]
 
 export function TestimonialsSection() {
   return (
-    <section className="space-y-6">
-      <h2 className="text-3xl font-bold text-center">What People Are Saying</h2>
-      <div className="grid md:grid-cols-3 gap-8">
-        <TestimonialCard
-          quote="llms.txt has revolutionized how we structure our AI documentation. It's a game-changer for developers and AI researchers alike."
-          author="Dr. Jane Smith"
-          position="AI Research Lead at TechCorp"
-        />
-        <TestimonialCard
-          quote="Implementing llms.txt improved our AI model's understanding of our docs by 40%. It's now an essential part of our development process."
-          author="John Doe"
-          position="CTO of AI Innovations Inc."
-        />
-        <TestimonialCard
-          quote="llms.txt has simplified our content management for AI consumption. It's the standard we've been waiting for in the AI documentation space."
-          author="Emily Chen"
-          position="Documentation Manager at AITech Solutions"
-        />
+    <Section
+      title="Why This Starter Works"
+      description="The starter keeps the core directory workflow simple while leaving room to specialize later."
+    >
+      <div className="grid gap-6 md:grid-cols-3">
+        {proofPoints.map(point => (
+          <Card key={point.title}>
+            <CardContent className="space-y-3 p-6">
+              <h3 className="text-lg font-semibold">{point.title}</h3>
+              <p className="text-sm text-muted-foreground">{point.body}</p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
-    </section>
+    </Section>
   )
 }

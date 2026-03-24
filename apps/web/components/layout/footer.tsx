@@ -2,7 +2,13 @@ import { SiGithub, SiReddit, SiX } from '@icons-pack/react-simple-icons'
 import Link from 'next/link'
 import { ModeToggle } from '@/components/mode-toggle'
 import { getRoute } from '@/lib/routes'
+import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
+
+type FooterLink = {
+  href: string
+  label: string
+}
 
 /**
  * Footer component with site navigation and external links
@@ -10,6 +16,38 @@ import { siteConfig } from '@/lib/site-config'
  */
 export function Footer() {
   const { drBadge } = siteConfig
+  const directoryLinks: FooterLink[] = [
+    {
+      href: `${getRoute('home')}#${siteCopy.allAnchorId}`,
+      label: siteCopy.allLabel
+    },
+    {
+      href: getRoute('submit'),
+      label: siteCopy.submitLabel
+    }
+  ]
+  const resourceLinks: FooterLink[] = []
+
+  if (siteConfig.features.showProjects) {
+    resourceLinks.push({
+      href: getRoute('projects'),
+      label: 'Projects'
+    })
+  }
+
+  if (siteConfig.features.showDocs) {
+    resourceLinks.push({
+      href: getRoute('docs.list'),
+      label: 'Docs'
+    })
+  }
+
+  if (siteConfig.features.showGuides) {
+    resourceLinks.push({
+      href: getRoute('guides.list'),
+      label: 'Guides'
+    })
+  }
 
   return (
     <footer className="border-t border-border/50 py-12 md:py-16 bg-muted/30">
@@ -64,40 +102,31 @@ export function Footer() {
                 Directory
               </h4>
               <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href={getRoute('projects')} className="hover:text-foreground">
-                    Projects
-                  </Link>
-                </li>
-                <li>
-                  <Link href={getRoute('guides.list')} className="hover:text-foreground">
-                    Guides
-                  </Link>
-                </li>
-                <li>
-                  <Link href={getRoute('submit')} className="hover:text-foreground">
-                    Submit
-                  </Link>
-                </li>
+                {directoryLinks.map(link => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="hover:text-foreground">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
-            <div>
-              <h4 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-4">
-                Resources
-              </h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href={getRoute('submit')} className="hover:text-foreground">
-                    Advertise
-                  </Link>
-                </li>
-                <li>
-                  <Link href={getRoute('submit')} className="hover:text-foreground">
-                    Brands
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            {resourceLinks.length > 0 ? (
+              <div>
+                <h4 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-4">
+                  Resources
+                </h4>
+                <ul className="space-y-2 text-sm">
+                  {resourceLinks.map(link => (
+                    <li key={link.href}>
+                      <Link href={link.href} className="hover:text-foreground">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
             <div>
               <h4 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-4">
                 Legal

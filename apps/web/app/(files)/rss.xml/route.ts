@@ -5,6 +5,7 @@ import {
   SITE_NAME,
   SITE_PUBLIC_URL
 } from '@/lib/seo/seo-config'
+import { siteCopy } from '@/lib/site-copy'
 import { getRoute } from '@/lib/routes'
 
 const baseUrl = SITE_PUBLIC_URL
@@ -45,7 +46,7 @@ export async function GET() {
             url: baseUrl
           }
         ],
-        categories: ['Website', site.category || 'Uncategorized']
+        categories: [siteCopy.listingName.singularTitle, site.category || 'Uncategorized']
       }))
     ]
   }

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { buildSubmissionIssueUrl } from '@/lib/github-issue'
 import { categories } from '@/lib/categories'
+import { siteCopy } from '@/lib/site-copy'
 import { generateLlmsFullUrl, generateLlmsUrl } from './submit-form-utils'
 import { SubmitFormGuidelines } from './submit-form-guidelines'
 
@@ -28,6 +29,7 @@ const INITIAL_FORM_STATE: SubmissionFormState = {
 
 export function GitHubIssueSubmitForm() {
   const [formState, setFormState] = useState<SubmissionFormState>(INITIAL_FORM_STATE)
+  const listingLabel = siteCopy.listingName.singularTitle
 
   function updateField<Key extends keyof SubmissionFormState>(
     key: Key,
@@ -76,7 +78,7 @@ export function GitHubIssueSubmitForm() {
   return (
     <div className="space-y-8">
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold">Submit a Website</h1>
+        <h1 className="text-3xl font-bold">{siteCopy.submitLabel}</h1>
         <p className="text-muted-foreground">
           Share the basics and we&apos;ll open a prefilled GitHub issue for review. No account is
           required on this site.
@@ -91,14 +93,14 @@ export function GitHubIssueSubmitForm() {
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="grid gap-6 md:grid-cols-2">
           <label className="space-y-2">
-            <span className="text-sm font-medium">Project name</span>
+            <span className="text-sm font-medium">Name</span>
             <input
               required
               type="text"
               value={formState.name}
               onChange={event => updateField('name', event.target.value)}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              placeholder="Example Project"
+              placeholder={`Example ${listingLabel}`}
             />
           </label>
 
@@ -120,7 +122,7 @@ export function GitHubIssueSubmitForm() {
           </label>
 
           <label className="space-y-2 md:col-span-2">
-            <span className="text-sm font-medium">Website URL</span>
+            <span className="text-sm font-medium">{listingLabel} URL</span>
             <input
               required
               type="url"
@@ -162,7 +164,7 @@ export function GitHubIssueSubmitForm() {
             value={formState.description}
             onChange={event => updateField('description', event.target.value)}
             className="min-h-32 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            placeholder="A short summary of what your project does and why its llms.txt is useful."
+            placeholder={`A short summary of what this ${siteCopy.listingName.singular} covers and why its llms.txt is useful.`}
           />
         </label>
 

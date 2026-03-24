@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { FavoritesLink } from '@/components/ui/favorites-link'
 import { categories } from '@/lib/categories'
 import { getRoute } from '@/lib/routes'
+import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 import { tools } from '@/lib/tools'
 
@@ -44,11 +45,11 @@ export function AppSidebar({ currentCategory, featuredCount = 0 }: AppSidebarPro
           <h3 className="font-semibold text-sm mb-4 text-muted-foreground">Categories</h3>
           <nav className="space-y-1">
             <a
-              href={isHomePage ? '#all-websites' : `${getRoute('home')}#all-websites`}
+              href={isHomePage ? `#${siteCopy.allAnchorId}` : `${getRoute('home')}#${siteCopy.allAnchorId}`}
               onClick={e => {
                 if (isHomePage) {
                   e.preventDefault()
-                  document.getElementById('all-websites')?.scrollIntoView()
+                  document.getElementById(siteCopy.allAnchorId)?.scrollIntoView()
                 }
               }}
               className={`flex items-center gap-2 px-2 py-1 text-sm rounded-md transition-colors cursor-pointer ${
@@ -56,9 +57,9 @@ export function AppSidebar({ currentCategory, featuredCount = 0 }: AppSidebarPro
                   ? 'text-foreground font-medium bg-accent'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
               }`}
-            >
-              <HomeIcon className="h-4 w-4" />
-              All Websites
+              >
+                <HomeIcon className="h-4 w-4" />
+                {siteCopy.allLabel}
             </a>
             <Link
               href="/featured"

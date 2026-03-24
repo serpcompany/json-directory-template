@@ -2,9 +2,15 @@ import {
   defaultSiteConfig,
   resolveCheckedInSiteConfig
 } from '../../../sites/index'
-import { resolveDrBadgeConfig, type ResolvedDrBadge, type SiteFeatureFlags } from '../../../sites/types'
+import {
+  resolveDrBadgeConfig,
+  type ResolvedDrBadge,
+  type SiteCopyConfig,
+  type SiteFeatureFlags
+} from '../../../sites/types'
 
 export type SiteConfig = {
+  copy: SiteCopyConfig
   description: string
   domain: string
   drBadge: ResolvedDrBadge
@@ -46,6 +52,7 @@ export function resolveSiteConfig(
   const configuredSite = resolveCheckedInSiteConfig(siteId)
 
   return {
+    copy: configuredSite.copy,
     description: configuredSite.site.description,
     domain: configuredSite.site.domain,
     drBadge: resolveDrBadgeConfig(configuredSite.branding.drBadge),

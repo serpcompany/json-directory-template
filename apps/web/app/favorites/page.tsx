@@ -9,12 +9,12 @@ import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { WebsitesListWithSearch } from '@/components/websites-list-with-search'
 import { getGuides } from '@/lib/content-loader'
 import { SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
+import { siteCopy } from '@/lib/site-copy'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: `Saved Favorites - ${SITE_NAME}`,
-  description:
-    'View and manage the websites, tools, and resources you have saved from the directory.',
-  keywords: ['favorites', 'saved websites', 'bookmarks', 'directory entries', 'resources'],
+  description: `View and manage the ${siteCopy.listingName.plural} and related resources you have saved from the directory.`,
+  keywords: ['favorites', `saved ${siteCopy.listingName.plural}`, 'bookmarks', 'directory listings', 'resources'],
   path: '/favorites'
 })
 
@@ -29,7 +29,7 @@ export default async function FavoritesPage() {
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
           name: `Favorites - ${SITE_NAME}`,
-          description: 'Your saved directory entries',
+          description: `Your saved ${siteCopy.listingName.plural}`,
           url: `${SITE_PUBLIC_URL}/favorites`
         }}
       />
@@ -53,7 +53,7 @@ export default async function FavoritesPage() {
                 <h1 className="text-3xl font-bold">Saved Favorites</h1>
               </div>
               <p className="text-muted-foreground">
-                Your saved websites, tools, and resources from the directory
+                Your saved {siteCopy.listingName.plural} and related resources from the directory
               </p>
             </div>
 
