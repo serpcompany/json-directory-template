@@ -2,33 +2,33 @@
  * Application route constants
  * Use these constants instead of hardcoding routes in components
  */
-import { siteConfig } from '@/lib/site-config'
+import { siteConfig } from '@/lib/site-config';
 
 function normalizeBasePath(basePath: string): string {
-  return basePath.replace(/^\/+|\/+$/g, '')
+  return basePath.replace(/^\/+|\/+$/g, '');
 }
 
 function buildRouteFromBase(basePath: string, pattern = ''): string {
-  const normalizedBasePath = normalizeBasePath(basePath)
-  const routeBasePath = `/${normalizedBasePath}`
+  const normalizedBasePath = normalizeBasePath(basePath);
+  const routeBasePath = `/${normalizedBasePath}`;
 
   if (!pattern) {
-    return routeBasePath
+    return routeBasePath;
   }
 
-  return `${routeBasePath}/${pattern}`
+  return `${routeBasePath}/${pattern}`;
 }
 
 function buildListingRoute(pattern = ''): string {
-  return buildRouteFromBase(siteConfig.listingRouteBasePath, pattern)
+  return buildRouteFromBase(siteConfig.listingRouteBasePath, pattern);
 }
 
 function buildDocsRoute(pattern = ''): string {
-  return buildRouteFromBase(siteConfig.docsRouteBasePath, pattern)
+  return buildRouteFromBase(siteConfig.docsRouteBasePath, pattern);
 }
 
 function buildNetworkRoute(pattern = ''): string {
-  return buildRouteFromBase(siteConfig.networkRouteBasePath, pattern)
+  return buildRouteFromBase(siteConfig.networkRouteBasePath, pattern);
 }
 
 export const routes = {
@@ -38,39 +38,41 @@ export const routes = {
     detail: buildListingRoute('[slug]'),
     featured: buildListingRoute(),
     latest: `${buildListingRoute()}?sort=latest`,
-    withCategory: `${buildListingRoute()}?category=[category]`
+    withCategory: `${buildListingRoute()}?category=[category]`,
   },
   website: {
     list: buildListingRoute(),
     detail: buildListingRoute('[slug]'),
     featured: buildListingRoute(),
     latest: `${buildListingRoute()}?sort=latest`,
-    withCategory: `${buildListingRoute()}?category=[category]`
+    withCategory: `${buildListingRoute()}?category=[category]`,
   },
   category: {
-    page: '/categories/[category]'
+    page: '/categories/[category]',
   },
   about: '/about',
   account: '/account',
+  affiliateDisclosure: '/legal/affiliate-disclosure',
   favorites: '/favorites',
   docs: {
     list: buildDocsRoute(),
-    doc: buildDocsRoute('[slug]')
+    doc: buildDocsRoute('[slug]'),
   },
   guides: {
     list: '/posts',
-    guide: '/posts/[slug]'
+    guide: '/posts/[slug]',
   },
   news: '/news',
   privacy: '/legal/privacy',
   cookies: '/legal/cookies',
+  dmca: '/legal/dmca',
   projects: buildNetworkRoute(),
   search: '/search',
   login: '/login',
   submit: '/submit',
   terms: '/legal/terms',
-  rss: '/rss.xml'
-} as const
+  rss: '/rss.xml',
+} as const;
 
 type StaticRoutes =
   | 'home'
@@ -84,16 +86,18 @@ type StaticRoutes =
   | 'about'
   | 'docs.list'
   | 'favorites'
+  | 'affiliateDisclosure'
   | 'guides.list'
   | 'news'
   | 'privacy'
   | 'cookies'
+  | 'dmca'
   | 'login'
   | 'projects'
   | 'search'
   | 'submit'
   | 'terms'
-  | 'rss'
+  | 'rss';
 
 type DynamicRoutes =
   | 'listing.detail'
@@ -102,19 +106,19 @@ type DynamicRoutes =
   | 'website.withCategory'
   | 'docs.doc'
   | 'guides.guide'
-  | 'category.page'
+  | 'category.page';
 
-type Routes = StaticRoutes | DynamicRoutes
+type Routes = StaticRoutes | DynamicRoutes;
 
 type DynamicRouteParams = {
-  'listing.detail': { slug: string }
-  'listing.withCategory': { category: string }
-  'website.detail': { slug: string }
-  'website.withCategory': { category: string }
-  'docs.doc': { slug: string }
-  'guides.guide': { slug: string }
-  'category.page': { category: string }
-}
+  'listing.detail': { slug: string };
+  'listing.withCategory': { category: string };
+  'website.detail': { slug: string };
+  'website.withCategory': { category: string };
+  'docs.doc': { slug: string };
+  'guides.guide': { slug: string };
+  'category.page': { category: string };
+};
 
 /**
  * Get the URL for a route
@@ -125,17 +129,17 @@ export function getRoute<T extends Routes>(
   route: T,
   params?: T extends keyof DynamicRouteParams ? DynamicRouteParams[T] : never
 ): string {
-  const parts = route.split('.')
-  let current: any = routes
+  const parts = route.split('.');
+  let current: any = routes;
 
   for (const part of parts) {
-    current = current[part]
+    current = current[part];
   }
 
   if (typeof current === 'string' && params) {
-    const param = Object.entries(params)[0]
-    return current.replace(`[${param[0]}]`, param[1])
+    const param = Object.entries(params)[0];
+    return current.replace(`[${param[0]}]`, param[1]);
   }
 
-  return current
+  return current;
 }

@@ -1,52 +1,48 @@
-import { SiGithub, SiReddit, SiX } from '@icons-pack/react-simple-icons'
-import Link from 'next/link'
-import { ModeToggle } from '@/components/mode-toggle'
-import { getRoute } from '@/lib/routes'
-import { siteCopy } from '@/lib/site-copy'
-import { siteConfig } from '@/lib/site-config'
+import { SiGithub, SiReddit, SiX } from '@icons-pack/react-simple-icons';
+import Link from 'next/link';
+import { ModeToggle } from '@/components/mode-toggle';
+import { getRoute } from '@/lib/routes';
+import { siteCopy } from '@/lib/site-copy';
+import { siteConfig } from '@/lib/site-config';
 
 type FooterLink = {
-  href: string
-  label: string
-}
+  href: string;
+  label: string;
+};
 
 /**
  * Footer component with site navigation and external links
  * Features: Bold typography, refined spacing, clean layout
  */
 export function Footer() {
-  const { drBadge } = siteConfig
+  const { drBadge } = siteConfig;
   const directoryLinks: FooterLink[] = [
     {
-      href: `${getRoute('home')}#${siteCopy.allAnchorId}`,
-      label: siteCopy.allLabel
-    },
-    {
       href: getRoute('submit'),
-      label: siteCopy.submitLabel
-    }
-  ]
-  const resourceLinks: FooterLink[] = []
+      label: siteCopy.submitLabel,
+    },
+  ];
+  const resourceLinks: FooterLink[] = [];
 
   if (siteConfig.features.showProjects) {
     resourceLinks.push({
       href: getRoute('projects'),
-      label: siteCopy.networkLabel
-    })
+      label: siteCopy.networkLabel,
+    });
   }
 
   if (siteConfig.features.showDocs) {
     resourceLinks.push({
       href: getRoute('docs.list'),
-      label: siteCopy.docsLabel
-    })
+      label: siteCopy.docsLabel,
+    });
   }
 
   if (siteConfig.features.showGuides) {
     resourceLinks.push({
       href: getRoute('guides.list'),
-      label: 'Posts'
-    })
+      label: 'Posts',
+    });
   }
 
   return (
@@ -55,8 +51,12 @@ export function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-8 md:gap-12">
           <div className="space-y-4 md:col-span-2">
-            <h3 className="font-bold text-lg tracking-tight">{siteConfig.name}</h3>
-            <p className="text-sm text-muted-foreground">{siteConfig.tagline}</p>
+            <h3 className="font-bold text-lg tracking-tight">
+              {siteConfig.name}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {siteConfig.tagline}
+            </p>
             <div className="flex items-center gap-1 my-6">
               <ModeToggle />
               <Link
@@ -102,7 +102,7 @@ export function Footer() {
                 Directory
               </h4>
               <ul className="space-y-2 text-sm">
-                {directoryLinks.map(link => (
+                {directoryLinks.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href} className="hover:text-foreground">
                       {link.label}
@@ -117,7 +117,7 @@ export function Footer() {
                   Resources
                 </h4>
                 <ul className="space-y-2 text-sm">
-                  {resourceLinks.map(link => (
+                  {resourceLinks.map((link) => (
                     <li key={link.href}>
                       <Link href={link.href} className="hover:text-foreground">
                         {link.label}
@@ -133,32 +133,51 @@ export function Footer() {
               </h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link href={getRoute('about')} className="hover:text-foreground">
+                  <Link
+                    href={getRoute('about')}
+                    className="hover:text-foreground"
+                  >
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link href={getRoute('privacy')} className="hover:text-foreground">
-                    Privacy
+                  <Link
+                    href={getRoute('privacy')}
+                    className="hover:text-foreground"
+                  >
+                    Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href={getRoute('terms')} className="hover:text-foreground">
-                    Terms
+                  <Link
+                    href={getRoute('terms')}
+                    className="hover:text-foreground"
+                  >
+                    Terms of Service
                   </Link>
                 </li>
                 <li>
-                  <Link href={getRoute('cookies')} className="hover:text-foreground">
-                    Cookies
+                  <Link
+                    href={getRoute('affiliateDisclosure')}
+                    className="hover:text-foreground"
+                  >
+                    Affiliate Disclosure
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={getRoute('dmca')}
+                    className="hover:text-foreground"
+                  >
+                    DMCA
                   </Link>
                 </li>
               </ul>
             </div>
           </div>
         </div>
-        <div className="mt-12 pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
-        </div>
+        <div className="mt-12 pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground"></div>
       </div>
     </footer>
-  )
+  );
 }

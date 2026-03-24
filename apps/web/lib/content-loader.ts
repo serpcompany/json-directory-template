@@ -1,239 +1,250 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import {
   normalizeJsonWebsite,
   parseJsonWebsiteEntries,
   type WebsiteJsonEntry,
   type WebsitePriority,
-  type WebsiteResourceLink
-} from './website-schema'
-import { siteConfig } from './site-config'
+  type WebsiteResourceLink,
+} from './website-schema';
+import { siteConfig } from './site-config';
+import { resolveFromRoot } from './server-utils';
 
 // Import content-collections with fallback for CI
-let allGuides: any[] = []
-let allLegals: any[] = []
-let allResources: any[] = []
-let allWebsites: any[] = []
-let allDocs: any[] = []
-let allAboutPages: any[] = []
-let allJsonWebsites: any[] = []
+let allGuides: any[] = [];
+let allLegals: any[] = [];
+let allResources: any[] = [];
+let allWebsites: any[] = [];
+let allDocs: any[] = [];
+let allAboutPages: any[] = [];
+let allJsonWebsites: any[] = [];
 
 try {
-  const collections = require('@/.content-collections/generated')
-  allGuides = collections.allGuides || []
-  allLegals = collections.allLegals || []
-  allResources = collections.allResources || []
-  allWebsites = collections.allWebsites || []
-  allDocs = collections.allDocs || []
-  allAboutPages = collections.allAboutPages || []
+  const collections = require('@/.content-collections/generated');
+  allGuides = collections.allGuides || [];
+  allLegals = collections.allLegals || [];
+  allResources = collections.allResources || [];
+  allWebsites = collections.allWebsites || [];
+  allDocs = collections.allDocs || [];
+  allAboutPages = collections.allAboutPages || [];
 } catch {
   // Fallback for CI/build environments where content-collections hasn't been generated yet
   // Only warn if not in test environment
   if (process.env.NODE_ENV !== 'test') {
-    console.warn('Content collections not available, using empty arrays')
+    console.warn('Content collections not available, using empty arrays');
   }
 }
 
 try {
-  allJsonWebsites = require('../../../data/websites.json')
+  allJsonWebsites = require('../../../data/websites.json');
 } catch {
-  allJsonWebsites = []
+  allJsonWebsites = [];
 }
 
-const collectionGuides = allGuides
-const collectionLegals = allLegals
-const collectionResources = allResources
-const collectionWebsites = allWebsites
-const collectionDocs = allDocs
-const collectionAboutPages = allAboutPages
+const collectionGuides = allGuides;
+const collectionLegals = allLegals;
+const collectionResources = allResources;
+const collectionWebsites = allWebsites;
+const collectionDocs = allDocs;
+const collectionAboutPages = allAboutPages;
 
 // Define types compatible with content-collections schema
 interface Website {
-  slug: string
-  name: string
-  description: string
-  website: string
-  category: string
-  publishedAt: string
-  entityType?: string
-  isUnofficial?: boolean
-  priority?: WebsitePriority
-  featured?: boolean
-  content?: string
-  resourceLinks?: WebsiteResourceLink[]
-  relatedWebsites?: WebsiteMetadata[]
-  previousWebsite?: WebsiteMetadata | null
-  nextWebsite?: WebsiteMetadata | null
-  _meta?: ContentMeta
+  slug: string;
+  name: string;
+  description: string;
+  website: string;
+  category: string;
+  publishedAt: string;
+  entityType?: string;
+  isUnofficial?: boolean;
+  priority?: WebsitePriority;
+  featured?: boolean;
+  content?: string;
+  resourceLinks?: WebsiteResourceLink[];
+  relatedWebsites?: WebsiteMetadata[];
+  previousWebsite?: WebsiteMetadata | null;
+  nextWebsite?: WebsiteMetadata | null;
+  _meta?: ContentMeta;
 }
 
 interface Guide {
-  slug: string
-  title: string
-  description: string
-  date: string
-  image?: string
-  authors: Array<{ name: string; url?: string }>
-  tags?: string[]
-  difficulty: 'beginner' | 'intermediate' | 'advanced'
-  category: 'getting-started' | 'implementation' | 'best-practices' | 'integration'
-  published: boolean
-  publishedAt?: string
-  readingTime?: number
-  content?: string
-  _meta?: ContentMeta
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+  image?: string;
+  authors: Array<{ name: string; url?: string }>;
+  tags?: string[];
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  category:
+    | 'getting-started'
+    | 'implementation'
+    | 'best-practices'
+    | 'integration';
+  published: boolean;
+  publishedAt?: string;
+  readingTime?: number;
+  content?: string;
+  _meta?: ContentMeta;
 }
 
 interface Resource {
-  slug?: string
-  title: string
-  description: string
-  url?: string
-  category: string
-  icon?: string
-  featured?: boolean
-  content?: string
-  _meta?: ContentMeta
+  slug?: string;
+  title: string;
+  description: string;
+  url?: string;
+  category: string;
+  icon?: string;
+  featured?: boolean;
+  content?: string;
+  _meta?: ContentMeta;
 }
 
 interface Doc {
-  slug: string
-  title: string
-  description: string
-  order: number
-  published: boolean
-  content?: string
-  _meta?: ContentMeta
+  slug: string;
+  title: string;
+  description: string;
+  order: number;
+  published: boolean;
+  content?: string;
+  _meta?: ContentMeta;
 }
 
 interface Legal {
-  slug?: string
-  title?: string
-  lastUpdated?: string
-  summary?: string
-  content?: string
-  _meta?: ContentMeta
+  slug?: string;
+  title?: string;
+  lastUpdated?: string;
+  summary?: string;
+  content?: string;
+  _meta?: ContentMeta;
 }
 
 interface AboutPage {
-  slug: string
-  title: string
-  description: string
-  metaTitle: string
-  metaDescription: string
-  keywords: string[]
-  introTitle: string
-  introBody: string
-  whatIsTitle: string
-  whatIsBody: string
-  missionTitle: string
-  missionIntro: string
-  missionItems: string[]
-  stepsTitle: string
+  slug: string;
+  title: string;
+  description: string;
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string[];
+  introTitle: string;
+  introBody: string;
+  whatIsTitle: string;
+  whatIsBody: string;
+  missionTitle: string;
+  missionIntro: string;
+  missionItems: string[];
+  stepsTitle: string;
   steps: Array<{
-    icon: 'file-text' | 'code' | 'zap'
-    title: string
-    body: string
-  }>
-  communityTitle: string
-  communityBody: string
-  primaryCtaLabel: string
-  secondaryCtaLabel: string
-  contactTitle: string
-  contactBody: string
-  contactEmail: string
-  published: boolean
-  content?: string
-  _meta?: ContentMeta
+    icon: 'file-text' | 'code' | 'zap';
+    title: string;
+    body: string;
+  }>;
+  communityTitle: string;
+  communityBody: string;
+  primaryCtaLabel: string;
+  secondaryCtaLabel: string;
+  contactTitle: string;
+  contactBody: string;
+  contactEmail: string;
+  published: boolean;
+  content?: string;
+  _meta?: ContentMeta;
 }
 
 /**
  * Interface for the _meta property found in content-collections items
  */
 interface ContentMeta {
-  filePath: string
-  fileName: string
-  directory: string
-  path: string
-  extension: string
-  content?: string
+  filePath: string;
+  fileName: string;
+  directory: string;
+  path: string;
+  extension: string;
+  content?: string;
 }
 
 /**
  * Types for content metadata
  */
 export interface WebsiteMetadata {
-  slug: string
-  name: string
-  description: string
-  website: string
-  category: string
-  publishedAt: string
-  entityType?: string
-  isUnofficial?: boolean
-  featured?: boolean
-  priority?: WebsitePriority
-  content?: string
-  resourceLinks?: WebsiteResourceLink[]
-  relatedWebsites?: WebsiteMetadata[]
-  previousWebsite?: WebsiteMetadata | null
-  nextWebsite?: WebsiteMetadata | null
-  _meta?: ContentMeta
+  slug: string;
+  name: string;
+  description: string;
+  website: string;
+  category: string;
+  publishedAt: string;
+  entityType?: string;
+  isUnofficial?: boolean;
+  featured?: boolean;
+  priority?: WebsitePriority;
+  content?: string;
+  resourceLinks?: WebsiteResourceLink[];
+  relatedWebsites?: WebsiteMetadata[];
+  previousWebsite?: WebsiteMetadata | null;
+  nextWebsite?: WebsiteMetadata | null;
+  _meta?: ContentMeta;
 }
 
 export interface GuideMetadata {
-  slug: string
-  title: string
-  description: string
-  date: string
-  image?: string
-  authors: Array<{ name: string; url?: string }>
-  tags?: string[]
-  difficulty: 'beginner' | 'intermediate' | 'advanced'
-  category: 'getting-started' | 'implementation' | 'best-practices' | 'integration'
-  published: boolean
-  publishedAt?: string
-  readingTime?: number
-  content?: string
-  _meta?: ContentMeta
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+  image?: string;
+  authors: Array<{ name: string; url?: string }>;
+  tags?: string[];
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  category:
+    | 'getting-started'
+    | 'implementation'
+    | 'best-practices'
+    | 'integration';
+  published: boolean;
+  publishedAt?: string;
+  readingTime?: number;
+  content?: string;
+  _meta?: ContentMeta;
 }
 
 export interface DocMetadata {
-  slug: string
-  title: string
-  description: string
-  order: number
-  published: boolean
-  content?: string
+  slug: string;
+  title: string;
+  description: string;
+  order: number;
+  published: boolean;
+  content?: string;
 }
 
 export interface AboutPageMetadata {
-  slug: string
-  title: string
-  description: string
-  metaTitle: string
-  metaDescription: string
-  keywords: string[]
-  introTitle: string
-  introBody: string
-  whatIsTitle: string
-  whatIsBody: string
-  missionTitle: string
-  missionIntro: string
-  missionItems: string[]
-  stepsTitle: string
+  slug: string;
+  title: string;
+  description: string;
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string[];
+  introTitle: string;
+  introBody: string;
+  whatIsTitle: string;
+  whatIsBody: string;
+  missionTitle: string;
+  missionIntro: string;
+  missionItems: string[];
+  stepsTitle: string;
   steps: Array<{
-    icon: 'file-text' | 'code' | 'zap'
-    title: string
-    body: string
-  }>
-  communityTitle: string
-  communityBody: string
-  primaryCtaLabel: string
-  secondaryCtaLabel: string
-  contactTitle: string
-  contactBody: string
-  contactEmail: string
-  published: boolean
-  content?: string
+    icon: 'file-text' | 'code' | 'zap';
+    title: string;
+    body: string;
+  }>;
+  communityTitle: string;
+  communityBody: string;
+  primaryCtaLabel: string;
+  secondaryCtaLabel: string;
+  contactTitle: string;
+  contactBody: string;
+  contactEmail: string;
+  published: boolean;
+  content?: string;
 }
 
 /**
@@ -243,22 +254,24 @@ export interface AboutPageMetadata {
  */
 export function getWebsites(): WebsiteMetadata[] {
   if (Array.isArray(allJsonWebsites) && allJsonWebsites.length > 0) {
-    const parsedJsonWebsites = parseJsonWebsiteEntries(allJsonWebsites)
+    const parsedJsonWebsites = parseJsonWebsiteEntries(allJsonWebsites);
 
     return parsedJsonWebsites.map(normalizeJsonWebsite).sort((a, b) => {
-      return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    })
+      return (
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      );
+    });
   }
 
   if (!collectionWebsites || collectionWebsites.length === 0) {
-    return []
+    return [];
   }
 
   // Ensure each website has a valid slug
   const websitesWithSlugs = collectionWebsites.map((website: Website) => {
     // If website already has a valid slug, use it
     if (website.slug && typeof website.slug === 'string') {
-      return website
+      return website;
     }
 
     // Derive slug from _meta.path, _meta.fileName, or name (in priority order)
@@ -270,14 +283,16 @@ export function getWebsites(): WebsiteMetadata[] {
         .replace(/[^\w\s-]/g, '')
         .replace(/\s+/g, '-')
         .replace(/--+/g, '-') ||
-      ''
+      '';
 
-    return { ...website, slug }
-  })
+    return { ...website, slug };
+  });
 
   return websitesWithSlugs.sort((a: Website, b: Website) => {
-    return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  })
+    return (
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    );
+  });
 }
 
 /**
@@ -287,41 +302,41 @@ export function getWebsites(): WebsiteMetadata[] {
  * @returns Website with content and navigation, or null if not found
  */
 export async function getWebsiteBySlug(slug: string) {
-  const websites = getWebsites() // Use the enhanced function that ensures slugs
+  const websites = getWebsites(); // Use the enhanced function that ensures slugs
 
   if (websites.length === 0) {
-    return null
+    return null;
   }
 
   // Find the website with the matching slug
-  const website = websites.find(site => site.slug === slug)
+  const website = websites.find((site) => site.slug === slug);
 
   if (!website) {
-    return null
+    return null;
   }
 
   // Find current index for previous/next navigation
-  const currentIndex = websites.findIndex(site => site.slug === slug)
+  const currentIndex = websites.findIndex((site) => site.slug === slug);
 
   // Get previous and next websites
-  const previousWebsite = websites[currentIndex - 1] || null
-  const nextWebsite = websites[currentIndex + 1] || null
+  const previousWebsite = websites[currentIndex - 1] || null;
+  const nextWebsite = websites[currentIndex + 1] || null;
 
   // Get related websites (same category, excluding current)
   const relatedWebsites = websites
-    .filter(site => site.category === website.category && site.slug !== slug)
-    .slice(0, 4)
+    .filter((site) => site.category === website.category && site.slug !== slug)
+    .slice(0, 4);
 
   // Get content from _meta if available
-  const content = website.content || website._meta?.content || ''
+  const content = website.content || website._meta?.content || '';
 
   return {
     ...website,
     content,
     relatedWebsites,
     previousWebsite,
-    nextWebsite
-  }
+    nextWebsite,
+  };
 }
 
 /**
@@ -331,7 +346,7 @@ export async function getWebsiteBySlug(slug: string) {
  */
 export function getGuides() {
   if (!collectionGuides || collectionGuides.length === 0) {
-    return []
+    return [];
   }
 
   // Map to match the Guide type expected by components
@@ -342,7 +357,10 @@ export function getGuides() {
       description: guide.description || '',
       slug: guide.slug || '',
       image: guide.image || undefined,
-      difficulty: (guide.difficulty || 'beginner') as 'beginner' | 'intermediate' | 'advanced',
+      difficulty: (guide.difficulty || 'beginner') as
+        | 'beginner'
+        | 'intermediate'
+        | 'advanced',
       category: (guide.category || 'getting-started') as
         | 'getting-started'
         | 'implementation'
@@ -351,13 +369,14 @@ export function getGuides() {
       published: guide.published !== false,
       publishedAt: guide.publishedAt || guide.date || new Date().toISOString(),
       date: guide.date || new Date().toISOString(),
-      authors: guide.authors || []
+      authors: guide.authors || [],
     }))
     .sort((a: Guide, b: Guide) => {
       return (
-        new Date(b.publishedAt || b.date).getTime() - new Date(a.publishedAt || a.date).getTime()
-      )
-    })
+        new Date(b.publishedAt || b.date).getTime() -
+        new Date(a.publishedAt || a.date).getTime()
+      );
+    });
 }
 
 /**
@@ -366,15 +385,19 @@ export function getGuides() {
  * @param slug - The guide slug
  * @returns Guide with content, or null if not found
  */
-export async function getGuideBySlug(slug: string): Promise<GuideMetadata | null> {
-  const guide = collectionGuides.find((guide: Guide) => guide.slug === slug && guide.published)
+export async function getGuideBySlug(
+  slug: string
+): Promise<GuideMetadata | null> {
+  const guide = collectionGuides.find(
+    (guide: Guide) => guide.slug === slug && guide.published
+  );
 
   if (!guide) {
-    return null
+    return null;
   }
 
   // Get content from guide
-  const content = guide.content || guide._meta?.content || ''
+  const content = guide.content || guide._meta?.content || '';
 
   // Ensure the guide has all required properties from GuideMetadata
   return {
@@ -389,8 +412,8 @@ export async function getGuideBySlug(slug: string): Promise<GuideMetadata | null
     published: guide.published !== false,
     publishedAt: guide.publishedAt || guide.date || new Date().toISOString(),
     readingTime: guide.readingTime || 0,
-    content
-  }
+    content,
+  };
 }
 
 /**
@@ -400,19 +423,36 @@ export async function getGuideBySlug(slug: string): Promise<GuideMetadata | null
  * @returns Legal content string
  */
 export async function getLegalContent(key: string): Promise<string> {
-  const legal = collectionLegals.find((l: Legal) => l._meta?.path === key)
+  const legal = collectionLegals.find((l: Legal) => l._meta?.path === key);
+  const content =
+    legal?.content ||
+    legal?._meta?.content ||
+    readLegalContentFromFileSystem(key);
 
-  if (!legal) {
-    throw new Error(`Legal content "${key}" not found`)
+  if (!content) {
+    throw new Error(`Legal content "${key}" not found`);
   }
 
-  const content = legal.content || legal._meta?.content || ''
-
   return content
+    .replace(/\{\{siteName\}\}/g, siteConfig.name)
+    .replace(/\{\{domain\}\}/g, siteConfig.domain)
     .replace(/privacy@serp\.co/gi, `privacy@${siteConfig.domain}`)
     .replace(/legal@serp\.co/gi, `legal@${siteConfig.domain}`)
     .replace(/serp\.co/gi, siteConfig.domain)
-    .replace(/\bSERP\b/g, siteConfig.name)
+    .replace(/\bSERP\b/g, siteConfig.name);
+}
+
+function readLegalContentFromFileSystem(key: string): string {
+  const legalFilePath = path.join(
+    resolveFromRoot('packages/content/data/legal'),
+    `${key}.mdx`
+  );
+
+  if (!fs.existsSync(legalFilePath)) {
+    return '';
+  }
+
+  return fs.readFileSync(legalFilePath, 'utf8');
 }
 
 /**
@@ -421,7 +461,7 @@ export async function getLegalContent(key: string): Promise<string> {
  * @returns Array of resources
  */
 export function getResources() {
-  return collectionResources
+  return collectionResources;
 }
 
 /**
@@ -431,19 +471,21 @@ export function getResources() {
  * @returns Resource with content, or null if not found
  */
 export async function getResourceBySlug(slug: string) {
-  const resource = collectionResources.find((resource: Resource) => resource.slug === slug)
+  const resource = collectionResources.find(
+    (resource: Resource) => resource.slug === slug
+  );
 
   if (!resource) {
-    return null
+    return null;
   }
 
   // Get content from resource
-  const content = resource.content || resource._meta?.content || ''
+  const content = resource.content || resource._meta?.content || '';
 
   return {
     ...resource,
-    content
-  }
+    content,
+  };
 }
 
 /**
@@ -453,7 +495,7 @@ export async function getResourceBySlug(slug: string) {
  */
 export function getDocs(): DocMetadata[] {
   if (!collectionDocs || collectionDocs.length === 0) {
-    return []
+    return [];
   }
 
   return collectionDocs
@@ -463,9 +505,9 @@ export function getDocs(): DocMetadata[] {
       title: doc.title || '',
       description: doc.description || '',
       order: doc.order ?? 0,
-      published: doc.published !== false
+      published: doc.published !== false,
     }))
-    .sort((a: DocMetadata, b: DocMetadata) => a.order - b.order)
+    .sort((a: DocMetadata, b: DocMetadata) => a.order - b.order);
 }
 
 /**
@@ -475,13 +517,15 @@ export function getDocs(): DocMetadata[] {
  * @returns Doc with content, or null if not found
  */
 export async function getDocBySlug(slug: string): Promise<DocMetadata | null> {
-  const doc = collectionDocs.find((doc: Doc) => doc.slug === slug && doc.published)
+  const doc = collectionDocs.find(
+    (doc: Doc) => doc.slug === slug && doc.published
+  );
 
   if (!doc) {
-    return null
+    return null;
   }
 
-  const content = doc.content || doc._meta?.content || ''
+  const content = doc.content || doc._meta?.content || '';
 
   return {
     slug: doc.slug || slug,
@@ -489,8 +533,8 @@ export async function getDocBySlug(slug: string): Promise<DocMetadata | null> {
     description: doc.description || '',
     order: doc.order ?? 0,
     published: doc.published !== false,
-    content
-  }
+    content,
+  };
 }
 
 /**
@@ -501,10 +545,10 @@ export async function getDocBySlug(slug: string): Promise<DocMetadata | null> {
 export async function getAboutPage(): Promise<AboutPageMetadata | null> {
   const aboutPage = collectionAboutPages.find(
     (page: AboutPage) => page.slug === 'about' && page.published
-  )
+  );
 
   if (!aboutPage) {
-    return null
+    return null;
   }
 
   return {
@@ -531,6 +575,6 @@ export async function getAboutPage(): Promise<AboutPageMetadata | null> {
     contactBody: aboutPage.contactBody || '',
     contactEmail: aboutPage.contactEmail || '',
     published: aboutPage.published !== false,
-    content: aboutPage.content || aboutPage._meta?.content || ''
-  }
+    content: aboutPage.content || aboutPage._meta?.content || '',
+  };
 }

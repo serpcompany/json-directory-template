@@ -179,6 +179,12 @@ Depending on the chosen source:
 - `content.listingSource.kind = "trial-products-json"` also needs `category`, `featuredCount`, and `publishedAt`
 - deploy runs also need `deploy.repoUrl`, `deploy.branch`, and `deploy.preserve`
 
+Important:
+
+- `site-config` does not own the individual listing names.
+- Shell labels like `Listings`, `Docs`, `Network`, and `Submit` come from `copy.*` in `sites/<id>/site-config.ts`.
+- The actual listing names and slugs come from the configured listing source itself. For `trial-products-json` sites like `serpdownloaders`, that means editing the source records in `sites/<id>/products.json` and then rebuilding `data/websites.json`.
+
 Usually customized, but safe to inherit from the starter if they fit:
 
 - `copy.listingName.singular`

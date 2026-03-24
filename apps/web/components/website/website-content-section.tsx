@@ -1,13 +1,24 @@
-import { Info } from 'lucide-react'
-import { MDXRemote } from 'next-mdx-remote/rsc'
-import remarkGfm from 'remark-gfm'
-import { components } from '@/components/mdx'
-import type { WebsiteMetadata } from '@/lib/content-loader'
-import { siteCopy } from '@/lib/site-copy'
-import { stripHtmlTags } from '@/lib/utils'
+import { Info } from 'lucide-react';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
+import { components } from '@/components/mdx';
+import type { WebsiteMetadata } from '@/lib/content-loader';
+import { siteCopy } from '@/lib/site-copy';
+import { stripHtmlTags } from '@/lib/utils';
 
 interface WebsiteContentSectionProps {
-  website: WebsiteMetadata
+  website: WebsiteMetadata;
+}
+
+function stripDuplicateLinksSection(
+  content: string,
+  hasSupplementalLinks: boolean
+): string {
+  if (!hasSupplementalLinks) {
+    return content;
+  }
+
+  return content.replace(/\n## Links[\s\S]*$/i, '').trim();
 }
 
 /**
@@ -20,21 +31,26 @@ interface WebsiteContentSectionProps {
  */
 export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
   if (website.content) {
+    const renderedContent = stripDuplicateLinksSection(
+      website.content,
+      Boolean(website.resourceLinks?.length)
+    );
+
     return (
       <section className="animate-fade-in-up opacity-0 stagger-4">
         <div className="prose dark:prose-invert max-w-none prose-headings:scroll-mt-20">
           <MDXRemote
-            source={website.content}
+            source={renderedContent}
             components={components}
             options={{
               mdxOptions: {
-                remarkPlugins: [remarkGfm]
-              }
+                remarkPlugins: [remarkGfm],
+              },
             }}
           />
         </div>
       </section>
-    )
+    );
   }
 
   return (
@@ -49,16 +65,21 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
             <Info className="size-5 text-primary" aria-hidden />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-pretty scroll-mt-20" id="about-heading">
+            <h2
+              className="text-xl font-bold text-pretty scroll-mt-20"
+              id="about-heading"
+            >
               About {website.name}
             </h2>
-            <p className="text-sm text-muted-foreground mt-0.5">Summary and key details</p>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Summary and key details
+            </p>
           </div>
         </div>
         <p className="text-muted-foreground leading-relaxed text-pretty">
-          {stripHtmlTags(website.description)} Browse this {siteCopy.listingName.singular} for
-          resource links, category context, and key details that help visitors evaluate it
-          quickly.
+          {stripHtmlTags(website.description)} Browse this{' '}
+          {siteCopy.listingName.singular} for resource links, category context,
+          and key details that help visitors evaluate it quickly.
         </p>
       </div>
 
@@ -67,8 +88,10 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
         {[
           {
             label: 'Category',
-            value: website.category ? website.category.replace(/-/g, ' ') : 'General',
-            className: 'capitalize'
+            value: website.category
+              ? website.category.replace(/-/g, ' ')
+              : 'General',
+            className: 'capitalize',
           },
           { label: 'Type', value: siteCopy.listingName.singularTitle },
           { label: 'Resources', value: 'Helpful links and context' },
@@ -78,10 +101,10 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
               ? new Date(website.publishedAt).toLocaleDateString('en-US', {
                   month: 'long',
                   day: 'numeric',
-                  year: 'numeric'
+                  year: 'numeric',
                 })
-              : 'Recently'
-          }
+              : 'Recently',
+          },
         ].map(({ label, value, className = '' }) => (
           <div
             key={label}
@@ -95,5 +118,5 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
         ))}
       </div>
     </section>
-  )
+  );
 }

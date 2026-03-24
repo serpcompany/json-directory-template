@@ -1,13 +1,15 @@
-import { ExternalLink, Link2 } from 'lucide-react'
-import { WebsiteCliSection } from '@/components/website/website-cli-section'
-import type { WebsiteMetadata } from '@/lib/content-loader'
+import { ExternalLink, Link2 } from 'lucide-react';
+import { WebsiteCliSection } from '@/components/website/website-cli-section';
+import type { WebsiteMetadata } from '@/lib/content-loader';
 
 interface WebsiteResourcesSectionProps {
-  website: WebsiteMetadata
+  website: WebsiteMetadata;
 }
 
-export function WebsiteResourcesSection({ website }: WebsiteResourcesSectionProps) {
-  const resourceLinks = website.resourceLinks ?? []
+export function WebsiteResourcesSection({
+  website,
+}: WebsiteResourcesSectionProps) {
+  const resourceLinks = website.resourceLinks ?? [];
 
   return (
     <>
@@ -21,8 +23,11 @@ export function WebsiteResourcesSection({ website }: WebsiteResourcesSectionProp
                 <Link2 className="size-5 text-primary" aria-hidden />
               </div>
               <div>
-                <h2 className="scroll-mt-20 text-xl font-bold text-pretty" id="resources">
-                  Resources
+                <h2
+                  className="scroll-mt-20 text-xl font-bold text-pretty"
+                  id="links"
+                >
+                  Links
                 </h2>
                 <p className="mt-0.5 text-sm text-muted-foreground">
                   Helpful links for this entry
@@ -31,7 +36,7 @@ export function WebsiteResourcesSection({ website }: WebsiteResourcesSectionProp
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-              {resourceLinks.map(link => (
+              {resourceLinks.map((link) => (
                 <a
                   key={`${link.label}-${link.url}`}
                   href={link.url}
@@ -39,7 +44,9 @@ export function WebsiteResourcesSection({ website }: WebsiteResourcesSectionProp
                   rel="noreferrer"
                   className="group flex items-center justify-between rounded-xl border border-border/50 bg-background/70 px-4 py-3 text-sm transition-colors hover:border-border hover:bg-background"
                 >
-                  <span className="font-medium text-foreground">{link.label}</span>
+                  <span className="font-medium text-foreground">
+                    {link.label}
+                  </span>
                   <ExternalLink
                     className="size-4 text-muted-foreground transition-colors group-hover:text-foreground"
                     aria-hidden
@@ -51,5 +58,5 @@ export function WebsiteResourcesSection({ website }: WebsiteResourcesSectionProp
         </section>
       ) : null}
     </>
-  )
+  );
 }

@@ -1,28 +1,28 @@
-import { render, screen } from '@/test/test-utils'
-import { AppSidebar } from '@/components/layout/app-sidebar'
-import { categories } from '@/lib/categories'
-import { siteCopy } from '@/lib/site-copy'
+import { render, screen } from '@/test/test-utils';
+import { AppSidebar } from '@/components/layout/app-sidebar';
+import { categories } from '@/lib/categories';
 
 jest.mock('@/components/ui/favorites-link', () => ({
-  FavoritesLink: () => <a href="/favorites">Favorites</a>
-}))
+  FavoritesLink: () => <a href="/favorites">Favorites</a>,
+}));
 
 describe('AppSidebar', () => {
-  it('uses the configured all-items label in the home anchor link', () => {
-    render(<AppSidebar />)
+  it('does not render the all-items anchor shortcut in the categories list', () => {
+    render(<AppSidebar />);
 
-    expect(screen.getByRole('link', { name: siteCopy.allLabel })).toHaveAttribute(
-      'href',
-      '#all-listings'
-    )
-  })
+    expect(
+      screen.queryByRole('link', { name: /all listings/i })
+    ).not.toBeInTheDocument();
+  });
 
   it('hides the external resources group when no external resources are configured', () => {
-    render(<AppSidebar />)
+    render(<AppSidebar />);
 
-    expect(screen.queryByRole('heading', { name: 'Resources' })).not.toBeInTheDocument()
-    expect(screen.queryByText('Chrome Extension')).not.toBeInTheDocument()
-  })
+    expect(
+      screen.queryByRole('heading', { name: 'Resources' })
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText('Chrome Extension')).not.toBeInTheDocument();
+  });
 
   it('renders only the active category links and hides featured when there are no featured listings', () => {
     render(
@@ -30,10 +30,16 @@ describe('AppSidebar', () => {
         availableCategorySlugs={[categories[0]!.slug]}
         showFeaturedCategory={false}
       />
-    )
+    );
 
-    expect(screen.getByRole('link', { name: categories[0]!.name })).toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: 'AI & Machine Learning' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: 'Featured' })).not.toBeInTheDocument()
-  })
-})
+    expect(
+      screen.getByRole('link', { name: categories[0]!.name })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'AI & Machine Learning' })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'Featured' })
+    ).not.toBeInTheDocument();
+  });
+});

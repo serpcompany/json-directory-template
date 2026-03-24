@@ -1,24 +1,28 @@
-import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { JsonLd } from '@/components/json-ld'
-import { ProjectNavigation } from '@/components/project-navigation'
-import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
-import { WebsiteContentSection } from '@/components/website/website-content-section'
-import { WebsiteDetailSidebar } from '@/components/website/website-detail-sidebar'
-import { WebsiteError } from '@/components/website/website-error'
-import { WebsiteHero } from '@/components/website/website-hero'
-import { WebsiteRelatedProjects } from '@/components/website/website-related-projects'
-import { WebsiteResourcesSection } from '@/components/website/website-resources-section'
-import { getWebsiteBySlug, getWebsites, type WebsiteMetadata } from '@/lib/content-loader'
-import { resolveListingDetailTemplate } from '@/lib/listing-detail-template'
-import { getRoute } from '@/lib/routes'
-import { generateWebsiteDetailSchema } from '@/lib/schema'
-import { SITE_NAME, generateDynamicMetadata } from '@/lib/seo/seo-config'
-import { siteCopy } from '@/lib/site-copy'
-import { siteConfig } from '@/lib/site-config'
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { JsonLd } from '@/components/json-ld';
+import { ProjectNavigation } from '@/components/project-navigation';
+import { ExternalResourcesSection } from '@/components/sections/external-resources-section';
+import { WebsiteContentSection } from '@/components/website/website-content-section';
+import { WebsiteDetailSidebar } from '@/components/website/website-detail-sidebar';
+import { WebsiteError } from '@/components/website/website-error';
+import { WebsiteHero } from '@/components/website/website-hero';
+import { WebsiteRelatedProjects } from '@/components/website/website-related-projects';
+import { WebsiteResourcesSection } from '@/components/website/website-resources-section';
+import {
+  getWebsiteBySlug,
+  getWebsites,
+  type WebsiteMetadata,
+} from '@/lib/content-loader';
+import { resolveListingDetailTemplate } from '@/lib/listing-detail-template';
+import { getRoute } from '@/lib/routes';
+import { generateWebsiteDetailSchema } from '@/lib/schema';
+import { SITE_NAME, generateDynamicMetadata } from '@/lib/seo/seo-config';
+import { siteCopy } from '@/lib/site-copy';
+import { siteConfig } from '@/lib/site-config';
 
 interface ProjectPageProps {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }
 
 /**
@@ -27,23 +31,33 @@ interface ProjectPageProps {
  * @param params - Page parameters containing the website slug
  * @returns Promise<Metadata> - Generated metadata for the page
  */
-export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
-  const { slug } = await params
+export async function generateMetadata({
+  params,
+}: ProjectPageProps): Promise<Metadata> {
+  const { slug } = await params;
 
   try {
-    const project = await getWebsiteBySlug(slug)
+    const project = await getWebsiteBySlug(slug);
 
     if (!project) {
-      return {}
+      return {};
     }
 
     // Format category for display
     const categoryFormatted = project.category
-      ? project.category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
-      : null
+      ? project.category
+          .replace(/-/g, ' ')
+          .replace(/\b\w/g, (l) => l.toUpperCase())
+      : null;
 
     // Create an SEO-optimized description
-    const seoDescription = `${project.description} Explore ${project.name} in the ${siteConfig.name} directory, with resource links, category details, and related entries.${categoryFormatted ? ` Category: ${categoryFormatted}.` : ''}`
+    const seoDescription = `${project.description} Explore ${
+      project.name
+    } in the ${
+      siteConfig.name
+    } directory, with resource links, category details, and related entries.${
+      categoryFormatted ? ` Category: ${categoryFormatted}.` : ''
+    }`;
 
     // Generate comprehensive keywords
     const keywords = [
@@ -54,22 +68,23 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
       `${siteCopy.listingName.singular} details`,
       'directory listings',
       'resource links',
-      categoryFormatted
-    ].filter(Boolean) as string[]
+      categoryFormatted,
+    ].filter(Boolean) as string[];
 
     return generateDynamicMetadata({
       type: 'listing',
       name: project.name,
-      description: seoDescription.length > 160 ? project.description : seoDescription,
+      description:
+        seoDescription.length > 160 ? project.description : seoDescription,
       slug: project.slug,
       additionalKeywords: keywords,
-      publishedAt: project.publishedAt
-    })
+      publishedAt: project.publishedAt,
+    });
   } catch (_error) {
     return {
       title: `${siteCopy.listingName.singularTitle} | ${SITE_NAME}`,
-      description: siteCopy.listingName.singularTitle
-    }
+      description: siteCopy.listingName.singularTitle,
+    };
   }
 }
 
@@ -80,22 +95,25 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
  */
 export async function generateStaticParams() {
   try {
-    const websites = await getWebsites()
+    const websites = await getWebsites();
 
     if (!websites || websites.length === 0) {
-      return []
+      return [];
     }
 
     // Only include websites with valid string slugs
     const params = websites
-      .filter((website: WebsiteMetadata) => website.slug && typeof website.slug === 'string')
+      .filter(
+        (website: WebsiteMetadata) =>
+          website.slug && typeof website.slug === 'string'
+      )
       .map((website: WebsiteMetadata) => ({
-        slug: website.slug
-      }))
+        slug: website.slug,
+      }));
 
-    return params
+    return params;
   } catch (_error) {
-    return []
+    return [];
   }
 }
 
@@ -107,19 +125,25 @@ export async function generateStaticParams() {
  */
 export default async function ProjectPage({ params }: ProjectPageProps) {
   try {
-    const { slug } = await params
+    const { slug } = await params;
 
-    const project = await getWebsiteBySlug(slug)
+    const project = await getWebsiteBySlug(slug);
 
     if (!project) {
-      notFound()
+      notFound();
     }
 
     const breadcrumbItems = [
-      { name: 'Directory', href: getRoute('listing.list') },
-      { name: project.name, href: getRoute('listing.detail', { slug: project.slug }) }
-    ]
-    const detailTemplate = resolveListingDetailTemplate(project.entityType)
+      {
+        name: siteCopy.listingName.pluralTitle,
+        href: getRoute('listing.list'),
+      },
+      {
+        name: project.name,
+        href: getRoute('listing.detail', { slug: project.slug }),
+      },
+    ];
+    const detailTemplate = resolveListingDetailTemplate(project.entityType);
 
     const detailPage = (
       <div
@@ -139,18 +163,21 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
               {/* Main content column */}
               <div className="lg:col-span-8 space-y-14 md:space-y-16">
-                {/* Supplemental resources */}
-                <WebsiteResourcesSection website={project} />
-
                 {/* Content Section */}
                 <WebsiteContentSection website={project} />
 
                 {/* External resources section */}
                 {siteConfig.features.showExternalResources && (
                   <section className="animate-fade-in-up opacity-0 stagger-5">
-                    <ExternalResourcesSection layout="default" showImages={false} />
+                    <ExternalResourcesSection
+                      layout="default"
+                      showImages={false}
+                    />
                   </section>
                 )}
+
+                {/* Supplemental resources */}
+                <WebsiteResourcesSection website={project} />
               </div>
 
               {/* Sidebar column */}
@@ -188,7 +215,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </div>
       </div>
-    )
+    );
 
     switch (detailTemplate) {
       case 'movie':
@@ -196,9 +223,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       case 'product':
       case 'default':
       default:
-        return detailPage
+        return detailPage;
     }
   } catch (_error) {
-    return <WebsiteError />
+    return <WebsiteError />;
   }
 }

@@ -1,26 +1,26 @@
-'use client'
+'use client';
 
-import { cn } from '@thedaviddias/design-system/lib/utils'
-import { ExternalLink, Home as HomeIcon, Trophy, X } from 'lucide-react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useEffect } from 'react'
-import { SignOutButton } from '@/components/auth/sign-out-button'
-import { FavoritesLink } from '@/components/ui/favorites-link'
-import type { HeaderAuthState } from '@/lib/auth'
-import { categories } from '@/lib/categories'
-import { externalResources } from '@/lib/external-resources'
-import { getRoute } from '@/lib/routes'
-import { siteCopy } from '@/lib/site-copy'
-import { siteConfig } from '@/lib/site-config'
+import { cn } from '@thedaviddias/design-system/lib/utils';
+import { ExternalLink, Trophy, X } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
+import { SignOutButton } from '@/components/auth/sign-out-button';
+import { FavoritesLink } from '@/components/ui/favorites-link';
+import type { HeaderAuthState } from '@/lib/auth';
+import { categories } from '@/lib/categories';
+import { externalResources } from '@/lib/external-resources';
+import { getRoute } from '@/lib/routes';
+import { siteCopy } from '@/lib/site-copy';
+import { siteConfig } from '@/lib/site-config';
 
 interface MobileDrawerProps {
-  availableCategorySlugs?: string[]
-  authState?: HeaderAuthState
-  isOpen: boolean
-  onClose: () => void
-  featuredCount?: number
-  showFeaturedCategory?: boolean
+  availableCategorySlugs?: string[];
+  authState?: HeaderAuthState;
+  isOpen: boolean;
+  onClose: () => void;
+  featuredCount?: number;
+  showFeaturedCategory?: boolean;
 }
 
 /**
@@ -32,36 +32,38 @@ export function MobileDrawer({
   isOpen,
   onClose,
   featuredCount,
-  showFeaturedCategory = Boolean(featuredCount)
+  showFeaturedCategory = Boolean(featuredCount),
 }: MobileDrawerProps) {
-  const pathname = usePathname()
-  const isAuthenticated = authState?.isAuthenticated ?? false
-  const isAuthConfigured = authState?.isConfigured ?? true
+  const pathname = usePathname();
+  const isAuthenticated = authState?.isAuthenticated ?? false;
+  const isAuthConfigured = authState?.isConfigured ?? true;
   const showExternalResources =
-    siteConfig.features.showExternalResources && externalResources.length > 0
+    siteConfig.features.showExternalResources && externalResources.length > 0;
   const availableCategories = availableCategorySlugs
-    ? categories.filter(category => availableCategorySlugs.includes(category.slug))
-    : categories
+    ? categories.filter((category) =>
+        availableCategorySlugs.includes(category.slug)
+      )
+    : categories;
 
   // Close drawer when route changes
   useEffect(() => {
     if (isOpen) {
-      onClose()
+      onClose();
     }
-  }, [pathname]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Prevent body scroll when drawer is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden'
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = ''
+      document.body.style.overflow = '';
     }
 
     return () => {
-      document.body.style.overflow = ''
-    }
-  }, [isOpen])
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   // Handle escape key
   useEffect(() => {
@@ -70,19 +72,19 @@ export function MobileDrawer({
      */
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
-        onClose()
+        onClose();
       }
-    }
+    };
 
-    document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
-  }, [isOpen, onClose])
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
 
-  const isHomePage = pathname === '/'
   /**
    * Checks if current page is a category page
    */
-  const isCategoryPage = (slug: string) => pathname === getRoute('category.page', { category: slug })
+  const isCategoryPage = (slug: string) =>
+    pathname === getRoute('category.page', { category: slug });
 
   return (
     <>
@@ -91,12 +93,14 @@ export function MobileDrawer({
         type="button"
         className={cn(
           'fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] transition-opacity sm:hidden border-none p-0',
-          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          isOpen
+            ? 'opacity-100 pointer-events-auto'
+            : 'opacity-0 pointer-events-none'
         )}
         onClick={onClose}
-        onKeyDown={e => {
+        onKeyDown={(e) => {
           if (e.key === 'Escape') {
-            onClose()
+            onClose();
           }
         }}
         tabIndex={isOpen ? 0 : -1}
@@ -128,7 +132,9 @@ export function MobileDrawer({
         <div className="overflow-y-auto h-[calc(100%-64px)] p-4 space-y-6">
           {/* Main Navigation */}
           <div>
-            <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Navigation</h3>
+            <h3 className="font-semibold text-sm mb-3 text-muted-foreground">
+              Navigation
+            </h3>
             <nav className="space-y-1">
               {siteConfig.features.showAuth && isAuthenticated ? (
                 <Link
@@ -190,7 +196,9 @@ export function MobileDrawer({
           {/* My Collection Section */}
           {siteConfig.features.showFavorites ? (
             <div>
-              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">My Collection</h3>
+              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">
+                My Collection
+              </h3>
               <nav className="space-y-1">
                 <FavoritesLink isMobile />
               </nav>
@@ -199,40 +207,21 @@ export function MobileDrawer({
 
           {/* Categories */}
           <div>
-            <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Categories</h3>
+            <h3 className="font-semibold text-sm mb-3 text-muted-foreground">
+              Categories
+            </h3>
             <nav className="space-y-1">
-              <a
-                href={isHomePage ? `#${siteCopy.allAnchorId}` : `${getRoute('home')}#${siteCopy.allAnchorId}`}
-                onClick={e => {
-                  if (isHomePage) {
-                    e.preventDefault()
-                    onClose()
-                    setTimeout(() => {
-                      document.getElementById(siteCopy.allAnchorId)?.scrollIntoView()
-                    }, 100)
-                  }
-                }}
-                className={cn(
-                  'flex items-center gap-2 px-2 py-1.5 text-sm rounded-md transition-colors cursor-pointer',
-                  isHomePage
-                    ? 'text-foreground font-medium bg-accent'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                )}
-              >
-                <HomeIcon className="h-4 w-4" />
-                {siteCopy.allLabel}
-              </a>
               {showFeaturedCategory ? (
                 <button
                   type="button"
                   onClick={() => {
                     if (pathname === '/') {
-                      onClose()
+                      onClose();
                       setTimeout(() => {
-                        document.getElementById('featured')?.scrollIntoView()
-                      }, 100)
+                        document.getElementById('featured')?.scrollIntoView();
+                      }, 100);
                     } else {
-                      window.location.href = '/#featured'
+                      window.location.href = '/#featured';
                     }
                   }}
                   className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors w-full text-left"
@@ -248,7 +237,7 @@ export function MobileDrawer({
                   )}
                 </button>
               ) : null}
-              {availableCategories.map(category => (
+              {availableCategories.map((category) => (
                 <Link
                   key={category.slug}
                   href={getRoute('category.page', { category: category.slug })}
@@ -268,9 +257,11 @@ export function MobileDrawer({
 
           {showExternalResources ? (
             <div>
-              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Resources</h3>
+              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">
+                Resources
+              </h3>
               <nav className="space-y-1">
-                {externalResources.map(resource => (
+                {externalResources.map((resource) => (
                   <Link
                     key={resource.slug}
                     href={resource.url}
@@ -291,5 +282,5 @@ export function MobileDrawer({
         </div>
       </div>
     </>
-  )
+  );
 }
