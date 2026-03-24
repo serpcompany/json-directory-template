@@ -91,6 +91,8 @@ Acceptance:
 - [x] Remove or move remaining hardcoded brand, ownership, and marketing assumptions
 - [x] Decide which content blocks are starter defaults vs per-site content
 - [x] Continue cleaning residual `llms.txt`-specific language where it should now be generic
+- [ ] Audit and normalize the core directory-item vocabulary:
+  replace loose `website` / `product` wording with one canonical term, and decide whether the generated `/websites/...` route should stay fixed or become configurable
 - [x] Update tests and starter docs to match the generalized model
 - [x] Add site-config-driven feature flags for optional shell sections:
   creator projects, featured guides, developer tools, newsletter

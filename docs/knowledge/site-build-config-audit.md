@@ -184,6 +184,10 @@ Status:
 - search page description/keywords
 - empty state copy for lists/search
 - “submit a website” style CTA labels if sites need custom wording
+- canonical directory-item vocabulary:
+  pick one term for the listed unit (`listing` is the current recommendation) and wash out mixed `website` / `product` wording from active surfaces, docs, analytics labels, and helper names
+- generated listing route shape:
+  decide whether `/websites/[slug]` remains the durable public route or becomes a configurable route prefix for different site types
 
 ### Feed and structured metadata surfaces
 
@@ -208,6 +212,11 @@ These are the main active areas still worth cleaning up or explicitly deciding t
 - `apps/web/app/guides/[slug]/page.tsx`
 - `apps/web/app/docs/page.tsx`
 - `apps/web/app/(files)/rss.xml/route.ts`
+- `apps/web/app/websites/[slug]/page.tsx`
+- `apps/web/lib/routes.ts`
+- `apps/web/lib/seo/seo-config.ts`
+- `apps/web/lib/analytics-helpers.ts`
+- `apps/web/lib/website-schema.ts`
 
 ### Active components and helpers
 
@@ -229,6 +238,12 @@ These files are not all bugs. Some are starter defaults. The follow-up work is t
 - keep as shared starter default
 - move into site-owned content later
 - archive/remove from the active starter
+
+Additional naming concern:
+
+- the project currently uses `website`, `websites`, and `product` inconsistently for the same directory item
+- that inconsistency affects copy, helper names, analytics payloads, schema names, and the generated detail route
+- this should be treated as a first-class cleanup pass, not just copy polish
 
 ## First classification pass
 
