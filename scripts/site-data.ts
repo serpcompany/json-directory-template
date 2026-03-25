@@ -5,6 +5,7 @@ import {
   parseSiteInputArgs,
   type SiteInputTarget,
 } from './site-config.ts';
+import { warnIfUnsupportedNodeVersion } from './runtime-guards.ts';
 import { writeTrialWebsiteEntries } from './trial-build.ts';
 
 const workspaceRoot = resolve(process.cwd());
@@ -52,8 +53,17 @@ export function prepareSiteData(input: SiteInputTarget): PreparedSiteData {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const prepared = prepareSiteData(parseSiteInputArgs(process.argv.slice(2)));
-  console.log(`Prepared listing data for ${prepared.siteId}`);
-  console.log(`Source: ${prepared.sourcePathDisplay} (${prepared.sourceKind})`);
-  console.log(`Output: ${prepared.outputPathDisplay}`);
+  try {
+    warnIfUnsupportedNodeVersion();
+    const prepared = prepareSiteData(parseSiteInputArgs(process.argv.slice(2)));
+    console.log(`Prepared listing data for ${prepared.siteId}`);
+    console.log(
+      `Source: ${prepared.sourcePathDisplay} (${prepared.sourceKind})`
+    );
+    console.log(`Output: ${prepared.outputPathDisplay}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(message);
+    process.exitCode = 1;
+  }
 }

@@ -1,11 +1,18 @@
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import {
+  ensurePortAvailable,
+  warnIfUnsupportedNodeVersion,
+} from './runtime-guards.ts';
+import {
   loadCheckedInSiteFromInput,
   parseSiteInputArgs,
   type SiteInputTarget,
 } from './site-config.ts';
 import { prepareSiteData } from './site-data.ts';
+import { validateSite } from './validate-site.ts';
+
+const WEB_DEV_PORT = 3005;
 
 function forwardSignal(
   child: ReturnType<typeof spawn>,
@@ -19,12 +26,16 @@ function forwardSignal(
 }
 
 export async function devSite(input: SiteInputTarget): Promise<void> {
+  warnIfUnsupportedNodeVersion();
+
   const definition = loadCheckedInSiteFromInput(input);
   const prepared = prepareSiteData(input);
 
   console.log(`Prepared listing data for ${prepared.siteId}`);
   console.log(`Source: ${prepared.sourcePathDisplay} (${prepared.sourceKind})`);
   console.log(`Output: ${prepared.outputPathDisplay}`);
+  validateSite(input);
+  await ensurePortAvailable(WEB_DEV_PORT);
   console.log(`Starting web dev server for ${definition.id}`);
 
   const child = spawn('pnpm', ['--filter', 'web', 'dev'], {
