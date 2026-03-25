@@ -62,7 +62,12 @@ export function LLMGrid({
               )}
               key={item.slug}
             >
-              <FaviconWithFallback website={item.website} name={item.name} size={32} />
+              <FaviconWithFallback
+                website={item.website}
+                name={item.name}
+                logoUrl={item.media?.logo}
+                size={32}
+              />
               <div className="flex-1 min-w-0 space-y-1">
                 <div className="flex items-center gap-2">
                   <h3 className="font-semibold text-xs sm:text-sm md:text-base truncate">
@@ -133,7 +138,12 @@ export function LLMGrid({
               <div className="space-y-1.5">
                 <div className="space-y-1.5 sm:space-y-2">
                   <div className="flex items-start justify-between">
-                    <FaviconWithFallback website={item.website} name={item.name} size={32} />
+                    <FaviconWithFallback
+                      website={item.website}
+                      name={item.name}
+                      logoUrl={item.media?.logo}
+                      size={32}
+                    />
                     <FavoriteButton slug={item.slug} size="sm" variant="default" />
                   </div>
                   <div className="flex items-center gap-2">

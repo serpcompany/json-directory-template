@@ -4,6 +4,9 @@ import { FaviconWithFallback } from '@/components/ui/favicon-with-fallback'
 import { getRoute } from '@/lib/routes'
 
 interface ProjectNavItem {
+  media?: {
+    logo?: string
+  }
   slug: string
   name: string
   website: string
@@ -37,6 +40,7 @@ export function ProjectNavigation({ previousWebsite, nextWebsite }: ProjectNavig
               <FaviconWithFallback
                 website={previousWebsite.website}
                 name={previousWebsite.name}
+                logoUrl={previousWebsite.media?.logo}
                 size={40}
                 className="rounded-lg"
               />
@@ -74,6 +78,7 @@ export function ProjectNavigation({ previousWebsite, nextWebsite }: ProjectNavig
               <FaviconWithFallback
                 website={nextWebsite.website}
                 name={nextWebsite.name}
+                logoUrl={nextWebsite.media?.logo}
                 size={40}
                 className="rounded-lg"
               />

@@ -18,7 +18,6 @@ interface WebsitesListWithSortProps {
   initialWebsites: WebsiteMetadata[]
   emptyTitle?: string
   emptyDescription?: string
-  categoryType?: 'tool' | 'non-tool'
 }
 
 /**
@@ -75,7 +74,12 @@ export function WebsitesListWithSort({
     >
       <div className="space-y-3">
         <div className="space-y-2">
-          <FaviconWithFallback website={website.website} name={website.name} size={32} />
+          <FaviconWithFallback
+            website={website.website}
+            name={website.name}
+            logoUrl={website.media?.logo}
+            size={32}
+          />
           <div className="flex items-center gap-2">
             <h3 className="font-semibold">
               <Link
@@ -118,7 +122,8 @@ export function WebsitesListWithSort({
         <div className="text-sm text-muted-foreground">
           {initialWebsites.length > 0 && (
             <>
-              Showing {sortedWebsites.length} {siteCopy.listingName.plural} in this category
+              Showing {sortedWebsites.length} {siteCopy.listingName.plural} in
+              this category
             </>
           )}
         </div>

@@ -1,12 +1,11 @@
 import { Badge } from '@thedaviddias/design-system/badge'
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
-import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url'
 import { ExternalLink, Globe } from 'lucide-react'
 import Link from 'next/link'
 import { FavoriteButton } from '@/components/ui/favorite-button'
+import { FaviconWithFallback } from '@/components/ui/favicon-with-fallback'
 import type { WebsiteMetadata } from '@/lib/content-loader'
 import { SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
-import { generateAltText } from '@/lib/seo/seo-helpers'
 
 interface WebsiteHeroProps {
   website: WebsiteMetadata
@@ -49,11 +48,11 @@ export function WebsiteHero({ website, breadcrumbItems }: WebsiteHeroProps) {
               >
                 <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 opacity-0 blur-xl transition-all duration-500 group-hover:opacity-100" />
                 <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card p-3 shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl">
-                  <img
-                    src={getFaviconUrl(website.website, 256) || '/placeholder.svg'}
-                    alt={generateAltText('favicon', website.name)}
-                    width={72}
-                    height={72}
+                  <FaviconWithFallback
+                    website={website.website}
+                    name={website.name}
+                    logoUrl={website.media?.logo}
+                    size={72}
                     className="rounded-xl"
                   />
                 </div>
