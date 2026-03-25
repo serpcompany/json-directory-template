@@ -47,7 +47,7 @@ describe('loadCheckedInSite', () => {
     expect(config.id).toBe('serpdownloaders.com');
     expect(config.content.listingSource.kind).toBe('trial-products-json');
     expect(config.site.domain).toBe('serpdownloaders.com');
-    expect(config.routes.listingBasePath).toBe('listing');
+    expect(config.routes.listingBasePath).toBe('products');
     expect(config.routes.docsBasePath).toBe('docs');
     expect(config.routes.networkBasePath).toBe('network');
     expect(config.content.listingSource.outputPath).toBe('data/listings.json');
@@ -55,11 +55,11 @@ describe('loadCheckedInSite', () => {
       categoryLabels: {},
       docsLabel: 'Docs',
       listingName: {
-        plural: 'listings',
-        singular: 'listing',
+        plural: 'products',
+        singular: 'product',
       },
       networkLabel: 'Network',
-      submitLabel: 'Submit a Listing',
+      submitLabel: 'Submit a Product',
     });
     expect(config.features.showAuth).toBe(false);
     expect(config.features.showDocs).toBe(false);
@@ -79,10 +79,10 @@ describe('loadCheckedInSite', () => {
     expect(config.social.githubIssuesUrl).toBe(
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     );
-    expect(config.routes.listingBasePath).toBe('listing');
+    expect(config.routes.listingBasePath).toBe('products');
     expect(config.routes.docsBasePath).toBe('docs');
     expect(config.routes.networkBasePath).toBe('network');
-    expect(config.copy.submitLabel).toBe('Submit a Listing');
+    expect(config.copy.submitLabel).toBe('Submit a Product');
     expect(config.copy.docsLabel).toBe('Docs');
     expect(config.copy.networkLabel).toBe('Network');
     expect(config.features.showNewsletter).toBe(true);
@@ -166,8 +166,8 @@ describe('buildSiteEnvironment', () => {
     expect(
       buildSiteEnvironment(loadCheckedInSite('serpdownloaders.com'))
     ).toEqual({
-      LISTING_ROUTE_BASE_PATH: 'listing',
-      NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'listing',
+      LISTING_ROUTE_BASE_PATH: 'products',
+      NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'products',
       NEXT_PUBLIC_SITE_ID: 'serpdownloaders.com',
       SITE_ID: 'serpdownloaders.com',
     });
@@ -181,10 +181,10 @@ describe('resolveResolvedSiteConfig', () => {
     ).toMatchObject({
       copy: {
         listingName: {
-          plural: 'listings',
-          singular: 'listing',
+          plural: 'products',
+          singular: 'product',
         },
-        submitLabel: 'Submit a Listing',
+        submitLabel: 'Submit a Product',
       },
       description:
         'A collection of tools to help you download anything from anywhere, anytime.',
@@ -193,7 +193,7 @@ describe('resolveResolvedSiteConfig', () => {
       githubIssueRepo: 'json-directory-template',
       id: 'serpdownloaders.com',
       docsRouteBasePath: 'docs',
-      listingRouteBasePath: 'listing',
+      listingRouteBasePath: 'products',
       name: 'SERP Downloaders',
       networkRouteBasePath: 'network',
       publicUrl: 'https://serpdownloaders.com',

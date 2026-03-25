@@ -28,6 +28,13 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
       publishedAt: '2026-03-24',
     },
   },
+  copy: {
+    listingName: {
+      plural: 'products',
+      singular: 'product',
+    },
+    submitLabel: 'Submit a Product',
+  },
   deploy: {
     branch: 'main',
     preserve: ['.github/workflows/deploy.yml', 'CNAME'],
@@ -35,6 +42,9 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     strategy: 'github-pages-repo-sync',
   },
   id: 'serpdownloaders.com',
+  routes: {
+    listingBasePath: 'products',
+  },
   site: {
     description: 'A collection of tools to help you download anything from anywhere, anytime.',
     domain: 'serpdownloaders.com',
@@ -43,6 +53,10 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     tagline: 'For the people who just like to get down...loading',
   },
   social: {
+    githubIssueOwner: 'serpcompany',
+    githubIssueRepo: 'json-directory-template',
+    githubIssuesUrl:
+      'https://github.com/serpcompany/json-directory-template/issues/new/choose',
     redditUrl: 'https://www.reddit.com/r/serpdownloaders/',
     twitterUrl: 'https://x.com/serpapps',
   },

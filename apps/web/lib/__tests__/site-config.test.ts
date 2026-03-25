@@ -46,18 +46,18 @@ describe('resolveSiteConfig', () => {
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     );
     expect(config.publicUrl).toBe('https://serpdownloaders.com');
-    expect(config.listingRouteBasePath).toBe('listing');
+    expect(config.listingRouteBasePath).toBe('products');
     expect(config.docsRouteBasePath).toBe('docs');
     expect(config.networkRouteBasePath).toBe('network');
     expect(config.copy).toEqual({
       categoryLabels: {},
       docsLabel: 'Docs',
       listingName: {
-        plural: 'listings',
-        singular: 'listing',
+        plural: 'products',
+        singular: 'product',
       },
       networkLabel: 'Network',
-      submitLabel: 'Submit a Listing',
+      submitLabel: 'Submit a Product',
     });
     expect(config.features).toEqual({
       showAuth: false,
@@ -80,12 +80,12 @@ describe('resolveSiteConfig', () => {
     expect(config.githubIssuesUrl).toBe(
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     );
-    expect(config.listingRouteBasePath).toBe('listing');
+    expect(config.listingRouteBasePath).toBe('products');
     expect(config.docsRouteBasePath).toBe('docs');
     expect(config.networkRouteBasePath).toBe('network');
     expect(config.copy.docsLabel).toBe('Docs');
     expect(config.copy.networkLabel).toBe('Network');
-    expect(config.copy.submitLabel).toBe('Submit a Listing');
+    expect(config.copy.submitLabel).toBe('Submit a Product');
   });
 
   it('falls back to the checked-in default site config', () => {
