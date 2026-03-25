@@ -5,11 +5,11 @@ describe('resolveBuildRun', () => {
   it('resolves the artifact dir from the checked-in site config id', () => {
     expect(
       resolveBuildRun([], {
-        SITE_ID: 'serpdownloaders'
+        SITE_ID: 'serpdownloaders.com'
       })
     ).toEqual({
-      artifactDir: 'dist/sites/serpdownloaders',
-      siteId: 'serpdownloaders'
+      artifactDir: 'dist/sites/serpdownloaders.com',
+      siteId: 'serpdownloaders.com'
     })
   })
 

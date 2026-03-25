@@ -1,7 +1,7 @@
 import { defaultSiteConfig } from './site-config.default';
 import { defaultSiteContent, resolveSiteContent } from './site-content';
-import { serpExtensionsSiteConfig } from './serpextensions/site-config';
-import { serpdownloadersSiteConfig } from './serpdownloaders/site-config';
+import { extensionsSerpCoSiteConfig } from './extensions.serp.co/site-config';
+import { serpdownloadersComSiteConfig } from './serpdownloaders.com/site-config';
 import type {
   CheckedInSiteConfig,
   CheckedInSiteConfigOverride,
@@ -9,8 +9,8 @@ import type {
 } from './types';
 
 export const siteConfigsById: Record<string, CheckedInSiteConfigOverride> = {
-  serpextensions: serpExtensionsSiteConfig,
-  serpdownloaders: serpdownloadersSiteConfig,
+  'extensions.serp.co': extensionsSerpCoSiteConfig,
+  'serpdownloaders.com': serpdownloadersComSiteConfig,
 };
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

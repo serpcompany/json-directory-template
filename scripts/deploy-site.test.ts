@@ -3,12 +3,12 @@ import { buildDeployPlan } from './deploy-site.ts'
 
 describe('buildDeployPlan', () => {
   it('builds a deterministic deploy plan from the checked-in site config', () => {
-    expect(buildDeployPlan({ siteId: 'serpdownloaders' })).toEqual({
+    expect(buildDeployPlan({ siteId: 'serpdownloaders.com' })).toEqual({
       branch: 'main',
-      buildDir: expect.stringMatching(/dist\/sites\/serpdownloaders$/),
+      buildDir: expect.stringMatching(/dist\/sites\/serpdownloaders.com$/),
       preserve: ['.github/workflows/deploy.yml', 'CNAME'],
       repoUrl: 'https://github.com/serpcompany/serpdownloaders.com.git',
-      siteId: 'serpdownloaders',
+      siteId: 'serpdownloaders.com',
       strategy: 'github-pages-repo-sync'
     })
   })

@@ -1,14 +1,14 @@
 import type { CheckedInSiteConfigOverride } from '../types';
 
-export const serpExtensionsSiteConfig: CheckedInSiteConfigOverride = {
+export const extensionsSerpCoSiteConfig: CheckedInSiteConfigOverride = {
   build: {
-    artifactDir: 'dist/sites/serpextensions',
+    artifactDir: 'dist/sites/extensions.serp.co',
   },
   content: {
     listingSource: {
       kind: 'listing-json',
-      outputPath: 'data/websites.json',
-      path: 'data/websites.json',
+      outputPath: 'data/listings.json',
+      path: 'data/listings.json',
     },
   },
   copy: {
@@ -27,7 +27,7 @@ export const serpExtensionsSiteConfig: CheckedInSiteConfigOverride = {
   features: {
     showNewsletter: false,
   },
-  id: 'serpextensions',
+  id: 'extensions.serp.co',
   routes: {
     listingBasePath: 'extension',
   },

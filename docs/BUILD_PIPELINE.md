@@ -51,7 +51,7 @@ Authoring rule:
 - add new fields to the default config once
 - keep per-site config files override-only
 - inherit unchanged values through the central resolver instead of copying the full config into every site file
-- `sites/<site-id>/products.json` or `websites.json`
+- `sites/<site-id>/products.json` or `listings.json`
 - `sites/<site-id>/assets/logo.png`
 - `sites/<site-id>/assets/opengraph-image.png`
 - `sites/<site-id>/assets/favicon.ico`
@@ -61,7 +61,7 @@ Optional temporary intake can live under `tmp/sites/<site-id>/`, but that is scr
 ### 2. Validate
 
 ```bash
-pnpm validate:site -- --site serpdownloaders
+pnpm validate:site -- --site serpdownloaders.com
 ```
 
 Validation checks:
@@ -74,7 +74,7 @@ Validation checks:
 ### 3. Build
 
 ```bash
-pnpm build:site -- --site serpdownloaders
+pnpm build:site -- --site serpdownloaders.com
 ```
 
 Build behavior:
@@ -82,7 +82,7 @@ Build behavior:
 - loads `sites/site-config.default.ts`
 - loads `sites/<site-id>/site-config.ts`
 - resolves the final site/runtime config
-- prepares `data/websites.json` for the active site
+- prepares `data/listings.json` for the active site
 - generates site-aware side artifacts such as search index output
 - stages supported brand assets into the app build when configured
 - if a configured brand asset uses `source: 'url'`, the pipeline downloads it once into the deterministic `sites/<site-id>/assets/*` staging path, validates the file shape, and then builds from that staged local copy
@@ -106,7 +106,7 @@ Failure behavior:
 ### 4. Deploy
 
 ```bash
-pnpm deploy:site -- --site serpdownloaders
+pnpm deploy:site -- --site serpdownloaders.com
 ```
 
 Deploy behavior:

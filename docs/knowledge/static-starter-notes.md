@@ -10,13 +10,13 @@
 
 ## Website Data
 
-- `data/websites.json` is the active website-entry source for the current starter.
-- `pnpm tsx scripts/validate-data.ts data/websites.json` validates the active JSON source.
+- `data/listings.json` is the active website-entry source for the current starter.
+- `pnpm tsx scripts/validate-data.ts data/listings.json` validates the active JSON source.
 - Site-specific build flows can transform alternative JSON inputs into this same shape during build time.
 - The active loader now expects `slug`, `website`, `description`, `category`, `publishedAt`, and optional metadata like `featured`, `priority`, `content`, and `resourceLinks`.
 - The formal schema for raw JSON website entries now lives in `apps/web/lib/website-schema.ts`.
-- Optional `content` in `data/websites.json` now flows through the JSON loader and can power the detail page body.
-- Optional `resourceLinks` in `data/websites.json` can power the detail-page Resources card without introducing special-case `llms.txt` fields.
+- Optional `content` in `data/listings.json` now flows through the JSON loader and can power the detail page body.
+- Optional `resourceLinks` in `data/listings.json` can power the detail-page Resources card without introducing special-case `llms.txt` fields.
 - Prefer `automation-workflow` as the automation category slug. The loader still normalizes the older `integration-automation` value during the transition.
 - `pnpm validate:site -- --site <id>` now rejects unknown category slugs up front and reports the active category set derived from real listing data.
 - Public category pages and category navigation should only come from categories that actually have attached listings; empty taxonomy buckets should not generate pages or nav links.

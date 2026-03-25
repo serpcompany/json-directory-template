@@ -17,9 +17,9 @@ import { validateSite } from './validate-site.ts'
 
 const workspaceRoot = process.cwd()
 const testRoot = resolve(workspaceRoot, 'tmp', 'validate-site-test')
-const listingsPath = resolve(testRoot, 'fixtures', 'websites.json')
+const listingsPath = resolve(testRoot, 'fixtures', 'listings.json')
 const runTempPath = resolve(testRoot, 'run')
-const relativeListingsPath = 'tmp/validate-site-test/fixtures/websites.json'
+const relativeListingsPath = 'tmp/validate-site-test/fixtures/listings.json'
 
 const mockedCreateRunTempDir = vi.mocked(createRunTempDir)
 const mockedLoadCheckedInSiteFromInput = vi.mocked(loadCheckedInSiteFromInput)

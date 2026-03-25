@@ -7,7 +7,10 @@ published: true
 
 # Common Commands
 
-<p className="mt-2 text-xl text-muted-foreground">These are the commands you will use most while developing, validating, and exporting a site from the starter.</p>
+<p className="mt-2 text-xl text-muted-foreground">
+  These are the commands you will use most while developing, validating, and
+  exporting a site from the starter.
+</p>
 
 ## Local development
 
@@ -23,6 +26,12 @@ Run the older multi-workspace loop:
 pnpm dev:all
 ```
 
+Run one checked-in site with its data prep and env wired for you:
+
+```bash
+pnpm dev:site -- --site serpdownloaders.com
+```
+
 Run the web app with the Node inspector attached:
 
 ```bash
@@ -34,7 +43,7 @@ pnpm --filter web dev:inspect
 Validate the active listing JSON shape:
 
 ```bash
-pnpm tsx scripts/validate-data.ts data/websites.json
+pnpm validate:listings data/listings.json
 ```
 
 Run the full repo tests:
@@ -71,10 +80,16 @@ pnpm generate-search-index
 
 ## Data generation helpers
 
-Transform a site-specific JSON source into `data/websites.json`:
+Prepare the active normalized listing dataset for one site:
 
 ```bash
-pnpm exec tsx scripts/trial-build.ts sites/your-site/products.json data/websites.json
+pnpm prepare:site -- --site serpdownloaders.com
+```
+
+Transform a site-specific JSON source into `data/listings.json`:
+
+```bash
+pnpm exec tsx scripts/trial-build.ts sites/your-site/products.json data/listings.json
 ```
 
 Generate the search artifact after data changes:
@@ -86,5 +101,6 @@ pnpm exec tsx scripts/search-index-generator.ts
 ## Notes
 
 - `pnpm dev` is the stable local default. The repo keeps `pnpm dev:all` for the heavier multi-workspace loop.
+- `pnpm dev:site -- --site <id>` is the safest path when the site does not use the default checked-in config.
 - The starter expects Node `24.x`.
 - When you are working on one site, prefer `build:site` over the broader root `build`.

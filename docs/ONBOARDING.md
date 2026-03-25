@@ -1,5 +1,5 @@
-- site-wide brand/content settings -> apps/web/lib/site-config.ts
-- individual entries/items -> data/websites.json
-- category
-- content
-- slug
+- checked-in site settings -> sites/site-config.default.ts and sites/<id>/site-config.ts
+- optional site-owned extras -> sites/<id>/site-content.ts
+- normalized listing dataset -> data/listings.json
+- site-specific source input for transformed builds -> sites/<id>/products.json
+- internal generated snapshots -> records/build-inputs/\*\* (do not edit by hand)

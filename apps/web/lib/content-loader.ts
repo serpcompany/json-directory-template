@@ -4,6 +4,7 @@ import {
   normalizeJsonWebsite,
   parseJsonWebsiteEntries,
   type WebsiteJsonEntry,
+  type WebsiteMedia,
   type WebsitePriority,
   type WebsiteResourceLink,
 } from './website-schema';
@@ -36,7 +37,7 @@ try {
 }
 
 try {
-  allJsonWebsites = require('../../../data/websites.json');
+  allJsonWebsites = require('../../../data/listings.json');
 } catch {
   allJsonWebsites = [];
 }
@@ -60,6 +61,7 @@ interface Website {
   isUnofficial?: boolean;
   priority?: WebsitePriority;
   featured?: boolean;
+  media?: WebsiteMedia;
   content?: string;
   resourceLinks?: WebsiteResourceLink[];
   relatedWebsites?: WebsiteMetadata[];
@@ -178,6 +180,7 @@ export interface WebsiteMetadata {
   isUnofficial?: boolean;
   featured?: boolean;
   priority?: WebsitePriority;
+  media?: WebsiteMedia;
   content?: string;
   resourceLinks?: WebsiteResourceLink[];
   relatedWebsites?: WebsiteMetadata[];

@@ -21,7 +21,7 @@ export function validateSite(input: SiteInputTarget): void {
   const definition = loadCheckedInSiteFromInput(input)
   const runTempDir = createRunTempDir('validate-site', definition.id)
   const validateDir = runTempDir.path
-  const validatePath = resolve(validateDir, 'websites.json')
+  const validatePath = resolve(validateDir, 'listings.json')
 
   try {
     mkdirSync(dirname(validatePath), { recursive: true })

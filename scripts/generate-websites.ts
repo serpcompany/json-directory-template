@@ -64,7 +64,7 @@ function getFaviconUrl(domain: string): string {
 function generateWebsitesJson(): void {
   const websitesDir = join(process.cwd(), 'packages', 'content', 'data', 'websites')
   const outputDir = join(process.cwd(), 'data')
-  const outputFile = join(outputDir, 'websites.json')
+  const outputFile = join(outputDir, 'listings.json')
 
   // Ensure output directory exists
   try {
@@ -104,7 +104,7 @@ function generateWebsitesJson(): void {
   // Sort websites by name
   websites.sort((a, b) => a.name.localeCompare(b.name))
 
-  // Generated websites.json with tools from primary categories
+  // Generated listings.json with tools from primary categories
   // Excluded sites from secondary categories
 
   // Write to JSON file

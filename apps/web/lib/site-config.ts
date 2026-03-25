@@ -1,36 +1,35 @@
 import {
   defaultSiteConfig,
-  resolveCheckedInSiteConfig
-} from '../../../sites/index'
+  resolveCheckedInSiteConfig,
+} from '../../../sites/index';
 import {
-  resolveDrBadgeConfig,
-  type ResolvedDrBadge,
+  type DrBadgeConfig,
   type SiteCopyConfig,
-  type SiteFeatureFlags
-} from '../../../sites/types'
+  type SiteFeatureFlags,
+} from '../../../sites/types';
 
 export type SiteConfig = {
-  copy: SiteCopyConfig
-  description: string
-  docsRouteBasePath: string
-  domain: string
-  drBadge: ResolvedDrBadge
-  features: SiteFeatureFlags
-  githubIssueOwner: string
-  githubIssueRepo: string
-  githubIssueTemplate: string
-  githubIssuesUrl: string
-  githubRepoUrl: string
-  githubUrl: string
-  id: string
-  listingRouteBasePath: string
-  name: string
-  networkRouteBasePath: string
-  publicUrl: string
-  redditUrl: string
-  tagline: string
-  twitterUrl: string
-}
+  copy: SiteCopyConfig;
+  description: string;
+  docsRouteBasePath: string;
+  domain: string;
+  drBadge: DrBadgeConfig;
+  features: SiteFeatureFlags;
+  githubIssueOwner: string;
+  githubIssueRepo: string;
+  githubIssueTemplate: string;
+  githubIssuesUrl: string;
+  githubRepoUrl: string;
+  githubUrl: string;
+  id: string;
+  listingRouteBasePath: string;
+  name: string;
+  networkRouteBasePath: string;
+  publicUrl: string;
+  redditUrl: string;
+  tagline: string;
+  twitterUrl: string;
+};
 
 export function getTwitterHandleFromUrl(url: string): string | null {
   try {
@@ -51,14 +50,14 @@ export function getTwitterHandleFromUrl(url: string): string | null {
 export function resolveSiteConfig(
   siteId = process.env.NEXT_PUBLIC_SITE_ID || process.env.SITE_ID || defaultSiteConfig.id
 ): SiteConfig {
-  const configuredSite = resolveCheckedInSiteConfig(siteId)
+  const configuredSite = resolveCheckedInSiteConfig(siteId);
 
   return {
     copy: configuredSite.copy,
     description: configuredSite.site.description,
     docsRouteBasePath: configuredSite.routes.docsBasePath,
     domain: configuredSite.site.domain,
-    drBadge: resolveDrBadgeConfig(configuredSite.branding.drBadge),
+    drBadge: configuredSite.branding.drBadge,
     features: configuredSite.features,
     githubIssueOwner: configuredSite.social.githubIssueOwner,
     githubIssueRepo: configuredSite.social.githubIssueRepo,
@@ -73,8 +72,8 @@ export function resolveSiteConfig(
     publicUrl: configuredSite.site.publicUrl,
     redditUrl: configuredSite.social.redditUrl,
     tagline: configuredSite.site.tagline,
-    twitterUrl: configuredSite.social.twitterUrl
-  }
+    twitterUrl: configuredSite.social.twitterUrl,
+  };
 }
 
-export const siteConfig: SiteConfig = resolveSiteConfig()
+export const siteConfig: SiteConfig = resolveSiteConfig();

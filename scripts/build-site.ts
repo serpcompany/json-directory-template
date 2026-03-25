@@ -26,7 +26,7 @@ import {
 } from './site-config.ts';
 import { createRunTempDir } from './run-context.ts';
 import { writeSplitSitemaps } from './sitemap-files.ts';
-import { writeTrialWebsiteEntries } from './trial-build.ts';
+import { prepareSiteData } from './site-data.ts';
 import { validateSite } from './validate-site.ts';
 import type { AssetSource } from '../sites/types.ts';
 
@@ -102,23 +102,11 @@ function prepareSourceData(input: SiteInputTarget): { restore: () => void } {
   const sourcePlan = definition.content.listingSource;
   const restoreDir = createRunTempDir('build-site-source', definition.id);
   const outputPath = resolve(workspaceRoot, sourcePlan.outputPath);
-  const backupPath = resolve(restoreDir.path, 'data-websites.json.backup');
+  const backupPath = resolve(restoreDir.path, 'data-listings.json.backup');
   const hadOriginal = backupFile(outputPath, backupPath);
 
   ensureParentDir(outputPath);
-
-  if (sourcePlan.kind === 'trial-products-json') {
-    writeTrialWebsiteEntries(sourcePlan.path, sourcePlan.outputPath, {
-      category: sourcePlan.category,
-      featuredCount: sourcePlan.featuredCount,
-      publishedAt: sourcePlan.publishedAt,
-    });
-  } else {
-    writeFileSync(
-      outputPath,
-      readFileSync(resolve(workspaceRoot, sourcePlan.path))
-    );
-  }
+  prepareSiteData(input);
 
   return {
     restore: () => {

@@ -2,7 +2,7 @@ import { resolveSiteContent } from '@/lib/site-content';
 
 describe('resolveSiteContent', () => {
   it('loads the checked-in SERP Extensions site-owned network links', () => {
-    const content = resolveSiteContent('serpextensions');
+    const content = resolveSiteContent('extensions.serp.co');
 
     expect(content.listingCliInstall).toBeNull();
     expect(content.externalResources).toEqual([]);

@@ -7,7 +7,10 @@ published: true
 
 # Getting Started
 
-<p className="mt-2 text-xl text-muted-foreground">Get the starter running locally, point it at a checked-in site config, and ship a static build artifact.</p>
+<p className="mt-2 text-xl text-muted-foreground">
+  Get the starter running locally, point it at a checked-in site config, and
+  ship a static build artifact.
+</p>
 
 ## Before you start
 
@@ -35,6 +38,7 @@ That starts the app on `http://localhost:3005`.
 Use these variants when you need them:
 
 - `pnpm dev:all` runs the older full Turbo workspace loop
+- `pnpm dev:site -- --site <id>` prepares the selected site's listing data and starts dev with the correct site env
 - `pnpm --filter web dev:inspect` starts the web app with the Node inspector attached
 
 ## Understand the checked-in site inputs
@@ -45,7 +49,7 @@ The active starter keeps site identity and shell behavior in checked-in config f
 - `sites/<id>/site-config.ts` holds sparse per-site overrides
 - `sites/<id>/site-content.ts` holds optional site-owned modules such as `externalResources` and `listingCliInstall`
 
-The current listing source of truth is usually `data/websites.json`, though a site-specific build step can transform another JSON file into that shape before export.
+The current listing source of truth is usually `data/listings.json`, though a site-specific build step can transform another JSON file into that shape before export.
 
 ## Build a static site artifact
 
@@ -62,7 +66,13 @@ The output lands under `dist/sites/<site-id>` based on the checked-in build conf
 Validate listing data before building:
 
 ```bash
-pnpm tsx scripts/validate-data.ts data/websites.json
+pnpm validate:listings data/listings.json
+```
+
+If your site uses a source adapter like `sites/<id>/products.json`, regenerate the normalized dataset first:
+
+```bash
+pnpm prepare:site -- --site serpdownloaders.com
 ```
 
 Run the main test suite:
@@ -81,7 +91,7 @@ pnpm generate-search-index
 
 - Review the [commands reference](/docs/commands) for the day-to-day scripts
 - Use the [AI-assisted workflow notes](/docs/agents) if you are making changes with coding agents
-- Check [JSON shapes](/docs/json-shapes) before editing `data/websites.json`
+- Check [JSON shapes](/docs/json-shapes) before editing `data/listings.json`
 - Review the [submit workflow](/docs/submit-workflow) before changing the GitHub handoff
 - Use the [rebrand checklist](/docs/rebrand-checklist) before swapping names, assets, or legal copy
-- Browse the [directory](/websites) to review listing output
+- Browse the [directory](/listing) to review listing output

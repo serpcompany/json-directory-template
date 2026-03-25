@@ -76,7 +76,7 @@ function writeSearchIndex(outputPath: string, searchIndex: SearchIndexEntry[]): 
 }
 
 export function main(): void {
-  const inputPath = process.env.WEBSITE_DATA_PATH || 'data/websites.json'
+  const inputPath = process.env.WEBSITE_DATA_PATH || 'data/listings.json'
   const outputPath = process.env.SEARCH_INDEX_OUTPUT_PATH || 'apps/web/public/search/search-index.json'
   const listingBasePath = process.env.LISTING_ROUTE_BASE_PATH || 'listing'
 

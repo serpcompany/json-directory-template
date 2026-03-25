@@ -1,15 +1,18 @@
 ---
 title: 'JSON Shapes'
-description: 'The active data shapes for the static starter, including data/websites.json and the current submit payload'
+description: 'The active data shapes for the static starter, including data/listings.json and the current submit payload'
 order: 5
 published: true
 ---
 
 # JSON Shapes
 
-<p className="mt-2 text-xl text-muted-foreground">The active starter uses local data first. The main source of truth is `data/websites.json`, while docs and guides still come from MDX content files.</p>
+<p className="mt-2 text-xl text-muted-foreground">
+  The active starter uses local data first. The main source of truth is
+  `data/listings.json`, while docs and guides still come from MDX content files.
+</p>
 
-## `data/websites.json`
+## `data/listings.json`
 
 This file is an array of listing entries.
 
@@ -36,20 +39,20 @@ This file is an array of listing entries.
 
 ### Website entry fields
 
-| Field | Required | Notes |
-|------|------|------|
-| `slug` | Recommended | Stable URL segment for `/websites/[slug]`. The loader can derive it from `name` if it is missing. |
-| `name` | Yes | Display name used in cards, search, and detail pages. |
-| `website` | Yes | Canonical site URL. The loader also accepts the legacy `domain` field. |
-| `description` | Yes | Plain text summary. The loader strips HTML if older content included markup. |
-| `category` | Yes | Category slug used by the starter UI. |
-| `featured` | No | Marks the entry for featured lists. |
-| `favicon` | No | Generated convenience field. The current UI does not require it to render. |
-| `resourceLinks` | No | Optional label/URL pairs rendered under the listing detail Resources section. |
-| `content` | No | Optional body content rendered on the listing detail page. |
-| `priority` | No | Optional internal ordering hint used by some list views. |
-| `isUnofficial` | No | Marks community-maintained or non-official entries. |
-| `publishedAt` | Yes | Date string used for sorting and “recently added” sections. |
+| Field           | Required    | Notes                                                                                            |
+| --------------- | ----------- | ------------------------------------------------------------------------------------------------ |
+| `slug`          | Recommended | Stable URL segment for `/listing/[slug]`. The loader can derive it from `name` if it is missing. |
+| `name`          | Yes         | Display name used in cards, search, and detail pages.                                            |
+| `website`       | Yes         | Canonical site URL. The loader also accepts the legacy `domain` field.                           |
+| `description`   | Yes         | Plain text summary. The loader strips HTML if older content included markup.                     |
+| `category`      | Yes         | Category slug used by the starter UI.                                                            |
+| `featured`      | No          | Marks the entry for featured lists.                                                              |
+| `favicon`       | No          | Generated convenience field. The current UI does not require it to render.                       |
+| `resourceLinks` | No          | Optional label/URL pairs rendered under the listing detail Resources section.                    |
+| `content`       | No          | Optional body content rendered on the listing detail page.                                       |
+| `priority`      | No          | Optional internal ordering hint used by some list views.                                         |
+| `isUnofficial`  | No          | Marks community-maintained or non-official entries.                                              |
+| `publishedAt`   | Yes         | Date string used for sorting and “recently added” sections.                                      |
 
 ## Loader compatibility rules
 
@@ -92,6 +95,12 @@ The `/submit` form does not write JSON directly. It builds a GitHub issue URL fr
 ```
 
 That payload is converted into a prefilled GitHub issue. See [Submit Workflow](/docs/submit-workflow) for the full handoff.
+
+## Operator note
+
+- `data/listings.json` is only for the main listing collection.
+- Docs, posts, legal pages, and future first-party `/tools` content live elsewhere.
+- If your site uses a source adapter like `sites/<id>/products.json`, build that source into `data/listings.json` before export.
 
 ## Other content shapes
 

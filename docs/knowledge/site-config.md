@@ -8,12 +8,17 @@ Important distinction:
 - `sites/site-config.default.ts` is the full starter config, while `sites/<id>/site-config.ts` should stay as a sparse override-only file
 - `apps/web/lib/site-config.ts` is the internal app-facing adapter that resolves those checked-in files into the runtime shape the app uses
 - `apps/web/lib/site-copy.ts` is the small wording helper that turns checked-in copy fields into reusable UI labels such as "All Listings" and "Submit a Listing"
-- example: checked-in `branding.drBadge` prefers a provider payload, while the app-facing `siteConfig.drBadge` still holds the resolved raw badge values the footer renders
+- example: checked-in `branding.drBadge` is now a raw badge payload, so the footer can render exactly what the site owner configured without hidden provider resolution logic
 
 Source-of-truth files:
 
 - `sites/site-config.default.ts`
 - `sites/<id>/site-config.ts`
+
+Site id rule:
+
+- use the site domain as the checked-in site id and folder name when possible, for example `extensions.serp.co` or `serpdownloaders.com`
+- domains are usually the most stable identifier across repo, build, and deploy flows
 
 Recommended authoring rule:
 
@@ -73,10 +78,11 @@ export type CheckedInSiteConfig = {
   };
   branding: {
     drBadge: {
-      provider: 'serp-dr';
-      domain: string;
-      style?: 'serp-dr-v3';
-      alt?: string;
+      alt: string;
+      height: number;
+      href: string;
+      imageSrc: string;
+      width: number;
     };
     favicon?:
       | { source: 'local-path'; path: string }
@@ -101,6 +107,7 @@ export type CheckedInSiteConfig = {
         };
   };
   copy: {
+    categoryLabels: Record<string, string>;
     docsLabel: string;
     listingName: {
       singular: string;
@@ -136,17 +143,17 @@ export type CheckedInSiteConfig = {
 
 ## Field meanings
 
-| Field                                  | Required | Notes                                                                                                                   |
-| -------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `site.*`                               | Yes      | Main public identity and metadata values for the site.                                                                  |
-| `social.*`                             | Yes      | Public social links and submit/report helper destinations.                                                              |
-| `branding.drBadge`                     | Yes      | Current trust badge input. Provider-first shape is preferred.                                                           |
-| `branding.favicon/logo/opengraphImage` | No       | Canonical asset references when a site owns those assets. Supports checked-in local paths and staged remote URL inputs. |
-| `content.listingSource`                | Yes      | Declares where the site's listing data comes from.                                                                      |
-| `copy.*`                               | Yes      | Small site-facing wording contract for listing terminology plus configurable docs/network labels.                       |
-| `routes.*`                             | Yes      | Controls the public base paths for listings, docs, and the site-owned network page.                                     |
-| `features.*`                           | Yes      | Controls starter-owned optional surfaces.                                                                               |
-| `deploy.*`                             | No       | Required for deploy runs; omitted only for non-deploy examples.                                                         |
+| Field                                  | Required | Notes                                                                                                                               |
+| -------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `site.*`                               | Yes      | Main public identity and metadata values for the site.                                                                              |
+| `social.*`                             | Yes      | Public social links and submit/report helper destinations.                                                                          |
+| `branding.drBadge`                     | Yes      | Raw badge payload for the footer link + image. Use the exact href/image/size values the badge provider gave you.                    |
+| `branding.favicon/logo/opengraphImage` | No       | Canonical asset references when a site owns those assets. Supports checked-in local paths and staged remote URL inputs.             |
+| `content.listingSource`                | Yes      | Declares where the site's listing data comes from.                                                                                  |
+| `copy.*`                               | Yes      | Small site-facing wording contract for listing terminology, optional category display labels, and configurable docs/network labels. |
+| `routes.*`                             | Yes      | Controls the public base paths for listings, docs, and the site-owned network page.                                                 |
+| `features.*`                           | Yes      | Controls starter-owned optional surfaces.                                                                                           |
+| `deploy.*`                             | No       | Required for deploy runs; omitted only for non-deploy examples.                                                                     |
 
 ## Minimum Real-Site Input Checklist
 
@@ -171,6 +178,7 @@ For a real site build, the site owner should supply meaningful values for these 
 - `build.artifactDir`
 - `copy.docsLabel`
 - `copy.networkLabel`
+- `copy.categoryLabels`
 - `routes.docsBasePath`
 - `routes.networkBasePath`
 
@@ -183,13 +191,17 @@ Important:
 
 - `site-config` does not own the individual listing names.
 - Shell labels like `Listings`, `Docs`, `Network`, and `Submit` come from `copy.*` in `sites/<id>/site-config.ts`.
-- The actual listing names and slugs come from the configured listing source itself. For `trial-products-json` sites like `serpdownloaders`, that means editing the source records in `sites/<id>/products.json` and then rebuilding `data/websites.json`.
+- `copy.listingName.singular` and `copy.listingName.plural` are public-facing copy only. They drive headings, search placeholders, CTA text, and helper copy like `All Listings`. They do not change route paths.
+- Category route slugs stay canonical in shared taxonomy, but the visible category names can be overridden per site with `copy.categoryLabels`.
+- The actual listing names and slugs come from the configured listing source itself. For `trial-products-json` sites like `serpdownloaders.com`, that means editing the source records in `sites/<id>/products.json` and then rebuilding `data/listings.json`.
+- `records/build-inputs/**` is internal generated snapshot space. It is not operator input and should not be edited manually.
 
 Usually customized, but safe to inherit from the starter if they fit:
 
 - `copy.listingName.singular`
 - `copy.listingName.plural`
 - `copy.submitLabel`
+- `copy.categoryLabels`
 - `routes.listingBasePath`
 - `features.*`
 

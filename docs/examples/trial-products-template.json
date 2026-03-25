@@ -1,0 +1,30 @@
+{
+  "example-downloader": {
+    "product": {
+      "title": "Example Downloader",
+      "slug": "example-downloader",
+      "tagline": "One-line summary for cards and search results.",
+      "productPage": "https://example.com/example-downloader"
+    },
+    "media": {
+      "logo": "https://cdn.example.com/example-downloader/logo.png",
+      "images": ["https://cdn.example.com/example-downloader/screenshot-1.png"],
+      "video": "https://cdn.example.com/example-downloader/demo.mp4"
+    },
+    "content": {
+      "body": "## Overview\n\nLonger overview copy for the detail page.",
+      "faq": [
+        {
+          "question": "Does this work on mirrors?",
+          "answer": "Yes."
+        }
+      ]
+    },
+    "relatedLinks": [
+      {
+        "label": "Help Center",
+        "url": "https://help.example.com"
+      }
+    ]
+  }
+}

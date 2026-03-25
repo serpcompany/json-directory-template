@@ -15,13 +15,15 @@ function cloneDefaultSiteConfig() {
 
 describe('loadCheckedInSite', () => {
   it('loads the checked-in SERP Extensions site config', () => {
-    const config = loadCheckedInSite('serpextensions');
+    const config = loadCheckedInSite('extensions.serp.co');
 
-    expect(config.id).toBe('serpextensions');
+    expect(config.id).toBe('extensions.serp.co');
     expect(config.content.listingSource.kind).toBe('listing-json');
     expect(config.site.domain).toBe('extensions.serp.co');
     expect(config.routes.listingBasePath).toBe('extension');
+    expect(config.content.listingSource.outputPath).toBe('data/listings.json');
     expect(config.copy).toEqual({
+      categoryLabels: {},
       docsLabel: 'Docs',
       listingName: {
         plural: 'extensions',
@@ -31,6 +33,13 @@ describe('loadCheckedInSite', () => {
       submitLabel: 'Submit an Extension',
     });
     expect(config.features.showNewsletter).toBe(false);
+    expect(config.branding.drBadge).toEqual({
+      alt: 'Verified DR badge for example.com',
+      height: 50,
+      href: 'https://dr.serp.co/',
+      imageSrc: 'https://dr.serp.co/badge/example.com?style=serp-dr-v3',
+      width: 200,
+    });
     expect(config.social.githubRepoUrl).toBe(
       'https://github.com/serpcompany/extensions.serp.co'
     );
@@ -39,16 +48,18 @@ describe('loadCheckedInSite', () => {
     );
   });
 
-  it('loads the checked-in serpdownloaders site config', () => {
-    const config = loadCheckedInSite('serpdownloaders');
+  it('loads the checked-in serpdownloaders.com site config', () => {
+    const config = loadCheckedInSite('serpdownloaders.com');
 
-    expect(config.id).toBe('serpdownloaders');
+    expect(config.id).toBe('serpdownloaders.com');
     expect(config.content.listingSource.kind).toBe('trial-products-json');
     expect(config.site.domain).toBe('serpdownloaders.com');
     expect(config.routes.listingBasePath).toBe('listing');
     expect(config.routes.docsBasePath).toBe('docs');
     expect(config.routes.networkBasePath).toBe('network');
+    expect(config.content.listingSource.outputPath).toBe('data/listings.json');
     expect(config.copy).toEqual({
+      categoryLabels: {},
       docsLabel: 'Docs',
       listingName: {
         plural: 'listings',
@@ -59,16 +70,23 @@ describe('loadCheckedInSite', () => {
     });
     expect(config.features.showAuth).toBe(false);
     expect(config.features.showDocs).toBe(false);
-    expect(config.features.showDeveloperTools).toBe(false);
+    expect(config.features.showExternalResources).toBe(false);
     expect(config.features.showFavorites).toBe(false);
     expect(config.features.showGuides).toBe(false);
     expect(config.features.showNewsletter).toBe(true);
     expect(config.features.showProjects).toBe(false);
+    expect(config.branding.drBadge).toEqual({
+      alt: 'Verified DR badge for serpdownloaders.com',
+      height: 50,
+      href: 'https://dr.serp.co/',
+      imageSrc: 'https://dr.serp.co/badge/serpdownloaders.com?style=serp-dr-v3',
+      width: 200,
+    });
     expect(config.deploy?.strategy).toBe('github-pages-repo-sync');
   });
 
   it('inherits default values when a site override does not redefine them', () => {
-    const config = loadCheckedInSite('serpdownloaders');
+    const config = loadCheckedInSite('serpdownloaders.com');
 
     expect(config.social.githubIssueOwner).toBe('serpcompany');
     expect(config.social.githubIssueRepo).toBe('json-directory-template');
@@ -151,19 +169,21 @@ describe('validateCheckedInSiteConfig', () => {
 
 describe('resolveSiteArtifactDir', () => {
   it('resolves the configured artifact directory', () => {
-    expect(resolveSiteArtifactDir(loadCheckedInSite('serpdownloaders'))).toBe(
-      'dist/sites/serpdownloaders'
-    );
+    expect(
+      resolveSiteArtifactDir(loadCheckedInSite('serpdownloaders.com'))
+    ).toBe('dist/sites/serpdownloaders.com');
   });
 });
 
 describe('buildSiteEnvironment', () => {
   it('maps a checked-in site config to the minimal app env contract', () => {
-    expect(buildSiteEnvironment(loadCheckedInSite('serpdownloaders'))).toEqual({
+    expect(
+      buildSiteEnvironment(loadCheckedInSite('serpdownloaders.com'))
+    ).toEqual({
       LISTING_ROUTE_BASE_PATH: 'listing',
       NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'listing',
-      NEXT_PUBLIC_SITE_ID: 'serpdownloaders',
-      SITE_ID: 'serpdownloaders',
+      NEXT_PUBLIC_SITE_ID: 'serpdownloaders.com',
+      SITE_ID: 'serpdownloaders.com',
     });
   });
 });
@@ -171,7 +191,7 @@ describe('buildSiteEnvironment', () => {
 describe('resolveResolvedSiteConfig', () => {
   it('resolves the checked-in site config into the app-facing shape', () => {
     expect(
-      resolveResolvedSiteConfig(loadCheckedInSite('serpdownloaders'))
+      resolveResolvedSiteConfig(loadCheckedInSite('serpdownloaders.com'))
     ).toMatchObject({
       copy: {
         listingName: {
@@ -180,17 +200,18 @@ describe('resolveResolvedSiteConfig', () => {
         },
         submitLabel: 'Submit a Listing',
       },
-      description: 'Directory of download-focused browser tools.',
+      description:
+        'A collection of tools to help you download anything from anywhere, anytime.',
       domain: 'serpdownloaders.com',
       githubIssueOwner: 'serpcompany',
       githubIssueRepo: 'json-directory-template',
-      id: 'serpdownloaders',
+      id: 'serpdownloaders.com',
       docsRouteBasePath: 'docs',
       listingRouteBasePath: 'listing',
       name: 'SERP Downloaders',
       networkRouteBasePath: 'network',
       publicUrl: 'https://serpdownloaders.com',
-      tagline: 'Download-focused product directory',
+      tagline: 'For the people who just like to get down...loading',
     });
   });
 });
