@@ -4,7 +4,7 @@ This folder is no longer the active starter source of truth.
 
 Current active listing data lives in:
 
-- `data/websites.json`
+- `data/listings.json`
 
 This `packages/content/data/websites/**` corpus is kept as reference-only legacy material for now.
 

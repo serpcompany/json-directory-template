@@ -33,7 +33,7 @@ Use it as a quick reference, not as a source of truth for active product behavio
 - Representative route: `/websites/[slug]`
 - Source: `apps/web/app/websites/[slug]/page.tsx`
 - Main supporting files: `apps/web/components/website/website-hero.tsx`, `apps/web/components/website/website-resources-section.tsx`, `apps/web/components/website/website-detail-sidebar.tsx`
-- Data source: `data/websites.json`
+- Data source: `data/listings.json`
 - Why keep it: This is the most important detail-page pattern in the repo. It captures the hero, resource links, sidebar, related projects, and navigation treatment.
 - Recommended action: `Keep + rebrand first`
 

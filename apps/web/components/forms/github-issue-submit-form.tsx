@@ -1,17 +1,18 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { buildSubmissionIssueUrl } from '@/lib/github-issue'
-import { categories } from '@/lib/categories'
-import { siteCopy } from '@/lib/site-copy'
-import { SubmitFormGuidelines } from './submit-form-guidelines'
+import { useState } from 'react';
+import { buildSubmissionIssueUrl } from '@/lib/github-issue';
+import { getCategoryDisplayName } from '@/lib/category-display';
+import { categories } from '@/lib/categories';
+import { siteCopy } from '@/lib/site-copy';
+import { SubmitFormGuidelines } from './submit-form-guidelines';
 
 interface SubmissionFormState {
-  category: string
-  description: string
-  name: string
-  notes: string
-  website: string
+  category: string;
+  description: string;
+  name: string;
+  notes: string;
+  website: string;
 }
 
 const INITIAL_FORM_STATE: SubmissionFormState = {
@@ -19,52 +20,54 @@ const INITIAL_FORM_STATE: SubmissionFormState = {
   description: '',
   name: '',
   notes: '',
-  website: ''
-}
+  website: '',
+};
 
 export function GitHubIssueSubmitForm() {
-  const [formState, setFormState] = useState<SubmissionFormState>(INITIAL_FORM_STATE)
-  const listingLabel = siteCopy.listingName.singularTitle
+  const [formState, setFormState] =
+    useState<SubmissionFormState>(INITIAL_FORM_STATE);
+  const listingLabel = siteCopy.listingName.singularTitle;
 
   function updateField<Key extends keyof SubmissionFormState>(
     key: Key,
     value: SubmissionFormState[Key]
   ): void {
-    setFormState(currentState => ({
+    setFormState((currentState) => ({
       ...currentState,
-      [key]: value
-    }))
+      [key]: value,
+    }));
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
-    event.preventDefault()
+    event.preventDefault();
 
     const issueUrl = buildSubmissionIssueUrl({
       category: formState.category,
       description: formState.description,
       name: formState.name,
       notes: formState.notes,
-      website: formState.website
-    })
+      website: formState.website,
+    });
 
-    window.location.assign(issueUrl)
+    window.location.assign(issueUrl);
   }
 
-  const isSubmitDisabled = !formState.name || !formState.website || !formState.category
+  const isSubmitDisabled =
+    !formState.name || !formState.website || !formState.category;
 
   return (
     <div className="space-y-8">
       <div className="space-y-4">
         <h1 className="text-3xl font-bold">{siteCopy.submitLabel}</h1>
         <p className="text-muted-foreground">
-          Share the basics and we&apos;ll open a prefilled GitHub issue for review. No account is
-          required on this site.
+          Share the basics and we&apos;ll open a prefilled GitHub issue for
+          review. No account is required on this site.
         </p>
       </div>
 
       <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-100">
-        Submissions are reviewed through GitHub issues so the site can stay simple and easy to
-        host.
+        Submissions are reviewed through GitHub issues so the site can stay
+        simple and easy to host.
       </div>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
@@ -75,7 +78,7 @@ export function GitHubIssueSubmitForm() {
               required
               type="text"
               value={formState.name}
-              onChange={event => updateField('name', event.target.value)}
+              onChange={(event) => updateField('name', event.target.value)}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               placeholder={`Example ${listingLabel}`}
             />
@@ -86,13 +89,13 @@ export function GitHubIssueSubmitForm() {
             <select
               required
               value={formState.category}
-              onChange={event => updateField('category', event.target.value)}
+              onChange={(event) => updateField('category', event.target.value)}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <option value="">Choose a category</option>
-              {categories.map(category => (
+              {categories.map((category) => (
                 <option key={category.slug} value={category.slug}>
-                  {category.name}
+                  {getCategoryDisplayName(category.slug)}
                 </option>
               ))}
             </select>
@@ -104,7 +107,7 @@ export function GitHubIssueSubmitForm() {
               required
               type="url"
               value={formState.website}
-              onChange={event => updateField('website', event.target.value)}
+              onChange={(event) => updateField('website', event.target.value)}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               placeholder="https://example.com"
             />
@@ -115,7 +118,7 @@ export function GitHubIssueSubmitForm() {
           <span className="text-sm font-medium">Description</span>
           <textarea
             value={formState.description}
-            onChange={event => updateField('description', event.target.value)}
+            onChange={(event) => updateField('description', event.target.value)}
             className="min-h-32 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             placeholder={`A short summary of what this ${siteCopy.listingName.singular} covers and why it is useful.`}
           />
@@ -125,7 +128,7 @@ export function GitHubIssueSubmitForm() {
           <span className="text-sm font-medium">Additional notes</span>
           <textarea
             value={formState.notes}
-            onChange={event => updateField('notes', event.target.value)}
+            onChange={(event) => updateField('notes', event.target.value)}
             className="min-h-24 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             placeholder="Optional context for reviewers."
           />
@@ -151,5 +154,5 @@ export function GitHubIssueSubmitForm() {
 
       <SubmitFormGuidelines />
     </div>
-  )
+  );
 }

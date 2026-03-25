@@ -25,13 +25,13 @@ describe('WebsiteContentSection', () => {
       <WebsiteContentSection
         website={{
           ...baseWebsite,
-          content: '## Overview\n\nThis came from data/websites.json.',
+          content: '## Overview\n\nThis came from data/listings.json.',
         }}
       />
     );
 
     expect(screen.getByTestId('mdx-content')).toHaveTextContent(
-      '## Overview This came from data/websites.json.'
+      '## Overview This came from data/listings.json.'
     );
     expect(screen.queryByText('About Example Project')).not.toBeInTheDocument();
   });
@@ -43,7 +43,7 @@ describe('WebsiteContentSection', () => {
           ...baseWebsite,
           content: `## Overview
 
-This came from data/websites.json.
+This came from data/listings.json.
 
 ## Links
 
@@ -56,7 +56,7 @@ This came from data/websites.json.
     );
 
     expect(screen.getByTestId('mdx-content')).toHaveTextContent(
-      '## Overview This came from data/websites.json.'
+      '## Overview This came from data/listings.json.'
     );
     expect(screen.getByTestId('mdx-content')).not.toHaveTextContent('## Links');
     expect(screen.getByTestId('mdx-content')).not.toHaveTextContent(

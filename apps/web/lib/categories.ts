@@ -1,4 +1,4 @@
-import type { LucideIcon } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react';
 import {
   Brain,
   Briefcase,
@@ -11,16 +11,15 @@ import {
   Package,
   ShoppingCart,
   User,
-  Workflow
-} from 'lucide-react'
+  Workflow,
+} from 'lucide-react';
 
 export interface Category {
-  name: string
-  slug: string
-  description: string
-  icon: LucideIcon
-  priority: 'high' | 'medium' | 'low'
-  type: 'tool' | 'non-tool'
+  name: string;
+  slug: string;
+  description: string;
+  icon: LucideIcon;
+  priority: 'high' | 'medium' | 'low';
 }
 
 export const categories: Category[] = [
@@ -30,7 +29,6 @@ export const categories: Category[] = [
     description: 'APIs, frameworks, libraries, IDEs, and development utilities',
     icon: Code2,
     priority: 'high',
-    type: 'tool'
   },
   {
     name: 'AI & Machine Learning',
@@ -38,15 +36,14 @@ export const categories: Category[] = [
     description: 'AI models, ML tools, LLM platforms, and AI services',
     icon: Brain,
     priority: 'high',
-    type: 'tool'
   },
   {
     name: 'Data & Analytics',
     slug: 'data-analytics',
-    description: 'Databases, analytics platforms, BI tools, and data processing',
+    description:
+      'Databases, analytics platforms, BI tools, and data processing',
     icon: Database,
     priority: 'high',
-    type: 'tool'
   },
   {
     name: 'Infrastructure & Cloud',
@@ -54,7 +51,6 @@ export const categories: Category[] = [
     description: 'Cloud platforms, hosting, containers, and DevOps tools',
     icon: Cpu,
     priority: 'high',
-    type: 'tool'
   },
   {
     name: 'Security & Identity',
@@ -62,15 +58,14 @@ export const categories: Category[] = [
     description: 'Security tools, authentication, encryption, and compliance',
     icon: Lock,
     priority: 'high',
-    type: 'tool'
   },
   {
     name: 'Automation & Workflow',
     slug: 'automation-workflow',
-    description: 'Workflow automation, integration platforms, and productivity tools',
+    description:
+      'Workflow automation, integration platforms, and productivity tools',
     icon: Workflow,
     priority: 'medium',
-    type: 'tool'
   },
   {
     name: 'Finance & Fintech',
@@ -78,15 +73,14 @@ export const categories: Category[] = [
     description: 'Financial services, payment platforms, and fintech tools',
     icon: Briefcase,
     priority: 'medium',
-    type: 'tool'
   },
   {
     name: 'Marketing & Sales',
     slug: 'marketing-sales',
-    description: 'Marketing tools, CRM, sales platforms, and customer engagement',
+    description:
+      'Marketing tools, CRM, sales platforms, and customer engagement',
     icon: User,
     priority: 'medium',
-    type: 'tool'
   },
   {
     name: 'E-commerce',
@@ -94,7 +88,6 @@ export const categories: Category[] = [
     description: 'Online stores, marketplaces, and retail platforms',
     icon: ShoppingCart,
     priority: 'low',
-    type: 'non-tool'
   },
   {
     name: 'Content & Media',
@@ -102,7 +95,6 @@ export const categories: Category[] = [
     description: 'Publishing platforms, content management, and media tools',
     icon: FileText,
     priority: 'low',
-    type: 'non-tool'
   },
   {
     name: 'Business Operations',
@@ -110,7 +102,6 @@ export const categories: Category[] = [
     description: 'Business management, operations, and enterprise tools',
     icon: Briefcase,
     priority: 'low',
-    type: 'non-tool'
   },
   {
     name: 'Personal',
@@ -118,7 +109,6 @@ export const categories: Category[] = [
     description: 'Personal websites, portfolios, and blogs',
     icon: User,
     priority: 'low',
-    type: 'non-tool'
   },
   {
     name: 'Agency & Services',
@@ -126,7 +116,6 @@ export const categories: Category[] = [
     description: 'Agencies, consultancies, and service providers',
     icon: Briefcase,
     priority: 'low',
-    type: 'non-tool'
   },
   {
     name: 'International',
@@ -134,7 +123,6 @@ export const categories: Category[] = [
     description: 'Non-English and international websites',
     icon: Globe,
     priority: 'low',
-    type: 'non-tool'
   },
   {
     name: 'Other',
@@ -142,31 +130,26 @@ export const categories: Category[] = [
     description: "Everything else that doesn't fit other categories",
     icon: Package,
     priority: 'low',
-    type: 'non-tool'
-  }
-]
+  },
+];
 
 export const categoryAliases: Record<string, string> = {
-  'integration-automation': 'automation-workflow'
-}
-
-// Helper functions
-export const toolCategories = categories.filter(c => c.type === 'tool')
-export const nonToolCategories = categories.filter(c => c.type === 'non-tool')
+  'integration-automation': 'automation-workflow',
+};
 
 export const getCategoryBySlug = (slug: string): Category | undefined => {
-  return categories.find(c => c.slug === slug)
-}
+  return categories.find((c) => c.slug === slug);
+};
 
 export const getCategoryLabel = (slug: string): string => {
-  return getCategoryBySlug(slug)?.name || slug
-}
+  return getCategoryBySlug(slug)?.name || slug;
+};
 
 export const getCategoryIcon = (slug: string): LucideIcon => {
-  const category = getCategoryBySlug(slug)
-  return category?.icon || Package
-}
+  const category = getCategoryBySlug(slug);
+  return category?.icon || Package;
+};
 
 export const normalizeCategorySlug = (slug: string): string => {
-  return categoryAliases[slug] || slug
-}
+  return categoryAliases[slug] || slug;
+};

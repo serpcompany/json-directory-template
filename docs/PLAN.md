@@ -96,7 +96,7 @@ graph TD
 - [x] One working proof that source JSON can be validated, transformed, built here, and deployed to another GitHub repo for GitHub Pages
 - [x] A static export build path via `pnpm build:pages`
 - [x] A target-repo sync deploy path via `scripts/deploy-to-repo.sh`
-- [x] A checked-in site config for `serpdownloaders`
+- [x] A checked-in site config for `serpdownloaders.com`
 - [x] A second real checked-in site exercise for `extensions.serp.co`
 - [x] Site-aware validate/build/deploy commands driven by one site id
 - [x] Per-site build artifacts under `dist/sites/<site-id>`
@@ -110,7 +110,7 @@ graph TD
 - [x] A cleaner operator-facing DR badge input shape:
       provider-style payload first, raw badge fields only as compatibility
 - [x] A first classification pass for starter defaults vs site-owned content vs contract-driven surfaces
-- [x] A working checked-in site-config build and deploy trial for `serpdownloaders`
+- [x] A working checked-in site-config build and deploy trial for `serpdownloaders.com`
 
 ## Where we are now
 
@@ -192,7 +192,7 @@ graph TD
 - [x] Resolve the current mismatch between the old authored-content docs and the new JSON-first reality
 - [x] Decide the intended source of truth for websites:
       MDX-authored entries, JSON-authored entries, or both through one normalized ingestion layer
-- [x] Document whether `data/websites.json` is:
+- [x] Document whether `data/listings.json` is:
       generated output only, checked-in editable source, or site-build intermediate
 - [x] Review workflows, PR checks, and labels that still assume `packages/content/data/websites/**` is the only valid authoring path
 - [x] Decide whether the legacy `scripts/generate-websites.ts` flow stays, changes, or gets retired
@@ -201,7 +201,7 @@ graph TD
 - [x] Review helper scripts and CI rules that still block or classify changes based on MDX-only assumptions
 - [x] Include tests for the intended ingestion path and schema normalization
 - [x] Update `data/README.md`, docs, and workflow notes once the intended model is chosen
-- [x] Add an explicit PR/main validation gate for `data/websites.json` so accepted listing changes fail early
+- [x] Add an explicit PR/main validation gate for `data/listings.json` so accepted listing changes fail early
 
 ### 4. Future submit / sign up / login flow
 

@@ -1,20 +1,24 @@
-'use client'
+'use client';
 
-import { Button } from '@thedaviddias/design-system/button'
-import { ErrorBoundaryCustom } from '@thedaviddias/design-system/error-boundary'
-import { ToggleGroup, ToggleGroupItem } from '@thedaviddias/design-system/toggle-group'
-import { Clock, Grid, List, SortAsc } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { EmptyState } from '@/components/empty-state'
-import { LLMGrid } from '@/components/llm/llm-grid'
-import { useWebsiteFilters } from '@/hooks/use-website-filters'
-import { categories } from '@/lib/categories'
-import type { WebsiteMetadata } from '@/lib/content-loader'
-import { getRoute } from '@/lib/routes'
-import { siteCopy } from '@/lib/site-copy'
+import { Button } from '@thedaviddias/design-system/button';
+import { ErrorBoundaryCustom } from '@thedaviddias/design-system/error-boundary';
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from '@thedaviddias/design-system/toggle-group';
+import { Clock, Grid, List, SortAsc } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { EmptyState } from '@/components/empty-state';
+import { LLMGrid } from '@/components/llm/llm-grid';
+import { useWebsiteFilters } from '@/hooks/use-website-filters';
+import { getCategoryDisplayName } from '@/lib/category-display';
+import { categories } from '@/lib/categories';
+import type { WebsiteMetadata } from '@/lib/content-loader';
+import { getRoute } from '@/lib/routes';
+import { siteCopy } from '@/lib/site-copy';
 
 interface ClientProjectsListProps {
-  initialWebsites: WebsiteMetadata[]
+  initialWebsites: WebsiteMetadata[];
 }
 
 /**
@@ -31,9 +35,9 @@ function isValidWebsite(website: any): website is WebsiteMetadata {
     typeof website.description === 'string' &&
     typeof website.website === 'string' &&
     typeof website.category === 'string' &&
-    typeof website.publishedAt === 'string'
+    typeof website.publishedAt === 'string';
 
-  return isValid
+  return isValid;
 }
 
 /**
@@ -49,43 +53,53 @@ function isValidWebsite(website: any): website is WebsiteMetadata {
  * <ClientProjectsList initialWebsites={websites} />
  * ```
  */
-export function ClientProjectsList({ initialWebsites }: ClientProjectsListProps) {
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [websites, setWebsites] = useState(initialWebsites)
-  const { categoryFilter, sortBy, setCategoryFilter, setSortBy } = useWebsiteFilters()
+export function ClientProjectsList({
+  initialWebsites,
+}: ClientProjectsListProps) {
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [websites, setWebsites] = useState(initialWebsites);
+  const { categoryFilter, sortBy, setCategoryFilter, setSortBy } =
+    useWebsiteFilters();
 
   // Get current category name for heading
   const currentCategoryName =
     categoryFilter === 'all'
       ? `All ${siteCopy.listingName.pluralTitle}`
-      : `${categories.find(cat => cat.slug === categoryFilter)?.name || 'Unknown'} ${siteCopy.listingName.pluralTitle}`
+      : `${getCategoryDisplayName(categoryFilter)} ${
+          siteCopy.listingName.pluralTitle
+        }`;
 
   // Update filtered and sorted websites when filters or initial websites change
   useEffect(() => {
-    let filteredWebsites = [...initialWebsites]
+    let filteredWebsites = [...initialWebsites];
 
     // Filter by category if selected
     if (categoryFilter !== 'all') {
-      filteredWebsites = filteredWebsites.filter(website => website.category === categoryFilter)
+      filteredWebsites = filteredWebsites.filter(
+        (website) => website.category === categoryFilter
+      );
     }
 
     // Sort by selected criteria
     if (sortBy === 'latest') {
       filteredWebsites.sort(
-        (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-      )
+        (a, b) =>
+          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      );
     } else if (sortBy === 'name') {
-      filteredWebsites.sort((a, b) => a.name.localeCompare(b.name))
+      filteredWebsites.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     // Validate websites after all filtering and sorting
-    const validWebsites = filteredWebsites.filter(isValidWebsite)
-    setWebsites(validWebsites)
-  }, [initialWebsites, categoryFilter, sortBy])
+    const validWebsites = filteredWebsites.filter(isValidWebsite);
+    setWebsites(validWebsites);
+  }, [initialWebsites, categoryFilter, sortBy]);
 
   return (
     <div>
-      <h1 className="text-4xl font-bold tracking-tight mb-4">{currentCategoryName}</h1>
+      <h1 className="text-4xl font-bold tracking-tight mb-4">
+        {currentCategoryName}
+      </h1>
 
       <div className="mb-8">
         <div className="flex flex-wrap gap-2">
@@ -97,15 +111,17 @@ export function ClientProjectsList({ initialWebsites }: ClientProjectsListProps)
           >
             All Categories
           </Button>
-          {categories.map(category => (
+          {categories.map((category) => (
             <Button
               key={category.slug}
-              variant={categoryFilter === category.slug ? 'default' : 'secondary'}
+              variant={
+                categoryFilter === category.slug ? 'default' : 'secondary'
+              }
               size="sm"
               onClick={() => setCategoryFilter(category.slug)}
               className="rounded-full hover:cursor-pointer"
             >
-              {category.name}
+              {getCategoryDisplayName(category.slug)}
             </Button>
           ))}
         </div>
@@ -138,11 +154,17 @@ export function ClientProjectsList({ initialWebsites }: ClientProjectsListProps)
             onValueChange={(value: string) => value && setSortBy(value)}
             className="bg-background border rounded-md"
           >
-            <ToggleGroupItem value="latest" className="px-3 py-2 h-10 data-[state=on]:bg-accent">
+            <ToggleGroupItem
+              value="latest"
+              className="px-3 py-2 h-10 data-[state=on]:bg-accent"
+            >
               <Clock className="size-4 mr-2" />
               <span className="text-sm">Latest</span>
             </ToggleGroupItem>
-            <ToggleGroupItem value="name" className="px-3 py-2 h-10 data-[state=on]:bg-accent">
+            <ToggleGroupItem
+              value="name"
+              className="px-3 py-2 h-10 data-[state=on]:bg-accent"
+            >
               <SortAsc className="size-4 mr-2" />
               <span className="text-sm">Name</span>
             </ToggleGroupItem>
@@ -158,15 +180,19 @@ export function ClientProjectsList({ initialWebsites }: ClientProjectsListProps)
         />
       ) : viewMode === 'grid' ? (
         <ErrorBoundaryCustom>
-          <h2 className="text-2xl font-semibold mb-6 sr-only">{siteCopy.listingCountLabel}</h2>
+          <h2 className="text-2xl font-semibold mb-6 sr-only">
+            {siteCopy.listingCountLabel}
+          </h2>
           <LLMGrid items={websites} />
         </ErrorBoundaryCustom>
       ) : (
         <ErrorBoundaryCustom>
-          <h2 className="text-2xl font-semibold mb-6 sr-only">{siteCopy.listingCountLabel}</h2>
+          <h2 className="text-2xl font-semibold mb-6 sr-only">
+            {siteCopy.listingCountLabel}
+          </h2>
           <LLMGrid items={websites} variant="compact" />
         </ErrorBoundaryCustom>
       )}
     </div>
-  )
+  );
 }

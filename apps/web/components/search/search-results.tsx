@@ -1,15 +1,15 @@
-'use client'
+'use client';
 
-import { useSearchParams } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
-import { EmptyState } from '@/components/empty-state'
-import { SearchFilters } from '@/components/search/search-filters'
-import { useSearch } from '@/components/search/use-search'
-import { WebsitesListWithSort } from '@/components/websites-list-with-sort'
-import { getCategoryLabel } from '@/lib/categories'
-import { getRoute } from '@/lib/routes'
-import { siteCopy } from '@/lib/site-copy'
-import { siteConfig } from '@/lib/site-config'
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+import { EmptyState } from '@/components/empty-state';
+import { SearchFilters } from '@/components/search/search-filters';
+import { useSearch } from '@/components/search/use-search';
+import { WebsitesListWithSort } from '@/components/websites-list-with-sort';
+import { getCategoryDisplayName } from '@/lib/category-display';
+import { getRoute } from '@/lib/routes';
+import { siteCopy } from '@/lib/site-copy';
+import { siteConfig } from '@/lib/site-config';
 
 /**
  * Search results component for displaying and filtering websites
@@ -17,31 +17,33 @@ import { siteConfig } from '@/lib/site-config'
  * @returns React component
  */
 export function SearchResults() {
-  const searchParams = useSearchParams()
-  const query = searchParams.get('q') || ''
-  const { results, loading, error } = useSearch(query)
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const searchParams = useSearchParams();
+  const query = searchParams.get('q') || '';
+  const { results, loading, error } = useSearch(query);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   // Filter results based on selected categories
   const filteredResults = useMemo(() => {
     if (selectedCategories.length === 0) {
-      return results
+      return results;
     }
-    return results.filter(result => selectedCategories.includes(result.category))
-  }, [results, selectedCategories])
+    return results.filter((result) =>
+      selectedCategories.includes(result.category)
+    );
+  }, [results, selectedCategories]);
 
   // Get available categories from current results
   const availableCategories = useMemo(() => {
-    return [...new Set(results.map(result => result.category))]
-  }, [results])
+    return [...new Set(results.map((result) => result.category))];
+  }, [results]);
 
   useEffect(() => {
     if (query) {
-      document.title = `Search Results for "${query}" | ${siteConfig.name}`
+      document.title = `Search Results for "${query}" | ${siteConfig.name}`;
     } else {
-      document.title = `Search | ${siteConfig.name}`
+      document.title = `Search | ${siteConfig.name}`;
     }
-  }, [query])
+  }, [query]);
 
   if (error) {
     return (
@@ -58,7 +60,7 @@ export function SearchResults() {
           Refresh Page
         </button>
       </div>
-    )
+    );
   }
 
   if (loading) {
@@ -66,7 +68,7 @@ export function SearchResults() {
       <div className="flex justify-center py-8">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500" />
       </div>
-    )
+    );
   }
 
   if (!query) {
@@ -77,7 +79,7 @@ export function SearchResults() {
         actionLabel={siteCopy.exploreAllLabel}
         actionHref={getRoute('home')}
       />
-    )
+    );
   }
 
   if (results.length === 0) {
@@ -86,16 +88,22 @@ export function SearchResults() {
         <div className="text-center py-8">
           <h2 className="text-xl font-semibold mb-2">Nothing Found</h2>
           <p className="text-muted-foreground mb-6">
-            We couldn't find any results for "{query}". Try using different keywords or check your
-            spelling.
+            We couldn't find any results for "{query}". Try using different
+            keywords or check your spelling.
           </p>
           <div className="space-y-2 text-sm text-muted-foreground">
             <p>Search suggestions:</p>
             <ul className="list-disc list-inside space-y-1 max-w-md mx-auto">
               <li>Check for typos in your search terms</li>
-              <li>Try more general keywords (e.g., "AI" instead of "artificial intelligence")</li>
+              <li>
+                Try more general keywords (e.g., "AI" instead of "artificial
+                intelligence")
+              </li>
               <li>Browse by category using the sidebar</li>
-              <li>Submit a new {siteCopy.listingName.singular} if you do not see it listed</li>
+              <li>
+                Submit a new {siteCopy.listingName.singular} if you do not see
+                it listed
+              </li>
             </ul>
           </div>
         </div>
@@ -106,7 +114,7 @@ export function SearchResults() {
           actionHref={getRoute('submit')}
         />
       </div>
-    )
+    );
   }
 
   return (
@@ -116,7 +124,8 @@ export function SearchResults() {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           <div>
             <h2 className="text-lg font-semibold">
-              {filteredResults.length} result{filteredResults.length !== 1 ? 's' : ''} for "{query}"
+              {filteredResults.length} result
+              {filteredResults.length !== 1 ? 's' : ''} for "{query}"
             </h2>
             <p className="text-sm text-muted-foreground">
               {selectedCategories.length > 0 ? (
@@ -152,8 +161,8 @@ export function SearchResults() {
           <div className="flex flex-wrap gap-2">
             {Object.entries(
               results.reduce<Record<string, number>>((acc, result) => {
-                acc[result.category] = (acc[result.category] || 0) + 1
-                return acc
+                acc[result.category] = (acc[result.category] || 0) + 1;
+                return acc;
               }, {})
             ).map(([category, count]) => (
               <button
@@ -162,7 +171,7 @@ export function SearchResults() {
                 onClick={() => setSelectedCategories([category])}
                 className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-background border hover:bg-muted/50 transition-colors cursor-pointer"
               >
-                {getCategoryLabel(category)} ({count})
+                {getCategoryDisplayName(category)} ({count})
               </button>
             ))}
           </div>
@@ -172,7 +181,9 @@ export function SearchResults() {
       {/* No results after filtering */}
       {filteredResults.length === 0 && selectedCategories.length > 0 ? (
         <div className="text-center py-8">
-          <h3 className="text-lg font-semibold mb-2">No results match your filters</h3>
+          <h3 className="text-lg font-semibold mb-2">
+            No results match your filters
+          </h3>
           <p className="text-muted-foreground mb-4">
             Try removing some category filters or search with different terms.
           </p>
@@ -193,5 +204,5 @@ export function SearchResults() {
         />
       )}
     </div>
-  )
+  );
 }

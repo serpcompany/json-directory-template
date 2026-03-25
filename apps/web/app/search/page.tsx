@@ -1,15 +1,16 @@
-import { ExternalLink, Home as HomeIcon } from 'lucide-react'
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import { Suspense } from 'react'
-import { SearchResults } from '@/components/search/search-results'
-import { getActiveCategories } from '@/lib/category-navigation'
-import { getWebsites } from '@/lib/content-loader'
-import { externalResources } from '@/lib/external-resources'
-import { getRoute } from '@/lib/routes'
-import { generateBaseMetadata } from '@/lib/seo/seo-config'
-import { siteCopy } from '@/lib/site-copy'
-import { siteConfig } from '@/lib/site-config'
+import { ExternalLink, Home as HomeIcon } from 'lucide-react';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Suspense } from 'react';
+import { SearchResults } from '@/components/search/search-results';
+import { getActiveCategories } from '@/lib/category-navigation';
+import { getCategoryDisplayName } from '@/lib/category-display';
+import { getWebsites } from '@/lib/content-loader';
+import { externalResources } from '@/lib/external-resources';
+import { getRoute } from '@/lib/routes';
+import { generateBaseMetadata } from '@/lib/seo/seo-config';
+import { siteCopy } from '@/lib/site-copy';
+import { siteConfig } from '@/lib/site-config';
 
 /**
  * Generate metadata for the static search shell.
@@ -17,7 +18,7 @@ import { siteConfig } from '@/lib/site-config'
  */
 export async function generateMetadata(): Promise<Metadata> {
   const showExternalResources =
-    siteConfig.features.showExternalResources && externalResources.length > 0
+    siteConfig.features.showExternalResources && externalResources.length > 0;
 
   return generateBaseMetadata({
     title: 'Search',
@@ -26,16 +27,22 @@ export async function generateMetadata(): Promise<Metadata> {
       : `Search for listings and resources in ${siteConfig.name}.`,
     path: '/search',
     keywords: showExternalResources
-      ? ['search', 'find', 'directory listings', 'external resources', 'resources']
+      ? [
+          'search',
+          'find',
+          'directory listings',
+          'external resources',
+          'resources',
+        ]
       : ['search', 'find', 'directory listings', 'resources'],
-    noindex: true
-  })
+    noindex: true,
+  });
 }
 
 export default function SearchPage() {
   const showExternalResources =
-    siteConfig.features.showExternalResources && externalResources.length > 0
-  const activeCategories = getActiveCategories(getWebsites())
+    siteConfig.features.showExternalResources && externalResources.length > 0;
+  const activeCategories = getActiveCategories(getWebsites());
 
   return (
     <div className="border-t">
@@ -46,7 +53,9 @@ export default function SearchPage() {
             <h2 className="sr-only">Search Filters</h2>
 
             <div>
-              <h3 className="font-semibold text-sm mb-4 text-muted-foreground">Categories</h3>
+              <h3 className="font-semibold text-sm mb-4 text-muted-foreground">
+                Categories
+              </h3>
               <nav className="space-y-1">
                 <Link
                   href={getRoute('home')}
@@ -55,14 +64,16 @@ export default function SearchPage() {
                   <HomeIcon className="h-4 w-4" />
                   {siteCopy.allLabel}
                 </Link>
-                {activeCategories.map(category => (
+                {activeCategories.map((category) => (
                   <Link
                     key={category.slug}
-                    href={getRoute('category.page', { category: category.slug })}
+                    href={getRoute('category.page', {
+                      category: category.slug,
+                    })}
                     className="flex items-center gap-2 px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
                   >
                     <category.icon className="h-4 w-4" />
-                    {category.name}
+                    {getCategoryDisplayName(category.slug)}
                   </Link>
                 ))}
               </nav>
@@ -70,9 +81,11 @@ export default function SearchPage() {
 
             {showExternalResources ? (
               <div>
-                <h3 className="font-semibold text-sm mb-4 text-muted-foreground">Resources</h3>
+                <h3 className="font-semibold text-sm mb-4 text-muted-foreground">
+                  Resources
+                </h3>
                 <nav className="space-y-1">
-                  {externalResources.map(resource => (
+                  {externalResources.map((resource) => (
                     <Link
                       key={resource.slug}
                       href={resource.url}
@@ -117,5 +130,5 @@ export default function SearchPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

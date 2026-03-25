@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { FavoritesLink } from '@/components/ui/favorites-link';
 import type { HeaderAuthState } from '@/lib/auth';
+import { getCategoryDisplayName } from '@/lib/category-display';
 import { categories } from '@/lib/categories';
 import { externalResources } from '@/lib/external-resources';
 import { getRoute } from '@/lib/routes';
@@ -249,7 +250,7 @@ export function MobileDrawer({
                   )}
                 >
                   <category.icon className="h-4 w-4" />
-                  {category.name}
+                  {getCategoryDisplayName(category.slug)}
                 </Link>
               ))}
             </nav>

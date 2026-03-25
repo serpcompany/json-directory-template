@@ -5,4 +5,4 @@
 So the intent is:
 
 - one label for editable listing/content source changes
-- avoid treating `data/websites.json` as generated output in the active starter flow
+- avoid treating `data/listings.json` as generated output in the active starter flow

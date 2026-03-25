@@ -41,7 +41,7 @@ Acceptance:
 
 ### Chunk 1. Lock the source-of-truth model
 
-- [x] Decide and document whether `data/websites.json` is generated output, editable source, or build intermediate
+- [x] Decide and document whether `data/listings.json` is generated output, editable source, or build intermediate
 - [x] Decide the role of `packages/content/data/websites/**`
 - [x] Update [data/README.md](/Users/devin/dev/repos/json-directory-template/data/README.md)
 - [x] Update workflow/docs references that still describe MDX-only website authoring
@@ -132,7 +132,7 @@ Acceptance:
 - [x] Make the default local web dev loop stable, repo-scoped, and debugger-optional:
       default `next dev --webpack`, explicit `turbopack.root`, plus opt-in `dev:inspect`
 - [x] Complete the deeper upstream audit for placeholder/demo routes against `thedaviddias/llms-txt-hub`
-- [x] Remove hardcoded `serpdownloaders` fallback assumptions from the default build workflow
+- [x] Remove hardcoded `serpdownloaders.com` fallback assumptions from the default build workflow
 - [x] Exercise the checked-in site contract against a second real site:
       `extensions.serp.co`
 

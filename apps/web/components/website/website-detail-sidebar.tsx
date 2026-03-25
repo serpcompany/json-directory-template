@@ -1,25 +1,26 @@
-import registryData from '@cli-data/registry.json'
-import { Calendar, Download, Hash } from 'lucide-react'
-import Link from 'next/link'
-import type { WebsiteMetadata } from '@/lib/content-loader'
-import { getRoute } from '@/lib/routes'
+import registryData from '@cli-data/registry.json';
+import { Calendar, Download, Hash } from 'lucide-react';
+import Link from 'next/link';
+import { getCategoryDisplayName } from '@/lib/category-display';
+import type { WebsiteMetadata } from '@/lib/content-loader';
+import { getRoute } from '@/lib/routes';
 
-const webSlugToCliSlug = new Map<string, string>()
+const webSlugToCliSlug = new Map<string, string>();
 for (const entry of registryData as { slug: string; webSlug?: string }[]) {
   if (entry.webSlug) {
-    webSlugToCliSlug.set(entry.webSlug, entry.slug)
+    webSlugToCliSlug.set(entry.webSlug, entry.slug);
   }
 }
 
 interface WebsiteDetailSidebarProps {
-  website: WebsiteMetadata
+  website: WebsiteMetadata;
 }
 
 /**
  * Sidebar for website detail pages showing static metadata for the selected website.
  */
 export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
-  const cliSlug = webSlugToCliSlug.get(website.slug)
+  const cliSlug = webSlugToCliSlug.get(website.slug);
 
   return (
     <aside className="space-y-6 lg:sticky lg:top-20 lg:self-start">
@@ -44,7 +45,7 @@ export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
               href={getRoute('category.page', { category: website.category })}
               className="mt-1 inline-block text-sm text-foreground hover:text-primary transition-colors capitalize"
             >
-              {website.category.replace(/-/g, ' ')}
+              {getCategoryDisplayName(website.category)}
             </Link>
           </div>
         )}
@@ -59,12 +60,12 @@ export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
               {new Date(website.publishedAt).toLocaleDateString('en-US', {
                 month: 'long',
                 day: 'numeric',
-                year: 'numeric'
+                year: 'numeric',
               })}
             </p>
           </div>
         )}
       </div>
     </aside>
-  )
+  );
 }

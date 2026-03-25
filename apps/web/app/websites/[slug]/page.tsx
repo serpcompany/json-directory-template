@@ -14,6 +14,7 @@ import {
   getWebsites,
   type WebsiteMetadata,
 } from '@/lib/content-loader';
+import { getCategoryDisplayName } from '@/lib/category-display';
 import { resolveListingDetailTemplate } from '@/lib/listing-detail-template';
 import { getRoute } from '@/lib/routes';
 import { generateWebsiteDetailSchema } from '@/lib/schema';
@@ -45,9 +46,7 @@ export async function generateMetadata({
 
     // Format category for display
     const categoryFormatted = project.category
-      ? project.category
-          .replace(/-/g, ' ')
-          .replace(/\b\w/g, (l) => l.toUpperCase())
+      ? getCategoryDisplayName(project.category)
       : null;
 
     // Create an SEO-optimized description

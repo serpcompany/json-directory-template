@@ -22,8 +22,10 @@ const sampleWebsite = {
 };
 
 describe('website surface copy', () => {
-  it('uses generic links copy and keeps the supplemental links in the simpler bottom section style', () => {
-    render(<WebsiteResourcesSection website={sampleWebsite} />);
+  it('uses generic links copy and keeps the supplemental links in the shared sticky-header list style', () => {
+    const { container } = render(
+      <WebsiteResourcesSection website={sampleWebsite} />
+    );
 
     expect(
       screen.getByRole('heading', { name: /^links$/i })
@@ -31,6 +33,9 @@ describe('website surface copy', () => {
     expect(
       screen.getByText(/helpful links for this entry/i)
     ).toBeInTheDocument();
+    expect(container.querySelector('.sticky.top-16')).not.toBeNull();
+    expect(container.querySelector('ul.divide-y')).not.toBeNull();
+    expect(container.querySelector('li')).not.toBeNull();
     expect(screen.getByRole('link', { name: /support docs/i })).toHaveAttribute(
       'href',
       'https://example.com/docs'

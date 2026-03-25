@@ -1,58 +1,64 @@
-import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url'
-import { SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL, SITE_URL } from '@/lib/seo/seo-config'
-import { siteCopy } from '@/lib/site-copy'
-import type { GuideMetadata, WebsiteMetadata } from './content-loader'
-import { getRoute } from './routes'
+import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url';
+import {
+  SITE_LOGO_URL,
+  SITE_NAME,
+  SITE_PUBLIC_URL,
+  SITE_URL,
+} from '@/lib/seo/seo-config';
+import { siteCopy } from '@/lib/site-copy';
+import { getCategoryDisplayName } from './category-display';
+import type { GuideMetadata, WebsiteMetadata } from './content-loader';
+import { getRoute } from './routes';
 
 export interface SchemaOrg {
-  '@context': 'https://schema.org'
-  '@type': string
-  [key: string]: any
+  '@context': 'https://schema.org';
+  '@type': string;
+  [key: string]: any;
 }
 
 export interface WebsiteSchema extends SchemaOrg {
-  '@type': 'Service'
-  name: string
-  description: string
-  url: string
+  '@type': 'Service';
+  name: string;
+  description: string;
+  url: string;
   provider: {
-    '@type': 'Organization'
-    name: string
-    url: string
-  }
-  category: string
+    '@type': 'Organization';
+    name: string;
+    url: string;
+  };
+  category: string;
 }
 
 export interface ArticleSchema extends SchemaOrg {
-  '@type': 'TechArticle'
-  headline: string
-  description: string
-  datePublished: string
+  '@type': 'TechArticle';
+  headline: string;
+  description: string;
+  datePublished: string;
   author: {
-    '@type': 'Organization'
-    name: string
-  }
+    '@type': 'Organization';
+    name: string;
+  };
 }
 
 export interface CollectionPageSchema extends SchemaOrg {
-  '@type': 'CollectionPage'
-  name: string
-  description: string
-  hasPart: WebsiteSchema[]
+  '@type': 'CollectionPage';
+  name: string;
+  description: string;
+  hasPart: WebsiteSchema[];
 }
 
 export interface GuideSchema extends SchemaOrg {
-  '@type': 'TechArticle'
-  headline: string
-  description: string
-  datePublished: string
+  '@type': 'TechArticle';
+  headline: string;
+  description: string;
+  datePublished: string;
   author: {
-    '@type': 'Person'
-    name: string
-    url?: string
-  }
-  articleSection: string
-  timeRequired: string
+    '@type': 'Person';
+    name: string;
+    url?: string;
+  };
+  articleSection: string;
+  timeRequired: string;
 }
 
 /**
@@ -71,10 +77,10 @@ export function generateWebsiteSchema(website: WebsiteMetadata): WebsiteSchema {
     provider: {
       '@type': 'Organization',
       name: website.name,
-      url: website.website
+      url: website.website,
     },
-    category: website.category || 'DeveloperAPI'
-  }
+    category: website.category || 'DeveloperAPI',
+  };
 }
 
 /**
@@ -92,9 +98,9 @@ export function generateArticleSchema(website: WebsiteMetadata): ArticleSchema {
     datePublished: website.publishedAt,
     author: {
       '@type': 'Organization',
-      name: SITE_NAME
-    }
-  }
+      name: SITE_NAME,
+    },
+  };
 }
 
 /**
@@ -105,12 +111,14 @@ export function generateArticleSchema(website: WebsiteMetadata): ArticleSchema {
  * @returns Schema.org structured data graph
  */
 export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
-  const pageUrl = `${SITE_URL}${getRoute('listing.detail', { slug: website.slug })}`
+  const pageUrl = `${SITE_URL}${getRoute('listing.detail', {
+    slug: website.slug,
+  })}`;
   const categoryFormatted = website.category
-    ? website.category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
-    : 'Developer Tools'
-  const listingLabel = siteCopy.listingName.singular
-  const listingLabelTitle = siteCopy.listingName.singularTitle
+    ? getCategoryDisplayName(website.category)
+    : 'Developer Tools';
+  const listingLabel = siteCopy.listingName.singular;
+  const listingLabelTitle = siteCopy.listingName.singularTitle;
 
   return {
     '@context': 'https://schema.org',
@@ -123,17 +131,17 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
         name: `${website.name} ${listingLabelTitle}`,
         description: website.description,
         isPartOf: {
-          '@id': `${SITE_URL}/#website`
+          '@id': `${SITE_URL}/#website`,
         },
         primaryImageOfPage: {
           '@type': 'ImageObject',
-          url: getFaviconUrl(website.website, 256)
+          url: getFaviconUrl(website.website, 256),
         },
         datePublished: website.publishedAt,
         dateModified: website.publishedAt,
         breadcrumb: {
-          '@id': `${pageUrl}#breadcrumb`
-        }
+          '@id': `${pageUrl}#breadcrumb`,
+        },
       },
       // BreadcrumbList
       {
@@ -144,21 +152,21 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
             '@type': 'ListItem',
             position: 1,
             name: 'Home',
-            item: SITE_URL
+            item: SITE_URL,
           },
           {
             '@type': 'ListItem',
             position: 2,
             name: siteCopy.allLabel,
-            item: `${SITE_URL}${getRoute('listing.list')}`
+            item: `${SITE_URL}${getRoute('listing.list')}`,
           },
           {
             '@type': 'ListItem',
             position: 3,
             name: website.name,
-            item: pageUrl
-          }
-        ]
+            item: pageUrl,
+          },
+        ],
       },
       // SoftwareApplication - better for tools/platforms
       {
@@ -173,13 +181,13 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
           '@type': 'Offer',
           price: '0',
           priceCurrency: 'USD',
-          availability: 'https://schema.org/InStock'
+          availability: 'https://schema.org/InStock',
         },
         publisher: {
           '@type': 'Organization',
           name: website.name,
-          url: website.website
-        }
+          url: website.website,
+        },
       },
       // TechArticle about the implementation
       {
@@ -192,7 +200,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
         author: {
           '@type': 'Organization',
           name: SITE_NAME,
-          url: SITE_PUBLIC_URL
+          url: SITE_PUBLIC_URL,
         },
         publisher: {
           '@type': 'Organization',
@@ -200,21 +208,21 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
           url: SITE_PUBLIC_URL,
           logo: {
             '@type': 'ImageObject',
-            url: SITE_LOGO_URL
-          }
+            url: SITE_LOGO_URL,
+          },
         },
         mainEntityOfPage: {
-          '@id': `${pageUrl}#webpage`
+          '@id': `${pageUrl}#webpage`,
         },
         about: {
-          '@id': `${pageUrl}#software`
+          '@id': `${pageUrl}#software`,
         },
         keywords: [
           website.name,
           `${listingLabel} details`,
           'resource links',
-          categoryFormatted
-        ].join(', ')
+          categoryFormatted,
+        ].join(', '),
       },
       // FAQ Schema for common questions
       {
@@ -226,29 +234,35 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
             name: `What is included in ${website.name}'s ${listingLabel}?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: `${website.name}'s ${listingLabel} includes its summary, category details, primary link, and any supplemental resources included with the ${listingLabel}.`
-            }
+              text: `${website.name}'s ${listingLabel} includes its summary, category details, primary link, and any supplemental resources included with the ${listingLabel}.`,
+            },
           },
           {
             '@type': 'Question',
             name: `How do I access ${website.name}'s published links?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: `You can visit ${website.name} directly at ${website.website}.${website.resourceLinks && website.resourceLinks.length > 0 ? ' This entry also includes supplemental resource links alongside the main destination.' : ''}`
-            }
+              text: `You can visit ${website.name} directly at ${
+                website.website
+              }.${
+                website.resourceLinks && website.resourceLinks.length > 0
+                  ? ' This entry also includes supplemental resource links alongside the main destination.'
+                  : ''
+              }`,
+            },
           },
           {
             '@type': 'Question',
             name: `What category does ${website.name} belong to?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: `${website.name} is categorized under "${categoryFormatted}" in the ${SITE_NAME} directory. ${website.description}`
-            }
-          }
-        ]
-      }
-    ]
-  }
+              text: `${website.name} is categorized under "${categoryFormatted}" in the ${SITE_NAME} directory. ${website.description}`,
+            },
+          },
+        ],
+      },
+    ],
+  };
 }
 
 /**
@@ -257,14 +271,16 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadata) {
  * @param websites - Array of website metadata
  * @returns Schema.org CollectionPage structured data
  */
-export function generateCollectionSchema(websites: WebsiteMetadata[]): CollectionPageSchema {
+export function generateCollectionSchema(
+  websites: WebsiteMetadata[]
+): CollectionPageSchema {
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: `${SITE_NAME} Directory`,
     description: 'Directory of listings and resources',
-    hasPart: websites.map(site => generateWebsiteSchema(site))
-  }
+    hasPart: websites.map((site) => generateWebsiteSchema(site)),
+  };
 }
 
 /**
@@ -283,10 +299,10 @@ export function generateGuideSchema(guide: GuideMetadata): GuideSchema {
     author: {
       '@type': 'Person',
       name: guide.authors[0].name,
-      ...(guide.authors[0].url && { url: guide.authors[0].url })
+      ...(guide.authors[0].url && { url: guide.authors[0].url }),
     },
     articleSection: guide.category,
     timeRequired: `PT${Math.ceil(guide.readingTime || 5)}M`,
-    difficulty: guide.difficulty
-  }
+    difficulty: guide.difficulty,
+  };
 }

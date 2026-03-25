@@ -2,6 +2,7 @@ import { Info } from 'lucide-react';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import { components } from '@/components/mdx';
+import { getCategoryDisplayName } from '@/lib/category-display';
 import type { WebsiteMetadata } from '@/lib/content-loader';
 import { siteCopy } from '@/lib/site-copy';
 import { stripHtmlTags } from '@/lib/utils';
@@ -89,9 +90,9 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
           {
             label: 'Category',
             value: website.category
-              ? website.category.replace(/-/g, ' ')
+              ? getCategoryDisplayName(website.category)
               : 'General',
-            className: 'capitalize',
+            className: '',
           },
           { label: 'Type', value: siteCopy.listingName.singularTitle },
           { label: 'Resources', value: 'Helpful links and context' },

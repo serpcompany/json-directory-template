@@ -1,10 +1,11 @@
-# Entity Data Shape
+# Listing Data Shape
 
 ## Where The Shape Lives
 
-- Raw website entry data lives in `data/websites.json`.
+- Raw listing entry data lives in `data/listings.json`.
 - The formal runtime schema for those JSON rows lives in `apps/web/lib/website-schema.ts`.
 - The active loader that validates and normalizes those rows for the app lives in `apps/web/lib/content-loader.ts`.
+- `data/listings.json` is only for the main listing collection. Docs, posts, legal pages, and future first-party tools do not belong in this file.
 
 ## Current Raw JSON Shape
 
@@ -60,30 +61,30 @@ Use this shape when preparing rows to replace the placeholder data:
 After validation and normalization, the website detail page effectively receives:
 
 ```ts
-type WebsiteDetailPageData = {
-  slug: string
-  name: string
-  website: string
-  description: string
-  category: string
-  publishedAt: string
-  featured?: boolean
-  priority?: 'high' | 'medium' | 'low'
-  isUnofficial?: boolean
+type ListingDetailPageData = {
+  slug: string;
+  name: string;
+  website: string;
+  description: string;
+  category: string;
+  publishedAt: string;
+  featured?: boolean;
+  priority?: 'high' | 'medium' | 'low';
+  isUnofficial?: boolean;
   resourceLinks?: Array<{
-    label: string
-    url: string
-  }>
-  content?: string
-  relatedWebsites?: WebsiteDetailPageData[]
-  previousWebsite?: WebsiteDetailPageData | null
-  nextWebsite?: WebsiteDetailPageData | null
-}
+    label: string;
+    url: string;
+  }>;
+  content?: string;
+  relatedWebsites?: ListingDetailPageData[];
+  previousWebsite?: ListingDetailPageData | null;
+  nextWebsite?: ListingDetailPageData | null;
+};
 ```
 
 ## Derived Fields
 
-These are not authored directly in `data/websites.json`:
+These are not authored directly in `data/listings.json`:
 
 - `relatedWebsites`
 - `previousWebsite`

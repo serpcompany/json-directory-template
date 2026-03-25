@@ -3,6 +3,7 @@
 import { ExternalLink, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { FavoritesLink } from '@/components/ui/favorites-link';
+import { getCategoryDisplayName } from '@/lib/category-display';
 import { categories } from '@/lib/categories';
 import { externalResources } from '@/lib/external-resources';
 import { getRoute } from '@/lib/routes';
@@ -86,7 +87,7 @@ export function AppSidebar({
                 }`}
               >
                 <category.icon className="h-4 w-4" />
-                {category.name}
+                {getCategoryDisplayName(category.slug)}
               </Link>
             ))}
           </nav>

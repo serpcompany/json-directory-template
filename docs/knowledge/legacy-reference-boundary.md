@@ -18,7 +18,7 @@ This note classifies the deferred legacy/reference areas so the active starter s
 Treat these as active starter inputs:
 
 - `sites/**`
-- `data/websites.json`
+- `data/listings.json`
 - `packages/content/data/about/**`
 - `packages/content/data/docs/**`
 - `packages/content/data/guides/**`

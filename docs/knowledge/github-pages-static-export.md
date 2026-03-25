@@ -9,15 +9,15 @@ For the broader pipeline model and the “hosted later, static now” boundary, 
 ### 1. Source data
 
 - Default checked-in config: `sites/site-config.default.ts`
-- Site checked-in config: `sites/serpdownloaders/site-config.ts`
-- Trial source data for the current run: `sites/serpdownloaders/products.json`
-- Site-owned assets for the current run: `sites/serpdownloaders/assets/*`
-- The active app expects website entries in the `data/websites.json` shape
+- Site checked-in config: `sites/serpdownloaders.com/site-config.ts`
+- Trial source data for the current run: `sites/serpdownloaders.com/products.json`
+- Site-owned assets for the current run: `sites/serpdownloaders.com/assets/*`
+- The active app expects website entries in the `data/listings.json` shape
 - `scripts/trial-build.ts` converts the trial product JSON into that website-entry shape during the site build
 
 ### 2. Build step
 
-- Run `pnpm build:site -- --site serpdownloaders`
+- Run `pnpm build:site -- --site serpdownloaders.com`
 - `pnpm build:pages` currently aliases the same site-aware build flow
 - The build wrapper:
   - loads the checked-in site config
@@ -26,13 +26,13 @@ For the broader pipeline model and the “hosted later, static now” boundary, 
   - fails early if the site config references missing files or invalid inputs
   - sets `STATIC_EXPORT=true`
   - runs the normal app build in export mode
-  - writes the final static artifact to `dist/sites/serpdownloaders`
+  - writes the final static artifact to `dist/sites/serpdownloaders.com`
   - stages supported brand assets from `sites/<site-id>/assets/*` when they are referenced in site config
   - temporarily removes the NextAuth route from the static build surface, then restores temporary overrides after the build
 
 ### 3. Output artifact
 
-- The deploy artifact is `dist/sites/serpdownloaders`
+- The deploy artifact is `dist/sites/serpdownloaders.com`
 - `apps/web/out` is just the intermediate Next.js export directory
 - Do not deploy `.next` output for this POC
 
@@ -60,7 +60,7 @@ For the broader pipeline model and the “hosted later, static now” boundary, 
 
 The current POC site values now live in:
 - `sites/site-config.default.ts`
-- `sites/serpdownloaders/site-config.ts`
+- `sites/serpdownloaders.com/site-config.ts`
 
 Workflow/runtime env is derived from that checked-in site config rather than a bundle of one-off workflow vars.
 
@@ -83,8 +83,8 @@ Workflow/runtime env is derived from that checked-in site config rather than a b
 
 ## Verification checklist
 
-- Run `pnpm build:site -- --site serpdownloaders`
-- Confirm `dist/sites/serpdownloaders` contains `index.html`, `404.html`, `.nojekyll`, and `CNAME`
+- Run `pnpm build:site -- --site serpdownloaders.com`
+- Confirm `dist/sites/serpdownloaders.com` contains `index.html`, `404.html`, `.nojekyll`, and `CNAME`
 - Confirm the target repo contains plain static files at repo root, not `.next`
 - Confirm the target repo contains `.github/workflows/deploy.yml`
 - Confirm the target repo Pages workflow completes successfully

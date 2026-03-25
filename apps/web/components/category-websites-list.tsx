@@ -1,17 +1,16 @@
-import type { WebsiteMetadata } from '@/lib/content-loader'
-import { siteCopy } from '@/lib/site-copy'
-import { WebsitesListWithSort } from './websites-list-with-sort'
+import type { WebsiteMetadata } from '@/lib/content-loader';
+import { siteCopy } from '@/lib/site-copy';
+import { WebsitesListWithSort } from './websites-list-with-sort';
 
 interface CategoryWebsitesListProps {
-  initialWebsites: WebsiteMetadata[]
-  categoryType?: 'tool' | 'non-tool'
+  initialWebsites: WebsiteMetadata[];
 }
 
 /**
  * Wrapper for category websites list - passes through to client component
  */
 export function CategoryWebsitesList({
-  initialWebsites
+  initialWebsites,
 }: CategoryWebsitesListProps) {
   return (
     <WebsitesListWithSort
@@ -19,5 +18,5 @@ export function CategoryWebsitesList({
       emptyTitle={siteCopy.categoryEmptyTitle}
       emptyDescription={siteCopy.categoryEmptyDescription}
     />
-  )
+  );
 }

@@ -1,21 +1,22 @@
-'use client'
+'use client';
 
-import { Button } from '@thedaviddias/design-system/button'
-import { Checkbox } from '@thedaviddias/design-system/checkbox'
+import { Button } from '@thedaviddias/design-system/button';
+import { Checkbox } from '@thedaviddias/design-system/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuTrigger
-} from '@thedaviddias/design-system/dropdown-menu'
-import { Filter, X } from 'lucide-react'
-import { useState } from 'react'
-import { categories } from '@/lib/categories'
+  DropdownMenuTrigger,
+} from '@thedaviddias/design-system/dropdown-menu';
+import { Filter, X } from 'lucide-react';
+import { useState } from 'react';
+import { getCategoryDisplayName } from '@/lib/category-display';
+import { categories } from '@/lib/categories';
 
 interface SearchFiltersProps {
-  selectedCategories: string[]
-  onCategoryChange: (categories: string[]) => void
-  availableCategories?: string[]
-  resultCount?: number
+  selectedCategories: string[];
+  onCategoryChange: (categories: string[]) => void;
+  availableCategories?: string[];
+  resultCount?: number;
 }
 
 /**
@@ -24,15 +25,16 @@ interface SearchFiltersProps {
 export function SearchFilters({
   selectedCategories,
   onCategoryChange,
-  availableCategories = []
+  availableCategories = [],
 }: SearchFiltersProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   // Get categories that have results or are selected
   const relevantCategories = categories.filter(
-    category =>
-      availableCategories.includes(category.slug) || selectedCategories.includes(category.slug)
-  )
+    (category) =>
+      availableCategories.includes(category.slug) ||
+      selectedCategories.includes(category.slug)
+  );
 
   /**
    * Toggles a category filter on or off
@@ -40,23 +42,23 @@ export function SearchFilters({
    */
   const handleCategoryToggle = (categorySlug: string, checked: boolean) => {
     if (checked) {
-      onCategoryChange([...selectedCategories, categorySlug])
+      onCategoryChange([...selectedCategories, categorySlug]);
     } else {
-      onCategoryChange(selectedCategories.filter(c => c !== categorySlug))
+      onCategoryChange(selectedCategories.filter((c) => c !== categorySlug));
     }
-  }
+  };
 
   /**
    * Clears all active category filters
 
    */
   const clearAllFilters = () => {
-    onCategoryChange([])
-  }
+    onCategoryChange([]);
+  };
 
-  const activeFiltersCount = selectedCategories.length
+  const activeFiltersCount = selectedCategories.length;
 
-  if (relevantCategories.length === 0) return null
+  if (relevantCategories.length === 0) return null;
 
   return (
     <div className="flex items-center gap-2">
@@ -89,17 +91,22 @@ export function SearchFilters({
               )}
             </div>
             <div className="space-y-3 max-h-64 sm:max-h-80 overflow-y-auto">
-              {relevantCategories.map(category => {
-                const isSelected = selectedCategories.includes(category.slug)
-                const categoryCount = availableCategories.filter(c => c === category.slug).length
-                const Icon = category.icon
+              {relevantCategories.map((category) => {
+                const isSelected = selectedCategories.includes(category.slug);
+                const categoryCount = availableCategories.filter(
+                  (c) => c === category.slug
+                ).length;
+                const Icon = category.icon;
 
                 return (
-                  <div key={category.slug} className="flex items-center space-x-2">
+                  <div
+                    key={category.slug}
+                    className="flex items-center space-x-2"
+                  >
                     <Checkbox
                       id={category.slug}
                       checked={isSelected}
-                      onCheckedChange={checked =>
+                      onCheckedChange={(checked) =>
                         handleCategoryToggle(category.slug, checked as boolean)
                       }
                     />
@@ -108,13 +115,17 @@ export function SearchFilters({
                       className="flex items-center gap-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex-1"
                     >
                       <Icon className="h-4 w-4 text-muted-foreground" />
-                      <span className="flex-1">{category.name}</span>
+                      <span className="flex-1">
+                        {getCategoryDisplayName(category.slug)}
+                      </span>
                       {availableCategories.includes(category.slug) && (
-                        <span className="text-xs text-muted-foreground">({categoryCount})</span>
+                        <span className="text-xs text-muted-foreground">
+                          ({categoryCount})
+                        </span>
                       )}
                     </label>
                   </div>
-                )
+                );
               })}
             </div>
           </div>
@@ -124,9 +135,9 @@ export function SearchFilters({
       {/* Active filter badges */}
       {activeFiltersCount > 0 && (
         <div className="flex items-center gap-1 flex-wrap">
-          {selectedCategories.map(categorySlug => {
-            const category = categories.find(c => c.slug === categorySlug)
-            if (!category) return null
+          {selectedCategories.map((categorySlug) => {
+            const category = categories.find((c) => c.slug === categorySlug);
+            if (!category) return null;
 
             return (
               <div
@@ -134,20 +145,22 @@ export function SearchFilters({
                 className="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded-md text-xs"
               >
                 <category.icon className="h-3 w-3" />
-                <span>{category.name}</span>
+                <span>{getCategoryDisplayName(category.slug)}</span>
                 <button
                   type="button"
                   onClick={() => handleCategoryToggle(categorySlug, false)}
                   className="hover:bg-primary/20 rounded-sm p-0.5"
-                  aria-label={`Remove ${category.name} filter`}
+                  aria-label={`Remove ${getCategoryDisplayName(
+                    category.slug
+                  )} filter`}
                 >
                   <X className="h-3 w-3" />
                 </button>
               </div>
-            )
+            );
           })}
         </div>
       )}
     </div>
-  )
+  );
 }

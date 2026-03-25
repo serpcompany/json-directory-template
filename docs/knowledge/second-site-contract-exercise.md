@@ -4,7 +4,7 @@ This note records the first real second-site pressure test against the checked-i
 
 ## Site used
 
-- site id: `serpextensions`
+- site id: `extensions.serp.co`
 - domain: `extensions.serp.co`
 - repo: `serpcompany/extensions.serp.co`
 

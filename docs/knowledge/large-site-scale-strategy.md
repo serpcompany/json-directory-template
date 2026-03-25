@@ -6,7 +6,7 @@ This doc defines when the current static starter still fits and when it should m
 
 Measured from the current default build on this branch:
 
-- `78` listings in `data/websites.json`
+- `78` listings in `data/listings.json`
 - `12 MB` final static artifact in `dist/sites/default`
 - `8.2 MB` of that artifact is the `listing/**` HTML tree
 - `2.1 MB` is `_next/**`
