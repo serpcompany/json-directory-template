@@ -20,7 +20,7 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   },
   content: {
     listingSource: {
-      category: 'automation-workflow',
+      category: 'video-downloaders',
       featuredCount: 6,
       kind: 'trial-products-json',
       outputPath: 'data/listings.json',
@@ -43,7 +43,7 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     tagline: 'For the people who just like to get down...loading',
   },
   social: {
-    redditUrl: 'https://www.reddit.com/r/serp/',
-    twitterUrl: 'https://x.com/serpcompany',
+    redditUrl: 'https://www.reddit.com/r/serpdownloaders/',
+    twitterUrl: 'https://x.com/serpapps',
   },
 };
