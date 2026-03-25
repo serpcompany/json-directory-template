@@ -21,11 +21,10 @@ export function WebsiteResourcesSection({
         <section className="animate-fade-in-up opacity-0 stagger-3">
           <Section
             title="Links"
-            description="Helpful links for this entry"
             titleId="links"
           >
-            <div className="rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden">
-              <ul className="divide-y divide-border/50">
+            <div className="rounded-2xl border bg-card/50 backdrop-blur-sm overflow-hidden">
+              <ul className="divide-y divide-border/80">
                 {resourceLinks.map((link) => (
                   <li key={`${link.label}-${link.url}`}>
                     <Link
