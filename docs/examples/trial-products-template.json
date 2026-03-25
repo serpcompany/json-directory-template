@@ -3,6 +3,8 @@
     "product": {
       "title": "Example Downloader",
       "slug": "example-downloader",
+      "primaryCategory": "video-downloaders",
+      "categories": ["video-downloaders", "developer-tools"],
       "tagline": "One-line summary for cards and search results.",
       "productPage": "https://example.com/example-downloader"
     },

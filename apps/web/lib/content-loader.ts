@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { getListingCategories } from './category-navigation';
 import {
   normalizeJsonWebsite,
   parseJsonWebsiteEntries,
@@ -56,6 +57,7 @@ interface Website {
   description: string;
   website: string;
   category: string;
+  categories?: string[];
   publishedAt: string;
   entityType?: string;
   isUnofficial?: boolean;
@@ -175,6 +177,7 @@ export interface WebsiteMetadata {
   description: string;
   website: string;
   category: string;
+  categories?: string[];
   publishedAt: string;
   entityType?: string;
   isUnofficial?: boolean;
@@ -272,9 +275,15 @@ export function getWebsites(): WebsiteMetadata[] {
 
   // Ensure each website has a valid slug
   const websitesWithSlugs = collectionWebsites.map((website: Website) => {
+    const categories = getListingCategories(website);
+
     // If website already has a valid slug, use it
     if (website.slug && typeof website.slug === 'string') {
-      return website;
+      return {
+        ...website,
+        category: categories[0] || website.category,
+        categories,
+      };
     }
 
     // Derive slug from _meta.path, _meta.fileName, or name (in priority order)
@@ -288,7 +297,12 @@ export function getWebsites(): WebsiteMetadata[] {
         .replace(/--+/g, '-') ||
       '';
 
-    return { ...website, slug };
+    return {
+      ...website,
+      category: categories[0] || website.category,
+      categories,
+      slug,
+    };
   });
 
   return websitesWithSlugs.sort((a: Website, b: Website) => {
@@ -326,8 +340,26 @@ export async function getWebsiteBySlug(slug: string) {
   const nextWebsite = websites[currentIndex + 1] || null;
 
   // Get related websites (same category, excluding current)
+  const websiteCategorySlugs = new Set(getListingCategories(website));
   const relatedWebsites = websites
-    .filter((site) => site.category === website.category && site.slug !== slug)
+    .map((site) => ({
+      sharedCategoryCount: getListingCategories(site).filter((category) =>
+        websiteCategorySlugs.has(category)
+      ).length,
+      site,
+    }))
+    .filter(
+      ({ sharedCategoryCount, site }) =>
+        site.slug !== slug && sharedCategoryCount > 0
+    )
+    .sort((left, right) => {
+      if (right.sharedCategoryCount !== left.sharedCategoryCount) {
+        return right.sharedCategoryCount - left.sharedCategoryCount;
+      }
+
+      return left.site.name.localeCompare(right.site.name);
+    })
+    .map(({ site }) => site)
     .slice(0, 4);
 
   // Get content from _meta if available

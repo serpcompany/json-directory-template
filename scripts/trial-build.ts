@@ -13,6 +13,7 @@ type TrialLink = {
 
 type CanonicalTrialProduct = {
   category?: string;
+  categories?: string[];
   content?: {
     body?: string;
     description?: string;
@@ -31,7 +32,9 @@ type CanonicalTrialProduct = {
     video?: string;
   };
   product?: {
+    categories?: string[];
     name?: string;
+    primaryCategory?: string;
     productPage?: string;
     slug?: string;
     tagline?: string;
@@ -80,6 +83,7 @@ type CanonicalizeTrialProductsOptions = {
 
 type WebsiteJsonEntry = {
   category: string;
+  categories?: string[];
   content?: string;
   description: string;
   favicon: string;
@@ -101,6 +105,7 @@ type WebsiteJsonEntry = {
 
 type NormalizedTrialProduct = {
   category: string;
+  categories: string[];
   content?: {
     body?: string;
     faq?: Array<{
@@ -140,6 +145,10 @@ function escapeMdxText(value: string): string {
 function cleanStringArray(values?: string[]): string[] | undefined {
   const cleanedValues = values?.map((value) => value.trim()).filter(Boolean);
   return cleanedValues && cleanedValues.length > 0 ? cleanedValues : undefined;
+}
+
+function cleanCategoryArray(values?: string[]): string[] | undefined {
+  return cleanStringArray(values);
 }
 
 function cleanMedia(value?: CanonicalTrialProduct['media']):
@@ -289,7 +298,14 @@ function normalizeCanonicalTrialProduct(
   fallbackSlug: string,
   defaultCategory: string
 ): NormalizedTrialProduct {
-  const category = cleanString(product.category) || defaultCategory;
+  const explicitCategories =
+    cleanCategoryArray(product.product?.categories) ||
+    cleanCategoryArray(product.categories);
+  const primaryCategory =
+    cleanString(product.product?.primaryCategory) ||
+    cleanString(product.category);
+  const category =
+    primaryCategory || explicitCategories?.[0] || defaultCategory;
   const description =
     cleanString(product.product?.tagline) ||
     cleanString(product.content?.description);
@@ -303,6 +319,8 @@ function normalizeCanonicalTrialProduct(
   if (!category) {
     throw new Error(`Missing category for ${slug}`);
   }
+
+  const categories = [...new Set([category, ...(explicitCategories || [])])];
 
   if (!website) {
     throw new Error(`Missing product page for ${slug}`);
@@ -318,6 +336,7 @@ function normalizeCanonicalTrialProduct(
 
   return {
     category,
+    categories,
     content: {
       body:
         cleanString(product.content?.body) ||
@@ -370,6 +389,7 @@ function normalizeLegacyTrialProduct(
 
   return {
     category: defaultCategory,
+    categories: [defaultCategory],
     content: {
       body: buildLegacyBodySections(product),
       faq: cleanFaqEntries(product.contentMarketing?.storeListingCopy?.faq),
@@ -438,22 +458,35 @@ function buildCanonicalTrialProduct(
   defaultCategory?: string
 ): CanonicalTrialProduct {
   const canonicalProduct: CanonicalTrialProduct = {
-    content: {
-      body: product.content?.body,
-      faq: product.content?.faq,
-    },
-    media: product.media,
     product: {
       productPage: product.website,
       slug: product.slug,
       tagline: product.description,
       title: product.name,
     },
-    relatedLinks: product.resourceLinks,
   };
 
-  if (product.category !== defaultCategory) {
-    canonicalProduct.category = product.category;
+  if (product.content?.body || product.content?.faq?.length) {
+    canonicalProduct.content = {
+      body: product.content?.body,
+      faq: product.content?.faq,
+    };
+  }
+
+  if (product.media) {
+    canonicalProduct.media = product.media;
+  }
+
+  if (product.resourceLinks?.length) {
+    canonicalProduct.relatedLinks = product.resourceLinks;
+  }
+
+  if (product.category !== defaultCategory || product.categories.length > 1) {
+    canonicalProduct.product = {
+      ...canonicalProduct.product,
+      categories: product.categories,
+      primaryCategory: product.category,
+    };
   }
 
   return canonicalProduct;
@@ -491,19 +524,21 @@ export function buildTrialWebsiteEntries(
         options.category
       );
       const normalizedWebsiteUrl = normalizedProduct.website.replace(/\/$/, '');
+      const resourceLinks = buildResourceLinks(normalizedProduct);
 
       return {
         category: normalizedProduct.category,
+        categories: normalizedProduct.categories,
         content: buildContent(normalizedProduct),
         description: normalizedProduct.description,
         favicon: buildFaviconUrl(normalizedWebsiteUrl),
         featured: index < (options.featuredCount ?? 6),
-        media: normalizedProduct.media,
         name: normalizedProduct.name,
         publishedAt: options.publishedAt,
-        resourceLinks: buildResourceLinks(normalizedProduct),
         slug: normalizedProduct.slug,
         website: normalizedWebsiteUrl,
+        ...(normalizedProduct.media ? { media: normalizedProduct.media } : {}),
+        ...(resourceLinks ? { resourceLinks } : {}),
       };
     })
     .sort((entryA, entryB) => entryA.name.localeCompare(entryB.name));

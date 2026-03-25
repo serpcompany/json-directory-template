@@ -21,6 +21,7 @@ describe('parseJsonWebsiteEntries', () => {
   it('accepts a valid website entry with optional detail page content and resource links', () => {
     const entries = parseJsonWebsiteEntries([
       buildWebsiteEntry({
+        categories: ['developer-tools', 'video-downloaders'],
         content: '## Overview\n\nThis is long-form detail page content.',
         entityType: 'movie',
         featured: true,
@@ -41,6 +42,10 @@ describe('parseJsonWebsiteEntries', () => {
 
     expect(entries).toHaveLength(1);
     expect(entries[0]?.content).toContain('Overview');
+    expect(entries[0]?.categories).toEqual([
+      'developer-tools',
+      'video-downloaders',
+    ]);
     expect(entries[0]?.entityType).toBe('movie');
     expect(entries[0]?.media).toEqual({
       images: ['https://cdn.example.com/example-1.png'],
@@ -89,6 +94,7 @@ describe('normalizeJsonWebsite', () => {
     const [entry] = parseJsonWebsiteEntries([
       buildWebsiteEntry({
         category: 'integration-automation',
+        categories: ['integration-automation', 'developer-tools'],
         content: '## Details\n\nRendered on the detail page.',
         description: '<p>Supports <strong>HTML</strong> descriptions.</p>',
         domain: 'https://example.com',
@@ -111,6 +117,10 @@ describe('normalizeJsonWebsite', () => {
     const normalized = normalizeJsonWebsite(entry);
 
     expect(normalized.category).toBe('video-downloaders');
+    expect(normalized.categories).toEqual([
+      'video-downloaders',
+      'developer-tools',
+    ]);
     expect(normalized.content).toBe(
       '## Details\n\nRendered on the detail page.'
     );

@@ -1,13 +1,16 @@
 import {
   getActiveCategories,
   getFeaturedListingCount,
+  getListingCategories,
   getUnknownCategorySlugs,
   hasFeaturedListings,
+  listingMatchesCategory,
 } from '@/lib/category-navigation';
 
 const sampleListings = [
   {
     category: 'developer-tools',
+    categories: ['developer-tools', 'video-downloaders'],
     featured: true,
   },
   {
@@ -17,6 +20,25 @@ const sampleListings = [
 ];
 
 describe('category-navigation', () => {
+  it('returns the normalized primary-plus-secondary categories for a listing', () => {
+    expect(getListingCategories(sampleListings[0]!)).toEqual([
+      'developer-tools',
+      'video-downloaders',
+    ]);
+  });
+
+  it('matches category pages against either the primary or a secondary category', () => {
+    expect(listingMatchesCategory(sampleListings[0]!, 'developer-tools')).toBe(
+      true
+    );
+    expect(
+      listingMatchesCategory(sampleListings[0]!, 'video-downloaders')
+    ).toBe(true);
+    expect(
+      listingMatchesCategory(sampleListings[0]!, 'infrastructure-cloud')
+    ).toBe(false);
+  });
+
   it('returns only populated canonical categories in starter taxonomy order', () => {
     expect(
       getActiveCategories(sampleListings).map((category) => category.slug)
@@ -37,9 +59,10 @@ describe('category-navigation', () => {
         ...sampleListings,
         {
           category: 'made-up-category',
+          categories: ['developer-tools', 'really-made-up-category'],
           featured: false,
         },
       ])
-    ).toEqual(['made-up-category']);
+    ).toEqual(['made-up-category', 'really-made-up-category']);
   });
 });

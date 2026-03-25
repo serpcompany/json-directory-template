@@ -7,6 +7,7 @@ import type { SearchIndexEntry } from '@/lib/search-index';
 
 const entry: SearchIndexEntry = {
   category: 'video-downloaders',
+  categories: ['video-downloaders', 'developer-tools'],
   content: 'Helpful content',
   description: 'Browser automation listing',
   name: 'Example Listing',
@@ -27,7 +28,7 @@ describe('search-utils', () => {
       website: 'https://example.com',
       name: 'Example Listing',
       description: 'Browser automation listing',
-      categories: ['video-downloaders'],
+      categories: ['video-downloaders', 'developer-tools'],
       tags: [],
       category: 'video-downloaders',
       publishedAt: '',
@@ -36,6 +37,7 @@ describe('search-utils', () => {
 
   it('matches search queries against the canonical fields only', () => {
     expect(matchesSearchQuery(entry, 'browser automation')).toBe(true);
+    expect(matchesSearchQuery(entry, 'developer tools')).toBe(true);
     expect(matchesSearchQuery(entry, 'websites')).toBe(true);
     expect(matchesSearchQuery(entry, 'missing term')).toBe(false);
   });

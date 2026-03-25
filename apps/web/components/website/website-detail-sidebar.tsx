@@ -21,6 +21,12 @@ interface WebsiteDetailSidebarProps {
  */
 export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
   const cliSlug = webSlugToCliSlug.get(website.slug);
+  const categorySlugs = [
+    ...(website.category ? [website.category] : []),
+    ...(website.categories || []),
+  ].filter(
+    (value, index, values) => Boolean(value) && values.indexOf(value) === index
+  );
 
   return (
     <aside className="space-y-6 lg:sticky lg:top-20 lg:self-start">
@@ -35,18 +41,23 @@ export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
           </div>
         )}
 
-        {website.category && (
+        {categorySlugs.length > 0 && (
           <div>
             <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
               <Hash className="size-3" aria-hidden />
-              Category
+              {categorySlugs.length > 1 ? 'Categories' : 'Category'}
             </span>
-            <Link
-              href={getRoute('category.page', { category: website.category })}
-              className="mt-1 inline-block text-sm text-foreground hover:text-primary transition-colors capitalize"
-            >
-              {getCategoryDisplayName(website.category)}
-            </Link>
+            <div className="mt-1 flex flex-wrap gap-2">
+              {categorySlugs.map((categorySlug) => (
+                <Link
+                  key={categorySlug}
+                  href={getRoute('category.page', { category: categorySlug })}
+                  className="inline-block text-sm text-foreground hover:text-primary transition-colors capitalize"
+                >
+                  {getCategoryDisplayName(categorySlug)}
+                </Link>
+              ))}
+            </div>
           </div>
         )}
 

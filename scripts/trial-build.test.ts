@@ -9,7 +9,6 @@ describe('buildTrialWebsiteEntries', () => {
     const entries = buildTrialWebsiteEntries(
       {
         'example-downloader': {
-          category: 'automation-workflow',
           content: {
             body: '## Overview\n\nSave videos from ExampleVideo with one click.',
             faq: [
@@ -25,6 +24,8 @@ describe('buildTrialWebsiteEntries', () => {
             video: 'https://cdn.example.com/example-downloader/demo.mp4',
           },
           product: {
+            categories: ['automation-workflow', 'developer-tools'],
+            primaryCategory: 'automation-workflow',
             productPage: 'https://serp.ly/example-downloader',
             slug: 'example-downloader',
             tagline: 'Download videos from ExampleVideo in one click.',
@@ -47,6 +48,7 @@ describe('buildTrialWebsiteEntries', () => {
     expect(entries).toEqual([
       {
         category: 'automation-workflow',
+        categories: ['automation-workflow', 'developer-tools'],
         content: expect.stringContaining('## FAQ'),
         description: 'Download videos from ExampleVideo in one click.',
         favicon: 'https://www.google.com/s2/favicons?domain=serp.ly&sz=128',
@@ -68,6 +70,31 @@ describe('buildTrialWebsiteEntries', () => {
         website: 'https://serp.ly/example-downloader',
       },
     ]);
+  });
+
+  it('uses the first category as the primary route category when only categories are provided', () => {
+    const [entry] = buildTrialWebsiteEntries(
+      {
+        'example-downloader': {
+          product: {
+            categories: ['developer-tools', 'video-downloaders'],
+            productPage: 'https://serp.ly/example-downloader',
+            slug: 'example-downloader',
+            tagline: 'Download videos from ExampleVideo in one click.',
+            title: 'SERP Example Downloader',
+          },
+        },
+      },
+      {
+        category: 'video-downloaders',
+        publishedAt: '2026-03-24',
+      }
+    );
+
+    expect(entry).toMatchObject({
+      category: 'developer-tools',
+      categories: ['developer-tools', 'video-downloaders'],
+    });
   });
 
   it('keeps legacy nested trial product compatibility during the transition', () => {
@@ -107,6 +134,7 @@ describe('buildTrialWebsiteEntries', () => {
     expect(entries).toEqual([
       {
         category: 'automation-workflow',
+        categories: ['automation-workflow'],
         content: expect.stringContaining('Offline use cases'),
         description: 'Download videos from ExampleVideo in one click.',
         favicon: 'https://www.google.com/s2/favicons?domain=serp.ly&sz=128',
@@ -187,6 +215,39 @@ describe('buildTrialWebsiteEntries', () => {
             url: 'https://help.serp.co/en/',
           },
         ],
+      },
+    });
+  });
+
+  it('keeps explicit primary and secondary categories in the canonical source shape', () => {
+    const products = canonicalizeTrialProducts(
+      {
+        'example-downloader': {
+          product: {
+            categories: ['video-downloaders', 'developer-tools'],
+            primaryCategory: 'video-downloaders',
+            productPage: 'https://serp.ly/example-downloader',
+            slug: 'example-downloader',
+            tagline: 'Download videos from ExampleVideo in one click.',
+            title: 'SERP Example Downloader',
+          },
+        },
+      },
+      {
+        defaultCategory: 'video-downloaders',
+      }
+    );
+
+    expect(products).toEqual({
+      'example-downloader': {
+        product: {
+          categories: ['video-downloaders', 'developer-tools'],
+          primaryCategory: 'video-downloaders',
+          productPage: 'https://serp.ly/example-downloader',
+          slug: 'example-downloader',
+          tagline: 'Download videos from ExampleVideo in one click.',
+          title: 'SERP Example Downloader',
+        },
       },
     });
   });

@@ -31,6 +31,16 @@ function stripDuplicateLinksSection(
  * @returns Content section with MDX or fallback information
  */
 export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
+  const categoryLabels = [
+    ...(website.category ? [website.category] : []),
+    ...(website.categories || []),
+  ]
+    .filter(
+      (value, index, values) =>
+        Boolean(value) && values.indexOf(value) === index
+    )
+    .map((categorySlug) => getCategoryDisplayName(categorySlug));
+
   if (website.content) {
     const renderedContent = stripDuplicateLinksSection(
       website.content,
@@ -88,10 +98,9 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
       <div className="grid sm:grid-cols-2 gap-4">
         {[
           {
-            label: 'Category',
-            value: website.category
-              ? getCategoryDisplayName(website.category)
-              : 'General',
+            label: categoryLabels.length > 1 ? 'Categories' : 'Category',
+            value:
+              categoryLabels.length > 0 ? categoryLabels.join(', ') : 'General',
             className: '',
           },
           { label: 'Type', value: siteCopy.listingName.singularTitle },

@@ -1,36 +1,60 @@
-import { categories, normalizeCategorySlug, type Category } from './categories'
+import { categories, normalizeCategorySlug, type Category } from './categories';
 
 type CategoryLike = {
-  category: string
-  featured?: boolean
-}
+  categories?: string[];
+  category?: string;
+  featured?: boolean;
+};
 
-const knownCategorySlugs = new Set(categories.map(category => category.slug))
+const knownCategorySlugs = new Set(categories.map((category) => category.slug));
 
 function normalizeListingCategory(category: string): string {
-  return normalizeCategorySlug(category)
+  return normalizeCategorySlug(category);
+}
+
+export function getListingCategories(listing: CategoryLike): string[] {
+  const normalizedCategories = [
+    ...(listing.category ? [listing.category] : []),
+    ...(listing.categories || []),
+  ]
+    .map((category) => category.trim())
+    .filter(Boolean)
+    .map(normalizeListingCategory);
+
+  return [...new Set(normalizedCategories)];
+}
+
+export function listingMatchesCategory(
+  listing: CategoryLike,
+  categorySlug: string
+): boolean {
+  return getListingCategories(listing).includes(
+    normalizeListingCategory(categorySlug)
+  );
 }
 
 export function getUnknownCategorySlugs(listings: CategoryLike[]): string[] {
-  return [...new Set(
-    listings
-      .map(listing => normalizeListingCategory(listing.category))
-      .filter(category => !knownCategorySlugs.has(category))
-  )]
+  return [
+    ...new Set(
+      listings
+        .flatMap(getListingCategories)
+        .filter((category) => !knownCategorySlugs.has(category))
+    ),
+  ];
 }
 
 export function getActiveCategories(listings: CategoryLike[]): Category[] {
-  const activeCategorySlugs = new Set(
-    listings.map(listing => normalizeListingCategory(listing.category))
-  )
+  const activeCategorySlugs = new Set(listings.flatMap(getListingCategories));
 
-  return categories.filter(category => activeCategorySlugs.has(category.slug))
+  return categories.filter((category) =>
+    activeCategorySlugs.has(category.slug)
+  );
 }
 
 export function getFeaturedListingCount(listings: CategoryLike[]): number {
-  return listings.filter(listing => listing.featured === true).length
+  return listings.filter((listing) => listing.featured === true).length;
 }
 
 export function hasFeaturedListings(listings: CategoryLike[]): boolean {
-  return getFeaturedListingCount(listings) > 0
+  return getFeaturedListingCount(listings) > 0;
 }

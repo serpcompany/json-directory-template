@@ -12,6 +12,7 @@ import { EmptyState } from '@/components/empty-state';
 import { LLMGrid } from '@/components/llm/llm-grid';
 import { useWebsiteFilters } from '@/hooks/use-website-filters';
 import { getCategoryDisplayName } from '@/lib/category-display';
+import { listingMatchesCategory } from '@/lib/category-navigation';
 import { categories } from '@/lib/categories';
 import type { WebsiteMetadata } from '@/lib/content-loader';
 import { getRoute } from '@/lib/routes';
@@ -75,8 +76,8 @@ export function ClientProjectsList({
 
     // Filter by category if selected
     if (categoryFilter !== 'all') {
-      filteredWebsites = filteredWebsites.filter(
-        (website) => website.category === categoryFilter
+      filteredWebsites = filteredWebsites.filter((website) =>
+        listingMatchesCategory(website, categoryFilter)
       );
     }
 

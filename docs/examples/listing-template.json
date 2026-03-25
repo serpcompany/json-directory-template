@@ -5,6 +5,7 @@
     "website": "https://example.com",
     "description": "Short plain-English summary of what the listing is and why it is useful.",
     "category": "developer-tools",
+    "categories": ["developer-tools", "video-downloaders"],
     "publishedAt": "2026-03-24",
     "featured": false,
     "priority": "medium",

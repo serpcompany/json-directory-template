@@ -103,8 +103,9 @@ export function SearchAutocomplete({
         const query = searchQuery.toLowerCase();
         const websiteMatches = searchIndex
           .filter((item) => {
-            const searchableText =
-              `${item.name} ${item.description} ${item.category}`.toLowerCase();
+            const searchableText = `${item.name} ${item.description} ${
+              item.category
+            } ${(item.categories || []).join(' ')}`.toLowerCase();
             return searchableText.includes(query);
           })
           .slice(0, 5)

@@ -14,6 +14,7 @@ import { getGuides, getWebsites } from '@/lib/content-loader';
 import {
   getActiveCategories,
   getFeaturedListingCount,
+  listingMatchesCategory,
 } from '@/lib/category-navigation';
 import { getRoute } from '@/lib/routes';
 import { getCategorySEO } from '@/lib/seo/category-seo';
@@ -61,7 +62,8 @@ export async function generateMetadata({
   const categoryProjectsCount =
     category.slug === 'featured'
       ? allProjects.filter((p) => p.featured === true).length
-      : allProjects.filter((p) => p.category === category.slug).length;
+      : allProjects.filter((p) => listingMatchesCategory(p, category.slug))
+          .length;
   const seoContent = getCategorySEO(category.slug, category);
   const categoryDisplayName = getCategoryDisplayName(category.slug);
 
@@ -115,7 +117,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   } else {
     // Filter projects by category and sort alphabetically by default
     categoryProjects = allProjects
-      .filter((project) => project.category === category.slug)
+      .filter((project) => listingMatchesCategory(project, category.slug))
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 

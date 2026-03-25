@@ -88,7 +88,7 @@ describe('validateSite', () => {
       'Valid site data for test-site — 2 entries'
     );
     expect(consoleLogSpy).toHaveBeenCalledWith(
-      'Active categories for test-site: developer-tools, automation-workflow'
+      'Active categories for test-site: developer-tools, video-downloaders'
     );
   });
 

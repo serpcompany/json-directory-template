@@ -28,14 +28,19 @@ export function SearchResults() {
       return results;
     }
     return results.filter((result) =>
-      selectedCategories.includes(result.category)
+      result.categories.some((category) =>
+        selectedCategories.includes(category)
+      )
     );
   }, [results, selectedCategories]);
 
   // Get available categories from current results
   const availableCategories = useMemo(() => {
-    return [...new Set(results.map((result) => result.category))];
+    return results.flatMap((result) => result.categories);
   }, [results]);
+  const availableCategoryCount = useMemo(() => {
+    return new Set(availableCategories).size;
+  }, [availableCategories]);
 
   useEffect(() => {
     if (query) {
@@ -138,8 +143,8 @@ export function SearchResults() {
                 </>
               ) : (
                 <>
-                  Found in {availableCategories.length} categor
-                  {availableCategories.length !== 1 ? 'ies' : 'y'}
+                  Found in {availableCategoryCount} categor
+                  {availableCategoryCount !== 1 ? 'ies' : 'y'}
                 </>
               )}
             </p>
@@ -161,7 +166,9 @@ export function SearchResults() {
           <div className="flex flex-wrap gap-2">
             {Object.entries(
               results.reduce<Record<string, number>>((acc, result) => {
-                acc[result.category] = (acc[result.category] || 0) + 1;
+                for (const category of result.categories) {
+                  acc[category] = (acc[category] || 0) + 1;
+                }
                 return acc;
               }, {})
             ).map(([category, count]) => (

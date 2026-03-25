@@ -12,6 +12,7 @@ jest.mock('remark-gfm', () => jest.fn());
 
 const baseWebsite: WebsiteMetadata = {
   category: 'developer-tools',
+  categories: ['developer-tools'],
   description: 'Useful developer tooling.',
   name: 'Example Project',
   publishedAt: '2026-03-22',
@@ -73,5 +74,21 @@ This came from data/listings.json.
     expect(screen.getByText(/^Listing$/)).toBeInTheDocument();
     expect(screen.queryByText(/directory entry/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/^Website$/)).not.toBeInTheDocument();
+  });
+
+  it('shows all assigned categories when a listing belongs to more than one category', () => {
+    render(
+      <WebsiteContentSection
+        website={{
+          ...baseWebsite,
+          categories: ['developer-tools', 'video-downloaders'],
+        }}
+      />
+    );
+
+    expect(screen.getByText(/^Categories$/)).toBeInTheDocument();
+    expect(
+      screen.getByText('Developer Tools, Video Downloaders')
+    ).toBeInTheDocument();
   });
 });

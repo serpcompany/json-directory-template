@@ -44,6 +44,12 @@ export const websiteMediaSchema = z
 export const websiteJsonEntrySchema = z
   .object({
     category: z.string().trim().min(1, 'category is required'),
+    categories: z
+      .array(
+        z.string().trim().min(1, 'categories must not contain empty slugs')
+      )
+      .min(1, 'categories must include at least one slug')
+      .optional(),
     content: z.string().min(1, 'content must not be empty').optional(),
     description: z.string().trim().min(1, 'description is required'),
     domain: z.string().url('domain must be a valid URL').optional(),
@@ -84,6 +90,7 @@ export type WebsiteResourceLink = z.infer<typeof websiteResourceLinkSchema>;
 
 export interface NormalizedWebsiteEntry {
   category: string;
+  categories: string[];
   content?: string;
   description: string;
   entityType?: string;
@@ -108,6 +115,17 @@ function slugifyWebsiteName(name: string): string {
 
 function normalizeJsonCategory(category: string): string {
   return normalizeCategorySlug(category);
+}
+
+function normalizeJsonCategories(
+  category: string,
+  categories?: string[]
+): string[] {
+  const normalizedCategories = [category, ...(categories || [])]
+    .map(normalizeJsonCategory)
+    .filter(Boolean);
+
+  return [...new Set(normalizedCategories)];
 }
 
 function sanitizeWebsiteDescription(description: string): string {
@@ -137,8 +155,11 @@ export function parseJsonWebsiteEntries(input: unknown): WebsiteJsonEntry[] {
 export function normalizeJsonWebsite(
   entry: WebsiteJsonEntry
 ): NormalizedWebsiteEntry {
+  const category = normalizeJsonCategory(entry.category);
+
   return {
-    category: normalizeJsonCategory(entry.category),
+    category,
+    categories: normalizeJsonCategories(entry.category, entry.categories),
     content: entry.content,
     description: sanitizeWebsiteDescription(entry.description),
     entityType: entry.entityType,

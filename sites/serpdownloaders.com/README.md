@@ -11,15 +11,20 @@ This site uses the `trial-products-json` source adapter, so the app does not rea
 Keep each record in `products.json` focused on five groups:
 
 - `product`
-  Page-facing fields such as `title`, `tagline`, `productPage`, and `slug`.
+  Page-facing fields such as `title`, `tagline`, `productPage`, `slug`, and optional `primaryCategory` / `categories`.
 - `media`
   Optional structured assets such as a `logo`, screenshots in `images`, or one `video` URL.
-- `category`
-  Optional override. If omitted, this site uses the default category from `site-config.ts`.
 - `content`
   The catch-all long-form area, mainly `body` plus optional `faq`.
 - `relatedLinks`
   The lower links section, such as Help Center.
+
+If you need a listing to appear in more than one category:
+
+- set `product.primaryCategory` to the canonical route category
+- set `product.categories` to every category that listing should belong to
+
+If you omit both, this site still falls back to the default category from `site-config.ts`.
 
 Do not add extension implementation or design config here. Fields like popup UI config, context menu config, download manager panel config, and player button styling are outside the starter contract.
 
