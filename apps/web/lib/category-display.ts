@@ -1,4 +1,8 @@
-import { getCategoryBySlug, type Category } from './categories';
+import {
+  getCategoryBySlug,
+  normalizeCategorySlug,
+  type Category,
+} from './categories';
 import { siteConfig } from './site-config';
 
 export interface DisplayCategory extends Category {
@@ -9,9 +13,15 @@ export function resolveCategoryDisplayName(
   slug: string,
   categoryLabels: Record<string, string> = {}
 ): string {
-  const category = getCategoryBySlug(slug);
+  const normalizedSlug = normalizeCategorySlug(slug);
+  const category = getCategoryBySlug(normalizedSlug);
 
-  return categoryLabels[slug] ?? category?.name ?? slug;
+  return (
+    categoryLabels[slug] ??
+    categoryLabels[normalizedSlug] ??
+    category?.name ??
+    normalizedSlug
+  );
 }
 
 export function getCategoryDisplayName(slug: string): string {

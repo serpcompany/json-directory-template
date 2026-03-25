@@ -3,14 +3,14 @@ import { resolveCategoryDisplayName } from '@/lib/category-display';
 describe('resolveCategoryDisplayName', () => {
   it('falls back to the shared category label when no site override exists', () => {
     expect(resolveCategoryDisplayName('automation-workflow')).toBe(
-      'Automation & Workflow'
+      'Video Downloaders'
     );
   });
 
   it('uses a site-owned label override when one is configured', () => {
     expect(
       resolveCategoryDisplayName('automation-workflow', {
-        'automation-workflow': 'Download Workflows',
+        'video-downloaders': 'Download Workflows',
       })
     ).toBe('Download Workflows');
   });

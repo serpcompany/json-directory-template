@@ -110,7 +110,7 @@ describe('normalizeJsonWebsite', () => {
 
     const normalized = normalizeJsonWebsite(entry);
 
-    expect(normalized.category).toBe('automation-workflow');
+    expect(normalized.category).toBe('video-downloaders');
     expect(normalized.content).toBe(
       '## Details\n\nRendered on the detail page.'
     );

@@ -5,13 +5,13 @@ import {
   Code2,
   Cpu,
   Database,
+  Download,
   FileText,
   Globe,
   Lock,
   Package,
   ShoppingCart,
   User,
-  Workflow,
 } from 'lucide-react';
 
 export interface Category {
@@ -60,11 +60,11 @@ export const categories: Category[] = [
     priority: 'high',
   },
   {
-    name: 'Automation & Workflow',
-    slug: 'automation-workflow',
+    name: 'Video Downloaders',
+    slug: 'video-downloaders',
     description:
-      'Workflow automation, integration platforms, and productivity tools',
-    icon: Workflow,
+      'Downloaders, recorders, and browser tools for saving online video',
+    icon: Download,
     priority: 'medium',
   },
   {
@@ -134,7 +134,8 @@ export const categories: Category[] = [
 ];
 
 export const categoryAliases: Record<string, string> = {
-  'integration-automation': 'automation-workflow',
+  'integration-automation': 'video-downloaders',
+  'automation-workflow': 'video-downloaders',
 };
 
 export const getCategoryBySlug = (slug: string): Category | undefined => {

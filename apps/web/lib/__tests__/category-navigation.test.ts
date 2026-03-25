@@ -2,33 +2,34 @@ import {
   getActiveCategories,
   getFeaturedListingCount,
   getUnknownCategorySlugs,
-  hasFeaturedListings
-} from '@/lib/category-navigation'
+  hasFeaturedListings,
+} from '@/lib/category-navigation';
 
 const sampleListings = [
   {
     category: 'developer-tools',
-    featured: true
+    featured: true,
   },
   {
     category: 'integration-automation',
-    featured: false
-  }
-]
+    featured: false,
+  },
+];
 
 describe('category-navigation', () => {
   it('returns only populated canonical categories in starter taxonomy order', () => {
-    expect(getActiveCategories(sampleListings).map(category => category.slug)).toEqual([
-      'developer-tools',
-      'automation-workflow'
-    ])
-  })
+    expect(
+      getActiveCategories(sampleListings).map((category) => category.slug)
+    ).toEqual(['developer-tools', 'video-downloaders']);
+  });
 
   it('tracks featured availability from the listing set', () => {
-    expect(getFeaturedListingCount(sampleListings)).toBe(1)
-    expect(hasFeaturedListings(sampleListings)).toBe(true)
-    expect(hasFeaturedListings([{ category: 'developer-tools', featured: false }])).toBe(false)
-  })
+    expect(getFeaturedListingCount(sampleListings)).toBe(1);
+    expect(hasFeaturedListings(sampleListings)).toBe(true);
+    expect(
+      hasFeaturedListings([{ category: 'developer-tools', featured: false }])
+    ).toBe(false);
+  });
 
   it('reports unknown normalized category slugs for validation', () => {
     expect(
@@ -36,9 +37,9 @@ describe('category-navigation', () => {
         ...sampleListings,
         {
           category: 'made-up-category',
-          featured: false
-        }
+          featured: false,
+        },
       ])
-    ).toEqual(['made-up-category'])
-  })
-})
+    ).toEqual(['made-up-category']);
+  });
+});
