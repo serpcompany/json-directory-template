@@ -5,7 +5,7 @@ Static-first starter for directory-style sites.
 The current model is:
 
 - checked-in site config under `sites/**`
-- checked-in listing data in `data/websites.json`
+- checked-in listing data in `data/listings.json`
 - static export builds into `dist/sites/<site-id>`
 - deploys sync that artifact into a target GitHub Pages repo
 
@@ -39,7 +39,7 @@ pnpm --filter web exec jest --runInBand
 
 - site config: `sites/site-config.default.ts` plus `sites/<site-id>/site-config.ts`
 - optional site-owned content: `sites/<site-id>/site-content.ts`
-- active listing data: `data/websites.json`
+- active listing data: `data/listings.json`
 - public docs content: `packages/content/data/docs/*.mdx`
 - legal content: `packages/content/data/legal/*.mdx`
 

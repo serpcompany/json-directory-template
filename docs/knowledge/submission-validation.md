@@ -7,7 +7,7 @@ That means the active path is:
 1. a visitor submits through `/submit`
 2. the app sends them to a prefilled GitHub issue
 3. a maintainer reviews the issue
-4. if accepted, the maintainer opens or updates a PR that edits `data/websites.json`
+4. if accepted, the maintainer opens or updates a PR that edits `data/listings.json`
 5. CI validates that checked-in listing data before merge
 
 ## Active validation strategy
@@ -17,14 +17,14 @@ The repo now uses two layers:
 - `PR Review`
   - runs the normal repo validation stack on pull requests
 - `Validate Listing Data`
-  - runs specifically when `data/websites.json` changes on a PR or on `main`
-  - executes `pnpm tsx scripts/validate-data.ts data/websites.json`
+  - runs specifically when `data/listings.json` changes on a PR or on `main`
+  - executes `pnpm tsx scripts/validate-data.ts data/listings.json`
 
 This keeps the current strategy explicit:
 
 - GitHub issue intake is the public submission handoff
 - PRs are the reviewable write path
-- `data/websites.json` is the checked-in listing source that must validate before merge
+- `data/listings.json` is the checked-in listing source that must validate before merge
 - this is the current static-starter bridge flow, not the long-term hosted auth/submission architecture
 
 ## What fails early
@@ -42,7 +42,7 @@ This keeps the current strategy explicit:
 If validation fails on a PR:
 
 1. read the failing path and message from the workflow log
-2. fix `data/websites.json`
+2. fix `data/listings.json`
 3. push the correction to the same PR
 4. wait for `Validate Listing Data` to pass
 
@@ -51,7 +51,7 @@ If the problem came from a GitHub issue submission, fix the checked-in JSON in t
 ## Related files
 
 - `.github/workflows/pr-review.yml`
-- `.github/workflows/update-websites-json.yml`
+- `.github/workflows/update-listings-json.yml`
 - `scripts/validate-data.ts`
 - `packages/content/data/docs/submit-workflow.mdx`
 - [hosted-submission-extension-path.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/hosted-submission-extension-path.md)

@@ -31,36 +31,36 @@ interface WorkflowDefinition {
 function loadWorkflow(): WorkflowDefinition {
   const workflowPath = resolve(
     process.cwd(),
-    '.github/workflows/update-websites-json.yml'
+    '.github/workflows/update-listings-json.yml'
   );
   const raw = readFileSync(workflowPath, 'utf8');
 
   return yaml.load(raw) as WorkflowDefinition;
 }
 
-describe('update-websites-json workflow', () => {
+describe('update-listings-json workflow', () => {
   it('validates listing data on pull requests as well as pushes to main', () => {
     const workflow = loadWorkflow();
 
     expect(workflow.on.pull_request).toMatchObject({
       branches: ['main'],
-      paths: ['data/websites.json'],
+      paths: ['data/listings.json'],
     });
     expect(workflow.on.push).toMatchObject({
       branches: ['main'],
-      paths: ['data/websites.json'],
+      paths: ['data/listings.json'],
     });
   });
 
-  it('runs the checked-in listing data validator against data/websites.json', () => {
+  it('runs the checked-in listing data validator against data/listings.json', () => {
     const workflow = loadWorkflow();
     const validateJob = workflow.jobs['validate-listing-data'];
     const validateStep = validateJob.steps?.find(
-      (step) => step.name === 'Validate data/websites.json'
+      (step) => step.name === 'Validate data/listings.json'
     );
 
     expect(validateStep?.run).toBe(
-      'pnpm tsx scripts/validate-data.ts data/websites.json'
+      'pnpm tsx scripts/validate-data.ts data/listings.json'
     );
   });
 

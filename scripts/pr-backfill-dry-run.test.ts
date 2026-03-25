@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest';
 import {
   assessSubmissionGuidelines,
   buildClassifierContext,
@@ -7,8 +7,8 @@ import {
   deriveMergeAction,
   deriveStructuralDecision,
   deriveWouldMergeDecision,
-  parseSubmissionFrontmatter
-} from './pr-backfill-dry-run.ts'
+  parseSubmissionFrontmatter,
+} from './pr-backfill-dry-run.ts';
 
 describe('buildClassifierContext', () => {
   it('maps GitHub API payloads into the classifier input shape', () => {
@@ -16,23 +16,23 @@ describe('buildClassifierContext', () => {
       commits: [
         {
           author: { login: 'octocat' },
-          committer: { login: 'octocat' }
-        }
+          committer: { login: 'octocat' },
+        },
       ],
       details: {
         draft: false,
         head: {
           ref: 'add/example',
           sha: 'abc123',
-          user: { login: 'octocat' }
+          user: { login: 'octocat' },
         },
         mergeable: true,
         number: 123,
         state: 'open',
         title: 'feat: add example website',
         user: {
-          login: 'octocat'
-        }
+          login: 'octocat',
+        },
       },
       files: [
         {
@@ -41,18 +41,18 @@ describe('buildClassifierContext', () => {
           deletions: 0,
           filename: 'packages/content/data/websites/example.mdx',
           previous_filename: null,
-          status: 'added'
-        }
-      ]
-    })
+          status: 'added',
+        },
+      ],
+    });
 
     expect(result).toEqual({
       authorLogin: 'octocat',
       commits: [
         {
           authorLogin: 'octocat',
-          committerLogin: 'octocat'
-        }
+          committerLogin: 'octocat',
+        },
       ],
       files: [
         {
@@ -61,14 +61,14 @@ describe('buildClassifierContext', () => {
           deletions: 0,
           filename: 'packages/content/data/websites/example.mdx',
           previousFilename: null,
-          status: 'added'
-        }
+          status: 'added',
+        },
       ],
       headRefName: 'add/example',
-      title: 'feat: add example website'
-    })
-  })
-})
+      title: 'feat: add example website',
+    });
+  });
+});
 
 describe('parseSubmissionFrontmatter', () => {
   it('extracts the required frontmatter fields from mdx content', () => {
@@ -81,25 +81,26 @@ publishedAt: '2026-03-14'
 ---
 
 # Example
-`)
+`);
 
     expect(result).toEqual({
       category: 'developer-tools',
-      description: 'Example is a developer platform with API docs for AI agents.',
+      description:
+        'Example is a developer platform with API docs for AI agents.',
       name: 'Example',
       publishedAt: '2026-03-14',
-      website: 'https://example.com'
-    })
-  })
-})
+      website: 'https://example.com',
+    });
+  });
+});
 
 describe('assessSubmissionGuidelines', () => {
   const baseFrontmatter = {
     category: 'developer-tools',
     description: 'Example is a developer platform with API docs for AI agents.',
     name: 'Example',
-    website: 'https://example.com'
-  }
+    website: 'https://example.com',
+  };
 
   it('passes a structurally safe tool submission with matching signals', () => {
     const result = assessSubmissionGuidelines({
@@ -109,36 +110,38 @@ describe('assessSubmissionGuidelines', () => {
         ok: true,
         status: 200,
         text: 'Example is a developer platform with API docs and SDK references.',
-        url: 'https://example.com'
-      }
-    })
+        url: 'https://example.com',
+      },
+    });
 
     expect(result).toEqual({
       guidelineReasons: ['No guideline concerns detected.'],
       guidelineStatus: 'pass',
-      policyEligible: true
-    })
-  })
+      policyEligible: true,
+    });
+  });
 
   it('warns when a non-tool category requires manual review', () => {
     const result = assessSubmissionGuidelines({
       frontmatter: {
         ...baseFrontmatter,
-        category: 'personal'
+        category: 'personal',
       },
       homepageInspection: {
         contentType: 'text/html',
         ok: true,
         status: 200,
         text: 'A personal website and blog.',
-        url: 'https://example.com'
-      }
-    })
+        url: 'https://example.com',
+      },
+    });
 
-    expect(result.guidelineStatus).toBe('pass')
-    expect(result.policyEligible).toBe(true)
-    expect(result.guidelineReasons).toEqual(['No guideline concerns detected.'])
-  })
+    expect(result.guidelineStatus).toBe('pass');
+    expect(result.policyEligible).toBe(true);
+    expect(result.guidelineReasons).toEqual([
+      'No guideline concerns detected.',
+    ]);
+  });
 
   it('warns when the homepage is inaccessible', () => {
     const result = assessSubmissionGuidelines({
@@ -148,16 +151,16 @@ describe('assessSubmissionGuidelines', () => {
         error: 'fetch failed',
         ok: false,
         text: '',
-        url: 'https://example.com'
-      }
-    })
+        url: 'https://example.com',
+      },
+    });
 
-    expect(result.guidelineStatus).toBe('warn')
-    expect(result.policyEligible).toBe(false)
+    expect(result.guidelineStatus).toBe('warn');
+    expect(result.policyEligible).toBe(false);
     expect(result.guidelineReasons).toContain(
       'Website homepage could not be inspected (fetch failed).'
-    )
-  })
+    );
+  });
 
   it('does not block service-oriented wording on its own anymore', () => {
     const result = assessSubmissionGuidelines({
@@ -167,33 +170,35 @@ describe('assessSubmissionGuidelines', () => {
         ok: true,
         status: 200,
         text: 'We are a digital agency providing consulting services for local businesses.',
-        url: 'https://example.com'
-      }
-    })
+        url: 'https://example.com',
+      },
+    });
 
-    expect(result.guidelineStatus).toBe('pass')
-    expect(result.policyEligible).toBe(true)
-    expect(result.guidelineReasons).toEqual(['No guideline concerns detected.'])
-  })
+    expect(result.guidelineStatus).toBe('pass');
+    expect(result.policyEligible).toBe(true);
+    expect(result.guidelineReasons).toEqual([
+      'No guideline concerns detected.',
+    ]);
+  });
 
   it('only fails on the narrowed suspicious-term list', () => {
     const result = assessSubmissionGuidelines({
       frontmatter: {
         ...baseFrontmatter,
-        category: 'personal'
+        category: 'personal',
       },
       homepageInspection: {
         contentType: 'text/html',
         ok: true,
         status: 200,
         text: 'Adult learning programs for career growth and continuing education.',
-        url: 'https://example.com'
-      }
-    })
+        url: 'https://example.com',
+      },
+    });
 
-    expect(result.guidelineStatus).toBe('pass')
-    expect(result.policyEligible).toBe(true)
-  })
+    expect(result.guidelineStatus).toBe('pass');
+    expect(result.policyEligible).toBe(true);
+  });
 
   it('still fails on obvious suspicious-site terms', () => {
     const result = assessSubmissionGuidelines({
@@ -203,15 +208,15 @@ describe('assessSubmissionGuidelines', () => {
         ok: true,
         status: 200,
         text: 'This casino platform offers betting, gambling, and bonus promotions.',
-        url: 'https://example.com'
-      }
-    })
+        url: 'https://example.com',
+      },
+    });
 
-    expect(result.guidelineStatus).toBe('fail')
-    expect(result.policyEligible).toBe(false)
-    expect(result.guidelineReasons.join(' ')).toContain('casino')
-  })
-})
+    expect(result.guidelineStatus).toBe('fail');
+    expect(result.policyEligible).toBe(false);
+    expect(result.guidelineReasons.join(' ')).toContain('casino');
+  });
+});
 
 describe('deriveStructuralDecision', () => {
   const classification = {
@@ -219,62 +224,67 @@ describe('deriveStructuralDecision', () => {
     labels: ['lane:mdx-fast', 'risk:low', 'automerge:candidate'],
     lane: 'mdx-fast' as const,
     manualWebsitesJsonChange: false,
-    reason: 'PR only adds new .mdx entries under packages/content/data/websites/**.',
+    reason:
+      'PR only adds new .mdx entries under packages/content/data/websites/**.',
     risk: 'low' as const,
     stats: {
       fileCount: 1,
       totalChanges: 25,
-      touchesWebsitesJson: false
+      touchesInternalBuildInputs: false,
+      touchesWebsitesJson: false,
     },
-    summary: 'summary'
-  }
+    summary: 'summary',
+  };
 
   it('returns true when the PR satisfies the structural auto-merge gates', () => {
     const result = deriveStructuralDecision({
       classification,
       isDraft: false,
       mergeable: true,
-      state: 'open'
-    })
+      state: 'open',
+    });
 
     expect(result).toEqual({
       reason: 'Structural checks passed.',
-      structurallyEligible: true
-    })
-  })
+      structurallyEligible: true,
+    });
+  });
 
   it('no longer treats PR Review as part of local structural eligibility', () => {
     const result = deriveStructuralDecision({
       classification,
       isDraft: false,
       mergeable: true,
-      state: 'open'
-    })
+      state: 'open',
+    });
 
     expect(result).toEqual({
       reason: 'Structural checks passed.',
-      structurallyEligible: true
-    })
-  })
-})
+      structurallyEligible: true,
+    });
+  });
+});
 
 describe('deriveWouldMergeDecision', () => {
   it('blocks when guideline review raises a concern even after structural success', () => {
     const result = deriveWouldMergeDecision({
-      guidelineReasons: ['Category "personal" requires manual review for auto-merge.'],
+      guidelineReasons: [
+        'Category "personal" requires manual review for auto-merge.',
+      ],
       guidelineStatus: 'warn',
       structuralDecision: {
         reason: 'Structural checks passed.',
-        structurallyEligible: true
-      }
-    })
+        structurallyEligible: true,
+      },
+    });
 
     expect(result).toEqual({
       policyEligible: false,
-      reason: 'Manual review: Category "personal" requires manual review for auto-merge.',
-      wouldMerge: false
-    })
-  })
+      reason:
+        'Manual review: Category "personal" requires manual review for auto-merge.',
+      wouldMerge: false,
+    });
+  });
 
   it('returns true only when both structural and guideline checks pass', () => {
     const result = deriveWouldMergeDecision({
@@ -282,16 +292,16 @@ describe('deriveWouldMergeDecision', () => {
       guidelineStatus: 'pass',
       structuralDecision: {
         reason: 'Structural checks passed.',
-        structurallyEligible: true
-      }
-    })
+        structurallyEligible: true,
+      },
+    });
 
     expect(result).toEqual({
       policyEligible: true,
       reason: 'Would auto-merge now.',
-      wouldMerge: true
-    })
-  })
+      wouldMerge: true,
+    });
+  });
 
   it('keeps a structurally blocked PR blocked regardless of guideline status', () => {
     const result = deriveWouldMergeDecision({
@@ -299,17 +309,17 @@ describe('deriveWouldMergeDecision', () => {
       guidelineStatus: 'pass',
       structuralDecision: {
         reason: 'Latest PR Review status is missing.',
-        structurallyEligible: false
-      }
-    })
+        structurallyEligible: false,
+      },
+    });
 
     expect(result).toEqual({
       policyEligible: false,
       reason: 'Latest PR Review status is missing.',
-      wouldMerge: false
-    })
-  })
-})
+      wouldMerge: false,
+    });
+  });
+});
 
 describe('deriveMergeAction', () => {
   it('plans a merge during dry-run when the PR is eligible', () => {
@@ -317,87 +327,94 @@ describe('deriveMergeAction', () => {
       desiredLabels: ['automerge:candidate'],
       dryRun: true,
       wouldMerge: true,
-      wouldMergeReason: 'Would auto-merge now.'
-    })
+      wouldMergeReason: 'Would auto-merge now.',
+    });
 
     expect(result).toEqual({
       attempted: true,
       mode: 'dry-run',
       reason: 'Would merge now.',
-      status: 'planned'
-    })
-  })
+      status: 'planned',
+    });
+  });
 
   it('skips merge when manual review labeling is present', () => {
     const result = deriveMergeAction({
       desiredLabels: ['needs:manual-review'],
       dryRun: false,
       wouldMerge: true,
-      wouldMergeReason: 'Would auto-merge now.'
-    })
+      wouldMergeReason: 'Would auto-merge now.',
+    });
 
     expect(result).toEqual({
       attempted: false,
       mode: 'applied',
       reason: 'Merge skipped because the PR is labeled for manual review.',
-      status: 'skipped'
-    })
-  })
+      status: 'skipped',
+    });
+  });
 
   it('skips merge when the PR is not eligible', () => {
     const result = deriveMergeAction({
       desiredLabels: ['needs:manual-review'],
       dryRun: false,
       wouldMerge: false,
-      wouldMergeReason: 'Latest PR Review status is failure.'
-    })
+      wouldMergeReason: 'Latest PR Review status is failure.',
+    });
 
     expect(result).toEqual({
       attempted: false,
       mode: 'applied',
       reason: 'Latest PR Review status is failure.',
-      status: 'skipped'
-    })
-  })
-})
+      status: 'skipped',
+    });
+  });
+});
 
 describe('deriveManagedLabels', () => {
   const baseClassification = {
     automergeEligible: true,
-    labels: ['lane:mdx-fast', 'risk:low', 'automerge:candidate', 'area:content'],
+    labels: [
+      'lane:mdx-fast',
+      'risk:low',
+      'automerge:candidate',
+      'area:content',
+    ],
     lane: 'mdx-fast' as const,
     manualWebsitesJsonChange: false,
-    reason: 'PR only adds new .mdx entries under packages/content/data/websites/**.',
+    reason:
+      'PR only adds new .mdx entries under packages/content/data/websites/**.',
     risk: 'low' as const,
     stats: {
       fileCount: 1,
       totalChanges: 25,
-      touchesWebsitesJson: false
+      touchesInternalBuildInputs: false,
+      touchesWebsitesJson: false,
     },
-    summary: 'summary'
-  }
+    summary: 'summary',
+  };
 
   it('keeps fast-lane labels for structurally and policy-eligible PRs', () => {
     const result = deriveManagedLabels({
       classification: baseClassification,
       guidelineStatus: 'pass',
       policyEligible: true,
-      structurallyEligible: true
-    })
+      structurallyEligible: true,
+    });
 
-    expect(result).toEqual(['automerge:candidate'])
-  })
+    expect(result).toEqual(['automerge:candidate']);
+  });
 
   it('downgrades to standard lane and manual review when guidelines warn', () => {
     const result = deriveManagedLabels({
       classification: baseClassification,
       guidelineStatus: 'warn',
       policyEligible: false,
-      structurallyEligible: true
-    })
+      structurallyEligible: true,
+    });
 
-    expect(result).toEqual(['needs:manual-review'])
-  })
+    expect(result).toEqual(['needs:manual-review']);
+  });
 
   it('uses manual review for structurally blocked PRs', () => {
     const result = deriveManagedLabels({
@@ -405,43 +422,49 @@ describe('deriveManagedLabels', () => {
         ...baseClassification,
         labels: ['lane:blocked', 'risk:high', 'status:blocked'],
         lane: 'blocked',
-        risk: 'high'
+        risk: 'high',
       },
       guidelineStatus: 'skipped',
       policyEligible: false,
-      structurallyEligible: false
-    })
+      structurallyEligible: false,
+    });
 
-    expect(result).toEqual(['needs:manual-review'])
-  })
+    expect(result).toEqual(['needs:manual-review']);
+  });
 
-  it('preserves generated websites.json labeling when present', () => {
+  it('preserves generated listings.json labeling when present', () => {
     const result = deriveManagedLabels({
       classification: {
         ...baseClassification,
-        labels: ['generated:websites-json'],
-        manualWebsitesJsonChange: true
+        labels: ['generated:listings-json'],
+        manualWebsitesJsonChange: true,
       },
       guidelineStatus: 'skipped',
       policyEligible: false,
-      structurallyEligible: false
-    })
+      structurallyEligible: false,
+    });
 
-    expect(result).toEqual(['generated:websites-json', 'needs:manual-review'])
-  })
-})
+    expect(result).toEqual(['generated:listings-json', 'needs:manual-review']);
+  });
+});
 
 describe('calculateManagedLabelSync', () => {
   it('removes stale managed labels but preserves unrelated labels', () => {
     const result = calculateManagedLabelSync(
-      ['area:content', 'guideline:pass', 'lane:mdx-fast', 'risk:low', 'custom:keep'],
+      [
+        'area:content',
+        'guideline:pass',
+        'lane:mdx-fast',
+        'risk:low',
+        'custom:keep',
+      ],
       ['needs:manual-review']
-    )
+    );
 
     expect(result).toEqual({
       added: ['needs:manual-review'],
       desired: ['needs:manual-review'],
-      removed: ['area:content', 'guideline:pass', 'lane:mdx-fast', 'risk:low']
-    })
-  })
-})
+      removed: ['area:content', 'guideline:pass', 'lane:mdx-fast', 'risk:low'],
+    });
+  });
+});

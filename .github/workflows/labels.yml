@@ -53,14 +53,14 @@ jobs:
                 description: 'High-risk or mixed change based on deterministic intake rules.'
               },
               {
-                name: 'generated:websites-json',
+                name: 'generated:listings-json',
                 color: 'FBCA04',
-                description: 'Touches generated data/websites.json.'
+                description: 'Touches generated data/listings.json.'
               },
               {
                 name: 'needs:generated-file-review',
                 color: 'D876E3',
-                description: 'Manual review required because data/websites.json was changed outside automation.'
+                description: 'Manual review required because data/listings.json was changed outside automation.'
               },
               {
                 name: 'automerge:candidate',

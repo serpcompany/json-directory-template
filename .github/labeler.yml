@@ -3,7 +3,7 @@ area:content:
       - any-glob-to-any-file:
           - 'packages/content/data/websites/**'
 
-generated:websites-json:
+generated:listings-json:
   - changed-files:
       - any-glob-to-any-file:
-          - 'data/websites.json'
+          - 'data/listings.json'
