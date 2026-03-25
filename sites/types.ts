@@ -8,14 +8,6 @@ export type AssetSource =
       url: string;
     };
 
-export type DrBadgeConfig = {
-  alt: string;
-  height: number;
-  href: string;
-  imageSrc: string;
-  width: number;
-};
-
 export type ListingSourceConfig =
   | {
       kind: 'listing-json';
@@ -98,7 +90,6 @@ export type SiteFeatureFlags = {
 
 export type CheckedInSiteConfig = {
   branding: {
-    drBadge: DrBadgeConfig;
     favicon?: AssetSource;
     logo?: AssetSource;
     opengraphImage?: AssetSource;
@@ -130,7 +121,6 @@ export type CheckedInSiteConfig = {
   social: {
     githubIssueOwner: string;
     githubIssueRepo: string;
-    githubIssueTemplate: string;
     githubIssuesUrl: string;
     githubRepoUrl: string;
     githubUrl: string;

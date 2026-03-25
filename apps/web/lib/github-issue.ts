@@ -35,7 +35,6 @@ export function buildSubmissionIssueUrl(input: SubmissionIssueInput): string {
     `https://github.com/${siteConfig.githubIssueOwner}/${siteConfig.githubIssueRepo}/issues/new`
   )
 
-  url.searchParams.set('template', siteConfig.githubIssueTemplate)
   url.searchParams.set('title', `Submit ${siteCopy.listingName.singularTitle}: ${input.name}`)
   url.searchParams.set('body', buildIssueBody(input))
 

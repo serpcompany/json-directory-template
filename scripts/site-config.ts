@@ -26,14 +26,6 @@ const assetSourceSchema = z.union([
   }),
 ]);
 
-const drBadgeSchema = z.object({
-  alt: z.string().min(1),
-  height: z.number().int().positive(),
-  href: z.string().url(),
-  imageSrc: z.string().url(),
-  width: z.number().int().positive(),
-});
-
 const listingJsonSourceSchema = z.object({
   kind: z.literal('listing-json'),
   outputPath: z.string().min(1).default('data/listings.json'),
@@ -83,7 +75,6 @@ const featureFlagsSchema = z.object({
 
 const checkedInSiteConfigSchema = z.object({
   branding: z.object({
-    drBadge: drBadgeSchema,
     favicon: assetSourceSchema.optional(),
     logo: assetSourceSchema.optional(),
     opengraphImage: assetSourceSchema.optional(),
@@ -183,7 +174,6 @@ const checkedInSiteConfigSchema = z.object({
   social: z.object({
     githubIssueOwner: z.string().min(1),
     githubIssueRepo: z.string().min(1),
-    githubIssueTemplate: z.string().min(1).default('submit-website.yml'),
     githubIssuesUrl: z.string().url(),
     githubRepoUrl: z.string().url(),
     githubUrl: z.string().url(),
@@ -258,11 +248,9 @@ export function resolveResolvedSiteConfig(siteConfig: CheckedInSiteConfig) {
     description: siteConfig.site.description,
     docsRouteBasePath: siteConfig.routes.docsBasePath,
     domain: siteConfig.site.domain,
-    drBadge: siteConfig.branding.drBadge,
     features: siteConfig.features,
     githubIssueOwner: siteConfig.social.githubIssueOwner,
     githubIssueRepo: siteConfig.social.githubIssueRepo,
-    githubIssueTemplate: siteConfig.social.githubIssueTemplate,
     githubIssuesUrl: siteConfig.social.githubIssuesUrl,
     githubRepoUrl: siteConfig.social.githubRepoUrl,
     githubUrl: siteConfig.social.githubUrl,

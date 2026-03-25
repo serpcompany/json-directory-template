@@ -48,7 +48,6 @@ Make sure the site points at the correct repo and issue flow:
 - `social.githubIssuesUrl`
 - `social.githubIssueOwner`
 - `social.githubIssueRepo`
-- `social.githubIssueTemplate`
 
 Also review any site-owned extras in `sites/<site-id>/site-content.ts`, such as network links or external resources.
 

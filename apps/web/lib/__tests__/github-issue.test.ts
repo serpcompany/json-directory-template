@@ -17,7 +17,7 @@ describe('buildSubmissionIssueUrl', () => {
     expect(parsedUrl.pathname).toBe(
       `/${siteConfig.githubIssueOwner}/${siteConfig.githubIssueRepo}/issues/new`
     )
-    expect(parsedUrl.searchParams.get('template')).toBe('submit-website.yml')
+    expect(parsedUrl.searchParams.get('template')).toBeNull()
     expect(parsedUrl.searchParams.get('title')).toBe(
       `Submit ${siteCopy.listingName.singularTitle}: Example Project`
     )

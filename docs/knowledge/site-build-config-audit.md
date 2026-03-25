@@ -29,22 +29,8 @@ These are already part of the active site/build contract through checked-in site
 - `social.githubIssueOwner`
 - `social.githubIssueRepo`
 - `social.githubIssuesUrl`
-- `social.githubIssueTemplate`
 - `social.redditUrl`
 - `social.twitterUrl`
-
-### Simple branding
-
-Status note:
-- the checked-in site config now treats `drBadge` as a provider payload first
-- preferred shape:
-  - `branding.drBadge.provider`
-  - `branding.drBadge.domain`
-  - optional `branding.drBadge.style`
-  - optional `branding.drBadge.alt`
-- raw `href` / `imageSrc` / `width` / `height` remains compatibility-only for unusual badge providers or migration
-
-- `branding.drBadge`
 
 
 ### Content/data source
@@ -107,7 +93,6 @@ This is the current recommended field classification for the active checked-in s
 - `site.tagline`
 - `social.githubIssueOwner`
 - `social.githubIssueRepo`
-- `social.githubIssueTemplate`
 - `deploy.branch`
 - `deploy.preserve[]`
 - `content.listingSource.category`
@@ -128,10 +113,6 @@ This is the current recommended field classification for the active checked-in s
 - `branding.logo`
 - `branding.opengraphImage`
 - `content.listingSource.path`
-
-### Provider payload
-
-- `branding.drBadge`
 
 Note:
 - `content.listingSource.featuredCount` is still numeric in code.
@@ -175,7 +156,6 @@ Status:
 
 - legal contact identity
 - legal contact email/domain values
-- trust badges beyond the DR badge
 - issue/report/support destinations if they differ from submit destinations
 
 ### Search and directory UX copy

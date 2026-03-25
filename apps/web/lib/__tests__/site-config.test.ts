@@ -19,13 +19,6 @@ describe('resolveSiteConfig', () => {
     );
     expect(config.publicUrl).toBe('https://extensions.serp.co');
     expect(config.listingRouteBasePath).toBe('extension');
-    expect(config.drBadge).toEqual({
-      alt: 'Verified DR badge for example.com',
-      height: 50,
-      href: 'https://dr.serp.co/',
-      imageSrc: 'https://dr.serp.co/badge/example.com?style=serp-dr-v3',
-      width: 200,
-    });
     expect(config.copy).toEqual({
       categoryLabels: {},
       docsLabel: 'Docs',
@@ -45,7 +38,7 @@ describe('resolveSiteConfig', () => {
     expect(config.name).toBe('SERP Downloaders');
     expect(config.domain).toBe('serpdownloaders.com');
     expect(config.description).toBe(
-      'Directory of download-focused browser tools.'
+      'A collection of tools to help you download anything from anywhere, anytime.'
     );
     expect(config.githubIssueOwner).toBe('serpcompany');
     expect(config.githubIssueRepo).toBe('json-directory-template');
@@ -54,13 +47,6 @@ describe('resolveSiteConfig', () => {
     );
     expect(config.publicUrl).toBe('https://serpdownloaders.com');
     expect(config.listingRouteBasePath).toBe('listing');
-    expect(config.drBadge).toEqual({
-      alt: 'Verified DR badge for serpdownloaders.com',
-      height: 50,
-      href: 'https://dr.serp.co/',
-      imageSrc: 'https://dr.serp.co/badge/serpdownloaders.com?style=serp-dr-v3',
-      width: 200,
-    });
     expect(config.docsRouteBasePath).toBe('docs');
     expect(config.networkRouteBasePath).toBe('network');
     expect(config.copy).toEqual({

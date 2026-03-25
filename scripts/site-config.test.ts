@@ -33,13 +33,6 @@ describe('loadCheckedInSite', () => {
       submitLabel: 'Submit an Extension',
     });
     expect(config.features.showNewsletter).toBe(false);
-    expect(config.branding.drBadge).toEqual({
-      alt: 'Verified DR badge for example.com',
-      height: 50,
-      href: 'https://dr.serp.co/',
-      imageSrc: 'https://dr.serp.co/badge/example.com?style=serp-dr-v3',
-      width: 200,
-    });
     expect(config.social.githubRepoUrl).toBe(
       'https://github.com/serpcompany/extensions.serp.co'
     );
@@ -75,13 +68,6 @@ describe('loadCheckedInSite', () => {
     expect(config.features.showGuides).toBe(false);
     expect(config.features.showNewsletter).toBe(true);
     expect(config.features.showProjects).toBe(false);
-    expect(config.branding.drBadge).toEqual({
-      alt: 'Verified DR badge for serpdownloaders.com',
-      height: 50,
-      href: 'https://dr.serp.co/',
-      imageSrc: 'https://dr.serp.co/badge/serpdownloaders.com?style=serp-dr-v3',
-      width: 200,
-    });
     expect(config.deploy?.strategy).toBe('github-pages-repo-sync');
   });
 

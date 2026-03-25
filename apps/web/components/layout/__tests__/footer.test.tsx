@@ -27,15 +27,6 @@ describe('Footer', () => {
       siteConfig.twitterUrl
     );
 
-    const badgeImage = screen.getByRole('img', {
-      name: siteConfig.drBadge.alt,
-    });
-    expect(badgeImage).toHaveAttribute('src', siteConfig.drBadge.imageSrc);
-    expect(badgeImage.closest('a')).toHaveAttribute(
-      'href',
-      siteConfig.drBadge.href
-    );
-
     expect(
       screen.queryByRole('link', { name: /all listings/i })
     ).not.toBeInTheDocument();

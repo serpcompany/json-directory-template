@@ -8,7 +8,6 @@ Important distinction:
 - `sites/site-config.default.ts` is the full starter config, while `sites/<id>/site-config.ts` should stay as a sparse override-only file
 - `apps/web/lib/site-config.ts` is the internal app-facing adapter that resolves those checked-in files into the runtime shape the app uses
 - `apps/web/lib/site-copy.ts` is the small wording helper that turns checked-in copy fields into reusable UI labels such as "All Listings" and "Submit a Listing"
-- example: checked-in `branding.drBadge` is now a raw badge payload, so the footer can render exactly what the site owner configured without hidden provider resolution logic
 
 Source-of-truth files:
 
@@ -72,18 +71,10 @@ export type CheckedInSiteConfig = {
     githubIssueOwner: string;
     githubIssueRepo: string;
     githubIssuesUrl: string;
-    githubIssueTemplate: string;
     redditUrl: string;
     twitterUrl: string;
   };
   branding: {
-    drBadge: {
-      alt: string;
-      height: number;
-      href: string;
-      imageSrc: string;
-      width: number;
-    };
     favicon?:
       | { source: 'local-path'; path: string }
       | { source: 'url'; url: string };
@@ -147,7 +138,6 @@ export type CheckedInSiteConfig = {
 | -------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `site.*`                               | Yes      | Main public identity and metadata values for the site.                                                                              |
 | `social.*`                             | Yes      | Public social links and submit/report helper destinations.                                                                          |
-| `branding.drBadge`                     | Yes      | Raw badge payload for the footer link + image. Use the exact href/image/size values the badge provider gave you.                    |
 | `branding.favicon/logo/opengraphImage` | No       | Canonical asset references when a site owns those assets. Supports checked-in local paths and staged remote URL inputs.             |
 | `content.listingSource`                | Yes      | Declares where the site's listing data comes from.                                                                                  |
 | `copy.*`                               | Yes      | Small site-facing wording contract for listing terminology, optional category display labels, and configurable docs/network labels. |
@@ -165,13 +155,11 @@ For a real site build, the site owner should supply meaningful values for these 
 - `site.publicUrl`
 - `site.description`
 - `site.tagline`
-- `branding.drBadge`
 - `social.githubUrl`
 - `social.githubRepoUrl`
 - `social.githubIssueOwner`
 - `social.githubIssueRepo`
 - `social.githubIssuesUrl`
-- `social.githubIssueTemplate`
 - `social.twitterUrl`
 - `social.redditUrl`
 - `content.listingSource`

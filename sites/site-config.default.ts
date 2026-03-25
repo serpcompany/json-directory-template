@@ -1,15 +1,7 @@
 import type { CheckedInSiteConfig } from './types';
 
 export const defaultSiteConfig: CheckedInSiteConfig = {
-  branding: {
-    drBadge: {
-      alt: 'Verified DR badge for example.com',
-      height: 50,
-      href: 'https://dr.serp.co/',
-      imageSrc: 'https://dr.serp.co/badge/example.com?style=serp-dr-v3',
-      width: 200,
-    },
-  },
+  branding: {},
   build: {
     appOutDir: 'apps/web/out',
     artifactDir: 'dist/sites/default',
@@ -59,7 +51,6 @@ export const defaultSiteConfig: CheckedInSiteConfig = {
   social: {
     githubIssueOwner: 'serpcompany',
     githubIssueRepo: 'json-directory-template',
-    githubIssueTemplate: 'submit-website.yml',
     githubIssuesUrl:
       'https://github.com/serpcompany/json-directory-template/issues/new/choose',
     githubRepoUrl: 'https://github.com/serpcompany/json-directory-template',

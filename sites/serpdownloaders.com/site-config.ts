@@ -2,13 +2,6 @@ import type { CheckedInSiteConfigOverride } from '../types';
 
 export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   branding: {
-    drBadge: {
-      alt: 'Verified DR badge for serpdownloaders.com',
-      height: 50,
-      href: 'https://dr.serp.co/',
-      imageSrc: 'https://dr.serp.co/badge/serpdownloaders.com?style=serp-dr-v3',
-      width: 200,
-    },
     favicon: {
       path: 'sites/serpdownloaders.com/assets/favicon.ico',
       source: 'local-path',

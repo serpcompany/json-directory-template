@@ -3,7 +3,6 @@ import {
   resolveCheckedInSiteConfig,
 } from '../../../sites/index';
 import {
-  type DrBadgeConfig,
   type SiteCopyConfig,
   type SiteFeatureFlags,
 } from '../../../sites/types';
@@ -13,11 +12,9 @@ export type SiteConfig = {
   description: string;
   docsRouteBasePath: string;
   domain: string;
-  drBadge: DrBadgeConfig;
   features: SiteFeatureFlags;
   githubIssueOwner: string;
   githubIssueRepo: string;
-  githubIssueTemplate: string;
   githubIssuesUrl: string;
   githubRepoUrl: string;
   githubUrl: string;
@@ -57,11 +54,9 @@ export function resolveSiteConfig(
     description: configuredSite.site.description,
     docsRouteBasePath: configuredSite.routes.docsBasePath,
     domain: configuredSite.site.domain,
-    drBadge: configuredSite.branding.drBadge,
     features: configuredSite.features,
     githubIssueOwner: configuredSite.social.githubIssueOwner,
     githubIssueRepo: configuredSite.social.githubIssueRepo,
-    githubIssueTemplate: configuredSite.social.githubIssueTemplate,
     githubIssuesUrl: configuredSite.social.githubIssuesUrl,
     githubRepoUrl: configuredSite.social.githubRepoUrl,
     githubUrl: configuredSite.social.githubUrl,

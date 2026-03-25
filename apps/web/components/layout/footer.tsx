@@ -15,7 +15,6 @@ type FooterLink = {
  * Features: Bold typography, refined spacing, clean layout
  */
 export function Footer() {
-  const { drBadge } = siteConfig;
   const directoryLinks: FooterLink[] = [
     {
       href: getRoute('submit'),
@@ -87,14 +86,6 @@ export function Footer() {
                 <span className="sr-only">X (Twitter)</span>
               </Link>
             </div>
-            <a href={drBadge.href} target="_blank" rel="noopener noreferrer">
-              <img
-                src={drBadge.imageSrc}
-                alt={drBadge.alt}
-                width={drBadge.width}
-                height={drBadge.height}
-              />
-            </a>
           </div>
           <div className="md:col-span-4 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
