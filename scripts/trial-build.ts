@@ -1,30 +1,34 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import {
+  canonicalTrialProductSchema,
+  type CanonicalTrialProduct,
+} from '../sites/trial-product-schema';
 
-type TrialFaqEntry = {
+type TrialFaqEntryInput = {
   answer?: string;
   question?: string;
 };
 
-type TrialLink = {
+type TrialLinkInput = {
   label?: string;
   url?: string;
 };
 
-type CanonicalTrialProduct = {
+type CanonicalTrialProductInput = {
   category?: string;
   categories?: string[];
   content?: {
     body?: string;
     description?: string;
-    faq?: TrialFaqEntry[];
+    faq?: TrialFaqEntryInput[];
     overview?: string;
     useCases?: string[];
     whyItExists?: string;
   };
   links?: {
     productPage?: string;
-    related?: TrialLink[];
+    related?: TrialLinkInput[];
   };
   media?: {
     images?: string[];
@@ -40,7 +44,7 @@ type CanonicalTrialProduct = {
     tagline?: string;
     title?: string;
   };
-  relatedLinks?: TrialLink[];
+  relatedLinks?: TrialLinkInput[];
 };
 
 type LegacyTrialProduct = {
@@ -51,7 +55,7 @@ type LegacyTrialProduct = {
       valueProposition?: string;
     };
     storeListingCopy?: {
-      faq?: TrialFaqEntry[];
+      faq?: TrialFaqEntryInput[];
       shortDescription?: string;
     };
   };
@@ -67,9 +71,9 @@ type LegacyTrialProduct = {
   };
 };
 
-type TrialProduct = CanonicalTrialProduct | LegacyTrialProduct;
+type TrialProduct = CanonicalTrialProductInput | LegacyTrialProduct;
 
-type TrialProducts = Record<string, TrialProduct>;
+export type TrialProducts = Record<string, TrialProduct>;
 
 type TrialBuildOptions = {
   category: string;
@@ -82,7 +86,6 @@ type CanonicalizeTrialProductsOptions = {
 };
 
 type WebsiteJsonEntry = {
-  category: string;
   categories?: string[];
   content?: string;
   description: string;
@@ -177,7 +180,7 @@ function cleanMedia(value?: CanonicalTrialProduct['media']):
   };
 }
 
-function cleanFaqEntries(entries?: TrialFaqEntry[]):
+function cleanFaqEntries(entries?: TrialFaqEntryInput[]):
   | Array<{
       answer: string;
       question: string;
@@ -197,14 +200,21 @@ function cleanFaqEntries(entries?: TrialFaqEntry[]):
         question,
       };
     })
-    .filter(Boolean);
+    .filter(
+      (
+        entry
+      ): entry is {
+        answer: string;
+        question: string;
+      } => Boolean(entry)
+    );
 
   return cleanedEntries && cleanedEntries.length > 0
     ? cleanedEntries
     : undefined;
 }
 
-function cleanResourceLinks(links?: TrialLink[]):
+function cleanResourceLinks(links?: TrialLinkInput[]):
   | Array<{
       label: string;
       url: string;
@@ -224,14 +234,21 @@ function cleanResourceLinks(links?: TrialLink[]):
         url,
       };
     })
-    .filter(Boolean);
+    .filter(
+      (
+        link
+      ): link is {
+        label: string;
+        url: string;
+      } => Boolean(link)
+    );
 
   return cleanedLinks && cleanedLinks.length > 0 ? cleanedLinks : undefined;
 }
 
 function hasCanonicalTrialProductShape(
   product: TrialProduct
-): product is CanonicalTrialProduct {
+): product is CanonicalTrialProductInput {
   return (
     typeof product === 'object' &&
     product !== null &&
@@ -270,7 +287,7 @@ function buildLegacyBodySections(
 }
 
 function buildTransitionBodySections(
-  content?: CanonicalTrialProduct['content']
+  content?: CanonicalTrialProductInput['content']
 ): string | undefined {
   if (!content) {
     return undefined;
@@ -294,18 +311,18 @@ function buildTransitionBodySections(
 }
 
 function normalizeCanonicalTrialProduct(
-  product: CanonicalTrialProduct,
+  product: CanonicalTrialProductInput,
   fallbackSlug: string,
   defaultCategory: string
 ): NormalizedTrialProduct {
   const explicitCategories =
     cleanCategoryArray(product.product?.categories) ||
     cleanCategoryArray(product.categories);
-  const primaryCategory =
+  const legacyPrimaryCategory =
     cleanString(product.product?.primaryCategory) ||
     cleanString(product.category);
   const category =
-    primaryCategory || explicitCategories?.[0] || defaultCategory;
+    explicitCategories?.[0] || legacyPrimaryCategory || defaultCategory;
   const description =
     cleanString(product.product?.tagline) ||
     cleanString(product.content?.description);
@@ -457,7 +474,7 @@ function buildCanonicalTrialProduct(
   product: NormalizedTrialProduct,
   defaultCategory?: string
 ): CanonicalTrialProduct {
-  const canonicalProduct: CanonicalTrialProduct = {
+  const canonicalProduct: CanonicalTrialProductInput = {
     product: {
       productPage: product.website,
       slug: product.slug,
@@ -485,11 +502,10 @@ function buildCanonicalTrialProduct(
     canonicalProduct.product = {
       ...canonicalProduct.product,
       categories: product.categories,
-      primaryCategory: product.category,
     };
   }
 
-  return canonicalProduct;
+  return canonicalTrialProductSchema.parse(canonicalProduct);
 }
 
 export function canonicalizeTrialProducts(
@@ -527,7 +543,6 @@ export function buildTrialWebsiteEntries(
       const resourceLinks = buildResourceLinks(normalizedProduct);
 
       return {
-        category: normalizedProduct.category,
         categories: normalizedProduct.categories,
         content: buildContent(normalizedProduct),
         description: normalizedProduct.description,

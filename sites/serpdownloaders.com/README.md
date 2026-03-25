@@ -2,16 +2,17 @@
 
 ## Source of truth
 
-For `serpdownloaders.com`, listing data starts in:
+For `serpdownloaders.com`, product data starts in:
 
 - `sites/serpdownloaders.com/products.json`
 
 This site uses the `trial-products-json` source adapter, so the app does not read `products.json` directly at runtime.
+Public product detail pages render under `/products/[slug]`.
 
 Keep each record in `products.json` focused on five groups:
 
 - `product`
-  Page-facing fields such as `title`, `tagline`, `productPage`, `slug`, and optional `primaryCategory` / `categories`.
+  Page-facing fields such as `title`, `tagline`, `productPage`, `slug`, and optional `categories`.
 - `media`
   Optional structured assets such as a `logo`, screenshots in `images`, or one `video` URL.
 - `content`
@@ -19,10 +20,10 @@ Keep each record in `products.json` focused on five groups:
 - `relatedLinks`
   The lower links section, such as Help Center.
 
-If you need a listing to appear in more than one category:
+If you need a product to appear in more than one category:
 
-- set `product.primaryCategory` to the canonical route category
 - set `product.categories` to every category that listing should belong to
+- put the canonical route category first in that array
 
 If you omit both, this site still falls back to the default category from `site-config.ts`.
 
@@ -49,3 +50,17 @@ pnpm dev:site -- --site serpdownloaders.com
 ```
 
 If you already have `pnpm dev` running, you can just rerun the prepare step and refresh the browser.
+
+## Operator-only form view
+
+If you want a local form-driven view of the same contract instead of editing JSON directly:
+
+```bash
+pnpm dev:operator -- --site serpdownloaders.com
+```
+
+Then open:
+
+```txt
+http://localhost:3005/operator/onboard-site
+```

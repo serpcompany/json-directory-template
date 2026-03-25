@@ -15,7 +15,10 @@ import { validateSite } from './validate-site.ts';
 const DEFAULT_WEB_DEV_PORT = 3005;
 
 function resolveDevPort(): number {
-  const rawPort = process.env.WEB_DEV_PORT ?? process.env.PORT;
+  const rawPort =
+    process.env.OPERATOR_UI_PORT ??
+    process.env.WEB_DEV_PORT ??
+    process.env.PORT;
 
   if (!rawPort) {
     return DEFAULT_WEB_DEV_PORT;
@@ -37,7 +40,7 @@ function forwardSignal(
   });
 }
 
-export async function devSite(input: SiteInputTarget): Promise<void> {
+export async function devOperator(input: SiteInputTarget): Promise<void> {
   warnIfUnsupportedNodeVersion();
 
   const definition = loadCheckedInSiteFromInput(input);
@@ -48,8 +51,9 @@ export async function devSite(input: SiteInputTarget): Promise<void> {
   console.log(`Source: ${prepared.sourcePathDisplay} (${prepared.sourceKind})`);
   console.log(`Output: ${prepared.outputPathDisplay}`);
   validateSite(input);
-  await ensurePortAvailable(devPort, 'pnpm dev:site -- --site <id>');
-  console.log(`Starting web dev server for ${definition.id}`);
+  await ensurePortAvailable(devPort, 'pnpm dev:operator -- --site <id>');
+  console.log(`Starting operator UI for ${definition.id}`);
+  console.log(`Open: http://localhost:${devPort}/operator/onboard-site`);
 
   const child = spawn(
     'pnpm',
@@ -67,6 +71,7 @@ export async function devSite(input: SiteInputTarget): Promise<void> {
       cwd: process.cwd(),
       env: {
         ...process.env,
+        ENABLE_OPERATOR_UI: 'true',
         NEXT_PUBLIC_SITE_ID: definition.id,
         SITE_ID: definition.id,
       },
@@ -81,7 +86,7 @@ export async function devSite(input: SiteInputTarget): Promise<void> {
     child.once('error', reject);
     child.once('exit', (code) => {
       if (code && code !== 0) {
-        reject(new Error(`web dev server exited with code ${code}`));
+        reject(new Error(`operator dev server exited with code ${code}`));
         return;
       }
 
@@ -91,7 +96,7 @@ export async function devSite(input: SiteInputTarget): Promise<void> {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  devSite(parseSiteInputArgs(process.argv.slice(2))).catch((error) => {
+  devOperator(parseSiteInputArgs(process.argv.slice(2))).catch((error) => {
     const message = error instanceof Error ? error.message : String(error);
     console.error(message);
     process.exitCode = 1;

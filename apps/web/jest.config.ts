@@ -101,7 +101,7 @@ const config: Config.InitialOptions = {
   },
 
   transformIgnorePatterns: [
-    'node_modules/(?!(@thedaviddias|lucide-react|next-themes|sonner|@octokit|@t3-oss|@hookform|@radix-ui|@clerk|cheerio|normalize-url|react-markdown|remark.*|rehype.*|unified|bail|is-plain-obj|trough|vfile|nuqs)/)'
+    'node_modules/(?!(@thedaviddias|lucide-react|next-themes|sonner|@octokit|@t3-oss|@hookform|@radix-ui|@clerk|@rjsf|@x0k|cheerio|normalize-url|react-markdown|remark.*|rehype.*|unified|bail|is-plain-obj|trough|vfile|nuqs)/)'
   ],
   moduleDirectories: ['node_modules', '<rootDir>/'],
   watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname']

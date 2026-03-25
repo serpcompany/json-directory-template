@@ -25,7 +25,6 @@ describe('buildTrialWebsiteEntries', () => {
           },
           product: {
             categories: ['automation-workflow', 'developer-tools'],
-            primaryCategory: 'automation-workflow',
             productPage: 'https://serp.ly/example-downloader',
             slug: 'example-downloader',
             tagline: 'Download videos from ExampleVideo in one click.',
@@ -47,7 +46,6 @@ describe('buildTrialWebsiteEntries', () => {
 
     expect(entries).toEqual([
       {
-        category: 'automation-workflow',
         categories: ['automation-workflow', 'developer-tools'],
         content: expect.stringContaining('## FAQ'),
         description: 'Download videos from ExampleVideo in one click.',
@@ -92,7 +90,6 @@ describe('buildTrialWebsiteEntries', () => {
     );
 
     expect(entry).toMatchObject({
-      category: 'developer-tools',
       categories: ['developer-tools', 'video-downloaders'],
     });
   });
@@ -133,7 +130,6 @@ describe('buildTrialWebsiteEntries', () => {
 
     expect(entries).toEqual([
       {
-        category: 'automation-workflow',
         categories: ['automation-workflow'],
         content: expect.stringContaining('Offline use cases'),
         description: 'Download videos from ExampleVideo in one click.',
@@ -225,7 +221,6 @@ describe('buildTrialWebsiteEntries', () => {
         'example-downloader': {
           product: {
             categories: ['video-downloaders', 'developer-tools'],
-            primaryCategory: 'video-downloaders',
             productPage: 'https://serp.ly/example-downloader',
             slug: 'example-downloader',
             tagline: 'Download videos from ExampleVideo in one click.',
@@ -242,7 +237,6 @@ describe('buildTrialWebsiteEntries', () => {
       'example-downloader': {
         product: {
           categories: ['video-downloaders', 'developer-tools'],
-          primaryCategory: 'video-downloaders',
           productPage: 'https://serp.ly/example-downloader',
           slug: 'example-downloader',
           tagline: 'Download videos from ExampleVideo in one click.',

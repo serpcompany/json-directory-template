@@ -77,6 +77,21 @@ describe('parseJsonWebsiteEntries', () => {
     });
   });
 
+  it('accepts entries that provide only categories and no top-level category', () => {
+    const entries = parseJsonWebsiteEntries([
+      buildWebsiteEntry({
+        category: undefined,
+        categories: ['developer-tools', 'video-downloaders'],
+      }),
+    ]);
+
+    expect(entries[0]?.category).toBeUndefined();
+    expect(entries[0]?.categories).toEqual([
+      'developer-tools',
+      'video-downloaders',
+    ]);
+  });
+
   it('rejects entries without a website or domain', () => {
     expect(() =>
       parseJsonWebsiteEntries([
@@ -154,5 +169,22 @@ describe('normalizeJsonWebsite', () => {
     expect(normalized.media).toEqual({
       logo: '/listing-logos/serpdownloaders.com/example-logo.png',
     });
+  });
+
+  it('derives the canonical category from the first categories entry when category is omitted', () => {
+    const [entry] = parseJsonWebsiteEntries([
+      buildWebsiteEntry({
+        category: undefined,
+        categories: ['developer-tools', 'video-downloaders'],
+      }),
+    ]);
+
+    const normalized = normalizeJsonWebsite(entry);
+
+    expect(normalized.category).toBe('developer-tools');
+    expect(normalized.categories).toEqual([
+      'developer-tools',
+      'video-downloaders',
+    ]);
   });
 });

@@ -57,8 +57,10 @@ describe('ensurePortAvailable', () => {
       throw new Error('Expected test server to bind to a numeric port');
     }
 
-    await expect(ensurePortAvailable(address.port)).rejects.toThrowError(
-      getPortInUseMessage(address.port)
+    await expect(
+      ensurePortAvailable(address.port, 'pnpm dev:operator -- --site <id>')
+    ).rejects.toThrowError(
+      getPortInUseMessage(address.port, 'pnpm dev:operator -- --site <id>')
     );
   });
 });

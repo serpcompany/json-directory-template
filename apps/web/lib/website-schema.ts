@@ -43,7 +43,7 @@ export const websiteMediaSchema = z
 
 export const websiteJsonEntrySchema = z
   .object({
-    category: z.string().trim().min(1, 'category is required'),
+    category: z.string().trim().min(1, 'category must not be empty').optional(),
     categories: z
       .array(
         z.string().trim().min(1, 'categories must not contain empty slugs')
@@ -72,6 +72,14 @@ export const websiteJsonEntrySchema = z
     website: z.string().url('website must be a valid URL').optional(),
   })
   .superRefine((entry, context) => {
+    if (!entry.category && (!entry.categories || entry.categories.length === 0)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'category or categories is required',
+        path: ['categories'],
+      });
+    }
+
     if (!entry.website && !entry.domain) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
@@ -113,19 +121,23 @@ function slugifyWebsiteName(name: string): string {
     .replace(/--+/g, '-');
 }
 
-function normalizeJsonCategory(category: string): string {
+function normalizeJsonCategory(category?: string): string | undefined {
+  if (!category) {
+    return undefined;
+  }
+
   return normalizeCategorySlug(category);
 }
 
 function normalizeJsonCategories(
-  category: string,
+  category?: string,
   categories?: string[]
 ): string[] {
   const normalizedCategories = [category, ...(categories || [])]
     .map(normalizeJsonCategory)
     .filter(Boolean);
 
-  return [...new Set(normalizedCategories)];
+  return [...new Set(normalizedCategories)] as string[];
 }
 
 function sanitizeWebsiteDescription(description: string): string {
@@ -155,11 +167,18 @@ export function parseJsonWebsiteEntries(input: unknown): WebsiteJsonEntry[] {
 export function normalizeJsonWebsite(
   entry: WebsiteJsonEntry
 ): NormalizedWebsiteEntry {
-  const category = normalizeJsonCategory(entry.category);
+  const categories = normalizeJsonCategories(entry.category, entry.categories);
+  const category = categories[0];
+
+  if (!category) {
+    throw new Error(
+      'Invalid data/listings.json shape: category or categories is required'
+    );
+  }
 
   return {
     category,
-    categories: normalizeJsonCategories(entry.category, entry.categories),
+    categories,
     content: entry.content,
     description: sanitizeWebsiteDescription(entry.description),
     entityType: entry.entityType,

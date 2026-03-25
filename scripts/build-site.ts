@@ -39,6 +39,14 @@ const authRouteBackupPath = resolve(
   workspaceRoot,
   'apps/web/app/api/auth/[...nextauth]/route.static-export-disabled.ts'
 );
+const operatorOnboardingPagePath = resolve(
+  workspaceRoot,
+  'apps/web/app/operator/onboard-site/page.tsx'
+);
+const operatorOnboardingPageBackupPath = resolve(
+  workspaceRoot,
+  'apps/web/app/operator/onboard-site/page.static-export-disabled.tsx'
+);
 const searchIndexPath = resolve(
   workspaceRoot,
   'apps/web/public/search/search-index.json'
@@ -398,6 +406,22 @@ function restoreAuthRouteAfterStaticExport(): void {
   renameSync(authRouteBackupPath, authRoutePath);
 }
 
+function disableOperatorOnboardingForStaticExport(): void {
+  if (!existsSync(operatorOnboardingPagePath)) {
+    return;
+  }
+
+  renameSync(operatorOnboardingPagePath, operatorOnboardingPageBackupPath);
+}
+
+function restoreOperatorOnboardingAfterStaticExport(): void {
+  if (!existsSync(operatorOnboardingPageBackupPath)) {
+    return;
+  }
+
+  renameSync(operatorOnboardingPageBackupPath, operatorOnboardingPagePath);
+}
+
 type ArtifactSurfaceFlags = {
   showAuth: boolean;
   showDocs: boolean;
@@ -514,6 +538,7 @@ export function pruneStaticArtifactDir(
 
   removeArtifactPath(resolve(artifactDir, '_not-found'));
   removeArtifactPath(resolve(artifactDir, '404'));
+  removeArtifactPath(resolve(artifactDir, 'operator'));
 
   if (!flags.showAuth) {
     removeArtifactPath(resolve(artifactDir, 'account'));
@@ -591,11 +616,13 @@ export async function runBuildSite(input: SiteInputTarget): Promise<void> {
   const brandAssetState = await prepareBrandAssets(input);
 
   disableAuthRouteForStaticExport();
+  disableOperatorOnboardingForStaticExport();
 
   try {
     run('pnpm', ['--filter', 'web', 'build'], env);
     finalizeArtifactDir(input);
   } finally {
+    restoreOperatorOnboardingAfterStaticExport();
     restoreAuthRouteAfterStaticExport();
     brandAssetState.restore();
     searchIndexState.restore();

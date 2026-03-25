@@ -129,6 +129,7 @@ Acceptance:
 - [x] Strip sourcemaps and export-debug text artifacts from the public deploy artifact by default
 - [x] Remove auth, favorites, projects, docs, and guides routes from the default static artifact unless explicitly enabled
 - [x] Add site-config-backed listing terminology and submit CTA copy for the core home/search/submit starter surfaces
+- [x] Remove authored primary-category duplication from the trial product contract and derive canonical route category from ordered `categories[]` while keeping the homepage default on all entries
 - [x] Make the default local web dev loop stable, repo-scoped, and debugger-optional:
       default `next dev --webpack`, explicit `turbopack.root`, plus opt-in `dev:inspect`
 - [x] Complete the deeper upstream audit for placeholder/demo routes against `thedaviddias/llms-txt-hub`

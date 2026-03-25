@@ -1,0 +1,323 @@
+{
+  "kind": "serplists-template-pack",
+  "schemaVersion": "2.0.0",
+  "exportedAt": "2026-03-25T03:28:19.000Z",
+  "exportedBy": "Codex",
+  "templates": [
+    {
+      "title": "New Site Onboarding SOP",
+      "description": "Standard operating procedure for onboarding a new site into the json-directory starter using the checked-in site contract.",
+      "slug": "new-site-onboarding-sop",
+      "visibility": "public",
+      "categories": ["operations", "site-onboarding"],
+      "tags": ["multi-site", "site-config", "launch", "qa"],
+      "sections": [
+        {
+          "id": "section-site-definition",
+          "title": "Define the Site",
+          "items": [
+            {
+              "id": "item-lock-domain-and-repo",
+              "title": "Lock the site identity",
+              "description": "Confirm the stable domain, repo, and internal site id before creating any files.",
+              "contents": [
+                {
+                  "id": "content-site-identity-rules",
+                  "type": "subItems",
+                  "value": "",
+                  "subItems": [
+                    {
+                      "id": "sub-domain",
+                      "title": "Use the domain as the site id when possible, for example `browserextensions.io`."
+                    },
+                    {
+                      "id": "sub-repo",
+                      "title": "Confirm the publish repo owner/name and branch."
+                    },
+                    {
+                      "id": "sub-public-url",
+                      "title": "Confirm the final public URL, not a placeholder."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "item-lock-public-vocabulary",
+              "title": "Lock the public naming and route vocabulary",
+              "description": "Decide what the site calls its main collection and which public route bases it will keep stable.",
+              "contents": [
+                {
+                  "id": "content-public-vocabulary",
+                  "type": "text",
+                  "value": "**Decide before launch:**\n\n- `copy.listingName.singular` and `copy.listingName.plural`\n- `routes.listingBasePath`\n- `routes.docsBasePath`\n- `routes.networkBasePath`\n- whether docs, posts, and network are public at launch"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "section-site-files",
+          "title": "Create the Site Files",
+          "items": [
+            {
+              "id": "item-create-site-folder",
+              "title": "Create the checked-in site folder",
+              "description": "Add the new site directory under `sites/<site-id>/` and keep the contract sparse.",
+              "contents": [
+                {
+                  "id": "content-site-files",
+                  "type": "subItems",
+                  "value": "",
+                  "subItems": [
+                    {
+                      "id": "sub-site-config",
+                      "title": "Create `sites/<site-id>/site-config.ts`"
+                    },
+                    {
+                      "id": "sub-site-content",
+                      "title": "Create `sites/<site-id>/site-content.ts` if the site has owned resources or network links"
+                    },
+                    {
+                      "id": "sub-site-readme",
+                      "title": "Create `sites/<site-id>/README.md` explaining the source of truth and local commands"
+                    },
+                    {
+                      "id": "sub-assets",
+                      "title": "Add any checked-in assets under `sites/<site-id>/assets/` if the site needs local branding files"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "item-register-site",
+              "title": "Register the site in the runtime",
+              "description": "Wire the new site into the repo so validation, dev, and builds can resolve it.",
+              "contents": [
+                {
+                  "id": "content-register-site",
+                  "type": "text",
+                  "value": "**Update these places:**\n\n- `sites/index.ts`\n- any site-specific docs or examples if the contract changed\n- issue/project tracking if this onboarding is tied to a tracked rollout"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "section-listing-source",
+          "title": "Set the Listing Source",
+          "items": [
+            {
+              "id": "item-choose-source-kind",
+              "title": "Choose the source-of-truth format",
+              "description": "Decide whether the site edits normalized listing JSON directly or uses the adapter-driven products source.",
+              "contents": [
+                {
+                  "id": "content-source-kind",
+                  "type": "subItems",
+                  "value": "",
+                  "subItems": [
+                    {
+                      "id": "sub-listing-json",
+                      "title": "Use `listing-json` when maintainers should edit normalized listing records directly."
+                    },
+                    {
+                      "id": "sub-trial-products",
+                      "title": "Use `trial-products-json` when the site edits `sites/<site-id>/products.json` and the adapter regenerates `data/listings.json`."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "item-shape-listing-data",
+              "title": "Shape the listing data to the active contract",
+              "description": "Use the lean listing contract the page actually renders.",
+              "contents": [
+                {
+                  "id": "content-listing-contract",
+                  "type": "text",
+                  "value": "**Current lean contract:**\n\n- `product.title`\n- `product.slug`\n- `product.tagline`\n- `product.productPage`\n- optional `product.categories` (first item becomes the canonical route category)\n- optional `media.logo`, `media.images`, `media.video`\n- optional `content.body`, `content.faq`\n- optional `relatedLinks[]`\n\nKeep implementation-only fields out of the source contract."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "section-generate-validate",
+          "title": "Generate and Validate",
+          "items": [
+            {
+              "id": "item-prepare-site-data",
+              "title": "Generate the runtime listing dataset",
+              "description": "Run the site-prep flow so the app reads the latest checked-in data.",
+              "contents": [
+                {
+                  "id": "content-prepare-site",
+                  "type": "text",
+                  "value": "```bash\npnpm prepare:site -- --site <site-id>\n```"
+                }
+              ]
+            },
+            {
+              "id": "item-validate-site",
+              "title": "Run the site validator",
+              "description": "Fail early on bad route inputs, unknown category slugs, and invalid listing data.",
+              "contents": [
+                {
+                  "id": "content-validate-site",
+                  "type": "text",
+                  "value": "```bash\npnpm validate:site -- --site <site-id>\n```"
+                }
+              ]
+            },
+            {
+              "id": "item-regenerate-search-index",
+              "title": "Regenerate the search index after data changes",
+              "description": "Refresh the checked-in search artifact whenever listing data changes.",
+              "contents": [
+                {
+                  "id": "content-search-index",
+                  "type": "text",
+                  "value": "```bash\npnpm exec tsx scripts/search-index-generator.ts\n```"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "section-local-qa",
+          "title": "Run Local QA",
+          "items": [
+            {
+              "id": "item-run-site-dev",
+              "title": "Start the site in local dev mode",
+              "description": "Use the site-aware dev command so the shell resolves the intended site config and listing data.",
+              "contents": [
+                {
+                  "id": "content-dev-site",
+                  "type": "text",
+                  "value": "```bash\npnpm dev:site -- --site <site-id>\n```"
+                }
+              ]
+            },
+            {
+              "id": "item-smoke-core-pages",
+              "title": "Smoke-test the core public pages",
+              "description": "Verify the user-facing routes and navigation, not just tests.",
+              "contents": [
+                {
+                  "id": "content-core-page-checks",
+                  "type": "subItems",
+                  "value": "",
+                  "subItems": [
+                    {
+                      "id": "sub-home",
+                      "title": "Homepage renders the correct site name, tagline, and listing terminology"
+                    },
+                    {
+                      "id": "sub-listing",
+                      "title": "At least one listing detail page renders the hero, bottom links, and category links correctly"
+                    },
+                    {
+                      "id": "sub-category",
+                      "title": "At least one category page loads at `/categories/<slug>` and only shows populated categories"
+                    },
+                    {
+                      "id": "sub-search",
+                      "title": "Search returns expected listings and category filters"
+                    },
+                    {
+                      "id": "sub-legal",
+                      "title": "Legal/footer links point to the intended pages and copy"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "item-check-optional-surfaces",
+              "title": "Check optional feature surfaces",
+              "description": "Verify that docs, posts, newsletter, and network are either intentionally enabled or absent.",
+              "contents": [
+                {
+                  "id": "content-optional-surfaces",
+                  "type": "text",
+                  "value": "Confirm the site matches its feature flags. If a surface is off by default, make sure it does not leak into navigation, sitemap, or empty pages."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "section-build-handoff",
+          "title": "Build, Review, and Handoff",
+          "items": [
+            {
+              "id": "item-build-static-artifact",
+              "title": "Build the final static artifact",
+              "description": "Generate the deployable output for the new site and inspect the final route shape in `dist/`.",
+              "contents": [
+                {
+                  "id": "content-build-site",
+                  "type": "text",
+                  "value": "```bash\npnpm build:site -- --site <site-id>\n```"
+                }
+              ]
+            },
+            {
+              "id": "item-check-dist-artifact",
+              "title": "Inspect the final artifact, not just the raw Next route log",
+              "description": "The final public route contract is the post-processed site artifact in `dist/sites/<site-id>`.",
+              "contents": [
+                {
+                  "id": "content-dist-checks",
+                  "type": "subItems",
+                  "value": "",
+                  "subItems": [
+                    {
+                      "id": "sub-dist-listing",
+                      "title": "Confirm the listing route base under `dist/sites/<site-id>/<listing-base>/`"
+                    },
+                    {
+                      "id": "sub-dist-categories",
+                      "title": "Confirm category pages under `dist/sites/<site-id>/categories/`"
+                    },
+                    {
+                      "id": "sub-dist-search",
+                      "title": "Confirm `search/search-index.json` exists and matches the site data"
+                    },
+                    {
+                      "id": "sub-dist-sitemap",
+                      "title": "Confirm `sitemap-index.xml` and split sitemap files exist as expected"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "item-update-tracking",
+              "title": "Update issue, project board, and notes",
+              "description": "Close the loop with a recorded outcome and any follow-up gaps.",
+              "contents": [
+                {
+                  "id": "content-tracking-handoff",
+                  "type": "text",
+                  "value": "**Before calling onboarding done:**\n\n- update the linked GitHub issue with what changed\n- move the project card to the correct status\n- document any newly discovered contract gaps in `docs/knowledge/**` or split follow-up issues"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "manifest": {
+    "totalTemplates": 1,
+    "format": "portable",
+    "includesVisibility": true,
+    "includesRules": false,
+    "assetWarnings": 0
+  }
+}

@@ -35,6 +35,20 @@ Recommended command:
 pnpm prepare:site -- --site your-site-id
 ```
 
+For a local operator-only form view of the same contract:
+
+```bash
+pnpm dev:operator -- --site your-site-id
+```
+
+Then open:
+
+```txt
+http://localhost:3005/operator/onboard-site
+```
+
+Use that UI when you want required/optional fields, inline validation, and JSON export. Use the checked-in source files directly for quick one-off edits.
+
 ## Canonical adapter source shape
 
 For `trial-products-json` sites, the canonical source file is now intentionally small and grouped around the fields this starter actually uses:
@@ -45,7 +59,6 @@ For `trial-products-json` sites, the canonical source file is now intentionally 
     "product": {
       "title": "Example Downloader",
       "slug": "example-downloader",
-      "primaryCategory": "video-downloaders",
       "categories": ["video-downloaders", "developer-tools"],
       "tagline": "One-line directory summary.",
       "productPage": "https://example.com/example-downloader"
@@ -103,14 +116,12 @@ Use this as the rule of thumb:
 
 - `product`
   Fields the page uses directly for title, tagline, primary link, and route identity.
-  Use `product.primaryCategory` as the route category. Use `product.categories` when the same listing should also appear in other collections.
+  Use `product.categories` as the full category list. The first entry becomes the canonical route category when the app needs one.
 - `media`
   Optional structured assets such as a logo, screenshots, or one demo video URL.
   For the current listing UI, `media.logo` should prefer a checked-in or remote `.png`. Non-`.png`, missing, or broken logos fall back to the checked-in SERP asset at `/img/serp-arrow-logo-black.svg`.
-- `product.primaryCategory`
-  Optional per-record primary category override. If omitted, the site config default category is used.
 - `product.categories`
-  Optional list of all categories the listing should belong to. The primary category is automatically treated as the first and canonical route category.
+  Optional ordered list of all categories the listing should belong to. The first category is treated as the canonical route category.
 - `content`
   The long-form catch-all area. `content.body` is the main markdown/text field.
 - `relatedLinks`
@@ -122,7 +133,6 @@ Every normalized listing record must provide:
 
 - `name`
 - `description`
-- `category`
 - `categories`
 - `publishedAt`
 - `website` or legacy `domain`

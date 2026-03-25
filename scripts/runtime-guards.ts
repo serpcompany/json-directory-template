@@ -30,16 +30,22 @@ export function warnIfUnsupportedNodeVersion(
   }
 }
 
-export function getPortInUseMessage(port: number): string {
+export function getPortInUseMessage(
+  port: number,
+  rerunCommand = 'pnpm dev:site -- --site <id>'
+): string {
   return [
     `Port ${port} is already in use.`,
     'Another local dev server is probably already running.',
     'If you already have the site open, keep that server running and just refresh the browser.',
-    `Otherwise stop the process using port ${port} and rerun \`pnpm dev:site -- --site <id>\`.`,
+    `Otherwise stop the process using port ${port} and rerun \`${rerunCommand}\`.`,
   ].join(' ');
 }
 
-export async function ensurePortAvailable(port: number): Promise<void> {
+export async function ensurePortAvailable(
+  port: number,
+  rerunCommand?: string
+): Promise<void> {
   await new Promise<void>((resolvePromise, reject) => {
     const server = createServer();
 
@@ -47,7 +53,7 @@ export async function ensurePortAvailable(port: number): Promise<void> {
       server.close();
 
       if ((error as NodeJS.ErrnoException).code === 'EADDRINUSE') {
-        reject(new Error(getPortInUseMessage(port)));
+        reject(new Error(getPortInUseMessage(port, rerunCommand)));
         return;
       }
 
