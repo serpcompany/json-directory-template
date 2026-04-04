@@ -42,6 +42,7 @@ Acceptance:
 - [ ] Run the closeout checklist for `serpdownloaders.com`
 - [x] Verify the final sitemap/robots artifact contract
 - [x] Verify site-owned GTM is present for `serpdownloaders.com` production output and absent on non-GTM sites
+- [x] Replace stale `serpdownloaders.com` favicon/logo/Open Graph assets and verify the built artifact stages them correctly
 - [x] Record real command outcomes and manual checks in the checklist
 - [ ] Run the browser closeout sweep with `agent-browser` for each verified site
 - [ ] Open explicit follow-up issues for any failed or intentionally deferred items
@@ -71,6 +72,10 @@ Notes:
   `robots.txt` is still serving the old content-signals file on the live domain even though the
   deployed target repo now contains the correct sitemap-based version that points at
   `sitemap-index.xml`.
+- Current local-only follow-up:
+  refreshed `serpdownloaders.com` branding assets are deployed, but the live unversioned root asset
+  URLs are still serving prior cached files. Query-busted asset URLs already return the refreshed
+  files, so this is now a cache-busting/invalidation concern rather than a build/deploy concern.
 - [x] Keep `sitemap-index.xml` as the canonical shipped static sitemap entrypoint while preserving
   `sitemap.xml` for direct app/runtime environments and compatibility
 - Additional confirmed live state:

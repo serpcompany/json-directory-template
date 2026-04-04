@@ -233,6 +233,14 @@ Operational guidance:
 - prefer `local-path` for canonical long-lived assets you want versioned in the repo
 - use `url` when operators need a temporary or externally managed source, but still want the static build to stage and pin the file locally before export
 - after a successful remote-asset build, treat the staged file in `sites/<site-id>/assets/*` as the local cached copy the next build may intentionally reuse
+- branding verification should be done as a set, not one file at a time:
+  `favicon.ico`, `logo.png`, `apple-touch-icon.png`, and `opengraph-image.png`.
+  The build copies `branding.logo` into both `/logo.png` and `/apple-touch-icon.png`, so a stale
+  site logo will leak into both surfaces even if the favicon is replaced correctly.
+- for static custom-domain deploys, root asset paths such as `/favicon.ico` and `/logo.png` may
+  stay stale behind CDN caches longer than HTML or query-busted asset URLs. If a branding deploy is
+  correct in the build artifact and target repo but the live root URL still serves the previous
+  file, verify the same asset with a query string before assuming the deploy failed.
 
 ## Known Gaps
 

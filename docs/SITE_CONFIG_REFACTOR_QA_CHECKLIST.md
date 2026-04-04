@@ -78,7 +78,7 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 - [x] at least one listing detail page loads for each verified site
 - [x] search page loads and returns results
 - [x] submit page loads and shows the expected category choices
-- [ ] branding assets shown in the built site match the checked-in site assets
+- [x] branding assets shown in the built site match the checked-in site assets
 
 ## 9. If anything fails
 
@@ -111,6 +111,21 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
   all passed. `dist/sites/serpdownloaders.com/index.html` contains `GTM-M82HC3SC`,
   `googletagmanager.com`, and `ns.html?id=GTM-M82HC3SC`; `dist/sites/default/index.html` and
   `dist/sites/serp.software/index.html` do not.
+- 2026-04-04: Replaced stale `serpdownloaders.com` brand assets in
+  `sites/serpdownloaders.com/assets/favicon.ico`, `logo.png`, and `opengraph-image.png`. Then ran
+  `pnpm validate:site -- --site serpdownloaders.com`, `pnpm build:site -- --site serpdownloaders.com`,
+  served `dist/sites/serpdownloaders.com` on `http://127.0.0.1:4322`, and verified:
+  homepage title still renders `SERP Downloaders Directory of Products and Resources`;
+  `favicon.ico`, `logo.png`, `apple-touch-icon.png`, and `opengraph-image.png` all serve the new
+  SERP Downloaders asset set from the built artifact; the built favicon hash no longer matches the
+  old starter/default favicon.
+- 2026-04-04: Deployed the refreshed `serpdownloaders.com` asset set to
+  `serpcompany/serpdownloaders.com` at commit `a4cf150`. The target repo root files now match the
+  new local hashes. Live unversioned root asset URLs are still serving the prior cached files, but
+  `https://serpdownloaders.com/favicon.ico?v=20260404`,
+  `https://serpdownloaders.com/apple-touch-icon.png?v=20260404`, and
+  `https://serpdownloaders.com/opengraph-image.png?v=20260404` all return the refreshed assets.
+  That confirms a live CDN cache lag on the old root URLs, not a bad build or deploy.
 - 2026-04-04: Local browser verification against the existing dev server at
   `http://localhost:3005` confirmed `SERP Downloaders` renders on `/` and
   `/products/123movies-downloader`, and direct HTML checks for both routes confirmed GTM is not
