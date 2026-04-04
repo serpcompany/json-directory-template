@@ -3,10 +3,8 @@ import { join, resolve, sep } from 'node:path'
 
 export const SITEMAP_PAGE_SIZE = 10_000
 
-type SitemapGroupName = 'categories' | 'listing' | 'pages'
-
 type SitemapGroup = {
-  name: SitemapGroupName
+  name: string
   paths: string[]
 }
 
@@ -146,7 +144,7 @@ function groupArtifactPaths(paths: string[], listingBasePath: string): SitemapGr
 
   return [
     { name: 'pages', paths: sortPaths(pages) },
-    { name: 'listing', paths: sortPaths(listing) },
+    { name: listingBasePath, paths: sortPaths(listing) },
     { name: 'categories', paths: sortPaths(categories) }
   ]
 }

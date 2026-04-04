@@ -69,13 +69,16 @@ Notes:
 - `serp.software` stays available in-repo as an additional multi-site proof config, but it is not the board-tracked proof target.
 - Current confirmed live drift:
   `robots.txt` is still serving the old content-signals file on the live domain even though the
-  deployed target repo now contains the correct sitemap-based version.
+  deployed target repo now contains the correct sitemap-based version that points at
+  `sitemap-index.xml`.
+- [x] Keep `sitemap-index.xml` as the canonical shipped static sitemap entrypoint while preserving
+  `sitemap.xml` for direct app/runtime environments and compatibility
 - Additional confirmed live state:
   homepage, product route, search, submit, privacy, and sitemap are now aligned to the current repo
   contract after deploy.
 - Next concrete step:
-  recheck live `robots.txt` after propagation; if it still serves the old file, split that into an
-  explicit follow-up issue.
+  recheck live `robots.txt` after the current CDN cache window expires; if it still serves the old
+  file, split that into an explicit follow-up issue.
 
 ### Phase 3. Taxonomy and discovery
 

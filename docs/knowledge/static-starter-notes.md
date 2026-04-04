@@ -48,8 +48,10 @@
 
 ## Sitemaps
 
-- The final static artifact now rewrites the exported `sitemap.xml` into a sitemap index and also writes an explicit `sitemap-index.xml` compatibility twin.
-- Split sitemap families are emitted as `pages-index.xml`, `listing-index.xml`, and `categories-index.xml`, with `10,000` URLs per leaf file by default.
+- Direct app environments still advertise `sitemap.xml`, because that is the app-served sitemap route.
+- The final static artifact writes `sitemap-index.xml` as the canonical shipped sitemap entrypoint and also keeps `sitemap.xml` as a compatibility twin with the same sitemap-index XML.
+- Split sitemap families are emitted as `pages-index.xml`, `<listingBasePath>-index.xml`, and `categories-index.xml`, with `10,000` URLs per leaf file by default.
+- `routes.listingBasePath` cannot use reserved values like `pages` or `sitemap`, because those would collide with sitemap family filenames.
 - Category sitemap files are emitted only when the final artifact actually contains category pages.
 - The sitemap split runs against the finalized static artifact, so it reflects the shipped public route map after pruning and public path remaps.
 

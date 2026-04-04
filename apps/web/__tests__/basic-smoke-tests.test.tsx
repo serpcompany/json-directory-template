@@ -234,6 +234,24 @@ describe('Metadata and SEO', () => {
     try {
       const robots = await import('../app/robots')
       expect(typeof robots.default).toBe('function')
+
+      const previousStaticExport = process.env.STATIC_EXPORT
+
+      delete process.env.STATIC_EXPORT
+      expect(robots.default()).toMatchObject({
+        sitemap: 'https://example.com/sitemap.xml'
+      })
+
+      process.env.STATIC_EXPORT = 'true'
+      expect(robots.default()).toMatchObject({
+        sitemap: 'https://example.com/sitemap-index.xml'
+      })
+
+      if (previousStaticExport === undefined) {
+        delete process.env.STATIC_EXPORT
+      } else {
+        process.env.STATIC_EXPORT = previousStaticExport
+      }
     } catch (error) {
       // Robots might have dependencies that are hard to mock
       expect(error).toBeDefined()

@@ -7,6 +7,10 @@ import {
 
 const reservedPublicRouteBasePaths = {
   categories: 'Public category pages always use /categories/[slug].',
+  pages:
+    'The static sitemap generator reserves pages-*.xml and pages-index.xml for non-listing pages.',
+  sitemap:
+    'The static sitemap generator reserves sitemap-index.xml for the top-level sitemap index.',
   posts: 'Public editorial posts always use /posts/[slug] when enabled.',
   tools: '/tools is reserved for future first-party tool pages.',
 } as const;

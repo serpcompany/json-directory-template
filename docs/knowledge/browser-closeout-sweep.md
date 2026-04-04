@@ -11,8 +11,11 @@ For each verified site:
 - open one listing detail page through the public listing route
 - open the submit page and confirm the GitHub-issue flow still makes sense
 - open privacy, terms, and cookies pages
-- open `robots.txt` and confirm it points at the public sitemap entrypoint
-- confirm `sitemap.xml` resolves and, when applicable, reflects sitemap-index style output
+- open `robots.txt` and confirm it points at the correct sitemap entrypoint for that environment
+- for shipped static artifacts and live static sites, expect `sitemap-index.xml`
+- for direct app/runtime environments, expect `sitemap.xml`
+- confirm `sitemap-index.xml` resolves and reflects sitemap-index output
+- confirm `sitemap.xml` also resolves as the compatibility twin
 - confirm disabled optional routes are not publicly available when their feature flags are off
 - confirm GTM is absent for sites without a checked-in `analytics.gtmId`
 - if a site is configured with `analytics.gtmId`, confirm the GTM script and noscript iframe render in production output

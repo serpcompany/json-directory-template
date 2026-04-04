@@ -40,7 +40,7 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
   `account`, `login`, `favorites`, `projects`, `docs`, `guides`
 - [x] listing detail pages are emitted under the expected public base path
 - [x] search index is generated and present in the artifact
-- [x] `robots.txt` points at the expected public sitemap entrypoint
+- [x] `robots.txt` points at the expected sitemap entrypoint for the environment under test
 
 ## 5. Search and taxonomy
 
@@ -142,6 +142,16 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
   live `/submit/` resolves to `Submit a Product | SERP Downloaders`, and live `sitemap.xml` now
   serves the sitemap-index contract.
 - 2026-04-04: The deployed target repo contains the expected `robots.txt` (`User-Agent: *` with
-  `Sitemap: https://serpdownloaders.com/sitemap.xml`), but the live domain is still serving the old
+  `Sitemap: https://serpdownloaders.com/sitemap-index.xml` after the canonical-entrypoint update),
+  but the live domain is still serving the old
   content-signals `robots.txt`. Treat this as a post-deploy propagation/cache mismatch and recheck
   before filing a permanent follow-up issue.
+- 2026-04-04: Direct app/runtime environments should continue to advertise `sitemap.xml` from
+  `robots.txt`; only the finalized static artifact should advertise `sitemap-index.xml`.
+- 2026-04-04: A second deploy pushed commit `6f3ef58` to `serpcompany/serpdownloaders.com` with
+  the canonical sitemap update. Post-deploy checks confirm live `sitemap-index.xml` and
+  compatibility `sitemap.xml` both return sitemap-index XML, the homepage/product/search routes are
+  still aligned, and the target repo `robots.txt` now references
+  `https://serpdownloaders.com/sitemap-index.xml`. Live `robots.txt` is still serving the older
+  content-signals file with a cached `last-modified` of `2026-04-04 04:28:39 GMT`, so treat it as
+  an edge-cache lag until the current cache window expires.

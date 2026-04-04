@@ -150,6 +150,32 @@ describe('validateCheckedInSiteConfig', () => {
     );
   });
 
+  it('rejects listing route base paths that collide with sitemap family names', () => {
+    const reservedListingPaths = ['pages', 'sitemap'] as const;
+
+    for (const listingBasePath of reservedListingPaths) {
+      const invalidConfig = cloneDefaultSiteConfig();
+      invalidConfig.routes.listingBasePath = listingBasePath;
+
+      let error: unknown;
+
+      try {
+        validateCheckedInSiteConfig(invalidConfig);
+      } catch (caughtError) {
+        error = caughtError;
+      }
+
+      expect(error).toBeInstanceOf(ZodError);
+      expect((error as ZodError).issues).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            path: ['routes', 'listingBasePath'],
+          }),
+        ])
+      );
+    }
+  });
+
   it('rejects invalid GTM container ids', () => {
     const invalidConfig = cloneDefaultSiteConfig();
     invalidConfig.analytics = {
