@@ -14,6 +14,10 @@ describe('resolveSiteConfig', () => {
     expect(config.githubIssuesUrl).toBe(
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     );
+    expect(config.githubRepoUrl).toBe(
+      'https://github.com/serpcompany/json-directory-template'
+    );
+    expect(config.githubUrl).toBe('https://github.com/serpdownloaders');
     expect(config.publicUrl).toBe('https://serpdownloaders.com');
     expect(config.gtmId).toBe('GTM-M82HC3SC');
     expect(config.listingRouteBasePath).toBe('products');
@@ -93,6 +97,10 @@ describe('resolveSiteConfig', () => {
     expect(config.githubIssuesUrl).toBe(
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     );
+    expect(config.githubRepoUrl).toBe(
+      'https://github.com/serpcompany/json-directory-template'
+    );
+    expect(config.githubUrl).toBe('https://github.com/serpdownloaders');
     expect(config.listingRouteBasePath).toBe('products');
     expect(config.docsRouteBasePath).toBe('docs');
     expect(config.networkRouteBasePath).toBe('network');
