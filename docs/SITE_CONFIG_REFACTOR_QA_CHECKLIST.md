@@ -129,3 +129,9 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 - 2026-04-04: Live `https://serpdownloaders.com/robots.txt` still serves the old content-signals
   file, and live `https://serpdownloaders.com/search/` still renders `Search | Directory Starter`.
   This confirms the live site has not been aligned to the current repo contract yet.
+- 2026-04-04: Additional live checks confirmed `https://serpdownloaders.com/submit/` and
+  `https://serpdownloaders.com/legal/privacy/` both return HTTP 200. Live `sitemap.xml` also
+  returns HTTP 200, but it is still the old flat `<urlset>` sitemap rather than the repo's current
+  sitemap-index style artifact. Live search is inconsistent across user-facing checks:
+  direct HTML reads show `Search | SERP Downloaders`, while `agent-browser` still reports
+  `Search | Directory Starter`, which is enough to treat live search branding as not yet aligned.

@@ -55,7 +55,7 @@ Acceptance:
 - [ ] Retitle/rewrite issue `#41`
 - [x] Run the first live comparison pass against `serpdownloaders.com`
 - [x] Compare live behavior against the current built artifact
-- [ ] Spot-check homepage, listing detail, search, submit, sitemap, and robots on the live site
+- [x] Spot-check homepage, listing detail, search, submit, sitemap, and robots on the live site
 - [ ] Capture shared-contract gaps as separate follow-up issues
 - [ ] Update docs with live proof-site notes and verification
 
@@ -71,6 +71,11 @@ Notes:
   homepage title is still the old `Websites, Tools, and Resources` contract, `/products/123movies-downloader`
   is still 404 live, `robots.txt` still serves the old content-signals file, and `/search/` still renders
   `Directory Starter`.
+- Additional confirmed live state:
+  `/submit/`, `/legal/privacy/`, and `/sitemap.xml` all load live, but the sitemap is still the old
+  flat `urlset` shape rather than the current repo sitemap contract.
+- Next concrete step:
+  deploy the current `serpdownloaders.com` artifact to the target repo, then rerun the same live sweep.
 
 ### Phase 3. Taxonomy and discovery
 
