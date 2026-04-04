@@ -53,8 +53,8 @@ Acceptance:
 ### Phase 2. Live proof site: `serpdownloaders.com`
 
 - [ ] Retitle/rewrite issue `#41`
-- [ ] Run the live closeout pass against `serpdownloaders.com`
-- [ ] Compare live behavior against the current built artifact
+- [x] Run the first live comparison pass against `serpdownloaders.com`
+- [x] Compare live behavior against the current built artifact
 - [ ] Spot-check homepage, listing detail, search, submit, sitemap, and robots on the live site
 - [ ] Capture shared-contract gaps as separate follow-up issues
 - [ ] Update docs with live proof-site notes and verification
@@ -67,6 +67,10 @@ Notes:
 
 - `serpdownloaders.com` remains the active real-site verification target for the current closeout pass.
 - `serp.software` stays available in-repo as an additional multi-site proof config, but it is not the board-tracked proof target.
+- Current confirmed live drift:
+  homepage title is still the old `Websites, Tools, and Resources` contract, `/products/123movies-downloader`
+  is still 404 live, `robots.txt` still serves the old content-signals file, and `/search/` still renders
+  `Directory Starter`.
 
 ### Phase 3. Taxonomy and discovery
 

@@ -73,7 +73,7 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 - [ ] capture browser-found copy, branding, redirect, form, and layout issues before calling closeout done
 
 - [ ] homepage loads for `default`
-- [ ] homepage loads for `serpdownloaders.com`
+- [x] homepage loads for `serpdownloaders.com`
 - [x] homepage loads for `serp.software`
 - [ ] at least one listing detail page loads for each verified site
 - [ ] search page loads and returns results
@@ -120,3 +120,12 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
   `/products/123movies-downloader/`. Direct HTML checks against that served build confirmed
   `GTM-M82HC3SC`, `googletagmanager.com`, and `ns.html?id=GTM-M82HC3SC` are present in
   production output.
+- 2026-04-04: Live `serpdownloaders.com` browser pass confirmed the current production site is
+  still on the older contract. `https://serpdownloaders.com/` renders
+  `SERP Downloaders Directory of Websites, Tools, and Resources`, not the repo's current
+  `Products and Resources` title. `https://serpdownloaders.com/products/123movies-downloader`
+  currently resolves to `Page Not Found | SERP Downloaders`, while the local artifact serves
+  `/products/123movies-downloader/` successfully.
+- 2026-04-04: Live `https://serpdownloaders.com/robots.txt` still serves the old content-signals
+  file, and live `https://serpdownloaders.com/search/` still renders `Search | Directory Starter`.
+  This confirms the live site has not been aligned to the current repo contract yet.
