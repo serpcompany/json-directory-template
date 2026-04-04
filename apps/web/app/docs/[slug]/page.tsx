@@ -6,8 +6,14 @@ import remarkGfm from 'remark-gfm'
 import { components } from '@/components/mdx'
 import { type DocMetadata, getDocBySlug, getDocs } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
+import {
+  generateDisabledRouteMetadata,
+  isRouteFeatureEnabled,
+  requireRouteFeature
+} from '@/lib/route-feature-gates'
 import { SITE_PUBLIC_URL, generateDynamicMetadata } from '@/lib/seo/seo-config'
 import { siteCopy } from '@/lib/site-copy'
+import { siteConfig } from '@/lib/site-config'
 
 interface DocPageProps {
   params: Promise<{
@@ -15,10 +21,16 @@ interface DocPageProps {
   }>
 }
 
+export const dynamicParams = false
+
 /**
  * Generates metadata for a doc page
  */
 export async function generateMetadata(props: DocPageProps): Promise<Metadata> {
+  if (!isRouteFeatureEnabled('showDocs')) {
+    return generateDisabledRouteMetadata()
+  }
+
   const { slug } = await props.params
   const doc = await getDocBySlug(slug)
 
@@ -39,6 +51,10 @@ export async function generateMetadata(props: DocPageProps): Promise<Metadata> {
  * Generates static params for all doc pages (excluding getting-started which is the index)
  */
 export async function generateStaticParams(): Promise<Awaited<DocPageProps['params']>[]> {
+  if (!siteConfig.features.showDocs) {
+    return []
+  }
+
   const docs = getDocs()
 
   return docs
@@ -49,6 +65,8 @@ export async function generateStaticParams(): Promise<Awaited<DocPageProps['para
 }
 
 export default async function DocPage({ params }: DocPageProps) {
+  requireRouteFeature('showDocs')
+
   const { slug } = await params
   const doc = await getDocBySlug(slug)
 

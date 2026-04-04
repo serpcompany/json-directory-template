@@ -9,6 +9,7 @@ import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { WebsitesListWithSearch } from '@/components/websites-list-with-search'
 import { getActiveCategories } from '@/lib/category-navigation'
 import { getGuides } from '@/lib/content-loader'
+import { requireRouteFeature } from '@/lib/route-feature-gates'
 import { SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 import { siteCopy } from '@/lib/site-copy'
 
@@ -20,6 +21,8 @@ export const metadata: Metadata = generateBaseMetadata({
 })
 
 export default async function FavoritesPage() {
+  requireRouteFeature('showFavorites')
+
   const { allProjects, featuredProjects, totalCount } = await getHomePageData()
   const featuredGuides = await getGuides()
   const activeCategories = getActiveCategories(allProjects)

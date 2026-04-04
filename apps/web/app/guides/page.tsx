@@ -5,24 +5,37 @@ import { JsonLd } from '@/components/json-ld'
 import { GuideCard } from '@/components/sections/guide-card'
 import { type GuideMetadata, getGuides } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
+import {
+  generateDisabledRouteMetadata,
+  isRouteFeatureEnabled,
+  requireRouteFeature
+} from '@/lib/route-feature-gates'
 import { generateGuideSchema } from '@/lib/schema'
 import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 import { siteConfig } from '@/lib/site-config'
 
-export const metadata: Metadata = generateBaseMetadata({
-  title: 'Posts',
-  description: `Browse posts, walkthroughs, and reference notes for ${siteConfig.name}.`,
-  path: getRoute('guides.list'),
-  keywords: [
-    'directory posts',
-    'product walkthroughs',
-    'reference notes',
-    'blog posts',
-    `${siteConfig.name} posts`
-  ]
-})
+export function generateMetadata(): Metadata {
+  if (!isRouteFeatureEnabled('showGuides')) {
+    return generateDisabledRouteMetadata()
+  }
+
+  return generateBaseMetadata({
+    title: 'Posts',
+    description: `Browse posts, walkthroughs, and reference notes for ${siteConfig.name}.`,
+    path: getRoute('guides.list'),
+    keywords: [
+      'directory posts',
+      'product walkthroughs',
+      'reference notes',
+      'blog posts',
+      `${siteConfig.name} posts`
+    ]
+  })
+}
 
 export default async function GuidesPage() {
+  requireRouteFeature('showGuides')
+
   const guides = await getGuides()
 
   return (

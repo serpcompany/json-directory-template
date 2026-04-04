@@ -7,18 +7,31 @@ import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { networkLinks } from '@/lib/network-links'
 import { getRoute } from '@/lib/routes'
+import {
+  generateDisabledRouteMetadata,
+  isRouteFeatureEnabled,
+  requireRouteFeature
+} from '@/lib/route-feature-gates'
 import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
-export const metadata: Metadata = generateBaseMetadata({
-  title: siteConfig.copy.networkLabel,
-  description: `Explore related brands, repositories, partners, and contribution links for ${siteConfig.name}.`,
-  path: getRoute('projects'),
-  keywords: ['network', 'resources', 'repositories', 'partners', siteConfig.name]
-})
+export function generateMetadata(): Metadata {
+  if (!isRouteFeatureEnabled('showProjects')) {
+    return generateDisabledRouteMetadata()
+  }
+
+  return generateBaseMetadata({
+    title: siteConfig.copy.networkLabel,
+    description: `Explore related brands, repositories, partners, and contribution links for ${siteConfig.name}.`,
+    path: getRoute('projects'),
+    keywords: ['network', 'resources', 'repositories', 'partners', siteConfig.name]
+  })
+}
 
 export default function ProjectsPage() {
+  requireRouteFeature('showProjects')
+
   return (
     <div className="container mx-auto py-8">
       <div className="space-y-12">

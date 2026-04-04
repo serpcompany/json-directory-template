@@ -52,6 +52,11 @@ const searchIndexPath = resolve(
   'apps/web/public/search/search-index.json'
 );
 
+type StagedPath = {
+  activePath: string;
+  backupPath: string;
+};
+
 function run(command: string, args: string[], env: NodeJS.ProcessEnv): void {
   const result = spawnSync(command, args, {
     cwd: workspaceRoot,
@@ -103,6 +108,28 @@ function restoreFileOrDelete(
   if (existsSync(path)) {
     rmSync(path, { force: true });
   }
+}
+
+function stagePath(activePath: string, backupPath: string): StagedPath | null {
+  if (!existsSync(activePath)) {
+    return null;
+  }
+
+  ensureParentDir(backupPath);
+  renameSync(activePath, backupPath);
+
+  return {
+    activePath,
+    backupPath,
+  };
+}
+
+function restoreStagedPath(stage: StagedPath): void {
+  if (!existsSync(stage.backupPath)) {
+    return;
+  }
+
+  renameSync(stage.backupPath, stage.activePath);
 }
 
 function prepareSourceData(input: SiteInputTarget): { restore: () => void } {
@@ -422,6 +449,53 @@ function restoreOperatorOnboardingAfterStaticExport(): void {
   renameSync(operatorOnboardingPageBackupPath, operatorOnboardingPagePath);
 }
 
+function prepareDisabledRoutesForStaticExport(
+  input: SiteInputTarget
+): { restore: () => void } {
+  const definition = loadCheckedInSiteFromInput(input);
+  const restoreDir = createRunTempDir('build-site-routes', definition.id);
+  const stages: StagedPath[] = [];
+
+  const maybeStage = (relativePath: string, backupName: string): void => {
+    const stage = stagePath(
+      resolve(workspaceRoot, relativePath),
+      resolve(restoreDir.path, backupName)
+    );
+
+    if (stage) {
+      stages.push(stage);
+    }
+  };
+
+  if (!definition.features.showAuth) {
+    maybeStage('apps/web/app/account', 'account');
+    maybeStage('apps/web/app/login', 'login');
+  }
+
+  if (!definition.features.showFavorites) {
+    maybeStage('apps/web/app/favorites', 'favorites');
+  }
+
+  if (!definition.features.showProjects) {
+    maybeStage('apps/web/app/projects', 'projects');
+  }
+
+  if (!definition.features.showDocs) {
+    maybeStage('apps/web/app/docs', 'docs');
+  }
+
+  if (!definition.features.showGuides) {
+    maybeStage('apps/web/app/guides', 'guides');
+  }
+
+  return {
+    restore: () => {
+      stages.reverse().forEach(restoreStagedPath);
+      restoreDir.cleanup();
+    },
+  };
+}
+
 type ArtifactSurfaceFlags = {
   showAuth: boolean;
   showDocs: boolean;
@@ -614,6 +688,7 @@ export async function runBuildSite(input: SiteInputTarget): Promise<void> {
   const sourceState = prepareSourceData(input);
   const searchIndexState = prepareSearchIndex(input, env);
   const brandAssetState = await prepareBrandAssets(input);
+  const routeState = prepareDisabledRoutesForStaticExport(input);
 
   disableAuthRouteForStaticExport();
   disableOperatorOnboardingForStaticExport();
@@ -624,6 +699,7 @@ export async function runBuildSite(input: SiteInputTarget): Promise<void> {
   } finally {
     restoreOperatorOnboardingAfterStaticExport();
     restoreAuthRouteAfterStaticExport();
+    routeState.restore();
     brandAssetState.restore();
     searchIndexState.restore();
     sourceState.restore();

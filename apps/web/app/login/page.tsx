@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { GitHubSignInButton } from '@/components/auth/github-sign-in-button'
 import { getRoute } from '@/lib/routes'
+import { requireRouteFeature } from '@/lib/route-feature-gates'
 import { getSafeCallbackUrl, getSession, isGitHubAuthConfigured } from '@/lib/auth'
 import { isStaticExportBuild } from '@/lib/runtime-mode'
 
@@ -14,6 +15,8 @@ type LoginPageProps = {
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps): Promise<ReactElement> {
+  requireRouteFeature('showAuth')
+
   const isStaticBuild = isStaticExportBuild()
   const callbackUrl = isStaticBuild
     ? getSafeCallbackUrl()

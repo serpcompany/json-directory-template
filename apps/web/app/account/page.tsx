@@ -2,10 +2,13 @@ import type { ReactElement } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@thedaviddias/design-system/avatar'
 import { redirect } from 'next/navigation'
 import { getRoute } from '@/lib/routes'
+import { requireRouteFeature } from '@/lib/route-feature-gates'
 import { getSafeCallbackUrl, getSession } from '@/lib/auth'
 import { isStaticExportBuild } from '@/lib/runtime-mode'
 
 export default async function AccountPage(): Promise<ReactElement> {
+  requireRouteFeature('showAuth')
+
   if (isStaticExportBuild()) {
     return (
       <section className="container mx-auto flex flex-1 px-4 py-16">

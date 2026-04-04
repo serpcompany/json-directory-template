@@ -8,8 +8,14 @@ import { JsonLd } from '@/components/json-ld'
 import { components } from '@/components/mdx'
 import { type GuideMetadata, getGuideBySlug, getGuides } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
+import {
+  generateDisabledRouteMetadata,
+  isRouteFeatureEnabled,
+  requireRouteFeature
+} from '@/lib/route-feature-gates'
 import { generateGuideSchema } from '@/lib/schema'
 import { SITE_PUBLIC_URL, generateDynamicMetadata } from '@/lib/seo/seo-config'
+import { siteConfig } from '@/lib/site-config'
 
 interface GuidePageProps {
   params: Promise<{
@@ -17,10 +23,16 @@ interface GuidePageProps {
   }>
 }
 
+export const dynamicParams = false
+
 /**
  * Generates metadata for a guide page
  */
 export async function generateMetadata(props: GuidePageProps): Promise<Metadata> {
+  if (!isRouteFeatureEnabled('showGuides')) {
+    return generateDisabledRouteMetadata()
+  }
+
   const { slug } = await props.params
   const guide = await getGuideBySlug(slug)
 
@@ -42,6 +54,10 @@ export async function generateMetadata(props: GuidePageProps): Promise<Metadata>
  * Generates static params for all guide pages
  */
 export async function generateStaticParams(): Promise<Awaited<GuidePageProps['params']>[]> {
+  if (!siteConfig.features.showGuides) {
+    return []
+  }
+
   const guides = await getGuides()
 
   return guides.map((guide: GuideMetadata) => ({
@@ -50,6 +66,8 @@ export async function generateStaticParams(): Promise<Awaited<GuidePageProps['pa
 }
 
 export default async function GuidePage({ params }: GuidePageProps) {
+  requireRouteFeature('showGuides')
+
   const { slug } = await params
   const guide = await getGuideBySlug(slug)
 

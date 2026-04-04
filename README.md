@@ -74,8 +74,10 @@ This repo still contains some legacy/reference areas from the earlier product di
 Use [Legacy Reference Boundary](./docs/knowledge/legacy-reference-boundary.md) for the keep/move/rewrite decisions on:
 
 - `packages/content/data/websites/**`
-- `apps/e2e/**`
+- `apps/e2e/playwright-report/**`
+- `apps/e2e/test-results/**`
 - `websites/**`
 - `_archive/**`
 
-Those areas are not the active starter contract unless explicitly called out in the docs above.
+The Playwright source under `apps/e2e/tests/**` remains active coverage.
+The areas above are not the active starter contract unless explicitly called out in the docs above.

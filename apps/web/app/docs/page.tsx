@@ -6,24 +6,37 @@ import remarkGfm from 'remark-gfm'
 import { components } from '@/components/mdx'
 import { getDocBySlug } from '@/lib/content-loader'
 import { getRoute } from '@/lib/routes'
+import {
+  generateDisabledRouteMetadata,
+  isRouteFeatureEnabled,
+  requireRouteFeature
+} from '@/lib/route-feature-gates'
 import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
 import { siteCopy } from '@/lib/site-copy'
 import { siteConfig } from '@/lib/site-config'
 
-export const metadata: Metadata = generateBaseMetadata({
-  title: `${siteCopy.docsLabel} - ${siteConfig.name}`,
-  description: `Reference docs, setup notes, and workflow details for ${siteConfig.name}.`,
-  path: getRoute('docs.list'),
-  keywords: [
-    'documentation',
-    'setup notes',
-    'workflow reference',
-    'starter docs',
-    `${siteConfig.name} documentation`
-  ]
-})
+export function generateMetadata(): Metadata {
+  if (!isRouteFeatureEnabled('showDocs')) {
+    return generateDisabledRouteMetadata()
+  }
+
+  return generateBaseMetadata({
+    title: `${siteCopy.docsLabel} - ${siteConfig.name}`,
+    description: `Reference docs, setup notes, and workflow details for ${siteConfig.name}.`,
+    path: getRoute('docs.list'),
+    keywords: [
+      'documentation',
+      'setup notes',
+      'workflow reference',
+      'starter docs',
+      `${siteConfig.name} documentation`
+    ]
+  })
+}
 
 export default async function DocsPage() {
+  requireRouteFeature('showDocs')
+
   const doc = await getDocBySlug('getting-started')
 
   if (!doc) {

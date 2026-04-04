@@ -1,9 +1,20 @@
 import { expect, test } from '@playwright/test'
 
-const detailWebsite = {
+const detailListing = {
   name: 'Acurast Hub',
   slug: 'acurast-hub-llms-txt'
 } as const
+
+async function expectUnavailableRoute(page: Parameters<typeof test>[1] extends never ? never : any, path: string) {
+  const response = await page.goto(path, { waitUntil: 'domcontentloaded' })
+  const status = response?.status()
+
+  if (status === 404) {
+    return
+  }
+
+  await expect(page.getByRole('heading', { level: 1, name: /page not found/i })).toBeVisible()
+}
 
 test.describe('Static starter smoke tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -11,20 +22,8 @@ test.describe('Static starter smoke tests', () => {
     page.setDefaultTimeout(30000)
   })
 
-  test('kept public pages load successfully', async ({ page }) => {
-    const pages = [
-      '/',
-      '/login',
-      '/about',
-      '/guides',
-      '/projects',
-      '/news',
-      '/legal/privacy',
-      '/legal/terms',
-      '/legal/cookies',
-      '/favorites',
-      '/submit'
-    ] as const
+  test('core public MVP routes load successfully', async ({ page }) => {
+    const pages = ['/', '/about', '/search', '/submit', '/legal/privacy', '/legal/terms', '/legal/cookies'] as const
 
     for (const path of pages) {
       const response = await page.goto(path, {
@@ -41,32 +40,24 @@ test.describe('Static starter smoke tests', () => {
   test('homepage search filters directory results locally', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' })
 
-    await expect(page.getByRole('heading', { level: 1, name: /llms\.txt hub/i })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 
     const searchInput = page.getByPlaceholder('Search...')
     await searchInput.fill('acurast')
 
-    await expect(page.getByText(/Showing \d+ result/)).toBeVisible()
+    await expect(page.getByText(/showing \d+ result/i)).toBeVisible()
     await expect(page.getByRole('link', { name: /Acurast Hub/i })).toBeVisible()
   })
 
-  test('website favorites persist into the favorites page', async ({ page }) => {
-    await page.goto(`/websites/${detailWebsite.slug}`, { waitUntil: 'domcontentloaded' })
+  test('listing detail pages load under the public listing route', async ({ page }) => {
+    await page.goto(`/listing/${detailListing.slug}`, { waitUntil: 'domcontentloaded' })
 
     await expect(
-      page.getByRole('heading', { level: 1, name: detailWebsite.name })
+      page.getByRole('heading', { level: 1, name: detailListing.name })
     ).toBeVisible()
-
-    await page.getByRole('button', { name: /add to favorites/i }).first().click()
-    await expect(page.getByRole('button', { name: /remove from favorites/i }).first()).toBeVisible()
-
-    await page.goto('/favorites', { waitUntil: 'domcontentloaded' })
-
-    await expect(page.getByRole('heading', { level: 1, name: /your favorites/i })).toBeVisible()
-    await expect(page.getByRole('link', { name: /Acurast Hub/i })).toBeVisible()
   })
 
-  test('submit flow redirects to a prefilled GitHub issue', async ({ page }) => {
+  test('submit flow redirects to the configured prefilled GitHub issue', async ({ page }) => {
     let redirectedIssueUrl = ''
 
     await page.route('https://github.com/**', async route => {
@@ -80,64 +71,38 @@ test.describe('Static starter smoke tests', () => {
 
     await page.goto('/submit', { waitUntil: 'domcontentloaded' })
 
-    await page.getByLabel('Project name').fill('Example Project')
+    await page.getByLabel('Name').fill('Example Project')
     await page.getByLabel('Category').selectOption('developer-tools')
-
-    const websiteInput = page.getByLabel('Website URL')
-    await websiteInput.fill('https://example.com')
-    await websiteInput.blur()
-
-    await expect(page.getByLabel('llms.txt URL')).toHaveValue('https://example.com/llms.txt')
-
+    await page.getByLabel('Listing URL').fill('https://example.com')
     await page.getByRole('button', { name: /continue on github/i }).click()
 
-    await expect(page).toHaveURL(/github\.com\/thedaviddias\/llms-txt-hub\/issues\/new/)
-    await expect.poll(() => redirectedIssueUrl).toContain('template=submit-website.yml')
-    await expect.poll(() => redirectedIssueUrl).toContain('Submit+llms.txt%3A+Example+Project')
-    await expect
-      .poll(() => redirectedIssueUrl)
-      .toContain('Website%3A+https%3A%2F%2Fexample.com')
+    await expect(page).toHaveURL(/github\.com\/serpapps\/support\/issues\/new/)
+    await expect.poll(() => redirectedIssueUrl).toContain('Submit+Listing%3A+Example+Project')
+    await expect.poll(() => redirectedIssueUrl).toContain('Listing+URL%3A+https%3A%2F%2Fexample.com')
+    await expect.poll(() => redirectedIssueUrl).toContain('Category%3A+developer-tools')
   })
 
-  test('websites route redirects to the homepage directory', async ({ page }) => {
+  test('legacy aliases still redirect to the supported public surface', async ({ page }) => {
     await page.goto('/websites', { waitUntil: 'domcontentloaded' })
-
     await expect(page).toHaveURL(/\/$/)
-    await expect(page.getByRole('heading', { level: 1, name: /llms\.txt hub/i })).toBeVisible()
+
+    await page.goto('/news', { waitUntil: 'domcontentloaded' })
+    await expect(page).toHaveURL(/\/$/)
   })
 
-  test('account redirects to login when signed out', async ({ page }) => {
-    await page.goto('/account', { waitUntil: 'domcontentloaded' })
+  test('disabled default-site routes are not publicly available', async ({ page }) => {
+    const disabledRoutes = ['/login', '/account', '/favorites', '/docs', '/posts', '/network'] as const
 
-    await expect(page).toHaveURL(/\/login\?callbackUrl=%2Faccount/)
-    await expect(page.getByRole('heading', { level: 1, name: /sign up \/ sign in/i })).toBeVisible()
-  })
-
-  test('login page starts the GitHub auth flow', async ({ page }) => {
-    let githubAuthorizeUrl = ''
-
-    await page.route('https://github.com/**', async route => {
-      githubAuthorizeUrl = route.request().url()
-      await route.fulfill({
-        body: '<html><body>stub</body></html>',
-        contentType: 'text/html',
-        status: 200
-      })
-    })
-
-    await page.goto('/login', { waitUntil: 'domcontentloaded' })
-
-    await page.getByRole('button', { name: /continue with github/i }).click()
-
-    await expect(page).toHaveURL(/github\.com\/login\/oauth\/authorize/)
-    await expect.poll(() => githubAuthorizeUrl).toContain('client_id=playwright-github-client-id')
+    for (const path of disabledRoutes) {
+      await expectUnavailableRoute(page, path)
+    }
   })
 
   test('homepage works on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 })
     await page.goto('/', { waitUntil: 'domcontentloaded' })
 
-    await expect(page.getByRole('heading', { level: 1, name: /llms\.txt hub/i })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page.getByRole('button', { name: /open menu/i })).toBeVisible()
   })
 })
