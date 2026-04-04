@@ -75,9 +75,9 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 - [ ] homepage loads for `default`
 - [x] homepage loads for `serpdownloaders.com`
 - [x] homepage loads for `serp.software`
-- [ ] at least one listing detail page loads for each verified site
-- [ ] search page loads and returns results
-- [ ] submit page loads and shows the expected category choices
+- [x] at least one listing detail page loads for each verified site
+- [x] search page loads and returns results
+- [x] submit page loads and shows the expected category choices
 - [ ] branding assets shown in the built site match the checked-in site assets
 
 ## 9. If anything fails
@@ -135,3 +135,13 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
   sitemap-index style artifact. Live search is inconsistent across user-facing checks:
   direct HTML reads show `Search | SERP Downloaders`, while `agent-browser` still reports
   `Search | Directory Starter`, which is enough to treat live search branding as not yet aligned.
+- 2026-04-04: `pnpm deploy:site -- --site serpdownloaders.com` completed successfully and pushed
+  commit `4bca6bc` to `serpcompany/serpdownloaders.com`. Post-deploy checks now show the live
+  homepage title is `SERP Downloaders Directory of Products and Resources`, the live product page
+  `/products/123movies-downloader/` loads, live `/search/` resolves to `Search | SERP Downloaders`,
+  live `/submit/` resolves to `Submit a Product | SERP Downloaders`, and live `sitemap.xml` now
+  serves the sitemap-index contract.
+- 2026-04-04: The deployed target repo contains the expected `robots.txt` (`User-Agent: *` with
+  `Sitemap: https://serpdownloaders.com/sitemap.xml`), but the live domain is still serving the old
+  content-signals `robots.txt`. Treat this as a post-deploy propagation/cache mismatch and recheck
+  before filing a permanent follow-up issue.

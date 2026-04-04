@@ -57,7 +57,7 @@ Acceptance:
 - [x] Compare live behavior against the current built artifact
 - [x] Spot-check homepage, listing detail, search, submit, sitemap, and robots on the live site
 - [ ] Capture shared-contract gaps as separate follow-up issues
-- [ ] Update docs with live proof-site notes and verification
+- [x] Update docs with live proof-site notes and verification
 
 Acceptance:
 
@@ -68,14 +68,14 @@ Notes:
 - `serpdownloaders.com` remains the active real-site verification target for the current closeout pass.
 - `serp.software` stays available in-repo as an additional multi-site proof config, but it is not the board-tracked proof target.
 - Current confirmed live drift:
-  homepage title is still the old `Websites, Tools, and Resources` contract, `/products/123movies-downloader`
-  is still 404 live, `robots.txt` still serves the old content-signals file, and `/search/` still renders
-  `Directory Starter`.
+  `robots.txt` is still serving the old content-signals file on the live domain even though the
+  deployed target repo now contains the correct sitemap-based version.
 - Additional confirmed live state:
-  `/submit/`, `/legal/privacy/`, and `/sitemap.xml` all load live, but the sitemap is still the old
-  flat `urlset` shape rather than the current repo sitemap contract.
+  homepage, product route, search, submit, privacy, and sitemap are now aligned to the current repo
+  contract after deploy.
 - Next concrete step:
-  deploy the current `serpdownloaders.com` artifact to the target repo, then rerun the same live sweep.
+  recheck live `robots.txt` after propagation; if it still serves the old file, split that into an
+  explicit follow-up issue.
 
 ### Phase 3. Taxonomy and discovery
 
