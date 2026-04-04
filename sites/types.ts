@@ -69,6 +69,10 @@ export type SiteOwnedContent = {
   networkLinks: SiteNetworkLink[];
 };
 
+export type SiteAnalyticsConfig = {
+  gtmId?: string;
+};
+
 export type DeployConfig = {
   branch: string;
   preserve: string[];
@@ -89,6 +93,7 @@ export type SiteFeatureFlags = {
 };
 
 export type CheckedInSiteConfig = {
+  analytics?: SiteAnalyticsConfig;
   branding: {
     favicon?: AssetSource;
     logo?: AssetSource;

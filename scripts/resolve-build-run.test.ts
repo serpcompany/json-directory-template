@@ -19,4 +19,14 @@ describe('resolveBuildRun', () => {
       siteId: 'default'
     })
   })
+
+  it('rejects removed checked-in site ids instead of falling back to default', () => {
+    expect(() =>
+      resolveBuildRun([], {
+        SITE_ID: 'extensions.serp.co'
+      })
+    ).toThrow(
+      'Site "extensions.serp.co" was removed from this repo. Use a supported checked-in site id instead.'
+    )
+  })
 })

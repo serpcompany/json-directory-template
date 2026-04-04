@@ -13,6 +13,7 @@ export type SiteConfig = {
   docsRouteBasePath: string;
   domain: string;
   features: SiteFeatureFlags;
+  gtmId?: string;
   githubIssueOwner: string;
   githubIssueRepo: string;
   githubIssuesUrl: string;
@@ -55,6 +56,7 @@ export function resolveSiteConfig(
     docsRouteBasePath: configuredSite.routes.docsBasePath,
     domain: configuredSite.site.domain,
     features: configuredSite.features,
+    gtmId: configuredSite.analytics?.gtmId,
     githubIssueOwner: configuredSite.social.githubIssueOwner,
     githubIssueRepo: configuredSite.social.githubIssueRepo,
     githubIssuesUrl: configuredSite.social.githubIssuesUrl,

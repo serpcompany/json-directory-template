@@ -1,6 +1,6 @@
 {
-  "projectName": "SERP Apps",
-  "projectOwner": "devinschumacher",
+  "projectName": "JSON Directory Template",
+  "projectOwner": "serpcompany",
   "repoType": "github",
   "repoHost": "https://github.com",
   "files": ["README.md"],
@@ -11,22 +11,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/devinschumacher",
       "profile": "https://github.com/devinschumacher",
       "contributions": ["content"]
-    },
-    {
-      "login": "serp-y",
-      "name": "serp y",
-      "avatar_url": "https://avatars.githubusercontent.com/serp-y",
-      "profile": "https://github.com/serpapps",
-      "contributions": ["content"]
-    },
-    {
-      "login": "Onlyfans Downloader",
-      "name": "Onlyfans Downlaoder",
-      "avatar_url": "https://avatars.githubusercontent.com/serpapps",
-      "profile": "https://github.com/serpapps/onlyfans-downloader",
-      "contributions": ["content"]
-    },
-      ],
+    }
+  ],
   "commitType": "docs",
   "commitConvention": "angular",
   "contributorsPerLine": 7

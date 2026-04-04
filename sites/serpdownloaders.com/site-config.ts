@@ -1,6 +1,9 @@
 import type { CheckedInSiteConfigOverride } from '../types';
 
 export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
+  analytics: {
+    gtmId: 'GTM-M82HC3SC',
+  },
   branding: {
     favicon: {
       path: 'sites/serpdownloaders.com/assets/favicon.ico',

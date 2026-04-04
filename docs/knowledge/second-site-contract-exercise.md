@@ -4,9 +4,9 @@ This note records the first real second-site pressure test against the checked-i
 
 ## Site used
 
-- site id: `extensions.serp.co`
-- domain: `extensions.serp.co`
-- repo: `serpcompany/extensions.serp.co`
+- site id: `serp.software`
+- domain: `serp.software`
+- repo: deploy target not created yet
 
 ## What this exercised
 
@@ -19,12 +19,10 @@ Proven override points:
 - listing terminology:
   `copy.listingName.*`, `copy.submitLabel`
 - listing route base:
-  `routes.listingBasePath = extension`
+  `routes.listingBasePath = software`
 - GitHub links:
   `social.githubRepoUrl`, `social.githubIssueRepo`, `social.githubIssuesUrl`
-- feature toggle:
-  `features.showNewsletter = false`
-- site-owned network links via `sites/<id>/site-content.ts`
+- sparse site-owned content via `sites/<id>/site-content.ts`
 
 ## Result
 
@@ -34,9 +32,9 @@ That means the current checked-in config model already supports:
 
 - different public listing vocabulary
 - different public listing path prefixes
-- different repo/issue ownership links
-- different site-owned network links
-- per-site feature toggles
+- sparse repo/issue ownership overrides when needed
+- site-owned content modules
+- no deploy target until a real repo exists
 
 ## Important verification nuance
 
@@ -48,7 +46,7 @@ The final public route remap happens later in `scripts/build-site.ts`, when the 
 
 For route-contract verification, check the final artifact instead:
 
-- `dist/sites/<site-id>/extension/...`
+- `dist/sites/<site-id>/software/...`
 - `dist/sites/<site-id>/categories/...`
 - `dist/sites/<site-id>/search/search-index.json`
 - `dist/sites/<site-id>/sitemap-index.xml`

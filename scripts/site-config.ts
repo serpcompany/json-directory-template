@@ -26,6 +26,12 @@ const assetSourceSchema = z.union([
   }),
 ]);
 
+const siteAnalyticsSchema = z
+  .object({
+    gtmId: z.string().regex(/^GTM-[A-Z0-9]+$/).optional(),
+  })
+  .optional();
+
 const listingJsonSourceSchema = z.object({
   kind: z.literal('listing-json'),
   outputPath: z.string().min(1).default('data/listings.json'),
@@ -74,6 +80,7 @@ const featureFlagsSchema = z.object({
 });
 
 const checkedInSiteConfigSchema = z.object({
+  analytics: siteAnalyticsSchema,
   branding: z.object({
     favicon: assetSourceSchema.optional(),
     logo: assetSourceSchema.optional(),
@@ -249,6 +256,7 @@ export function resolveResolvedSiteConfig(siteConfig: CheckedInSiteConfig) {
     docsRouteBasePath: siteConfig.routes.docsBasePath,
     domain: siteConfig.site.domain,
     features: siteConfig.features,
+    gtmId: siteConfig.analytics?.gtmId,
     githubIssueOwner: siteConfig.social.githubIssueOwner,
     githubIssueRepo: siteConfig.social.githubIssueRepo,
     githubIssuesUrl: siteConfig.social.githubIssuesUrl,

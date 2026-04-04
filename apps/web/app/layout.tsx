@@ -22,7 +22,9 @@ import {
   SITE_TAGLINE,
   SITE_URL
 } from '@/lib/seo/seo-config'
+import { resolveGoogleTagManagerId } from '@/lib/google-tag-manager'
 import { siteCopy } from '@/lib/site-copy'
+import { resolveSiteConfig } from '@/lib/site-config'
 
 export const metadata: import('next').Metadata = {
   title: {
@@ -42,7 +44,8 @@ type RootLayoutProps = {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps): Promise<ReactElement> {
-  const gtmId = process.env.NEXT_PUBLIC_GTM_ID
+  const activeSiteConfig = resolveSiteConfig()
+  const gtmId = resolveGoogleTagManagerId(activeSiteConfig)
   const authState = await getHeaderAuthState()
   const allListings = getWebsites()
   const activeCategories = getActiveCategories(allListings)

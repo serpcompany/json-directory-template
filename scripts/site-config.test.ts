@@ -14,33 +14,6 @@ function cloneDefaultSiteConfig() {
 }
 
 describe('loadCheckedInSite', () => {
-  it('loads the checked-in SERP Extensions site config', () => {
-    const config = loadCheckedInSite('extensions.serp.co');
-
-    expect(config.id).toBe('extensions.serp.co');
-    expect(config.content.listingSource.kind).toBe('listing-json');
-    expect(config.site.domain).toBe('extensions.serp.co');
-    expect(config.routes.listingBasePath).toBe('extension');
-    expect(config.content.listingSource.outputPath).toBe('data/listings.json');
-    expect(config.copy).toEqual({
-      categoryLabels: {},
-      docsLabel: 'Docs',
-      listingName: {
-        plural: 'extensions',
-        singular: 'extension',
-      },
-      networkLabel: 'Network',
-      submitLabel: 'Submit an Extension',
-    });
-    expect(config.features.showNewsletter).toBe(false);
-    expect(config.social.githubRepoUrl).toBe(
-      'https://github.com/serpcompany/extensions.serp.co'
-    );
-    expect(config.deploy?.repoUrl).toBe(
-      'https://github.com/serpcompany/extensions.serp.co.git'
-    );
-  });
-
   it('loads the checked-in serpdownloaders.com site config', () => {
     const config = loadCheckedInSite('serpdownloaders.com');
 
@@ -68,6 +41,7 @@ describe('loadCheckedInSite', () => {
     expect(config.features.showGuides).toBe(false);
     expect(config.features.showNewsletter).toBe(true);
     expect(config.features.showProjects).toBe(false);
+    expect(config.analytics?.gtmId).toBe('GTM-M82HC3SC');
     expect(config.deploy?.strategy).toBe('github-pages-repo-sync');
   });
 
@@ -85,7 +59,30 @@ describe('loadCheckedInSite', () => {
     expect(config.copy.submitLabel).toBe('Submit a Product');
     expect(config.copy.docsLabel).toBe('Docs');
     expect(config.copy.networkLabel).toBe('Network');
+    expect(config.analytics?.gtmId).toBe('GTM-M82HC3SC');
     expect(config.features.showNewsletter).toBe(true);
+  });
+
+  it('loads the checked-in serp.software site config without a deploy target', () => {
+    const config = loadCheckedInSite('serp.software');
+
+    expect(config.id).toBe('serp.software');
+    expect(config.content.listingSource.kind).toBe('listing-json');
+    expect(config.site.domain).toBe('serp.software');
+    expect(config.routes.listingBasePath).toBe('software');
+    expect(config.content.listingSource.outputPath).toBe('data/listings.json');
+    expect(config.copy).toEqual({
+      categoryLabels: {},
+      docsLabel: 'Docs',
+      listingName: {
+        plural: 'software',
+        singular: 'software',
+      },
+      networkLabel: 'Network',
+      submitLabel: 'Submit Software',
+    });
+    expect(config.analytics?.gtmId).toBeUndefined();
+    expect(config.deploy).toBeUndefined();
   });
 
   it('loads the checked-in default site config when no site id is provided', () => {
@@ -97,6 +94,7 @@ describe('loadCheckedInSite', () => {
     expect(config.routes.listingBasePath).toBe('listing');
     expect(config.routes.docsBasePath).toBe('docs');
     expect(config.routes.networkBasePath).toBe('network');
+    expect(config.analytics?.gtmId).toBeUndefined();
     expect(config.copy.listingName.singular).toBe('listing');
     expect(config.copy.docsLabel).toBe('Docs');
     expect(config.copy.networkLabel).toBe('Network');
@@ -151,6 +149,30 @@ describe('validateCheckedInSiteConfig', () => {
       ])
     );
   });
+
+  it('rejects invalid GTM container ids', () => {
+    const invalidConfig = cloneDefaultSiteConfig();
+    invalidConfig.analytics = {
+      gtmId: 'UA-INVALID',
+    };
+
+    let error: unknown;
+
+    try {
+      validateCheckedInSiteConfig(invalidConfig);
+    } catch (caughtError) {
+      error = caughtError;
+    }
+
+    expect(error).toBeInstanceOf(ZodError);
+    expect((error as ZodError).issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: ['analytics', 'gtmId'],
+        }),
+      ])
+    );
+  });
 });
 
 describe('resolveSiteArtifactDir', () => {
@@ -158,6 +180,9 @@ describe('resolveSiteArtifactDir', () => {
     expect(
       resolveSiteArtifactDir(loadCheckedInSite('serpdownloaders.com'))
     ).toBe('dist/sites/serpdownloaders.com');
+    expect(resolveSiteArtifactDir(loadCheckedInSite('serp.software'))).toBe(
+      'dist/sites/serp.software'
+    );
   });
 });
 
@@ -170,6 +195,12 @@ describe('buildSiteEnvironment', () => {
       NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'products',
       NEXT_PUBLIC_SITE_ID: 'serpdownloaders.com',
       SITE_ID: 'serpdownloaders.com',
+    });
+    expect(buildSiteEnvironment(loadCheckedInSite('serp.software'))).toEqual({
+      LISTING_ROUTE_BASE_PATH: 'software',
+      NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'software',
+      NEXT_PUBLIC_SITE_ID: 'serp.software',
+      SITE_ID: 'serp.software',
     });
   });
 });
@@ -189,6 +220,7 @@ describe('resolveResolvedSiteConfig', () => {
       description:
         'A collection of tools to help you download anything from anywhere, anytime.',
       domain: 'serpdownloaders.com',
+      gtmId: 'GTM-M82HC3SC',
       githubIssueOwner: 'serpcompany',
       githubIssueRepo: 'json-directory-template',
       id: 'serpdownloaders.com',
@@ -198,6 +230,31 @@ describe('resolveResolvedSiteConfig', () => {
       networkRouteBasePath: 'network',
       publicUrl: 'https://serpdownloaders.com',
       tagline: 'For the people who just like to get down...loading',
+    });
+  });
+
+  it('resolves serp.software into the app-facing site-config shape', () => {
+    expect(resolveResolvedSiteConfig(loadCheckedInSite('serp.software'))).toMatchObject({
+      copy: {
+        listingName: {
+          plural: 'software',
+          singular: 'software',
+        },
+        submitLabel: 'Submit Software',
+      },
+      description:
+        'Discover curated software tools, products, and internet utilities across categories.',
+      domain: 'serp.software',
+      gtmId: undefined,
+      githubIssueOwner: 'serpcompany',
+      githubIssueRepo: 'json-directory-template',
+      id: 'serp.software',
+      docsRouteBasePath: 'docs',
+      listingRouteBasePath: 'software',
+      name: 'SERP Software',
+      networkRouteBasePath: 'network',
+      publicUrl: 'https://serp.software',
+      tagline: 'Curated software directory',
     });
   });
 });

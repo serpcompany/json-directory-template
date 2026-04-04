@@ -1,11 +1,11 @@
 import { defaultSiteConfig } from './site-config.default';
 import { defaultSiteContent } from './site-content.default';
-import { extensionsSerpCoSiteContent } from './extensions.serp.co/site-content';
+import { serpSoftwareSiteContent } from './serp.software/site-content';
 import { serpdownloadersComSiteContent } from './serpdownloaders.com/site-content';
 import type { SiteOwnedContent } from './types';
 
 const siteContentById: Record<string, SiteOwnedContent> = {
-  'extensions.serp.co': extensionsSerpCoSiteContent,
+  'serp.software': serpSoftwareSiteContent,
   'serpdownloaders.com': serpdownloadersComSiteContent,
 };
 

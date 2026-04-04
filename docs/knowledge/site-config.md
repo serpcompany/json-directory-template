@@ -16,7 +16,7 @@ Source-of-truth files:
 
 Site id rule:
 
-- use the site domain as the checked-in site id and folder name when possible, for example `extensions.serp.co` or `serpdownloaders.com`
+- use the site domain as the checked-in site id and folder name when possible, for example `serp.software` or `serpdownloaders.com`
 - domains are usually the most stable identifier across repo, build, and deploy flows
 
 Recommended authoring rule:
