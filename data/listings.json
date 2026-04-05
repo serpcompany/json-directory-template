@@ -55,5 +55,19 @@
     ],
     "slug": "harbor-cloud",
     "website": "https://example.com/cloud"
+  },
+  {
+    "slug": "https-test-badge-verify-surge-sh",
+    "name": "https://test-badge-verify.surge.sh/",
+    "website": "https://test-badge-verify.surge.sh/",
+    "description": "asdf",
+    "content": "adf",
+    "category": "security-identity",
+    "categories": [
+      "security-identity"
+    ],
+    "resourceLinks": [],
+    "publishedAt": "2026-04-05",
+    "featured": false
   }
 ]

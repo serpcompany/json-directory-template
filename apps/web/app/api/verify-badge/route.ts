@@ -153,7 +153,7 @@ export async function POST(req: NextRequest) {
     content: submission.content ?? '',
     category: submission.category,
     categories: [submission.category],
-    resourceLinks: submission.resourceLinks ?? [],
+    resourceLinks: (submission.resourceLinks ?? []).filter(r => r.label.trim() && r.url.trim()),
     publishedAt: new Date().toISOString().slice(0, 10),
     featured: false,
   })
