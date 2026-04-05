@@ -1,0 +1,14 @@
+name: Weekly badge check
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # every Monday 9am UTC
+  workflow_dispatch:       # allow manual trigger
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger badge check
+        run: |
+          curl -f "${{ secrets.SITE_URL }}/api/cron/check-badges?secret=${{ secrets.CRON_SECRET }}" \
+            -H "Accept: application/json"
