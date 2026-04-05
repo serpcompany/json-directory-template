@@ -1,0 +1,6 @@
+<svg width="153" height="44" viewBox="0 0 153 44" xmlns="http://www.w3.org/2000/svg">
+  <rect x="1" y="1" width="151" height="42" rx="5" fill="#1a1a1a" stroke="#333333" stroke-width="1"/>
+  
+  <text x="10" y="18" font-family="system-ui,-apple-system,sans-serif" font-size="9" font-weight="500" fill="#ffffff" opacity="0.8">FEATURED ON</text>
+  <text x="10" y="32" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="700" fill="#eeeeee">SERP Software</text>
+</svg>
