@@ -1,241 +1,109 @@
 # Submission Flow
 
-This document explains the full badge verification submission flow introduced in the
-`badge-verification-submission-flow` epic. It covers how submitters add their sites and
-how directory owners review and publish approved submissions.
+Self-service badge verification flow. Submitters place a badge on their site as proof of intent; the directory verifies the backlink and auto-publishes the listing.
 
 ---
 
-## Overview
+## How it works
 
-The flow replaces the old GitHub-issue-redirect approach with a self-contained API that:
-
-1. Accepts a JSON form submission and returns a unique verification token.
-2. Lets the submitter embed a badge snippet on their site.
-3. Verifies that the badge (containing the token) is reachable on the public web.
-4. Allows the directory owner to promote verified submissions to published listings via CLI.
+1. Submitter fills out `/submit` → POSTs to `/api/submit` → gets a token
+2. Submitter lands on `/submit/verify?token=...` → copies the badge embed snippet
+3. Submitter places the snippet on their site (any public HTML page)
+4. Submitter clicks **Verify Now** → `/api/verify-badge` crawls their page, checks for a backlink to the directory domain
+5. On success: listing is auto-appended to `data/listings.json`, pages are revalidated, submitter sees a link to their live listing
 
 ---
 
-## Generating Badge SVG Assets
+## Submit form fields
 
-Badge SVGs are statically generated from site configs and committed to the repo.  
-Run once after adding a new site config, or whenever branding changes:
+| Field | Required | Notes |
+|---|---|---|
+| Name | ✅ | Listing display name |
+| Website URL | ✅ | Must be a valid URL |
+| Category | ✅ | Single primary category |
+| Short Description | ✅ | One-liner, shown in cards |
+| Full Description | — | Markdown, shown on detail page |
+| Resource Links | — | Up to 5 label+url pairs |
+
+---
+
+## Badge embed snippet
+
+The verify page generates this snippet (domain is resolved at runtime from `window.location.origin`):
+
+```html
+<a href="https://yourdomain.com" target="_blank" title="Featured on Directory Name">
+  <img
+    src="https://yourdomain.com/badge/featured-on-default-light.svg"
+    alt="Featured on Directory Name"
+    data-verify-token="<token>"
+    width="200" height="54"
+  />
+</a>
+```
+
+The `data-verify-token` attribute ties the snippet to the submission. Verification checks for a backlink (`<a href>`) pointing to the directory domain — not the token itself — so entity-encoded or JS-rendered pages still pass.
+
+---
+
+## Verification logic (two-pass)
+
+**Pass 1 — raw HTML + cheerio**
+- Fetches the submitter's URL with `DirectoryVerifier/1.0` user-agent
+- Decodes HTML entities (`&quot;` → `"`)
+- Parses with cheerio, checks `$('a[href*="yourdomain.com"]').length > 0`
+
+**Pass 2 — Playwright headless fallback**
+- Runs only when pass 1 fails
+- Full browser render (`networkidle`), same link check on the live DOM
+- Handles JS-rendered pages and page builders that rewrite HTML
+
+---
+
+## Generating badge SVG assets
+
+Run once after adding a new site config or changing branding:
 
 ```bash
 pnpm generate:badges
 ```
 
-This produces files in `apps/web/public/badge/`:
-
-```
-featured-on-<siteId>-light.svg
-featured-on-<siteId>-dark.svg
-```
-
-The badge images are then publicly served at:
-
-```
-https://<siteUrl>/badge/featured-on-<siteId>-light.svg
-https://<siteUrl>/badge/featured-on-<siteId>-dark.svg
-```
+Writes to `apps/web/public/badge/`:
+- `featured-on-<site-id>-light.svg`
+- `featured-on-<site-id>-dark.svg`
 
 ---
 
-## Submit Form (POST → `/api/submit`)
-
-The `SubmitForm` (`apps/web/components/forms/github-issue-submit-form.tsx`) POSTs
-JSON to `/api/submit`:
-
-```json
-{
-  "name": "My Tool",
-  "website": "https://example.com",
-  "category": "developer-tools",
-  "description": "A longer description of the tool (min 10 chars)."
-}
-```
-
-### What the API does
-
-- Validates the request body with Zod.
-- Derives a **verification token** from the hostname + a short timestamp hash.
-- Writes the pending submission to `data/submissions-pending.json` (idempotent — same
-  token is returned if the website was already submitted).
-- Returns `{ "token": "<token>" }`.
-
-### What happens next
-
-- The browser is navigated to `/submit/verify?token=<token>`.
-
----
-
-## Verify Page (`/submit/verify`)
-
-The verify page (`apps/web/app/submit/verify/page.tsx`) reads `?token` from the URL
-and fetches submission details from `/api/submission?token=<token>`.  
-It then displays:
-
-| Component | Purpose |
-|-----------|---------|
-| `BadgePreview` | Shows a live preview of the light/dark badge image. |
-| `CopySnippet` | Displays the HTML embed snippet for the submitter to paste on their site. |
-| `VerifyButton` | Triggers a POST to `/api/verify-badge` to check the badge is live. |
-
-### Embed snippet format
-
-```html
-<a href="https://<siteUrl>" title="Featured on <siteName>">
-  <img
-    src="https://<siteUrl>/badge/featured-on-<siteId>-light.svg"
-    alt="Featured on <siteName>"
-    data-verify-token="<token>"
-    width="153"
-    height="44"
-  />
-</a>
-```
-
-The `data-verify-token` attribute is what the verify API looks for when it crawls the
-submitter's page.
-
----
-
-## Verify Badge API (`POST /api/verify-badge`)
-
-**Request body:** `{ "token": "<token>" }`
-
-### What it does
-
-1. Looks up the submission in `submissions-pending.json`.
-2. Increments `verifyAttempts` (max 5 before rate-limiting).
-3. Fetches the submitter's website (up to 500 KB, 8 s timeout).
-4. Checks the HTML for `data-verify-token="<token>"`.
-5. **On success** — promotes the submission from `submissions-pending.json` to
-   `submissions-verified.json` (with a `verifiedAt` timestamp) and removes it from
-   pending.
-
-**Response:**
-
-```json
-{ "verified": true,  "message": "Verified! Your submission is now in review." }
-{ "verified": false, "message": "<reason>" }
-```
-
----
-
-## Admin CLI (`scripts/submissions.ts`)
-
-Directory owners manage submissions via:
+## Admin CLI
 
 ```bash
-# List pending (awaiting verification)
-pnpm submissions list-pending
-
-# List verified (awaiting publish)
-pnpm submissions list-verified
-
-# Publish a verified submission → appends to data/listings.json
-pnpm submissions publish <token>
+pnpm submissions list-pending     # view incoming queue
+pnpm submissions list-verified    # view verified, see published status
+pnpm submissions publish <token>  # manually publish a verified submission
 ```
 
-### `publish <token>`
-
-- Reads the verified submission from `data/submissions-verified.json`.
-- Appends a new listing record to `data/listings.json`.
-- Marks the verified submission with a `publishedAt` timestamp.
-- The new listing is immediately picked up by the site on the next build.
+`publish` appends a listing record to `data/listings.json` — use this if you want manual review before publish instead of auto-publish.
 
 ---
 
-## Data Flow Diagram
+## Weekly badge re-check (cron)
 
-```
-Submitter                 API / Next.js              File System
-─────────                 ─────────────              ───────────
+A GitHub Actions workflow runs every Monday at 9am UTC and hits `/api/cron/check-badges`.
 
-[Submit Form]
-      │
-      │  POST /api/submit {name, website, …}
-      │ ─────────────────────────────────────►
-      │                                          write → submissions-pending.json
-      │◄──────────────────────────────────────
-      │  { token }
-      │
-[Verify Page /submit/verify?token=…]
-      │
-      │  GET /api/submission?token=…
-      │ ─────────────────────────────────────►
-      │                                          read  ← submissions-pending.json
-      │◄──────────────────────────────────────
-      │  { name, website }
-      │
-[Paste badge snippet on own site]
-      │
-[Click "Verify badge"]
-      │
-      │  POST /api/verify-badge { token }
-      │ ─────────────────────────────────────►
-      │                         fetch submitter's page
-      │                         check for data-verify-token="<token>"
-      │                                          write → submissions-verified.json
-      │                                          write → submissions-pending.json (remove)
-      │◄──────────────────────────────────────
-      │  { verified: true }
-      │
+**Required GitHub secrets:**
+- `SITE_URL` — your production domain (e.g. `https://yourdomain.com`)
+- `CRON_SECRET` — a random secret string (generate with `openssl rand -hex 32`)
 
-Directory Owner
-───────────────
-
-pnpm submissions list-verified
-                                          read  ← submissions-verified.json
-
-pnpm submissions publish <token>
-                                          write → data/listings.json
-                                          write → submissions-verified.json (publishedAt)
-```
+The endpoint checks every published listing's website for a backlink. Returns a JSON report of which listings are missing the badge. Manual trigger available from the Actions tab.
 
 ---
 
-## Smoke Test
+## Data files
 
-A file-based smoke test (no running server required) can be run with:
+| File | Purpose |
+|---|---|
+| `data/submissions-pending.json` | Submitted, awaiting verification |
+| `data/submissions-verified.json` | Verified, pending or published |
+| `data/listings.json` | Published listings shown on frontend |
 
-```bash
-pnpm test:submission-flow
-```
-
-The test (`scripts/test-submission-flow.ts`):
-
-1. Verifies `generateToken` produces url-safe, unique tokens.
-2. Writes a test pending submission and reads it back.
-3. Checks the in-memory HTML fixture contains / does not contain the token as expected.
-4. Promotes the submission from pending → verified.
-5. Publishes the verified submission to `listings.json`.
-6. Confirms badge SVG assets exist in `apps/web/public/badge/`.
-7. Restores all data files to their pre-test state.
-
----
-
-## Files Involved
-
-| Path | Purpose |
-|------|---------|
-| `apps/web/app/api/submit/route.ts` | POST /api/submit — accepts form data, writes to pending |
-| `apps/web/app/api/submission/route.ts` | GET /api/submission — returns submission details by token |
-| `apps/web/app/api/verify-badge/route.ts` | POST /api/verify-badge — crawls submitter's site |
-| `apps/web/lib/submission-token.ts` | `generateToken(website)` utility |
-| `apps/web/lib/submissions-store.ts` | `readSubmissions` / `writeSubmissions` helpers |
-| `apps/web/components/forms/github-issue-submit-form.tsx` | Submit form (POSTs to API) |
-| `apps/web/components/verify/BadgePreview.tsx` | Badge image preview |
-| `apps/web/components/verify/CopySnippet.tsx` | Embed snippet display + copy button |
-| `apps/web/components/verify/VerifyButton.tsx` | Triggers POST /api/verify-badge |
-| `apps/web/app/submit/verify/page.tsx` | Full verify page |
-| `apps/web/public/badge/` | Generated badge SVG assets |
-| `sites/submission-schema.ts` | Zod schemas + TypeScript types |
-| `data/submissions-pending.json` | Pending submissions store |
-| `data/submissions-verified.json` | Verified submissions store |
-| `data/listings.json` | Published listings (append-only from CLI) |
-| `scripts/generate-badges.ts` | Badge SVG generator |
-| `scripts/submissions.ts` | Admin CLI |
-| `scripts/test-submission-flow.ts` | Smoke test |
+All three are committed to the repo. Real submission data should live on a private branch.
