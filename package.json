@@ -25,6 +25,7 @@
     "validate:sites": "pnpm tsx scripts/validate-active-sites.ts",
     "deploy": "pnpm deploy:site",
     "deploy:site": "pnpm tsx scripts/deploy-site.ts",
+    "generate:badges": "tsx scripts/generate-badges.ts",
     "generate:llms": "pnpm --filter generator start",
     "generate:website": "turbo gen website",
     "postinstall": "manypkg fix",
