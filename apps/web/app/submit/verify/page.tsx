@@ -81,9 +81,7 @@ export default function VerifyPage() {
   }
 
   const { data } = loadState;
-  const { id: siteId, name: siteName, publicUrl } = siteConfig;
-  // Strip protocol from publicUrl for use in embed href
-  const siteUrl = publicUrl.replace(/^https?:\/\//, '');
+  const { id: siteId, name: siteName } = siteConfig;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -144,8 +142,8 @@ export default function VerifyPage() {
           <CopySnippet
             token={token}
             siteId={siteId}
-            siteUrl={siteUrl}
             siteName={siteName}
+            theme={theme}
           />
         </section>
 

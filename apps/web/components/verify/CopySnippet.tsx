@@ -1,20 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Check, Copy } from 'lucide-react';
 
 interface CopySnippetProps {
   token: string;
   siteId: string;
-  siteUrl: string;
   siteName: string;
+  theme?: 'light' | 'dark';
 }
 
-export function CopySnippet({ token, siteId, siteUrl, siteName }: CopySnippetProps) {
+export function CopySnippet({ token, siteId, siteName, theme = 'light' }: CopySnippetProps) {
   const [copied, setCopied] = useState(false);
+  const [origin, setOrigin] = useState('');
 
-  const snippet = `<a href="https://${siteUrl}" title="Featured on ${siteName}">
-  <img src="https://${siteUrl}/badge/featured-on-${siteId}-light.svg" alt="Featured on ${siteName}" data-verify-token="${token}" width="153" height="44" />
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+
+  const baseUrl = origin || 'https://your-site.com';
+  const snippet = `<a href="${baseUrl}" target="_blank" title="Featured on ${siteName}">
+  <img src="${baseUrl}/badge/featured-on-${siteId}-${theme}.svg" alt="Featured on ${siteName}" data-verify-token="${token}" width="200" height="54" />
 </a>`;
 
   function handleCopy() {

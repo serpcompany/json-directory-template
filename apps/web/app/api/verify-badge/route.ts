@@ -1,57 +1,22 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { readSubmissions, writeSubmissions } from '../../../lib/submissions-store';
+import * as cheerio from 'cheerio';
+import { decode } from 'html-entities';
+import { siteConfig } from '@/lib/site-config';
+import { readSubmissions, writeSubmissions } from '@/lib/submissions-store';
 
 const MAX_BODY_BYTES = 500 * 1024; // 500 KB
 
-export async function POST(req: NextRequest) {
-  let token: string | undefined;
+// ── helpers ────────────────────────────────────────────────────────────────────
+
+/** Fetch page HTML, capped at MAX_BODY_BYTES. Returns null on network error. */
+async function fetchHtml(url: string): Promise<string | null> {
   try {
-    const body = (await req.json()) as Record<string, unknown>;
-    token = typeof body.token === 'string' ? body.token : undefined;
-  } catch {
-    return NextResponse.json({ verified: false, message: 'Invalid request body' }, { status: 400 });
-  }
-
-  if (!token) {
-    return NextResponse.json({ verified: false, message: 'Missing token' }, { status: 400 });
-  }
-
-  const pending = await readSubmissions('pending');
-  const submission = pending.find((s) => s.token === token);
-
-  if (!submission) {
-    return NextResponse.json({ verified: false, message: 'Submission not found' }, { status: 404 });
-  }
-
-  if (submission.verifyAttempts >= 5) {
-    return NextResponse.json(
-      { verified: false, message: 'Too many attempts. Contact support.' },
-      { status: 429 },
-    );
-  }
-
-  // Increment attempt count before fetching
-  await writeSubmissions(
-    'pending',
-    pending.map((s) => (s.token === token ? { ...s, verifyAttempts: s.verifyAttempts + 1 } : s)),
-  );
-
-  // Fetch submitter's page with size limit
-  let html: string;
-  try {
-    const res = await fetch(submission.website, {
+    const res = await fetch(url, {
       signal: AbortSignal.timeout(8000),
       headers: { 'User-Agent': 'DirectoryVerifier/1.0' },
     });
-
-    // Read at most 500 KB to avoid memory issues
     const reader = res.body?.getReader();
-    if (!reader) {
-      return NextResponse.json({
-        verified: false,
-        message: "Couldn't reach your site. Make sure it's publicly accessible and try again.",
-      });
-    }
+    if (!reader) return null;
 
     const chunks: Uint8Array[] = [];
     let bytesRead = 0;
@@ -68,44 +33,107 @@ export async function POST(req: NextRequest) {
         chunks.push(value);
       }
     }
-
-    const combined = new Uint8Array(chunks.reduce((acc, c) => acc + c.byteLength, 0));
+    const combined = new Uint8Array(chunks.reduce((n, c) => n + c.byteLength, 0));
     let offset = 0;
-    for (const chunk of chunks) {
-      combined.set(chunk, offset);
-      offset += chunk.byteLength;
-    }
-    html = new TextDecoder().decode(combined);
+    for (const c of chunks) { combined.set(c, offset); offset += c.byteLength; }
+    return new TextDecoder().decode(combined);
   } catch {
+    return null;
+  }
+}
+
+interface VerifyResult {
+  hasBacklink: boolean;
+  hasToken: boolean;
+}
+
+/** Pass 1 — raw HTML + cheerio (handles entity-encoded attributes too). */
+function checkRawHtml(html: string, domain: string, token: string): VerifyResult {
+  // Decode entities so &quot; → " before cheerio parses
+  const decoded = decode(html);
+  const $ = cheerio.load(decoded);
+
+  const hasBacklink = $(`a[href*="${domain}"]`).length > 0;
+  const hasToken = $(`[data-verify-token="${token}"]`).length > 0;
+  return { hasBacklink, hasToken };
+}
+
+/** Pass 2 — headless Playwright for JS-rendered pages. */
+async function checkRenderedDom(url: string, domain: string, token: string): Promise<VerifyResult> {
+  try {
+    const { chromium } = await import('playwright');
+    const browser = await chromium.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.goto(url, { waitUntil: 'networkidle', timeout: 15000 });
+
+    const hasBacklink = (await page.locator(`a[href*="${domain}"]`).count()) > 0;
+    const hasToken = (await page.locator(`[data-verify-token="${token}"]`).count()) > 0;
+
+    await browser.close();
+    return { hasBacklink, hasToken };
+  } catch {
+    return { hasBacklink: false, hasToken: false };
+  }
+}
+
+// ── route ──────────────────────────────────────────────────────────────────────
+
+export async function POST(req: NextRequest) {
+  let token: string | undefined;
+  try {
+    const body = (await req.json()) as Record<string, unknown>;
+    token = typeof body.token === 'string' ? body.token : undefined;
+  } catch {
+    return NextResponse.json({ verified: false, message: 'Invalid request body' }, { status: 400 });
+  }
+
+  if (!token) {
+    return NextResponse.json({ verified: false, message: 'Missing token' }, { status: 400 });
+  }
+
+  const pending = await readSubmissions('pending');
+  const submission = pending.find((s) => s.token === token);
+  if (!submission) {
+    return NextResponse.json({ verified: false, message: 'Submission not found' }, { status: 404 });
+  }
+
+
+  // Use request origin in dev/staging; fall back to configured domain in prod
+  const requestOrigin = req.headers.get('origin') || req.nextUrl.origin;
+  const domain = requestOrigin.replace(/^https?:\/\//, '').replace(/:\d+$/, '') || siteConfig.domain;
+
+  // Pass 1: raw HTML
+  const html = await fetchHtml(submission.website);
+  if (!html) {
     return NextResponse.json({
       verified: false,
       message: "Couldn't reach your site. Make sure it's publicly accessible and try again.",
     });
   }
 
-  // Check for verification token in HTML
-  const tokenPresent = html.includes(`data-verify-token="${token}"`);
-  if (!tokenPresent) {
+  let result = checkRawHtml(html, domain, token);
+
+  // Pass 2: rendered DOM fallback (only if raw HTML check failed)
+  if (!result.hasBacklink) {
+    result = await checkRenderedDom(submission.website, domain, token);
+  }
+
+  if (!result.hasBacklink) {
     return NextResponse.json({
       verified: false,
-      message:
-        'Badge not found on your site. Make sure the snippet is placed on a publicly visible page.',
+      message: `Backlink to ${domain} not found on your site. Add the badge snippet to a publicly visible page and try again.`,
     });
   }
 
-  // Promote to verified: add to verified list and remove from pending
+  // Promote to verified
   try {
     const verifiedList = await readSubmissions('verified');
     await writeSubmissions('verified', [
       ...verifiedList,
       { ...submission, verifiedAt: new Date().toISOString() },
     ]);
-    // Re-read pending to avoid race with the incremented attempt count we wrote above
     const latestPending = await readSubmissions('pending');
-    await writeSubmissions(
-      'pending',
-      latestPending.filter((s) => s.token !== token),
-    );
+    await writeSubmissions('pending', latestPending.filter((s) => s.token !== token));
   } catch {
     return NextResponse.json(
       { verified: false, message: 'An unexpected error occurred. Please try again.' },
