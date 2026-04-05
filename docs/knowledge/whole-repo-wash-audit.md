@@ -39,7 +39,7 @@ Legacy or intentionally parked material that should stay clearly marked rather t
 | Root operator instructions | `CLAUDE.md` still contains `llmstxt` scaffolding markers | `MVP-now` | This is an active operator-facing file and it signals stale repo assumptions | Replace the old scaffold with repo-appropriate guidance or remove it if no longer needed |
 | Planning docs | `docs/PLAN.md`, `docs/IMPLEMENTATION_TRACKER.md`, and the QA checklist were still describing a past branch-era pass | `MVP-now` | The closeout queue was no longer trustworthy | Reset the docs first, then keep them in sync with issue/project state |
 | Active end-to-end tests | `apps/e2e/tests/*.spec.ts` still assert `/websites` routes and the old `thedaviddias/llms-txt-hub` issue target in places | `MVP-now` | Tests can silently lock the repo to stale public behavior | Review each assertion and keep only the ones that are still intentional |
-| Active workflow/test assumptions around legacy source paths | `lefthook.yml`, `README.md`, `data/README.md`, and some tests still reference `packages/content/data/websites/**` | `MVP-now` | The repo already treats that corpus as legacy/reference, so active workflow guidance must be consistent | Clean active docs/checks that still frame the legacy corpus as the main authoring path |
+| Active workflow/test assumptions around legacy source paths | `.github/workflows/pr-review.yml`, `.github/labeler.yml`, `scripts/pr-triage.ts`, `scripts/check-frontmatter.ts`, and some tests still reference `packages/content/data/websites/**` | `MVP-now` | The repo already treats that corpus as legacy/reference, so active workflow guidance must be consistent | Clean active docs/checks that still frame the legacy corpus as the main authoring path |
 | Favorites browser storage key | `apps/web/contexts/favorites-context.tsx` still uses `llms-txt-hub-favorites` | `post-MVP` | This is user-stateful and should not be renamed silently during closeout | Keep the current key for compatibility and plan an explicit migration if we ever rename it |
 | Monorepo root discovery helper | `packages/utils/content-paths.ts` still walks upward until it finds `llms-txt-hub` | `internal-only` | This can block later repo/package renames and is too risky for an ad hoc cleanup | Refactor the helper to use a repo-neutral marker before any root package rename |
 | Workspace package namespace | active packages and imports still use `@thedaviddias/*` | `internal-only` | This is broad internal naming residue with high blast radius | Classify package-by-package and only rename with a dedicated migration plan |
@@ -70,8 +70,9 @@ Legacy or intentionally parked material that should stay clearly marked rather t
 ## Downstream issue mapping
 
 - `#43` should own this audit and the closeout ordering
-- `#41` should stay downstream of the wash pass and be retitled to `serp.software`
-- `#42` should stay after the next proof-site pass unless taxonomy becomes the blocker
+- `#47` should own the active workflow/test cleanup for legacy website-authoring assumptions
+- `#48` should follow `#47` for the remaining default-site closeout verification
+- `#42` should stay after the remaining closeout pass unless taxonomy becomes the blocker
 - `#39` should move to the later architecture/spec lane
 
 ## Verification notes for this audit

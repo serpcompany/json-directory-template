@@ -19,8 +19,14 @@ jobs:
       - name: Install
         uses: ./.github/actions/install
 
-      - name: Check Frontmatter
-        run: pnpm check:frontmatter
+      - name: Validate default site
+        run: pnpm validate:site -- --site default
+
+      - name: Validate serpdownloaders.com site
+        run: pnpm validate:site -- --site serpdownloaders.com
+
+      - name: Validate serp.software site
+        run: pnpm validate:site -- --site serp.software
 
       - name: Run Biome Check
         uses: mongolyy/reviewdog-action-biome@v2

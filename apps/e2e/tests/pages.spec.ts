@@ -40,14 +40,6 @@ test.describe('Main Pages', () => {
     await expect(page.getByText(/prefilled github issue/i)).toBeVisible()
   })
 
-  test('legacy routes redirect to the homepage directory', async ({ page }) => {
-    await page.goto('/websites')
-    await expect(page).toHaveURL(/\/$/)
-
-    await page.goto('/news')
-    await expect(page).toHaveURL(/\/$/)
-  })
-
   test('disabled optional routes should not be publicly available by default', async ({ page }) => {
     const disabledRoutes = ['/login', '/account', '/favorites', '/docs', '/posts', '/network'] as const
 

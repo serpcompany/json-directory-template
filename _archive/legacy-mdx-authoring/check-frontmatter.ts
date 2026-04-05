@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import chalk from 'chalk'
 import yaml from 'js-yaml'
-import type { WebsiteMetadata } from '../apps/web/lib/mdx'
+import type { WebsiteMetadata } from '../../apps/web/lib/mdx'
 
 const websitesDirectory = path.join(process.cwd(), 'packages/content/data/websites')
 

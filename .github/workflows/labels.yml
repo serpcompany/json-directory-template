@@ -20,52 +20,7 @@ jobs:
               {
                 name: 'area:content',
                 color: '0E8A16',
-                description: 'Touches content website entries or generated website data.'
-              },
-              {
-                name: 'lane:mdx-fast',
-                color: '1D76DB',
-                description: 'Eligible for the MDX auto-merge fast lane.'
-              },
-              {
-                name: 'lane:standard',
-                color: '5319E7',
-                description: 'Requires standard human review.'
-              },
-              {
-                name: 'lane:blocked',
-                color: 'B60205',
-                description: 'Blocked from fast-lane processing.'
-              },
-              {
-                name: 'status:blocked',
-                color: 'D93F0B',
-                description: 'Needs manual intervention before review.'
-              },
-              {
-                name: 'risk:low',
-                color: '0E8A16',
-                description: 'Low-risk change based on deterministic intake rules.'
-              },
-              {
-                name: 'risk:high',
-                color: 'B60205',
-                description: 'High-risk or mixed change based on deterministic intake rules.'
-              },
-              {
-                name: 'generated:listings-json',
-                color: 'FBCA04',
-                description: 'Touches generated data/listings.json.'
-              },
-              {
-                name: 'needs:generated-file-review',
-                color: 'D876E3',
-                description: 'Manual review required because data/listings.json was changed outside automation.'
-              },
-              {
-                name: 'automerge:candidate',
-                color: '0E8A16',
-                description: 'Eligible for auto-merge after required checks pass.'
+                description: 'Touches active listing-entry source files such as data/listings.json or sites/**/products.json.'
               }
             ]
 

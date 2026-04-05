@@ -16,7 +16,6 @@ import { resolveFromRoot } from './server-utils';
 let allGuides: any[] = [];
 let allLegals: any[] = [];
 let allResources: any[] = [];
-let allWebsites: any[] = [];
 let allDocs: any[] = [];
 let allAboutPages: any[] = [];
 let allJsonWebsites: any[] = [];
@@ -26,7 +25,6 @@ try {
   allGuides = collections.allGuides || [];
   allLegals = collections.allLegals || [];
   allResources = collections.allResources || [];
-  allWebsites = collections.allWebsites || [];
   allDocs = collections.allDocs || [];
   allAboutPages = collections.allAboutPages || [];
 } catch {
@@ -46,32 +44,10 @@ try {
 const collectionGuides = allGuides;
 const collectionLegals = allLegals;
 const collectionResources = allResources;
-const collectionWebsites = allWebsites;
 const collectionDocs = allDocs;
 const collectionAboutPages = allAboutPages;
 
 // Define types compatible with content-collections schema
-interface Website {
-  slug: string;
-  name: string;
-  description: string;
-  website: string;
-  category: string;
-  categories?: string[];
-  publishedAt: string;
-  entityType?: string;
-  isUnofficial?: boolean;
-  priority?: WebsitePriority;
-  featured?: boolean;
-  media?: WebsiteMedia;
-  content?: string;
-  resourceLinks?: WebsiteResourceLink[];
-  relatedWebsites?: WebsiteMetadata[];
-  previousWebsite?: WebsiteMetadata | null;
-  nextWebsite?: WebsiteMetadata | null;
-  _meta?: ContentMeta;
-}
-
 interface Guide {
   slug: string;
   title: string;
@@ -259,53 +235,13 @@ export interface AboutPageMetadata {
  * @returns Array of website metadata
  */
 export function getWebsites(): WebsiteMetadata[] {
-  if (Array.isArray(allJsonWebsites) && allJsonWebsites.length > 0) {
-    const parsedJsonWebsites = parseJsonWebsiteEntries(allJsonWebsites);
-
-    return parsedJsonWebsites.map(normalizeJsonWebsite).sort((a, b) => {
-      return (
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-      );
-    });
-  }
-
-  if (!collectionWebsites || collectionWebsites.length === 0) {
+  if (!Array.isArray(allJsonWebsites) || allJsonWebsites.length === 0) {
     return [];
   }
 
-  // Ensure each website has a valid slug
-  const websitesWithSlugs = collectionWebsites.map((website: Website) => {
-    const categories = getListingCategories(website);
+  const parsedJsonWebsites = parseJsonWebsiteEntries(allJsonWebsites);
 
-    // If website already has a valid slug, use it
-    if (website.slug && typeof website.slug === 'string') {
-      return {
-        ...website,
-        category: categories[0] || website.category,
-        categories,
-      };
-    }
-
-    // Derive slug from _meta.path, _meta.fileName, or name (in priority order)
-    const slug =
-      website._meta?.path ||
-      website._meta?.fileName?.replace(/\.mdx$/, '') ||
-      website.name
-        ?.toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/--+/g, '-') ||
-      '';
-
-    return {
-      ...website,
-      category: categories[0] || website.category,
-      categories,
-      slug,
-    };
-  });
-
-  return websitesWithSlugs.sort((a: Website, b: Website) => {
+  return parsedJsonWebsites.map(normalizeJsonWebsite).sort((a, b) => {
     return (
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
@@ -319,7 +255,7 @@ export function getWebsites(): WebsiteMetadata[] {
  * @returns Website with content and navigation, or null if not found
  */
 export async function getWebsiteBySlug(slug: string) {
-  const websites = getWebsites(); // Use the enhanced function that ensures slugs
+  const websites = getWebsites();
 
   if (websites.length === 0) {
     return null;

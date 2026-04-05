@@ -1,38 +1,9 @@
 import { defineCollection, defineConfig } from '@content-collections/core'
 
 // Paths will resolve from the project root
-const websitesPath = '../../packages/content/data/websites'
 const guidesPath = '../../packages/content/data/guides'
 const resourcesPath = '../../packages/content/data/resources'
 const legalPath = '../../packages/content/data/legal'
-
-const websites = defineCollection({
-  name: 'Website',
-  directory: websitesPath,
-  include: '**/*.mdx',
-  computedFields: {
-    slug: {
-      type: 'string',
-      resolve: doc => doc._raw.sourceFileName.replace(/\.mdx$/, '')
-    }
-  },
-  schema: z => ({
-    name: z.string(),
-    description: z.string(),
-    website: z.string().url(),
-    category: z.string(),
-    publishedAt: z.string(),
-    isUnofficial: z.boolean().optional().default(false),
-    resourceLinks: z
-      .array(
-        z.object({
-          label: z.string(),
-          url: z.string().url()
-        })
-      )
-      .optional()
-  })
-})
 
 const guides = defineCollection({
   name: 'Guide',
@@ -103,5 +74,5 @@ const legal = defineCollection({
 })
 
 export default defineConfig({
-  collections: [websites, guides, resources, legal]
+  collections: [guides, resources, legal]
 })

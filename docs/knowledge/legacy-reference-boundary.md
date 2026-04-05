@@ -8,6 +8,7 @@ This note classifies the deferred legacy/reference areas so the active starter s
 | -------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------- |
 | `README.md`                                                    | Rewrite                         | The repo root README should explain the current starter, not the old llms listing corpus.         |
 | `packages/content/data/websites/**`                            | Keep as reference-only          | Not the active source of truth; keep only as migration/reference material for now.                |
+| `_archive/legacy-mdx-authoring/**`                            | Keep as reference-only          | Archived MDX intake workflows, helper scripts, and repo-policy tests from the old community flow. |
 | `apps/e2e/tests/**`                                            | Keep active                     | The E2E package is still part of the repo workflow and remains the active Playwright source area. |
 | `apps/e2e/playwright-report/**` and `apps/e2e/test-results/**` | Move to archive                 | Generated artifacts do not belong in the active package tree.                                     |
 | `websites/**`                                                  | Move to archive / mark inactive | No longer part of the active starter pipeline.                                                    |
@@ -28,6 +29,7 @@ Treat these as active starter inputs:
 Treat these as legacy/reference-only unless a future doc changes the contract:
 
 - `packages/content/data/websites/**`
+- `_archive/legacy-mdx-authoring/**`
 - `websites/**`
 - `_archive/**`
 

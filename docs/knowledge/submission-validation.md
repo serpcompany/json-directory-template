@@ -7,8 +7,8 @@ That means the active path is:
 1. a visitor submits through `/submit`
 2. the app sends them to a prefilled GitHub issue
 3. a maintainer reviews the issue
-4. if accepted, the maintainer opens or updates a PR that edits `data/listings.json`
-5. CI validates that checked-in listing data before merge
+4. if accepted, the maintainer opens or updates a PR that edits the active checked-in listing source
+5. CI validates the active checked-in site data before merge
 
 ## Active validation strategy
 
@@ -16,6 +16,7 @@ The repo now uses two layers:
 
 - `PR Review`
   - runs the normal repo validation stack on pull requests
+  - validates the active checked-in sites with `pnpm validate:site -- --site <id>`
 - `Validate Listing Data`
   - runs specifically when `data/listings.json` changes on a PR or on `main`
   - executes `pnpm tsx scripts/validate-data.ts data/listings.json`
@@ -24,7 +25,7 @@ This keeps the current strategy explicit:
 
 - GitHub issue intake is the public submission handoff
 - PRs are the reviewable write path
-- `data/listings.json` is the checked-in listing source that must validate before merge
+- the checked-in listing source is `data/listings.json` or `sites/<id>/products.json`, depending on the site's configured adapter
 - this is the current static-starter bridge flow, not the long-term hosted auth/submission architecture
 
 ## What fails early
@@ -42,7 +43,7 @@ This keeps the current strategy explicit:
 If validation fails on a PR:
 
 1. read the failing path and message from the workflow log
-2. fix `data/listings.json`
+2. fix the active checked-in listing source for that site
 3. push the correction to the same PR
 4. wait for `Validate Listing Data` to pass
 

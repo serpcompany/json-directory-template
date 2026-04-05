@@ -21,6 +21,7 @@
 - `pnpm validate:site -- --site <id>` now rejects unknown category slugs up front and reports the active category set derived from real listing data.
 - Public category pages and category navigation should only come from categories that actually have attached listings; empty taxonomy buckets should not generate pages or nav links.
 - Treat `packages/content/data/websites/**` as legacy/reference website content unless and until a future migration path is formalized.
+- The old MDX-intake helpers and workflows now live under `_archive/legacy-mdx-authoring/**` and are not part of active CI, build, or maintainer scripts.
 
 ## Docs Content
 

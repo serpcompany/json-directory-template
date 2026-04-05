@@ -1,9 +1,5 @@
 area:content:
   - changed-files:
       - any-glob-to-any-file:
-          - 'packages/content/data/websites/**'
-
-generated:listings-json:
-  - changed-files:
-      - any-glob-to-any-file:
           - 'data/listings.json'
+          - 'sites/**/products.json'

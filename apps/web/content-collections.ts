@@ -1,42 +1,12 @@
 import { defineCollection, defineConfig } from '@content-collections/core'
 
 // Paths will resolve from the project root
-const websitesPath = '../../packages/content/data/websites'
 const guidesPath = '../../packages/content/data/guides'
 const resourcesPath = '../../packages/content/data/resources'
 const legalPath = '../../packages/content/data/legal'
 const docsPath = '../../packages/content/data/docs'
 const aboutPath = '../../packages/content/data/about'
 const extensionUpdatesPath = '../../packages/content/data/extension-updates'
-
-const websites = defineCollection({
-  name: 'Website',
-  directory: websitesPath,
-  include: '**/*.mdx',
-  schema: z => ({
-    slug: z.string().optional(),
-    name: z.string(),
-    description: z.string(),
-    website: z.string().url(),
-    category: z.string(),
-    publishedAt: z.string(),
-    isUnofficial: z.boolean().optional().default(false),
-    priority: z.enum(['high', 'medium', 'low']).optional().default('medium'),
-    featured: z.boolean().optional().default(false),
-    resourceLinks: z
-      .array(
-        z.object({
-          label: z.string(),
-          url: z.string().url()
-        })
-      )
-      .optional()
-  }),
-  transform: document => ({
-    ...document,
-    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, '')
-  })
-})
 
 const guides = defineCollection({
   name: 'Guide',
@@ -178,5 +148,5 @@ const extensionUpdates = defineCollection({
 })
 
 export default defineConfig({
-  collections: [websites, guides, resources, legal, docs, aboutPages, extensionUpdates]
+  collections: [guides, resources, legal, docs, aboutPages, extensionUpdates]
 })

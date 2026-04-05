@@ -40,13 +40,6 @@ test.describe('Basic Page Load Tests', () => {
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   })
 
-  test('legacy listing route alias redirects to the homepage', async ({ page }) => {
-    const response = await page.goto('/websites', { waitUntil: 'domcontentloaded' })
-    expect(response?.status()).toBeLessThan(400)
-
-    await expect(page).toHaveURL(/\/$/)
-  })
-
   test('disabled optional routes do not load on the default site', async ({ page }) => {
     const disabledRoutes = ['/login', '/account', '/favorites', '/docs', '/posts', '/network'] as const
 
