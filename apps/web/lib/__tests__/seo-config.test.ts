@@ -27,19 +27,13 @@ describe('seo-config', () => {
       `${SITE_PUBLIC_URL}/apple-touch-icon.png`
     );
     expect(SITE_LOGO_URL).toBe(`${SITE_PUBLIC_URL}/logo.png`);
-    expect(SITE_TWITTER_HANDLE).toBe(
-      getTwitterHandleFromUrl(siteConfig.twitterUrl)
-    );
+    expect(SITE_TWITTER_HANDLE).toBeNull();
   });
 
   it('uses the configured social URLs in website schema publisher links', () => {
     const schema = generateRootWebsiteSchema();
 
-    expect(schema.publisher.sameAs).toEqual([
-      siteConfig.githubUrl,
-      siteConfig.redditUrl,
-      siteConfig.twitterUrl,
-    ]);
+    expect(schema.publisher.sameAs).toEqual([]);
     expect(schema.publisher.logo.url).toBe(SITE_LOGO_URL);
   });
 

@@ -1,7 +1,15 @@
 import {
-  LISTING_LOGO_FALLBACK_PATH,
+  DEFAULT_SITE_LISTING_LOGO_FALLBACK_PATH,
+  SITE_BRAND_LISTING_LOGO_FALLBACK_PATH,
+  getListingLogoFallbackPath,
   shouldUseProvidedListingLogo,
 } from '@/lib/listing-logo-presentation';
+
+jest.mock('@/lib/site-config', () => ({
+  siteConfig: {
+    id: 'default',
+  },
+}));
 
 describe('listing-logo-presentation', () => {
   it('only treats png logos as preferred provided logos', () => {
@@ -29,7 +37,18 @@ describe('listing-logo-presentation', () => {
     expect(shouldUseProvidedListingLogo(undefined)).toBe(false);
   });
 
-  it('exports the checked-in serp fallback asset path', () => {
-    expect(LISTING_LOGO_FALLBACK_PATH).toBe('/img/serp-arrow-logo-black.svg');
+  it('uses the neutral fallback on the default starter', () => {
+    expect(DEFAULT_SITE_LISTING_LOGO_FALLBACK_PATH).toBe('/placeholder.svg');
+    expect(getListingLogoFallbackPath()).toBe('/placeholder.svg');
+  });
+
+  it('keeps the site-brand fallback available for checked-in proof sites', async () => {
+    const { siteConfig } = await import('@/lib/site-config');
+    siteConfig.id = 'serpdownloaders.com';
+
+    expect(SITE_BRAND_LISTING_LOGO_FALLBACK_PATH).toBe('/logo.png');
+    expect(getListingLogoFallbackPath()).toBe('/logo.png');
+
+    siteConfig.id = 'default';
   });
 });

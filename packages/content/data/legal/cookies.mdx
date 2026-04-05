@@ -1,8 +1,8 @@
 # Cookie Policy
 
-**Last updated: March 22, 2026**
+**Last updated: April 5, 2026**
 
-This Cookie Policy explains how SERP ("we," "us," or "our") uses cookies and similar tracking technologies when you visit our website (serp.co) and related services.
+This Cookie Policy explains how this directory site ("we," "us," or "our") uses cookies and similar tracking technologies when you visit the public site and any configured extensions of the starter.
 
 ## 1. What Are Cookies
 
@@ -19,50 +19,52 @@ Cookies are small text files that are stored on your device (computer, tablet, o
 
 ### 2.1 Essential Cookies
 
-These cookies are necessary for the website to function properly and cannot be disabled:
+Most starter sites do not set login or analytics cookies by default. If you keep the default
+feature flags and do not configure authentication or analytics, the public site works without
+those cookies.
+
+If a site owner enables additional integrations later, that site may add cookies for those
+features and should update this policy to match the real deployment.
+
+These cookies are only relevant when optional authentication is enabled:
 
 | Cookie Name | Purpose | Duration | Type |
 | ----------- | ------- | -------- | ---- |
-| `__clerk_*` | Authentication and session management | Session/30 days | Essential |
+| `next-auth.*` | Optional GitHub sign-in session state | Session/default auth lifetime | Essential |
 
 ### 2.2 Analytics Cookies
 
-We use privacy-focused analytics to understand how visitors use our website:
+This starter does not ship analytics cookies by default.
 
-| Service | Purpose | Data Processing | Opt-Out |
-| ------- | ------- | --------------- | ------- |
-| OpenPanel | Product analytics | Cookieless, no personal data | Browser settings |
-
-**Note**: OpenPanel is privacy-focused and does not use tracking cookies or collect personal data.
+If a site owner later enables analytics, they should update this section to document the actual
+provider and consent behavior.
 
 ### 2.3 Local Storage (Not Cookies)
 
 We use browser local storage (not cookies) to enhance your experience:
 
-| Storage Key | Purpose | Duration | Type |
-| ----------- | ------- | -------- | ---- |
-| `llms-hub-favorites` | Store your favorite websites locally | Until manually cleared | Local Storage |
-| `websites-show-all` | Remember show all preference | Until manually cleared | Local Storage |
-| `websites-sort-by` | Remember sort preferences | Until manually cleared | Local Storage |
-| `category-sort-by` | Remember category sort preferences | Until manually cleared | Local Storage |
-| `recentSearches` | Store recent search history | Until manually cleared | Local Storage |
+| Stored Preference | Purpose | Duration | Type |
+| ----------------- | ------- | -------- | ---- |
+| `llms-txt-hub-favorites` | Store your saved listings locally | Until manually cleared | Local Storage |
+| `websites-show-all` | Remember whether the directory expands all listings | Until manually cleared | Local Storage |
+| `websites-sort-by` | Remember the default directory sort order | Until manually cleared | Local Storage |
+| `category-sort-by` | Remember category-page sort order | Until manually cleared | Local Storage |
+| `recentSearches` | Store recent search history for autocomplete | Until manually cleared | Local Storage |
 
-**Note**: Local storage data stays on your device and is not sent to our servers. This data persists until you clear your browser data or uninstall the browser.
+**Note**: Local storage data stays on your device and is not sent to our servers. This data persists until you clear your browser data or remove it manually.
 
 ## 3. Cookie Consent
 
 ### 3.1 Essential Cookies
-Essential cookies are automatically enabled as they are necessary for the website to function. These include:
-- Authentication and security cookies
-- Basic functionality cookies
-- User preference cookies
+If optional authentication is enabled for your site, the auth provider may set essential session
+cookies while a user signs in or stays logged in.
+
+The default starter configuration does not enable sign-in.
 
 ### 3.2 Non-Essential Cookies
-For non-essential cookies, we:
-- Provide clear information about their purpose
-- Seek your consent before setting them
-- Allow you to withdraw consent at any time
-- Respect browser "Do Not Track" signals where applicable
+The default starter does not set non-essential analytics or marketing cookies.
+
+If a site owner adds them later, they should document the real provider and consent behavior here.
 
 ## 4. Managing Your Cookie Preferences
 
@@ -85,36 +87,36 @@ You can control cookies through your browser settings:
 
 | Cookie Type | Impact if Disabled |
 | ----------- | ------------------ |
-| Essential (`__clerk_*`) | Cannot log in or maintain sessions |
-| Analytics | No impact on functionality |
+| Essential (`next-auth.*`, if enabled) | Cannot log in or maintain sessions |
+| Analytics | No impact on functionality on the default starter |
 
 ### 4.4 Impact of Clearing Local Storage
 
 | Storage Type | Impact if Cleared |
 | ------------ | ----------------- |
-| Favorites | Will lose all saved favorite websites |
+| Favorites | Will lose all saved favorite listings |
 | Sort/Filter Preferences | Will reset to default sort and filter settings |
 | Recent Searches | Will lose search history and autocomplete suggestions |
 
 ## 5. Third-Party Services
 
-### 5.1 Authentication (Clerk)
-- **Purpose**: User authentication and account management
-- **Cookies Set**: Session and authentication tokens
-- **Data Processing**: User profile and authentication data
-- **Privacy Policy**: [Clerk Privacy Policy](https://clerk.com/privacy)
+### 5.1 Optional Authentication (NextAuth + GitHub)
+- **Purpose**: User authentication when a site owner enables sign-in
+- **Cookies Set**: Session and security cookies managed by the configured auth flow
+- **Data Processing**: Authentication and account-session data
+- **Privacy Policy**: Site owners should link the active auth provider policy when this is enabled
 
-### 5.2 Analytics (OpenPanel)
-- **Purpose**: Product analytics and user behavior insights
-- **Cookies Set**: None (cookieless tracking)
-- **Data Processing**: Anonymized usage statistics only
-- **Privacy Policy**: [OpenPanel Privacy Policy](https://openpanel.dev/privacy)
+### 5.2 Optional Analytics
+- **Purpose**: Usage measurement only when a site owner enables analytics
+- **Cookies Set**: Depends on the configured analytics provider
+- **Data Processing**: Depends on the configured analytics provider
+- **Privacy Policy**: Site owners should document the active provider here
 
-### 5.3 Hosting (Vercel)
-- **Purpose**: Website hosting and performance
-- **Cookies Set**: Performance and security cookies
-- **Data Processing**: Technical logs and performance data
-- **Privacy Policy**: [Vercel Privacy Policy](https://vercel.com/privacy)
+### 5.3 Hosting
+- **Purpose**: Static hosting, security, and performance
+- **Cookies Set**: Depends on the chosen host and CDN
+- **Data Processing**: Technical delivery logs and hosting telemetry
+- **Privacy Policy**: Site owners should link the active host or platform policy
 
 ## 6. International Cookie Laws
 
@@ -167,14 +169,14 @@ When we make significant changes:
 
 ## 9. Contact Us
 
-For questions about our cookie usage:
+For questions about your site's cookie usage:
 
-**Email**: [privacy@serp.co](mailto:privacy@serp.co)
+**Email**: [privacy@example.com](mailto:privacy@example.com)
 **Subject Line**: Cookie Policy Inquiry
 **Response Time**: Within 30 days
 
 For technical issues with cookies:
-**Email**: [support@serp.co](mailto:support@serp.co)
+**Email**: [support@example.com](mailto:support@example.com)
 
 ## 10. Additional Resources
 
@@ -191,6 +193,6 @@ For technical issues with cookies:
 
 ---
 
-**Effective Date**: March 22, 2026
+**Effective Date**: April 5, 2026
 
-This Cookie Policy is effective as of March 22, 2026, and was last updated on March 22, 2026.
+This Cookie Policy is effective as of April 5, 2026, and was last updated on April 5, 2026.

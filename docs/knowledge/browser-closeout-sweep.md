@@ -43,8 +43,8 @@ For `default`, treat these as disabled unless the site config changes:
 - `/posts`
 - `/network`
 
-Legacy aliases such as `/websites` and `/news` may still redirect, but they are not part of the core MVP route set.
-Do not assume `/websites` redirects to `/`; it may redirect to the current checked-in listing base path such as `/listing`.
+Legacy aliases such as `/websites` and `/news` may still exist, but they are not part of the core starter route set.
+Do not treat `/websites` as a required closeout behavior; it now lives in follow-up issue `#52`.
 
 ## Recording outcomes
 

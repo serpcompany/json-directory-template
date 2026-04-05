@@ -61,7 +61,7 @@ Optional temporary intake can live under `tmp/sites/<site-id>/`, but that is scr
 ### 2. Validate
 
 ```bash
-pnpm validate:site -- --site serpdownloaders.com
+pnpm validate:site -- --site your-site-id
 ```
 
 Validation checks:
@@ -74,7 +74,7 @@ Validation checks:
 ### 3. Build
 
 ```bash
-pnpm build:site -- --site serpdownloaders.com
+pnpm build:site -- --site your-site-id
 ```
 
 Build behavior:
@@ -106,7 +106,7 @@ Failure behavior:
 ### 4. Deploy
 
 ```bash
-pnpm deploy:site -- --site serpdownloaders.com
+pnpm deploy:site -- --site your-site-id
 ```
 
 Deploy behavior:

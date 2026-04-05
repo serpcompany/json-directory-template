@@ -20,8 +20,8 @@ jobs:
 
       - uses: ./.github/actions/install
 
-      - name: Build CLI
-        run: pnpm --filter llmstxt-cli build
+      - name: Build publishable package
+        run: pnpm --filter ./packages/cli build
 
       - name: Create Release PR or Publish
         uses: changesets/action@v1

@@ -3,7 +3,7 @@
 import { Globe } from 'lucide-react';
 import { useState } from 'react';
 import {
-  LISTING_LOGO_FALLBACK_PATH,
+  getListingLogoFallbackPath,
   shouldUseProvidedListingLogo,
 } from '@/lib/listing-logo-presentation';
 
@@ -44,8 +44,9 @@ export function FaviconWithFallback({
     );
   }
 
+  const fallbackPath = getListingLogoFallbackPath();
   const imageSrc =
-    shouldUseFallbackLogo || !logoUrl ? LISTING_LOGO_FALLBACK_PATH : logoUrl;
+    shouldUseFallbackLogo || !logoUrl ? fallbackPath : logoUrl;
   const imageAlt = shouldUseFallbackLogo
     ? `${name} fallback logo`
     : `${name} logo`;

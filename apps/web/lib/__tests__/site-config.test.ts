@@ -1,4 +1,9 @@
-import { resolveSiteConfig } from '@/lib/site-config';
+import {
+  getConfiguredSocialLinks,
+  hasConfiguredGitHubIssueTarget,
+  hasConfiguredPublicSocialLinks,
+  resolveSiteConfig,
+} from '@/lib/site-config';
 
 describe('resolveSiteConfig', () => {
   it('loads the checked-in per-site config for serpdownloaders.com', () => {
@@ -115,14 +120,17 @@ describe('resolveSiteConfig', () => {
     expect(config.id).toBe('default');
     expect(config.name).toBe('Directory Starter');
     expect(config.domain).toBe('example.com');
-    expect(config.githubIssueOwner).toBe('serpcompany');
-    expect(config.githubIssueRepo).toBe('json-directory-template');
+    expect(config.githubIssueOwner).toBe('example');
+    expect(config.githubIssueRepo).toBe('directory-starter');
     expect(config.githubIssuesUrl).toBe(
-      'https://github.com/serpcompany/json-directory-template/issues/new/choose'
+      'https://github.com/example/directory-starter/issues/new/choose'
     );
     expect(config.githubRepoUrl).toBe(
-      'https://github.com/serpcompany/json-directory-template'
+      'https://github.com/example/directory-starter'
     );
+    expect(config.githubUrl).toBe('https://github.com/example');
+    expect(config.redditUrl).toBe('https://www.reddit.com/r/directorystarter/');
+    expect(config.twitterUrl).toBe('https://x.com/directorystarter');
     expect(config.gtmId).toBeUndefined();
     expect(config.listingRouteBasePath).toBe('listing');
     expect(config.docsRouteBasePath).toBe('docs');
@@ -137,6 +145,21 @@ describe('resolveSiteConfig', () => {
       networkLabel: 'Network',
       submitLabel: 'Submit a Listing',
     });
+    expect(hasConfiguredGitHubIssueTarget(config)).toBe(false);
+    expect(hasConfiguredPublicSocialLinks(config)).toBe(false);
+    expect(getConfiguredSocialLinks(config)).toEqual([]);
+  });
+
+  it('treats checked-in proof-site socials and issue targets as configured', () => {
+    const config = resolveSiteConfig('serpdownloaders.com');
+
+    expect(hasConfiguredGitHubIssueTarget(config)).toBe(true);
+    expect(hasConfiguredPublicSocialLinks(config)).toBe(true);
+    expect(getConfiguredSocialLinks(config)).toEqual([
+      'https://github.com/serpdownloaders',
+      'https://www.reddit.com/r/serpdownloaders/',
+      'https://x.com/serpapps',
+    ]);
   });
 
   it('rejects removed checked-in site ids explicitly', () => {

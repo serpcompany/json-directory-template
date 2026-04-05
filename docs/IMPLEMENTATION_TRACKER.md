@@ -110,6 +110,27 @@ Notes:
 - Next concrete step:
   keep any future live drift as a fresh follow-up issue instead of leaving `#41` or `#44` open as
   stale blockers.
+- 2026-04-05: The final human-style audit under `#50` found one more immediate starter-surface
+  cleanup bundle before the repo can be treated as a clean template default. Local fixes now
+  neutralize the default sample corpus, hide placeholder GitHub/social surfaces until the starter is
+  configured, keep the default submit flow gated until a real issue target is set, restore a
+  site-aware listing-logo fallback, align the cookie-policy copy to the current runtime, and update
+  the active starter setup docs. The audit also split the remaining residue into follow-up issues
+  `#51` (proof-site/operator contract) and `#52` (legacy public compatibility assumptions).
+- 2026-04-05: Verification for the local `#50` bundle passed with `pnpm validate:listings
+  data/listings.json`, `pnpm test:repo`, `pnpm --filter web exec jest --runInBand
+  lib/__tests__/content-loader.test.ts lib/__tests__/github-issue.test.ts
+  lib/__tests__/listing-logo-presentation.test.ts lib/__tests__/site-config.test.ts`, `pnpm
+  build:site -- --site default`, `pnpm generate-search-index`, and `PLAYWRIGHT_BASE_URL=http://127.0.0.1:4317
+  pnpm --filter e2e exec playwright test tests/smoke.spec.ts tests/pages.spec.ts
+  tests/interactions.spec.ts --project=chromium`.
+- 2026-04-05: Browser verification for the local `#50` bundle used `agent-browser` against the
+  built default artifact on `http://127.0.0.1:4317/`. The homepage now renders the neutral sample
+  listings (`Example API Toolkit`, `Northwind Analytics`, `Harbor Cloud`), no longer exposes
+  placeholder GitHub links in the public chrome, keeps the default submit CTA disabled until the
+  issue target is configured, and renders a built `404.html` that stays on-site instead of pushing
+  the template repo issue flow. The old `/websites` compatibility surface is no longer treated as
+  part of the active starter verification contract; it now belongs to follow-up issue `#52`.
 
 ### Phase 3. Taxonomy and discovery
 
@@ -121,6 +142,19 @@ Notes:
 Acceptance:
 
 - [ ] Taxonomy work is driven by real onboarding/discovery pressure
+
+### Phase 4. Final template cleanliness audit
+
+- [x] Create the audit issue `#50` and split the work into reviewer lanes
+- [x] Record the consolidated findings in
+      [docs/knowledge/final-template-cleanliness-audit.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/final-template-cleanliness-audit.md)
+- [x] File follow-up issue `#51` for proof-site/operator contract cleanup
+- [x] File follow-up issue `#52` for legacy public compatibility cleanup
+- [ ] Publish the immediate `#50` starter-surface cleanup bundle
+
+Acceptance:
+
+- [ ] The active default starter surface is neutral enough to treat remaining residue as explicit follow-up work
 
 ### Later. Storage/runtime expansion
 

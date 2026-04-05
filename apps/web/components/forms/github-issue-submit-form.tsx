@@ -5,6 +5,7 @@ import { buildSubmissionIssueUrl } from '@/lib/github-issue';
 import { getCategoryDisplayName } from '@/lib/category-display';
 import { categories } from '@/lib/categories';
 import { siteCopy } from '@/lib/site-copy';
+import { hasConfiguredGitHubIssueTarget, siteConfig } from '@/lib/site-config';
 import { SubmitFormGuidelines } from './submit-form-guidelines';
 
 interface SubmissionFormState {
@@ -27,6 +28,7 @@ export function GitHubIssueSubmitForm() {
   const [formState, setFormState] =
     useState<SubmissionFormState>(INITIAL_FORM_STATE);
   const listingLabel = siteCopy.listingName.singularTitle;
+  const hasConfiguredIssueTarget = hasConfiguredGitHubIssueTarget(siteConfig);
 
   function updateField<Key extends keyof SubmissionFormState>(
     key: Key,
@@ -53,7 +55,7 @@ export function GitHubIssueSubmitForm() {
   }
 
   const isSubmitDisabled =
-    !formState.name || !formState.website || !formState.category;
+    !hasConfiguredIssueTarget || !formState.name || !formState.website || !formState.category;
 
   return (
     <div className="space-y-8">
@@ -69,6 +71,13 @@ export function GitHubIssueSubmitForm() {
         Submissions are reviewed through GitHub issues so the site can stay
         simple and easy to host.
       </div>
+
+      {!hasConfiguredIssueTarget ? (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-100">
+          Configure the GitHub issue target in <code>sites/site-config.default.ts</code> before
+          enabling starter submissions.
+        </div>
+      ) : null}
 
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="grid gap-6 md:grid-cols-2">

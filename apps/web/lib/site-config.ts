@@ -29,6 +29,15 @@ export type SiteConfig = {
   twitterUrl: string;
 };
 
+const DEFAULT_STARTER_PLACEHOLDER = {
+  githubIssueOwner: 'example',
+  githubIssueRepo: 'directory-starter',
+  githubRepoUrl: 'https://github.com/example/directory-starter',
+  githubUrl: 'https://github.com/example',
+  redditUrl: 'https://www.reddit.com/r/directorystarter/',
+  twitterUrl: 'https://x.com/directorystarter',
+} as const;
+
 export function getTwitterHandleFromUrl(url: string): string | null {
   try {
     const parsedUrl = new URL(url)
@@ -43,6 +52,32 @@ export function getTwitterHandleFromUrl(url: string): string | null {
   } catch {
     return null
   }
+}
+
+export function hasConfiguredGitHubIssueTarget(config: SiteConfig): boolean {
+  return !(
+    config.id === 'default' &&
+    config.githubIssueOwner === DEFAULT_STARTER_PLACEHOLDER.githubIssueOwner &&
+    config.githubIssueRepo === DEFAULT_STARTER_PLACEHOLDER.githubIssueRepo
+  )
+}
+
+export function hasConfiguredPublicSocialLinks(config: SiteConfig): boolean {
+  return !(
+    config.id === 'default' &&
+    config.githubRepoUrl === DEFAULT_STARTER_PLACEHOLDER.githubRepoUrl &&
+    config.githubUrl === DEFAULT_STARTER_PLACEHOLDER.githubUrl &&
+    config.redditUrl === DEFAULT_STARTER_PLACEHOLDER.redditUrl &&
+    config.twitterUrl === DEFAULT_STARTER_PLACEHOLDER.twitterUrl
+  )
+}
+
+export function getConfiguredSocialLinks(config: SiteConfig): string[] {
+  if (!hasConfiguredPublicSocialLinks(config)) {
+    return []
+  }
+
+  return [config.githubUrl, config.redditUrl, config.twitterUrl]
 }
 
 export function resolveSiteConfig(

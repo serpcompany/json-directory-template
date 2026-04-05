@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ModeToggle } from '@/components/mode-toggle';
 import { getRoute } from '@/lib/routes';
 import { siteCopy } from '@/lib/site-copy';
-import { siteConfig } from '@/lib/site-config';
+import { hasConfiguredPublicSocialLinks, siteConfig } from '@/lib/site-config';
 
 type FooterLink = {
   href: string;
@@ -15,6 +15,7 @@ type FooterLink = {
  * Features: Bold typography, refined spacing, clean layout
  */
 export function Footer() {
+  const showSocialLinks = hasConfiguredPublicSocialLinks(siteConfig);
   const directoryLinks: FooterLink[] = [
     {
       href: getRoute('submit'),
@@ -58,33 +59,37 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-1 my-6">
               <ModeToggle />
-              <Link
-                href={siteConfig.githubUrl}
-                className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <SiGithub className="size-5" />
-                <span className="sr-only">GitHub</span>
-              </Link>
-              <Link
-                href={siteConfig.redditUrl}
-                className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <SiReddit className="size-5" />
-                <span className="sr-only">Reddit</span>
-              </Link>
-              <Link
-                href={siteConfig.twitterUrl}
-                className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <SiX className="size-5" />
-                <span className="sr-only">X (Twitter)</span>
-              </Link>
+              {showSocialLinks ? (
+                <>
+                  <Link
+                    href={siteConfig.githubUrl}
+                    className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <SiGithub className="size-5" />
+                    <span className="sr-only">GitHub</span>
+                  </Link>
+                  <Link
+                    href={siteConfig.redditUrl}
+                    className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <SiReddit className="size-5" />
+                    <span className="sr-only">Reddit</span>
+                  </Link>
+                  <Link
+                    href={siteConfig.twitterUrl}
+                    className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <SiX className="size-5" />
+                    <span className="sr-only">X (Twitter)</span>
+                  </Link>
+                </>
+              ) : null}
             </div>
           </div>
           <div className="md:col-span-4 grid grid-cols-1 md:grid-cols-3 gap-8">

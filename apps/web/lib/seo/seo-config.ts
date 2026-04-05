@@ -1,7 +1,12 @@
 import type { Metadata } from 'next'
 import { getRoute } from '@/lib/routes'
 import { siteCopy } from '@/lib/site-copy'
-import { getTwitterHandleFromUrl, siteConfig } from '@/lib/site-config'
+import {
+  getConfiguredSocialLinks,
+  getTwitterHandleFromUrl,
+  hasConfiguredPublicSocialLinks,
+  siteConfig,
+} from '@/lib/site-config'
 
 /**
  * Centralized SEO Configuration
@@ -16,7 +21,9 @@ export const SITE_TAGLINE = siteConfig.tagline
 export const SITE_DESCRIPTION = siteConfig.description
 export const SITE_PUBLIC_URL = siteConfig.publicUrl
 export const SITE_URL = SITE_PUBLIC_URL
-export const SITE_TWITTER_HANDLE = getTwitterHandleFromUrl(siteConfig.twitterUrl)
+export const SITE_TWITTER_HANDLE = hasConfiguredPublicSocialLinks(siteConfig)
+  ? getTwitterHandleFromUrl(siteConfig.twitterUrl)
+  : null
 export const SITE_FAVICON_URL = `${SITE_URL}/favicon.ico`
 export const SITE_APPLE_TOUCH_ICON_URL = `${SITE_URL}/apple-touch-icon.png`
 export const SITE_LOGO_URL = `${SITE_URL}/logo.png`
@@ -254,7 +261,7 @@ export function generateWebsiteSchema() {
         '@type': 'ImageObject',
         url: SITE_LOGO_URL
       },
-      sameAs: [siteConfig.githubUrl, siteConfig.redditUrl, siteConfig.twitterUrl]
+      sameAs: getConfiguredSocialLinks(siteConfig)
     }
   }
 }

@@ -1,8 +1,14 @@
 import { expect, test } from '@playwright/test'
 
 const detailListing = {
-  name: '123Movies Downloader',
-  slug: '123movies-downloader'
+  name: 'Example API Toolkit',
+  slug: 'example-api-toolkit'
+} as const
+
+const searchListing = {
+  hiddenName: 'Harbor Cloud',
+  name: 'Northwind Analytics',
+  query: 'northwind'
 } as const
 
 async function expectUnavailableRoute(page: Parameters<typeof test>[1] extends never ? never : any, path: string) {
@@ -44,10 +50,14 @@ test.describe('Static starter smoke tests', () => {
 
     const directoryRegion = page.getByRole('region', { name: /browse the directory/i })
     const searchInput = directoryRegion.getByPlaceholder(/search the directory/i)
-    await searchInput.fill('123movies')
+    await searchInput.fill(searchListing.query)
 
-    await expect(directoryRegion.getByRole('link', { name: /123Movies Downloader/i })).toBeVisible()
-    await expect(directoryRegion.getByRole('link', { name: /AlphaPorno Downloader/i })).toHaveCount(0)
+    await expect(
+      directoryRegion.getByRole('link', { name: new RegExp(searchListing.name, 'i') })
+    ).toBeVisible()
+    await expect(
+      directoryRegion.getByRole('link', { name: new RegExp(searchListing.hiddenName, 'i') })
+    ).toHaveCount(0)
   })
 
   test('listing detail pages load under the public listing route', async ({ page }) => {
@@ -58,40 +68,21 @@ test.describe('Static starter smoke tests', () => {
     ).toBeVisible()
   })
 
-  test('submit flow redirects to the configured prefilled GitHub issue', async ({ page }) => {
-    let redirectedIssueUrl = ''
-
-    await page.route('https://github.com/**', async route => {
-      redirectedIssueUrl = route.request().url()
-      await route.fulfill({
-        body: '<html><body>stub</body></html>',
-        contentType: 'text/html',
-        status: 200
-      })
-    })
-
+  test('default starter submit flow stays disabled until the GitHub issue target is configured', async ({ page }) => {
     await page.goto('/submit', { waitUntil: 'networkidle' })
 
     const continueButton = page.getByRole('button', { name: /continue on github/i })
 
+    await expect(page.getByText(/configure the github issue target/i)).toBeVisible()
+    await expect(continueButton).toBeDisabled()
+
     await page.getByLabel('Name').fill('Example Project')
     await page.getByLabel('Category').selectOption('developer-tools')
     await page.getByLabel('Listing URL').fill('https://example.com')
-    await expect(continueButton).toBeEnabled()
-    await continueButton.click()
-
-    await expect(page).toHaveURL(
-      /github\.com\/serpcompany\/json-directory-template\/issues\/new/
-    )
-    await expect.poll(() => redirectedIssueUrl).toContain('Submit+Listing%3A+Example+Project')
-    await expect.poll(() => redirectedIssueUrl).toContain('Listing+URL%3A+https%3A%2F%2Fexample.com')
-    await expect.poll(() => redirectedIssueUrl).toContain('Category%3A+developer-tools')
+    await expect(continueButton).toBeDisabled()
   })
 
-  test('legacy aliases still redirect to the supported public surface', async ({ page }) => {
-    await page.goto('/websites', { waitUntil: 'domcontentloaded' })
-    await expect(page).toHaveURL(/\/listing$/)
-
+  test('news alias still redirects to the supported public surface', async ({ page }) => {
     await page.goto('/news', { waitUntil: 'domcontentloaded' })
     await expect(page).toHaveURL(/\/$/)
   })

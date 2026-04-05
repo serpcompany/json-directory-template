@@ -5,16 +5,16 @@ test.describe('User Interactions', () => {
     await page.goto('/')
 
     const searchInput = page.getByRole('textbox').first()
-    await searchInput.fill('123movies')
+    await searchInput.fill('northwind')
     await searchInput.press('Enter')
 
-    await page.waitForURL('**/search?*')
+    await page.waitForURL(/\/search\/?\?.+/)
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-    await expect(page.getByRole('link', { name: /123Movies Downloader/i })).toBeVisible()
+    await expect(page.getByRole('link', { name: /Northwind Analytics/i })).toBeVisible()
   })
 
   test('listing detail pages should allow local favorite toggles', async ({ page }) => {
-    await page.goto('/listing/123movies-downloader')
+    await page.goto('/listing/example-api-toolkit')
 
     const favoriteButton = page.getByRole('button', { name: /add to favorites/i }).first()
     if (await favoriteButton.isVisible()) {
@@ -46,7 +46,7 @@ test.describe('Navigation Interactions', () => {
       const privacyLink = page.getByRole('link', { name: /privacy/i })
       if (await privacyLink.isVisible()) {
         await privacyLink.click()
-        await page.waitForURL('**/legal/privacy')
+        await page.waitForURL(/\/legal\/privacy\/?$/)
         await expect(page).toHaveURL(/\/legal\/privacy/)
       }
     }
@@ -120,9 +120,9 @@ test.describe('Mobile Interactions', () => {
 
       const searchInput = page.getByRole('textbox').first()
       if (await searchInput.isVisible()) {
-        await searchInput.fill('123movies')
+        await searchInput.fill('northwind')
         await searchInput.press('Enter')
-        await expect(page).toHaveURL(/\/search\?.+/, { timeout: 10000 })
+        await expect(page).toHaveURL(/\/search\/?\?.+/, { timeout: 10000 })
       }
     }
   })

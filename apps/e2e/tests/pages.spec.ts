@@ -1,8 +1,13 @@
 import { expect, test } from '@playwright/test'
 
 const detailListing = {
-  name: '123Movies Downloader',
-  slug: '123movies-downloader'
+  name: 'Example API Toolkit',
+  slug: 'example-api-toolkit'
+} as const
+
+const searchListing = {
+  name: 'Northwind Analytics',
+  query: 'northwind'
 } as const
 
 async function expectUnavailableRoute(page: Parameters<typeof test>[1] extends never ? never : any, path: string) {
@@ -75,11 +80,11 @@ test.describe('Listing and Category Pages', () => {
 
 test.describe('Search and Navigation', () => {
   test('search page should work with a query parameter', async ({ page }) => {
-    await page.goto('/search?q=123movies')
+    await page.goto(`/search?q=${searchListing.query}`)
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page.getByRole('textbox').first()).toBeVisible()
-    await expect(page.getByRole('link', { name: /123Movies Downloader/i })).toBeVisible()
+    await expect(page.getByRole('link', { name: new RegExp(searchListing.name, 'i') })).toBeVisible()
   })
 
   test('primary navigation links should work correctly', async ({ page }) => {
@@ -116,15 +121,17 @@ test.describe('Legal Pages', () => {
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page.getByRole('main')).toBeVisible()
+    await expect(page.getByText(/most starter sites do not set login or analytics cookies by default/i)).toBeVisible()
   })
 })
 
 test.describe('Error Pages', () => {
-  test('404 page should display for non-existent routes', async ({ page }) => {
-    const response = await page.goto('/non-existent-page')
+  test('default 404 page stays on-site instead of pointing at the template repo issue flow', async ({ page }) => {
+    await page.goto('/404.html')
 
-    const status = response?.status()
-    expect(status === 404 || status === 200).toBeTruthy()
+    await expect(page.getByRole('heading', { level: 1, name: /page not found/i })).toBeVisible()
+    await expect(page.getByRole('link', { name: /back to homepage/i })).toBeVisible()
+    await expect(page.getByText(/report an issue on github/i)).toHaveCount(0)
   })
 })
 

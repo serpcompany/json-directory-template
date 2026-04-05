@@ -2,7 +2,7 @@ import { SiGithub, SiReddit, SiX } from '@icons-pack/react-simple-icons'
 import { Section } from '@/components/layout/section'
 import { Card } from '@/components/ui/card'
 import { siteCopy } from '@/lib/site-copy'
-import { siteConfig } from '@/lib/site-config'
+import { hasConfiguredPublicSocialLinks, siteConfig } from '@/lib/site-config'
 
 const communities = [
   {
@@ -30,6 +30,10 @@ const communities = [
  * Renders the starter community links section
  */
 export function CommunitiesSection() {
+  if (!hasConfiguredPublicSocialLinks(siteConfig)) {
+    return null
+  }
+
   return (
     <Section
       title="Follow The Project"

@@ -8,6 +8,9 @@ describe('GitHubIssueSubmitForm', () => {
 
     expect(screen.getByRole('heading', { name: /submit a listing/i })).toBeInTheDocument()
     expect(screen.getByText(/reviewed through github issues/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(/before enabling starter submissions\./i, { selector: 'div' })
+    ).toBeInTheDocument()
     expect(screen.getByLabelText(/^name$/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/listing url/i)).toBeInTheDocument()
     expect(screen.getByText(/the main url for the listing you are submitting/i)).toBeInTheDocument()

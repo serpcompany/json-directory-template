@@ -7,6 +7,7 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 - [x] active planning docs point at the current closeout sequence:
   audit -> wash execution -> MVP verification -> `serpdownloaders.com` live proof site ->
   docs/default-site closeout follow-up -> taxonomy follow-up
+- [x] default starter public surfaces now use neutral sample listings and keep placeholder social/submit targets hidden or gated until configured
 - [ ] root metadata/config files no longer leak stale repo or old-brand assumptions
 - [x] active tests/workflows no longer enforce stale route or stale issue-target assumptions unless they are still intentional
 - [x] any intentionally deferred residue is captured in the audit/tracker instead of left implicit
@@ -237,3 +238,22 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
   The only remaining open checklist items are the taxonomy/discovery items already queued under
   `#42` plus internal-only root metadata residue tracked under the `#43` umbrella; `#48` did not
   need a new follow-up issue.
+- 2026-04-05: The final template-cleanliness audit under `#50` replaced the default starter corpus
+  with neutral sample listings, kept neutral social/submit placeholders in config while hiding or
+  gating them in the public starter UI, rewrote the cookie-policy content to match the current
+  runtime, and made listing-logo fallback site-aware: `/placeholder.svg` on the default starter and
+  `/logo.png` for checked-in proof sites.
+- 2026-04-05: `pnpm validate:listings data/listings.json`, `pnpm test:repo`, `pnpm --filter web
+  exec jest --runInBand lib/__tests__/content-loader.test.ts lib/__tests__/github-issue.test.ts
+  lib/__tests__/listing-logo-presentation.test.ts lib/__tests__/site-config.test.ts`, `pnpm
+  build:site -- --site default`, `pnpm generate-search-index`, and `PLAYWRIGHT_BASE_URL=http://127.0.0.1:4317
+  pnpm --filter e2e exec playwright test tests/smoke.spec.ts tests/pages.spec.ts
+  tests/interactions.spec.ts --project=chromium` all passed for the local `#50` bundle.
+- 2026-04-05: `agent-browser` confirmed the built default homepage and built `404.html` on
+  `http://127.0.0.1:4317/`. The homepage now shows `Example API Toolkit`, `Northwind Analytics`,
+  and `Harbor Cloud`, hides the placeholder GitHub chrome on the default starter, leaves the submit
+  CTA disabled until the issue target is configured, and keeps the starter 404 page on-site instead
+  of pushing users to the template repo issue flow.
+- 2026-04-05: The remaining legacy public compatibility work now lives in follow-up issue `#52`.
+  `/websites` is no longer treated as part of the active starter verification contract in the smoke
+  suite or browser closeout sweep.

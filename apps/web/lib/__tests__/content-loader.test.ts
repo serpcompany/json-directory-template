@@ -23,7 +23,7 @@ describe('getWebsites', () => {
     const websites = getWebsites();
 
     expect(websites.length).toBeGreaterThan(0);
-    expect(websites.some((website) => website.slug === '123movies-downloader')).toBe(
+    expect(websites.some((website) => website.slug === 'example-api-toolkit')).toBe(
       true
     );
     expect(

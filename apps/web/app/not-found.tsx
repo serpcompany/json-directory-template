@@ -13,6 +13,8 @@ export const metadata: Metadata = generateBaseMetadata({
 })
 
 export default async function NotFound() {
+  const showIssueLink = siteConfig.id !== 'default'
+
   return (
     <main className="mx-auto relative container flex flex-col items-center justify-center px-4">
       <div className="mx-auto flex h-screen flex-col items-center justify-center">
@@ -24,17 +26,23 @@ export default async function NotFound() {
             Page Not Found
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-center text-base  text-neutral-400">
-            The page you are looking for does not exist. <br /> But don&apos;t worry, we&apos;ve got
-            you covered. You can{' '}
-            <Link
-              href={siteConfig.githubIssuesUrl}
-              className="text-foreground"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              report an issue on GitHub
-            </Link>
-            .
+            The page you are looking for does not exist. <br />
+            {showIssueLink ? (
+              <>
+                But don&apos;t worry, we&apos;ve got you covered. You can{' '}
+                <Link
+                  href={siteConfig.githubIssuesUrl}
+                  className="text-foreground"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  report an issue on GitHub
+                </Link>
+                .
+              </>
+            ) : (
+              <>Try the homepage or one of the starter listings instead.</>
+            )}
           </p>
           <Button asChild className="mt-8">
             <Link href={getRoute('home')}>Back to homepage</Link>

@@ -14,18 +14,9 @@ describe('Footer', () => {
 
     expect(screen.getByText(siteConfig.name)).toBeInTheDocument();
     expect(screen.getByText(siteConfig.tagline)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /GitHub/ })).toHaveAttribute(
-      'href',
-      siteConfig.githubUrl
-    );
-    expect(screen.getByRole('link', { name: /Reddit/ })).toHaveAttribute(
-      'href',
-      siteConfig.redditUrl
-    );
-    expect(screen.getByRole('link', { name: /X.*Twitter/ })).toHaveAttribute(
-      'href',
-      siteConfig.twitterUrl
-    );
+    expect(screen.queryByRole('link', { name: /GitHub/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /Reddit/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /X.*Twitter/ })).not.toBeInTheDocument();
 
     expect(
       screen.queryByRole('link', { name: /all listings/i })

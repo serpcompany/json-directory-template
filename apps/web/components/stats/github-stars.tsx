@@ -3,7 +3,7 @@
 import { SiGithub } from '@icons-pack/react-simple-icons'
 import { StarIcon } from 'lucide-react'
 import Link from 'next/link'
-import { siteConfig } from '@/lib/site-config'
+import { hasConfiguredPublicSocialLinks, siteConfig } from '@/lib/site-config'
 
 interface StarsProps {
   mobileCompact?: boolean
@@ -13,6 +13,10 @@ interface StarsProps {
  * Static GitHub link used in the header without live API fetching.
  */
 export function GithubStars({ mobileCompact = false }: StarsProps) {
+  if (!hasConfiguredPublicSocialLinks(siteConfig)) {
+    return null
+  }
+
   const className = mobileCompact
     ? '!no-underline inline-flex items-center gap-2 h-9 px-3 text-sm font-bold text-muted-foreground hover:text-foreground sm:bg-secondary hover:sm:bg-accent sm:text-foreground sm:rounded-none sm:border sm:border-border hover:sm:border-foreground/20 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
     : '!no-underline inline-flex items-center gap-2 h-9 px-3 bg-secondary hover:bg-accent text-sm font-bold text-foreground rounded-none border border-border hover:border-foreground/20 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'

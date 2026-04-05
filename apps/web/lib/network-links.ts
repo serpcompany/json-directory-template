@@ -1,10 +1,14 @@
 import { siteContent } from '@/lib/site-content'
-import { siteConfig } from '@/lib/site-config'
+import { hasConfiguredPublicSocialLinks, siteConfig } from '@/lib/site-config'
 import type { SiteNetworkLink, SiteOwnedContent } from '../../../sites/types'
 
 export type NetworkLink = SiteNetworkLink
 
 function resolveDefaultNetworkLinks(): NetworkLink[] {
+  if (!hasConfiguredPublicSocialLinks(siteConfig)) {
+    return []
+  }
+
   return [
     {
       description: `Browse the source, starter structure, and build workflow for ${siteConfig.name}.`,

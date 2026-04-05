@@ -6,7 +6,6 @@ on:
     paths:
       - 'data/listings.json'
       - 'sites/**'
-      - 'tmp/**'
       - 'apps/web/**'
       - 'scripts/**'
       - '.github/workflows/build-and-deploy.yml'

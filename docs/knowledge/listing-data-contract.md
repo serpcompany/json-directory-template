@@ -119,7 +119,7 @@ Use this as the rule of thumb:
   Use `product.categories` as the full category list. The first entry becomes the canonical route category when the app needs one.
 - `media`
   Optional structured assets such as a logo, screenshots, or one demo video URL.
-  For the current listing UI, `media.logo` should prefer a checked-in or remote `.png`. Non-`.png`, missing, or broken logos fall back to the checked-in SERP asset at `/img/serp-arrow-logo-black.svg`.
+  For the current listing UI, `media.logo` should prefer a checked-in or remote `.png`. Non-`.png`, missing, or broken logos fall back to the neutral placeholder asset at `/placeholder.svg`.
 - `product.categories`
   Optional ordered list of all categories the listing should belong to. The first category is treated as the canonical route category.
 - `content`

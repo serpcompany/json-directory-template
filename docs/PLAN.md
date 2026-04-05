@@ -8,6 +8,7 @@ Execution tracking lives in:
 
 - [docs/IMPLEMENTATION_TRACKER.md](/Users/devin/dev/repos/json-directory-template/docs/IMPLEMENTATION_TRACKER.md)
 - [docs/knowledge/whole-repo-wash-audit.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/whole-repo-wash-audit.md)
+- [docs/knowledge/final-template-cleanliness-audit.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/final-template-cleanliness-audit.md)
 - [docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md)
 
 ## Locked decisions
@@ -98,6 +99,18 @@ Acceptance:
 
 - [ ] Taxonomy work is tied to real onboarding/discovery needs, not broad speculation
 
+### Phase 5. Final template cleanliness audit
+
+- [x] Run the human-style audit under `#50`
+- [ ] Publish the immediate starter-surface neutrality fixes found in `#50`
+- [x] Split broader residue into explicit follow-up issues instead of leaving it in docs/chat
+- [ ] Close `#50` only after the immediate fixes are verified and the follow-up issues are linked
+
+Acceptance:
+
+- [ ] The active default starter no longer reads like a lightly rebranded OSS clone on the published branch
+- [x] Remaining residue is explicitly tracked in follow-up issues such as `#51` and `#52`
+
 ### Later. Hosted and storage expansion
 
 - [ ] Keep badge/embed generation as a possible static-lane enhancement later
@@ -118,6 +131,9 @@ Acceptance:
 - [x] `#47` retired legacy website-authoring assumptions from active workflows, tests, and docs
 - [x] `#48` closed the remaining `default`-site artifact/deploy/docs closeout verification
 - [ ] `#42` is now the next `Ready` item for taxonomy/discovery follow-up
+- [ ] `#50` is the final post-`#42` audit issue for template cleanliness
+- [x] `#51` tracks the remaining proof-site/operator contract cleanup after `#50`
+- [x] `#52` tracks the remaining legacy public compatibility cleanup after `#50`
 - [x] `#42` stays downstream of the proof-site pass and remaining closeout truth pass unless taxonomy becomes the blocker
 - [x] `#39` is treated as later architecture/spec work, not as the gate in front of MVP closeout
 
