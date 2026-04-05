@@ -6,6 +6,8 @@ export const PendingSubmissionSchema = z.object({
   website: z.string().url(),
   category: z.string(),
   description: z.string(),
+  content: z.string().optional().default(''),
+  resourceLinks: z.array(z.object({ label: z.string(), url: z.string() })).optional().default([]),
   submittedAt: z.string(), // ISO 8601
   verifyAttempts: z.number().default(0),
 });

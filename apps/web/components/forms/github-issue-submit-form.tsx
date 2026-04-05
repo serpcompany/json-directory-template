@@ -9,20 +9,23 @@ import { siteCopy } from '@/lib/site-copy';
 import { hasConfiguredGitHubIssueTarget, siteConfig } from '@/lib/site-config';
 import { SubmitFormGuidelines } from './submit-form-guidelines';
 
+interface ResourceLink { label: string; url: string }
 interface SubmissionFormState {
-  category: string;
-  description: string;
-  name: string;
-  notes: string;
-  website: string;
+  name: string
+  website: string
+  category: string
+  description: string
+  content: string
+  resourceLinks: ResourceLink[]
 }
 
 const INITIAL_FORM_STATE: SubmissionFormState = {
+  name: '',
+  website: '',
   category: '',
   description: '',
-  name: '',
-  notes: '',
-  website: '',
+  content: '',
+  resourceLinks: [{ label: '', url: '' }],
 };
 
 export function GitHubIssueSubmitForm() {
@@ -34,13 +37,36 @@ export function GitHubIssueSubmitForm() {
   const listingLabel = siteCopy.listingName.singularTitle;
   const hasConfiguredIssueTarget = hasConfiguredGitHubIssueTarget(siteConfig);
 
-  function updateField<Key extends keyof SubmissionFormState>(
+  function updateField<Key extends keyof Omit<SubmissionFormState, 'resourceLinks'>>(
     key: Key,
     value: SubmissionFormState[Key]
   ): void {
     setFormState((currentState) => ({
       ...currentState,
       [key]: value,
+    }));
+  }
+
+  function updateResourceLink(index: number, field: keyof ResourceLink, value: string): void {
+    setFormState((currentState) => {
+      const updated = currentState.resourceLinks.map((link, i) =>
+        i === index ? { ...link, [field]: value } : link
+      );
+      return { ...currentState, resourceLinks: updated };
+    });
+  }
+
+  function addResourceLink(): void {
+    setFormState((currentState) => ({
+      ...currentState,
+      resourceLinks: [...currentState.resourceLinks, { label: '', url: '' }],
+    }));
+  }
+
+  function removeResourceLink(index: number): void {
+    setFormState((currentState) => ({
+      ...currentState,
+      resourceLinks: currentState.resourceLinks.filter((_, i) => i !== index),
     }));
   }
 
@@ -58,6 +84,8 @@ export function GitHubIssueSubmitForm() {
           website: formState.website,
           category: formState.category,
           description: formState.description,
+          content: formState.content,
+          resourceLinks: formState.resourceLinks,
         }),
       });
 
@@ -81,12 +109,12 @@ export function GitHubIssueSubmitForm() {
     category: formState.category,
     description: formState.description,
     name: formState.name,
-    notes: formState.notes,
+    notes: formState.content,
     website: formState.website,
   });
 
   const isSubmitDisabled =
-    isSubmitting || !formState.name || !formState.website || !formState.category;
+    isSubmitting || !formState.name || !formState.website || !formState.category || !formState.description;
 
   return (
     <div className="space-y-8">
@@ -150,7 +178,7 @@ export function GitHubIssueSubmitForm() {
           </label>
 
           <label className="space-y-2 md:col-span-2">
-            <span className="text-sm font-medium">{listingLabel} URL</span>
+            <span className="text-sm font-medium">Website URL</span>
             <input
               required
               type="url"
@@ -163,24 +191,67 @@ export function GitHubIssueSubmitForm() {
         </div>
 
         <label className="block space-y-2">
-          <span className="text-sm font-medium">Description</span>
+          <span className="text-sm font-medium">Short Description</span>
           <textarea
+            required
             value={formState.description}
             onChange={(event) => updateField('description', event.target.value)}
-            className="min-h-32 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            placeholder={`A short summary of what this ${siteCopy.listingName.singular} covers and why it is useful.`}
+            className="min-h-24 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            placeholder="One sentence describing what this listing covers."
           />
         </label>
 
         <label className="block space-y-2">
-          <span className="text-sm font-medium">Additional notes</span>
+          <span className="text-sm font-medium">Full Description</span>
           <textarea
-            value={formState.notes}
-            onChange={(event) => updateField('notes', event.target.value)}
-            className="min-h-24 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            placeholder="Optional context for reviewers."
+            value={formState.content}
+            onChange={(event) => updateField('content', event.target.value)}
+            className="min-h-48 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            placeholder="Markdown supported. Describe what makes this listing valuable."
           />
         </label>
+
+        <div className="space-y-3">
+          <span className="text-sm font-medium">Resource Links</span>
+          <p className="text-xs text-muted-foreground">
+            Optional links to docs, demos, or related resources (max 5).
+          </p>
+          {formState.resourceLinks.map((link, index) => (
+            <div key={index} className="flex gap-2">
+              <input
+                type="text"
+                value={link.label}
+                onChange={(e) => updateResourceLink(index, 'label', e.target.value)}
+                className="w-1/3 rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                placeholder="Label"
+              />
+              <input
+                type="url"
+                value={link.url}
+                onChange={(e) => updateResourceLink(index, 'url', e.target.value)}
+                className="flex-1 rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                placeholder="https://example.com/docs"
+              />
+              <button
+                type="button"
+                onClick={() => removeResourceLink(index)}
+                className="inline-flex items-center justify-center rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/50"
+                aria-label="Remove link"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          {formState.resourceLinks.length < 5 && (
+            <button
+              type="button"
+              onClick={addResourceLink}
+              className="text-sm text-primary underline-offset-2 hover:underline"
+            >
+              Add another link
+            </button>
+          )}
+        </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
           <button
@@ -188,7 +259,7 @@ export function GitHubIssueSubmitForm() {
             disabled={isSubmitDisabled}
             className="inline-flex items-center justify-center rounded-none bg-foreground px-6 py-3 text-sm font-bold text-background transition-colors hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isSubmitting ? 'Submitting…' : 'Submit'}
+            {isSubmitting ? 'Submitting…' : 'Submit Listing'}
           </button>
           <button
             type="button"

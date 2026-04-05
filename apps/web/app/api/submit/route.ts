@@ -7,7 +7,12 @@ const SubmitBodySchema = z.object({
   name: z.string().min(1),
   website: z.string().url(),
   category: z.string().min(1),
-  description: z.string().optional().default(''),
+  description: z.string().min(1),
+  content: z.string().optional().default(''),
+  resourceLinks: z.array(z.object({
+    label: z.string(),
+    url: z.string(),
+  })).optional().default([]),
 });
 
 export async function POST(req: NextRequest) {
@@ -23,7 +28,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { name, website, category, description } = parsed.data;
+  const { name, website, category, description, content, resourceLinks } = parsed.data;
   const token = generateToken(website);
 
   const pending = await readSubmissions('pending');
@@ -40,6 +45,8 @@ export async function POST(req: NextRequest) {
     website,
     category,
     description,
+    content,
+    resourceLinks,
     submittedAt: new Date().toISOString(),
     verifyAttempts: 0,
   };
