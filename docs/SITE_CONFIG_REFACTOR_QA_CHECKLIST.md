@@ -5,10 +5,11 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 ## 1. Wash alignment
 
 - [x] active planning docs point at the current closeout sequence:
-  audit -> wash execution -> MVP verification -> `serp.software` proof site -> taxonomy follow-up
+  audit -> wash execution -> MVP verification -> `serpdownloaders.com` live proof site ->
+  docs/default-site closeout follow-up -> taxonomy follow-up
 - [ ] root metadata/config files no longer leak stale repo or old-brand assumptions
-- [ ] active tests/workflows no longer enforce stale route or stale issue-target assumptions unless they are still intentional
-- [ ] any intentionally deferred residue is captured in the audit/tracker instead of left implicit
+- [x] active tests/workflows no longer enforce stale route or stale issue-target assumptions unless they are still intentional
+- [x] any intentionally deferred residue is captured in the audit/tracker instead of left implicit
 
 ## 2. Checked-in site config
 
@@ -59,8 +60,8 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 
 ## 7. Docs and runbooks
 
-- [ ] pipeline docs describe the current checked-in site-config model
-- [ ] the tracker and audit docs reflect the current source-of-truth model
+- [x] pipeline docs describe the current checked-in site-config model
+- [x] the tracker and audit docs reflect the current source-of-truth model
 - [ ] any stale references to removed scripts, old config paths, or legacy source paths are cleaned up or clearly marked reference-only
 
 ## 8. Browser closeout sweep
@@ -70,9 +71,9 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 - [x] verify disabled default routes such as auth, favorites, docs, guides/posts, and network/projects do not stay publicly available
 - [x] verify GTM is absent for sites without checked-in `analytics.gtmId`
 - [x] verify GTM bootstrap + noscript render for `serpdownloaders.com` in production output
-- [ ] capture browser-found copy, branding, redirect, form, and layout issues before calling closeout done
+- [x] capture browser-found copy, branding, redirect, form, and layout issues before calling closeout done
 
-- [ ] homepage loads for `default`
+- [x] homepage loads for `default`
 - [x] homepage loads for `serpdownloaders.com`
 - [x] homepage loads for `serp.software`
 - [x] at least one listing detail page loads for each verified site
@@ -82,9 +83,9 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 
 ## 9. If anything fails
 
-- [ ] capture the exact failing command or page path
-- [ ] note whether it is wash, config, build, artifact, deploy, or UI behavior
-- [ ] update [docs/IMPLEMENTATION_TRACKER.md](/Users/devin/dev/repos/json-directory-template/docs/IMPLEMENTATION_TRACKER.md) before continuing
+- [x] capture the exact failing command or page path
+- [x] note whether it is wash, config, build, artifact, deploy, or UI behavior
+- [x] update [docs/IMPLEMENTATION_TRACKER.md](/Users/devin/dev/repos/json-directory-template/docs/IMPLEMENTATION_TRACKER.md) before continuing
 - [ ] create or update a GitHub issue if the failure should survive beyond the current pass
 
 ## Verification notes
@@ -135,16 +136,17 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
   `/products/123movies-downloader/`. Direct HTML checks against that served build confirmed
   `GTM-M82HC3SC`, `googletagmanager.com`, and `ns.html?id=GTM-M82HC3SC` are present in
   production output.
-- 2026-04-04: Live `serpdownloaders.com` browser pass confirmed the current production site is
-  still on the older contract. `https://serpdownloaders.com/` renders
+- 2026-04-04: Pre-deploy live `serpdownloaders.com` browser pass confirmed the current production
+  site was still on the older contract. `https://serpdownloaders.com/` renders
   `SERP Downloaders Directory of Websites, Tools, and Resources`, not the repo's current
   `Products and Resources` title. `https://serpdownloaders.com/products/123movies-downloader`
   currently resolves to `Page Not Found | SERP Downloaders`, while the local artifact serves
   `/products/123movies-downloader/` successfully.
-- 2026-04-04: Live `https://serpdownloaders.com/robots.txt` still serves the old content-signals
-  file, and live `https://serpdownloaders.com/search/` still renders `Search | Directory Starter`.
-  This confirms the live site has not been aligned to the current repo contract yet.
-- 2026-04-04: Additional live checks confirmed `https://serpdownloaders.com/submit/` and
+- 2026-04-04: Pre-deploy live `https://serpdownloaders.com/robots.txt` still served the old
+  content-signals file, and live `https://serpdownloaders.com/search/` still rendered
+  `Search | Directory Starter`. These drift notes were later superseded by the same-day deploy
+  checks and the April 5 public-domain recheck below.
+- 2026-04-04: Additional pre-deploy live checks confirmed `https://serpdownloaders.com/submit/` and
   `https://serpdownloaders.com/legal/privacy/` both return HTTP 200. Live `sitemap.xml` also
   returns HTTP 200, but it is still the old flat `<urlset>` sitemap rather than the repo's current
   sitemap-index style artifact. Live search is inconsistent across user-facing checks:
@@ -160,7 +162,8 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
   `Sitemap: https://serpdownloaders.com/sitemap-index.xml` after the canonical-entrypoint update),
   but the live domain is still serving the old
   content-signals `robots.txt`. Treat this as a post-deploy propagation/cache mismatch and recheck
-  before filing a permanent follow-up issue.
+  before filing a permanent follow-up issue. This mismatch was resolved on the public domain by the
+  April 5 recheck below.
 - 2026-04-04: Direct app/runtime environments should continue to advertise `sitemap.xml` from
   `robots.txt`; only the finalized static artifact should advertise `sitemap-index.xml`.
 - 2026-04-04: A second deploy pushed commit `6f3ef58` to `serpcompany/serpdownloaders.com` with
@@ -168,5 +171,47 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
   compatibility `sitemap.xml` both return sitemap-index XML, the homepage/product/search routes are
   still aligned, and the target repo `robots.txt` now references
   `https://serpdownloaders.com/sitemap-index.xml`. Live `robots.txt` is still serving the older
-  content-signals file with a cached `last-modified` of `2026-04-04 04:28:39 GMT`, so treat it as
-  an edge-cache lag until the current cache window expires.
+  content-signals file with a cached `last-modified` of `2026-04-04 04:28:39 GMT`; that
+  edge-cache lag was resolved on the public domain by the April 5 recheck below.
+- 2026-04-05: Rechecked the live domain directly. `https://serpdownloaders.com/` still serves the
+  current `Products and Resources` title, `https://serpdownloaders.com/products/123movies-downloader/`
+  still resolves, and `https://serpdownloaders.com/robots.txt` now serves the expected
+  sitemap-index-aware file on the public domain.
+- 2026-04-05: Rechecked the live unversioned root assets. The SHA-256 for
+  `https://serpdownloaders.com/favicon.ico` now matches the query-busted
+  `?v=20260404` variant, and the SHA-256 for `https://serpdownloaders.com/opengraph-image.png`
+  now matches the query-busted `?v=20260404` variant as well. The earlier cache-lag note is no
+  longer the current blocker.
+- 2026-04-05: `pnpm test:repo` passed after replacing the old frontmatter/fast-lane policy tests
+  with `scripts/pr-review-workflow.test.ts`, `scripts/labels-workflow.test.ts`, and the existing
+  `scripts/update-listings-json-workflow.test.ts`.
+- 2026-04-05: `pnpm --filter web exec jest --runInBand lib/__tests__/content-loader.test.ts
+  lib/__tests__/github-issue.test.ts lib/__tests__/site-config.test.ts` passed. The new
+  `content-loader` coverage confirms active listing resolution stays on JSON-backed listing data
+  and does not fall back to the legacy website MDX collection.
+- 2026-04-05: Active workflow/docs cleanup under `#47` now matches the JSON-first maintainer
+  model: `PR Review` validates `default`, `serpdownloaders.com`, and `serp.software`; active label
+  rules only target `data/listings.json` and `sites/**/products.json`; the old MDX-intake scripts
+  and workflows now live under `_archive/legacy-mdx-authoring/**` as reference-only material.
+- 2026-04-05: A targeted residue search still finds broader historical references such as
+  [docs/SITE_CONFIG_INVENTORY.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_INVENTORY.md)
+  and
+  [docs/knowledge/reference-surfaces.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/reference-surfaces.md)
+  that talk about older `/websites` defaults. Leave the docs-cleanup checkbox above open until
+  that wider historical pass is scoped explicitly.
+- 2026-04-05: Local default-site browser verification was attempted for `#47`, but the run was
+  blocked before route checks completed. `agent-browser` required a one-time Chrome install, then
+  `next dev` panicked under Turbopack with `No space left on device (os error 28)` while serving
+  `http://127.0.0.1:3005`.
+- 2026-04-05: After freeing disk space, reran a targeted default-site browser pass on an isolated
+  webpack dev server at `http://127.0.0.1:3317`. `agent-browser` still stalled in this shell, so
+  the actual browser verification was completed with Playwright against that isolated port.
+- 2026-04-05: The rerun confirmed `http://127.0.0.1:3317/` loads, the default-site public listing
+  detail route `http://127.0.0.1:3317/listing/123movies-downloader` loads, `/websites` redirects
+  to `/listing`, and the submit flow redirects to
+  `https://github.com/serpcompany/json-directory-template/issues/new`.
+- 2026-04-05: The isolated rerun surfaced two stale active assumptions and both were fixed in the
+  repo: `apps/e2e/tests/smoke.spec.ts` was still expecting `/websites -> /`, and
+  `sites/site-config.default.ts` still pointed the default submit flow at `serpapps/support`.
+- 2026-04-05: `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3317 PLAYWRIGHT_PORT=3317 pnpm --filter e2e exec playwright test tests/smoke.spec.ts --project=chromium --grep 'core public MVP routes load successfully|listing detail pages load under the public listing route|submit flow redirects to the configured prefilled GitHub issue|legacy aliases still redirect to the supported public surface'`
+  passed after the route/test/config fixes above.

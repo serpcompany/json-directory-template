@@ -44,9 +44,11 @@ For `default`, treat these as disabled unless the site config changes:
 - `/network`
 
 Legacy aliases such as `/websites` and `/news` may still redirect, but they are not part of the core MVP route set.
+Do not assume `/websites` redirects to `/`; it may redirect to the current checked-in listing base path such as `/listing`.
 
 ## Recording outcomes
 
 - record which site was checked
 - record the exact paths exercised
 - record whether an issue was fixed now, explicitly deferred, or split into a follow-up issue
+- if `agent-browser` stalls in the local shell, rerun the check on an isolated dev port with a targeted Playwright pass and record the fallback command plus the reason it was needed
