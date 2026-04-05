@@ -2,10 +2,19 @@
 
 This doc turns the current closeout plan into the active execution queue.
 
-## Current truth
+## Current truth (updated 2026-04-05)
+
+- [x] Badge verification submission flow shipped (`#57`–`#67`, merged to main 2026-04-05)
+- [x] Submit form now collects full listing fields with API-backed token flow — GitHub issue redirect is fallback only
+- [x] Verified listings auto-publish to `data/listings.json` with page revalidation
+- [x] Weekly badge re-check cron endpoint + GitHub Actions in place (set `CRON_SECRET` + `SITE_URL` secrets to activate)
+- [ ] AI auto-fill on submit form — deferred to hosted lane
+- [ ] Badge missing email notification — deferred (`#67` follow-up)
+
+## Previous truth
 
 - [x] JSON/static remains the MVP publishing model
-- [x] The GitHub-issue submit flow remains the MVP submission bridge
+- [x] The GitHub-issue submit flow remains the MVP submission bridge (now fallback only)
 - [x] The whole-repo wash audit is now the first closeout phase
 - [x] `serpdownloaders.com` is the active live proof-site target for closeout
 - [x] The live `serpdownloaders.com` proof pass is now aligned on the public domain after the April 5, 2026 recheck

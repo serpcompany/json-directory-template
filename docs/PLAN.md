@@ -111,10 +111,30 @@ Acceptance:
 - [x] The active default starter no longer reads like a lightly rebranded OSS clone on the published branch
 - [x] Remaining residue is explicitly tracked in follow-up issues such as `#51` and `#52`
 
+### Phase 6. Badge verification submission flow
+
+- [x] Replace GitHub-issue redirect with self-service badge verification loop (`#57`–`#67`)
+- [x] Submit form collects full listing fields (name, URL, category, description, content, resource links)
+- [x] `/api/submit` stores pending submission, returns token
+- [x] `/submit/verify` page shows badge snippet with light/dark toggle and copy button
+- [x] `/api/verify-badge` two-pass backlink check: cheerio on raw HTML + Playwright fallback for JS-rendered pages
+- [x] Auto-publish verified listing to `data/listings.json` with `revalidatePath` on success
+- [x] Admin CLI: `pnpm submissions list-pending/list-verified/publish`
+- [x] Badge SVG generator: `pnpm generate:badges`
+- [x] Weekly cron endpoint + GitHub Actions workflow for badge re-check
+- [x] See `docs/SUBMISSION_FLOW.md` for full operator reference
+
+Acceptance:
+
+- [x] Submitters can complete the full submit → badge → verify → live listing flow without GitHub
+- [x] Directory owners can re-verify badges on a weekly schedule
+- [x] All 11 issues (`#57`–`#67`) closed and merged to main
+
 ### Later. Hosted and storage expansion
 
-- [ ] Keep badge/embed generation as a possible static-lane enhancement later
-- [ ] Keep self-serve submission, paid promoted spots, sponsor inventory, Stripe checkout, and moderation/admin workflows in a hosted lane
+- [ ] AI auto-fill on submit form: pre-populate fields from submitted URL via LLM inference
+- [ ] Weekly cron badge re-check: email notification when badge goes missing (`#67` follow-up)
+- [ ] Keep self-serve paid promoted spots, sponsor inventory, Stripe checkout, and moderation/admin workflows in a hosted lane
 - [ ] Revisit storage/runtime expansion only after the JSON-first MVP closeout and next proof-site pass are complete
 - [ ] Document any future hosted write-back model before implementation work starts
 
