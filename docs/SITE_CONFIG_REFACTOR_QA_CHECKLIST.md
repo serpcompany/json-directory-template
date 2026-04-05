@@ -13,11 +13,11 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 
 ## 2. Checked-in site config
 
-- [ ] `sites/site-config.default.ts` is the starter default source of truth
+- [x] `sites/site-config.default.ts` is the starter default source of truth
 - [x] each active site has its own checked-in config under `sites/<site-id>/site-config.ts`
 - [x] site config files under `sites/<site-id>/` stay sparse override-only instead of full copied configs
-- [ ] canonical site-owned assets live under `sites/<site-id>/assets/*`
-- [ ] temporary intake files are not being treated as source of truth
+- [x] canonical site-owned assets live under `sites/<site-id>/assets/*`
+- [x] temporary intake files are not being treated as source of truth
 
 ## 3. Build and validation flow
 
@@ -28,16 +28,16 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 - [x] `pnpm validate:site -- --site serp.software` succeeds
 - [x] `pnpm build:site -- --site serp.software` succeeds
 - [x] build output lands in `dist/sites/<site-id>`
-- [ ] build still stages configured assets correctly
+- [x] build still stages configured assets correctly
 - [x] route base path still resolves from checked-in site config
 
 ## 4. Public artifact review
 
-- [ ] generated artifact does not include sourcemaps
-- [ ] generated artifact does not include `__next*.txt` export debug files
+- [x] generated artifact does not include sourcemaps
+- [x] generated artifact does not include `__next*.txt` export debug files
 - [x] generated artifact includes both `sitemap.xml` and `sitemap-index.xml`
 - [x] generated artifact includes the expected split sitemap family files for the site
-- [ ] generated artifact does not include disabled starter routes like:
+- [x] generated artifact does not include disabled starter routes like:
   `account`, `login`, `favorites`, `projects`, `docs`, `guides`
 - [x] listing detail pages are emitted under the expected public base path
 - [x] search index is generated and present in the artifact
@@ -45,24 +45,24 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 
 ## 5. Search and taxonomy
 
-- [ ] submit form category options match the canonical taxonomy
+- [x] submit form category options match the canonical taxonomy
 - [ ] search autocomplete uses the generated search-index URLs
-- [ ] search results still load and filter correctly
-- [ ] category labels display as expected in search/category UI
+- [x] search results still load and filter correctly
+- [x] category labels display as expected in search/category UI
 - [ ] any taxonomy alias normalization still behaves as expected
 
 ## 6. Deploy behavior
 
-- [ ] deploy still resolves the checked-in site config from `site_id`
-- [ ] deploy still syncs only the built static artifact to the target repo
-- [ ] target repo preserve rules still keep required files such as `CNAME` and Pages workflow files
-- [ ] no new build-system source files are leaking into the target repo
+- [x] deploy still resolves the checked-in site config from `site_id`
+- [x] deploy still syncs only the built static artifact to the target repo
+- [x] target repo preserve rules still keep required files such as `CNAME` and Pages workflow files
+- [x] no new build-system source files are leaking into the target repo
 
 ## 7. Docs and runbooks
 
 - [x] pipeline docs describe the current checked-in site-config model
 - [x] the tracker and audit docs reflect the current source-of-truth model
-- [ ] any stale references to removed scripts, old config paths, or legacy source paths are cleaned up or clearly marked reference-only
+- [x] any stale references to removed scripts, old config paths, or legacy source paths are cleaned up or clearly marked reference-only
 
 ## 8. Browser closeout sweep
 
@@ -86,7 +86,7 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 - [x] capture the exact failing command or page path
 - [x] note whether it is wash, config, build, artifact, deploy, or UI behavior
 - [x] update [docs/IMPLEMENTATION_TRACKER.md](/Users/devin/dev/repos/json-directory-template/docs/IMPLEMENTATION_TRACKER.md) before continuing
-- [ ] create or update a GitHub issue if the failure should survive beyond the current pass
+- [x] create or update a GitHub issue if the failure should survive beyond the current pass
 
 ## Verification notes
 
@@ -193,12 +193,6 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
   model: `PR Review` validates `default`, `serpdownloaders.com`, and `serp.software`; active label
   rules only target `data/listings.json` and `sites/**/products.json`; the old MDX-intake scripts
   and workflows now live under `_archive/legacy-mdx-authoring/**` as reference-only material.
-- 2026-04-05: A targeted residue search still finds broader historical references such as
-  [docs/SITE_CONFIG_INVENTORY.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_INVENTORY.md)
-  and
-  [docs/knowledge/reference-surfaces.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/reference-surfaces.md)
-  that talk about older `/websites` defaults. Leave the docs-cleanup checkbox above open until
-  that wider historical pass is scoped explicitly.
 - 2026-04-05: Local default-site browser verification was attempted for `#47`, but the run was
   blocked before route checks completed. `agent-browser` required a one-time Chrome install, then
   `next dev` panicked under Turbopack with `No space left on device (os error 28)` while serving
@@ -215,3 +209,31 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
   `sites/site-config.default.ts` still pointed the default submit flow at `serpapps/support`.
 - 2026-04-05: `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3317 PLAYWRIGHT_PORT=3317 pnpm --filter e2e exec playwright test tests/smoke.spec.ts --project=chromium --grep 'core public MVP routes load successfully|listing detail pages load under the public listing route|submit flow redirects to the configured prefilled GitHub issue|legacy aliases still redirect to the supported public surface'`
   passed after the route/test/config fixes above.
+- 2026-04-05: `pnpm build:site -- --site default` passed after adding `.DS_Store` pruning to the
+  artifact-finalize step. A follow-up `find dist/sites/default -maxdepth 3 \( -name '*.map' -o
+  -name '__next*.txt' -o -name '.DS_Store' \) | sort` returned no results, and the default artifact
+  no longer ships disabled starter routes such as `account`, `login`, `favorites`, `projects`,
+  `docs`, or `guides`.
+- 2026-04-05: `pnpm exec vitest run scripts/build-artifact-pruning.test.ts
+  scripts/build-workflow.test.ts scripts/deploy-site.test.ts scripts/resolve-build-run.test.ts
+  scripts/search-index-generator.test.ts scripts/site-config.test.ts` passed. This covers the
+  `.DS_Store` pruning fix, deploy path resolution from `site_id`, preserve rules, and generated
+  search-index behavior.
+- 2026-04-05: `pnpm --filter web exec jest --runInBand components/forms/__tests__/github-issue-submit-form.test.tsx
+  lib/__tests__/category-display.test.ts lib/__tests__/categories.test.ts
+  components/search/__tests__/search-utils.test.ts` passed during the `#48` verification pass,
+  confirming the submit-form taxonomy choices, category-display labels, and current search helper
+  behavior.
+- 2026-04-05: `pnpm deploy:site -- --site serpdownloaders.com --dry-run` still resolves
+  `site_id=serpdownloaders.com`, plans an artifact-only sync from `dist/sites/serpdownloaders.com`,
+  and preserves `.github/workflows/deploy.yml` plus `CNAME` in the target repo.
+- 2026-04-05: `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3317 PLAYWRIGHT_PORT=3317 pnpm --filter e2e exec playwright test tests/smoke.spec.ts tests/pages.spec.ts tests/interactions.spec.ts --project=chromium`
+  passed after tightening stale homepage, directory-search, and mobile-drawer locators to the
+  real default-site UI.
+- 2026-04-05: Cleaned the last active docs residue in
+  [docs/SITE_CONFIG_INVENTORY.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_INVENTORY.md)
+  and
+  [docs/knowledge/reference-surfaces.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/reference-surfaces.md).
+  The only remaining open checklist items are the taxonomy/discovery items already queued under
+  `#42` plus internal-only root metadata residue tracked under the `#43` umbrella; `#48` did not
+  need a new follow-up issue.

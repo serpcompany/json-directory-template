@@ -588,6 +588,11 @@ function pruneArtifactTree(path: string): void {
       continue;
     }
 
+    if (entry.name === '.DS_Store') {
+      rmSync(entryPath, { force: true });
+      continue;
+    }
+
     if (entry.name.endsWith('.map')) {
       rmSync(entryPath, { force: true });
       continue;

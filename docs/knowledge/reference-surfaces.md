@@ -30,7 +30,7 @@ Use it as a quick reference, not as a source of truth for active product behavio
 
 ### Website Detail
 
-- Representative route: `/websites/[slug]`
+- Representative route: `/listing/[slug]`
 - Source: `apps/web/app/websites/[slug]/page.tsx`
 - Main supporting files: `apps/web/components/website/website-hero.tsx`, `apps/web/components/website/website-resources-section.tsx`, `apps/web/components/website/website-detail-sidebar.tsx`
 - Data source: `data/listings.json`
@@ -127,7 +127,7 @@ Use it as a quick reference, not as a source of truth for active product behavio
 
 - `/faq` was removed from the active starter and should stay out unless a future site explicitly needs an FAQ surface
 - `/news` already redirects to `/` from `apps/web/app/news/page.tsx`
-- `/websites` already redirects to `/` from `apps/web/app/websites/page.tsx`
+- `/websites` is now just a compatibility redirect to the configured listing base path, currently `/listing`
 - Recommended action: `Drop`
 
 Those are not useful long-term references beyond knowing that they were intentionally collapsed.

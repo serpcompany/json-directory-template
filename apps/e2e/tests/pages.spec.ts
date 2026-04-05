@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test'
 
 const detailListing = {
-  name: 'Acurast Hub',
-  slug: 'acurast-hub-llms-txt'
+  name: '123Movies Downloader',
+  slug: '123movies-downloader'
 } as const
 
 async function expectUnavailableRoute(page: Parameters<typeof test>[1] extends never ? never : any, path: string) {
@@ -20,10 +20,14 @@ test.describe('Main Pages', () => {
   test('homepage should load and display key elements', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' })
 
-    await expect(page.getByRole('navigation').first()).toBeVisible()
+    await expect(page.getByRole('link', { name: /^Directory Starter$/ })).toBeVisible()
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-    await expect(page.getByRole('link', { name: /submit a listing/i })).toBeVisible()
-    await expect(page.getByPlaceholder('Search...')).toBeVisible()
+    await expect(
+      page.getByRole('banner').getByRole('link', { name: /submit a listing/i })
+    ).toBeVisible()
+    await expect(
+      page.getByPlaceholder(/search listings, categories, and descriptions/i)
+    ).toBeVisible()
   })
 
   test('about page should load and display content', async ({ page }) => {
@@ -71,23 +75,24 @@ test.describe('Listing and Category Pages', () => {
 
 test.describe('Search and Navigation', () => {
   test('search page should work with a query parameter', async ({ page }) => {
-    await page.goto('/search?q=acurast')
+    await page.goto('/search?q=123movies')
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page.getByRole('textbox').first()).toBeVisible()
-    await expect(page.getByRole('link', { name: /Acurast Hub/i })).toBeVisible()
+    await expect(page.getByRole('link', { name: /123Movies Downloader/i })).toBeVisible()
   })
 
-  test('header navigation links should work correctly', async ({ page }) => {
+  test('primary navigation links should work correctly', async ({ page }) => {
     await page.goto('/')
 
-    await page.getByRole('banner').getByRole('link', { name: /^About$/ }).click()
-    await expect(page).toHaveURL(/\/about/)
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-
-    await page.getByRole('banner').getByRole('link', { name: /^Submit$/ }).click()
+    await page.getByRole('banner').getByRole('link', { name: /submit a listing/i }).click()
     await expect(page).toHaveURL(/\/submit/)
     await expect(page.getByRole('heading', { level: 1, name: /submit a listing/i })).toBeVisible()
+
+    await page.goto('/')
+    await page.getByRole('contentinfo').getByRole('link', { name: /^About$/ }).click()
+    await expect(page).toHaveURL(/\/about/)
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   })
 })
 

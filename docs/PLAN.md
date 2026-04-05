@@ -52,19 +52,19 @@ Acceptance:
 
 - [x] Truth-pass the closeout docs and board after live proof-site alignment under `#46`
 - [x] Review active workflow/config assumptions that still point at legacy website-authoring paths under `#47`
-- [ ] Run the closeout checklist for `default` under `#48`
+- [x] Run the closeout checklist for `default` under `#48`
 - [x] Run the default-site browser closeout pass on an isolated local dev server and record the real route outcomes
 - [x] Verify the shipped `sitemap.xml`/`sitemap-index.xml`/`robots.txt` contract in the built artifact
 - [x] Verify site-owned GTM behavior for `serpdownloaders.com` production output and absence on non-GTM sites
 - [x] Verify `default` and `serpdownloaders.com` with real validate/build runs
-- [ ] Finish the remaining `default`-site artifact, deploy, and docs residue under `#48`
-- [ ] Turn any failure or unverified item into an explicit follow-up issue instead of leaving it in a doc only
-- [ ] Update docs with the actual verification outcome, not placeholder boxes
+- [x] Finish the remaining `default`-site artifact, deploy, and docs residue under `#48`
+- [x] Turn any failure or unverified item into an explicit follow-up issue instead of leaving it in a doc only
+- [x] Update docs with the actual verification outcome, not placeholder boxes
 
 Acceptance:
 
-- [ ] [docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md) has real pass/fail outcomes for the remaining open items
-- [ ] MVP closeout status is evidence-based instead of inferred from old issue history
+- [x] [docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md) has real pass/fail outcomes for the remaining open items
+- [x] MVP closeout status is evidence-based instead of inferred from old issue history
 - [x] The board, tracker, and checklist describe the same unresolved work
 
 Scope note:
@@ -116,7 +116,8 @@ Acceptance:
 - [x] `#44` is the completed sitemap/robots closeout issue once the April 5, 2026 live recheck lands
 - [x] `#46` captured the docs/board truth pass and is now done
 - [x] `#47` retired legacy website-authoring assumptions from active workflows, tests, and docs
-- [ ] `#48` is now the next `Ready` item for the remaining `default`-site artifact/deploy/docs closeout verification
+- [x] `#48` closed the remaining `default`-site artifact/deploy/docs closeout verification
+- [ ] `#42` is now the next `Ready` item for taxonomy/discovery follow-up
 - [x] `#42` stays downstream of the proof-site pass and remaining closeout truth pass unless taxonomy becomes the blocker
 - [x] `#39` is treated as later architecture/spec work, not as the gate in front of MVP closeout
 

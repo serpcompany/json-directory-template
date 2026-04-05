@@ -39,6 +39,7 @@ describe('pruneStaticArtifactDir', () => {
   it('removes forbidden debug files and disabled default route surfaces', () => {
     const artifactDir = makeTempArtifactDir();
 
+    writeFile(resolve(artifactDir, '.DS_Store'));
     writeFile(resolve(artifactDir, '_next/static/chunks/app.js.map'));
     writeFile(resolve(artifactDir, '__next._tree.txt'));
     writeFile(resolve(artifactDir, 'about/index.html'));
@@ -61,6 +62,7 @@ describe('pruneStaticArtifactDir', () => {
       showProjects: false,
     });
 
+    expect(existsSync(resolve(artifactDir, '.DS_Store'))).toBe(false);
     expect(
       existsSync(resolve(artifactDir, '_next/static/chunks/app.js.map'))
     ).toBe(false);

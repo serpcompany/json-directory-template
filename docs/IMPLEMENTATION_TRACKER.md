@@ -40,19 +40,19 @@ Acceptance:
 ### Phase 1. MVP closeout verification
 
 - [x] Truth-pass the closeout docs and board after the live proof-site alignment under `#46`
-- [ ] Run the closeout checklist for `default` under `#48`
+- [x] Run the closeout checklist for `default` under `#48`
 - [x] Run the default-site browser closeout pass on an isolated local dev server and record the route outcomes
 - [x] Run the closeout checklist for `serpdownloaders.com`
 - [x] Verify the final sitemap/robots artifact contract
 - [x] Verify site-owned GTM is present for `serpdownloaders.com` production output and absent on non-GTM sites
 - [x] Replace stale `serpdownloaders.com` favicon/logo/Open Graph assets and verify the built artifact stages them correctly
 - [x] Record real command outcomes and manual checks in the checklist
-- [ ] Finish the remaining default-site artifact, deploy, and docs residue under `#48`
-- [ ] Open explicit follow-up issues for any failed or intentionally deferred items
+- [x] Finish the remaining default-site artifact, deploy, and docs residue under `#48`
+- [x] Open explicit follow-up issues for any failed or intentionally deferred items
 
 Acceptance:
 
-- [ ] MVP closeout is backed by evidence, not assumed from previous implementation issues
+- [x] MVP closeout is backed by evidence, not assumed from previous implementation issues
 - [x] The board, tracker, and checklist agree on the remaining unresolved work
 
 ### Phase 2. Live proof site: `serpdownloaders.com`
@@ -82,6 +82,26 @@ Notes:
   `github.com/serpcompany/json-directory-template/issues/new`. That rerun also exposed and fixed
   two stale active assumptions: the smoke test was still expecting `/websites -> /`, and the
   default site config was still pointing at `serpapps/support`.
+- 2026-04-05: Finished the remaining `#48` default-site closeout evidence. `pnpm build:site -- --site default`
+  now prunes `.DS_Store` from the shipped artifact, and the rebuilt `dist/sites/default` artifact
+  no longer contains sourcemaps, `__next*.txt`, or disabled starter routes. The default artifact
+  still stages the expected root assets and sitemap family files.
+- 2026-04-05: `pnpm exec vitest run scripts/build-artifact-pruning.test.ts
+  scripts/build-workflow.test.ts scripts/deploy-site.test.ts scripts/resolve-build-run.test.ts
+  scripts/search-index-generator.test.ts scripts/site-config.test.ts` passed. This confirms the
+  artifact pruning, search-index generation, and deploy-resolution rules still hold under the
+  current checked-in site-config flow.
+- 2026-04-05: `pnpm deploy:site -- --site serpdownloaders.com --dry-run` still resolves the
+  checked-in `site_id`, plans an artifact-only repo sync, and preserves `CNAME` plus the target
+  repo Pages workflow file.
+- 2026-04-05: `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3317 PLAYWRIGHT_PORT=3317 pnpm --filter e2e exec playwright test tests/smoke.spec.ts tests/pages.spec.ts tests/interactions.spec.ts --project=chromium`
+  passed after tightening stale homepage and mobile-menu locators to the current UI contract.
+- 2026-04-05: Cleaned the last active docs residue found during `#48` in
+  [docs/SITE_CONFIG_INVENTORY.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_INVENTORY.md)
+  and
+  [docs/knowledge/reference-surfaces.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/reference-surfaces.md).
+  The remaining open checklist items are taxonomy-specific and stay with `#42`; no new follow-up
+  issue was needed from the `#48` pass.
 - [x] Keep `sitemap-index.xml` as the canonical shipped static sitemap entrypoint while preserving
   `sitemap.xml` for direct app/runtime environments and compatibility
 - Additional confirmed live state as of 2026-04-05:

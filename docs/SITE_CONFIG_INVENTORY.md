@@ -15,7 +15,7 @@ This is intentionally broader than naming and URLs. It covers terminology, route
 ## Current recommendation
 
 - canonical directory-item term: `listing`
-- current public route prefix: keep `/websites/[slug]` as the starter default for now, but treat it as a checked-in site-config value rather than a hardcoded constant
+- current public route prefix: `routes.listingBasePath` is the checked-in source of truth, and the current starter default is `/listing/[slug]`
 - source-of-truth split:
   - checked-in site config under `sites/**` for true site-facing inputs
   - site-owned content for larger page/copy/legal/tool datasets
@@ -55,7 +55,7 @@ Why:
 
 | Surface | Status | Recommendation | File references | Notes |
 | --- | --- | --- | --- | --- |
-| Public route helper names still use `website.*` | Keep internal only | Normalize helper keys toward `listing.*` even if the public route stays `/websites` | [routes.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/routes.ts#L6), [routes.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/routes.ts#L41) | Internal naming cleanup |
+| Public route helper names still use `website.*` | Keep internal only | Normalize helper keys toward `listing.*` even though the public contract is already `/listing` and the old `/websites` path is now just a compatibility alias | [routes.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/routes.ts#L6), [routes.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/routes.ts#L41) | Internal naming cleanup |
 | Analytics payloads and helper names use `website`, `websites`, and `member` | Keep internal only | Normalize around `listing` or `directory_item`; preserve legacy event names only if analytics continuity matters | [analytics-helpers.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/analytics-helpers.ts#L5), [analytics-helpers.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/analytics-helpers.ts#L54), [analytics-helpers.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/analytics-helpers.ts#L102), [analytics-helpers.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/analytics-helpers.ts#L161) | Internal/event cleanup |
 | Schema and loader types use `website` naming | Keep internal only | Normalize schema/type/helper names toward `listing` over time | [website-schema.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/website-schema.ts#L5), [website-schema.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/website-schema.ts#L50), [content-loader.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/content-loader.ts#L12), [content-loader.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/content-loader.ts#L47) | JSON field `website` may still remain if it specifically means the listing destination URL |
 | UI copy mixes `website`, `project`, and `directory entry` | Should become configurable | Move visible CTA/copy wording into site-owned copy or config-backed text | [page.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/page.tsx#L16), [search/page.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/search/page.tsx#L15), [search-results.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/search/search-results.tsx#L70), [github-issue-submit-form.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/forms/github-issue-submit-form.tsx#L87) | High-visibility naming cleanup |
@@ -64,15 +64,15 @@ Why:
 
 ### Current recommendation
 
-- keep `/websites/[slug]` as the starter default for now
+- keep `routes.listingBasePath` as the checked-in source of truth; the current starter default is `listing`
 - route prefix is now a checked-in site-config decision through `routes.listingBasePath`
 
 ### Inventory
 
 | Surface | Status | Recommendation | File references | Notes |
 | --- | --- | --- | --- | --- |
-| Listing route base path | Configurable now | Keep `websites` as the starter default, but allow each site to override it through checked-in site config | [types.ts](/Users/devin/dev/repos/json-directory-template/sites/types.ts), [site-config.default.ts](/Users/devin/dev/repos/json-directory-template/sites/site-config.default.ts), [routes.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/routes.ts) | Public URL path now comes from site config |
-| Singular redirect `/website/:path*` -> `/websites/:path*` | Keep as starter default | Keep only if the legacy alias is still worth preserving | [next.config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/next.config.ts#L70) | Legacy alias |
+| Listing route base path | Configurable now | Keep `listing` as the current starter default and allow each site to override it through checked-in site config | [types.ts](/Users/devin/dev/repos/json-directory-template/sites/types.ts), [site-config.default.ts](/Users/devin/dev/repos/json-directory-template/sites/site-config.default.ts), [routes.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/routes.ts) | Public URL path now comes from site config |
+| Singular redirect `/website/:path*` -> `/websites/:path*` | Keep as starter default | Keep only if the legacy alias is still worth preserving, but treat `/websites` as a compatibility redirect to the configured listing base path rather than a default route | [next.config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/next.config.ts#L70) | Legacy alias |
 | Search index URL fallback | Configurable now | Search index generation should keep following `routes.listingBasePath` as the source of truth | [search-index-generator.ts](/Users/devin/dev/repos/json-directory-template/scripts/search-index-generator.ts) | Route coupling removed from hardcoded `/websites` strings |
 | Optional routes like auth/docs/guides/projects/favorites | Keep as starter default | Continue treating them as starter-controlled surfaces gated by checked-in site config | [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts), [build-site.ts](/Users/devin/dev/repos/json-directory-template/scripts/build-site.ts) | Export/pruning now works |
 
@@ -128,7 +128,7 @@ Why:
 | Homepage hero marketing copy beyond the primary listing/submit labels | Should become configurable | Keep the new terminology/CTA on `copy.*`, but move longer hero marketing copy to site-owned content or richer config blocks if sites start diverging | [hero-section.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/sections/hero-section.tsx#L22) | Primary listing count label and submit CTA now follow checked-in copy |
 | Newsletter section copy | Should become configurable | Move to site-owned content or config-backed copy blocks | [newsletter-section.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/sections/newsletter-section.tsx#L8) | Still starter pitch copy |
 | Search page marketing copy beyond the primary listing/submit labels | Should become configurable | Keep the new terminology/submit wording on `copy.*`, but move any site-specific search marketing copy into richer site-owned content if needed | [search/page.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/search/page.tsx#L42), [search-results.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/components/search/search-results.tsx#L96) | Primary search empty-state terminology now follows checked-in copy |
-| Legacy `/websites` redirect shell page copy | Should become configurable | Keep the redirect behavior if needed, but avoid baking route-specific wording into metadata/copy without site-level control | [page.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/websites/page.tsx#L5) | Public route wording still starter-owned |
+| Legacy `/websites` redirect shell page copy | Should become configurable | Keep the redirect behavior if needed, but avoid baking route-specific wording into metadata/copy without site-level control now that `/websites` is a compatibility alias, not the public default | [page.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/websites/page.tsx#L5) | Public route wording still starter-owned |
 
 ## 6. Content modules and optional surfaces
 

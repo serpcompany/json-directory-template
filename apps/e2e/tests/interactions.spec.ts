@@ -5,16 +5,16 @@ test.describe('User Interactions', () => {
     await page.goto('/')
 
     const searchInput = page.getByRole('textbox').first()
-    await searchInput.fill('acurast')
+    await searchInput.fill('123movies')
     await searchInput.press('Enter')
 
     await page.waitForURL('**/search?*')
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-    await expect(page.getByRole('link', { name: /Acurast Hub/i })).toBeVisible()
+    await expect(page.getByRole('link', { name: /123Movies Downloader/i })).toBeVisible()
   })
 
   test('listing detail pages should allow local favorite toggles', async ({ page }) => {
-    await page.goto('/listing/acurast-hub-llms-txt')
+    await page.goto('/listing/123movies-downloader')
 
     const favoriteButton = page.getByRole('button', { name: /add to favorites/i }).first()
     if (await favoriteButton.isVisible()) {
@@ -99,13 +99,11 @@ test.describe('Mobile Interactions', () => {
 
     if (await mobileMenuBtn.isVisible()) {
       await mobileMenuBtn.click()
-      await page.waitForTimeout(500)
+      await expect(page.getByRole('heading', { name: /^Menu$/ })).toBeVisible()
 
-      const navLink = page.getByRole('link', { name: /about|submit/i }).first()
-      if (await navLink.isVisible()) {
-        await navLink.click()
-        await page.waitForLoadState('domcontentloaded')
-      }
+      const drawerNav = page.getByRole('navigation').filter({ hasText: /submit a listing/i }).last()
+      await drawerNav.getByRole('link', { name: /submit a listing/i }).click()
+      await expect(page).toHaveURL(/\/submit/)
     } else {
       const bodyText = await page.textContent('body')
       expect(bodyText?.length).toBeGreaterThan(100)
@@ -122,7 +120,7 @@ test.describe('Mobile Interactions', () => {
 
       const searchInput = page.getByRole('textbox').first()
       if (await searchInput.isVisible()) {
-        await searchInput.fill('acurast')
+        await searchInput.fill('123movies')
         await searchInput.press('Enter')
         await expect(page).toHaveURL(/\/search\?.+/, { timeout: 10000 })
       }

@@ -42,11 +42,12 @@ test.describe('Static starter smoke tests', () => {
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 
-    const searchInput = page.getByPlaceholder('Search...')
-    await searchInput.fill('acurast')
+    const directoryRegion = page.getByRole('region', { name: /browse the directory/i })
+    const searchInput = directoryRegion.getByPlaceholder(/search the directory/i)
+    await searchInput.fill('123movies')
 
-    await expect(page.getByText(/showing \d+ result/i)).toBeVisible()
-    await expect(page.getByRole('link', { name: /Acurast Hub/i })).toBeVisible()
+    await expect(directoryRegion.getByRole('link', { name: /123Movies Downloader/i })).toBeVisible()
+    await expect(directoryRegion.getByRole('link', { name: /AlphaPorno Downloader/i })).toHaveCount(0)
   })
 
   test('listing detail pages load under the public listing route', async ({ page }) => {
