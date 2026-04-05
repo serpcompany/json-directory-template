@@ -7,7 +7,7 @@ const SubmitBodySchema = z.object({
   name: z.string().min(1),
   website: z.string().url(),
   category: z.string().min(1),
-  description: z.string().min(10),
+  description: z.string().optional().default(''),
 });
 
 export async function POST(req: NextRequest) {
