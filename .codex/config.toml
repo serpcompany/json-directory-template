@@ -1,0 +1,4 @@
+[mcp_servers.mermaid]
+command = "npx"
+args = ["-y", "mcp-remote", "https://mcp.mermaid.ai/mcp"]
+enabled = false

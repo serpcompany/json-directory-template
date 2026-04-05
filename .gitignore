@@ -51,7 +51,7 @@ lychee-out.md
 # Jetbrains
 .idea
 
-.claude/
+
 .cursor/
 
 CLAUDE.local.md
@@ -64,7 +64,7 @@ tmp/sites/
 
 # llms.txt documentation
 .agents/
-.claude/
+
 .cursor/
 
-.codex/config.toml
+
