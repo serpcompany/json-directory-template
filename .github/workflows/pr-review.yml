@@ -19,14 +19,8 @@ jobs:
       - name: Install
         uses: ./.github/actions/install
 
-      - name: Validate default site
-        run: pnpm validate:site -- --site default
-
-      - name: Validate serpdownloaders.com site
-        run: pnpm validate:site -- --site serpdownloaders.com
-
-      - name: Validate serp.software site
-        run: pnpm validate:site -- --site serp.software
+      - name: Validate active checked-in sites
+        run: pnpm validate:sites
 
       - name: Run Biome Check
         uses: mongolyy/reviewdog-action-biome@v2

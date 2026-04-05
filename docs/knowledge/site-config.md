@@ -172,7 +172,7 @@ For a real site build, the site owner should supply meaningful values for these 
 
 Depending on the chosen source:
 
-- `content.listingSource.kind = "trial-products-json"` also needs `category`, `featuredCount`, and `publishedAt`
+- the adapter-driven source kind currently named `trial-products-json` also needs `category`, `featuredCount`, and `publishedAt`
 - deploy runs also need `deploy.repoUrl`, `deploy.branch`, and `deploy.preserve`
 
 Important:
@@ -181,7 +181,7 @@ Important:
 - Shell labels like `Listings`, `Docs`, `Network`, and `Submit` come from `copy.*` in `sites/<id>/site-config.ts`.
 - `copy.listingName.singular` and `copy.listingName.plural` are public-facing copy only. They drive headings, search placeholders, CTA text, and helper copy like `All Listings`. They do not change route paths.
 - Category route slugs stay canonical in shared taxonomy, but the visible category names can be overridden per site with `copy.categoryLabels`.
-- The actual listing names and slugs come from the configured listing source itself. For `trial-products-json` sites like `serpdownloaders.com`, that means editing the source records in `sites/<id>/products.json` and then rebuilding `data/listings.json`.
+- The actual listing names and slugs come from the configured listing source itself. For adapter-driven sites that use `products.json`, that means editing the source records in `sites/<id>/products.json` and then rebuilding `data/listings.json`.
 - `records/build-inputs/**` is internal generated snapshot space. It is not operator input and should not be edited manually.
 
 Usually customized, but safe to inherit from the starter if they fit:

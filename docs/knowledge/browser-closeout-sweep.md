@@ -44,7 +44,7 @@ For `default`, treat these as disabled unless the site config changes:
 - `/network`
 
 Legacy aliases such as `/websites` and `/news` may still exist, but they are not part of the core starter route set.
-Do not treat `/websites` as a required closeout behavior; it now lives in follow-up issue `#52`.
+Do not treat `/websites` as a required closeout behavior unless a site intentionally keeps that compatibility surface.
 
 ## Recording outcomes
 

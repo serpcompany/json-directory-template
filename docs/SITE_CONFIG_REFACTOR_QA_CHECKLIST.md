@@ -191,9 +191,10 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
   `content-loader` coverage confirms active listing resolution stays on JSON-backed listing data
   and does not fall back to the legacy website MDX collection.
 - 2026-04-05: Active workflow/docs cleanup under `#47` now matches the JSON-first maintainer
-  model: `PR Review` validates `default`, `serpdownloaders.com`, and `serp.software`; active label
-  rules only target `data/listings.json` and `sites/**/products.json`; the old MDX-intake scripts
-  and workflows now live under `_archive/legacy-mdx-authoring/**` as reference-only material.
+  model: `PR Review` now uses the generic `pnpm validate:sites` entrypoint for the default site
+  plus all checked-in site overrides; active label rules only target `data/listings.json` and
+  `sites/**/products.json`; the old MDX-intake scripts and workflows now live under
+  `_archive/legacy-mdx-authoring/**` as reference-only material.
 - 2026-04-05: Local default-site browser verification was attempted for `#47`, but the run was
   blocked before route checks completed. `agent-browser` required a one-time Chrome install, then
   `next dev` panicked under Turbopack with `No space left on device (os error 28)` while serving

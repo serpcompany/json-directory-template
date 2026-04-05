@@ -34,6 +34,13 @@ Instead, the repo becomes the source of truth and GitHub becomes the audit trail
 5. A maintainer reviews the issue and, if approved, updates repo data such as `data/listings.json`.
 6. If that accepted change becomes a PR, CI validates `data/listings.json` before merge.
 
+## Current category rule
+
+The public form currently collects one category only.
+
+Treat that value as the primary category for intake.
+If the listing needs secondary categories, maintainers add them later during review in the checked-in source data.
+
 ## Example GitHub issue URL
 
 ```txt
@@ -68,6 +75,7 @@ Helpful reviewer context.
 - `apps/web/lib/github-issue.ts` builds the final GitHub issue URL, template, title, and body.
 - `sites/site-config.default.ts` plus `sites/<id>/site-config.ts` provide the checked-in owner, repo, issue URL, and template values.
 - `.github/workflows/update-listings-json.yml` validates accepted listing changes when `data/listings.json` is edited in a PR or on `main`.
+- `docs/knowledge/taxonomy-discovery-contract.md` records the current shared starter taxonomy and single-category intake rule.
 
 ## How accepted listing changes are gated
 

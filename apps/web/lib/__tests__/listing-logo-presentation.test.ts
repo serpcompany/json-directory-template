@@ -42,7 +42,7 @@ describe('listing-logo-presentation', () => {
     expect(getListingLogoFallbackPath()).toBe('/placeholder.svg');
   });
 
-  it('keeps the site-brand fallback available for checked-in proof sites', async () => {
+  it('keeps the site-brand fallback available for checked-in example sites', async () => {
     const { siteConfig } = await import('@/lib/site-config');
     siteConfig.id = 'serpdownloaders.com';
 

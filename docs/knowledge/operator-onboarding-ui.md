@@ -1,6 +1,6 @@
 # Operator Onboarding UI
 
-Use the operator onboarding UI when you want a local form-driven view of the site setup and listing payloads.
+Use the operator onboarding UI when you want an optional local form-driven view of the site setup and listing payloads.
 
 ## What it is
 
@@ -9,6 +9,7 @@ Use the operator onboarding UI when you want a local form-driven view of the sit
 - not under `/tools`
 - not intended for public deployment
 - stripped out of the normal `pnpm build:site` publish artifact
+- not the default maintainer workflow
 
 Current local route:
 
@@ -53,4 +54,5 @@ Edit the checked-in files directly when:
 
 ## Important limitation
 
-Right now this operator UI is aimed at `trial-products-json` site sources. That is the current onboarding path for adapter-driven sites like `serpdownloaders.com`.
+Right now this operator UI is aimed at adapter-driven checked-in sources that emit `products.json`.
+Treat it as an optional helper, not as the canonical workflow for every site.

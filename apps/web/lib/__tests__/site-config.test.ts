@@ -150,7 +150,7 @@ describe('resolveSiteConfig', () => {
     expect(getConfiguredSocialLinks(config)).toEqual([]);
   });
 
-  it('treats checked-in proof-site socials and issue targets as configured', () => {
+  it('treats checked-in example-site socials and issue targets as configured', () => {
     const config = resolveSiteConfig('serpdownloaders.com');
 
     expect(hasConfiguredGitHubIssueTarget(config)).toBe(true);

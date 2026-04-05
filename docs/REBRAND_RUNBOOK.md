@@ -1,6 +1,6 @@
 # Rebrand Runbook
 
-Use this when turning the starter into a new site brand. The goal is to replace the checked-in identity, assets, links, and public copy without hunting through the app.
+Use this when launching a new checked-in site or refreshing an existing site brand. The goal is to replace the checked-in identity, assets, links, and public copy without hunting through the app.
 
 ## 1. Update the checked-in site config
 

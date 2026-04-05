@@ -12,13 +12,16 @@
 
 - `data/listings.json` is the active website-entry source for the current starter.
 - `pnpm tsx scripts/validate-data.ts data/listings.json` validates the active JSON source.
+- `pnpm validate:sites` validates the default site plus every checked-in site override through one generic command.
 - Site-specific build flows can transform alternative JSON inputs into this same shape during build time.
 - The active loader now expects `slug`, `website`, `description`, `category`, `publishedAt`, and optional metadata like `featured`, `priority`, `content`, and `resourceLinks`.
 - The formal schema for raw JSON website entries now lives in `apps/web/lib/website-schema.ts`.
 - Optional `content` in `data/listings.json` now flows through the JSON loader and can power the detail page body.
 - Optional `resourceLinks` in `data/listings.json` can power the detail-page Resources card without introducing special-case `llms.txt` fields.
-- Prefer `automation-workflow` as the automation category slug. The loader still normalizes the older `integration-automation` value during the transition.
+- The active starter taxonomy now lives in `docs/knowledge/taxonomy-discovery-contract.md`.
+- The current alias lane keeps `automation-workflow` and `integration-automation` mapped to `video-downloaders`.
 - `pnpm validate:site -- --site <id>` now rejects unknown category slugs up front and reports the active category set derived from real listing data.
+- `pnpm validate:listings` now rejects unknown category slugs too, so direct JSON edits follow the same shared taxonomy contract.
 - Public category pages and category navigation should only come from categories that actually have attached listings; empty taxonomy buckets should not generate pages or nav links.
 - Treat `packages/content/data/websites/**` as legacy/reference website content unless and until a future migration path is formalized.
 - The old MDX-intake helpers and workflows now live under `_archive/legacy-mdx-authoring/**` and are not part of active CI, build, or maintainer scripts.
@@ -32,11 +35,11 @@
 - The starter's public listing route now defaults to `/listing`, while the internal filesystem route stays compatibility-oriented.
 - Category pages are public at `/categories/[slug]`.
 - Editorial guide content is public at `/posts` and `/posts/[slug]` when `features.showGuides` is enabled; otherwise that surface is pruned from the default static artifact.
-- Use that folder for starter-facing docs such as submit flow, JSON shape references, and rebrand runbooks.
+- Use that folder for starter-facing docs such as submit flow, JSON shape references, taxonomy notes, and site-launch runbooks.
 - Keep internal starter/operator notes such as `siteConfig` shapes in `docs/knowledge/**`, not in public `/docs`.
 - Keep representative page references in `docs/knowledge/reference-surfaces.md` when you want to preserve old patterns without leaving whole features active.
 - Use `docs/knowledge/legacy-reference-boundary.md` when deciding whether an older repo area is still active starter input or only reference material.
-- Use the decision labels in `docs/knowledge/reference-surfaces.md` to drive cleanup order: `Keep + rebrand first`, then `Keep + rebrand later`, then `Reference only`.
+- Use the decision labels in `docs/knowledge/reference-surfaces.md` to drive cleanup order: `Keep + first`, then `Keep + later`, then `Reference only`.
 - The checked-in site config source of truth now lives under `sites/**`, with `apps/web/lib/site-config.ts` acting as the app-facing adapter layer.
 - The runtime starter config now also owns optional shell feature flags, including whether to render creator-project, featured-guides, external-resources, and newsletter sections.
 - Reserve `/tools` for future first-party utility pages; the current `externalResources` surface is only for outbound/reference links configured per site.
@@ -56,11 +59,11 @@
 - Category sitemap files are emitted only when the final artifact actually contains category pages.
 - The sitemap split runs against the finalized static artifact, so it reflects the shipped public route map after pruning and public path remaps.
 
-## Rebrand Touchpoints
+## Brand Touchpoints
 
 - The main shell brand strings live in `apps/web/app/layout.tsx`, `apps/web/lib/seo/seo-config.ts`, `apps/web/components/layout/header.tsx`, and `apps/web/components/layout/footer.tsx`.
-- When you add starter-level site config, centralize `name`, `domain`, `tagline`, social URLs, and the optional DR badge in `sites/site-config.default.ts` and per-site overrides before wiring those values into the shell. The internal reference now lives in `docs/knowledge/site-config.md`.
-- The first active rebrand pass is complete for `apps/web/app/page.tsx`, `apps/web/app/websites/[slug]/page.tsx`, `apps/web/app/submit/page.tsx`, and `apps/web/app/favorites/page.tsx`.
+- When you add starter-level site config, centralize `name`, `domain`, `tagline`, and social URLs in `sites/site-config.default.ts` and per-site overrides before wiring those values into the shell. The internal reference now lives in `docs/knowledge/site-config.md`.
+- The first active starter-neutral pass is complete for `apps/web/app/page.tsx`, `apps/web/app/websites/[slug]/page.tsx`, `apps/web/app/submit/page.tsx`, and `apps/web/app/favorites/page.tsx`.
 - The starter now keeps the raw `website` destination field for compatibility, but removes `llmsUrl` / `llmsFullUrl` from the active listing contract and routes listing extras through generic resource links instead.
 - Starter-safe builds should keep legacy creator/tool/guide sidebars disabled unless a site explicitly enables them through checked-in site config feature flags.
 - The standalone FAQ route was removed from the active starter. Do not keep `/faq` in nav, sitemap, or smoke-test coverage unless a future site explicitly needs it.
@@ -69,7 +72,7 @@
 - The live legal copy comes from `packages/content/data/legal/*.mdx`; changing those files updates the current frontend without changing the route components.
 - The main visual brand assets live in `apps/web/app/favicon.ico`, `apps/web/app/opengraph-image.png`, `apps/web/app/opengraph-image.alt.txt`, and `apps/web/public/img/**`.
 - Legal contact details live in `packages/content/data/legal/**`.
-- The submit flow points at a GitHub repo from `apps/web/lib/github-issue.ts`, so rebrands usually need that updated too.
+- The submit flow points at a GitHub repo from `apps/web/lib/github-issue.ts`, so new site launches usually need that updated too.
 
 ## Agent Verification Quirk
 

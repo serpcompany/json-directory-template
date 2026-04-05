@@ -135,13 +135,13 @@ Notes:
 ### Phase 3. Taxonomy and discovery
 
 - [x] Re-scope issue `#42` around the real next category set
-- [ ] Split implementation follow-ons across data, UI, validation, and search when needed
-- [ ] Add or update taxonomy/discovery tests
-- [ ] Update docs for supported taxonomy behavior
+- [x] Split implementation follow-ons across data, UI, validation, and search when needed
+- [x] Add or update taxonomy/discovery tests
+- [x] Update docs for supported taxonomy behavior
 
 Acceptance:
 
-- [ ] Taxonomy work is driven by real onboarding/discovery pressure
+- [x] Taxonomy work is driven by real onboarding/discovery pressure
 
 ### Phase 4. Final template cleanliness audit
 
@@ -150,11 +150,27 @@ Acceptance:
       [docs/knowledge/final-template-cleanliness-audit.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/final-template-cleanliness-audit.md)
 - [x] File follow-up issue `#51` for proof-site/operator contract cleanup
 - [x] File follow-up issue `#52` for legacy public compatibility cleanup
-- [ ] Publish the immediate `#50` starter-surface cleanup bundle
+- [x] Publish the immediate `#50` starter-surface cleanup bundle
 
 Acceptance:
 
-- [ ] The active default starter surface is neutral enough to treat remaining residue as explicit follow-up work
+- [x] The active default starter surface is neutral enough to treat remaining residue as explicit follow-up work
+
+- 2026-04-05: Landed the remaining closeout contract pass for taxonomy and starter-surface cleanup.
+  Added
+  [docs/knowledge/taxonomy-discovery-contract.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/taxonomy-discovery-contract.md),
+  made public submit explicitly single-category with maintainer-added secondary categories, made
+  `pnpm validate:listings` enforce the shared taxonomy, added `pnpm validate:sites` for generic
+  checked-in site validation, removed proof-site-specific site validation steps from
+  `PR Review`, softened operator docs so `/operator/onboard-site` is treated as an optional local
+  helper instead of the default maintainer path, and marked the legacy `/websites` shell page as a
+  noindex compatibility redirect.
+- 2026-04-05: Verification for this pass used `pnpm test:repo`, `pnpm validate:listings
+  data/listings.json`, `pnpm validate:sites`, `pnpm build:site -- --site default`, and
+  `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3318 PLAYWRIGHT_PORT=3318 pnpm --filter e2e exec
+  playwright test tests/smoke.spec.ts --project=chromium --grep "default starter submit flow stays
+  disabled until the GitHub issue target is configured|news alias still redirects to the supported
+  public surface"` plus `--grep "core public MVP routes load successfully"`.
 
 ### Later. Storage/runtime expansion
 

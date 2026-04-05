@@ -124,7 +124,7 @@
                     },
                     {
                       "id": "sub-trial-products",
-                      "title": "Use `trial-products-json` when the site edits `sites/<site-id>/products.json` and the adapter regenerates `data/listings.json`."
+                      "title": "Use the adapter-driven `products.json` path when the site edits `sites/<site-id>/products.json` and the current source adapter regenerates `data/listings.json`."
                     }
                   ]
                 }

@@ -4,4 +4,5 @@
 - site-specific source input for transformed builds -> sites/<id>/products.json
 - internal generated snapshots -> records/build-inputs/\*\* (do not edit by hand)
 - reusable onboarding SOP template pack -> docs/examples/new-site-onboarding-sop.template-pack.json
-- local operator form UI -> pnpm dev:operator -- --site <id> then open /operator/onboard-site
+- optional local operator helper -> pnpm dev:operator -- --site <id> then open /operator/onboard-site
+- normal maintainer path -> edit the checked-in files directly, then run validate/build commands

@@ -1,20 +1,21 @@
 # Reference Surfaces
 
-This note keeps one representative page from each major surface so the team can trim and rebrand the starter without losing the old patterns entirely.
+This note keeps one representative page from each major surface so the team can
+trim and refresh the starter without losing the old patterns entirely.
 
 Use it as a quick reference, not as a source of truth for active product behavior.
 
 ## Next-Pass Decisions
 
-1. `Keep + rebrand first`: Home, Website Detail, Submit, Favorites
-- `Keep + rebrand later`: Docs, Guides, About, Projects
+1. `Keep + refresh first`: Home, Website Detail, Submit, Favorites
+- `Keep + refresh later`: Docs, Posts, About, Network
 - `Reference only, do not restore by default`: Community, Members, Profile, Login, Settings
 - `Drop`: FAQ, News redirect shell, Websites redirect shell
 
 ## Recommended Execution Order
 
-1. Rebrand the high-traffic active pages first: home, detail, submit, favorites.
-2. Rebrand the supporting static pages next: docs, guides, about, projects.
+1. Refresh the high-traffic active pages first: home, detail, submit, favorites.
+2. Refresh the supporting static pages next: docs, posts, about, network.
 3. Use the archived pages only as pattern references if a future site needs profiles or community features.
 4. Ignore the redirect-only shells unless they become useful again.
 
@@ -26,7 +27,7 @@ Use it as a quick reference, not as a source of truth for active product behavio
 - Source: `apps/web/app/page.tsx`
 - Main supporting files: `apps/web/components/sections/hero-section.tsx`, `apps/web/components/static-websites-list.tsx`, `apps/web/components/sections/recently-added-section.tsx`
 - Why keep it: This is the broadest snapshot of the current starter shell. It shows the hero, sidebar layout, featured modules, and the main directory listing in one place.
-- Recommended action: `Keep + rebrand first`
+- Recommended action: `Keep + refresh first`
 
 ### Website Detail
 
@@ -35,7 +36,7 @@ Use it as a quick reference, not as a source of truth for active product behavio
 - Main supporting files: `apps/web/components/website/website-hero.tsx`, `apps/web/components/website/website-resources-section.tsx`, `apps/web/components/website/website-detail-sidebar.tsx`
 - Data source: `data/listings.json`
 - Why keep it: This is the most important detail-page pattern in the repo. It captures the hero, resource links, sidebar, related projects, and navigation treatment.
-- Recommended action: `Keep + rebrand first`
+- Recommended action: `Keep + refresh first`
 
 ### Docs
 
@@ -43,15 +44,15 @@ Use it as a quick reference, not as a source of truth for active product behavio
 - Source: `apps/web/app/docs/page.tsx`
 - Representative content file: `packages/content/data/docs/getting-started.mdx`
 - Why keep it: This shows the docs landing pattern, breadcrumb treatment, and MDX rendering setup for starter-facing documentation.
-- Recommended action: `Keep + rebrand later`
+- Recommended action: `Keep + refresh later`
 
-### Guides
+### Posts
 
-- Representative route: `/guides`
+- Representative route: `/posts`
 - Source: `apps/web/app/guides/page.tsx`
 - Representative content file: `packages/content/data/guides/getting-started-llms-txt.mdx`
 - Why keep it: This is the clearest reference for the editorial/card-grid side of the site and the guide frontmatter pattern.
-- Recommended action: `Keep + rebrand later`
+- Recommended action: `Keep + refresh later`
 
 ### Submit
 
@@ -59,14 +60,14 @@ Use it as a quick reference, not as a source of truth for active product behavio
 - Source: `apps/web/app/submit/page.tsx`
 - Main supporting files: `apps/web/components/forms/github-issue-submit-form.tsx`, `apps/web/lib/github-issue.ts`
 - Why keep it: This captures the current static-friendly contribution flow and the form pattern that hands off to GitHub.
-- Recommended action: `Keep + rebrand first`
+- Recommended action: `Keep + refresh first`
 
-### Projects
+### Network
 
-- Representative route: `/projects`
+- Representative route: `/network`
 - Source: `apps/web/app/projects/page.tsx`
 - Why keep it: This is the clearest example of a static-friendly resource hub page that replaced a more dynamic GitHub-driven experience.
-- Recommended action: `Keep + rebrand later`
+- Recommended action: `Keep + refresh later`
 
 ### Favorites
 
@@ -74,14 +75,14 @@ Use it as a quick reference, not as a source of truth for active product behavio
 - Source: `apps/web/app/favorites/page.tsx`
 - Main supporting files: `apps/web/contexts/favorites-context.tsx`, `apps/web/components/websites-list-with-search.tsx`
 - Why keep it: This captures the local-storage favorites experience and the current mixed "directory plus extra sections" layout.
-- Recommended action: `Keep + rebrand first`
+- Recommended action: `Keep + refresh first`
 
 ### About
 
 - Representative route: `/about`
 - Source: `apps/web/app/about/page.tsx`
 - Why keep it: This is a useful reference for the old mission/marketing copy layer that still needs stronger template cleanup.
-- Recommended action: `Keep + rebrand later`
+- Recommended action: `Keep + refresh later`
 
 ## Archived Surfaces
 

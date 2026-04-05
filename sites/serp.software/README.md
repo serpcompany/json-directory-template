@@ -1,6 +1,6 @@
 # serp.software
 
-Checked-in proof-site override for the current JSON/shared contract.
+Checked-in example site override for the current JSON/shared contract.
 
 ## Notes
 

@@ -69,16 +69,31 @@ The loader also:
 
 ## Recommended category slugs
 
-Use the same category slugs that the active app understands:
+Use the shared starter taxonomy from
+[taxonomy-discovery-contract.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/taxonomy-discovery-contract.md).
 
-- `ai-ml`
+The active canonical slugs are:
+
 - `developer-tools`
+- `ai-ml`
 - `data-analytics`
-- `automation-workflow`
 - `infrastructure-cloud`
 - `security-identity`
+- `video-downloaders`
+- `finance-fintech`
+- `marketing-sales`
+- `ecommerce-retail`
+- `content-media`
+- `business-operations`
+- `personal`
+- `agency-services`
+- `international`
+- `other`
 
-During the current migration, some older local content may still contain legacy automation slugs. Prefer `automation-workflow` for new entries.
+The current alias lane is:
+
+- `integration-automation` -> `video-downloaders`
+- `automation-workflow` -> `video-downloaders`
 
 ## Submit form payload shape
 
@@ -95,6 +110,9 @@ The `/submit` form does not write JSON directly. It builds a GitHub issue URL fr
 ```
 
 That payload is converted into a prefilled GitHub issue. See [Submit Workflow](/docs/submit-workflow) for the full handoff.
+
+The current public intake rule stays single-category.
+If a listing needs secondary categories, maintainers add them later during review in the checked-in source of truth.
 
 ## Operator note
 

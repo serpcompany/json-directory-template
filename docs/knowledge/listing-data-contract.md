@@ -11,7 +11,7 @@ Use this as the operator-facing source-of-truth note for listing data.
 - `data/listings.json`
   The normalized main listing dataset the app actually reads at runtime.
 - `sites/<id>/products.json`
-  A site-specific source input for adapter-based builds such as `trial-products-json`.
+  A site-specific source input for adapter-driven builds.
 - `records/build-inputs/**`
   Internal generated snapshot space. Do not edit by hand.
 
@@ -28,6 +28,7 @@ Only edit the file that is the declared source for your site:
   Edit `data/listings.json` directly.
 - `content.listingSource.kind = "trial-products-json"`
   Edit `sites/<id>/products.json`, then rebuild so the adapter regenerates `data/listings.json`.
+  Treat this as the current adapter-driven path, not as the default maintainer story for every site.
 
 Recommended command:
 
@@ -49,9 +50,19 @@ http://localhost:3005/operator/onboard-site
 
 Use that UI when you want required/optional fields, inline validation, and JSON export. Use the checked-in source files directly for quick one-off edits.
 
+## Public submit intake rule
+
+The public `/submit` flow currently collects one category only.
+
+Treat that field as the listing's primary category during intake.
+If review determines the listing belongs in more than one category, maintainers add the extra categories later in:
+
+- `data/listings.json` for direct JSON sites
+- `sites/<id>/products.json` for adapter-driven sites that support category arrays
+
 ## Canonical adapter source shape
 
-For `trial-products-json` sites, the canonical source file is now intentionally small and grouped around the fields this starter actually uses:
+For adapter-driven sites that use `products.json`, the canonical source file is intentionally small and grouped around the fields this starter actually uses:
 
 ```json
 {
@@ -159,6 +170,12 @@ For a full site contract check:
 
 ```bash
 pnpm validate:site -- --site your-site-id
+```
+
+To validate the default site plus all checked-in per-site overrides together:
+
+```bash
+pnpm validate:sites
 ```
 
 For local development against one checked-in site:

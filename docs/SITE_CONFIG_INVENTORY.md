@@ -83,7 +83,7 @@ Why:
 | Surface | Status | File references | Notes |
 | --- | --- | --- | --- |
 | favicon/logo/Open Graph image references | Configurable now | [types.ts](/Users/devin/dev/repos/json-directory-template/sites/types.ts), [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts), [layout.tsx](/Users/devin/dev/repos/json-directory-template/apps/web/app/layout.tsx#L24) | Asset references are modeled and staged |
-| DR badge provider payload | Configurable now | [types.ts](/Users/devin/dev/repos/json-directory-template/sites/types.ts), [site-config.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/site-config.ts) | Provider-first shape is already in place |
+| DR badge provider payload | Not active | n/a | Remove or reintroduce only when a real badge feature lands; the active checked-in site-config contract does not currently expose this surface |
 
 ### Should become configurable next
 
@@ -149,7 +149,7 @@ Why:
 
 | Surface | Status | Recommendation | File references | Notes |
 | --- | --- | --- | --- | --- |
-| `content.listingSource`, `listing-json`, `trial-products-json` naming | Needs product decision | Decide whether these remain durable operator-facing names or get washed into listing-neutral terms | [types.ts](/Users/devin/dev/repos/json-directory-template/sites/types.ts), [site-config.ts](/Users/devin/dev/repos/json-directory-template/sites/serpdownloaders.com/site-config.ts) | Operator-facing terminology debt |
+| `content.listingSource`, `listing-json`, `trial-products-json` naming | Keep as current operator contract for now | Keep the checked-in source-kind names explicit until a broader product rename is actually needed; avoid treating the adapter path as the default maintainer story in onboarding docs | [types.ts](/Users/devin/dev/repos/json-directory-template/sites/types.ts), [site-config.ts](/Users/devin/dev/repos/json-directory-template/sites/serpdownloaders.com/site-config.ts) | Operator-facing terminology should stay factual, but not proof-site-first |
 | Category taxonomy and labels | Keep as starter default for now | Keep one shared canonical taxonomy for the starter, then decide later whether sites can override or subset it | [categories.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/categories.ts) | Submit flow now derives options from this source instead of duplicating a subset |
 | Category normalization special case | Keep internal only | Track and review `integration-automation` -> `automation-workflow` rule | [website-schema.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/website-schema.ts) | Hidden taxonomy rule |
 | Search index contract | Keep as starter default for now | Current contract is generated from listing JSON into `/search/search-index.json` with canonical `url` ownership in each record; clients should consume that URL instead of rebuilding it | [search-index-generator.ts](/Users/devin/dev/repos/json-directory-template/scripts/search-index-generator.ts), [search-index.ts](/Users/devin/dev/repos/json-directory-template/apps/web/lib/search-index.ts), [search-index.json](/Users/devin/dev/repos/json-directory-template/apps/web/public/search/search-index.json) | Record shape: `category`, `content`, `description`, `name`, `slug`, `url`, `website` |

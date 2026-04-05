@@ -56,7 +56,7 @@ jest.mock('@/lib/routes', () => ({
 
 const mockResults = [
   {
-    url: '/websites/example-site',
+    url: '/listing/example-site',
     slug: 'example-site',
     name: 'Example Site',
     description: 'A test website',
@@ -67,7 +67,7 @@ const mockResults = [
     publishedAt: '2023-01-01'
   },
   {
-    url: '/websites/another-site',
+    url: '/listing/another-site',
     slug: 'another-site',
     name: 'Another Site',
     description: 'Another test website',
@@ -78,7 +78,7 @@ const mockResults = [
     publishedAt: '2023-01-02'
   },
   {
-    url: '/websites/third-site',
+    url: '/listing/third-site',
     slug: 'third-site',
     name: 'Third Site',
     description: 'Third test website',
@@ -196,7 +196,7 @@ describe('SearchResults', () => {
     const manyResults = [
       ...mockResults,
       {
-        url: '/websites/fourth-site',
+        url: '/listing/fourth-site',
         slug: 'fourth-site',
         name: 'Fourth Site',
         description: 'Fourth test website',

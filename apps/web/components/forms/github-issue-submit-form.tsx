@@ -108,6 +108,10 @@ export function GitHubIssueSubmitForm() {
                 </option>
               ))}
             </select>
+            <p className="text-xs text-muted-foreground">
+              Choose the best primary category. Reviewers can add secondary
+              categories later if needed.
+            </p>
           </label>
 
           <label className="space-y-2 md:col-span-2">

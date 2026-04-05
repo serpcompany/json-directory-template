@@ -89,26 +89,26 @@ Acceptance:
 
 ### Phase 4. Taxonomy and discovery follow-up
 
-- [ ] Run the taxonomy/discovery pass after the next proof-site work unless onboarding proves it is the blocker first
-- [ ] Define the next category set to support
-- [ ] Split follow-on data, UI, validation, and search work into narrow implementation issues
-- [ ] Add or update tests covering taxonomy normalization and discovery behavior
-- [ ] Update docs so supported category behavior matches the code and issue queue
+- [x] Run the taxonomy/discovery pass after the next proof-site work unless onboarding proves it is the blocker first
+- [x] Define the next category set to support
+- [x] Split follow-on data, UI, validation, and search work into narrow implementation issues
+- [x] Add or update tests covering taxonomy normalization and discovery behavior
+- [x] Update docs so supported category behavior matches the code and issue queue
 
 Acceptance:
 
-- [ ] Taxonomy work is tied to real onboarding/discovery needs, not broad speculation
+- [x] Taxonomy work is tied to real onboarding/discovery needs, not broad speculation
 
 ### Phase 5. Final template cleanliness audit
 
 - [x] Run the human-style audit under `#50`
-- [ ] Publish the immediate starter-surface neutrality fixes found in `#50`
+- [x] Publish the immediate starter-surface neutrality fixes found in `#50`
 - [x] Split broader residue into explicit follow-up issues instead of leaving it in docs/chat
-- [ ] Close `#50` only after the immediate fixes are verified and the follow-up issues are linked
+- [x] Close `#50` only after the immediate fixes are verified and the follow-up issues are linked
 
 Acceptance:
 
-- [ ] The active default starter no longer reads like a lightly rebranded OSS clone on the published branch
+- [x] The active default starter no longer reads like a lightly rebranded OSS clone on the published branch
 - [x] Remaining residue is explicitly tracked in follow-up issues such as `#51` and `#52`
 
 ### Later. Hosted and storage expansion
@@ -130,8 +130,8 @@ Acceptance:
 - [x] `#46` captured the docs/board truth pass and is now done
 - [x] `#47` retired legacy website-authoring assumptions from active workflows, tests, and docs
 - [x] `#48` closed the remaining `default`-site artifact/deploy/docs closeout verification
-- [ ] `#42` is now the next `Ready` item for taxonomy/discovery follow-up
-- [ ] `#50` is the final post-`#42` audit issue for template cleanliness
+- [x] `#42` is now the next `Ready` item for taxonomy/discovery follow-up
+- [x] `#50` is the final post-`#42` audit issue for template cleanliness
 - [x] `#51` tracks the remaining proof-site/operator contract cleanup after `#50`
 - [x] `#52` tracks the remaining legacy public compatibility cleanup after `#50`
 - [x] `#42` stays downstream of the proof-site pass and remaining closeout truth pass unless taxonomy becomes the blocker

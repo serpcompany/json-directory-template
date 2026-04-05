@@ -12,7 +12,7 @@ const entry: SearchIndexEntry = {
   description: 'Browser automation listing',
   name: 'Example Listing',
   slug: 'example-listing',
-  url: '/websites/example-listing',
+  url: '/listing/example-listing',
   website: 'https://example.com',
 };
 
@@ -23,7 +23,7 @@ describe('search-utils', () => {
 
   it('uses the generated listing url and category when transforming metadata', () => {
     expect(transformToWebsiteMetadata(entry)).toEqual({
-      url: '/websites/example-listing',
+      url: '/listing/example-listing',
       slug: 'example-listing',
       website: 'https://example.com',
       name: 'Example Listing',
@@ -38,7 +38,7 @@ describe('search-utils', () => {
   it('matches search queries against the canonical fields only', () => {
     expect(matchesSearchQuery(entry, 'browser automation')).toBe(true);
     expect(matchesSearchQuery(entry, 'developer tools')).toBe(true);
-    expect(matchesSearchQuery(entry, 'websites')).toBe(true);
+    expect(matchesSearchQuery(entry, 'listing')).toBe(true);
     expect(matchesSearchQuery(entry, 'missing term')).toBe(false);
   });
 });

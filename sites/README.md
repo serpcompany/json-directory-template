@@ -13,7 +13,7 @@ This directory is the checked-in source of truth for per-site configuration and 
 - `<site-id>/site-content.ts`
   Site-owned optional extras such as network links or external resources.
 - `<site-id>/products.json`
-  Site-specific source input when that site uses a source adapter like `trial-products-json`.
+  Site-specific source input for adapter-driven sites that emit normalized listing data during build.
 
 For adapter-driven sites, keep `products.json` grouped around the fields this starter actually uses:
 
@@ -35,7 +35,7 @@ Do not treat `products.json` as a dump for extension implementation or design se
 The source-of-truth file for listing data is defined by each site's `content.listingSource`.
 
 - If `kind = "listing-json"`, edit `data/listings.json`.
-- If `kind = "trial-products-json"`, edit `sites/<site-id>/products.json`, then run:
+- If the site uses the adapter-driven source kind currently named `trial-products-json`, edit `sites/<site-id>/products.json`, then run:
 
 ```bash
 pnpm prepare:site -- --site <site-id>

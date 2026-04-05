@@ -27,16 +27,17 @@ function loadWorkflow(): WorkflowDefinition {
 }
 
 describe('pr-review workflow', () => {
-  it('validates the active checked-in sites instead of the legacy website frontmatter corpus', () => {
+  it('validates the active checked-in sites through the generic site-validation entrypoint', () => {
     const workflow = loadWorkflow();
     const validateJob = workflow.jobs.validate;
     const stepRuns = validateJob.steps?.map((step) => step.run).filter(Boolean);
 
-    expect(stepRuns).toContain('pnpm validate:site -- --site default');
-    expect(stepRuns).toContain(
+    expect(stepRuns).toContain('pnpm validate:sites');
+    expect(stepRuns).not.toContain('pnpm validate:site -- --site default');
+    expect(stepRuns).not.toContain(
       'pnpm validate:site -- --site serpdownloaders.com'
     );
-    expect(stepRuns).toContain('pnpm validate:site -- --site serp.software');
+    expect(stepRuns).not.toContain('pnpm validate:site -- --site serp.software');
     expect(stepRuns).not.toContain('pnpm check:frontmatter');
   });
 });
