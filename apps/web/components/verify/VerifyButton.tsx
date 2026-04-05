@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { CheckCircle, Loader2 } from 'lucide-react';
 
 type VerifyState = 'idle' | 'loading' | 'success' | 'error';
@@ -12,6 +13,7 @@ interface VerifyButtonProps {
 export function VerifyButton({ token }: VerifyButtonProps) {
   const [state, setState] = useState<VerifyState>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [slug, setSlug] = useState<string>('');
 
   async function handleVerify() {
     setState('loading');
@@ -22,9 +24,10 @@ export function VerifyButton({ token }: VerifyButtonProps) {
         body: JSON.stringify({ token }),
       });
 
-      const data = (await res.json()) as { verified?: boolean; message?: string };
+      const data = (await res.json()) as { verified?: boolean; message?: string; slug?: string };
 
       if (res.ok && data.verified) {
+        setSlug(data.slug ?? '');
         setState('success');
       } else {
         setErrorMessage(data.message ?? 'Verification failed.');
@@ -38,9 +41,19 @@ export function VerifyButton({ token }: VerifyButtonProps) {
 
   if (state === 'success') {
     return (
-      <div className="flex items-center gap-2 rounded-md bg-emerald-50 px-4 py-3 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-        <CheckCircle className="size-5 shrink-0" />
-        <span>Your submission is verified! We&apos;ll review it soon.</span>
+      <div className="space-y-3 rounded-md bg-emerald-50 px-4 py-3 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+        <div className="flex items-center gap-2">
+          <CheckCircle className="size-5 shrink-0" />
+          <span>Verified! Your listing is live.</span>
+        </div>
+        {slug && (
+          <Link
+            href={`/websites/${slug}`}
+            className="block text-sm font-medium underline underline-offset-2 hover:opacity-80"
+          >
+            View your listing →
+          </Link>
+        )}
       </div>
     );
   }

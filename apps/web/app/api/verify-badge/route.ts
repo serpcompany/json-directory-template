@@ -1,8 +1,10 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 import { decode } from 'html-entities';
+import { revalidatePath } from 'next/cache';
 import { siteConfig } from '@/lib/site-config';
 import { readSubmissions, writeSubmissions } from '@/lib/submissions-store';
+import { appendListing } from '@/lib/listings-store';
 
 const MAX_BODY_BYTES = 500 * 1024; // 500 KB
 
@@ -141,5 +143,23 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  return NextResponse.json({ verified: true, message: 'Verified! Your submission is now in review.' });
+  // Build slug and publish listing
+  const slug = submission.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  appendListing({
+    slug,
+    name: submission.name,
+    website: submission.website,
+    description: submission.description,
+    content: submission.content ?? '',
+    category: submission.category,
+    categories: [submission.category],
+    resourceLinks: submission.resourceLinks ?? [],
+    publishedAt: new Date().toISOString().slice(0, 10),
+    featured: false,
+  })
+  revalidatePath('/')
+  revalidatePath('/websites')
+  revalidatePath(`/websites/${slug}`)
+
+  return NextResponse.json({ verified: true, message: 'Verified! Your listing is live.', slug });
 }
