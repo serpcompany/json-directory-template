@@ -115,6 +115,14 @@ describe('resolveSiteConfig', () => {
     expect(config.id).toBe('default');
     expect(config.name).toBe('Directory Starter');
     expect(config.domain).toBe('example.com');
+    expect(config.githubIssueOwner).toBe('serpcompany');
+    expect(config.githubIssueRepo).toBe('json-directory-template');
+    expect(config.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/json-directory-template/issues/new/choose'
+    );
+    expect(config.githubRepoUrl).toBe(
+      'https://github.com/serpcompany/json-directory-template'
+    );
     expect(config.gtmId).toBeUndefined();
     expect(config.listingRouteBasePath).toBe('listing');
     expect(config.docsRouteBasePath).toBe('docs');

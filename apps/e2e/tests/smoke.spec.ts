@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test'
 
 const detailListing = {
-  name: 'Acurast Hub',
-  slug: 'acurast-hub-llms-txt'
+  name: '123Movies Downloader',
+  slug: '123movies-downloader'
 } as const
 
 async function expectUnavailableRoute(page: Parameters<typeof test>[1] extends never ? never : any, path: string) {
@@ -69,14 +69,19 @@ test.describe('Static starter smoke tests', () => {
       })
     })
 
-    await page.goto('/submit', { waitUntil: 'domcontentloaded' })
+    await page.goto('/submit', { waitUntil: 'networkidle' })
+
+    const continueButton = page.getByRole('button', { name: /continue on github/i })
 
     await page.getByLabel('Name').fill('Example Project')
     await page.getByLabel('Category').selectOption('developer-tools')
     await page.getByLabel('Listing URL').fill('https://example.com')
-    await page.getByRole('button', { name: /continue on github/i }).click()
+    await expect(continueButton).toBeEnabled()
+    await continueButton.click()
 
-    await expect(page).toHaveURL(/github\.com\/serpapps\/support\/issues\/new/)
+    await expect(page).toHaveURL(
+      /github\.com\/serpcompany\/json-directory-template\/issues\/new/
+    )
     await expect.poll(() => redirectedIssueUrl).toContain('Submit+Listing%3A+Example+Project')
     await expect.poll(() => redirectedIssueUrl).toContain('Listing+URL%3A+https%3A%2F%2Fexample.com')
     await expect.poll(() => redirectedIssueUrl).toContain('Category%3A+developer-tools')
@@ -84,7 +89,7 @@ test.describe('Static starter smoke tests', () => {
 
   test('legacy aliases still redirect to the supported public surface', async ({ page }) => {
     await page.goto('/websites', { waitUntil: 'domcontentloaded' })
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/listing$/)
 
     await page.goto('/news', { waitUntil: 'domcontentloaded' })
     await expect(page).toHaveURL(/\/$/)

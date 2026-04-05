@@ -49,11 +49,11 @@ export const defaultSiteConfig: CheckedInSiteConfig = {
     tagline: 'Discover listings and resources',
   },
   social: {
-    githubIssueOwner: 'serpapps',
-    githubIssueRepo: 'support',
+    githubIssueOwner: 'serpcompany',
+    githubIssueRepo: 'json-directory-template',
     githubIssuesUrl:
-      'https://github.com/serpapps/support/issues/new/choose',
-    githubRepoUrl: 'https://github.com/serpapps/support',
+      'https://github.com/serpcompany/json-directory-template/issues/new/choose',
+    githubRepoUrl: 'https://github.com/serpcompany/json-directory-template',
     githubUrl: 'https://github.com/serpcompany',
     redditUrl: 'https://www.reddit.com/r/serpapps/',
     twitterUrl: 'https://x.com/serpcompany',
