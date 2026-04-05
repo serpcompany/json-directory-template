@@ -69,5 +69,19 @@
     "resourceLinks": [],
     "publishedAt": "2026-04-05",
     "featured": false
+  },
+  {
+    "slug": "https-test-badge-verify-surge-sh",
+    "name": "https://test-badge-verify.surge.sh/",
+    "website": "https://test-badge-verify.surge.sh/",
+    "description": "https://test-badge-verify.surge.sh/",
+    "content": "https://test-badge-verify.surge.sh/",
+    "category": "data-analytics",
+    "categories": [
+      "data-analytics"
+    ],
+    "resourceLinks": [],
+    "publishedAt": "2026-04-05",
+    "featured": false
   }
 ]
