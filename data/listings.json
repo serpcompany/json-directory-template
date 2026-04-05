@@ -1,7 +1,9 @@
 [
   {
     "category": "developer-tools",
-    "categories": ["developer-tools"],
+    "categories": [
+      "developer-tools"
+    ],
     "content": "## Overview\n\nExample API Toolkit is a sample listing that shows how starter entries render across the directory, search index, and detail pages.\n\n## Why it is included\n\nThis entry gives maintainers a safe default example for the template without carrying over product copy from a previous project.\n\n## What to customize\n\n- Swap the name, slug, and URL for your real listing\n- Replace this long-form Markdown with the details you want on the public page\n- Add resource links, media, or categories that match your own site\n\n## Notes\n\nUse this entry as a formatting reference only. It is intentionally generic.",
     "description": "Sample developer-tools listing used to demonstrate the starter data shape.",
     "featured": true,
@@ -18,7 +20,9 @@
   },
   {
     "category": "data-analytics",
-    "categories": ["data-analytics"],
+    "categories": [
+      "data-analytics"
+    ],
     "content": "## Overview\n\nNorthwind Analytics is a sample analytics entry for teams that want to see how another category behaves before adding their own real data.\n\n## Why it is included\n\nThe starter needs more than one listing so search, filtering, featured sections, and category pages can be verified during setup.\n\n## What to customize\n\n- Replace the summary with your own product or directory listing copy\n- Point the website and resource links at your own properties\n- Mark the entry featured only if it belongs in your default hero selection\n\n## Notes\n\nKeeping a neutral sample here makes the starter easier to rebrand safely.",
     "description": "Neutral sample analytics listing for validating category, search, and detail-page behavior.",
     "featured": false,
@@ -35,7 +39,9 @@
   },
   {
     "category": "infrastructure-cloud",
-    "categories": ["infrastructure-cloud"],
+    "categories": [
+      "infrastructure-cloud"
+    ],
     "content": "## Overview\n\nHarbor Cloud is a sample infrastructure listing that rounds out the default starter dataset with a second non-featured category.\n\n## Why it is included\n\nThis entry helps verify that category pages, search results, and directory cards still behave correctly when the starter contains a small but varied dataset.\n\n## What to customize\n\n- Replace the placeholder copy with your actual listing details\n- Update the categories if your directory uses a different taxonomy\n- Add additional resource links if you want the card to demonstrate richer metadata\n\n## Notes\n\nThe default starter only needs enough data to prove the template contract, not to act like a shipped catalog.",
     "description": "Neutral sample infrastructure listing for the starter dataset.",
     "featured": false,

@@ -27,6 +27,7 @@
     "deploy:site": "pnpm tsx scripts/deploy-site.ts",
     "generate:badges": "tsx scripts/generate-badges.ts",
     "submissions": "tsx scripts/submissions.ts",
+    "test:submission-flow": "tsx scripts/test-submission-flow.ts",
     "generate:llms": "pnpm --filter generator start",
     "generate:website": "turbo gen website",
     "postinstall": "manypkg fix",
