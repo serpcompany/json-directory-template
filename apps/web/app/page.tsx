@@ -32,6 +32,7 @@ export const metadata: Metadata = generateBaseMetadata({
 })
 
 export default async function Home() {
+  const HOMEPAGE_SECTION_LIMIT = 50
   const {
     allProjects,
     featuredProjects,
@@ -42,6 +43,8 @@ export default async function Home() {
 
   // Sort projects alphabetically by name server-side
   const sortedProjects = [...allProjects].sort((a, b) => a.name.localeCompare(b.name))
+  const homepageProjects = sortedProjects.slice(0, HOMEPAGE_SECTION_LIMIT)
+  const homepageFeaturedGuides = featuredGuides.slice(0, HOMEPAGE_SECTION_LIMIT)
   const activeCategories = getActiveCategories(allProjects)
   const activeCategorySlugs = activeCategories.map(category => category.slug)
 
@@ -70,12 +73,16 @@ export default async function Home() {
 
             {/* All Websites Section */}
             <section>
-              <StaticWebsitesList websites={sortedProjects} totalCount={totalCount} />
+              <StaticWebsitesList
+                websites={homepageProjects}
+                totalCount={totalCount}
+                displayLimit={HOMEPAGE_SECTION_LIMIT}
+              />
             </section>
 
             {siteConfig.features.showExternalResources && <ExternalResourcesSection />}
             {siteConfig.features.showFeaturedGuides && (
-              <FeaturedGuidesSection guides={featuredGuides} />
+              <FeaturedGuidesSection guides={homepageFeaturedGuides} />
             )}
             {siteConfig.features.showCreatorProjects && <CreatorProjectsSection />}
             {siteConfig.features.showNewsletter && <NewsletterSection />}

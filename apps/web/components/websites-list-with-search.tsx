@@ -16,6 +16,7 @@ interface WebsitesListWithSearchProps {
   emptyDescription?: string;
   initialShowFavoritesOnly?: boolean;
   totalCount?: number;
+  displayLimit?: number;
 }
 
 export function WebsitesListWithSearch({
@@ -24,6 +25,7 @@ export function WebsitesListWithSearch({
   emptyDescription = `There are no directory entries available. Try checking back later or ${siteCopy.submitLabelSentence}.`,
   initialShowFavoritesOnly = false,
   totalCount,
+  displayLimit,
 }: WebsitesListWithSearchProps) {
   const [sortBy, setSortBy] = useState<'name' | 'latest'>('latest');
   const [searchQuery, setSearchQuery] = useState('');
@@ -140,7 +142,7 @@ export function WebsitesListWithSearch({
             >
               <LLMGrid
                 items={filteredAndSortedWebsites}
-                maxItems={undefined}
+                maxItems={displayLimit}
                 animateIn={!searchQuery.trim() && !isLoading}
                 className="transition-all duration-500 ease-in-out"
               />
@@ -150,7 +152,7 @@ export function WebsitesListWithSearch({
           <div className="mt-8 text-center" aria-live="polite">
             <div className="text-sm text-muted-foreground">
               <p>
-                Showing all {filteredAndSortedWebsites.length} matching{' '}
+                Showing {Math.min(filteredAndSortedWebsites.length, displayLimit ?? filteredAndSortedWebsites.length)} of {filteredAndSortedWebsites.length} matching{' '}
                 {siteCopy.listingName.plural}.
               </p>
             </div>

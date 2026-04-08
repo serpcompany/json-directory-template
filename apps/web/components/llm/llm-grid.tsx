@@ -120,8 +120,7 @@ export function LLMGrid({
         if (!item?.slug) return null
 
         const isVisible = !maxItems || index < maxItems
-        // Hide items 7 and 8 (index 6, 7) on screens smaller than 4xl
-        const isExtraItem = index >= 6
+        const collapseToWideScreensOnly = maxItems === undefined && index >= 6
 
         return (
           <div
@@ -131,7 +130,7 @@ export function LLMGrid({
               isVisible ? 'scale-100' : 'scale-95 absolute pointer-events-none',
               animateIn && isVisible && 'animate-fade-in-up opacity-0',
               animateIn && isVisible && getStaggerClass(index),
-              isExtraItem && isVisible && 'hidden 4xl:block'
+              collapseToWideScreensOnly && isVisible && 'hidden 4xl:block'
             )}
           >
             <Card className="p-4 relative h-full group">
