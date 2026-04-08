@@ -1,6 +1,20 @@
 import type { CheckedInSiteConfigOverride } from '../types';
 
 export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
+  branding: {
+    favicon: {
+      path: 'sites/serp.co/assets/favicon.ico',
+      source: 'local-path',
+    },
+    logo: {
+      path: 'sites/serp.co/assets/logo.png',
+      source: 'local-path',
+    },
+    opengraphImage: {
+      path: 'sites/serp.co/assets/opengraph-image.png',
+      source: 'local-path',
+    },
+  },
   build: {
     artifactDir: 'dist/sites/serp.co',
   },
