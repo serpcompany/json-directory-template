@@ -25,6 +25,12 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
     },
     submitLabel: 'Submit a Product',
   },
+  deploy: {
+    branch: 'main',
+    preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+    repoUrl: 'https://github.com/serpcompany/staging.serp.co.git',
+    strategy: 'github-pages-repo-sync',
+  },
   content: {
     listingSource: {
       kind: 'listing-json',
