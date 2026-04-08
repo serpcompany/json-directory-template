@@ -26,7 +26,8 @@ describe('seo-config', () => {
     expect(SITE_APPLE_TOUCH_ICON_URL).toBe(
       `${SITE_PUBLIC_URL}/apple-touch-icon.png`
     );
-    expect(SITE_LOGO_URL).toBe(`${SITE_PUBLIC_URL}/logo.png`);
+    expect(SITE_LOGO_URL).toBe(`${SITE_PUBLIC_URL}/placeholder.svg`);
+    expect(DEFAULT_OG_IMAGE.url).toBe(SITE_LOGO_URL);
     expect(SITE_TWITTER_HANDLE).toBeNull();
   });
 

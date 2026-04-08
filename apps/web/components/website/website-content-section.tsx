@@ -40,6 +40,7 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
         Boolean(value) && values.indexOf(value) === index
     )
     .map((categorySlug) => getCategoryDisplayName(categorySlug));
+  const featuredImageUrl = website.media?.images?.[0];
 
   if (website.content) {
     const renderedContent = stripDuplicateLinksSection(
@@ -49,6 +50,15 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
 
     return (
       <section className="animate-fade-in-up opacity-0 stagger-4">
+        {featuredImageUrl ? (
+          <div className="mb-8 overflow-hidden rounded-2xl border border-border/50 bg-card/50">
+            <img
+              src={featuredImageUrl}
+              alt={`${website.name} featured image`}
+              className="h-auto w-full object-cover"
+            />
+          </div>
+        ) : null}
         <div className="prose dark:prose-invert max-w-none prose-headings:scroll-mt-20">
           <MDXRemote
             source={renderedContent}
@@ -69,6 +79,15 @@ export function WebsiteContentSection({ website }: WebsiteContentSectionProps) {
       className="animate-fade-in-up opacity-0 stagger-4 space-y-8"
       aria-labelledby="about-heading"
     >
+      {featuredImageUrl ? (
+        <div className="overflow-hidden rounded-2xl border border-border/50 bg-card/50">
+          <img
+            src={featuredImageUrl}
+            alt={`${website.name} featured image`}
+            className="h-auto w-full object-cover"
+          />
+        </div>
+      ) : null}
       {/* About Section */}
       <div className="rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-6 md:p-8">
         <div className="flex items-center gap-3 mb-4">

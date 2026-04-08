@@ -147,6 +147,51 @@ function sanitizeWebsiteDescription(description: string): string {
     .trim();
 }
 
+function normalizeContentForComparison(value: string): string {
+  return value
+    .replace(/^#+\s*/gm, ' ')
+    .replace(/`{1,3}[\s\S]*?`{1,3}/g, ' ')
+    .replace(/\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/[>*_~-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
+function normalizeJsonContent(
+  content: string | undefined,
+  description: string
+): string | undefined {
+  if (!content) {
+    return undefined;
+  }
+
+  const trimmedContent = content.trim();
+
+  if (!trimmedContent) {
+    return undefined;
+  }
+
+  const normalizedDescription = normalizeContentForComparison(description);
+  const normalizedContent = normalizeContentForComparison(trimmedContent);
+  const normalizedOverviewContent = normalizedContent.replace(
+    /^overview\s+/,
+    ''
+  );
+  const markdownSectionCount = (trimmedContent.match(/^##\s+/gm) || []).length;
+
+  if (
+    normalizedContent === normalizedDescription ||
+    (markdownSectionCount <= 1 &&
+      normalizedOverviewContent === normalizedDescription)
+  ) {
+    return undefined;
+  }
+
+  return trimmedContent;
+}
+
 export function parseJsonWebsiteEntries(input: unknown): WebsiteJsonEntry[] {
   const result = websiteJsonEntriesSchema.safeParse(input);
 
@@ -169,6 +214,7 @@ export function normalizeJsonWebsite(
 ): NormalizedWebsiteEntry {
   const categories = normalizeJsonCategories(entry.category, entry.categories);
   const category = categories[0];
+  const description = sanitizeWebsiteDescription(entry.description);
 
   if (!category) {
     throw new Error(
@@ -179,8 +225,8 @@ export function normalizeJsonWebsite(
   return {
     category,
     categories,
-    content: entry.content,
-    description: sanitizeWebsiteDescription(entry.description),
+    content: normalizeJsonContent(entry.content, description),
+    description,
     entityType: entry.entityType,
     featured: entry.featured,
     isUnofficial: entry.isUnofficial,

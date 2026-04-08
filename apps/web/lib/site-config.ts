@@ -3,11 +3,20 @@ import {
   resolveCheckedInSiteConfig,
 } from '../../../sites/index';
 import {
+  type AssetSource,
   type SiteCopyConfig,
   type SiteFeatureFlags,
 } from '../../../sites/types';
 
+type SiteBrandingConfig = {
+  appleTouchIconUrl?: string;
+  faviconUrl?: string;
+  logoUrl?: string;
+  opengraphImageUrl?: string;
+};
+
 export type SiteConfig = {
+  branding: SiteBrandingConfig;
   copy: SiteCopyConfig;
   description: string;
   docsRouteBasePath: string;
@@ -28,6 +37,12 @@ export type SiteConfig = {
   tagline: string;
   twitterUrl: string;
 };
+
+const runtimeBrandAssetPaths = {
+  favicon: '/favicon.ico',
+  logo: '/logo.png',
+  opengraphImage: '/opengraph-image.png',
+} as const;
 
 const DEFAULT_STARTER_PLACEHOLDER = {
   githubIssueOwner: 'example',
@@ -80,12 +95,44 @@ export function getConfiguredSocialLinks(config: SiteConfig): string[] {
   return [config.githubUrl, config.redditUrl, config.twitterUrl]
 }
 
+function resolveRuntimeBrandAssetUrl(
+  asset: AssetSource | undefined,
+  kind: keyof typeof runtimeBrandAssetPaths
+): string | undefined {
+  if (!asset) {
+    return undefined;
+  }
+
+  if (asset.source === 'url') {
+    return asset.url;
+  }
+
+  return runtimeBrandAssetPaths[kind];
+}
+
 export function resolveSiteConfig(
   siteId = process.env.NEXT_PUBLIC_SITE_ID || process.env.SITE_ID || defaultSiteConfig.id
 ): SiteConfig {
   const configuredSite = resolveCheckedInSiteConfig(siteId);
 
   return {
+    branding: {
+      appleTouchIconUrl: resolveRuntimeBrandAssetUrl(
+        configuredSite.branding.logo,
+        'logo'
+      )
+        ? '/apple-touch-icon.png'
+        : undefined,
+      faviconUrl: resolveRuntimeBrandAssetUrl(
+        configuredSite.branding.favicon,
+        'favicon'
+      ),
+      logoUrl: resolveRuntimeBrandAssetUrl(configuredSite.branding.logo, 'logo'),
+      opengraphImageUrl: resolveRuntimeBrandAssetUrl(
+        configuredSite.branding.opengraphImage,
+        'opengraphImage'
+      ),
+    },
     copy: configuredSite.copy,
     description: configuredSite.site.description,
     docsRouteBasePath: configuredSite.routes.docsBasePath,

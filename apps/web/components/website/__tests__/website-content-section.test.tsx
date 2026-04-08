@@ -37,6 +37,23 @@ describe('WebsiteContentSection', () => {
     expect(screen.queryByText('About Example Project')).not.toBeInTheDocument();
   });
 
+  it('renders the first media image as the featured image when available', () => {
+    render(
+      <WebsiteContentSection
+        website={{
+          ...baseWebsite,
+          media: {
+            images: ['https://cdn.example.com/featured-image.png'],
+          },
+        }}
+      />
+    );
+
+    expect(
+      screen.getByRole('img', { name: 'Example Project featured image' })
+    ).toHaveAttribute('src', 'https://cdn.example.com/featured-image.png');
+  });
+
   it('strips the duplicate markdown links section when supplemental resource links are present', () => {
     render(
       <WebsiteContentSection

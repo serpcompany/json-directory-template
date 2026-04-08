@@ -37,8 +37,8 @@ export function AppSidebar({
     : categories;
 
   return (
-    <div className="sticky top-16 hidden w-[240px] max-w-[240px] min-w-[240px] overflow-hidden sm:block h-screen border-r">
-      <div className="p-4 space-y-6">
+    <div className="sticky top-16 hidden h-[calc(100vh-4rem)] w-[240px] max-w-[240px] min-w-[240px] overflow-y-auto border-r sm:block">
+      <div className="space-y-6 p-4">
         {/* Navigation section with proper heading hierarchy */}
         <h2 className="sr-only">Navigation</h2>
 

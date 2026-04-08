@@ -17,6 +17,20 @@ describe('FaviconWithFallback', () => {
     ).toHaveAttribute('src', 'https://cdn.example.com/logo.png');
   });
 
+  it('uses remote logo urls even when they do not end with .png', () => {
+    render(
+      <FaviconWithFallback
+        website="https://example.com"
+        name="Example Project"
+        logoUrl="https://imagedelivery.net/example/logo/public"
+      />
+    );
+
+    expect(
+      screen.getByRole('img', { name: 'Example Project logo' })
+    ).toHaveAttribute('src', 'https://imagedelivery.net/example/logo/public');
+  });
+
   it('falls back to the serp logo when no logo is provided', () => {
     render(
       <FaviconWithFallback
@@ -26,11 +40,11 @@ describe('FaviconWithFallback', () => {
     );
 
     expect(
-      screen.getByRole('img', { name: 'Example Project fallback logo' })
-    ).toHaveAttribute('src', LISTING_LOGO_FALLBACK_PATH);
+      screen.getByRole('img', { name: 'Example Project favicon' })
+    ).toHaveAttribute('src', expect.stringContaining('example.com'));
   });
 
-  it('renders the serp fallback logo when the provided logo is not a png', () => {
+  it('uses the site favicon when the provided local asset is not a supported image type', () => {
     render(
       <FaviconWithFallback
         website="https://example.com"
@@ -40,8 +54,8 @@ describe('FaviconWithFallback', () => {
     );
 
     expect(
-      screen.getByRole('img', { name: 'Example Project fallback logo' })
-    ).toHaveAttribute('src', LISTING_LOGO_FALLBACK_PATH);
+      screen.getByRole('img', { name: 'Example Project favicon' })
+    ).toHaveAttribute('src', expect.stringContaining('example.com'));
     expect(
       screen.queryByRole('img', { name: 'Example Project logo' })
     ).not.toBeInTheDocument();
@@ -57,6 +71,23 @@ describe('FaviconWithFallback', () => {
     );
 
     fireEvent.error(screen.getByRole('img', { name: 'Example Project logo' }));
+
+    expect(
+      screen.getByRole('img', { name: 'Example Project favicon' })
+    ).toHaveAttribute('src', expect.stringContaining('example.com'));
+  });
+
+  it('falls back to the neutral placeholder when the logo and favicon both fail', () => {
+    render(
+      <FaviconWithFallback
+        website="https://example.com"
+        name="Example Project"
+        logoUrl="https://cdn.example.com/logo.png"
+      />
+    );
+
+    fireEvent.error(screen.getByRole('img', { name: 'Example Project logo' }));
+    fireEvent.error(screen.getByRole('img', { name: 'Example Project favicon' }));
 
     expect(
       screen.getByRole('img', { name: 'Example Project fallback logo' })

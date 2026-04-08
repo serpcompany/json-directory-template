@@ -1,18 +1,23 @@
 import {
   DEFAULT_SITE_LISTING_LOGO_FALLBACK_PATH,
-  SITE_BRAND_LISTING_LOGO_FALLBACK_PATH,
   getListingLogoFallbackPath,
   shouldUseProvidedListingLogo,
 } from '@/lib/listing-logo-presentation';
 
 jest.mock('@/lib/site-config', () => ({
   siteConfig: {
+    branding: {},
     id: 'default',
   },
 }));
 
 describe('listing-logo-presentation', () => {
-  it('only treats png logos as preferred provided logos', () => {
+  it('accepts remote logo urls and supported local raster/vector assets', () => {
+    expect(
+      shouldUseProvidedListingLogo(
+        'https://imagedelivery.net/example/logo/public'
+      )
+    ).toBe(true);
     expect(
       shouldUseProvidedListingLogo(
         '/listing-logos/serpdownloaders.com/youtube-downloader.png'
@@ -26,12 +31,13 @@ describe('listing-logo-presentation', () => {
 
     expect(
       shouldUseProvidedListingLogo(
-        '/listing-logos/serpdownloaders.com/youtube-downloader.ico'
+        '/listing-logos/serpdownloaders.com/example-logo.svg'
       )
-    ).toBe(false);
+    ).toBe(true);
+
     expect(
       shouldUseProvidedListingLogo(
-        '/listing-logos/serpdownloaders.com/youtube-downloader.svg'
+        '/listing-logos/serpdownloaders.com/youtube-downloader.ico'
       )
     ).toBe(false);
     expect(shouldUseProvidedListingLogo(undefined)).toBe(false);
@@ -42,13 +48,12 @@ describe('listing-logo-presentation', () => {
     expect(getListingLogoFallbackPath()).toBe('/placeholder.svg');
   });
 
-  it('keeps the site-brand fallback available for checked-in example sites', async () => {
+  it('uses a configured site-brand fallback when one exists', async () => {
     const { siteConfig } = await import('@/lib/site-config');
-    siteConfig.id = 'serpdownloaders.com';
+    siteConfig.branding.logoUrl = '/logo.png';
 
-    expect(SITE_BRAND_LISTING_LOGO_FALLBACK_PATH).toBe('/logo.png');
     expect(getListingLogoFallbackPath()).toBe('/logo.png');
 
-    siteConfig.id = 'default';
+    siteConfig.branding.logoUrl = undefined;
   });
 });

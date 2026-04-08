@@ -24,10 +24,14 @@ export const SITE_URL = SITE_PUBLIC_URL
 export const SITE_TWITTER_HANDLE = hasConfiguredPublicSocialLinks(siteConfig)
   ? getTwitterHandleFromUrl(siteConfig.twitterUrl)
   : null
-export const SITE_FAVICON_URL = `${SITE_URL}/favicon.ico`
-export const SITE_APPLE_TOUCH_ICON_URL = `${SITE_URL}/apple-touch-icon.png`
-export const SITE_LOGO_URL = `${SITE_URL}/logo.png`
-export const SITE_OG_IMAGE_URL = `${SITE_URL}/opengraph-image.png`
+export const SITE_FAVICON_URL =
+  siteConfig.branding.faviconUrl ?? `${SITE_URL}/favicon.ico`
+export const SITE_APPLE_TOUCH_ICON_URL =
+  siteConfig.branding.appleTouchIconUrl ?? `${SITE_URL}/apple-touch-icon.png`
+export const SITE_LOGO_URL =
+  siteConfig.branding.logoUrl ?? `${SITE_URL}/placeholder.svg`
+export const SITE_OG_IMAGE_URL =
+  siteConfig.branding.opengraphImageUrl ?? SITE_LOGO_URL
 export const DIRECTORY_LISTINGS_KEYWORD = `directory ${siteCopy.listingName.plural}`
 
 // SEO Defaults

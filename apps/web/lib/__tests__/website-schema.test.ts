@@ -187,4 +187,17 @@ describe('normalizeJsonWebsite', () => {
       'video-downloaders',
     ]);
   });
+
+  it('drops trivial overview content when it only repeats the description', () => {
+    const [entry] = parseJsonWebsiteEntries([
+      buildWebsiteEntry({
+        content: '## Overview\n\nA concise test description.',
+      }),
+    ]);
+
+    const normalized = normalizeJsonWebsite(entry);
+
+    expect(normalized.content).toBeUndefined();
+    expect(normalized.description).toBe('A concise test description.');
+  });
 });

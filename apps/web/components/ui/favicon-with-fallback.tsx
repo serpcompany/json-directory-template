@@ -1,7 +1,8 @@
 'use client';
 
+import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url'
 import { Globe } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   getListingLogoFallbackPath,
   shouldUseProvidedListingLogo,
@@ -21,19 +22,51 @@ interface FaviconWithFallbackProps {
  * @returns React component that handles favicon loading and errors
  */
 export function FaviconWithFallback({
-  website: _website,
+  website,
   name,
   logoUrl,
   size = 32,
   className = 'rounded-lg',
 }: FaviconWithFallbackProps) {
-  const [imageError, setImageError] = useState(false);
-  const [fallbackError, setFallbackError] = useState(false);
+  const [candidateIndex, setCandidateIndex] = useState(0);
+  const fallbackPath = getListingLogoFallbackPath();
   const shouldUseProvidedLogo = shouldUseProvidedListingLogo(logoUrl);
-  const shouldUseFallbackLogo =
-    imageError || !shouldUseProvidedLogo || !logoUrl;
+  const faviconUrl = getFaviconUrl(website);
+  const imageCandidates = useMemo(() => {
+    const candidates: Array<{
+      alt: string;
+      src: string;
+    }> = [];
 
-  if (shouldUseFallbackLogo && fallbackError) {
+    if (shouldUseProvidedLogo && logoUrl) {
+      candidates.push({
+        alt: `${name} logo`,
+        src: logoUrl,
+      });
+    }
+
+    if (faviconUrl && faviconUrl !== '/placeholder.svg') {
+      candidates.push({
+        alt: `${name} favicon`,
+        src: faviconUrl,
+      });
+    }
+
+    candidates.push({
+      alt: `${name} fallback logo`,
+      src: fallbackPath,
+    });
+
+    return candidates;
+  }, [fallbackPath, faviconUrl, logoUrl, name, shouldUseProvidedLogo]);
+
+  useEffect(() => {
+    setCandidateIndex(0);
+  }, [imageCandidates]);
+
+  const currentImage = imageCandidates[candidateIndex];
+
+  if (!currentImage) {
     return (
       <div
         className={`${className} flex-shrink-0 flex items-center justify-center bg-muted`}
@@ -44,28 +77,16 @@ export function FaviconWithFallback({
     );
   }
 
-  const fallbackPath = getListingLogoFallbackPath();
-  const imageSrc =
-    shouldUseFallbackLogo || !logoUrl ? fallbackPath : logoUrl;
-  const imageAlt = shouldUseFallbackLogo
-    ? `${name} fallback logo`
-    : `${name} logo`;
-
   return (
     <img
-      src={imageSrc}
-      alt={imageAlt}
+      src={currentImage.src}
+      alt={currentImage.alt}
       width={size}
       height={size}
       className={`${className} flex-shrink-0 object-contain`}
       style={{ width: `${size}px`, height: 'auto', aspectRatio: '1/1' }}
       onError={() => {
-        if (shouldUseFallbackLogo) {
-          setFallbackError(true);
-          return;
-        }
-
-        setImageError(true);
+        setCandidateIndex((currentIndex) => currentIndex + 1);
       }}
     />
   );

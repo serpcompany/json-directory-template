@@ -49,6 +49,12 @@ describe('resolveSiteConfig', () => {
       showNewsletter: true,
       showProjects: false,
     });
+    expect(config.branding).toEqual({
+      appleTouchIconUrl: '/apple-touch-icon.png',
+      faviconUrl: '/favicon.ico',
+      logoUrl: '/logo.png',
+      opengraphImageUrl: '/opengraph-image.png',
+    });
   });
 
   it('loads the checked-in per-site config for serp.software', () => {
@@ -91,6 +97,44 @@ describe('resolveSiteConfig', () => {
       showGuides: false,
       showNewsletter: true,
       showProjects: false,
+    });
+  });
+
+  it('loads the checked-in per-site config for serp.co', () => {
+    const config = resolveSiteConfig('serp.co');
+
+    expect(config.id).toBe('serp.co');
+    expect(config.name).toBe('SERP');
+    expect(config.domain).toBe('serp.co');
+    expect(config.description).toBe(
+      'Discover and compare the best software companies in one place. Find the perfect solution for your business needs.'
+    );
+    expect(config.githubIssueOwner).toBe('serpcompany');
+    expect(config.githubIssueRepo).toBe('contact');
+    expect(config.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/contact/issues/new/choose'
+    );
+    expect(config.githubRepoUrl).toBe(
+      'https://github.com/serpcompany/contact'
+    );
+    expect(config.publicUrl).toBe('https://serp.co');
+    expect(config.gtmId).toBeUndefined();
+    expect(config.listingRouteBasePath).toBe('products');
+    expect(config.copy).toEqual({
+      categoryLabels: {},
+      docsLabel: 'Docs',
+      listingName: {
+        plural: 'products',
+        singular: 'product',
+      },
+      networkLabel: 'Network',
+      submitLabel: 'Submit a Product',
+    });
+    expect(config.branding).toEqual({
+      appleTouchIconUrl: undefined,
+      faviconUrl: undefined,
+      logoUrl: undefined,
+      opengraphImageUrl: undefined,
     });
   });
 
@@ -144,6 +188,12 @@ describe('resolveSiteConfig', () => {
       },
       networkLabel: 'Network',
       submitLabel: 'Submit a Listing',
+    });
+    expect(config.branding).toEqual({
+      appleTouchIconUrl: undefined,
+      faviconUrl: undefined,
+      logoUrl: undefined,
+      opengraphImageUrl: undefined,
     });
     expect(hasConfiguredGitHubIssueTarget(config)).toBe(false);
     expect(hasConfiguredPublicSocialLinks(config)).toBe(false);
