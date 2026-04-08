@@ -65,4 +65,16 @@ describe('category-navigation', () => {
       ])
     ).toEqual(['made-up-category', 'really-made-up-category']);
   });
+
+  it('uses the requested site category set when a site id is provided', () => {
+    expect(
+      getUnknownCategorySlugs(
+        [
+          { category: 'video-downloaders' },
+          { category: 'developer-tools' },
+        ],
+        'serpdownloaders.com'
+      )
+    ).toEqual(['developer-tools']);
+  });
 });

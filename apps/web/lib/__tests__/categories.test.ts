@@ -1,4 +1,4 @@
-import { categories, normalizeCategorySlug } from '@/lib/categories';
+import { categories, normalizeCategorySlug, resolveCategories } from '@/lib/categories';
 
 describe('normalizeCategorySlug', () => {
   it('maps legacy aliases to the active category slug', () => {
@@ -23,5 +23,26 @@ describe('categories', () => {
     expect(
       categories.some((category) => category.slug === 'video-downloaders')
     ).toBe(true);
+  });
+
+  it('includes shared categories imported from the larger serp category set', () => {
+    expect(
+      resolveCategories('serp.co').some(
+        (category) => category.slug === 'ai-agents'
+      )
+    ).toBe(true);
+  });
+
+  it('applies fallback metadata when a category only supplies slug and name', () => {
+    const category = resolveCategories('serp.co').find(
+      (item) => item.slug === 'ai-agents'
+    );
+
+    expect(category).toBeDefined();
+    expect(category?.icon).toBeDefined();
+    expect(category?.priority).toBe('low');
+    expect(category?.description).toBe(
+      'Browse ai agents listings and resources.'
+    );
   });
 });

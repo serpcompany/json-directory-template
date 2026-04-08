@@ -1,5 +1,6 @@
 import { defaultSiteConfig } from './site-config.default';
 import { defaultSiteContent, resolveSiteContent } from './site-content';
+import { serpCoSiteConfig } from './serp.co/site-config';
 import { serpSoftwareSiteConfig } from './serp.software/site-config';
 import { serpdownloadersComSiteConfig } from './serpdownloaders.com/site-config';
 import type {
@@ -9,6 +10,7 @@ import type {
 } from './types';
 
 export const siteConfigsById: Record<string, CheckedInSiteConfigOverride> = {
+  'serp.co': serpCoSiteConfig,
   'serp.software': serpSoftwareSiteConfig,
   'serpdownloaders.com': serpdownloadersComSiteConfig,
 };

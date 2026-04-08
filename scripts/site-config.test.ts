@@ -85,6 +85,32 @@ describe('loadCheckedInSite', () => {
     expect(config.deploy).toBeUndefined();
   });
 
+  it('loads the checked-in serp.co site config', () => {
+    const config = loadCheckedInSite('serp.co');
+
+    expect(config.id).toBe('serp.co');
+    expect(config.content.listingSource.kind).toBe('listing-json');
+    expect(config.site.domain).toBe('serp.co');
+    expect(config.routes.listingBasePath).toBe('products');
+    expect(config.content.listingSource.outputPath).toBe('data/listings.json');
+    expect(config.copy).toEqual({
+      categoryLabels: {},
+      docsLabel: 'Docs',
+      listingName: {
+        plural: 'products',
+        singular: 'product',
+      },
+      networkLabel: 'Network',
+      submitLabel: 'Submit a Product',
+    });
+    expect(config.social.githubIssueRepo).toBe('contact');
+    expect(config.social.githubRepoUrl).toBe(
+      'https://github.com/serpcompany/contact'
+    );
+    expect(config.analytics?.gtmId).toBeUndefined();
+    expect(config.deploy).toBeUndefined();
+  });
+
   it('loads the checked-in default site config when no site id is provided', () => {
     const config = loadCheckedInSite();
 
@@ -228,6 +254,12 @@ describe('buildSiteEnvironment', () => {
       NEXT_PUBLIC_SITE_ID: 'serp.software',
       SITE_ID: 'serp.software',
     });
+    expect(buildSiteEnvironment(loadCheckedInSite('serp.co'))).toEqual({
+      LISTING_ROUTE_BASE_PATH: 'products',
+      NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'products',
+      NEXT_PUBLIC_SITE_ID: 'serp.co',
+      SITE_ID: 'serp.co',
+    });
   });
 });
 
@@ -281,6 +313,31 @@ describe('resolveResolvedSiteConfig', () => {
       networkRouteBasePath: 'network',
       publicUrl: 'https://serp.software',
       tagline: 'Curated software directory',
+    });
+  });
+
+  it('resolves serp.co into the app-facing site-config shape', () => {
+    expect(resolveResolvedSiteConfig(loadCheckedInSite('serp.co'))).toMatchObject({
+      copy: {
+        listingName: {
+          plural: 'products',
+          singular: 'product',
+        },
+        submitLabel: 'Submit a Product',
+      },
+      description:
+        'Discover and compare the best software companies in one place. Find the perfect solution for your business needs.',
+      domain: 'serp.co',
+      gtmId: undefined,
+      githubIssueOwner: 'serpcompany',
+      githubIssueRepo: 'contact',
+      id: 'serp.co',
+      docsRouteBasePath: 'docs',
+      listingRouteBasePath: 'products',
+      name: 'SERP',
+      networkRouteBasePath: 'network',
+      publicUrl: 'https://serp.co',
+      tagline: 'Find your next SaaS',
     });
   });
 });

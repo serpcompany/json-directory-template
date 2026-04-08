@@ -1,0 +1,17 @@
+[
+  { "slug": "developer-tools", "name": "Developer Tools" },
+  { "slug": "ai-ml", "name": "AI & Machine Learning" },
+  { "slug": "data-analytics", "name": "Data & Analytics" },
+  { "slug": "infrastructure-cloud", "name": "Infrastructure & Cloud" },
+  { "slug": "security-identity", "name": "Security & Identity" },
+  { "slug": "video-downloaders", "name": "Video Downloaders" },
+  { "slug": "finance-fintech", "name": "Finance & Fintech" },
+  { "slug": "marketing-sales", "name": "Marketing & Sales" },
+  { "slug": "ecommerce-retail", "name": "E-commerce" },
+  { "slug": "content-media", "name": "Content & Media" },
+  { "slug": "business-operations", "name": "Business Operations" },
+  { "slug": "personal", "name": "Personal" },
+  { "slug": "agency-services", "name": "Agency & Services" },
+  { "slug": "international", "name": "International" },
+  { "slug": "other", "name": "Other" }
+]

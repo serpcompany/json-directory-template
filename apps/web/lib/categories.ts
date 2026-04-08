@@ -13,144 +13,167 @@ import {
   ShoppingCart,
   User,
 } from 'lucide-react';
+import { resolveCheckedInSiteCategories } from '../../../sites/categories';
+import { defaultSiteConfig } from '../../../sites/site-config.default';
+import type { SiteCategoryInput } from '../../../sites/types';
 
 export interface Category {
-  name: string;
-  slug: string;
   description: string;
   icon: LucideIcon;
+  name: string;
   priority: 'high' | 'medium' | 'low';
+  slug: string;
 }
 
-export const categories: Category[] = [
-  {
-    name: 'Developer Tools',
-    slug: 'developer-tools',
-    description: 'APIs, frameworks, libraries, IDEs, and development utilities',
-    icon: Code2,
-    priority: 'high',
-  },
-  {
-    name: 'AI & Machine Learning',
-    slug: 'ai-ml',
-    description: 'AI models, ML tools, LLM platforms, and AI services',
-    icon: Brain,
-    priority: 'high',
-  },
-  {
-    name: 'Data & Analytics',
-    slug: 'data-analytics',
-    description:
-      'Databases, analytics platforms, BI tools, and data processing',
-    icon: Database,
-    priority: 'high',
-  },
-  {
-    name: 'Infrastructure & Cloud',
-    slug: 'infrastructure-cloud',
-    description: 'Cloud platforms, hosting, containers, and DevOps tools',
-    icon: Cpu,
-    priority: 'high',
-  },
-  {
-    name: 'Security & Identity',
-    slug: 'security-identity',
-    description: 'Security tools, authentication, encryption, and compliance',
-    icon: Lock,
-    priority: 'high',
-  },
-  {
-    name: 'Video Downloaders',
-    slug: 'video-downloaders',
-    description:
-      'Downloaders, recorders, and browser tools for saving online video',
-    icon: Download,
-    priority: 'medium',
-  },
-  {
-    name: 'Finance & Fintech',
-    slug: 'finance-fintech',
-    description: 'Financial services, payment platforms, and fintech tools',
-    icon: Briefcase,
-    priority: 'medium',
-  },
-  {
-    name: 'Marketing & Sales',
-    slug: 'marketing-sales',
-    description:
-      'Marketing tools, CRM, sales platforms, and customer engagement',
-    icon: User,
-    priority: 'medium',
-  },
-  {
-    name: 'E-commerce',
-    slug: 'ecommerce-retail',
-    description: 'Online stores, marketplaces, and retail platforms',
-    icon: ShoppingCart,
-    priority: 'low',
-  },
-  {
-    name: 'Content & Media',
-    slug: 'content-media',
-    description: 'Publishing platforms, content management, and media tools',
-    icon: FileText,
-    priority: 'low',
-  },
-  {
-    name: 'Business Operations',
-    slug: 'business-operations',
-    description: 'Business management, operations, and enterprise tools',
-    icon: Briefcase,
-    priority: 'low',
-  },
-  {
-    name: 'Personal',
-    slug: 'personal',
-    description: 'Personal websites, portfolios, and blogs',
-    icon: User,
-    priority: 'low',
-  },
-  {
-    name: 'Agency & Services',
-    slug: 'agency-services',
+type CategoryPresentation = {
+  description?: string;
+  icon?: LucideIcon;
+  priority?: Category['priority'];
+};
+
+const categoryPresentationBySlug: Record<string, CategoryPresentation> = {
+  'agency-services': {
     description: 'Agencies, consultancies, and service providers',
     icon: Briefcase,
     priority: 'low',
   },
-  {
-    name: 'International',
-    slug: 'international',
+  'ai-ml': {
+    description: 'AI models, ML tools, LLM platforms, and AI services',
+    icon: Brain,
+    priority: 'high',
+  },
+  'business-operations': {
+    description: 'Business management, operations, and enterprise tools',
+    icon: Briefcase,
+    priority: 'low',
+  },
+  'content-media': {
+    description: 'Publishing platforms, content management, and media tools',
+    icon: FileText,
+    priority: 'low',
+  },
+  'data-analytics': {
+    description: 'Databases, analytics platforms, BI tools, and data processing',
+    icon: Database,
+    priority: 'high',
+  },
+  'developer-tools': {
+    description: 'APIs, frameworks, libraries, IDEs, and development utilities',
+    icon: Code2,
+    priority: 'high',
+  },
+  'ecommerce-retail': {
+    description: 'Online stores, marketplaces, and retail platforms',
+    icon: ShoppingCart,
+    priority: 'low',
+  },
+  'finance-fintech': {
+    description: 'Financial services, payment platforms, and fintech tools',
+    icon: Briefcase,
+    priority: 'medium',
+  },
+  international: {
     description: 'Non-English and international websites',
     icon: Globe,
     priority: 'low',
   },
-  {
-    name: 'Other',
-    slug: 'other',
+  'infrastructure-cloud': {
+    description: 'Cloud platforms, hosting, containers, and DevOps tools',
+    icon: Cpu,
+    priority: 'high',
+  },
+  'marketing-sales': {
+    description: 'Marketing tools, CRM, sales platforms, and customer engagement',
+    icon: User,
+    priority: 'medium',
+  },
+  other: {
     description: "Everything else that doesn't fit other categories",
     icon: Package,
     priority: 'low',
   },
-];
+  personal: {
+    description: 'Personal websites, portfolios, and blogs',
+    icon: User,
+    priority: 'low',
+  },
+  'security-identity': {
+    description: 'Security tools, authentication, encryption, and compliance',
+    icon: Lock,
+    priority: 'high',
+  },
+  'video-downloaders': {
+    description: 'Downloaders, recorders, and browser tools for saving online video',
+    icon: Download,
+    priority: 'medium',
+  },
+};
 
 export const categoryAliases: Record<string, string> = {
   'integration-automation': 'video-downloaders',
   'automation-workflow': 'video-downloaders',
 };
 
+function resolveRuntimeSiteId(): string {
+  return (
+    process.env.NEXT_PUBLIC_SITE_ID ||
+    process.env.SITE_ID ||
+    defaultSiteConfig.id
+  );
+}
+
+function buildFallbackDescription(name: string): string {
+  return `Browse ${name.toLowerCase()} listings and resources.`;
+}
+
+function resolveCategoryDescription(category: SiteCategoryInput): string {
+  return (
+    category.description ||
+    categoryPresentationBySlug[category.slug]?.description ||
+    buildFallbackDescription(category.name)
+  );
+}
+
+function resolveCategoryPriority(
+  category: SiteCategoryInput
+): Category['priority'] {
+  return (
+    category.priority ||
+    categoryPresentationBySlug[category.slug]?.priority ||
+    'low'
+  );
+}
+
+function resolveCategoryIcon(slug: string): LucideIcon {
+  return categoryPresentationBySlug[slug]?.icon || Package;
+}
+
+export function normalizeCategorySlug(slug: string): string {
+  return categoryAliases[slug] || slug;
+}
+
+export function resolveCategories(siteId = resolveRuntimeSiteId()): Category[] {
+  return resolveCheckedInSiteCategories(siteId).map((category) => ({
+    description: resolveCategoryDescription(category),
+    icon: resolveCategoryIcon(category.slug),
+    name: category.name,
+    priority: resolveCategoryPriority(category),
+    slug: category.slug,
+  }));
+}
+
+export const categories: Category[] = resolveCategories();
+
 export const getCategoryBySlug = (slug: string): Category | undefined => {
-  return categories.find((c) => c.slug === slug);
+  const normalizedSlug = normalizeCategorySlug(slug);
+  return categories.find((category) => category.slug === normalizedSlug);
 };
 
 export const getCategoryLabel = (slug: string): string => {
-  return getCategoryBySlug(slug)?.name || slug;
+  return getCategoryBySlug(slug)?.name || normalizeCategorySlug(slug);
 };
 
 export const getCategoryIcon = (slug: string): LucideIcon => {
   const category = getCategoryBySlug(slug);
   return category?.icon || Package;
-};
-
-export const normalizeCategorySlug = (slug: string): string => {
-  return categoryAliases[slug] || slug;
 };

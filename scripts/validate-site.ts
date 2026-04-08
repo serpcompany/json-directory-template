@@ -32,10 +32,10 @@ function getCategoryFixHint(
         ? 'sites/site-config.default.ts'
         : `sites/${siteId}/site-config.ts`;
 
-    return `Update content.listingSource.category in ${configPath} or add the slug to apps/web/lib/categories.ts.`;
+    return `Update content.listingSource.category in ${configPath} or add the slug to sites/${siteId}/categories.json.`;
   }
 
-  return `Update the category values in ${listingSource.path} or add the slug to apps/web/lib/categories.ts.`;
+  return `Update the category values in ${listingSource.path} or add the slug to sites/${siteId}/categories.json.`;
 }
 
 export function validateSite(input: SiteInputTarget): void {
@@ -87,7 +87,10 @@ export function validateSite(input: SiteInputTarget): void {
     );
 
     const normalizedListings = result.data.map(normalizeJsonWebsite);
-    const unknownCategorySlugs = getUnknownCategorySlugs(normalizedListings);
+    const unknownCategorySlugs = getUnknownCategorySlugs(
+      normalizedListings,
+      definition.id
+    );
 
     if (unknownCategorySlugs.length > 0) {
       throw new Error(
@@ -99,7 +102,10 @@ export function validateSite(input: SiteInputTarget): void {
       );
     }
 
-    const activeCategories = getActiveCategories(normalizedListings);
+    const activeCategories = getActiveCategories(
+      normalizedListings,
+      definition.id
+    );
     console.log(
       `Active categories for ${definition.id}: ${activeCategories
         .map((category) => category.slug)

@@ -41,6 +41,15 @@ export type SiteExternalResourceIcon =
   | 'gitBranch'
   | 'terminal';
 
+export type SiteCategoryPriority = 'high' | 'medium' | 'low';
+
+export type SiteCategoryInput = {
+  description?: string;
+  name: string;
+  priority?: SiteCategoryPriority;
+  slug: string;
+};
+
 export type SiteExternalResource = {
   description: string;
   href: string;

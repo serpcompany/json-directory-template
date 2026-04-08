@@ -1,4 +1,9 @@
-import { categories, normalizeCategorySlug, type Category } from './categories';
+import {
+  categories,
+  normalizeCategorySlug,
+  resolveCategories,
+  type Category,
+} from './categories';
 
 type CategoryLike = {
   categories?: string[];
@@ -6,10 +11,12 @@ type CategoryLike = {
   featured?: boolean;
 };
 
-const knownCategorySlugs = new Set(categories.map((category) => category.slug));
-
 function normalizeListingCategory(category: string): string {
   return normalizeCategorySlug(category);
+}
+
+function resolveCategorySet(siteId?: string): Category[] {
+  return siteId ? resolveCategories(siteId) : categories;
 }
 
 export function getListingCategories(listing: CategoryLike): string[] {
@@ -33,7 +40,14 @@ export function listingMatchesCategory(
   );
 }
 
-export function getUnknownCategorySlugs(listings: CategoryLike[]): string[] {
+export function getUnknownCategorySlugs(
+  listings: CategoryLike[],
+  siteId?: string
+): string[] {
+  const knownCategorySlugs = new Set(
+    resolveCategorySet(siteId).map((category) => category.slug)
+  );
+
   return [
     ...new Set(
       listings
@@ -43,10 +57,13 @@ export function getUnknownCategorySlugs(listings: CategoryLike[]): string[] {
   ];
 }
 
-export function getActiveCategories(listings: CategoryLike[]): Category[] {
+export function getActiveCategories(
+  listings: CategoryLike[],
+  siteId?: string
+): Category[] {
   const activeCategorySlugs = new Set(listings.flatMap(getListingCategories));
 
-  return categories.filter((category) =>
+  return resolveCategorySet(siteId).filter((category) =>
     activeCategorySlugs.has(category.slug)
   );
 }
