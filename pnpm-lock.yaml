@@ -843,6 +843,9 @@ importers:
       '@thedaviddias/site-contract':
         specifier: workspace:*
         version: link:../site-contract
+      '@thedaviddias/utils':
+        specifier: workspace:*
+        version: link:../utils
       lucide-react:
         specifier: ^0.486.0
         version: 0.486.0(react@19.2.4)
