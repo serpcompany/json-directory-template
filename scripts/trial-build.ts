@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import {
   canonicalTrialProductSchema,
   type CanonicalTrialProduct,
-} from '../sites/trial-product-schema';
+} from '@thedaviddias/site-contract/trial-product-schema';
 
 type TrialFaqEntryInput = {
   answer?: string;
