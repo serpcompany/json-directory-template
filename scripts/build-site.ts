@@ -16,6 +16,7 @@ import { dirname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { categories } from '../apps/web/lib/categories.ts';
+import { getSiteRootListingAliases } from '../apps/web/lib/site-root-listing-aliases.ts';
 import {
   buildSiteEnvironment,
   loadCheckedInSiteFromInput,
@@ -568,6 +569,28 @@ type ArtifactPublicRoutePaths = {
   networkBasePath: string;
 };
 
+type LegacyRootListingRedirectInput = {
+  listingBasePath: string;
+  siteId: string;
+};
+
+function buildStaticRedirectHtml(destinationPath: string): string {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0; url=${destinationPath}">
+    <link rel="canonical" href="${destinationPath}">
+    <script>window.location.replace(${JSON.stringify(destinationPath)});</script>
+  </head>
+  <body>
+    <p>Redirecting to <a href="${destinationPath}">${destinationPath}</a>.</p>
+  </body>
+</html>
+`;
+}
+
 export function applyConfiguredPublicRoutePaths(
   artifactDir: string,
   paths: ArtifactPublicRoutePaths
@@ -577,6 +600,38 @@ export function applyConfiguredPublicRoutePaths(
   applyPublicRouteBasePath(artifactDir, 'guides', 'posts');
   applyPublicRouteBasePath(artifactDir, 'projects', paths.networkBasePath);
   applyCategoryRoutePaths(artifactDir);
+}
+
+export function applyLegacyRootListingRedirects(
+  artifactDir: string,
+  input: LegacyRootListingRedirectInput
+): void {
+  const legacySlugs = getSiteRootListingAliases(input.siteId);
+
+  if (!legacySlugs?.length) {
+    return;
+  }
+
+  const normalizedListingBasePath = input.listingBasePath.replace(/^\/+|\/+$/g, '');
+
+  for (const slug of legacySlugs) {
+    const destinationPath = `/${normalizedListingBasePath}/${slug}/`;
+    const targetListingPath = resolve(
+      artifactDir,
+      normalizedListingBasePath,
+      slug,
+      'index.html'
+    );
+
+    if (!existsSync(targetListingPath)) {
+      continue;
+    }
+
+    const redirectPagePath = resolve(artifactDir, slug, 'index.html');
+    removeArtifactPath(resolve(artifactDir, slug));
+    mkdirSync(dirname(redirectPagePath), { recursive: true });
+    writeFileSync(redirectPagePath, buildStaticRedirectHtml(destinationPath));
+  }
 }
 
 function pruneArtifactTree(path: string): void {
@@ -670,6 +725,10 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     docsBasePath: definition.routes.docsBasePath,
     listingBasePath: definition.routes.listingBasePath,
     networkBasePath: definition.routes.networkBasePath,
+  });
+  applyLegacyRootListingRedirects(artifactDir, {
+    listingBasePath: definition.routes.listingBasePath,
+    siteId: definition.id,
   });
   writeSplitSitemaps(artifactDir, {
     baseUrl: definition.site.publicUrl,

@@ -4,10 +4,12 @@ import {
   rmSync,
   writeFileSync,
   existsSync,
+  readFileSync,
 } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
+  applyLegacyRootListingRedirects,
   applyConfiguredPublicRoutePaths,
   applyListingRouteBasePath,
   pruneStaticArtifactDir,
@@ -173,6 +175,39 @@ describe('applyConfiguredPublicRoutePaths', () => {
     expect(existsSync(resolve(artifactDir, 'network/index.html'))).toBe(true);
     expect(
       existsSync(resolve(artifactDir, 'network/repository/index.html'))
+    ).toBe(true);
+  });
+});
+
+describe('applyLegacyRootListingRedirects', () => {
+  it('creates static root-path redirect pages for serpdownloaders listing slugs', () => {
+    const artifactDir = makeTempArtifactDir();
+
+    writeFile(
+      resolve(artifactDir, 'products/instagram-downloader/index.html'),
+      '<html><body>instagram</body></html>'
+    );
+    writeFile(
+      resolve(artifactDir, 'products/getty-images-downloader/index.html'),
+      '<html><body>getty</body></html>'
+    );
+
+    applyLegacyRootListingRedirects(artifactDir, {
+      listingBasePath: 'products',
+      siteId: 'serpdownloaders.com',
+    });
+
+    const redirectPagePath = resolve(
+      artifactDir,
+      'instagram-downloader/index.html'
+    );
+
+    expect(existsSync(redirectPagePath)).toBe(true);
+    expect(readFileSync(redirectPagePath, 'utf8')).toContain(
+      '/products/instagram-downloader/'
+    );
+    expect(
+      existsSync(resolve(artifactDir, 'getty-images-downloader/index.html'))
     ).toBe(true);
   });
 });

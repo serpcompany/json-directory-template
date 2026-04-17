@@ -6,6 +6,7 @@ import type { NextConfig } from 'next';
 import { defaultSiteConfig, resolveCheckedInSiteConfig } from '../../sites';
 import { categories } from './lib/categories';
 import { isStaticExportBuild } from './lib/runtime-mode';
+import { getSiteRootListingAliases } from './lib/site-root-listing-aliases';
 
 export const INTERNAL_PACKAGES = [
   '@thedaviddias/design-system',
@@ -67,6 +68,7 @@ const docsBasePath = normalizeBasePath(runtimeSiteConfig.routes.docsBasePath);
 const networkBasePath = normalizeBasePath(
   runtimeSiteConfig.routes.networkBasePath
 );
+const rootListingAliases = getSiteRootListingAliases(runtimeSiteConfig.id);
 
 let nextConfig: NextConfig = {
   ...baseConfig,
@@ -139,6 +141,11 @@ let nextConfig: NextConfig = {
         destination: '/',
         permanent: false,
       },
+      ...rootListingAliases.map((slug) => ({
+        source: `/${slug}`,
+        destination: `${buildPublicRoute(listingBasePath)}/${slug}/`,
+        permanent: true,
+      })),
       {
         source: '/website/:path*',
         destination: `${buildPublicRoute(listingBasePath)}/:path*`,
