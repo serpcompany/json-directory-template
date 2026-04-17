@@ -1,11 +1,11 @@
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
-import { categories } from '@/lib/categories';
 import {
   canonicalTrialProductSchema,
   canonicalTrialProductsSchema,
   type CanonicalTrialProduct,
-} from '../../../sites/trial-product-schema';
+} from '@thedaviddias/site-contract/trial-product-schema';
+import { categories } from '@/lib/categories';
 
 const categorySlugValues = categories.map((category) => category.slug) as [
   string,

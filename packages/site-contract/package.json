@@ -8,6 +8,7 @@
     "./categories": "./src/categories.ts",
     "./site-content": "./src/site-content.ts",
     "./site-root-listing-aliases": "./src/site-root-listing-aliases.ts",
+    "./trial-product-schema": "./src/trial-product-schema.ts",
     "./types": "./src/types.ts"
   },
   "devDependencies": {
