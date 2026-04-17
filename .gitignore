@@ -56,6 +56,7 @@ lychee-out.md
 
 CLAUDE.local.md
 sessions/
+logs/
 tmp/deploy/
 tmp/sites/
 
@@ -66,5 +67,4 @@ tmp/sites/
 .agents/
 
 .cursor/
-
 
