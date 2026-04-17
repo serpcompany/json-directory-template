@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolveCheckedInSiteConfig } from './index';
+import { resolveCheckedInSiteSourcePath } from './checked-in-site-source-path';
 
 type TrialProductsJsonEntry = {
   product?: {
@@ -7,39 +8,38 @@ type TrialProductsJsonEntry = {
   };
 };
 
-function resolveWorkspaceRoot(): string {
-  const current = process.cwd();
-
-  if (existsSync(resolve(current, 'sites'))) {
-    return current;
-  }
-
-  if (existsSync(resolve(current, '..', '..', 'sites'))) {
-    return resolve(current, '..', '..');
-  }
-
-  return current;
-}
-
-const workspaceRoot = resolveWorkspaceRoot();
+type ListingJsonEntry = {
+  slug?: string;
+};
 
 export function getSiteRootListingAliases(siteId: string): string[] {
-  if (siteId !== 'serpdownloaders.com') {
-    return [];
-  }
-
-  const sourcePath = resolve(workspaceRoot, 'sites', siteId, 'products.json');
+  const siteConfig = resolveCheckedInSiteConfig(siteId);
+  const sourcePath = resolveCheckedInSiteSourcePath(
+    siteConfig.content.listingSource.path
+  );
 
   if (!existsSync(sourcePath)) {
     return [];
   }
 
-  const products = JSON.parse(readFileSync(sourcePath, 'utf8')) as Record<
-    string,
-    TrialProductsJsonEntry
-  >;
+  if (siteConfig.content.listingSource.kind === 'trial-products-json') {
+    const products = JSON.parse(readFileSync(sourcePath, 'utf8')) as Record<
+      string,
+      TrialProductsJsonEntry
+    >;
 
-  return Object.values(products)
-    .map((entry) => entry.product?.slug?.trim())
-    .filter((slug): slug is string => Boolean(slug));
+    return Object.values(products)
+      .map((entry) => entry.product?.slug?.trim())
+      .filter((slug): slug is string => Boolean(slug));
+  }
+
+  if (siteConfig.content.listingSource.kind === 'listing-json') {
+    const listings = JSON.parse(readFileSync(sourcePath, 'utf8')) as ListingJsonEntry[];
+
+    return listings
+      .map((entry) => entry.slug?.trim())
+      .filter((slug): slug is string => Boolean(slug));
+  }
+
+  return [];
 }

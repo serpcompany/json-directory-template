@@ -9,4 +9,11 @@ describe('site root listing aliases', () => {
     expect(aliases).toContain('teachable-video-downloader')
     expect(aliases).not.toContain('about')
   })
+
+  it('derives root-path aliases from listing-json sources too', () => {
+    const aliases = getSiteRootListingAliases('default')
+
+    expect(aliases.length).toBeGreaterThan(0)
+    expect(aliases).not.toContain('about')
+  })
 })
