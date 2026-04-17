@@ -1,12 +1,1 @@
-import type { SiteConfig } from '@/lib/site-config'
-
-export function resolveGoogleTagManagerId(
-  siteConfig: Pick<SiteConfig, 'gtmId'>,
-  nodeEnv = process.env.NODE_ENV
-): string | undefined {
-  if (nodeEnv !== 'production') {
-    return undefined
-  }
-
-  return siteConfig.gtmId
-}
+export * from '@thedaviddias/web-core/google-tag-manager'

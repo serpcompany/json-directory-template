@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isValidAssetReference } from './asset-reference';
+import { isValidAssetReference } from '@thedaviddias/site-contract/asset-reference';
 import { normalizeCategorySlug } from './categories';
 
 const publishedAtPattern = /^\d{4}-\d{2}-\d{2}$/;

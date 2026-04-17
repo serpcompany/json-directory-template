@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isValidAssetReference } from '@thedaviddias/web-core/asset-reference';
+import { isValidAssetReference } from './asset-reference';
 
 export const trialFaqEntrySchema = z.object({
   answer: z.string().trim().min(1, 'faq.answer is required'),

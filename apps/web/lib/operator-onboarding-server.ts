@@ -1,11 +1,10 @@
 import 'server-only'
 
-import { existsSync, readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { readFileSync } from 'node:fs'
 import { resolveCheckedInSiteConfig } from '@thedaviddias/site-contract'
+import { resolveCheckedInSiteSourcePath } from '@thedaviddias/site-contract/checked-in-site-source-path'
+import { canonicalizeTrialProducts, type TrialProducts } from '@thedaviddias/site-contract/trial-products'
 import type { CheckedInSiteConfig } from '@thedaviddias/site-contract/types'
-import { canonicalizeTrialProducts, type TrialProducts } from '../../../scripts/trial-build'
-import { resolveFromRoot } from '@/lib/server-utils'
 import {
   operatorOnboardingDocumentSchema,
   operatorSiteDocumentSchema,
@@ -77,22 +76,7 @@ export function buildOperatorOnboardingDocument(input: {
   })
 }
 
-export function resolveOperatorSourcePath(relativePath: string, cwd = process.cwd()): string {
-  const candidates = [
-    resolve(cwd, relativePath),
-    resolve(cwd, '..', '..', relativePath),
-    resolve(cwd, '..', relativePath),
-    resolveFromRoot(relativePath)
-  ]
-
-  const matchedPath = candidates.find(candidate => existsSync(candidate))
-
-  if (!matchedPath) {
-    throw new Error(`Could not resolve operator source path for ${relativePath}`)
-  }
-
-  return matchedPath
-}
+export const resolveOperatorSourcePath = resolveCheckedInSiteSourcePath
 
 export function loadOperatorOnboardingDocument(siteId?: string): OperatorOnboardingDocument {
   const siteConfig = resolveCheckedInSiteConfig(siteId)
@@ -104,7 +88,7 @@ export function loadOperatorOnboardingDocument(siteId?: string): OperatorOnboard
   }
 
   const products = JSON.parse(
-    readFileSync(resolveOperatorSourcePath(siteConfig.content.listingSource.path), 'utf8')
+    readFileSync(resolveCheckedInSiteSourcePath(siteConfig.content.listingSource.path), 'utf8')
   ) as TrialProducts
 
   return buildOperatorOnboardingDocument({

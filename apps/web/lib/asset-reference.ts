@@ -1,1 +1,1 @@
-export { isValidAssetReference } from '@thedaviddias/web-core/asset-reference'
+export { isValidAssetReference } from '@thedaviddias/site-contract/asset-reference'

@@ -5,9 +5,15 @@
   "exports": {
     "./asset-reference": "./src/asset-reference.ts",
     "./categories": "./src/categories.ts",
+    "./category-display": "./src/category-display.ts",
     "./category-navigation": "./src/category-navigation.ts",
+    "./external-resources": "./src/external-resources.ts",
+    "./google-tag-manager": "./src/google-tag-manager.ts",
+    "./network-links": "./src/network-links.ts",
+    "./routes": "./src/routes.ts",
     "./search-index": "./src/search-index.ts",
     "./site-config": "./src/site-config.ts",
+    "./site-copy": "./src/site-copy.ts",
     "./site-content": "./src/site-content.ts",
     "./website-schema": "./src/website-schema.ts"
   },
