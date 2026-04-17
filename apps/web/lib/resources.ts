@@ -2,13 +2,9 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { logger } from '@thedaviddias/logging'
 import matter from 'gray-matter'
+import { resolveWorkspacePath } from '@thedaviddias/web-core/workspace-path'
 
-// Inline server-only function to avoid import issues
-function resolveFromRoot(...paths: string[]): string {
-  return path.resolve(process.cwd(), ...paths)
-}
-
-const resourcesDirectory = resolveFromRoot('content/resources')
+const resourcesDirectory = resolveWorkspacePath('content/resources')
 
 export interface Resource {
   slug: string

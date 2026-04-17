@@ -16,6 +16,7 @@
     "./site-copy": "./src/site-copy.ts",
     "./site-content": "./src/site-content.ts",
     "./website-schema": "./src/website-schema.ts"
+    ,"./workspace-path": "./src/workspace-path.ts"
   },
   "dependencies": {
     "@thedaviddias/site-contract": "workspace:*",

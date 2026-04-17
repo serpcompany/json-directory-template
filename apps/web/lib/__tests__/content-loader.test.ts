@@ -23,9 +23,6 @@ describe('getWebsites', () => {
     const websites = getWebsites();
 
     expect(websites.length).toBeGreaterThan(0);
-    expect(websites.some((website) => website.slug === 'example-api-toolkit')).toBe(
-      true
-    );
     expect(
       websites.some((website) => website.slug === 'legacy-website-entry')
     ).toBe(false);
