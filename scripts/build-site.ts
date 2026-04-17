@@ -17,6 +17,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { categories } from '@thedaviddias/web-core/categories';
 import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases';
+import type { AssetSource } from '@thedaviddias/site-contract/types';
 import {
   buildSiteEnvironment,
   loadCheckedInSiteFromInput,
@@ -29,7 +30,6 @@ import { createRunTempDir } from './run-context.ts';
 import { writeSplitSitemaps } from './sitemap-files.ts';
 import { prepareSiteData } from './site-data.ts';
 import { validateSite } from './validate-site.ts';
-import type { AssetSource } from '../sites/types.ts';
 
 const workspaceRoot = resolve(process.cwd());
 const authRoutePath = resolve(

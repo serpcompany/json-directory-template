@@ -2,8 +2,10 @@ import { z } from 'zod';
 import {
   defaultSiteConfig,
   resolveCheckedInSiteConfig,
+} from '@thedaviddias/site-contract';
+import {
   type CheckedInSiteConfig,
-} from '../sites/index.ts';
+} from '@thedaviddias/site-contract/types';
 
 const reservedPublicRouteBasePaths = {
   categories: 'Public category pages always use /categories/[slug].',

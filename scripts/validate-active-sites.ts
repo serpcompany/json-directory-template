@@ -1,4 +1,4 @@
-import { activeCheckedInSiteIds } from '../sites/active-site-ids.ts';
+import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids';
 import { validateSite } from './validate-site.ts';
 
 export function getActiveCheckedInSiteIds(): string[] {
