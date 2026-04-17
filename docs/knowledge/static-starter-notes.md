@@ -10,10 +10,12 @@
 
 ## Website Data
 
-- `data/listings.json` is the active website-entry source for the current starter.
-- `pnpm tsx scripts/validate-data.ts data/listings.json` validates the active JSON source.
-- `pnpm validate:sites` validates the default site plus every checked-in site override through one generic command.
-- Site-specific build flows can transform alternative JSON inputs into this same shape during build time.
+- `data/listings.json` is the active website-entry source for the default starter only.
+- `sites/serpdownloaders.com/products.json` is the active checked-in listing source for the only currently powered checked-in site.
+- `pnpm tsx scripts/validate-data.ts data/listings.json` validates the default starter JSON source.
+- `pnpm validate:site -- --site serpdownloaders.com` validates the active checked-in site's real source and generated surface contract.
+- `pnpm validate:sites` validates the active non-default checked-in sites; run `pnpm validate:site -- --site default` separately for the default starter.
+- Site-specific build flows can transform alternative checked-in inputs into the shared listing shape during build time.
 - The active loader now expects `slug`, `website`, `description`, `category`, `publishedAt`, and optional metadata like `featured`, `priority`, `content`, and `resourceLinks`.
 - The formal schema for raw JSON website entries now lives in `apps/web/lib/website-schema.ts`.
 - Optional `content` in `data/listings.json` now flows through the JSON loader and can power the detail page body.
@@ -41,6 +43,7 @@
 - Use `docs/knowledge/legacy-reference-boundary.md` when deciding whether an older repo area is still active starter input or only reference material.
 - Use the decision labels in `docs/knowledge/reference-surfaces.md` to drive cleanup order: `Keep + first`, then `Keep + later`, then `Reference only`.
 - The checked-in site config source of truth now lives under `sites/**`, with `apps/web/lib/site-config.ts` acting as the app-facing adapter layer.
+- Inactive or incubating checked-in sites should move to `_archive/incubating-sites/**` instead of staying registered under `sites/**`.
 - The runtime starter config now also owns optional shell feature flags, including whether to render creator-project, featured-guides, external-resources, and newsletter sections.
 - Reserve `/tools` for future first-party utility pages; the current `externalResources` surface is only for outbound/reference links configured per site.
 - The old `/projects` concept is now treated as a site-owned network page. Keep the internal file-system route stable, but treat the public route and label as config-driven. The starter defaults are `/network` and `Network`.

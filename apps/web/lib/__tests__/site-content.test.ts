@@ -1,13 +1,19 @@
-import { resolveSiteContent } from '@/lib/site-content';
+import { resolveSiteContent } from '@/lib/site-content'
 
 describe('resolveSiteContent', () => {
-  it('loads the checked-in SERP Software site-owned content', () => {
-    const content = resolveSiteContent('serp.software');
+  it('loads the checked-in SERP Downloaders site-owned content', () => {
+    const content = resolveSiteContent('serpdownloaders.com')
 
     expect(content).toEqual({
       externalResources: [],
       listingCliInstall: null,
-      networkLinks: [],
-    });
-  });
-});
+      networkLinks: []
+    })
+  })
+
+  it('rejects removed site ids explicitly', () => {
+    expect(() => resolveSiteContent('serp.software')).toThrow(
+      'Site "serp.software" was removed from this repo. Use a supported checked-in site id instead.'
+    )
+  })
+})

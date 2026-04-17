@@ -63,52 +63,18 @@ describe('loadCheckedInSite', () => {
     expect(config.features.showNewsletter).toBe(true);
   });
 
-  it('loads the checked-in serp.software site config without a deploy target', () => {
-    const config = loadCheckedInSite('serp.software');
-
-    expect(config.id).toBe('serp.software');
-    expect(config.content.listingSource.kind).toBe('listing-json');
-    expect(config.site.domain).toBe('serp.software');
-    expect(config.routes.listingBasePath).toBe('software');
-    expect(config.content.listingSource.outputPath).toBe('data/listings.json');
-    expect(config.copy).toEqual({
-      categoryLabels: {},
-      docsLabel: 'Docs',
-      listingName: {
-        plural: 'software',
-        singular: 'software',
-      },
-      networkLabel: 'Network',
-      submitLabel: 'Submit Software',
-    });
-    expect(config.analytics?.gtmId).toBeUndefined();
-    expect(config.deploy).toBeUndefined();
+  it('rejects parked site ids that were removed from the active registry', () => {
+    for (const siteId of ['serp.co', 'serp.software', 'extensions.serp.co']) {
+      expect(() => loadCheckedInSite(siteId)).toThrow(
+        `Site "${siteId}" was removed from this repo. Use a supported checked-in site id instead.`
+      );
+    }
   });
 
-  it('loads the checked-in serp.co site config', () => {
-    const config = loadCheckedInSite('serp.co');
-
-    expect(config.id).toBe('serp.co');
-    expect(config.content.listingSource.kind).toBe('listing-json');
-    expect(config.site.domain).toBe('serp.co');
-    expect(config.routes.listingBasePath).toBe('products');
-    expect(config.content.listingSource.outputPath).toBe('data/listings.json');
-    expect(config.copy).toEqual({
-      categoryLabels: {},
-      docsLabel: 'Docs',
-      listingName: {
-        plural: 'products',
-        singular: 'product',
-      },
-      networkLabel: 'Network',
-      submitLabel: 'Submit a Product',
-    });
-    expect(config.social.githubIssueRepo).toBe('contact');
-    expect(config.social.githubRepoUrl).toBe(
-      'https://github.com/serpcompany/contact'
+  it('rejects unknown checked-in site ids instead of silently loading default', () => {
+    expect(() => loadCheckedInSite('unknown-site')).toThrow(
+      'Site "unknown-site" is not an active checked-in site in this repo. Use "default" or a supported checked-in site id instead.'
     );
-    expect(config.analytics?.gtmId).toBeUndefined();
-    expect(config.deploy).toBeUndefined();
   });
 
   it('loads the checked-in default site config when no site id is provided', () => {
@@ -232,9 +198,6 @@ describe('resolveSiteArtifactDir', () => {
     expect(
       resolveSiteArtifactDir(loadCheckedInSite('serpdownloaders.com'))
     ).toBe('dist/sites/serpdownloaders.com');
-    expect(resolveSiteArtifactDir(loadCheckedInSite('serp.software'))).toBe(
-      'dist/sites/serp.software'
-    );
   });
 });
 
@@ -247,18 +210,6 @@ describe('buildSiteEnvironment', () => {
       NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'products',
       NEXT_PUBLIC_SITE_ID: 'serpdownloaders.com',
       SITE_ID: 'serpdownloaders.com',
-    });
-    expect(buildSiteEnvironment(loadCheckedInSite('serp.software'))).toEqual({
-      LISTING_ROUTE_BASE_PATH: 'software',
-      NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'software',
-      NEXT_PUBLIC_SITE_ID: 'serp.software',
-      SITE_ID: 'serp.software',
-    });
-    expect(buildSiteEnvironment(loadCheckedInSite('serp.co'))).toEqual({
-      LISTING_ROUTE_BASE_PATH: 'products',
-      NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'products',
-      NEXT_PUBLIC_SITE_ID: 'serp.co',
-      SITE_ID: 'serp.co',
     });
   });
 });
@@ -291,53 +242,4 @@ describe('resolveResolvedSiteConfig', () => {
     });
   });
 
-  it('resolves serp.software into the app-facing site-config shape', () => {
-    expect(resolveResolvedSiteConfig(loadCheckedInSite('serp.software'))).toMatchObject({
-      copy: {
-        listingName: {
-          plural: 'software',
-          singular: 'software',
-        },
-        submitLabel: 'Submit Software',
-      },
-      description:
-        'Discover curated software tools, products, and internet utilities across categories.',
-      domain: 'serp.software',
-      gtmId: undefined,
-      githubIssueOwner: 'serpcompany',
-      githubIssueRepo: 'json-directory-template',
-      id: 'serp.software',
-      docsRouteBasePath: 'docs',
-      listingRouteBasePath: 'software',
-      name: 'SERP Software',
-      networkRouteBasePath: 'network',
-      publicUrl: 'https://serp.software',
-      tagline: 'Curated software directory',
-    });
-  });
-
-  it('resolves serp.co into the app-facing site-config shape', () => {
-    expect(resolveResolvedSiteConfig(loadCheckedInSite('serp.co'))).toMatchObject({
-      copy: {
-        listingName: {
-          plural: 'products',
-          singular: 'product',
-        },
-        submitLabel: 'Submit a Product',
-      },
-      description:
-        'Discover and compare the best software companies in one place. Find the perfect solution for your business needs.',
-      domain: 'serp.co',
-      gtmId: undefined,
-      githubIssueOwner: 'serpcompany',
-      githubIssueRepo: 'contact',
-      id: 'serp.co',
-      docsRouteBasePath: 'docs',
-      listingRouteBasePath: 'products',
-      name: 'SERP',
-      networkRouteBasePath: 'network',
-      publicUrl: 'https://serp.co',
-      tagline: 'Find your next SaaS',
-    });
-  });
 });

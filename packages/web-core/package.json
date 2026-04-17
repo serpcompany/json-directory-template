@@ -1,0 +1,23 @@
+{
+  "name": "@thedaviddias/web-core",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    "./asset-reference": "./src/asset-reference.ts",
+    "./categories": "./src/categories.ts",
+    "./category-navigation": "./src/category-navigation.ts",
+    "./search-index": "./src/search-index.ts",
+    "./site-config": "./src/site-config.ts",
+    "./site-content": "./src/site-content.ts",
+    "./website-schema": "./src/website-schema.ts"
+  },
+  "dependencies": {
+    "@thedaviddias/site-contract": "workspace:*",
+    "lucide-react": "^0.486.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

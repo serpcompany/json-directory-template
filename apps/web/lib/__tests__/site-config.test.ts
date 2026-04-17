@@ -2,42 +2,40 @@ import {
   getConfiguredSocialLinks,
   hasConfiguredGitHubIssueTarget,
   hasConfiguredPublicSocialLinks,
-  resolveSiteConfig,
-} from '@/lib/site-config';
+  resolveSiteConfig
+} from '@/lib/site-config'
 
 describe('resolveSiteConfig', () => {
   it('loads the checked-in per-site config for serpdownloaders.com', () => {
-    const config = resolveSiteConfig('serpdownloaders.com');
+    const config = resolveSiteConfig('serpdownloaders.com')
 
-    expect(config.name).toBe('SERP Downloaders');
-    expect(config.domain).toBe('serpdownloaders.com');
+    expect(config.name).toBe('SERP Downloaders')
+    expect(config.domain).toBe('serpdownloaders.com')
     expect(config.description).toBe(
       'A collection of tools to help you download anything from anywhere, anytime.'
-    );
-    expect(config.githubIssueOwner).toBe('serpcompany');
-    expect(config.githubIssueRepo).toBe('json-directory-template');
+    )
+    expect(config.githubIssueOwner).toBe('serpcompany')
+    expect(config.githubIssueRepo).toBe('json-directory-template')
     expect(config.githubIssuesUrl).toBe(
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
-    );
-    expect(config.githubRepoUrl).toBe(
-      'https://github.com/serpcompany/json-directory-template'
-    );
-    expect(config.githubUrl).toBe('https://github.com/serpdownloaders');
-    expect(config.publicUrl).toBe('https://serpdownloaders.com');
-    expect(config.gtmId).toBe('GTM-M82HC3SC');
-    expect(config.listingRouteBasePath).toBe('products');
-    expect(config.docsRouteBasePath).toBe('docs');
-    expect(config.networkRouteBasePath).toBe('network');
+    )
+    expect(config.githubRepoUrl).toBe('https://github.com/serpcompany/json-directory-template')
+    expect(config.githubUrl).toBe('https://github.com/serpdownloaders')
+    expect(config.publicUrl).toBe('https://serpdownloaders.com')
+    expect(config.gtmId).toBe('GTM-M82HC3SC')
+    expect(config.listingRouteBasePath).toBe('products')
+    expect(config.docsRouteBasePath).toBe('docs')
+    expect(config.networkRouteBasePath).toBe('network')
     expect(config.copy).toEqual({
       categoryLabels: {},
       docsLabel: 'Docs',
       listingName: {
         plural: 'products',
-        singular: 'product',
+        singular: 'product'
       },
       networkLabel: 'Network',
-      submitLabel: 'Submit a Product',
-    });
+      submitLabel: 'Submit a Product'
+    })
     expect(config.features).toEqual({
       showAuth: false,
       showCreatorProjects: false,
@@ -47,174 +45,97 @@ describe('resolveSiteConfig', () => {
       showFeaturedGuides: false,
       showGuides: false,
       showNewsletter: true,
-      showProjects: false,
-    });
+      showProjects: false
+    })
     expect(config.branding).toEqual({
       appleTouchIconUrl: '/apple-touch-icon.png',
       faviconUrl: '/favicon.ico',
       logoUrl: '/logo.png',
-      opengraphImageUrl: '/opengraph-image.png',
-    });
-  });
+      opengraphImageUrl: '/opengraph-image.png'
+    })
+  })
 
-  it('loads the checked-in per-site config for serp.software', () => {
-    const config = resolveSiteConfig('serp.software');
-
-    expect(config.id).toBe('serp.software');
-    expect(config.name).toBe('SERP Software');
-    expect(config.domain).toBe('serp.software');
-    expect(config.description).toBe(
-      'Discover curated software tools, products, and internet utilities across categories.'
-    );
-    expect(config.githubIssueOwner).toBe('serpcompany');
-    expect(config.githubIssueRepo).toBe('json-directory-template');
-    expect(config.githubIssuesUrl).toBe(
-      'https://github.com/serpcompany/json-directory-template/issues/new/choose'
-    );
-    expect(config.githubRepoUrl).toBe(
-      'https://github.com/serpcompany/json-directory-template'
-    );
-    expect(config.publicUrl).toBe('https://serp.software');
-    expect(config.gtmId).toBeUndefined();
-    expect(config.listingRouteBasePath).toBe('software');
-    expect(config.copy).toEqual({
-      categoryLabels: {},
-      docsLabel: 'Docs',
-      listingName: {
-        plural: 'software',
-        singular: 'software',
-      },
-      networkLabel: 'Network',
-      submitLabel: 'Submit Software',
-    });
-    expect(config.features).toEqual({
-      showAuth: false,
-      showCreatorProjects: false,
-      showDocs: false,
-      showExternalResources: false,
-      showFavorites: false,
-      showFeaturedGuides: false,
-      showGuides: false,
-      showNewsletter: true,
-      showProjects: false,
-    });
-  });
-
-  it('loads the checked-in per-site config for serp.co', () => {
-    const config = resolveSiteConfig('serp.co');
-
-    expect(config.id).toBe('serp.co');
-    expect(config.name).toBe('SERP');
-    expect(config.domain).toBe('serp.co');
-    expect(config.description).toBe(
-      'Discover and compare the best software companies in one place. Find the perfect solution for your business needs.'
-    );
-    expect(config.githubIssueOwner).toBe('serpcompany');
-    expect(config.githubIssueRepo).toBe('contact');
-    expect(config.githubIssuesUrl).toBe(
-      'https://github.com/serpcompany/contact/issues/new/choose'
-    );
-    expect(config.githubRepoUrl).toBe(
-      'https://github.com/serpcompany/contact'
-    );
-    expect(config.publicUrl).toBe('https://serp.co');
-    expect(config.gtmId).toBeUndefined();
-    expect(config.listingRouteBasePath).toBe('products');
-    expect(config.copy).toEqual({
-      categoryLabels: {},
-      docsLabel: 'Docs',
-      listingName: {
-        plural: 'products',
-        singular: 'product',
-      },
-      networkLabel: 'Network',
-      submitLabel: 'Submit a Product',
-    });
-    expect(config.branding).toEqual({
-      appleTouchIconUrl: undefined,
-      faviconUrl: undefined,
-      logoUrl: undefined,
-      opengraphImageUrl: undefined,
-    });
-  });
+  it('rejects parked site ids that were removed from the active registry', () => {
+    for (const siteId of ['serp.co', 'serp.software', 'extensions.serp.co']) {
+      expect(() => resolveSiteConfig(siteId)).toThrow(
+        `Site "${siteId}" was removed from this repo. Use a supported checked-in site id instead.`
+      )
+    }
+  })
 
   it('inherits default social and route values for sparse site overrides', () => {
-    const config = resolveSiteConfig('serpdownloaders.com');
+    const config = resolveSiteConfig('serpdownloaders.com')
 
-    expect(config.githubIssueOwner).toBe('serpcompany');
-    expect(config.githubIssueRepo).toBe('json-directory-template');
+    expect(config.githubIssueOwner).toBe('serpcompany')
+    expect(config.githubIssueRepo).toBe('json-directory-template')
     expect(config.githubIssuesUrl).toBe(
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
-    );
-    expect(config.githubRepoUrl).toBe(
-      'https://github.com/serpcompany/json-directory-template'
-    );
-    expect(config.githubUrl).toBe('https://github.com/serpdownloaders');
-    expect(config.listingRouteBasePath).toBe('products');
-    expect(config.docsRouteBasePath).toBe('docs');
-    expect(config.networkRouteBasePath).toBe('network');
-    expect(config.copy.docsLabel).toBe('Docs');
-    expect(config.copy.networkLabel).toBe('Network');
-    expect(config.copy.submitLabel).toBe('Submit a Product');
-  });
+    )
+    expect(config.githubRepoUrl).toBe('https://github.com/serpcompany/json-directory-template')
+    expect(config.githubUrl).toBe('https://github.com/serpdownloaders')
+    expect(config.listingRouteBasePath).toBe('products')
+    expect(config.docsRouteBasePath).toBe('docs')
+    expect(config.networkRouteBasePath).toBe('network')
+    expect(config.copy.docsLabel).toBe('Docs')
+    expect(config.copy.networkLabel).toBe('Network')
+    expect(config.copy.submitLabel).toBe('Submit a Product')
+  })
 
-  it('falls back to the checked-in default site config', () => {
-    const config = resolveSiteConfig('unknown-site');
+  it('falls back to the checked-in default site config only when no site id is provided', () => {
+    const config = resolveSiteConfig()
 
-    expect(config.id).toBe('default');
-    expect(config.name).toBe('Directory Starter');
-    expect(config.domain).toBe('example.com');
-    expect(config.githubIssueOwner).toBe('example');
-    expect(config.githubIssueRepo).toBe('directory-starter');
+    expect(config.id).toBe('default')
+    expect(config.name).toBe('Directory Starter')
+    expect(config.domain).toBe('example.com')
+    expect(config.githubIssueOwner).toBe('example')
+    expect(config.githubIssueRepo).toBe('directory-starter')
     expect(config.githubIssuesUrl).toBe(
       'https://github.com/example/directory-starter/issues/new/choose'
-    );
-    expect(config.githubRepoUrl).toBe(
-      'https://github.com/example/directory-starter'
-    );
-    expect(config.githubUrl).toBe('https://github.com/example');
-    expect(config.redditUrl).toBe('https://www.reddit.com/r/directorystarter/');
-    expect(config.twitterUrl).toBe('https://x.com/directorystarter');
-    expect(config.gtmId).toBeUndefined();
-    expect(config.listingRouteBasePath).toBe('listing');
-    expect(config.docsRouteBasePath).toBe('docs');
-    expect(config.networkRouteBasePath).toBe('network');
+    )
+    expect(config.githubRepoUrl).toBe('https://github.com/example/directory-starter')
+    expect(config.githubUrl).toBe('https://github.com/example')
+    expect(config.redditUrl).toBe('https://www.reddit.com/r/directorystarter/')
+    expect(config.twitterUrl).toBe('https://x.com/directorystarter')
+    expect(config.gtmId).toBeUndefined()
+    expect(config.listingRouteBasePath).toBe('listing')
+    expect(config.docsRouteBasePath).toBe('docs')
+    expect(config.networkRouteBasePath).toBe('network')
     expect(config.copy).toEqual({
       categoryLabels: {},
       docsLabel: 'Docs',
       listingName: {
         plural: 'listings',
-        singular: 'listing',
+        singular: 'listing'
       },
       networkLabel: 'Network',
-      submitLabel: 'Submit a Listing',
-    });
+      submitLabel: 'Submit a Listing'
+    })
     expect(config.branding).toEqual({
       appleTouchIconUrl: undefined,
       faviconUrl: undefined,
       logoUrl: undefined,
-      opengraphImageUrl: undefined,
-    });
-    expect(hasConfiguredGitHubIssueTarget(config)).toBe(false);
-    expect(hasConfiguredPublicSocialLinks(config)).toBe(false);
-    expect(getConfiguredSocialLinks(config)).toEqual([]);
-  });
+      opengraphImageUrl: undefined
+    })
+    expect(hasConfiguredGitHubIssueTarget(config)).toBe(false)
+    expect(hasConfiguredPublicSocialLinks(config)).toBe(false)
+    expect(getConfiguredSocialLinks(config)).toEqual([])
+  })
+
+  it('rejects unknown checked-in site ids instead of silently loading default', () => {
+    expect(() => resolveSiteConfig('unknown-site')).toThrow(
+      'Site "unknown-site" is not an active checked-in site in this repo. Use "default" or a supported checked-in site id instead.'
+    )
+  })
 
   it('treats checked-in example-site socials and issue targets as configured', () => {
-    const config = resolveSiteConfig('serpdownloaders.com');
+    const config = resolveSiteConfig('serpdownloaders.com')
 
-    expect(hasConfiguredGitHubIssueTarget(config)).toBe(true);
-    expect(hasConfiguredPublicSocialLinks(config)).toBe(true);
+    expect(hasConfiguredGitHubIssueTarget(config)).toBe(true)
+    expect(hasConfiguredPublicSocialLinks(config)).toBe(true)
     expect(getConfiguredSocialLinks(config)).toEqual([
       'https://github.com/serpdownloaders',
       'https://www.reddit.com/r/serpdownloaders/',
-      'https://x.com/serpapps',
-    ]);
-  });
-
-  it('rejects removed checked-in site ids explicitly', () => {
-    expect(() => resolveSiteConfig('extensions.serp.co')).toThrow(
-      'Site "extensions.serp.co" was removed from this repo. Use a supported checked-in site id instead.'
-    );
-  });
-});
+      'https://x.com/serpapps'
+    ])
+  })
+})

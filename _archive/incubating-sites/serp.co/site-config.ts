@@ -1,17 +1,17 @@
-import type { CheckedInSiteConfigOverride } from '../types';
+import type { CheckedInSiteConfigOverride } from '../../../sites/types';
 
 export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
   branding: {
     favicon: {
-      path: 'sites/serp.co/assets/favicon.ico',
+      path: '_archive/incubating-sites/serp.co/assets/favicon.ico',
       source: 'local-path',
     },
     logo: {
-      path: 'sites/serp.co/assets/logo.png',
+      path: '_archive/incubating-sites/serp.co/assets/logo.png',
       source: 'local-path',
     },
     opengraphImage: {
-      path: 'sites/serp.co/assets/opengraph-image.png',
+      path: '_archive/incubating-sites/serp.co/assets/opengraph-image.png',
       source: 'local-path',
     },
   },
@@ -35,7 +35,7 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
     listingSource: {
       kind: 'listing-json',
       outputPath: 'data/listings.json',
-      path: 'sites/serp.co/listings.json',
+      path: '_archive/incubating-sites/serp.co/listings.json',
     },
   },
   id: 'serp.co',

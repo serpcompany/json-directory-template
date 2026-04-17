@@ -1,4 +1,4 @@
-import type { SiteOwnedContent } from '../types'
+import type { SiteOwnedContent } from '../../../sites/types'
 
 export const serpSoftwareSiteContent: SiteOwnedContent = {
   externalResources: [],

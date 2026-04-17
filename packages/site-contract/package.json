@@ -1,0 +1,17 @@
+{
+  "name": "@thedaviddias/site-contract",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./active-site-ids": "./src/active-site-ids.ts",
+    "./categories": "./src/categories.ts",
+    "./site-content": "./src/site-content.ts",
+    "./site-root-listing-aliases": "./src/site-root-listing-aliases.ts",
+    "./types": "./src/types.ts"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

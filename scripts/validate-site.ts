@@ -12,11 +12,11 @@ import { writeTrialWebsiteEntries } from './trial-build.ts';
 import {
   getActiveCategories,
   getUnknownCategorySlugs,
-} from '../apps/web/lib/category-navigation.ts';
+} from '@thedaviddias/web-core/category-navigation';
 import {
   normalizeJsonWebsite,
   websiteJsonEntriesSchema,
-} from '../apps/web/lib/website-schema.ts';
+} from '@thedaviddias/web-core/website-schema';
 
 const workspaceRoot = resolve(process.cwd());
 

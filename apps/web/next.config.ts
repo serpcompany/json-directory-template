@@ -2,8 +2,8 @@ import path from 'node:path';
 import { withContentCollections } from '@content-collections/next';
 import withMDX from '@next/mdx';
 import { baseConfig, withAnalyzer } from '@thedaviddias/config-next';
+import { defaultSiteConfig, resolveCheckedInSiteConfig } from '@thedaviddias/site-contract';
 import type { NextConfig } from 'next';
-import { defaultSiteConfig, resolveCheckedInSiteConfig } from '../../sites';
 import { categories } from './lib/categories';
 import { isStaticExportBuild } from './lib/runtime-mode';
 import { getSiteRootListingAliases } from './lib/site-root-listing-aliases';
@@ -14,7 +14,9 @@ export const INTERNAL_PACKAGES = [
   '@thedaviddias/config-typescript',
   '@thedaviddias/content',
   '@thedaviddias/logging',
+  '@thedaviddias/site-contract',
   '@thedaviddias/utils',
+  '@thedaviddias/web-core',
 ];
 
 function normalizeBasePath(basePath: string): string {

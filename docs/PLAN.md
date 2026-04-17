@@ -1,145 +1,175 @@
-# JSON-First MVP Closeout Plan
+# Active-Site Contract And Multisite Wrapper Migration Plan
 
 ## Goal
 
-Finish the MVP with a truthful static/JSON contract, a washed repo surface, and a clear queue for the work that comes after MVP.
+Move this repo onto a disciplined multisite path without keeping speculative sites in the active
+runtime/build/deploy graph.
 
-Execution tracking lives in:
+The immediate objective is:
 
-- [docs/IMPLEMENTATION_TRACKER.md](/Users/devin/dev/repos/json-directory-template/docs/IMPLEMENTATION_TRACKER.md)
-- [docs/knowledge/whole-repo-wash-audit.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/whole-repo-wash-audit.md)
-- [docs/knowledge/final-template-cleanliness-audit.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/final-template-cleanliness-audit.md)
-- [docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md)
+- keep the repo aligned to a multisite architecture
+- treat `serpdownloaders.com` as the only active checked-in site right now
+- remove `serp.co`, `extensions.serp.co`, and `serp.software` from the active registry until they
+  are explicitly promoted
+- create a clean path toward thin wrapper apps plus a shared `packages/web-core` style runtime
 
-## Locked decisions
+Execution tracking lives in
+[docs/IMPLEMENTATION_TRACKER.md](/Users/devin/dev/repos/json-directory-template/docs/IMPLEMENTATION_TRACKER.md).
 
-- [x] Keep the MVP on the current JSON/static publishing model
-- [x] Keep the GitHub-issue submit flow as the MVP submission path
-- [x] Use `serpdownloaders.com` as the live proof site for MVP closeout
-- [x] Keep D1/Postgres, self-serve submissions, paid promoted spots, and other hosted-product work out of the MVP closeout lane
+## Current Truth
 
-## Phase order
+- This repo is supposed to become a multisite repo.
+- The only site currently powering the repo is `serpdownloaders.com`.
+- The codebase already has partial multisite plumbing:
+  checked-in site config under `sites/**`, site-aware build/deploy scripts, and
+  `dist/sites/<site-id>` artifacts.
+- The current problem is not the multisite direction itself. The problem is that inactive or
+  incubating sites have been allowed into the active graph too early, which creates shared-file
+  churn, branch noise, and cleanup work.
 
-### Phase 0. Whole-repo wash audit
+## Locked Decisions
 
-- [x] Produce one audit artifact with exact file evidence and cleanup buckets
-- [x] Classify residue into:
-      `MVP-now`, `post-MVP`, `internal-only`, `archive/reference`
-- [x] Seed the audit with known residue:
-      `.all-contributorsrc`, `CLAUDE.md`, root `package.json`, `lychee.toml`, stale `/websites` and old issue-url test assumptions, old `packages/content/data/websites/**` assumptions, and internal `@thedaviddias/*` / `llms-txt-hub` references
-- [x] Reset the plan/tracker/checklist docs so they point at the same next steps
+- Keep the repo on a multisite trajectory.
+- Do not keep speculative or not-yet-approved sites in the active site registry.
+- Distinguish explicitly between:
+  - active sites: wired into runtime/build/deploy/validation
+  - incubating sites: kept as reference material or parked work, but not active
+- Keep `serpdownloaders.com` as the sole active checked-in site until another site is intentionally
+  promoted.
+- Do not treat generated compatibility outputs such as `data/listings.json` as the source of truth
+  for inactive sites.
+- Finish the active-site cleanup before doing the larger wrapper-app extraction.
 
-Acceptance:
+## Read First
 
-- [x] The audit explains what must change before MVP closeout versus what can wait
-- [x] The main planning docs no longer describe an old branch-era implementation pass
+- [README.md](/Users/devin/dev/repos/json-directory-template/README.md)
+  - current repo contract, source-of-truth summary, and core commands
+- [docs/BUILD_PIPELINE.md](/Users/devin/dev/repos/json-directory-template/docs/BUILD_PIPELINE.md)
+  - current site-aware validate/build/deploy contract
+- [docs/DEPLOY_RUNBOOK.md](/Users/devin/dev/repos/json-directory-template/docs/DEPLOY_RUNBOOK.md)
+  - deploy expectations and target Pages repo sync behavior
+- [docs/SITE_CONFIG_INVENTORY.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_INVENTORY.md)
+  - current checked-in site inventory and assumptions
+- [docs/knowledge/site-config.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/site-config.md)
+  - site config ownership, boundaries, and terminology
+- [docs/knowledge/github-pages-static-export.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/github-pages-static-export.md)
+  - static export constraints, especially around route behavior and deploy artifacts
 
-### Phase 1. MVP-now wash execution
+Structural reference repos:
 
-- [x] Clean public-facing and operator-facing residue found in the audit
-- [x] Clean root metadata/config surfaces that still misstate the repo or old brand
-- [x] Update active tests and workflows that still enforce stale route or issue-url assumptions
-- [x] Add the small MVP-now closeout cards for sitemap/robots verification and optional GTM verification under `#43`
-- [x] Update docs/runbooks in the same change sets so cleanup does not drift back into chat
-- [x] Add or update tests for every behavior change made during the wash pass
-- [x] Verify any user-facing changes end to end before marking them done
+- `/Users/devin/dev/repos/openpanel`
+- `/Users/devin/dev/repos/emd-monorepo`
 
-Acceptance:
+Use them only as architectural references for the target wrapper-app shape. They are not a source
+of truth for this repo’s current implementation details.
 
-- [ ] Public, operator, and root metadata surfaces no longer leak stale brand or stale flow assumptions
-- [ ] The remaining residue is either intentionally deferred or parked in archive/reference areas
+## Phase Order
 
-### Phase 2. MVP truth and verification closeout
+### Phase 1. Active-Site Contract Cleanup
 
-- [x] Truth-pass the closeout docs and board after live proof-site alignment under `#46`
-- [x] Review active workflow/config assumptions that still point at legacy website-authoring paths under `#47`
-- [x] Run the closeout checklist for `default` under `#48`
-- [x] Run the default-site browser closeout pass on an isolated local dev server and record the real route outcomes
-- [x] Verify the shipped `sitemap.xml`/`sitemap-index.xml`/`robots.txt` contract in the built artifact
-- [x] Verify site-owned GTM behavior for `serpdownloaders.com` production output and absence on non-GTM sites
-- [x] Verify `default` and `serpdownloaders.com` with real validate/build runs
-- [x] Finish the remaining `default`-site artifact, deploy, and docs residue under `#48`
-- [x] Turn any failure or unverified item into an explicit follow-up issue instead of leaving it in a doc only
-- [x] Update docs with the actual verification outcome, not placeholder boxes
-
-Acceptance:
-
-- [x] [docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_REFACTOR_QA_CHECKLIST.md) has real pass/fail outcomes for the remaining open items
-- [x] MVP closeout status is evidence-based instead of inferred from old issue history
-- [x] The board, tracker, and checklist describe the same unresolved work
-
-Scope note:
-
-- The active real-site verification lane is `serpdownloaders.com`.
-- `serp.software` remains in this repo as an additional multi-site proof config.
-- The board-tracked proof target is still `serpdownloaders.com` because it is the live site.
-
-### Phase 3. `serpdownloaders.com` live proof-site closeout
-
-- [x] Keep issue `#41` scoped to the `serpdownloaders.com` live proof-site pass
-- [x] Run the live closeout pass against `serpdownloaders.com`
-- [x] Spot-check homepage, listing detail, search, submit, sitemap, and robots behavior on the real site
-- [x] Compare the live site against the current local build/artifact contract
-- [x] Recheck live `robots.txt` and unversioned root assets on April 5, 2026; the old cache-based blocker no longer reproduces
-- [x] Update docs with the live proof-site findings and verification notes
+- inventory every file that currently registers or assumes `serp.co`, `extensions.serp.co`, or
+  `serp.software` as active
+- remove those sites from active exports, registries, validation, and default build/deploy paths
+- keep `serpdownloaders.com` validating, building, and deploying cleanly through the existing
+  pipeline
 
 Acceptance:
 
-- [x] `serpdownloaders.com` is the real second proof of concept for the current JSON/shared contract
+- `serpdownloaders.com` is the only active site in the runtime/build/deploy graph
+- no shared file still implies the inactive sites are active
 
-### Phase 4. Taxonomy and discovery follow-up
+### Phase 2. Inactive-Site Isolation
 
-- [x] Run the taxonomy/discovery pass after the next proof-site work unless onboarding proves it is the blocker first
-- [x] Define the next category set to support
-- [x] Split follow-on data, UI, validation, and search work into narrow implementation issues
-- [x] Add or update tests covering taxonomy normalization and discovery behavior
-- [x] Update docs so supported category behavior matches the code and issue queue
-
-Acceptance:
-
-- [x] Taxonomy work is tied to real onboarding/discovery needs, not broad speculation
-
-### Phase 5. Final template cleanliness audit
-
-- [x] Run the human-style audit under `#50`
-- [x] Publish the immediate starter-surface neutrality fixes found in `#50`
-- [x] Split broader residue into explicit follow-up issues instead of leaving it in docs/chat
-- [x] Close `#50` only after the immediate fixes are verified and the follow-up issues are linked
+- decide where inactive/incubating sites should live:
+  `_archive/`, an incubation area, or a dedicated parking branch
+- move or park inactive site assets/config/content there without deleting useful reference material
+- document the difference between “inactive/incubating” and “active”
 
 Acceptance:
 
-- [x] The active default starter no longer reads like a lightly rebranded OSS clone on the published branch
-- [x] Remaining residue is explicitly tracked in follow-up issues such as `#51` and `#52`
+- inactive sites remain available as reference material
+- inactive sites do not affect runtime, build, validation, or deploy behavior
 
-### Later. Hosted and storage expansion
+### Phase 3. Active-Registry Hardening
 
-- [ ] Keep badge/embed generation as a possible static-lane enhancement later
-- [ ] Keep self-serve submission, paid promoted spots, sponsor inventory, Stripe checkout, and moderation/admin workflows in a hosted lane
-- [ ] Revisit storage/runtime expansion only after the JSON-first MVP closeout and next proof-site pass are complete
-- [ ] Document any future hosted write-back model before implementation work starts
+- add tests that assert only active sites are exported and validated
+- make active commands fail cleanly or refuse unsupported site ids where appropriate
+- update docs so “active site” has a precise meaning and promotion rules are explicit
 
 Acceptance:
 
-- [ ] Hosted work remains a separate product lane and does not distort the MVP static contract
+- future speculative sites cannot silently become active just by adding folders
 
-## GitHub sequencing
+### Phase 4. Wrapper-App Migration
 
-- [x] `#43` owns the whole-repo wash audit plus the JSON-first closeout sequence
-- [x] `#41` is the completed live proof-site issue once the April 5, 2026 live recheck lands
-- [x] `#44` is the completed sitemap/robots closeout issue once the April 5, 2026 live recheck lands
-- [x] `#46` captured the docs/board truth pass and is now done
-- [x] `#47` retired legacy website-authoring assumptions from active workflows, tests, and docs
-- [x] `#48` closed the remaining `default`-site artifact/deploy/docs closeout verification
-- [x] `#42` is now the next `Ready` item for taxonomy/discovery follow-up
-- [x] `#50` is the final post-`#42` audit issue for template cleanliness
-- [x] `#51` tracks the remaining proof-site/operator contract cleanup after `#50`
-- [x] `#52` tracks the remaining legacy public compatibility cleanup after `#50`
-- [x] `#42` stays downstream of the proof-site pass and remaining closeout truth pass unless taxonomy becomes the blocker
-- [x] `#39` is treated as later architecture/spec work, not as the gate in front of MVP closeout
+- define the target repo shape:
+  - `apps/<site>` thin wrappers
+  - `packages/web-core` shared rendering/runtime/build-facing logic
+  - `sites/<site>` site-owned config/content/assets
+  - `dist/sites/<site>` build artifacts
+- extract shared logic from `apps/web` into `packages/web-core`
+- keep `serpdownloaders.com` behavior stable during the extraction
 
-## Working rules for this closeout pass
+Acceptance:
 
-- [x] Keep tests and doc updates attached to every cleanup chunk
-- [x] Prefer classification before cleanup when a residue surface could be risky
-- [x] Keep archive/reference material clearly marked instead of half-cleaning it into active paths
-- [x] Do not let future hosted/database ideas reopen the MVP publishing contract
+- `serpdownloaders.com` still validates, builds, and deploys during and after extraction
+- wrapper apps stay thin and site-specific rather than becoming full forks
+
+### Phase 5. Site Promotion Contract
+
+- document the exact requirements before a second site can become active:
+  - approved deploy target
+  - checked-in site config and owned content
+  - validation/build/deploy coverage
+  - docs/runbook updates
+  - tests
+
+Acceptance:
+
+- promoting site #2 is a deliberate operational step, not an accidental codebase side effect
+
+## Important Implementation Areas
+
+The implementation should expect to touch these kinds of surfaces:
+
+- active site registry and checked-in site exports:
+  `sites/index.ts`, `sites/categories.ts`, `sites/**/site-config.ts`
+- shared app config and site adaptation:
+  `apps/web/lib/site-config.ts`, `apps/web/lib/categories.ts`,
+  `apps/web/lib/category-navigation.ts`
+- build/validation/deploy entrypoints:
+  `scripts/validate-site.ts`, `scripts/validate-active-sites.ts`,
+  `scripts/build-site.ts`, `scripts/deploy-site.ts`
+- planning and runbook docs:
+  `docs/PLAN.md`, `docs/IMPLEMENTATION_TRACKER.md`, and likely
+  [docs/BUILD_PIPELINE.md](/Users/devin/dev/repos/json-directory-template/docs/BUILD_PIPELINE.md)
+  plus
+  [docs/knowledge/site-config.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/site-config.md)
+
+Do not treat this as a file-by-file mandate. Use it as a decision-complete guide to the likely
+edit zones.
+
+## Test And Verification Expectations
+
+The implementation pass should verify at least:
+
+- active site registry behavior
+  - only active sites are exported and validated
+  - inactive sites do not participate in active resolution paths
+- `serpdownloaders.com` pipeline health
+  - `pnpm validate:site -- --site serpdownloaders.com`
+  - `pnpm build:site -- --site serpdownloaders.com`
+  - `pnpm deploy:site -- --site serpdownloaders.com --dry-run`
+- negative behavior
+  - inactive/unregistered sites fail cleanly or are explicitly excluded
+- migration safety
+  - wrapper extraction does not change `serpdownloaders.com` route or artifact behavior
+
+## Assumptions
+
+- The repo should stay multisite, not revert to a single-site product shape.
+- `serpdownloaders.com` is the only active site right now.
+- `serp.co`, `extensions.serp.co`, and `serp.software` should be treated as inactive/incubating
+  immediately.
+- The wrapper-app / `packages/web-core` migration is a follow-on implementation phase, not the
+  first cleanup step.

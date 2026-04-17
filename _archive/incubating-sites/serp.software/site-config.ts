@@ -1,4 +1,4 @@
-import type { CheckedInSiteConfigOverride } from '../types'
+import type { CheckedInSiteConfigOverride } from '../../../sites/types'
 
 export const serpSoftwareSiteConfig: CheckedInSiteConfigOverride = {
   build: {

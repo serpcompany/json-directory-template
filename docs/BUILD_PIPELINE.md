@@ -71,6 +71,11 @@ Validation checks:
 - referenced remote brand assets can be staged into the expected local asset shape before build
 - source JSON can be normalized into valid listing entries
 
+Repo-level validation note:
+
+- `pnpm validate:sites` validates the active non-default checked-in sites only
+- use `pnpm validate:site -- --site default` when you want to validate the starter default site explicitly
+
 ### 3. Build
 
 ```bash

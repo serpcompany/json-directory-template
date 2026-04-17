@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import {
   searchIndexSchema,
   type SearchIndexEntry,
-} from '../apps/web/lib/search-index.ts';
+} from '@thedaviddias/web-core/search-index';
 
 interface SearchSourceEntry {
   category?: string;

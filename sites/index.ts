@@ -1,8 +1,7 @@
 import { defaultSiteConfig } from './site-config.default';
 import { defaultSiteContent, resolveSiteContent } from './site-content';
-import { serpCoSiteConfig } from './serp.co/site-config';
-import { serpSoftwareSiteConfig } from './serp.software/site-config';
 import { serpdownloadersComSiteConfig } from './serpdownloaders.com/site-config';
+import { assertSiteIdIsSupported } from './active-site-ids';
 import type {
   CheckedInSiteConfig,
   CheckedInSiteConfigOverride,
@@ -10,22 +9,8 @@ import type {
 } from './types';
 
 export const siteConfigsById: Record<string, CheckedInSiteConfigOverride> = {
-  'serp.co': serpCoSiteConfig,
-  'serp.software': serpSoftwareSiteConfig,
   'serpdownloaders.com': serpdownloadersComSiteConfig,
 };
-
-const removedSiteIds = new Set(['extensions.serp.co']);
-
-function assertSiteIdIsNotRemoved(siteId: string): void {
-  if (!removedSiteIds.has(siteId)) {
-    return;
-  }
-
-  throw new Error(
-    `Site "${siteId}" was removed from this repo. Use a supported checked-in site id instead.`
-  );
-}
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -82,13 +67,8 @@ export function resolveCheckedInSiteConfig(
     return defaultSiteConfig;
   }
 
-  assertSiteIdIsNotRemoved(siteId);
-
+  assertSiteIdIsSupported(siteId);
   const siteOverride = siteConfigsById[siteId];
-
-  if (!siteOverride) {
-    return defaultSiteConfig;
-  }
 
   return mergeCheckedInSiteConfig(defaultSiteConfig, siteOverride);
 }

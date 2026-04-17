@@ -2,8 +2,9 @@ import 'server-only'
 
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { resolveCheckedInSiteConfig } from '@thedaviddias/site-contract'
+import type { CheckedInSiteConfig } from '@thedaviddias/site-contract/types'
 import { canonicalizeTrialProducts, type TrialProducts } from '../../../scripts/trial-build'
-import { resolveCheckedInSiteConfig, type CheckedInSiteConfig } from '../../../sites'
 import { resolveFromRoot } from '@/lib/server-utils'
 import {
   operatorOnboardingDocumentSchema,

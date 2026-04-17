@@ -1,11 +1,13 @@
 # Second Site Contract Exercise
 
-This note records the first real second-site pressure test against the checked-in site contract.
+Historical note: this document records an earlier proof-site exercise. It no longer describes the current active registry.
+
+This note records the first real second-site pressure test against the checked-in site contract before the active-site cleanup parked inactive sites under `_archive/incubating-sites/**`.
 
 ## Site used
 
-- site id: `serp.software`
-- domain: `serp.software`
+- site id: `serp.software` at the time of the exercise
+- domain: `serp.software` at the time of the exercise
 - repo: deploy target not created yet
 
 ## What this exercised
@@ -26,7 +28,7 @@ Proven override points:
 
 ## Result
 
-The repo validated and built the second site successfully without needing a new contract shape.
+At the time of the exercise, the repo validated and built the second site successfully without needing a new contract shape.
 
 That means the current checked-in config model already supports:
 
@@ -52,3 +54,7 @@ For route-contract verification, check the final artifact instead:
 - `dist/sites/<site-id>/sitemap-index.xml`
 
 Do not treat the raw Next route log alone as the final public route contract for multi-site builds.
+
+## Current status
+
+`serp.software` is no longer an active checked-in site in this repo. The current active registry only includes `serpdownloaders.com`, and parked site material now lives under `_archive/incubating-sites/**`.

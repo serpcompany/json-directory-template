@@ -1,6 +1,6 @@
 import { siteContent } from '@/lib/site-content'
 import { hasConfiguredPublicSocialLinks, siteConfig } from '@/lib/site-config'
-import type { SiteNetworkLink, SiteOwnedContent } from '../../../sites/types'
+import type { SiteNetworkLink, SiteOwnedContent } from '@thedaviddias/site-contract/types'
 
 export type NetworkLink = SiteNetworkLink
 

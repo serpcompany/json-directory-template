@@ -15,8 +15,8 @@ import {
 import { dirname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { categories } from '../apps/web/lib/categories.ts';
-import { getSiteRootListingAliases } from '../apps/web/lib/site-root-listing-aliases.ts';
+import { categories } from '@thedaviddias/web-core/categories';
+import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases';
 import {
   buildSiteEnvironment,
   loadCheckedInSiteFromInput,

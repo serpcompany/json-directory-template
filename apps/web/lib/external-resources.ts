@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
 import { Chrome, Code2, Command, GitBranch, Terminal } from 'lucide-react'
+import type { SiteExternalResourceIcon } from '@thedaviddias/site-contract/types'
 import { siteContent } from '@/lib/site-content'
-import type { SiteExternalResourceIcon } from '../../../sites/types'
 
 export interface ExternalResource {
   description: string
