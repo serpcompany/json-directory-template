@@ -1,5 +1,11 @@
 # Wrapper App Migration Implementation Plan
 
+Historical note:
+
+- This plan captures the original wrapper-app migration implementation sequence.
+- The work is complete and the document is kept as historical execution context.
+- Prefer the tracker and the later normalization plan for the current repo shape.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Finish the transition from `apps/web` as a mixed runtime/app layer into a thin wrapper app over `packages/web-core` and `packages/site-contract`, while keeping `serpdownloaders.com` build output stable.

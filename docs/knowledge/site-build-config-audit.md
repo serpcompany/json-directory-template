@@ -1,5 +1,12 @@
 # Site Build Config Audit
 
+Historical note:
+
+- This audit reflects the active build/config surface at the time it was written.
+- References under `apps/web/**` are historical snapshots and may now resolve to package-owned
+  modules in `packages/web-core/**`.
+- Use this document for audit context, not as the current ownership map.
+
 This audit captures what the current starter already treats as site-configurable, what still appears hardcoded in active surfaces, and what should remain internal to the build engine.
 
 Use this as the working checklist for expanding the site-facing build contract without turning internal implementation details into user inputs.

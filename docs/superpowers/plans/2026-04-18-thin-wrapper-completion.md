@@ -1,5 +1,12 @@
 # Thin Wrapper Completion Plan
 
+Historical note:
+
+- This plan documents the thin-wrapper migration work as it was scoped at the time.
+- It is now completed and preserved as implementation history.
+- Use `docs/IMPLEMENTATION_TRACKER.md` and `docs/superpowers/plans/2026-04-18-apps-web-normalization.md`
+  for the current post-migration state.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development. Execute each task as a bounded slice with a coder/reviewer loop before moving on.
 
 **Goal:** Finish the refactor that turns `apps/*` into real thin wrappers over `packages/web-core` and `packages/site-contract`, with `apps/serpdownloaders.com` as the canonical active-site wrapper and `apps/web` no longer acting as the implementation source app.

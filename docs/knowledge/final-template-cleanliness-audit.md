@@ -1,5 +1,11 @@
 # Final Template Cleanliness Audit
 
+Historical note:
+
+- This audit records the repo state during the cleanliness pass that produced it.
+- References to `apps/web/**` and generated starter artifacts are historical snapshots.
+- Use the tracker and current architecture docs for present-day ownership decisions.
+
 Date: 2026-04-05
 
 Parent issue: [#50](https://github.com/serpcompany/json-directory-template/issues/50)
