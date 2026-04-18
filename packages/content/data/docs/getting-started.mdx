@@ -33,13 +33,14 @@ For normal UI work, use the web app only:
 pnpm dev
 ```
 
-That starts the app on `http://localhost:3005`.
+That starts the active site wrapper on `http://localhost:3005`.
 
 Use these variants when you need them:
 
+- `pnpm dev:starter` runs the default starter wrapper directly
 - `pnpm dev:all` runs the older full Turbo workspace loop
 - `pnpm dev:site -- --site <id>` prepares the selected site's listing data and starts dev with the correct site env
-- `pnpm --filter web dev:inspect` starts the web app with the Node inspector attached
+- `pnpm --filter web dev:inspect` starts the starter wrapper with the Node inspector attached
 
 ## Understand the checked-in site inputs
 

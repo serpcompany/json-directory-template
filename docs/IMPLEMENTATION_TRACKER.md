@@ -54,7 +54,7 @@ Reference architectures:
 Acceptance:
 
 - [x] `apps/web` is an intentional thin starter wrapper rather than a privileged implementation app.
-- [ ] Tooling/defaults/docs no longer hide hard dependencies on `apps/web`.
+- [x] Tooling/defaults/docs no longer hide hard dependencies on `apps/web`.
 
 ### Phase 6. Thin-Wrapper Completion
 

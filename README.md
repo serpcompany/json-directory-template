@@ -18,7 +18,13 @@ pnpm install
 pnpm dev
 ```
 
-The default local app runs at `http://localhost:3005`.
+That starts the active site wrapper, currently `serpdownloaders.com`, at `http://localhost:3005`.
+
+If you want the starter wrapper specifically:
+
+```bash
+pnpm dev:starter
+```
 
 ## Core commands
 
@@ -32,7 +38,7 @@ Useful repo checks:
 
 ```bash
 pnpm test:repo
-pnpm --filter web exec jest --runInBand
+pnpm --dir apps/web exec jest --runInBand
 ```
 
 ## Current source of truth

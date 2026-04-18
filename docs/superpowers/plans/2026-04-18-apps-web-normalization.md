@@ -135,6 +135,12 @@ Status:
 - Run targeted Jest suites for changed imports
 - Run: `pnpm --dir apps/web typecheck`
 
+Status:
+
+- Completed. Route-only and test-only compatibility re-exports have been removed from
+  `apps/web/components/**`. The remaining component files there are real app-specific or
+  non-trivial code rather than package passthrough shims.
+
 ## Task 5: Final Apps Web Normalization Acceptance Pass
 
 **Intent:**
@@ -152,3 +158,9 @@ Status:
   - `apps/web` is either a thin starter wrapper or a clearly scoped compatibility app
   - shared starter/public surfaces live in packages
   - repo tooling does not hide hard dependencies on `apps/web`
+
+Status:
+
+- Completed. `apps/serpdownloaders.com` remains the canonical active-site wrapper, `apps/web` is
+  now an intentional thin starter wrapper, shared starter/public surfaces live in packages, and
+  the remaining `apps/web` code is no longer carrying hidden package passthrough shims.

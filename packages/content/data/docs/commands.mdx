@@ -14,10 +14,16 @@ published: true
 
 ## Local development
 
-Run just the web app:
+Run the active site wrapper:
 
 ```bash
 pnpm dev
+```
+
+Run the starter wrapper directly:
+
+```bash
+pnpm dev:starter
 ```
 
 Run the older multi-workspace loop:
@@ -32,7 +38,7 @@ Run one checked-in site with its data prep and env wired for you:
 pnpm dev:site -- --site serpdownloaders.com
 ```
 
-Run the web app with the Node inspector attached:
+Run the starter wrapper with the Node inspector attached:
 
 ```bash
 pnpm --filter web dev:inspect
@@ -52,10 +58,10 @@ Run the full repo tests:
 pnpm test
 ```
 
-Run focused web tests:
+Run focused starter-wrapper tests:
 
 ```bash
-pnpm --filter web exec jest --runInBand --runTestsByPath app/docs/__tests__/page.test.tsx
+pnpm --dir apps/web exec jest --runInBand --runTestsByPath app/docs/__tests__/page.test.tsx
 ```
 
 ## Build output

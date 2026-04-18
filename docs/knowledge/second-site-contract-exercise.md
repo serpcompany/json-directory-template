@@ -44,7 +44,10 @@ The raw `next build` route report still shows the pre-finalize export paths such
 
 That does **not** mean the shipped site artifact is wrong.
 
-The final public route remap happens later in `scripts/build-site.ts`, when the build copies `apps/web/out` into `dist/sites/<site-id>` and applies the configured public route base paths.
+The final public route remap happens later in `scripts/build-site.ts`, when the build copies the
+resolved app export directory (`build.appOutDir`, currently `apps/serpdownloaders.com/out` for the
+active site and `apps/web/out` for the starter wrapper) into `dist/sites/<site-id>` and applies
+the configured public route base paths.
 
 For route-contract verification, check the final artifact instead:
 
