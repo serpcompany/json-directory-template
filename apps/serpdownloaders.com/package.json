@@ -12,6 +12,7 @@
     "@content-collections/next": "^0.2.10",
     "@next/mdx": "16.1.6",
     "@thedaviddias/config-next": "workspace:*",
+    "@thedaviddias/config-typescript": "workspace:*",
     "@thedaviddias/design-system": "workspace:*",
     "@thedaviddias/logging": "workspace:*",
     "@thedaviddias/site-contract": "workspace:*",

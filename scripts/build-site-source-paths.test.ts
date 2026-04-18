@@ -2,33 +2,33 @@ import { describe, expect, it } from 'vitest';
 import { resolveBuildSourceAppPaths } from './build-site.ts';
 
 describe('resolveBuildSourceAppPaths', () => {
-  it('derives source-app staging paths from the configured app out dir', () => {
+  it('derives source-app staging paths from the configured starter app out dir', () => {
     const paths = resolveBuildSourceAppPaths({
-      appOutDir: 'apps/web/out',
+      appOutDir: 'apps/starter/out',
       workspaceRoot: '/workspace',
     });
 
     expect(paths).toEqual({
-      accountRoutePath: '/workspace/apps/web/app/account',
-      appDir: '/workspace/apps/web',
-      appleTouchIconPath: '/workspace/apps/web/public/apple-touch-icon.png',
+      accountRoutePath: '/workspace/apps/starter/app/account',
+      appDir: '/workspace/apps/starter',
+      appleTouchIconPath: '/workspace/apps/starter/public/apple-touch-icon.png',
       authRouteBackupPath:
-        '/workspace/apps/web/app/api/auth/[...nextauth]/route.static-export-disabled',
+        '/workspace/apps/starter/app/api/auth/[...nextauth]/route.static-export-disabled',
       authRoutePath:
-        '/workspace/apps/web/app/api/auth/[...nextauth]/route.ts',
-      favoritesRoutePath: '/workspace/apps/web/app/favorites',
-      faviconPath: '/workspace/apps/web/app/favicon.ico',
-      guidesRoutePath: '/workspace/apps/web/app/guides',
-      loginRoutePath: '/workspace/apps/web/app/login',
-      logoPath: '/workspace/apps/web/public/logo.png',
-      opengraphImagePath: '/workspace/apps/web/app/opengraph-image.png',
+        '/workspace/apps/starter/app/api/auth/[...nextauth]/route.ts',
+      favoritesRoutePath: '/workspace/apps/starter/app/favorites',
+      faviconPath: '/workspace/apps/starter/app/favicon.ico',
+      guidesRoutePath: '/workspace/apps/starter/app/guides',
+      loginRoutePath: '/workspace/apps/starter/app/login',
+      logoPath: '/workspace/apps/starter/public/logo.png',
+      opengraphImagePath: '/workspace/apps/starter/app/opengraph-image.png',
       operatorOnboardingPageBackupPath:
-        '/workspace/apps/web/app/operator/onboard-site/page.static-export-disabled',
+        '/workspace/apps/starter/app/operator/onboard-site/page.static-export-disabled',
       operatorOnboardingPagePath:
-        '/workspace/apps/web/app/operator/onboard-site/page.tsx',
-      projectsRoutePath: '/workspace/apps/web/app/projects',
-      docsRoutePath: '/workspace/apps/web/app/docs',
-      searchIndexPath: '/workspace/apps/web/public/search/search-index.json',
+        '/workspace/apps/starter/app/operator/onboard-site/page.tsx',
+      projectsRoutePath: '/workspace/apps/starter/app/projects',
+      docsRoutePath: '/workspace/apps/starter/app/docs',
+      searchIndexPath: '/workspace/apps/starter/public/search/search-index.json',
     });
   });
 

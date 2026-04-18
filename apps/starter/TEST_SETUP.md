@@ -40,8 +40,8 @@ Runs automatically before each commit:
 
 ```yaml
 test-modified:
-  glob: "apps/web/**/*.{test,spec}.{js,ts,tsx}"
-  run: cd apps/web && npm test -- --findRelatedTests {staged_files} --passWithNoTests --bail --maxWorkers=50%
+  glob: "apps/starter/**/*.{test,spec}.{js,ts,tsx}"
+  run: cd apps/starter && npm test -- --findRelatedTests {staged_files} --passWithNoTests --bail --maxWorkers=50%
 ```
 
 ### Pre-push Hook (Thorough 🔍)
@@ -53,7 +53,7 @@ Runs automatically before pushing to remote:
 
 ```yaml
 test-all:
-  run: cd apps/web && npm test -- --passWithNoTests --maxWorkers=75% --verbose=false
+  run: cd apps/starter && npm test -- --passWithNoTests --maxWorkers=75% --verbose=false
 ```
 
 ## ⚙️ Jest Configuration Optimizations
@@ -78,7 +78,7 @@ Optimized module mapping for monorepo structure:
 ## 🧪 Test Structure
 
 ```
-apps/web/
+apps/starter/
 ├── __tests__/                    # Main test directory
 │   └── basic-smoke-tests.test.tsx    # Core component smoke tests
 ├── components/

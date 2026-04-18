@@ -34,7 +34,7 @@ async function generateSearchIndex() {
     })
   }
 
-  // Write the search index to the apps/web/public directory instead of the root public directory
+  // Write the search index to the apps/starter/public directory instead of the root public directory
   const searchIndexPath = path.join(
     process.cwd(),
     'apps',

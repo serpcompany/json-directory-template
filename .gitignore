@@ -8,7 +8,7 @@
 
 # next.js
 .next/
-apps/web/out/
+apps/starter/out/
 
 # production
 /build

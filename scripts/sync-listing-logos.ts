@@ -3,6 +3,7 @@ import { dirname, extname, resolve } from 'node:path';
 import {
   loadCheckedInSiteFromInput,
   parseSiteInputArgs,
+  resolveSiteAppOutDir,
   type SiteInputTarget,
 } from './site-config.ts';
 
@@ -114,7 +115,8 @@ export async function syncListingLogos(
     string,
     Record<string, unknown>
   >;
-  const outputDir = `apps/web/public/listing-logos/${definition.id}`;
+  const appDir = dirname(resolveSiteAppOutDir(definition));
+  const outputDir = `${appDir}/public/listing-logos/${definition.id}`;
   const absoluteOutputDir = resolve(process.cwd(), outputDir);
 
   mkdirSync(absoluteOutputDir, { recursive: true });

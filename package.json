@@ -14,7 +14,7 @@
     "dev:all": "cross-env FORCE_COLOR=1 turbo dev --parallel",
     "dev:operator": "pnpm tsx scripts/dev-operator.ts",
     "dev:serpdownloaders": "pnpm dev:site -- --site serpdownloaders.com",
-    "dev:starter": "pnpm --filter web dev",
+    "dev:starter": "pnpm --filter starter dev",
     "dev:site": "pnpm tsx scripts/dev-site.ts",
     "format": "biome check --write .",
     "generate-search-index": "pnpm tsx scripts/search-index-generator.ts",
