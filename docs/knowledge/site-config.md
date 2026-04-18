@@ -2,12 +2,42 @@
 
 Use checked-in site config files under `sites/**` to centralize reusable brand and shell values instead of hardcoding them across the header, footer, metadata, and social links.
 
+## Ownership Model
+
+The current intended ownership boundary is:
+
+- `apps/<site>`
+  - thin wrapper apps only
+  - Next config, env wiring, generated content-collections entrypoints, and other framework-specific runtime hooks
+  - no reusable business logic
+- `packages/web-core`
+  - reusable runtime/query/render helpers
+  - routes, site copy, SEO, schema generation, category/query helpers, shared listing/runtime helpers
+- `packages/site-contract`
+  - checked-in site contract
+  - checked-in site config/category/content resolution
+  - onboarding helpers
+  - source-path resolution
+  - trial product normalization
+- `sites/<site>`
+  - declarative checked-in site data/config/assets only
+  - sparse per-site overrides and site-owned content/assets
+  - no shared resolver logic
+
+If a file can be reused by more than one site app, it should not live under `apps/<site>`.
+If a file defines checked-in site data rather than shared runtime behavior, it should not live in
+`packages/web-core`.
+
 Important distinction:
 
-- `sites/site-config.default.ts` and `sites/<id>/site-config.ts` are the checked-in source of truth
-- `sites/site-config.default.ts` is the full starter config, while `sites/<id>/site-config.ts` should stay as a sparse override-only file
-- `apps/web/lib/site-config.ts` is the internal app-facing adapter that resolves those checked-in files into the runtime shape the app uses
-- `apps/web/lib/site-copy.ts` is the small wording helper that turns checked-in copy fields into reusable UI labels such as "All Listings" and "Submit a Listing"
+- `sites/site-config.default.ts` and `sites/<id>/site-config.ts` are declarative checked-in source
+  inputs
+- `sites/site-config.default.ts` is the full starter config, while `sites/<id>/site-config.ts`
+  should stay as a sparse override-only file
+- `packages/site-contract` owns the checked-in site resolution logic that merges defaults and
+  per-site overrides
+- `packages/web-core` owns app-facing helpers such as site copy and shared runtime adapters built
+  on top of the checked-in site contract
 
 Source-of-truth files:
 
@@ -26,17 +56,22 @@ Recommended authoring rule:
 - only add the field to `sites/<id>/site-config.ts` when that site needs a non-default override
 - let the central resolver merge defaults plus overrides before validation
 
-Adapter file:
+Current adapter files:
 
 - `apps/web/lib/site-config.ts`
 - `apps/web/lib/site-copy.ts`
 - `apps/web/lib/site-content.ts`
 - `apps/web/lib/network-links.ts`
 
+These app-local files are compatibility shims while the wrapper-app migration is in progress. The
+target state is for active callers to import package modules directly, with only truly Next-specific
+wrappers left in the app layer.
+
 Site-owned content boundary:
 
-- keep reusable build/runtime contract in `sites/site-config.default.ts` plus `sites/<id>/site-config.ts`
-- keep site-specific optional modules and datasets in `sites/site-content.default.ts` plus `sites/<id>/site-content.ts`
+- keep declarative checked-in config in `sites/site-config.default.ts` plus `sites/<id>/site-config.ts`
+- keep site-specific optional modules and datasets in `sites/site-content.default.ts` plus
+  `sites/<id>/site-content.ts`
 - use the site-content layer for things like external tool cards or optional listing CLI install mappings that are too site-specific to belong in the shared starter contract
 - default site content should stay empty/safe so enabling a starter feature does not automatically ship old llms-specific residue
 

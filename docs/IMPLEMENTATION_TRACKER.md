@@ -67,9 +67,10 @@ Acceptance:
 ### Phase 4. Wrapper-App Migration
 
 - [x] Define the shared `packages/web-core` boundary.
-- [ ] Define thin-wrapper responsibilities for `apps/<site>`.
-- [ ] Migrate the coupled content-loading layer using the app-load / package-query split.
-- [ ] Consolidate remaining file-backed resource loading behind the same boundary.
+- [x] Define thin-wrapper responsibilities for `apps/<site>` and the ownership boundary for
+      `packages/site-contract` and `sites/<site>`.
+- [x] Migrate the coupled content-loading layer using the app-load / package-query split.
+- [x] Consolidate remaining file-backed resource loading behind the same boundary.
 - [ ] Create an `apps/serpdownloaders.com` wrapper.
 - [ ] Repoint build/validate/deploy flows to the wrapper app without changing artifacts.
 - [ ] Delete dead `apps/web/lib/*` shims after direct package imports settle.
@@ -115,7 +116,8 @@ handled as its own reviewable unit.
 2. [x] Task 2: consolidate `apps/web/lib/resources.ts` into the same content-loading boundary
    No active callers remain; the file is documented in-place as inactive legacy code and should
    not be expanded further without a new task that reintroduces app-layer file-backed resources.
-3. [ ] Task 3: document thin-wrapper responsibilities in docs
+3. [x] Task 3: document thin-wrapper responsibilities plus explicit ownership for `packages/web-core`,
+       `packages/site-contract`, and `sites/<site>` in docs
 4. [ ] Task 4: create `apps/serpdownloaders.com` thin wrapper skeleton
 5. [ ] Task 5: repoint build/validate/deploy to the wrapper app
 6. [ ] Task 6: remove dead `apps/web/lib/*` re-export shims
