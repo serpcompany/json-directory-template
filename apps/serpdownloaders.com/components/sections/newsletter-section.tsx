@@ -1,1 +1,1 @@
-export { NewsletterSection } from '../../../web/components/sections/newsletter-section'
+export { NewsletterSection } from '@thedaviddias/web-core/sections/newsletter-section'

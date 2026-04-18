@@ -1,1 +1,1 @@
-export { AppSidebar } from '../../../web/components/layout/app-sidebar'
+export { AppSidebar } from '@thedaviddias/web-core/layout/app-sidebar'
