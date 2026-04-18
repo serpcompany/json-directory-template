@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*", "../web/*"],
+      "@/*": ["./*"],
       "@cli-data/*": ["../../packages/cli/data/*"],
       "content-collections": ["./.content-collections/generated"]
     }

@@ -173,9 +173,18 @@ importers:
       '@thedaviddias/site-contract':
         specifier: workspace:*
         version: link:../../packages/site-contract
+      '@thedaviddias/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@thedaviddias/web-core':
         specifier: workspace:*
         version: link:../../packages/web-core
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       fast-xml-parser:
         specifier: ^5.3.5
         version: 5.3.5
@@ -194,6 +203,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.2.4(react@19.2.4)
+      tailwind-merge:
+        specifier: ^3.4.0
+        version: 3.4.0
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.1.18

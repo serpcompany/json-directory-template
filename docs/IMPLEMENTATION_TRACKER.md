@@ -40,15 +40,17 @@ Reference architectures:
   Docs, guides, search, about, legal/news static pages, website detail, and favorites routes are
   package-owned, and `apps/serpdownloaders.com` now owns explicit entrypoints for the active-site
   surfaces that ship today (`/`, `/about`, `/categories/**`, `/products/**`, `/legal/**`,
-  `/search`, `/rss.xml`, `/robots.txt`, `/sitemap.xml`). Remaining route debt is the wrapper-local
-  fallback layer that still resolves some UI/support modules from `apps/web`.
+  `/search`, `/rss.xml`, `/robots.txt`, `/sitemap.xml`). Remaining route debt is shrinking the
+  explicit app-local support graph that still lives under `apps/serpdownloaders.com/components/**`
+  and deciding which pieces should be promoted into `packages/web-core`.
 - [ ] Extract shared route-facing UI out of `apps/web/components/**` into `packages/web-core`.
   Shared layout/sidebar primitives, hero/animated background, newsletter/external-resources
   blocks, homepage list sections, creator-projects, featured-guides/search/category/search wrappers,
   guide-card, and the website-detail presentation stack now live in `packages/web-core`. Remaining
-  app-owned route-facing UI is the wrapper-local fallback layer still pulled through
-  `apps/serpdownloaders.com` via `@/* -> ../web/*`, especially MDX/rendering primitives, search UI,
-  favorites/search controls, and listing card support components.
+  app-owned route-facing UI is the explicit local support graph in
+  `apps/serpdownloaders.com/components/**`, especially MDX/rendering primitives, search UI,
+  favorites/search controls, listing-card support components, and analytics/favorites hooks that
+  are still app-bound rather than package-owned.
 - [x] Stop treating `apps/web` as the canonical implementation app for the active site.
 - [x] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
 - [x] Remove remaining build-source assumptions that still hardcode `apps/web` as the source app.
@@ -137,9 +139,9 @@ Status note:
   slices.
 - `apps/serpdownloaders.com` now owns the active-site build/dev/typecheck entrypoint and the
   active route files that ship `serpdownloaders.com` today.
-- The main remaining gap is wrapper isolation: `apps/serpdownloaders.com` still uses a
-  local-first `@/*` alias fallback into `../web/*`, so some route-supporting modules still resolve
-  through `apps/web/components/**` instead of local shims or package-owned exports.
+- The main remaining gap is package ownership cleanup: the active wrapper now resolves its own
+  route-supporting modules explicitly, but many of those support components are still copied or
+  app-local instead of package-owned.
 - Phase 4 wrapper extraction tasks are complete and verified through validate/build/deploy dry-run
   plus focused route and shim test suites.
 - Full execution plan for the remaining wrapper migration now lives in:
