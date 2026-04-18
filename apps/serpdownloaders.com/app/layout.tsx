@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react'
-import '../../../packages/design-system/styles/globals.css'
+import './globals.css'
 import { DesignSystemProvider } from '@thedaviddias/design-system/theme-provider'
 import { fonts } from '@thedaviddias/design-system/lib/fonts'
 import { Footer } from '@thedaviddias/web-core/layout/footer'
