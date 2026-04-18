@@ -11,6 +11,7 @@
     "./external-resources": "./src/external-resources.ts",
     "./google-tag-manager": "./src/google-tag-manager.ts",
     "./network-links": "./src/network-links.ts",
+    "./route-feature-gates": "./src/route-feature-gates.ts",
     "./routes": "./src/routes.ts",
     "./search-index": "./src/search-index.ts",
     "./schema": "./src/schema.ts",
