@@ -8,7 +8,7 @@ jest.mock('@/components/analytics-tracker', () => ({
   })
 }))
 
-jest.mock('@/components/ui/favicon-with-fallback', () => ({
+jest.mock('@thedaviddias/web-core/ui/favicon-with-fallback', () => ({
   FaviconWithFallback: ({
     logoUrl,
     name

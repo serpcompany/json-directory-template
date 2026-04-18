@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { SearchResults } from '@/components/search/search-results'
-import { useSearch } from '@/components/search/use-search'
+import { useSearch } from '@thedaviddias/web-core/search/use-search'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 // Mock Next.js navigation hooks
@@ -9,12 +9,12 @@ jest.mock('next/navigation', () => ({
 }))
 
 // Mock the useSearch hook
-jest.mock('../use-search')
+jest.mock('@thedaviddias/web-core/search/use-search')
 const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>
 const mockUseSearchParams = require('next/navigation').useSearchParams as jest.MockedFunction<any>
 
 // Mock child components
-jest.mock('@/components/empty-state', () => ({
+jest.mock('@thedaviddias/web-core/empty-state', () => ({
   EmptyState: ({
     title,
     description,
@@ -32,12 +32,12 @@ jest.mock('@/components/empty-state', () => ({
   )
 }))
 
-jest.mock('@/components/search/search-filters', () => ({
+jest.mock('@thedaviddias/web-core/search/search-filters', () => ({
   SearchFilters: () => <div>Search Filters</div>
 }))
 
-jest.mock('@/components/websites-list-with-sort', () => ({
-  WebsitesListWithSort: ({ initialWebsites }: { initialWebsites: any[] }) => (
+jest.mock('@thedaviddias/web-core/websites-list-with-sort-route', () => ({
+  WebsitesListWithSortRoute: ({ initialWebsites }: { initialWebsites: any[] }) => (
     <div>
       {initialWebsites.map(result => (
         <div key={result.slug} data-testid={`result-${result.slug}`}>
