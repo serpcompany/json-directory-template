@@ -1,5 +1,16 @@
 import { render, screen } from '@/test/test-utils'
 
+const mockRenderGuidesIndexPage = jest.fn(() => <div data-testid="guides-index-page" />)
+const mockGenerateGuidesIndexMetadata = jest.fn(() => ({
+  description: 'mock guides metadata',
+  title: 'mock guides title',
+}))
+
+jest.mock('@thedaviddias/web-core/guides/index-page', () => ({
+  GuidesIndexPage: (props: unknown) => mockRenderGuidesIndexPage(props),
+  generateGuidesIndexMetadata: (...args: unknown[]) => mockGenerateGuidesIndexMetadata(...args),
+}))
+
 const mockNotFound = jest.fn()
 const mockSiteConfig = {
   branding: {
@@ -70,24 +81,20 @@ describe('GuidesPage', () => {
     const { generateMetadata } = await import('@/app/guides/page')
     const metadata = generateMetadata()
 
-    expect(metadata.title).toBe('Posts')
-    expect(metadata.description).toBe(
-      `Browse posts, walkthroughs, and reference notes for ${mockSiteConfig.name}.`
-    )
-    expect(metadata.keywords).not.toContain('llms.txt guides')
+    expect(mockGenerateGuidesIndexMetadata).toHaveBeenCalled()
+    expect(metadata).toEqual({
+      description: 'mock guides metadata',
+      title: 'mock guides title',
+    })
   })
 
-  it('renders post-oriented wrapper copy for the public posts index when enabled', async () => {
+  it('delegates the posts index rendering to the package-owned route module', async () => {
     const { default: GuidesPage } = await import('@/app/guides/page')
 
     render(await GuidesPage())
 
-    expect(screen.getByRole('heading', { name: /^posts$/i })).toBeInTheDocument()
-    expect(
-      screen.getByText(/browse posts, walkthroughs, and reference notes for this directory/i)
-    ).toBeInTheDocument()
-    expect(screen.getByText(/posts will appear here when this site publishes them/i)).toBeInTheDocument()
-    expect(screen.queryByText(/llms\.txt/i)).not.toBeInTheDocument()
+    expect(screen.getByTestId('guides-index-page')).toBeInTheDocument()
+    expect(mockRenderGuidesIndexPage).toHaveBeenCalled()
   })
 
   it('uses not-found metadata when posts are disabled', async () => {

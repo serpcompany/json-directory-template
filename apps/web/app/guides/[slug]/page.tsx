@@ -1,12 +1,14 @@
-import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { MDXRemote } from 'next-mdx-remote/rsc'
-import remarkGfm from 'remark-gfm'
 import { GuideHeader } from '@/components/guide-header'
 import { JsonLd } from '@/components/json-ld'
 import { components } from '@/components/mdx'
 import { type GuideMetadata, getGuideBySlug, getGuides } from '@/lib/content-loader'
+import {
+  GuideDetailPage,
+  generateGuideDetailMetadata,
+  generateGuideDetailStaticParams,
+} from '@thedaviddias/web-core/guides/guide-page'
 import { getRoute } from '@thedaviddias/web-core/routes'
 import {
   generateDisabledRouteMetadata,
@@ -14,7 +16,6 @@ import {
   requireRouteFeature
 } from '@/lib/route-feature-gates'
 import { generateGuideSchema } from '@thedaviddias/web-core/schema'
-import { SITE_PUBLIC_URL, generateDynamicMetadata } from '@thedaviddias/web-core/seo-config'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 interface GuidePageProps {
@@ -40,14 +41,7 @@ export async function generateMetadata(props: GuidePageProps): Promise<Metadata>
     return {}
   }
 
-  return generateDynamicMetadata({
-    type: 'guide',
-    name: guide.title,
-    description: guide.description || `Learn about ${guide.title} in our comprehensive guide`,
-    slug: guide.slug,
-    publishedAt: guide.date,
-    additionalKeywords: ['guide', 'tutorial', 'how-to', 'implementation']
-  })
+  return generateGuideDetailMetadata(guide)
 }
 
 /**
@@ -60,9 +54,7 @@ export async function generateStaticParams(): Promise<Awaited<GuidePageProps['pa
 
   const guides = await getGuides()
 
-  return guides.map((guide: GuideMetadata) => ({
-    slug: guide.slug
-  }))
+  return generateGuideDetailStaticParams(guides)
 }
 
 export default async function GuidePage({ params }: GuidePageProps) {
@@ -75,27 +67,13 @@ export default async function GuidePage({ params }: GuidePageProps) {
     notFound()
   }
 
-  const breadcrumbItems = [
-    { name: 'Posts', href: getRoute('guides.list') },
-    { name: guide.title, href: getRoute('guides.guide', { slug }) }
-  ]
-
   return (
-    <article className="container relative max-w-3xl py-6 lg:py-10">
-      <JsonLd data={generateGuideSchema(guide)} />
-      <Breadcrumb items={breadcrumbItems} baseUrl={SITE_PUBLIC_URL} />
-      <GuideHeader {...guide} />
-      <div className="prose dark:prose-invert max-w-none">
-        <MDXRemote
-          source={guide.content || ''}
-          components={components}
-          options={{
-            mdxOptions: {
-              remarkPlugins: [remarkGfm]
-            }
-          }}
-        />
-      </div>
-    </article>
+    <GuideDetailPage
+      guide={guide}
+      guideHeader={<GuideHeader {...guide} />}
+      jsonLd={<JsonLd data={generateGuideSchema(guide)} />}
+      mdxComponents={components}
+      slug={slug}
+    />
   )
 }

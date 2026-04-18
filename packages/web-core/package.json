@@ -15,6 +15,8 @@
     "./docs/layout": "./src/docs/layout.tsx",
     "./external-resources": "./src/external-resources.ts",
     "./github-issue": "./src/github-issue.ts",
+    "./guides/guide-page": "./src/guides/guide-page.tsx",
+    "./guides/index-page": "./src/guides/index-page.tsx",
     "./home-page": "./src/home-page.tsx",
     "./hooks/use-search": "./src/hooks/use-search.ts",
     "./google-tag-manager": "./src/google-tag-manager.ts",
