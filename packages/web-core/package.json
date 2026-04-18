@@ -48,6 +48,7 @@
     "./schema": "./src/schema.ts",
     "./sections/creator-projects-section": "./src/sections/creator-projects-section.tsx",
     "./sections/external-resources-section": "./src/sections/external-resources-section.tsx",
+    "./sections/guide-card": "./src/sections/guide-card.tsx",
     "./sections/featured-guides-section": "./src/sections/featured-guides-section.tsx",
     "./sections/featured-projects-section": "./src/sections/featured-projects-section.tsx",
     "./sections/hero-section": "./src/sections/hero-section.tsx",
