@@ -6,7 +6,7 @@ on:
     paths:
       - 'data/listings.json'
       - 'sites/**'
-      - 'apps/web/**'
+      - 'apps/starter/**'
       - 'scripts/**'
       - '.github/workflows/build-and-deploy.yml'
   workflow_dispatch:

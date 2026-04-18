@@ -1,11 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getUnknownCategorySlugs } from '../apps/web/lib/category-navigation.ts';
+import { getUnknownCategorySlugs } from '@thedaviddias/web-core/category-navigation';
 import {
   normalizeJsonWebsite,
   parseJsonWebsiteEntries,
-} from '../apps/web/lib/website-schema.ts';
+} from '@thedaviddias/web-core/website-schema';
 
 export function validateListingData(
   parsed: unknown,
@@ -20,7 +20,7 @@ export function validateListingData(
       [
         `Validation failed for ${sourceLabel}`,
         `Unknown category slugs: ${unknownCategorySlugs.join(', ')}`,
-        'Update the category values or add the slug to apps/web/lib/categories.ts.',
+        'Update the category values or add the slug to packages/web-core/src/categories.ts.',
       ].join('\n')
     );
   }

@@ -71,6 +71,11 @@ Validation checks:
 - referenced remote brand assets can be staged into the expected local asset shape before build
 - source JSON can be normalized into valid listing entries
 
+Repo-level validation note:
+
+- `pnpm validate:sites` validates the active non-default checked-in sites only
+- use `pnpm validate:site -- --site default` when you want to validate the starter default site explicitly
+
 ### 3. Build
 
 ```bash
@@ -89,6 +94,18 @@ Build behavior:
 - if that staged local file already exists and is non-empty, the pipeline reuses it intentionally instead of redownloading the remote asset
 - runs the static export build
 - writes the final artifact to `dist/sites/<site-id>`
+
+Promotion rule:
+
+- `pnpm validate:sites` is not enough by itself to promote a site into the active registry
+- promotion also requires:
+  - `pnpm validate:site -- --site <site-id>`
+  - `pnpm build:site -- --site <site-id>`
+  - `pnpm deploy:site -- --site <site-id> --dry-run`
+  - wrapper-app readiness, docs/runbook updates, and active-registry test coverage
+- use
+  [SITE_PROMOTION_CHECKLIST.md](./SITE_PROMOTION_CHECKLIST.md)
+  as the final promotion gate
 
 Current supported staged asset shapes:
 

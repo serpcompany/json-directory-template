@@ -39,28 +39,34 @@ function loadWorkflow(): WorkflowDefinition {
 }
 
 describe('update-listings-json workflow', () => {
-  it('validates listing data on pull requests as well as pushes to main', () => {
+  it('validates active listing sources on pull requests as well as pushes to main', () => {
     const workflow = loadWorkflow();
 
     expect(workflow.on.pull_request).toMatchObject({
       branches: ['main'],
-      paths: ['data/listings.json'],
+      paths: ['data/listings.json', 'sites/serpdownloaders.com/products.json'],
     });
     expect(workflow.on.push).toMatchObject({
       branches: ['main'],
-      paths: ['data/listings.json'],
+      paths: ['data/listings.json', 'sites/serpdownloaders.com/products.json'],
     });
   });
 
-  it('runs the checked-in listing data validator against data/listings.json', () => {
+  it('runs the listing-source validation steps for the current active surfaces', () => {
     const workflow = loadWorkflow();
     const validateJob = workflow.jobs['validate-listing-data'];
-    const validateStep = validateJob.steps?.find(
+    const jsonValidateStep = validateJob.steps?.find(
       (step) => step.name === 'Validate data/listings.json'
     );
+    const activeSiteValidateStep = validateJob.steps?.find(
+      (step) => step.name === 'Validate active checked-in site data'
+    );
 
-    expect(validateStep?.run).toBe(
+    expect(jsonValidateStep?.run).toBe(
       'pnpm tsx scripts/validate-data.ts data/listings.json'
+    );
+    expect(activeSiteValidateStep?.run).toBe(
+      'pnpm validate:site -- --site serpdownloaders.com'
     );
   });
 

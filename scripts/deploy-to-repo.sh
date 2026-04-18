@@ -10,7 +10,7 @@ set -euo pipefail
 #   DEPLOY_REPO_URL  — fallback if not passed as $1
 #   DEPLOY_BRANCH    — fallback if not passed as $2 (default: main)
 #   DEPLOY_TOKEN     — optional GitHub token for auth (used in CI)
-#   DEPLOY_BUILD_DIR — optional build artifact directory (default: apps/web/out)
+#   DEPLOY_BUILD_DIR — optional build artifact directory (default: dist/sites/${SITE_ID:-default})
 #   DEPLOY_PRESERVE_PATHS — newline-delimited paths to preserve across sync
 
 DEPLOY_REPO="${1:-${DEPLOY_REPO_URL:-}}"
@@ -24,7 +24,7 @@ if [[ -z "$DEPLOY_REPO" ]]; then
 fi
 
 WORKSPACE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-BUILD_DIR="${DEPLOY_BUILD_DIR:-$WORKSPACE_ROOT/apps/web/out}"
+BUILD_DIR="${DEPLOY_BUILD_DIR:-$WORKSPACE_ROOT/dist/sites/${SITE_ID:-default}}"
 DEPLOY_TMP="$WORKSPACE_ROOT/tmp/deploy/$(date -u '+%Y%m%d-%H%M%S')"
 TARGET_PAGES_WORKFLOW_TEMPLATE="$WORKSPACE_ROOT/scripts/templates/target-pages-deploy.yml"
 PRESERVE_TMP="$DEPLOY_TMP/.preserve"

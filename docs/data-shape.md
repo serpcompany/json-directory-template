@@ -1,7 +1,7 @@
 
 ## Product pages
 
-- title: site-wide brand/content settings -> apps/web/lib/site-config.ts
+- title: site-wide brand/content settings -> apps/starter/lib/site-config.ts
 - slug: 
 - logo
 - tagline

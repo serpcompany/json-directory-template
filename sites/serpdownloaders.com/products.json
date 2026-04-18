@@ -1368,10 +1368,7 @@
         "label": "Github",
         "url": "https://github.com/serpapps"
       }
-    ],
-    "media": {
-      "logo": "/listing-logos/serpdownloaders.com/gohighlevel-downloader.ico"
-    }
+    ]
   },
   "gokollab-downloader": {
     "content": {
@@ -1898,10 +1895,7 @@
         "label": "Github",
         "url": "https://github.com/serpapps"
       }
-    ],
-    "media": {
-      "logo": "/listing-logos/serpdownloaders.com/luxuretv-downloader.ico"
-    }
+    ]
   },
   "m3u8-downloader": {
     "content": {
@@ -2188,10 +2182,7 @@
         "label": "Github",
         "url": "https://github.com/serpapps"
       }
-    ],
-    "media": {
-      "logo": "/listing-logos/serpdownloaders.com/myfreecams-downloader.gif"
-    }
+    ]
   },
   "nhentai-downloader": {
     "content": {
@@ -3426,10 +3417,7 @@
         "label": "Github",
         "url": "https://github.com/serpapps"
       }
-    ],
-    "media": {
-      "logo": "/listing-logos/serpdownloaders.com/thisvid-downloader.ico"
-    }
+    ]
   },
   "tiktok-downloader": {
     "content": {
@@ -4578,5 +4566,476 @@
     "media": {
       "logo": "/listing-logos/serpdownloaders.com/youtube-downloader.png"
     }
+  },
+  "getty-images-downloader": {
+    "content": {
+      "body": "## Overview\n\nGetty Images Downloader helps you save full-resolution Getty Images assets for offline research, creative review, moodboards, and backup workflows. Open the asset page you want, run the extension, and capture the original file without repetitive tab-by-tab saving.\n\n## Why It Exists\n\nThis extension is built for people who need a direct way to download Getty Images editorial and creative content in full resolution."
+    },
+    "product": {
+      "productPage": "https://serp.ly/getty-images-downloader",
+      "slug": "getty-images-downloader",
+      "tagline": "Download Getty Images editorial and creative content in full resolution.",
+      "title": "Getty Images Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/getty-images-downloader"
+      }
+    ]
+  },
+  "unsplash-downloader": {
+    "content": {
+      "body": "## Overview\n\nUnsplash Downloader helps you save high-resolution Unsplash photos for offline reference, design research, moodboards, and local archives. Open the photo page you want, run the extension, and download the original asset without juggling manual saves across large collections.\n\n## Why It Exists\n\nThis extension is built for people who want a faster way to download high-resolution photos from Unsplash, including collection-driven workflows."
+    },
+    "product": {
+      "productPage": "https://serp.ly/unsplash-downloader",
+      "slug": "unsplash-downloader",
+      "tagline": "Download high-resolution photos from Unsplash with collections support.",
+      "title": "Unsplash Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/unsplash-downloader"
+      }
+    ]
+  },
+  "wistia-video-downloader": {
+    "content": {
+      "body": "## Overview\n\nWistia Video Downloader helps you save Wistia-hosted videos for offline viewing, research, review, and backup. Open the page or embed you want, start playback if needed, and use the extension to detect and download the media in the best available quality.\n\n## Why It Exists\n\nThis extension is built for people who need a straightforward way to download Wistia videos embedded around the web without hunting for manifests or hidden source URLs."
+    },
+    "product": {
+      "productPage": "https://serp.ly/wistia-video-downloader",
+      "slug": "wistia-video-downloader",
+      "tagline": "Download Wistia-hosted videos embedded around the web for offline viewing.",
+      "title": "Wistia Video Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/wistia-video-downloader"
+      }
+    ],
+    "media": {
+      "logo": "/listing-logos/serpdownloaders.com/wistia-downloader.png"
+    }
+  },
+  "adobe-stock-downloader": {
+    "content": {
+      "body": "## Overview\n\nAdobe Stock Downloader helps you save Adobe Stock assets for offline creative review, reference folders, and research workflows. Open the image page you want, run the extension, and download the asset directly without repetitive manual saving.\n\n## Why It Exists\n\nThis extension is built for people who want a simpler way to download Adobe Stock images into their own offline workflow."
+    },
+    "product": {
+      "productPage": "https://serp.ly/adobe-stock-downloader",
+      "slug": "adobe-stock-downloader",
+      "tagline": "Download Adobe Stock images.",
+      "title": "Adobe Stock Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/adobe-stock-downloader"
+      }
+    ]
+  },
+  "soundgasm-downloader": {
+    "content": {
+      "body": "## Overview\n\nSoundgasm Downloader helps you save Soundgasm audio posts, playlists, and spoken-word uploads for offline listening, research, and backup. Open the track or collection you want, start playback if needed, and use the extension to capture the audio locally.\n\n## Why It Exists\n\nThis extension is built for people who want a direct way to download Soundgasm audio content without reconstructing streams by hand."
+    },
+    "product": {
+      "productPage": "https://serp.ly/soundgasm-downloader",
+      "slug": "soundgasm-downloader",
+      "tagline": "Download Soundgasm audio content with user collections and playlists.",
+      "title": "Soundgasm Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/soundgasm-downloader"
+      }
+    ]
+  },
+  "vectorstock-downloader": {
+    "content": {
+      "body": "## Overview\n\nVectorStock Downloader helps you save VectorStock vectors and illustrations for offline design work, creative review, and local reference libraries. Open the asset page you want, run the extension, and download the original file without repetitive manual extraction.\n\n## Why It Exists\n\nThis extension is built for people who need a direct workflow for extracting VectorStock vectors and illustrations in their original formats."
+    },
+    "product": {
+      "productPage": "https://serp.ly/vectorstock-downloader",
+      "slug": "vectorstock-downloader",
+      "tagline": "Extract VectorStock vectors and illustrations in original formats.",
+      "title": "VectorStock Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/vectorstock-downloader"
+      }
+    ]
+  },
+  "coursera-downloader": {
+    "content": {
+      "body": "## Overview\n\nCoursera Downloader helps you save course videos for study during travel, unstable connections, and personal backup workflows. Open the lesson you want, start playback if needed, and use the extension to detect and download the media locally.\n\n## Why It Exists\n\nThis extension is built for people who want a dependable way to download complete Coursera courses with videos for offline study."
+    },
+    "product": {
+      "productPage": "https://serp.ly/coursera-downloader",
+      "slug": "coursera-downloader",
+      "tagline": "Download complete Coursera courses with videos.",
+      "title": "Coursera Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/coursera-downloader"
+      }
+    ]
+  },
+  "deviantart-downloader": {
+    "content": {
+      "body": "## Overview\n\nDeviantArt Downloader helps you save artwork from DeviantArt for offline inspiration, local reference folders, and creative research. Open the asset page you want, run the extension, and download the file directly into your own workflow.\n\n## Why It Exists\n\nThis extension is built for people who want a comprehensive DeviantArt downloader for artwork without repetitive manual saving."
+    },
+    "product": {
+      "productPage": "https://serp.ly/deviantart-downloader",
+      "slug": "deviantart-downloader",
+      "tagline": "Comprehensive DeviantArt downloader for artwork.",
+      "title": "DeviantArt Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/deviantart-downloader"
+      }
+    ]
+  },
+  "hulu-downloader": {
+    "content": {
+      "body": "## Overview\n\nHulu Downloader helps you save shows and movies from Hulu for offline viewing, review, and personal backup. Open the title you want, start playback if needed, and use the extension to detect the media and download it locally.\n\n## Why It Exists\n\nThis extension is built for people who want to save Hulu shows and movies with subtitles and cleaner offline playback workflows."
+    },
+    "product": {
+      "productPage": "https://serp.ly/hulu-downloader",
+      "slug": "hulu-downloader",
+      "tagline": "Save Hulu shows and movies with subtitles and commercial-free playback.",
+      "title": "Hulu Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/hulu-downloader"
+      }
+    ]
+  },
+  "internet-archive-downloader": {
+    "content": {
+      "body": "## Overview\n\nInternet Archive Downloader helps you save books and reference material from Internet Archive for offline reading, research, and long-term access. Open the item you want, run the extension, and capture the downloadable asset into your own local archive.\n\n## Why It Exists\n\nThis extension is built for people doing research, preservation, or reference work who need a direct way to access and download books from Internet Archive."
+    },
+    "product": {
+      "productPage": "https://serp.ly/internet-archive-downloader",
+      "slug": "internet-archive-downloader",
+      "tagline": "Access and download books.",
+      "title": "Internet Archive Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/internet-archive-downloader"
+      }
+    ]
+  },
+  "livejasmin-downloader": {
+    "content": {
+      "body": "## Overview\n\nLiveJasmin Downloader helps you record live sessions and save replays from LiveJasmin for offline viewing and personal backup. Start the stream or replay you want, run the extension, and capture the session locally without dealing with stream URLs manually.\n\n## Why It Exists\n\nThis extension is built for people who want a cleaner way to record LiveJasmin private shows and cam sessions automatically."
+    },
+    "product": {
+      "productPage": "https://serp.ly/livejasmin-downloader",
+      "slug": "livejasmin-downloader",
+      "tagline": "Record LiveJasmin private shows and cam sessions automatically.",
+      "title": "LiveJasmin Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/livejasmin-downloader"
+      }
+    ]
+  },
+  "moodle-downloader": {
+    "content": {
+      "body": "## Overview\n\nMoodle Downloader helps you save course videos and lesson assets from Moodle for offline study, travel, and backup. Open the course page you need, start playback if needed, and use the extension to capture the lesson media locally.\n\n## Why It Exists\n\nThis extension is built for people who want to back up complete Moodle courses with their resources and activities."
+    },
+    "product": {
+      "productPage": "https://serp.ly/moodle-downloader",
+      "slug": "moodle-downloader",
+      "tagline": "Backup complete Moodle courses with all resources and activities.",
+      "title": "Moodle Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/moodle-downloader"
+      }
+    ]
+  },
+  "netflix-downloader": {
+    "content": {
+      "body": "## Overview\n\nNetflix Downloader helps you save shows and movies from Netflix for offline viewing, review, and backup. Open the title you want, start playback if needed, and use the extension to detect and download the media locally.\n\n## Why It Exists\n\nThis extension is built for people who want to download Netflix shows and movies in 4K with multiple audio tracks."
+    },
+    "product": {
+      "productPage": "https://serp.ly/netflix-downloader",
+      "slug": "netflix-downloader",
+      "tagline": "Download Netflix shows and movies in 4K with multiple audio tracks.",
+      "title": "Netflix Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/netflix-downloader"
+      }
+    ]
+  },
+  "patreon-downloader": {
+    "content": {
+      "body": "## Overview\n\nPatreon Downloader helps you save creator videos and gated media from Patreon for offline viewing and organized personal backup. Open the post or lesson you already have access to, run the extension, and download the media locally.\n\n## Why It Exists\n\nThis extension is built for people who want a direct workflow for downloading Patreon videos into their own offline archive."
+    },
+    "product": {
+      "productPage": "https://serp.ly/patreon-downloader",
+      "slug": "patreon-downloader",
+      "tagline": "Download Patreon videos directly to your local computer for offline viewing and easy backing up of your media.",
+      "title": "Patreon Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/patreon-downloader"
+      }
+    ]
+  },
+  "pexels-video-downloader": {
+    "content": {
+      "body": "## Overview\n\nPexels Video Downloader helps you save free Pexels videos for offline editing, research, and local asset libraries. Open the video page you want, start playback if needed, and use the extension to capture the media in the best available quality.\n\n## Why It Exists\n\nThis extension is built for people who want a direct way to download free Pexels videos in 4K quality with support for repeated batch workflows."
+    },
+    "product": {
+      "productPage": "https://serp.ly/pexels-video-downloader",
+      "slug": "pexels-video-downloader",
+      "tagline": "Download free Pexels videos in 4K quality with batch support.",
+      "title": "Pexels Video Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/pexels-video-downloader"
+      }
+    ]
+  },
+  "rawpixel-downloader": {
+    "content": {
+      "body": "## Overview\n\nRawpixel Downloader helps you save Rawpixel assets for offline creative work, local reference folders, and moodboard building. Open the asset page you want, run the extension, and download the image directly into your own workflow.\n\n## Why It Exists\n\nThis extension is built for people who need a cleaner way to extract Rawpixel premium PNGs without repetitive manual saving."
+    },
+    "product": {
+      "productPage": "https://serp.ly/rawpixel-downloader",
+      "slug": "rawpixel-downloader",
+      "tagline": "Extract Rawpixel premium PNGs.",
+      "title": "Rawpixel Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/rawpixel-downloader"
+      }
+    ]
+  },
+  "redtube-video-downloader": {
+    "content": {
+      "body": "## Overview\n\nRedTube Video Downloader helps you save RedTube videos for offline viewing, review, and backup. Open the page you want, start playback if needed, and use the extension to detect and download the media locally in the best available quality.\n\n## Why It Exists\n\nThis extension is built for people who want a direct workflow for downloading RedTube videos in multiple qualities with premium-content support."
+    },
+    "product": {
+      "productPage": "https://serp.ly/redtube-video-downloader",
+      "slug": "redtube-video-downloader",
+      "tagline": "Download RedTube videos in multiple qualities with premium content access.",
+      "title": "RedTube Video Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/redtube-video-downloader"
+      }
+    ],
+    "media": {
+      "logo": "/listing-logos/serpdownloaders.com/redtube-downloader.png"
+    }
+  },
+  "terabox-downloader": {
+    "content": {
+      "body": "## Overview\n\nTeraBox Downloader helps you pull files from TeraBox down to your computer for offline access, backup, and transfer into your own storage workflow. Open the file or folder you want, run the extension, and save the asset locally without relying on web-only access.\n\n## Why It Exists\n\nThis extension is built for people who want a direct way to download from TeraBox cloud storage without speed restrictions or extra friction."
+    },
+    "product": {
+      "productPage": "https://serp.ly/terabox-downloader",
+      "slug": "terabox-downloader",
+      "tagline": "Download from TeraBox cloud storage without limits or speed restrictions.",
+      "title": "TeraBox Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/terabox-downloader"
+      }
+    ]
+  },
+  "thumbnail-downloader": {
+    "content": {
+      "body": "## Overview\n\nThumbnail Downloader helps you extract thumbnail images from supported video pages for research, content planning, swipe files, and design reference work. Open the page you want, run the extension, and save the thumbnail image locally in one step.\n\n## Why It Exists\n\nThis extension is built for people who repeatedly need to extract video thumbnails from YouTube and other supported pages without digging through source code or network requests."
+    },
+    "product": {
+      "productPage": "https://serp.ly/thumbnail-downloader",
+      "slug": "thumbnail-downloader",
+      "tagline": "Extract video thumbnails from YouTube and other supported video pages.",
+      "title": "Thumbnail Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/thumbnail-downloader"
+      }
+    ]
+  },
+  "xnxx-video-downloader": {
+    "content": {
+      "body": "## Overview\n\nXNXX Video Downloader helps you save XNXX videos for offline viewing, review, and backup. Open the page you want, start playback if needed, and use the extension to detect and download the media locally in the best available quality.\n\n## Why It Exists\n\nThis extension is built for people who want a direct workflow for saving XNXX videos in HD with fast batch downloading."
+    },
+    "product": {
+      "productPage": "https://serp.ly/xnxx-video-downloader",
+      "slug": "xnxx-video-downloader",
+      "tagline": "Save XNXX videos in HD with fast batch downloading.",
+      "title": "XNXX Video Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/xnxx-video-downloader"
+      }
+    ],
+    "media": {
+      "logo": "/listing-logos/serpdownloaders.com/xnxx-downloader.png"
+    }
+  },
+  "alamy-downloader": {
+    "content": {
+      "body": "## Overview\n\nAlamy Downloader helps you save stock photos from Alamy for offline creative review, reference folders, and research workflows. Open the asset page you want, run the extension, and download the image directly into your own workflow.\n\n## Why It Exists\n\nThis extension is built for people who want a direct way to extract Alamy stock photos in full resolution without watermarks or extra restrictions."
+    },
+    "product": {
+      "productPage": "https://serp.ly/alamy-downloader",
+      "slug": "alamy-downloader",
+      "tagline": "Extract Alamy stock photos in full resolution without watermarks or restrictions.",
+      "title": "Alamy Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/alamy-downloader"
+      }
+    ]
+  },
+  "nicovideo-downloader": {
+    "content": {
+      "body": "## Overview\n\nNicoVideo Downloader helps you save Niconico videos for offline viewing, review, and backup. Open the page you want, start playback if needed, and use the extension to detect and download the media locally.\n\n## Why It Exists\n\nThis extension is built for people who want a direct way to save Niconico videos with comments into their own offline workflow."
+    },
+    "product": {
+      "productPage": "https://serp.ly/nicovideo-downloader",
+      "slug": "nicovideo-downloader",
+      "tagline": "Save Niconico videos with comments.",
+      "title": "NicoVideo Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/nicovideo-downloader"
+      }
+    ]
+  },
+  "podia-downloader": {
+    "content": {
+      "body": "## Overview\n\nPodia Downloader helps you save Podia course videos for offline study, travel, and backup workflows. Open the lesson you want, start playback if needed, and use the extension to download the media locally.\n\n## Why It Exists\n\nThis extension is built for people who want a direct way to download Podia course videos for convenient offline viewing or safe backups."
+    },
+    "product": {
+      "productPage": "https://serp.ly/podia-downloader",
+      "slug": "podia-downloader",
+      "tagline": "Download Podia course videos for convenient offline viewing or safe backups.",
+      "title": "Podia Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/podia-downloader"
+      }
+    ]
+  },
+  "skillshare-downloader": {
+    "content": {
+      "body": "## Overview\n\nSkillshare Downloader helps you save Skillshare classes, lesson videos, and study assets for offline learning and backup. Open the class you want, start playback if needed, and use the extension to download the media locally.\n\n## Why It Exists\n\nThis extension is built for people who want to save complete Skillshare classes with projects and resources for offline study."
+    },
+    "product": {
+      "productPage": "https://serp.ly/skillshare-downloader",
+      "slug": "skillshare-downloader",
+      "tagline": "Save complete Skillshare classes with projects and resources.",
+      "title": "Skillshare Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/skillshare-downloader"
+      }
+    ]
+  },
+  "skool-video-downloader": {
+    "content": {
+      "body": "## Overview\n\nSkool Video Downloader helps you save Skool classroom videos for offline study, travel, and backup. Open the lesson you want, start playback if needed, and use the extension to download the media locally.\n\n## Why It Exists\n\nThis extension is built for people who want to download videos from their Skool classroom and keep a local backup of the lessons they rely on."
+    },
+    "product": {
+      "productPage": "https://serp.ly/skool-downloader",
+      "slug": "skool-video-downloader",
+      "tagline": "Download videos from your Skool classroom and back up your work for offline access.",
+      "title": "Skool Video Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/skool-downloader"
+      }
+    ],
+    "media": {
+      "logo": "/listing-logos/serpdownloaders.com/skool-downloader.png"
+    }
+  },
+  "snapchat-video-downloader": {
+    "content": {
+      "body": "## Overview\n\nSnapchat Video Downloader helps you save Snapchat stories and videos for offline viewing, review, and backup. Open the page you want, start playback if needed, and use the extension to detect and download the media locally.\n\n## Why It Exists\n\nThis extension is built for people who want a direct way to save Snapchat stories and videos for offline access."
+    },
+    "product": {
+      "productPage": "https://serp.ly/snapchat-video-downloader",
+      "slug": "snapchat-video-downloader",
+      "tagline": "Save Snapchat stories and videos for offline access.",
+      "title": "Snapchat Video Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/snapchat-video-downloader"
+      }
+    ]
+  },
+  "teachable-video-downloader": {
+    "content": {
+      "body": "## Overview\n\nTeachable Video Downloader helps you save Teachable course videos for offline study, travel, and backup workflows. Open the lesson you want, start playback if needed, and use the extension to download the media locally.\n\n## Why It Exists\n\nThis extension is built for people who want to download Teachable courses with all lectures into their own offline workflow."
+    },
+    "product": {
+      "productPage": "https://serp.ly/teachable-video-downloader",
+      "slug": "teachable-video-downloader",
+      "tagline": "Download Teachable courses with all lectures.",
+      "title": "Teachable Video Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Github",
+        "url": "https://github.com/serpapps/teachable-video-downloader"
+      }
+    ]
   }
 }

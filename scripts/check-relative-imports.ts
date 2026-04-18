@@ -1,5 +1,6 @@
 #!/usr/bin/env tsx
 import fs from 'node:fs'
+import path from 'node:path'
 
 const ALLOWED_RELATIVE_PATTERNS = [
   // Allow relative imports within the same directory
@@ -12,6 +13,12 @@ const ALIAS_MAP = {
   '../components': '@/components',
   '../../components': '@/components',
   '../../../components': '@/components',
+  '../actions': '@/actions',
+  '../../actions': '@/actions',
+  '../../../actions': '@/actions',
+  '../auth': '@/auth',
+  '../../auth': '@/auth',
+  '../../../auth': '@/auth',
   '../lib': '@/lib',
   '../../lib': '@/lib',
   '../../../lib': '@/lib',
@@ -35,6 +42,10 @@ const ALIAS_MAP = {
  * @returns Array of error messages for violations found
  */
 function checkFile(filePath: string): string[] {
+  if (!filePath.startsWith(`apps${path.sep}`) && !filePath.startsWith('apps/')) {
+    return []
+  }
+
   const content = fs.readFileSync(filePath, 'utf-8')
   const lines = content.split('\n')
   const errors: string[] = []
@@ -71,7 +82,7 @@ function checkFile(filePath: string): string[] {
         const cleanPath = importPath.replace(/^(\.\.\/)+/, '')
         const firstDir = cleanPath.split('/')[0]
 
-        if (['components', 'lib', 'hooks', 'contexts', 'utils'].includes(firstDir)) {
+        if (['actions', 'auth', 'components', 'lib', 'hooks', 'contexts', 'utils'].includes(firstDir)) {
           suggestion = `@/${cleanPath}`
         }
       }

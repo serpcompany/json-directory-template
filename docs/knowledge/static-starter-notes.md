@@ -2,20 +2,22 @@
 
 ## Dev Port
 
-- Root `pnpm dev` now targets the web app only through `pnpm --filter web dev`.
+- Root `pnpm dev` now follows the active site wrapper through `pnpm dev:site -- --site serpdownloaders.com`.
 - The default web dev script now uses `next dev --webpack` because Turbopack can hang on the first `/` compile in this repo's current Tailwind/PostCSS setup.
-- The web package no longer forces `--inspect` during normal local dev; use `pnpm --filter web dev:inspect` when you explicitly want the Node inspector.
+- The web package no longer forces `--inspect` during normal local dev; use `pnpm dev:starter` to run the starter wrapper and `pnpm --filter starter dev:inspect` when you explicitly want the Node inspector.
 - Use `pnpm dev:all` when you explicitly want the old Turbo parallel workspace behavior.
-- `apps/web/next.config.ts` still pins `turbopack.root` to this repo root so future Turbopack runs do not walk up to unrelated parent lockfiles during dev.
+- `apps/starter/next.config.ts` still pins `turbopack.root` to this repo root so future Turbopack runs do not walk up to unrelated parent lockfiles during dev.
 
 ## Website Data
 
-- `data/listings.json` is the active website-entry source for the current starter.
-- `pnpm tsx scripts/validate-data.ts data/listings.json` validates the active JSON source.
-- `pnpm validate:sites` validates the default site plus every checked-in site override through one generic command.
-- Site-specific build flows can transform alternative JSON inputs into this same shape during build time.
+- `data/listings.json` is the active website-entry source for the default starter only.
+- `sites/serpdownloaders.com/products.json` is the active checked-in listing source for the only currently powered checked-in site.
+- `pnpm tsx scripts/validate-data.ts data/listings.json` validates the default starter JSON source.
+- `pnpm validate:site -- --site serpdownloaders.com` validates the active checked-in site's real source and generated surface contract.
+- `pnpm validate:sites` validates the active non-default checked-in sites; run `pnpm validate:site -- --site default` separately for the default starter.
+- Site-specific build flows can transform alternative checked-in inputs into the shared listing shape during build time.
 - The active loader now expects `slug`, `website`, `description`, `category`, `publishedAt`, and optional metadata like `featured`, `priority`, `content`, and `resourceLinks`.
-- The formal schema for raw JSON website entries now lives in `apps/web/lib/website-schema.ts`.
+- The formal schema for raw JSON website entries now lives in `apps/starter/lib/website-schema.ts`.
 - Optional `content` in `data/listings.json` now flows through the JSON loader and can power the detail page body.
 - Optional `resourceLinks` in `data/listings.json` can power the detail-page Resources card without introducing special-case `llms.txt` fields.
 - The active starter taxonomy now lives in `docs/knowledge/taxonomy-discovery-contract.md`.
@@ -29,7 +31,7 @@
 ## Docs Content
 
 - Public docs pages live in `packages/content/data/docs`.
-- The About page now reads from `packages/content/data/about/about.mdx` through a dedicated content collection while keeping the existing route layout in `apps/web/app/about/page.tsx`.
+- The About page now reads from `packages/content/data/about/about.mdx` through a dedicated content collection while keeping the existing route layout in `apps/starter/app/about/page.tsx`.
 - Docs are ordered by the frontmatter `order` field and rendered through the `/docs` routes.
 - The public docs route base path and nav label now come from checked-in site config, with `docs` and `Docs` as the starter defaults.
 - The starter's public listing route now defaults to `/listing`, while the internal filesystem route stays compatibility-oriented.
@@ -40,7 +42,8 @@
 - Keep representative page references in `docs/knowledge/reference-surfaces.md` when you want to preserve old patterns without leaving whole features active.
 - Use `docs/knowledge/legacy-reference-boundary.md` when deciding whether an older repo area is still active starter input or only reference material.
 - Use the decision labels in `docs/knowledge/reference-surfaces.md` to drive cleanup order: `Keep + first`, then `Keep + later`, then `Reference only`.
-- The checked-in site config source of truth now lives under `sites/**`, with `apps/web/lib/site-config.ts` acting as the app-facing adapter layer.
+- The checked-in site config source of truth now lives under `sites/**`, with `apps/starter/lib/site-config.ts` acting as the app-facing adapter layer.
+- Inactive or incubating checked-in sites should move to `_archive/incubating-sites/**` instead of staying registered under `sites/**`.
 - The runtime starter config now also owns optional shell feature flags, including whether to render creator-project, featured-guides, external-resources, and newsletter sections.
 - Reserve `/tools` for future first-party utility pages; the current `externalResources` surface is only for outbound/reference links configured per site.
 - The old `/projects` concept is now treated as a site-owned network page. Keep the internal file-system route stable, but treat the public route and label as config-driven. The starter defaults are `/network` and `Network`.
@@ -52,27 +55,27 @@
 
 ## Sitemaps
 
-- Direct app environments still advertise `sitemap.xml`, because that is the app-served sitemap route.
-- The final static artifact writes `sitemap-index.xml` as the canonical shipped sitemap entrypoint and also keeps `sitemap.xml` as a compatibility twin with the same sitemap-index XML.
-- Split sitemap families are emitted as `pages-index.xml`, `<listingBasePath>-index.xml`, and `categories-index.xml`, with `10,000` URLs per leaf file by default.
-- `routes.listingBasePath` cannot use reserved values like `pages` or `sitemap`, because those would collide with sitemap family filenames.
-- Category sitemap files are emitted only when the final artifact actually contains category pages.
-- The sitemap split runs against the finalized static artifact, so it reflects the shipped public route map after pruning and public path remaps.
+- Both direct app environments and final static artifacts now treat `sitemap-index.xml` as the canonical sitemap entrypoint.
+- `sitemap.xml` remains as a compatibility redirect/twin to the canonical sitemap index.
+- Split sitemap families are emitted as fixed route names:
+  `pages-sitemap.xml`, `listings-sitemap.xml`, `taxonomies-sitemap.xml`, plus optional empty-or-omitted `docs-sitemap.xml` and `posts-sitemap.xml` depending on the site feature set and final artifact contents.
+- `routes.listingBasePath` cannot use reserved values like `sitemap` or the fixed sitemap-family route names, because those would collide with sitemap endpoints.
+- The sitemap split runs against the finalized static artifact, so it reflects the shipped public route map after pruning, public path remaps, and legacy root-listing alias exclusion.
 
 ## Brand Touchpoints
 
-- The main shell brand strings live in `apps/web/app/layout.tsx`, `apps/web/lib/seo/seo-config.ts`, `apps/web/components/layout/header.tsx`, and `apps/web/components/layout/footer.tsx`.
+- The main shell brand strings now resolve through `apps/starter/app/layout.tsx`, `apps/starter/lib/seo/seo-config.ts`, and the package-owned shell modules in `packages/web-core/src/layout/**`.
 - When you add starter-level site config, centralize `name`, `domain`, `tagline`, and social URLs in `sites/site-config.default.ts` and per-site overrides before wiring those values into the shell. The internal reference now lives in `docs/knowledge/site-config.md`.
-- The first active starter-neutral pass is complete for `apps/web/app/page.tsx`, `apps/web/app/websites/[slug]/page.tsx`, `apps/web/app/submit/page.tsx`, and `apps/web/app/favorites/page.tsx`.
+- The first active starter-neutral pass is complete for `apps/starter/app/page.tsx`, `apps/starter/app/websites/[slug]/page.tsx`, `apps/starter/app/submit/page.tsx`, and `apps/starter/app/favorites/page.tsx`.
 - The starter now keeps the raw `website` destination field for compatibility, but removes `llmsUrl` / `llmsFullUrl` from the active listing contract and routes listing extras through generic resource links instead.
 - Starter-safe builds should keep legacy creator/tool/guide sidebars disabled unless a site explicitly enables them through checked-in site config feature flags.
 - The standalone FAQ route was removed from the active starter. Do not keep `/faq` in nav, sitemap, or smoke-test coverage unless a future site explicitly needs it.
 - Legal content pages are now canonical at `/legal/privacy`, `/legal/terms`, and `/legal/cookies`.
 - The legacy root routes `/privacy`, `/terms`, and `/cookies` still exist only as redirects so existing links do not break.
 - The live legal copy comes from `packages/content/data/legal/*.mdx`; changing those files updates the current frontend without changing the route components.
-- The main visual brand assets live in `apps/web/app/favicon.ico`, `apps/web/app/opengraph-image.png`, `apps/web/app/opengraph-image.alt.txt`, and `apps/web/public/img/**`.
+- The main visual brand assets live in `apps/starter/app/favicon.ico`, `apps/starter/app/opengraph-image.png`, `apps/starter/app/opengraph-image.alt.txt`, and `apps/starter/public/img/**`.
 - Legal contact details live in `packages/content/data/legal/**`.
-- The submit flow points at a GitHub repo from `apps/web/lib/github-issue.ts`, so new site launches usually need that updated too.
+- The submit flow points at a GitHub repo from `apps/starter/lib/github-issue.ts`, while the shared form UI now lives in `packages/web-core/src/forms/**`.
 
 ## Agent Verification Quirk
 
@@ -95,4 +98,4 @@
 
 - The old app-only packages `packages/analytics`, `packages/auth`, `packages/api-utils`, `packages/caching`, `packages/security`, and `packages/flags` are no longer part of the active starter build.
 - The web app package manifest should not depend on those packages anymore.
-- `apps/web/env.ts` was removed because the active starter no longer consumes the old caching/env bundle.
+- `apps/starter/env.ts` was removed because the active starter no longer consumes the old caching/env bundle.

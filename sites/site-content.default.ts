@@ -1,7 +1,1 @@
-import type { SiteOwnedContent } from './types'
-
-export const defaultSiteContent: SiteOwnedContent = {
-  externalResources: [],
-  listingCliInstall: null,
-  networkLinks: []
-}
+export { defaultSiteContent } from '@thedaviddias/site-contract'

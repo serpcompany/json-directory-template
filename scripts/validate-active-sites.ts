@@ -1,16 +1,15 @@
-import { defaultSiteConfig, siteConfigsById } from '../sites/index.ts';
+import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids';
 import { validateSite } from './validate-site.ts';
 
 export function getActiveCheckedInSiteIds(): string[] {
-  return [
-    defaultSiteConfig.id,
-    ...Object.keys(siteConfigsById).sort((left, right) =>
-      left.localeCompare(right)
-    ),
-  ];
+  return [...activeCheckedInSiteIds].sort((left, right) =>
+    left.localeCompare(right)
+  );
 }
 
 export function validateActiveCheckedInSites(): void {
+  // This validates only active non-default sites. The default starter site is
+  // still available for explicit validation via `pnpm validate:site -- --site default`.
   for (const siteId of getActiveCheckedInSiteIds()) {
     validateSite({ siteId });
   }

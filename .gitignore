@@ -8,7 +8,8 @@
 
 # next.js
 .next/
-apps/web/out/
+apps/*/out/
+apps/*/public/search/search-index.json
 
 # production
 /build
@@ -56,6 +57,7 @@ lychee-out.md
 
 CLAUDE.local.md
 sessions/
+logs/
 tmp/deploy/
 tmp/sites/
 
@@ -66,5 +68,3 @@ tmp/sites/
 .agents/
 
 .cursor/
-
-

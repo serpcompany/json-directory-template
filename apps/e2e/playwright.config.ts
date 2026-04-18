@@ -77,7 +77,7 @@ export default defineConfig({
     // }
   ],
   webServer: {
-    command: `cd ../web && pnpm exec next dev --hostname 127.0.0.1 --port ${playwrightPort}`,
+    command: `cd ../starter && pnpm exec next dev --hostname 127.0.0.1 --port ${playwrightPort}`,
     url: baseUrl,
     reuseExistingServer: !process.env.CI,
     timeout: 60000, // 1 minute to start server

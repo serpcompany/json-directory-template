@@ -75,6 +75,10 @@
                       "title": "Create `sites/<site-id>/site-config.ts`"
                     },
                     {
+                      "id": "sub-wrapper-scaffold",
+                      "title": "Run `pnpm generate:site-wrapper -- --site <site-id>` to scaffold `apps/<site-id>/`"
+                    },
+                    {
                       "id": "sub-site-content",
                       "title": "Create `sites/<site-id>/site-content.ts` if the site has owned resources or network links"
                     },
@@ -98,7 +102,7 @@
                 {
                   "id": "content-register-site",
                   "type": "text",
-                  "value": "**Update these places:**\n\n- `sites/index.ts`\n- any site-specific docs or examples if the contract changed\n- issue/project tracking if this onboarding is tied to a tracked rollout"
+                  "value": "**Before promotion into the active registry:**\n\n- set `build.appPackageName` to `<site-id>` in `sites/<site-id>/site-config.ts`\n- set `build.appOutDir` to `apps/<site-id>/out` in `sites/<site-id>/site-config.ts`\n- update `packages/site-contract/src/index.ts`\n- update `packages/site-contract/src/active-site-ids.ts`\n- update any site-specific docs or examples if the contract changed\n- update issue/project tracking if this onboarding is tied to a tracked rollout"
                 }
               ]
             }

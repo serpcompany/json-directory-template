@@ -10,6 +10,7 @@ type SitemapGroup = {
 
 type WriteSplitSitemapsOptions = {
   baseUrl: string
+  excludedPaths?: string[]
   listingBasePath: string
   pageSize?: number
 }
@@ -26,6 +27,9 @@ const EXCLUDED_SITEMAP_PATHS = new Set([
   '/submit',
   '/terms'
 ])
+
+const DOCS_PREFIX = '/docs'
+const POSTS_PREFIX = '/posts'
 
 function normalizeBaseUrl(baseUrl: string): string {
   return baseUrl.replace(/\/+$/, '')
@@ -82,14 +86,18 @@ function buildSitemapIndexXml(baseUrl: string, sitemapPaths: string[]): string {
   ].join('')
 }
 
-function listArtifactRoutePaths(artifactDir: string, currentDir = artifactDir): string[] {
+function listArtifactRoutePaths(
+  artifactDir: string,
+  currentDir = artifactDir,
+  excludedPaths = new Set<string>()
+): string[] {
   const routePaths: string[] = []
 
   for (const entry of readdirSync(currentDir, { withFileTypes: true })) {
     const entryPath = join(currentDir, entry.name)
 
     if (entry.isDirectory()) {
-      routePaths.push(...listArtifactRoutePaths(artifactDir, entryPath))
+      routePaths.push(...listArtifactRoutePaths(artifactDir, entryPath, excludedPaths))
       continue
     }
 
@@ -105,6 +113,10 @@ function listArtifactRoutePaths(artifactDir: string, currentDir = artifactDir): 
     const publicPath = normalizeArtifactPath(relativeDir)
 
     if (EXCLUDED_SITEMAP_PATHS.has(publicPath)) {
+      continue
+    }
+
+    if (excludedPaths.has(publicPath)) {
       continue
     }
 
@@ -125,17 +137,34 @@ function sortPaths(paths: string[]): string[] {
 function groupArtifactPaths(paths: string[], listingBasePath: string): SitemapGroup[] {
   const listingPrefix = `/${listingBasePath}`
   const pages: string[] = []
-  const listing: string[] = []
-  const categories: string[] = []
+  const listings: string[] = []
+  const taxonomies: string[] = []
+  const docs: string[] = []
+  const posts: string[] = []
 
   for (const path of paths) {
-    if (path === listingPrefix || path.startsWith(`${listingPrefix}/`)) {
-      listing.push(path)
+    if (path === DOCS_PREFIX || path.startsWith(`${DOCS_PREFIX}/`)) {
+      docs.push(path)
+      continue
+    }
+
+    if (path === POSTS_PREFIX || path.startsWith(`${POSTS_PREFIX}/`)) {
+      posts.push(path)
+      continue
+    }
+
+    if (path === listingPrefix) {
+      taxonomies.push(path)
+      continue
+    }
+
+    if (path.startsWith(`${listingPrefix}/`)) {
+      listings.push(path)
       continue
     }
 
     if (path.startsWith('/categories/')) {
-      categories.push(path)
+      taxonomies.push(path)
       continue
     }
 
@@ -143,9 +172,11 @@ function groupArtifactPaths(paths: string[], listingBasePath: string): SitemapGr
   }
 
   return [
-    { name: 'pages', paths: sortPaths(pages) },
-    { name: listingBasePath, paths: sortPaths(listing) },
-    { name: 'categories', paths: sortPaths(categories) }
+    { name: 'pages-sitemap', paths: sortPaths(pages) },
+    { name: 'listings-sitemap', paths: sortPaths(listings) },
+    { name: 'taxonomies-sitemap', paths: sortPaths(taxonomies) },
+    { name: 'docs-sitemap', paths: sortPaths(docs) },
+    { name: 'posts-sitemap', paths: sortPaths(posts) },
   ]
 }
 
@@ -163,13 +194,21 @@ function writeGroupSitemaps(
   const sitemapIndexEntries: string[] = []
 
   pagePaths.forEach((paths, index) => {
-    const fileName = `${group.name}-${index}.xml`
+    const fileName =
+      pagePaths.length === 1 ? `${group.name}.xml` : `${group.name}-${index}.xml`
     writeFileSync(resolve(artifactDir, fileName), buildUrlSetXml(baseUrl, paths))
     sitemapIndexEntries.push(`/${fileName}`)
   })
 
-  const indexFileName = `${group.name}-index.xml`
-  writeFileSync(resolve(artifactDir, indexFileName), buildSitemapIndexXml(baseUrl, sitemapIndexEntries))
+  if (pagePaths.length === 1) {
+    return sitemapIndexEntries[0] ?? null
+  }
+
+  const indexFileName = `${group.name}.xml`
+  writeFileSync(
+    resolve(artifactDir, indexFileName),
+    buildSitemapIndexXml(baseUrl, sitemapIndexEntries)
+  )
 
   return `/${indexFileName}`
 }
@@ -179,7 +218,10 @@ export function writeSplitSitemaps(
   options: WriteSplitSitemapsOptions
 ): void {
   const pageSize = options.pageSize ?? SITEMAP_PAGE_SIZE
-  const publicPaths = sortPaths(listArtifactRoutePaths(artifactDir))
+  const excludedPaths = new Set(
+    (options.excludedPaths ?? []).map(path => normalizeArtifactPath(path))
+  )
+  const publicPaths = sortPaths(listArtifactRoutePaths(artifactDir, artifactDir, excludedPaths))
   const groupedPaths = groupArtifactPaths(publicPaths, options.listingBasePath.replace(/^\/+|\/+$/g, ''))
   const sitemapIndexEntries = groupedPaths
     .map(group => writeGroupSitemaps(artifactDir, options.baseUrl, group, pageSize))

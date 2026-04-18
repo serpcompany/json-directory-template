@@ -172,10 +172,16 @@ For a full site contract check:
 pnpm validate:site -- --site your-site-id
 ```
 
-To validate the default site plus all checked-in per-site overrides together:
+To validate the active non-default checked-in sites together:
 
 ```bash
 pnpm validate:sites
+```
+
+To validate the default starter explicitly:
+
+```bash
+pnpm validate:site -- --site default
 ```
 
 For local development against one checked-in site:
