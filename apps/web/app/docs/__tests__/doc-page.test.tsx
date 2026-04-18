@@ -133,7 +133,7 @@ describe('DocPage', () => {
     render(result)
 
     expect(screen.getByTestId('doc-detail-page')).toBeInTheDocument()
-    expect(mockRenderDocDetailPage).toHaveBeenCalled()
+    expect(mockNotFound).not.toHaveBeenCalled()
   })
 
   it('delegates static params generation to the package-owned route module', async () => {
