@@ -4,6 +4,8 @@ Historical note:
 
 - This plan documents the thin-wrapper migration work as it was scoped at the time.
 - It is now completed and preserved as implementation history.
+- `apps/web` no longer exists in the repo; references below describe the pre-rename migration
+  state that was later normalized into `apps/starter` plus site-specific wrappers.
 - Use `docs/IMPLEMENTATION_TRACKER.md` and `docs/superpowers/plans/2026-04-18-apps-web-normalization.md`
   for the current post-migration state.
 

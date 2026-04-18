@@ -3,8 +3,9 @@
 Historical note:
 
 - This audit reflects the active build/config surface at the time it was written.
-- References under `apps/web/**` are historical snapshots and may now resolve to package-owned
-  modules in `packages/web-core/**`.
+- `apps/web` no longer exists in the repo.
+- References under `apps/web/**` are historical snapshots and now resolve through `apps/starter`,
+  `apps/serpdownloaders.com`, and package-owned modules in `packages/web-core/**`.
 - Use this document for audit context, not as the current ownership map.
 
 This audit captures what the current starter already treats as site-configurable, what still appears hardcoded in active surfaces, and what should remain internal to the build engine.
@@ -191,7 +192,7 @@ Current recommendation:
 
 These are the main active areas still worth cleaning up or explicitly deciding to keep as starter defaults.
 
-### Active routes and metadata
+### Historical route and metadata references
 
 - `apps/web/app/projects/page.tsx`
 - `apps/web/app/guides/page.tsx`
@@ -204,7 +205,7 @@ These are the main active areas still worth cleaning up or explicitly deciding t
 - `apps/web/lib/analytics-helpers.ts`
 - `apps/web/lib/website-schema.ts`
 
-### Active components and helpers
+### Historical component and helper references
 
 - `apps/web/components/sections/external-resources-section.tsx`
 - `apps/web/components/sections/communities-section.tsx`
@@ -215,7 +216,7 @@ These are the main active areas still worth cleaning up or explicitly deciding t
 - `apps/web/lib/seo/seo-config.ts`
 - `apps/web/lib/schema.ts`
 
-### Current pattern
+### Historical pattern
 
 These files are not all bugs. Some are starter defaults. The follow-up work is to sort each one into:
 
