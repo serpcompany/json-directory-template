@@ -27,7 +27,7 @@ Reference architectures:
 - [x] `serpdownloaders.com` is the only site currently powering this repo.
 - [x] `serp.co`, `extensions.serp.co`, and `serp.software` are removed from the active registry.
 - [x] Active-vs-incubating site rules are documented and enforced.
-- [ ] Thin wrapper apps plus a shared `packages/web-core` boundary are fully in place.
+- [x] Thin wrapper apps plus a shared `packages/web-core` boundary are fully in place.
 
 ## Immediate Queue
 
