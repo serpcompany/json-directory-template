@@ -1,0 +1,61 @@
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import { getRoute } from '../routes';
+import { siteConfig } from '../site-config';
+import { siteCopy } from '../site-copy';
+import { AnimatedBackground } from '../ui/animated-background';
+
+interface HeroSectionProps {
+  websiteCount: number;
+}
+
+export function HeroSection({ websiteCount }: HeroSectionProps) {
+  return (
+    <section className="relative overflow-hidden py-12 md:py-16 lg:py-20">
+      <AnimatedBackground />
+      <div className="relative z-10 mx-auto max-w-4xl space-y-6 px-6 py-4 text-center md:space-y-8 md:py-8">
+        <div className="animate-fade-in-up opacity-0 stagger-1">
+          <Link
+            className="mx-auto inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-background/50 px-3 py-1.5 text-xs font-medium backdrop-blur-sm transition-all hover:border-foreground/20 hover:bg-background/80 md:gap-3 md:text-sm"
+            href={getRoute('home')}
+          >
+            <span className="inline-flex items-center rounded-full bg-foreground px-2.5 py-0.5 text-xs font-bold tabular-nums text-background">
+              {websiteCount}
+            </span>
+            <span className="text-muted-foreground">{siteCopy.listingCountLabel}</span>
+          </Link>
+        </div>
+
+        <h1 className="animate-fade-in-up opacity-0 stagger-2 text-4xl font-bold leading-[1.1] tracking-tight md:text-5xl lg:text-6xl xl:text-7xl">
+          <span className="relative whitespace-nowrap">
+            <span className="bg-gradient-to-r from-foreground via-foreground/80 to-foreground bg-clip-text text-transparent">
+              {siteConfig.name}
+            </span>
+          </span>
+        </h1>
+
+        <p className="animate-fade-in-up opacity-0 stagger-3 mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg lg:text-xl">
+          <span className="font-medium text-foreground">{siteConfig.tagline}</span>{' '}
+          and browse curated {siteCopy.listingName.plural}, resources, and
+          documentation links in one searchable directory
+        </p>
+
+        <div className="animate-fade-in-up opacity-0 stagger-4 flex flex-col justify-center gap-3 pt-2 sm:flex-row md:gap-4">
+          <Link
+            href={getRoute('submit')}
+            className="group inline-flex items-center justify-center gap-2 rounded-none bg-foreground px-6 py-3 text-sm font-bold text-background transition-all duration-300 hover:gap-3 hover:bg-foreground/90 press-effect md:px-8 md:py-4 md:text-base"
+          >
+            {siteCopy.submitLabel}
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+          <Link
+            href={getRoute('about')}
+            className="inline-flex items-center justify-center rounded-none border-2 border-foreground/20 px-6 py-3 text-sm font-bold text-foreground transition-all duration-300 hover:border-foreground/40 hover:bg-foreground/5 press-effect md:px-8 md:py-4 md:text-base"
+          >
+            Learn More
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}

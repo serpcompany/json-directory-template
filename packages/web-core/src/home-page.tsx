@@ -4,6 +4,7 @@ import { getActiveCategories } from './category-navigation'
 import type { GuideMetadata, WebsiteMetadata } from './content-query'
 import { AppSidebar } from './layout/app-sidebar'
 import { generateBaseMetadata, generateWebsiteSchema, KEYWORDS } from './seo-config'
+import { HeroSection } from './sections/hero-section'
 import { NewsletterSection } from './sections/newsletter-section'
 import { siteCopy } from './site-copy'
 import { siteConfig } from './site-config'
@@ -43,7 +44,6 @@ export interface HomePageSlots {
   ExternalResourcesSection: ComponentType
   FeaturedGuidesSection: ComponentType<FeaturedGuidesSectionProps>
   FeaturedProjectsSection: ComponentType<FeaturedProjectsSectionProps>
-  HeroSection: ComponentType
   JsonLd: (props: JsonLdProps) => ReactElement | Promise<ReactElement>
   RecentlyAddedSection: ComponentType<RecentlyAddedSectionProps>
   StaticWebsitesList: ComponentType<StaticWebsitesListProps>
@@ -84,7 +84,6 @@ export function HomePageRoute({ data, slots }: HomePageRouteProps): ReactElement
     ExternalResourcesSection,
     FeaturedGuidesSection,
     FeaturedProjectsSection,
-    HeroSection,
     JsonLd,
     RecentlyAddedSection,
     StaticWebsitesList,
@@ -100,7 +99,7 @@ export function HomePageRoute({ data, slots }: HomePageRouteProps): ReactElement
     <>
       <JsonLd data={generateWebsiteSchema()} />
       <div className="w-full space-y-16">
-        <HeroSection />
+        <HeroSection websiteCount={totalCount} />
       </div>
       <div className="border-t">
         <div className="relative flex h-full w-full max-w-full flex-row flex-nowrap">

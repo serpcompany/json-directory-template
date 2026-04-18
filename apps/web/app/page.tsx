@@ -4,7 +4,6 @@ import { JsonLd } from '@/components/json-ld'
 import { CreatorProjectsSection } from '@/components/sections/creator-projects-section'
 import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section'
 import { FeaturedProjectsSection } from '@/components/sections/featured-projects-section'
-import { HeroSection } from '@/components/sections/hero-section'
 import { RecentlyAddedSection } from '@/components/sections/recently-added-section'
 import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
 import { StaticWebsitesList } from '@/components/static-websites-list'
@@ -21,7 +20,6 @@ export default async function Home() {
         ExternalResourcesSection,
         FeaturedGuidesSection,
         FeaturedProjectsSection,
-        HeroSection,
         JsonLd,
         RecentlyAddedSection,
         StaticWebsitesList,

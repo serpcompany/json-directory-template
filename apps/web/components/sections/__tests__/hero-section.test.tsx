@@ -6,7 +6,7 @@ jest.mock('@/lib/content-loader', () => ({
   getWebsites: jest.fn(async () => new Array(42).fill(null))
 }))
 
-jest.mock('@/components/ui/animated-background', () => ({
+jest.mock('@thedaviddias/web-core/ui/animated-background', () => ({
   AnimatedBackground: () => <div data-testid="animated-background" />
 }))
 
