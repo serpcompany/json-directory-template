@@ -1,7 +1,10 @@
 import path from 'node:path'
 import { withContentCollections } from '@content-collections/next'
 import withMDX from '@next/mdx'
-import { baseConfig, withAnalyzer } from '@thedaviddias/config-next'
+import {
+  baseConfig,
+  withAnalyzer,
+} from '@thedaviddias/config-next'
 import {
   defaultSiteConfig,
   resolveCheckedInSiteConfig,
