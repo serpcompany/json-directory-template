@@ -6,7 +6,7 @@
 import { jest } from '@jest/globals'
 import { render } from '@/__tests__/utils/test-utils.helper'
 import NotFound from '@/app/not-found'
-import { FavoritesProvider } from '@/contexts/favorites-context'
+import { FavoritesProvider } from '@thedaviddias/web-core/root-shell-client'
 
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
@@ -207,7 +207,7 @@ describe('Basic Component Rendering', () => {
 
 describe('Metadata and SEO', () => {
   it('should export generateBaseMetadata function', async () => {
-    const { generateBaseMetadata } = await import('../lib/seo/seo-config')
+      const { generateBaseMetadata } = await import('@thedaviddias/web-core/seo-config')
     expect(typeof generateBaseMetadata).toBe('function')
 
     const metadata = generateBaseMetadata({
@@ -220,10 +220,15 @@ describe('Metadata and SEO', () => {
     expect(metadata).toHaveProperty('description')
   })
 
-  it('should have working sitemap generation', async () => {
+  it('should have working sitemap route generation', async () => {
     try {
-      const sitemap = await import('../app/sitemap')
-      expect(typeof sitemap.default).toBe('function')
+      const sitemapIndex = await import('../app/sitemap-index.xml/route')
+      const sitemapCompat = await import('../app/sitemap.xml/route')
+      const pagesSitemap = await import('../app/pages-sitemap.xml/route')
+
+      expect(typeof sitemapIndex.GET).toBe('function')
+      expect(typeof sitemapCompat.GET).toBe('function')
+      expect(typeof pagesSitemap.GET).toBe('function')
     } catch (error) {
       // Sitemap might have dependencies that are hard to mock
       expect(error).toBeDefined()
@@ -235,23 +240,9 @@ describe('Metadata and SEO', () => {
       const robots = await import('../app/robots')
       expect(typeof robots.default).toBe('function')
 
-      const previousStaticExport = process.env.STATIC_EXPORT
-
-      delete process.env.STATIC_EXPORT
-      expect(robots.default()).toMatchObject({
-        sitemap: 'https://example.com/sitemap.xml'
-      })
-
-      process.env.STATIC_EXPORT = 'true'
       expect(robots.default()).toMatchObject({
         sitemap: 'https://example.com/sitemap-index.xml'
       })
-
-      if (previousStaticExport === undefined) {
-        delete process.env.STATIC_EXPORT
-      } else {
-        process.env.STATIC_EXPORT = previousStaticExport
-      }
     } catch (error) {
       // Robots might have dependencies that are hard to mock
       expect(error).toBeDefined()

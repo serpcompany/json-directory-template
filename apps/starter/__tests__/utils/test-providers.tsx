@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { RenderOptions } from '@testing-library/react'
 import { ThemeProvider } from 'next-themes'
 import type { ReactNode } from 'react'
-import { FavoritesProvider } from '@/contexts/favorites-context'
+import { FavoritesProvider } from '@thedaviddias/web-core/root-shell-client'
 
 export interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   user?: any

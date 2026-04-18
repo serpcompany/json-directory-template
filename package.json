@@ -28,6 +28,7 @@
     "deploy": "pnpm deploy:site",
     "deploy:site": "pnpm tsx scripts/deploy-site.ts",
     "generate:llms": "pnpm --filter generator start",
+    "generate:site-wrapper": "pnpm tsx scripts/generate-site-wrapper.ts",
     "generate:website": "turbo gen website",
     "postinstall": "manypkg fix",
     "lint": "turbo lint && manypkg check",

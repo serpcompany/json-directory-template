@@ -26,12 +26,27 @@ If you want the starter wrapper specifically:
 pnpm dev:starter
 ```
 
+To scaffold a new thin site wrapper app:
+
+```bash
+pnpm generate:site-wrapper -- --site your-site-id
+```
+
 ## Core commands
+
+Active checked-in site:
+
+```bash
+pnpm validate:site -- --site serpdownloaders.com
+pnpm build:site -- --site serpdownloaders.com
+pnpm deploy:site -- --site serpdownloaders.com
+```
+
+Starter wrapper:
 
 ```bash
 pnpm validate:site -- --site default
 pnpm build:site -- --site default
-pnpm deploy:site -- --site default
 ```
 
 Useful repo checks:
@@ -51,6 +66,8 @@ pnpm --dir apps/starter exec jest --runInBand
 
 ## Key docs
 
+- [Current Plan](./docs/PLAN.md)
+- [Onboarding Notes](./docs/ONBOARDING.md)
 - [Build Pipeline](./docs/BUILD_PIPELINE.md)
 - [Rebrand Runbook](./docs/REBRAND_RUNBOOK.md)
 - [Deploy Runbook](./docs/DEPLOY_RUNBOOK.md)

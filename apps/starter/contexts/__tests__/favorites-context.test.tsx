@@ -1,6 +1,6 @@
 import { act } from 'react'
 import { render, screen, waitFor } from '@/__tests__/utils/test-utils.helper'
-import { useFavorites } from '@/contexts/favorites-context'
+import { useFavorites } from '@thedaviddias/web-core/root-shell-client'
 
 function FavoritesConsumer() {
   const { favorites, isLoading, toggleFavorite } = useFavorites()

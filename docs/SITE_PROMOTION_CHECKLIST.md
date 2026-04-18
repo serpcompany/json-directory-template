@@ -15,9 +15,15 @@ stay parked or incubating until every item below is complete.
    - Site-owned content/assets/config live under `sites/<site>`.
    - The site resolves cleanly through `packages/site-contract`.
 3. The site has a wrapper app target.
+   - Run `pnpm generate:site-wrapper -- --site <site-id>` unless the wrapper already exists.
    - `apps/<site>` exists as a thin wrapper app.
+   - `sites/<site>/site-config.ts` sets `build.appPackageName` to `<site-id>`.
+   - `sites/<site>/site-config.ts` sets `build.appOutDir` to `apps/<site-id>/out`.
    - Reusable logic stays in `packages/web-core` and `packages/site-contract`.
    - The wrapper app does not fork shared business logic from `apps/starter`.
+   - If the site is being promoted into the active registry, update:
+     - `packages/site-contract/src/index.ts`
+     - `packages/site-contract/src/active-site-ids.ts`
 4. Validation is green.
    - Run `pnpm validate:site -- --site <site-id>`.
    - Run active-site contract tests such as `pnpm exec vitest run scripts/validate-active-sites.test.ts scripts/site-config.test.ts`.

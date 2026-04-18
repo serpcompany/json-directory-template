@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { GuideHeader } from '@/components/guide-header'
 import { type GuideMetadata, getGuideBySlug, getGuides } from '@/lib/content-loader'
+import { GuideHeader } from '@thedaviddias/web-core/guides/guide-header'
 import {
   GuideDetailPage,
   generateGuideDetailMetadata,

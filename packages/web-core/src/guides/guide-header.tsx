@@ -12,11 +12,11 @@ interface GuideHeaderProps {
   category?: string
 }
 
-export function GuideHeader({ title, description, date, authors, category }: GuideHeaderProps) {
+export function GuideHeader({ title, description, date, authors }: GuideHeaderProps) {
   return (
     <div className="space-y-4 pb-8 border-b">
       <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">{title}</h1>
-      {description && <p className="text-xl text-muted-foreground">{description}</p>}
+      {description ? <p className="text-xl text-muted-foreground">{description}</p> : null}
       <div className="flex items-center space-x-2 text-sm text-muted-foreground">
         <time dateTime={date}>{format(new Date(date), 'MMMM dd, yyyy')}</time>
         <span>•</span>
@@ -35,7 +35,7 @@ export function GuideHeader({ title, description, date, authors, category }: Gui
               ) : (
                 author.name
               )}
-              {index < authors.length - 1 && ', '}
+              {index < authors.length - 1 ? ', ' : null}
             </span>
           ))}
         </div>
