@@ -54,8 +54,8 @@ Reference architectures:
   website-detail route adapters, plus package-owned route wrappers for homepage list sections and
   guide/external-resources cards. Shared analytics helpers and the creator-projects route wrapper
   now also live in `packages/web-core`, and the active wrapper's explicit local support graph in
-  `apps/serpdownloaders.com/components/**` has been reduced to thin re-exports plus a few tiny
-  helper shims rather than route-owned UI logic.
+  `apps/serpdownloaders.com/components/**` has been eliminated: `apps/serpdownloaders.com/app/**`
+  now imports package-owned modules directly instead of routing through a local shim tree.
 - [x] Stop treating `apps/web` as the canonical implementation app for the active site.
 - [x] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
 - [x] Remove remaining build-source assumptions that still hardcode `apps/web` as the source app.
@@ -145,9 +145,9 @@ Status note:
 - `apps/serpdownloaders.com` now owns the active-site build/dev/typecheck entrypoint and the
   active route files that ship `serpdownloaders.com` today.
 - The main remaining gap is package ownership cleanup: the active wrapper now resolves its own
-  route-supporting modules explicitly, and the active wrapper support graph is now effectively
-  thin. The remaining repo-level gap is broader cleanup of legacy `apps/web` route-facing UI and
-  any direct app-level imports that should become package-owned or package-direct.
+  route-supporting modules explicitly, and the active wrapper support graph is now package-direct.
+  The remaining repo-level gap is broader cleanup of legacy `apps/web` route-facing UI and any
+  direct app-level imports there that should become package-owned or package-direct.
 - Phase 4 wrapper extraction tasks are complete and verified through validate/build/deploy dry-run
   plus focused route and shim test suites.
 - Full execution plan for the remaining wrapper migration now lives in:

@@ -1,7 +1,7 @@
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
 import type { Metadata } from 'next'
-import { components } from '@/components/mdx/index'
 import { getLegalContent } from '@/lib/content-loader'
+import { components } from '@thedaviddias/web-core/mdx-components'
 import {
   LegalStaticPage,
   generateLegalPageMetadata,

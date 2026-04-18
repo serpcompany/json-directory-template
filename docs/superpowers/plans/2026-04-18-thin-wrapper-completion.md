@@ -29,6 +29,9 @@
 - shared analytics helpers and the creator-projects route wrapper now also live in
   `packages/web-core`, so the active wrapper support graph is down to thin re-exports and small
   helper shims instead of route-owned UI logic.
+- `apps/serpdownloaders.com/app/**` now imports package-owned modules directly for the active
+  homepage, category, search, detail, about, and legal routes, and the wrapper-local
+  `apps/serpdownloaders.com/components/**` shim tree has been removed entirely.
 - active-site build/search-index/dev flows no longer target `apps/web`, but wrapper isolation is
   not complete until the copied support graph is reduced to package-owned exports plus a thin app
   shell.

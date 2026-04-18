@@ -2,10 +2,6 @@ import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getHomePageData } from '@/actions/get-home-page-data'
-import { CategoryWebsitesList } from '@/components/category-websites-list'
-import { JsonLd } from '@/components/json-ld'
-import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
-import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section'
 import { getGuides, getWebsites } from '@/lib/content-loader'
 import {
   CategoryRoutePage,
@@ -13,12 +9,16 @@ import {
   generateCategoryRouteStaticParams,
 } from '@thedaviddias/web-core/category-routes/category-page'
 import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display'
+import { CategoryWebsitesListRoute as CategoryWebsitesList } from '@thedaviddias/web-core/category-websites-list-route'
 import {
   getActiveCategories,
   getFeaturedListingCount,
 } from '@thedaviddias/web-core/category-navigation'
 import { getCategoryBySlug } from '@thedaviddias/web-core/categories'
+import { JsonLd } from '@thedaviddias/web-core/json-ld'
 import { getRoute } from '@thedaviddias/web-core/routes'
+import { ExternalResourcesSectionRoute as ExternalResourcesSection } from '@thedaviddias/web-core/sections/external-resources-section-route'
+import { FeaturedGuidesSectionRoute as FeaturedGuidesSection } from '@thedaviddias/web-core/sections/featured-guides-section-route'
 import { SITE_PUBLIC_URL } from '@thedaviddias/web-core/seo-config'
 
 interface CategoryPageProps {

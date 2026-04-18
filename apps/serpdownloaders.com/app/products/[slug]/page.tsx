@@ -1,22 +1,22 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { JsonLd } from '@/components/json-ld'
-import { ProjectNavigation } from '@/components/project-navigation'
-import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
-import { WebsiteContentSection } from '@/components/website/website-content-section'
-import { WebsiteDetailSidebar } from '@/components/website/website-detail-sidebar'
-import { WebsiteError } from '@/components/website/website-error'
-import { WebsiteHero } from '@/components/website/website-hero'
-import { WebsiteRelatedProjects } from '@/components/website/website-related-projects'
-import { WebsiteResourcesSection } from '@/components/website/website-resources-section'
 import {
   generateWebsiteDetailRouteMetadata,
   generateWebsiteDetailRouteStaticParams,
   WebsiteDetailRoutePage,
 } from '@thedaviddias/web-core/website-routes/detail-page'
 import { getWebsiteBySlug, getWebsites } from '@/lib/content-loader'
+import { JsonLd } from '@thedaviddias/web-core/json-ld'
+import { ProjectNavigation } from '@thedaviddias/web-core/project-navigation'
 import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { SITE_NAME } from '@thedaviddias/web-core/seo-config'
+import { ExternalResourcesSectionRoute as ExternalResourcesSection } from '@thedaviddias/web-core/sections/external-resources-section-route'
+import { WebsiteContentSectionRoute as WebsiteContentSection } from '@thedaviddias/web-core/website/website-content-section-route'
+import { WebsiteDetailSidebar } from '@thedaviddias/web-core/website/website-detail-sidebar'
+import { WebsiteErrorRoute as WebsiteError } from '@thedaviddias/web-core/website/website-error-route'
+import { WebsiteHeroRoute as WebsiteHero } from '@thedaviddias/web-core/website/website-hero-route'
+import { WebsiteRelatedProjectsRoute as WebsiteRelatedProjects } from '@thedaviddias/web-core/website/website-related-projects-route'
+import { WebsiteResourcesSectionRoute as WebsiteResourcesSection } from '@thedaviddias/web-core/website/website-resources-section-route'
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>
