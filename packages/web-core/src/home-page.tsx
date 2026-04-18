@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import type { ComponentType, ReactElement } from 'react'
 import { getActiveCategories } from './category-navigation'
 import type { GuideMetadata, WebsiteMetadata } from './content-query'
+import { AppSidebar } from './layout/app-sidebar'
 import { generateBaseMetadata, generateWebsiteSchema, KEYWORDS } from './seo-config'
+import { NewsletterSection } from './sections/newsletter-section'
 import { siteCopy } from './site-copy'
 import { siteConfig } from './site-config'
 
@@ -16,11 +18,6 @@ export interface HomePageData {
 
 interface JsonLdProps {
   data: Record<string, any>
-}
-
-interface AppSidebarProps {
-  availableCategorySlugs?: string[]
-  featuredCount?: number
 }
 
 interface FeaturedGuidesSectionProps {
@@ -42,14 +39,12 @@ interface StaticWebsitesListProps {
 }
 
 export interface HomePageSlots {
-  AppSidebar: ComponentType<AppSidebarProps>
   CreatorProjectsSection: ComponentType
   ExternalResourcesSection: ComponentType
   FeaturedGuidesSection: ComponentType<FeaturedGuidesSectionProps>
   FeaturedProjectsSection: ComponentType<FeaturedProjectsSectionProps>
   HeroSection: ComponentType
   JsonLd: (props: JsonLdProps) => ReactElement | Promise<ReactElement>
-  NewsletterSection: ComponentType
   RecentlyAddedSection: ComponentType<RecentlyAddedSectionProps>
   StaticWebsitesList: ComponentType<StaticWebsitesListProps>
 }
@@ -85,14 +80,12 @@ export function HomePageRoute({ data, slots }: HomePageRouteProps): ReactElement
     totalCount,
   } = data
   const {
-    AppSidebar,
     CreatorProjectsSection,
     ExternalResourcesSection,
     FeaturedGuidesSection,
     FeaturedProjectsSection,
     HeroSection,
     JsonLd,
-    NewsletterSection,
     RecentlyAddedSection,
     StaticWebsitesList,
   } = slots

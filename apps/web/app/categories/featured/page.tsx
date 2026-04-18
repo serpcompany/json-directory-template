@@ -4,9 +4,7 @@ import { notFound } from 'next/navigation';
 import { getHomePageData } from '@/actions/get-home-page-data';
 import { CategoryWebsitesList } from '@/components/category-websites-list';
 import { JsonLd } from '@/components/json-ld';
-import { AppSidebar } from '@/components/layout/app-sidebar';
 import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section';
-import { NewsletterSection } from '@/components/sections/newsletter-section';
 import { ExternalResourcesSection } from '@/components/sections/external-resources-section';
 import {
   FeaturedCategoryRoutePage,
@@ -39,12 +37,10 @@ export default async function FeaturedPage() {
       featuredGuides={featuredGuides}
       featuredProjects={featuredProjects}
       slots={{
-        AppSidebar,
         CategoryWebsitesList,
         ExternalResourcesSection,
         FeaturedGuidesSection,
         JsonLd,
-        NewsletterSection,
         breadcrumb: (
           <Breadcrumb
             items={[{ name: 'Featured', href: featuredPath }]}

@@ -1,8 +1,6 @@
 import { getHomePageData } from '@/actions/get-home-page-data'
 import { JsonLd } from '@/components/json-ld'
-import { AppSidebar } from '@/components/layout/app-sidebar'
 import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section'
-import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { WebsitesListWithSearch } from '@/components/websites-list-with-search'
 import { getGuides } from '@/lib/content-loader'
 import {
@@ -27,10 +25,8 @@ export default async function FavoritesPage() {
       featuredProjects={featuredProjects}
       totalCount={totalCount}
       slots={{
-        AppSidebar,
         FeaturedGuidesSection,
         JsonLd,
-        NewsletterSection,
         WebsitesListWithSearch,
       }}
     />

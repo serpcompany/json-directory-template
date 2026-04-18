@@ -4,20 +4,17 @@ import type { Metadata } from 'next';
 import type { ComponentType, ReactNode } from 'react';
 import { getActiveCategories } from '../category-navigation';
 import type { GuideMetadata, WebsiteMetadata } from '../content-query';
+import { AppSidebar } from '../layout/app-sidebar';
 import {
   SITE_NAME,
   SITE_PUBLIC_URL,
   generateBaseMetadata,
 } from '../seo-config';
+import { NewsletterSection } from '../sections/newsletter-section';
 import { siteCopy } from '../site-copy';
 
 type JsonLdProps = {
   data: Record<string, unknown>;
-};
-
-type AppSidebarProps = {
-  availableCategorySlugs?: string[];
-  featuredCount?: number;
 };
 
 type FeaturedGuidesSectionProps = {
@@ -31,10 +28,8 @@ type WebsitesListWithSearchProps = {
 };
 
 type FavoritesPageSlots = {
-  AppSidebar: ComponentType<AppSidebarProps>;
   FeaturedGuidesSection: ComponentType<FeaturedGuidesSectionProps>;
   JsonLd: (props: JsonLdProps) => ReactNode | Promise<ReactNode>;
-  NewsletterSection: ComponentType;
   WebsitesListWithSearch: ComponentType<WebsitesListWithSearchProps>;
 };
 
@@ -68,13 +63,7 @@ export function FavoritesIndexPage({
 }: FavoritesPageProps) {
   const activeCategories = getActiveCategories(allProjects);
   const activeCategorySlugs = activeCategories.map((category) => category.slug);
-  const {
-    AppSidebar,
-    FeaturedGuidesSection,
-    JsonLd,
-    NewsletterSection,
-    WebsitesListWithSearch,
-  } = slots;
+  const { FeaturedGuidesSection, JsonLd, WebsitesListWithSearch } = slots;
 
   return (
     <>

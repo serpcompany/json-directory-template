@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { ComponentType, ReactNode } from 'react';
+import { AppSidebar } from '../layout/app-sidebar';
 import { getRoute } from '../routes';
 import {
   SITE_LOGO_URL,
@@ -7,17 +8,13 @@ import {
   SITE_PUBLIC_URL,
   generateBaseMetadata,
 } from '../seo-config';
+import { NewsletterSection } from '../sections/newsletter-section';
 import { siteCopy } from '../site-copy';
 import { siteConfig } from '../site-config';
 import type { GuideMetadata, WebsiteMetadata } from '../content-query';
 
 type JsonLdProps = {
   data: Record<string, unknown>;
-};
-
-type AppSidebarProps = {
-  availableCategorySlugs?: string[];
-  featuredCount?: number;
 };
 
 type CategoryWebsitesListProps = {
@@ -29,12 +26,10 @@ type FeaturedGuidesSectionProps = {
 };
 
 type FeaturedCategorySlots = {
-  AppSidebar: ComponentType<AppSidebarProps>;
   CategoryWebsitesList: ComponentType<CategoryWebsitesListProps>;
   ExternalResourcesSection: ComponentType;
   FeaturedGuidesSection: ComponentType<FeaturedGuidesSectionProps>;
   JsonLd: (props: JsonLdProps) => ReactNode | Promise<ReactNode>;
-  NewsletterSection: ComponentType;
   breadcrumb: ReactNode;
   headingIcon: ReactNode;
 };
@@ -64,12 +59,10 @@ export function FeaturedCategoryRoutePage({
   slots: FeaturedCategorySlots;
 }) {
   const {
-    AppSidebar,
     CategoryWebsitesList,
     ExternalResourcesSection,
     FeaturedGuidesSection,
     JsonLd,
-    NewsletterSection,
     breadcrumb,
     headingIcon,
   } = slots;
