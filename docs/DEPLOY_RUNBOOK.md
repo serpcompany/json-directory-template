@@ -38,6 +38,13 @@ Use this to confirm the target repo, branch, preserve paths, and artifact direct
 pnpm deploy:site -- --site <site-id> --dry-run
 ```
 
+Promotion requirement:
+
+- a site cannot be promoted without a confirmed deploy repo/branch strategy in checked-in config
+- promotion review must include a successful `pnpm deploy:site -- --site <site-id> --dry-run`
+- docs and runbooks must be updated before the registry change is considered complete
+- use [SITE_PROMOTION_CHECKLIST.md](./SITE_PROMOTION_CHECKLIST.md) as the source-of-truth gate
+
 ## GitHub Actions path
 
 The repo workflow is `.github/workflows/build-and-deploy.yml`.

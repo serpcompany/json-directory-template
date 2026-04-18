@@ -7,6 +7,7 @@ import {
 import {
   loadCheckedInSiteFromInput,
   parseSiteInputArgs,
+  resolveSiteAppPackageName,
   type SiteInputTarget,
 } from './site-config.ts';
 import { prepareSiteData } from './site-data.ts';
@@ -41,6 +42,7 @@ export async function devSite(input: SiteInputTarget): Promise<void> {
   warnIfUnsupportedNodeVersion();
 
   const definition = loadCheckedInSiteFromInput(input);
+  const appPackageName = resolveSiteAppPackageName(definition);
   const devPort = resolveDevPort();
   const prepared = prepareSiteData(input);
 
@@ -55,19 +57,15 @@ export async function devSite(input: SiteInputTarget): Promise<void> {
     'pnpm',
     [
       '--filter',
-      'web',
-      'exec',
-      'next',
+      appPackageName,
       'dev',
-      '--webpack',
-      '--port',
-      String(devPort),
     ],
     {
       cwd: process.cwd(),
       env: {
         ...process.env,
         NEXT_PUBLIC_SITE_ID: definition.id,
+        PORT: String(devPort),
         SITE_ID: definition.id,
       },
       stdio: 'inherit',

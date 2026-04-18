@@ -16,7 +16,7 @@ node_modules/
 **/.content-collections/
 
 # Ignore generated files
-apps/web/public/search/search-index.json
+apps/starter/public/search/search-index.json
 data/websites.json
 
 # Ignore scripts output

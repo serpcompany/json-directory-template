@@ -29,4 +29,14 @@ describe('resolveBuildRun', () => {
       'Site "extensions.serp.co" was removed from this repo. Use a supported checked-in site id instead.'
     )
   })
+
+  it('rejects unknown checked-in site ids instead of silently loading default', () => {
+    expect(() =>
+      resolveBuildRun([], {
+        SITE_ID: 'unknown-site'
+      })
+    ).toThrow(
+      'Site "unknown-site" is not an active checked-in site in this repo. Use "default" or a supported checked-in site id instead.'
+    )
+  })
 })

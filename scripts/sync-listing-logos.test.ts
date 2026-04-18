@@ -4,9 +4,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('./site-config.ts', () => ({
   loadCheckedInSiteFromInput: vi.fn(),
+  resolveSiteAppOutDir: vi.fn(),
 }));
 
-import { loadCheckedInSiteFromInput } from './site-config.ts';
+import { loadCheckedInSiteFromInput, resolveSiteAppOutDir } from './site-config.ts';
 import { syncListingLogos } from './sync-listing-logos.ts';
 
 const workspaceRoot = process.cwd();
@@ -18,17 +19,19 @@ const absoluteManifestPath = resolve(workspaceRoot, manifestPath);
 const outputDir = resolve(
   workspaceRoot,
   'apps',
-  'web',
+  'starter',
   'public',
   'listing-logos',
   'test-site'
 );
 
 const mockedLoadCheckedInSiteFromInput = vi.mocked(loadCheckedInSiteFromInput);
+const mockedResolveSiteAppOutDir = vi.mocked(resolveSiteAppOutDir);
 
 beforeEach(() => {
   mkdirSync(testRoot, { recursive: true });
   mkdirSync(outputDir, { recursive: true });
+  mockedResolveSiteAppOutDir.mockReturnValue('apps/starter/out');
 });
 
 afterEach(() => {
@@ -97,7 +100,7 @@ describe('syncListingLogos', () => {
 
     expect(result).toEqual({
       manifestPathDisplay: manifestPath,
-      outputDirDisplay: 'apps/web/public/listing-logos/test-site',
+      outputDirDisplay: 'apps/starter/public/listing-logos/test-site',
       siteId: 'test-site',
       sourcePathDisplay: sourcePath,
       syncedCount: 1,

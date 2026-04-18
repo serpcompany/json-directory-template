@@ -107,7 +107,7 @@ describe('validateSite', () => {
       [
         'Validation failed for site test-site',
         'Unknown category slugs: made-up-category',
-        `Update the category values in ${relativeListingsPath} or add the slug to apps/web/lib/categories.ts.`,
+        `Update the category values in ${relativeListingsPath} or add the slug to sites/test-site/categories.json.`,
       ].join('\n')
     );
   });
@@ -152,7 +152,7 @@ describe('validateSite', () => {
       [
         'Validation failed for site test-site',
         'Unknown category slugs: made-up-category',
-        'Update content.listingSource.category in sites/test-site/site-config.ts or add the slug to apps/web/lib/categories.ts.',
+        'Update content.listingSource.category in sites/test-site/site-config.ts or add the slug to sites/test-site/categories.json.',
       ].join('\n')
     );
   });

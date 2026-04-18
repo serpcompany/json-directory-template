@@ -1,5 +1,11 @@
 # Final Template Cleanliness Audit
 
+Historical note:
+
+- This audit records the repo state during the cleanliness pass that produced it.
+- References to `apps/web/**` and generated starter artifacts are historical snapshots.
+- Use the tracker and current architecture docs for present-day ownership decisions.
+
 Date: 2026-04-05
 
 Parent issue: [#50](https://github.com/serpcompany/json-directory-template/issues/50)
@@ -50,7 +56,7 @@ This audit pass intentionally cleaned the active starter surfaces first:
 
 ### [#51](https://github.com/serpcompany/json-directory-template/issues/51) De-proof the maintainer and operator contract
 
-Use this for residue that still treats `serpdownloaders.com` and `serp.software` as the normative path in CI, onboarding docs, operator docs/tests, or rebrand/runbook guidance.
+Use this for residue that still treats `serpdownloaders.com` or the old parked proof sites as the normative path in CI, onboarding docs, operator docs/tests, or rebrand/runbook guidance.
 
 Named current examples:
 
@@ -79,7 +85,7 @@ These findings are real, but they belong to taxonomy/discovery follow-up rather 
 These are allowed to remain for now as long as docs/workflows stop presenting them as the default path:
 
 - checked-in proof-site configs in `sites/index.ts`
-- proof-site-specific config under `sites/serpdownloaders.com/` and `sites/serp.software/`
+- proof-site-specific config under `sites/serpdownloaders.com/` and parked reference material under `_archive/incubating-sites/**`
 
 ## Verification run for this audit
 

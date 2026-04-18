@@ -32,7 +32,7 @@ The active shared category set is:
 
 Source of truth:
 
-- `apps/web/lib/categories.ts`
+- `apps/starter/lib/categories.ts`
 
 ## Alias behavior
 

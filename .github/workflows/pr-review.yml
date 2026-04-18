@@ -65,10 +65,10 @@ jobs:
         with:
           filters: |
             e2e_relevant:
-              - 'apps/web/app/**'
-              - 'apps/web/components/**'
-              - 'apps/web/lib/**'
-              - 'apps/web/public/**'
+              - 'apps/starter/app/**'
+              - 'apps/starter/components/**'
+              - 'apps/starter/lib/**'
+              - 'apps/starter/public/**'
               - 'apps/e2e/**'
               - 'packages/ui/**'
 

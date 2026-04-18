@@ -50,21 +50,22 @@ describe('writeSplitSitemaps', () => {
 
     expect(existsSync(resolve(artifactDir, 'sitemap-index.xml'))).toBe(true)
     expect(existsSync(resolve(artifactDir, 'sitemap.xml'))).toBe(true)
-    expect(existsSync(resolve(artifactDir, 'pages-index.xml'))).toBe(true)
-    expect(existsSync(resolve(artifactDir, 'products-index.xml'))).toBe(true)
-    expect(existsSync(resolve(artifactDir, 'categories-index.xml'))).toBe(true)
-    expect(existsSync(resolve(artifactDir, 'pages-0.xml'))).toBe(true)
-    expect(existsSync(resolve(artifactDir, 'products-0.xml'))).toBe(true)
-    expect(existsSync(resolve(artifactDir, 'categories-0.xml'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'pages-sitemap.xml'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'listings-sitemap.xml'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'taxonomies-sitemap.xml'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'docs-sitemap.xml'))).toBe(true)
 
     expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).toContain(
-      '<loc>https://example.com/pages-index.xml</loc>'
+      '<loc>https://example.com/pages-sitemap.xml</loc>'
     )
     expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).toContain(
-      '<loc>https://example.com/products-index.xml</loc>'
+      '<loc>https://example.com/listings-sitemap.xml</loc>'
     )
     expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).toContain(
-      '<loc>https://example.com/categories-index.xml</loc>'
+      '<loc>https://example.com/taxonomies-sitemap.xml</loc>'
+    )
+    expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).toContain(
+      '<loc>https://example.com/docs-sitemap.xml</loc>'
     )
     expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).toContain(
       '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
@@ -73,10 +74,9 @@ describe('writeSplitSitemaps', () => {
       readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')
     )
 
-    const pagesSitemap = readFileSync(resolve(artifactDir, 'pages-0.xml'), 'utf8')
+    const pagesSitemap = readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')
     expect(pagesSitemap).toContain('<loc>https://example.com/</loc>')
     expect(pagesSitemap).toContain('<loc>https://example.com/about</loc>')
-    expect(pagesSitemap).toContain('<loc>https://example.com/docs</loc>')
     expect(pagesSitemap).toContain('<loc>https://example.com/legal/privacy</loc>')
     expect(pagesSitemap).not.toContain('https://example.com/cookies')
     expect(pagesSitemap).not.toContain('https://example.com/news')
@@ -85,18 +85,21 @@ describe('writeSplitSitemaps', () => {
     expect(pagesSitemap).not.toContain('https://example.com/search')
     expect(pagesSitemap).not.toContain('https://example.com/submit')
 
-    const listingSitemap = readFileSync(resolve(artifactDir, 'products-0.xml'), 'utf8')
-    expect(listingSitemap).toContain('<loc>https://example.com/products</loc>')
+    const listingSitemap = readFileSync(resolve(artifactDir, 'listings-sitemap.xml'), 'utf8')
     expect(listingSitemap).toContain('<loc>https://example.com/products/example-tool</loc>')
 
-    const categoriesSitemap = readFileSync(resolve(artifactDir, 'categories-0.xml'), 'utf8')
-    expect(categoriesSitemap).toContain(
+    const taxonomiesSitemap = readFileSync(resolve(artifactDir, 'taxonomies-sitemap.xml'), 'utf8')
+    expect(taxonomiesSitemap).toContain('<loc>https://example.com/products</loc>')
+    expect(taxonomiesSitemap).toContain(
       '<loc>https://example.com/categories/developer-tools</loc>'
     )
-    expect(categoriesSitemap).toContain('<loc>https://example.com/categories/featured</loc>')
+    expect(taxonomiesSitemap).toContain('<loc>https://example.com/categories/featured</loc>')
+
+    const docsSitemap = readFileSync(resolve(artifactDir, 'docs-sitemap.xml'), 'utf8')
+    expect(docsSitemap).toContain('<loc>https://example.com/docs</loc>')
   })
 
-  it('skips the categories sitemap family when there are no category pages', () => {
+  it('skips optional sitemap families when there are no matching public routes', () => {
     const artifactDir = makeTempArtifactDir()
 
     writeFile(resolve(artifactDir, 'index.html'))
@@ -108,10 +111,14 @@ describe('writeSplitSitemaps', () => {
       listingBasePath: 'products'
     })
 
-    expect(existsSync(resolve(artifactDir, 'categories-index.xml'))).toBe(false)
-    expect(existsSync(resolve(artifactDir, 'categories-0.xml'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'taxonomies-sitemap.xml'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'docs-sitemap.xml'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'posts-sitemap.xml'))).toBe(false)
     expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).not.toContain(
-      'categories-index.xml'
+      'docs-sitemap.xml'
+    )
+    expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).not.toContain(
+      'posts-sitemap.xml'
     )
   })
 
@@ -129,13 +136,37 @@ describe('writeSplitSitemaps', () => {
       pageSize: 2
     })
 
-    expect(existsSync(resolve(artifactDir, 'pages-0.xml'))).toBe(true)
-    expect(existsSync(resolve(artifactDir, 'pages-1.xml'))).toBe(true)
-    expect(readFileSync(resolve(artifactDir, 'pages-index.xml'), 'utf8')).toContain(
-      '<loc>https://example.com/pages-0.xml</loc>'
+    expect(existsSync(resolve(artifactDir, 'pages-sitemap-0.xml'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'pages-sitemap-1.xml'))).toBe(true)
+    expect(readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')).toContain(
+      '<loc>https://example.com/pages-sitemap-0.xml</loc>'
     )
-    expect(readFileSync(resolve(artifactDir, 'pages-index.xml'), 'utf8')).toContain(
-      '<loc>https://example.com/pages-1.xml</loc>'
+    expect(readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')).toContain(
+      '<loc>https://example.com/pages-sitemap-1.xml</loc>'
+    )
+  })
+
+  it('excludes configured legacy root listing aliases from sitemap output', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    writeFile(resolve(artifactDir, 'index.html'))
+    writeFile(resolve(artifactDir, 'products/index.html'))
+    writeFile(resolve(artifactDir, 'products/example-tool/index.html'))
+    writeFile(resolve(artifactDir, 'example-tool/index.html'))
+
+    writeSplitSitemaps(artifactDir, {
+      baseUrl: 'https://example.com',
+      excludedPaths: ['/example-tool'],
+      listingBasePath: 'products',
+    })
+
+    const pagesSitemap = readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')
+    const listingsSitemap = readFileSync(resolve(artifactDir, 'listings-sitemap.xml'), 'utf8')
+
+    expect(pagesSitemap).not.toContain('<loc>https://example.com/example-tool</loc>')
+    expect(listingsSitemap).not.toContain('<loc>https://example.com/example-tool</loc>')
+    expect(listingsSitemap).toContain(
+      '<loc>https://example.com/products/example-tool</loc>'
     )
   })
 })

@@ -38,7 +38,8 @@ For the broader pipeline model and the “hosted later, static now” boundary, 
 ### 3. Output artifact
 
 - The deploy artifact is `dist/sites/<site-id>`
-- `apps/web/out` is just the intermediate Next.js export directory
+- The resolved `build.appOutDir` is just the intermediate Next.js export directory.
+  The starter default is still `apps/starter/out`, while active checked-in sites can point elsewhere.
 - Do not deploy `.next` output for this workflow
 
 ### 4. Workflow deploy path

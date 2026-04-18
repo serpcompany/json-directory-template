@@ -1,0 +1,550 @@
+[
+  {
+    "slug": "ai-ad-generator",
+    "name": "AI Ad Generators"
+  },
+  {
+    "slug": "ai-advertising-tools",
+    "name": "AI Advertising"
+  },
+  {
+    "slug": "ai-agents",
+    "name": "AI Agents"
+  },
+  {
+    "slug": "ai-answer-generator",
+    "name": "AI Answer Generator"
+  },
+  {
+    "slug": "ai-art-generators",
+    "name": "AI Art Generators"
+  },
+  {
+    "slug": "ai-automation-tools",
+    "name": "AI Automation"
+  },
+  {
+    "slug": "ai-avatar",
+    "name": "AI Avatars"
+  },
+  {
+    "slug": "ai-book-writer",
+    "name": "AI Book Writers"
+  },
+  {
+    "slug": "ai-business-consultant",
+    "name": "AI Business Consultant"
+  },
+  {
+    "slug": "ai-career-coach",
+    "name": "AI Career Coach"
+  },
+  {
+    "slug": "ai-chatbots",
+    "name": "AI Chatbots"
+  },
+  {
+    "slug": "ai-clip-generator",
+    "name": "AI Clip Generators"
+  },
+  {
+    "slug": "ai-coding",
+    "name": "AI Coding"
+  },
+  {
+    "slug": "ai-colorization-tools",
+    "name": "AI Colorization"
+  },
+  {
+    "slug": "ai-confessional",
+    "name": "AI Confessional"
+  },
+  {
+    "slug": "ai-content-creator",
+    "name": "AI Content Creators"
+  },
+  {
+    "slug": "ai-content-detection",
+    "name": "AI Content Detection"
+  },
+  {
+    "slug": "ai-copywriting",
+    "name": "AI Copywriting"
+  },
+  {
+    "slug": "ai-copywriting-free",
+    "name": "AI Copywriting Free"
+  },
+  {
+    "slug": "ai-cover-generator",
+    "name": "AI Cover Generators"
+  },
+  {
+    "slug": "ai-cover-letter-generator",
+    "name": "AI Cover Letter Generators"
+  },
+  {
+    "slug": "ai-customer-segmentation",
+    "name": "AI Customer Segmentation"
+  },
+  {
+    "slug": "ai-customer-service-agents",
+    "name": "AI Customer Service Agents"
+  },
+  {
+    "slug": "ai-data-analyst",
+    "name": "AI Data Analyst"
+  },
+  {
+    "slug": "ai-data-management",
+    "name": "AI Data Management"
+  },
+  {
+    "slug": "ai-design",
+    "name": "AI Design"
+  },
+  {
+    "slug": "ai-directories",
+    "name": "AI Directories"
+  },
+  {
+    "slug": "ai-doctor",
+    "name": "AI Doctor"
+  },
+  {
+    "slug": "ai-email-generators",
+    "name": "AI Email Generators"
+  },
+  {
+    "slug": "ai-email-marketing",
+    "name": "AI Email Marketing"
+  },
+  {
+    "slug": "ai-email-writing-assistants",
+    "name": "AI Email Writing Assistants"
+  },
+  {
+    "slug": "ai-emoji-generator",
+    "name": "AI Emoji Generators"
+  },
+  {
+    "slug": "ai-event-planner",
+    "name": "AI Event Planner"
+  },
+  {
+    "slug": "ai-field-management",
+    "name": "AI Field Management"
+  },
+  {
+    "slug": "ai-financial-advisor",
+    "name": "AI Financial Advisor"
+  },
+  {
+    "slug": "ai-flyer-generator",
+    "name": "AI Flyer Generators"
+  },
+  {
+    "slug": "ai-game-generator",
+    "name": "AI Game Generators"
+  },
+  {
+    "slug": "ai-graphic-design",
+    "name": "AI Graphic Design"
+  },
+  {
+    "slug": "ai-headshot-generator",
+    "name": "AI Headshot Generators"
+  },
+  {
+    "slug": "ai-image-generators",
+    "name": "AI Image Generators"
+  },
+  {
+    "slug": "ai-insurance",
+    "name": "AI Insurance"
+  },
+  {
+    "slug": "ai-interior-design",
+    "name": "AI Interior Design"
+  },
+  {
+    "slug": "ai-job-search",
+    "name": "AI Job Searching"
+  },
+  {
+    "slug": "ai-knowledge-management",
+    "name": "AI Knowledge Management"
+  },
+  {
+    "slug": "ai-language-teacher",
+    "name": "AI Language Teacher"
+  },
+  {
+    "slug": "ai-lawyer",
+    "name": "AI Lawyer"
+  },
+  {
+    "slug": "ai-lead-generation",
+    "name": "AI Lead Generation"
+  },
+  {
+    "slug": "ai-lyrics-generator",
+    "name": "AI Lyrics Generators"
+  },
+  {
+    "slug": "ai-marketing-tools",
+    "name": "AI Marketing"
+  },
+  {
+    "slug": "ai-meeting-assistant",
+    "name": "AI Meeting Assistants"
+  },
+  {
+    "slug": "ai-meme-generator",
+    "name": "AI Meme Generators"
+  },
+  {
+    "slug": "ai-note-taker",
+    "name": "AI Note Takers"
+  },
+  {
+    "slug": "ai-nutritionist",
+    "name": "AI Nutritionist"
+  },
+  {
+    "slug": "ai-paragraph-rewriter",
+    "name": "AI Paragraph Rewriter"
+  },
+  {
+    "slug": "ai-paraphrasing-tool",
+    "name": "AI Paraphrasing"
+  },
+  {
+    "slug": "ai-personal-trainer",
+    "name": "AI Personal Trainer"
+  },
+  {
+    "slug": "ai-podcast",
+    "name": "AI Podcasting"
+  },
+  {
+    "slug": "ai-poster-generator",
+    "name": "AI Poster Generators"
+  },
+  {
+    "slug": "ai-presentation-maker",
+    "name": "AI Presentation Makers"
+  },
+  {
+    "slug": "ai-product-demos",
+    "name": "AI Product Demos"
+  },
+  {
+    "slug": "ai-productivity-tools",
+    "name": "ai productivity tools"
+  },
+  {
+    "slug": "ai-product-management",
+    "name": "AI Product Management"
+  },
+  {
+    "slug": "ai-product-video-generator",
+    "name": "AI Product Video Generators"
+  },
+  {
+    "slug": "ai-programmer",
+    "name": "AI Programmer"
+  },
+  {
+    "slug": "ai-project-management",
+    "name": "AI Project Management"
+  },
+  {
+    "slug": "ai-prompt-generator",
+    "name": "AI Prompt Generators"
+  },
+  {
+    "slug": "ai-prospecting",
+    "name": "AI Prospecting"
+  },
+  {
+    "slug": "ai-rap-generator",
+    "name": "AI Rap Generators"
+  },
+  {
+    "slug": "ai-real-estate-agent",
+    "name": "AI Real Estate Agent"
+  },
+  {
+    "slug": "ai-recruiting",
+    "name": "AI Recruiting"
+  },
+  {
+    "slug": "ai-resume-builders",
+    "name": "AI Resume Builders"
+  },
+  {
+    "slug": "ai-risk-management",
+    "name": "AI Risk Management"
+  },
+  {
+    "slug": "ai-scheduling-assistants",
+    "name": "AI Scheduling"
+  },
+  {
+    "slug": "ai-script-generator",
+    "name": "AI Script Generators"
+  },
+  {
+    "slug": "ai-seo",
+    "name": "AI SEO"
+  },
+  {
+    "slug": "ai-social-media",
+    "name": "AI Social Media"
+  },
+  {
+    "slug": "ai-story-writers",
+    "name": "AI Story Writers"
+  },
+  {
+    "slug": "ai-stylist",
+    "name": "AI Stylist"
+  },
+  {
+    "slug": "ai-tax-preparation",
+    "name": "AI Tax Preparation"
+  },
+  {
+    "slug": "ai-text-to-speech",
+    "name": "AI Text to Speech"
+  },
+  {
+    "slug": "ai-time-tracking",
+    "name": "ai time tracking"
+  },
+  {
+    "slug": "ai-travel-agent",
+    "name": "AI Travel Agent"
+  },
+  {
+    "slug": "ai-tutor",
+    "name": "AI Tutor"
+  },
+  {
+    "slug": "ai-ugc",
+    "name": "AI UGC"
+  },
+  {
+    "slug": "ai-video-editor",
+    "name": "AI Video Editor"
+  },
+  {
+    "slug": "ai-video-enhancer",
+    "name": "AI Video Enhancers"
+  },
+  {
+    "slug": "ai-video-generators",
+    "name": "AI Video Generators"
+  },
+  {
+    "slug": "ai-voice-bots",
+    "name": "AI Voice Bots"
+  },
+  {
+    "slug": "ai-voice-changers",
+    "name": "AI Voice Changers"
+  },
+  {
+    "slug": "ai-voice-cloning",
+    "name": "AI Voice Cloning"
+  },
+  {
+    "slug": "ai-web-scraping",
+    "name": "AI Web Scraping"
+  },
+  {
+    "slug": "ai-website-builders",
+    "name": "AI Website Builders"
+  },
+  {
+    "slug": "apollo-lead-scrapers",
+    "name": "Apollo Lead Scrapers"
+  },
+  {
+    "slug": "auto-form-fill",
+    "name": "Auto Form Fill"
+  },
+  {
+    "slug": "b2b-ecommerce-platforms",
+    "name": "B2B Ecommerce Platforms"
+  },
+  {
+    "slug": "backlink-companies",
+    "name": "Backlink Companies"
+  },
+  {
+    "slug": "birthday-video-maker",
+    "name": "Birthday Video Makers"
+  },
+  {
+    "slug": "cartoon-video-maker",
+    "name": "Cartoon Video Makers"
+  },
+  {
+    "slug": "catalog-management-software",
+    "name": "Catalog Management Software"
+  },
+  {
+    "slug": "cloud-gpu-providers",
+    "name": "Cloud GPU"
+  },
+  {
+    "slug": "cloud-gpus-for-deep-learning",
+    "name": "Cloud GPUs for Deep Learning"
+  },
+  {
+    "slug": "ctr-bot",
+    "name": "CTR Bot"
+  },
+  {
+    "slug": "ctr-manipulation",
+    "name": "CTR Manipulation"
+  },
+  {
+    "slug": "database-management",
+    "name": "Database Management"
+  },
+  {
+    "slug": "ecommerce-analytics-tools",
+    "name": "Ecommerce Analytics Tools"
+  },
+  {
+    "slug": "ecommerce-merchandising-tools",
+    "name": "Ecommerce Merchandising Tools"
+  },
+  {
+    "slug": "ecommerce-platforms",
+    "name": "Ecommerce Platforms"
+  },
+  {
+    "slug": "face-shape-analyzer",
+    "name": "Face Shape Analyzers"
+  },
+  {
+    "slug": "free-website-submission-directories",
+    "name": "Free Website Submission Directories"
+  },
+  {
+    "slug": "google-search-scraper",
+    "name": "Google Search Scraper"
+  },
+  {
+    "slug": "google-serp-api",
+    "name": "Google SERP API"
+  },
+  {
+    "slug": "hipaa-compliant-hosting",
+    "name": "HIPAA Compliant Hosting"
+  },
+  {
+    "slug": "image-to-video-ai",
+    "name": "Image To Video AI"
+  },
+  {
+    "slug": "link-building-services",
+    "name": "Link Building Services"
+  },
+  {
+    "slug": "local-business-directories",
+    "name": "Local Business Directories"
+  },
+  {
+    "slug": "local-seo",
+    "name": "Local SEO"
+  },
+  {
+    "slug": "lyric-video-maker",
+    "name": "Lyric Video Makers"
+  },
+  {
+    "slug": "marketplace-software",
+    "name": "Marketplace Software"
+  },
+  {
+    "slug": "merchandising-software",
+    "name": "Merchandising Software"
+  },
+  {
+    "slug": "multi-channel-ecommerce-software",
+    "name": "Multi-Channel Ecommerce Software"
+  },
+  {
+    "slug": "nextjs-templates",
+    "name": "Nextjs Templates"
+  },
+  {
+    "slug": "no-code-web-scraper",
+    "name": "No Code Web Scrapers"
+  },
+  {
+    "slug": "order-management-software",
+    "name": "Order Management Software"
+  },
+  {
+    "slug": "plagiarism-checker",
+    "name": "Plagiarism Checker"
+  },
+  {
+    "slug": "react-components",
+    "name": "React Component Libraries"
+  },
+  {
+    "slug": "review-management-software",
+    "name": "Review Management Software"
+  },
+  {
+    "slug": "saas-directories",
+    "name": "SAAS Directories"
+  },
+  {
+    "slug": "script-to-video-ai",
+    "name": "Script To Video AI"
+  },
+  {
+    "slug": "serp-api",
+    "name": "SERP API"
+  },
+  {
+    "slug": "subscription-analytics-software",
+    "name": "Subscription Analytics Software"
+  },
+  {
+    "slug": "tailwind-templates",
+    "name": "Tailwind Templates"
+  },
+  {
+    "slug": "text-to-speech",
+    "name": "Text to Speech"
+  },
+  {
+    "slug": "text-to-video-ai",
+    "name": "Text To Video AI"
+  },
+  {
+    "slug": "ugc-creator",
+    "name": "UGC Creator"
+  },
+  {
+    "slug": "web-proxy",
+    "name": "Web Proxies"
+  },
+  {
+    "slug": "website-submission-directories",
+    "name": "Website Submission Directories"
+  },
+  {
+    "slug": "other",
+    "name": "Other"
+  }
+]

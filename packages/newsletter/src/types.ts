@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-// Common validation schemas - matching exactly what's in apps/web
+// Common validation schemas - matching exactly what's in apps/starter
 export const subscribeSchema = z.object({
   email: z.string().email('Invalid email address'),
   groups: z.array(z.string()).optional()

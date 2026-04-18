@@ -15,11 +15,14 @@ import {
 import { dirname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { categories } from '../apps/web/lib/categories.ts';
+import { categories } from '@thedaviddias/web-core/categories';
+import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases';
+import type { AssetSource } from '@thedaviddias/site-contract/types';
 import {
   buildSiteEnvironment,
   loadCheckedInSiteFromInput,
   parseSiteInputArgs,
+  resolveSiteAppPackageName,
   resolveSiteAppOutDir,
   resolveSiteArtifactDir,
   type SiteInputTarget,
@@ -28,34 +31,71 @@ import { createRunTempDir } from './run-context.ts';
 import { writeSplitSitemaps } from './sitemap-files.ts';
 import { prepareSiteData } from './site-data.ts';
 import { validateSite } from './validate-site.ts';
-import type { AssetSource } from '../sites/types.ts';
 
 const workspaceRoot = resolve(process.cwd());
-const authRoutePath = resolve(
-  workspaceRoot,
-  'apps/web/app/api/auth/[...nextauth]/route.ts'
-);
-const authRouteBackupPath = resolve(
-  workspaceRoot,
-  'apps/web/app/api/auth/[...nextauth]/route.static-export-disabled.ts'
-);
-const operatorOnboardingPagePath = resolve(
-  workspaceRoot,
-  'apps/web/app/operator/onboard-site/page.tsx'
-);
-const operatorOnboardingPageBackupPath = resolve(
-  workspaceRoot,
-  'apps/web/app/operator/onboard-site/page.static-export-disabled.tsx'
-);
-const searchIndexPath = resolve(
-  workspaceRoot,
-  'apps/web/public/search/search-index.json'
-);
 
 type StagedPath = {
   activePath: string;
   backupPath: string;
 };
+
+type BuildSourceAppPaths = {
+  accountRoutePath: string;
+  appDir: string;
+  appleTouchIconPath: string;
+  authRouteBackupPath: string;
+  authRoutePath: string;
+  docsRoutePath: string;
+  favoritesRoutePath: string;
+  faviconPath: string;
+  guidesRoutePath: string;
+  loginRoutePath: string;
+  logoPath: string;
+  opengraphImagePath: string;
+  operatorOnboardingPageBackupPath: string;
+  operatorOnboardingPagePath: string;
+  projectsRoutePath: string;
+  searchIndexPath: string;
+};
+
+export function resolveBuildSourceAppPaths({
+  appOutDir,
+  workspaceRoot = process.cwd(),
+}: {
+  appOutDir: string;
+  workspaceRoot?: string;
+}): BuildSourceAppPaths {
+  const resolvedAppOutDir = resolve(workspaceRoot, appOutDir);
+  const appDir = dirname(resolvedAppOutDir);
+
+  return {
+    accountRoutePath: resolve(appDir, 'app/account'),
+    appDir,
+    appleTouchIconPath: resolve(appDir, 'public/apple-touch-icon.png'),
+    authRouteBackupPath: resolve(
+      appDir,
+      'app/api/auth/[...nextauth]/route.static-export-disabled'
+    ),
+    authRoutePath: resolve(appDir, 'app/api/auth/[...nextauth]/route.ts'),
+    docsRoutePath: resolve(appDir, 'app/docs'),
+    favoritesRoutePath: resolve(appDir, 'app/favorites'),
+    faviconPath: resolve(appDir, 'app/favicon.ico'),
+    guidesRoutePath: resolve(appDir, 'app/guides'),
+    loginRoutePath: resolve(appDir, 'app/login'),
+    logoPath: resolve(appDir, 'public/logo.png'),
+    opengraphImagePath: resolve(appDir, 'app/opengraph-image.png'),
+    operatorOnboardingPageBackupPath: resolve(
+      appDir,
+      'app/operator/onboard-site/page.static-export-disabled'
+    ),
+    operatorOnboardingPagePath: resolve(
+      appDir,
+      'app/operator/onboard-site/page.tsx'
+    ),
+    projectsRoutePath: resolve(appDir, 'app/projects'),
+    searchIndexPath: resolve(appDir, 'public/search/search-index.json'),
+  };
+}
 
 function run(command: string, args: string[], env: NodeJS.ProcessEnv): void {
   const result = spawnSync(command, args, {
@@ -156,15 +196,19 @@ function prepareSearchIndex(
   env: NodeJS.ProcessEnv
 ): { restore: () => void } {
   const definition = loadCheckedInSiteFromInput(input);
+  const sourceAppPaths = resolveBuildSourceAppPaths({
+    appOutDir: resolveSiteAppOutDir(definition),
+    workspaceRoot,
+  });
   const restoreDir = createRunTempDir('build-site-search', definition.id);
   const backupPath = resolve(restoreDir.path, 'search-index.json.backup');
-  const hadOriginal = backupFile(searchIndexPath, backupPath);
+  const hadOriginal = backupFile(sourceAppPaths.searchIndexPath, backupPath);
 
   run('pnpm', ['tsx', 'scripts/search-index-generator.ts'], env);
 
   return {
     restore: () => {
-      restoreFile(searchIndexPath, backupPath, hadOriginal);
+      restoreFile(sourceAppPaths.searchIndexPath, backupPath, hadOriginal);
       restoreDir.cleanup();
     },
   };
@@ -312,6 +356,10 @@ async function prepareBrandAssets(
   input: SiteInputTarget
 ): Promise<{ restore: () => void }> {
   const siteConfig = loadCheckedInSiteFromInput(input);
+  const sourceAppPaths = resolveBuildSourceAppPaths({
+    appOutDir: resolveSiteAppOutDir(siteConfig),
+    workspaceRoot,
+  });
   const restoreDir = createRunTempDir('build-site-assets', siteConfig.id);
   const stages: AssetStage[] = [];
 
@@ -336,7 +384,7 @@ async function prepareBrandAssets(
     stages.push(
       stageLocalAsset(
         faviconSourcePath,
-        resolve(workspaceRoot, 'apps/web/app/favicon.ico'),
+        sourceAppPaths.faviconPath,
         resolve(restoreDir.path, 'favicon.ico.backup')
       )
     );
@@ -363,14 +411,14 @@ async function prepareBrandAssets(
     stages.push(
       stageLocalAsset(
         logoSourcePath,
-        resolve(workspaceRoot, 'apps/web/public/logo.png'),
+        sourceAppPaths.logoPath,
         resolve(restoreDir.path, 'logo.png.backup')
       )
     );
     stages.push(
       stageLocalAsset(
         logoSourcePath,
-        resolve(workspaceRoot, 'apps/web/public/apple-touch-icon.png'),
+        sourceAppPaths.appleTouchIconPath,
         resolve(restoreDir.path, 'apple-touch-icon.png.backup')
       )
     );
@@ -397,7 +445,7 @@ async function prepareBrandAssets(
     stages.push(
       stageLocalAsset(
         opengraphImageSourcePath,
-        resolve(workspaceRoot, 'apps/web/app/opengraph-image.png'),
+        sourceAppPaths.opengraphImagePath,
         resolve(restoreDir.path, 'opengraph-image.png.backup')
       )
     );
@@ -417,42 +465,14 @@ async function prepareBrandAssets(
   };
 }
 
-function disableAuthRouteForStaticExport(): void {
-  if (!existsSync(authRoutePath)) {
-    return;
-  }
-
-  renameSync(authRoutePath, authRouteBackupPath);
-}
-
-function restoreAuthRouteAfterStaticExport(): void {
-  if (!existsSync(authRouteBackupPath)) {
-    return;
-  }
-
-  renameSync(authRouteBackupPath, authRoutePath);
-}
-
-function disableOperatorOnboardingForStaticExport(): void {
-  if (!existsSync(operatorOnboardingPagePath)) {
-    return;
-  }
-
-  renameSync(operatorOnboardingPagePath, operatorOnboardingPageBackupPath);
-}
-
-function restoreOperatorOnboardingAfterStaticExport(): void {
-  if (!existsSync(operatorOnboardingPageBackupPath)) {
-    return;
-  }
-
-  renameSync(operatorOnboardingPageBackupPath, operatorOnboardingPagePath);
-}
-
 function prepareDisabledRoutesForStaticExport(
   input: SiteInputTarget
 ): { restore: () => void } {
   const definition = loadCheckedInSiteFromInput(input);
+  const sourceAppPaths = resolveBuildSourceAppPaths({
+    appOutDir: resolveSiteAppOutDir(definition),
+    workspaceRoot,
+  });
   const restoreDir = createRunTempDir('build-site-routes', definition.id);
   const stages: StagedPath[] = [];
 
@@ -468,24 +488,24 @@ function prepareDisabledRoutesForStaticExport(
   };
 
   if (!definition.features.showAuth) {
-    maybeStage('apps/web/app/account', 'account');
-    maybeStage('apps/web/app/login', 'login');
+    maybeStage(sourceAppPaths.accountRoutePath, 'account');
+    maybeStage(sourceAppPaths.loginRoutePath, 'login');
   }
 
   if (!definition.features.showFavorites) {
-    maybeStage('apps/web/app/favorites', 'favorites');
+    maybeStage(sourceAppPaths.favoritesRoutePath, 'favorites');
   }
 
   if (!definition.features.showProjects) {
-    maybeStage('apps/web/app/projects', 'projects');
+    maybeStage(sourceAppPaths.projectsRoutePath, 'projects');
   }
 
   if (!definition.features.showDocs) {
-    maybeStage('apps/web/app/docs', 'docs');
+    maybeStage(sourceAppPaths.docsRoutePath, 'docs');
   }
 
   if (!definition.features.showGuides) {
-    maybeStage('apps/web/app/guides', 'guides');
+    maybeStage(sourceAppPaths.guidesRoutePath, 'guides');
   }
 
   return {
@@ -568,6 +588,28 @@ type ArtifactPublicRoutePaths = {
   networkBasePath: string;
 };
 
+type LegacyRootListingRedirectInput = {
+  listingBasePath: string;
+  siteId: string;
+};
+
+function buildStaticRedirectHtml(destinationPath: string): string {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0; url=${destinationPath}">
+    <link rel="canonical" href="${destinationPath}">
+    <script>window.location.replace(${JSON.stringify(destinationPath)});</script>
+  </head>
+  <body>
+    <p>Redirecting to <a href="${destinationPath}">${destinationPath}</a>.</p>
+  </body>
+</html>
+`;
+}
+
 export function applyConfiguredPublicRoutePaths(
   artifactDir: string,
   paths: ArtifactPublicRoutePaths
@@ -577,6 +619,38 @@ export function applyConfiguredPublicRoutePaths(
   applyPublicRouteBasePath(artifactDir, 'guides', 'posts');
   applyPublicRouteBasePath(artifactDir, 'projects', paths.networkBasePath);
   applyCategoryRoutePaths(artifactDir);
+}
+
+export function applyLegacyRootListingRedirects(
+  artifactDir: string,
+  input: LegacyRootListingRedirectInput
+): void {
+  const legacySlugs = getSiteRootListingAliases(input.siteId);
+
+  if (!legacySlugs?.length) {
+    return;
+  }
+
+  const normalizedListingBasePath = input.listingBasePath.replace(/^\/+|\/+$/g, '');
+
+  for (const slug of legacySlugs) {
+    const destinationPath = `/${normalizedListingBasePath}/${slug}/`;
+    const targetListingPath = resolve(
+      artifactDir,
+      normalizedListingBasePath,
+      slug,
+      'index.html'
+    );
+
+    if (!existsSync(targetListingPath)) {
+      continue;
+    }
+
+    const redirectPagePath = resolve(artifactDir, slug, 'index.html');
+    removeArtifactPath(resolve(artifactDir, slug));
+    mkdirSync(dirname(redirectPagePath), { recursive: true });
+    writeFileSync(redirectPagePath, buildStaticRedirectHtml(destinationPath));
+  }
 }
 
 function pruneArtifactTree(path: string): void {
@@ -646,6 +720,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
   const definition = loadCheckedInSiteFromInput(input);
   const appOutDir = resolveSiteAppOutDir(definition);
   const artifactDir = resolveSiteArtifactDir(definition);
+  const legacySlugs = getSiteRootListingAliases(definition.id);
   const notFoundSourcePath = resolve(appOutDir, '_not-found/index.html');
   const notFoundTargetPath = resolve(artifactDir, '404.html');
   const noJekyllPath = resolve(artifactDir, '.nojekyll');
@@ -671,8 +746,13 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     listingBasePath: definition.routes.listingBasePath,
     networkBasePath: definition.routes.networkBasePath,
   });
+  applyLegacyRootListingRedirects(artifactDir, {
+    listingBasePath: definition.routes.listingBasePath,
+    siteId: definition.id,
+  });
   writeSplitSitemaps(artifactDir, {
     baseUrl: definition.site.publicUrl,
+    excludedPaths: legacySlugs.map(slug => `/${slug}`),
     listingBasePath: definition.routes.listingBasePath,
   });
 
@@ -682,6 +762,11 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
 
 export async function runBuildSite(input: SiteInputTarget): Promise<void> {
   const definition = loadCheckedInSiteFromInput(input);
+  const appPackageName = resolveSiteAppPackageName(definition);
+  const sourceAppPaths = resolveBuildSourceAppPaths({
+    appOutDir: resolveSiteAppOutDir(definition),
+    workspaceRoot,
+  });
   validateSite(input);
   const env = {
     ...process.env,
@@ -695,15 +780,29 @@ export async function runBuildSite(input: SiteInputTarget): Promise<void> {
   const brandAssetState = await prepareBrandAssets(input);
   const routeState = prepareDisabledRoutesForStaticExport(input);
 
-  disableAuthRouteForStaticExport();
-  disableOperatorOnboardingForStaticExport();
+  if (existsSync(sourceAppPaths.authRoutePath)) {
+    renameSync(sourceAppPaths.authRoutePath, sourceAppPaths.authRouteBackupPath);
+  }
+  if (existsSync(sourceAppPaths.operatorOnboardingPagePath)) {
+    renameSync(
+      sourceAppPaths.operatorOnboardingPagePath,
+      sourceAppPaths.operatorOnboardingPageBackupPath
+    );
+  }
 
   try {
-    run('pnpm', ['--filter', 'web', 'build'], env);
+    run('pnpm', ['--filter', appPackageName, 'build'], env);
     finalizeArtifactDir(input);
   } finally {
-    restoreOperatorOnboardingAfterStaticExport();
-    restoreAuthRouteAfterStaticExport();
+    if (existsSync(sourceAppPaths.operatorOnboardingPageBackupPath)) {
+      renameSync(
+        sourceAppPaths.operatorOnboardingPageBackupPath,
+        sourceAppPaths.operatorOnboardingPagePath
+      );
+    }
+    if (existsSync(sourceAppPaths.authRouteBackupPath)) {
+      renameSync(sourceAppPaths.authRouteBackupPath, sourceAppPaths.authRoutePath);
+    }
     routeState.restore();
     brandAssetState.restore();
     searchIndexState.restore();

@@ -2,6 +2,14 @@
 
 Use this checklist after the wash pass and before calling the JSON-first MVP closeout complete.
 
+Historical note:
+
+- older entries in this checklist mention `serp.software` from an earlier proof-site pass
+- `serpdownloaders.com` is now the only active non-default site in the current runtime/build/deploy
+  graph
+- treat the `serp.software` references below as historical verification notes, not current active
+  requirements
+
 ## 1. Wash alignment
 
 - [x] active planning docs point at the current closeout sequence:
@@ -26,8 +34,6 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 - [x] `pnpm build:site -- --site default` succeeds
 - [x] `pnpm validate:site -- --site serpdownloaders.com` succeeds
 - [x] `pnpm build:site -- --site serpdownloaders.com` succeeds
-- [x] `pnpm validate:site -- --site serp.software` succeeds
-- [x] `pnpm build:site -- --site serp.software` succeeds
 - [x] build output lands in `dist/sites/<site-id>`
 - [x] build still stages configured assets correctly
 - [x] route base path still resolves from checked-in site config
@@ -76,7 +82,6 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 
 - [x] homepage loads for `default`
 - [x] homepage loads for `serpdownloaders.com`
-- [x] homepage loads for `serp.software`
 - [x] at least one listing detail page loads for each verified site
 - [x] search page loads and returns results
 - [x] submit page loads and shows the expected category choices

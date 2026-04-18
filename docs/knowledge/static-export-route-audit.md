@@ -1,5 +1,11 @@
 # Static Export Route Audit
 
+Historical note:
+
+- This audit captures the static export surface at the time of the Pages cleanup work.
+- Any `apps/web/**` references below should be treated as historical route/build snapshots.
+- Use current build pipeline and wrapper docs for present-day ownership and output paths.
+
 ## What happened
 
 The GitHub Pages POC proved the deploy flow, but it also exposed that the factory build was exporting too much of the original starter app into target repos.

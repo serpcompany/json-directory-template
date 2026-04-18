@@ -1,14 +1,21 @@
 import { z } from 'zod';
 import {
   defaultSiteConfig,
+  DEFAULT_STARTER_APP_OUT_DIR,
+  DEFAULT_STARTER_APP_PACKAGE_NAME,
   resolveCheckedInSiteConfig,
+} from '@thedaviddias/site-contract';
+import {
   type CheckedInSiteConfig,
-} from '../sites/index.ts';
+} from '@thedaviddias/site-contract/types';
 
 const reservedPublicRouteBasePaths = {
   categories: 'Public category pages always use /categories/[slug].',
-  pages:
-    'The static sitemap generator reserves pages-*.xml and pages-index.xml for non-listing pages.',
+  'pages-sitemap': 'The app reserves /pages-sitemap.xml for the static pages sitemap.',
+  'listings-sitemap': 'The app reserves /listings-sitemap.xml for listing detail URLs.',
+  'taxonomies-sitemap': 'The app reserves /taxonomies-sitemap.xml for listing index and category URLs.',
+  'docs-sitemap': 'The app reserves /docs-sitemap.xml for docs URLs.',
+  'posts-sitemap': 'The app reserves /posts-sitemap.xml for post URLs.',
   sitemap:
     'The static sitemap generator reserves sitemap-index.xml for the top-level sitemap index.',
   posts: 'Public editorial posts always use /posts/[slug] when enabled.',
@@ -91,7 +98,8 @@ const checkedInSiteConfigSchema = z.object({
     opengraphImage: assetSourceSchema.optional(),
   }),
   build: z.object({
-    appOutDir: z.string().min(1).default('apps/web/out'),
+    appPackageName: z.string().min(1).default(DEFAULT_STARTER_APP_PACKAGE_NAME),
+    appOutDir: z.string().min(1).default(DEFAULT_STARTER_APP_OUT_DIR),
     artifactDir: z.string().min(1),
     mode: z.literal('static-directory').default('static-directory'),
   }),
@@ -247,6 +255,12 @@ export function resolveSiteArtifactDir(
   siteConfig: CheckedInSiteConfig
 ): string {
   return siteConfig.build.artifactDir;
+}
+
+export function resolveSiteAppPackageName(
+  siteConfig: CheckedInSiteConfig
+): string {
+  return siteConfig.build.appPackageName;
 }
 
 export function resolveSiteAppOutDir(siteConfig: CheckedInSiteConfig): string {
