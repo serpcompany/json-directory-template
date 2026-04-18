@@ -71,8 +71,8 @@ Acceptance:
       `packages/site-contract` and `sites/<site>`.
 - [x] Migrate the coupled content-loading layer using the app-load / package-query split.
 - [x] Consolidate remaining file-backed resource loading behind the same boundary.
-- [ ] Create an `apps/serpdownloaders.com` wrapper.
-- [ ] Repoint build/validate/deploy flows to the wrapper app without changing artifacts.
+- [x] Create an `apps/serpdownloaders.com` wrapper.
+- [x] Repoint build/validate/deploy flows to the wrapper app without changing artifacts.
 - [ ] Delete dead `apps/web/lib/*` shims after direct package imports settle.
 
 Acceptance:
@@ -101,8 +101,11 @@ Status note:
 
 - `packages/web-core` and `packages/site-contract` now own most of the low-coupling shared helper
   slices.
-- The biggest remaining migration item is still `apps/web/lib/content-loader.ts` and adjacent
-  file-backed content access.
+- `apps/serpdownloaders.com` now exists as the first thin wrapper app, and `build:site` reaches
+  the active site through that wrapper package while `apps/web` remains the canonical
+  implementation.
+- The biggest remaining migration item is deleting the leftover `apps/web/lib/*` compatibility
+  shims once direct package imports are fully settled.
 - Full execution plan for the remaining wrapper migration now lives in:
   [docs/superpowers/plans/2026-04-18-wrapper-app-migration.md](/Users/devin/dev/repos/json-directory-template/docs/superpowers/plans/2026-04-18-wrapper-app-migration.md)
 
@@ -118,8 +121,8 @@ handled as its own reviewable unit.
    not be expanded further without a new task that reintroduces app-layer file-backed resources.
 3. [x] Task 3: document thin-wrapper responsibilities plus explicit ownership for `packages/web-core`,
        `packages/site-contract`, and `sites/<site>` in docs
-4. [ ] Task 4: create `apps/serpdownloaders.com` thin wrapper skeleton
-5. [ ] Task 5: repoint build/validate/deploy to the wrapper app
+4. [x] Task 4: create `apps/serpdownloaders.com` thin wrapper skeleton
+5. [x] Task 5: repoint build/validate/deploy to the wrapper app
 6. [ ] Task 6: remove dead `apps/web/lib/*` re-export shims
 7. [ ] Task 7: run the final Phase 4 acceptance pass
 

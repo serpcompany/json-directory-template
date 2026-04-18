@@ -3,6 +3,7 @@ import type { CheckedInSiteConfig } from './types';
 export const defaultSiteConfig: CheckedInSiteConfig = {
   branding: {},
   build: {
+    appPackageName: 'web',
     appOutDir: 'apps/web/out',
     artifactDir: 'dist/sites/default',
     mode: 'static-directory',

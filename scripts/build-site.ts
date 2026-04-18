@@ -22,6 +22,7 @@ import {
   buildSiteEnvironment,
   loadCheckedInSiteFromInput,
   parseSiteInputArgs,
+  resolveSiteAppPackageName,
   resolveSiteAppOutDir,
   resolveSiteArtifactDir,
   type SiteInputTarget,
@@ -741,6 +742,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
 
 export async function runBuildSite(input: SiteInputTarget): Promise<void> {
   const definition = loadCheckedInSiteFromInput(input);
+  const appPackageName = resolveSiteAppPackageName(definition);
   validateSite(input);
   const env = {
     ...process.env,
@@ -758,7 +760,7 @@ export async function runBuildSite(input: SiteInputTarget): Promise<void> {
   disableOperatorOnboardingForStaticExport();
 
   try {
-    run('pnpm', ['--filter', 'web', 'build'], env);
+    run('pnpm', ['--filter', appPackageName, 'build'], env);
     finalizeArtifactDir(input);
   } finally {
     restoreOperatorOnboardingAfterStaticExport();

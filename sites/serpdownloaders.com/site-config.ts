@@ -19,6 +19,7 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     },
   },
   build: {
+    appPackageName: 'serpdownloaders.com',
     artifactDir: 'dist/sites/serpdownloaders.com',
   },
   content: {

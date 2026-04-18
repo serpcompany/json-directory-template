@@ -109,6 +109,7 @@ export type CheckedInSiteConfig = {
     opengraphImage?: AssetSource;
   };
   build: {
+    appPackageName: string;
     appOutDir: string;
     artifactDir: string;
     mode: 'static-directory';

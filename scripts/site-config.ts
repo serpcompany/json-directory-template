@@ -93,6 +93,7 @@ const checkedInSiteConfigSchema = z.object({
     opengraphImage: assetSourceSchema.optional(),
   }),
   build: z.object({
+    appPackageName: z.string().min(1).default('web'),
     appOutDir: z.string().min(1).default('apps/web/out'),
     artifactDir: z.string().min(1),
     mode: z.literal('static-directory').default('static-directory'),
@@ -249,6 +250,12 @@ export function resolveSiteArtifactDir(
   siteConfig: CheckedInSiteConfig
 ): string {
   return siteConfig.build.artifactDir;
+}
+
+export function resolveSiteAppPackageName(
+  siteConfig: CheckedInSiteConfig
+): string {
+  return siteConfig.build.appPackageName;
 }
 
 export function resolveSiteAppOutDir(siteConfig: CheckedInSiteConfig): string {
