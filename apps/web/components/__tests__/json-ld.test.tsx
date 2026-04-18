@@ -1,6 +1,6 @@
 import { headers } from 'next/headers'
 import React from 'react'
-import { JsonLd } from '@/components/json-ld'
+import { JsonLd } from '@thedaviddias/web-core/json-ld'
 
 jest.mock('next/headers', () => ({
   headers: jest.fn()

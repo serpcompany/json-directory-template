@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
-import { SiteOnboardingForm } from '@/components/operator/site-onboarding-form'
 import { isOperatorUiEnabled } from '@/lib/operator-mode'
 import { loadOperatorOnboardingDocument } from '@thedaviddias/site-contract/operator-onboarding-server'
+import { SiteOnboardingForm } from '@thedaviddias/web-core/operator/site-onboarding-form'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 export const metadata = {

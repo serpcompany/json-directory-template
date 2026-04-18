@@ -1,10 +1,10 @@
 import { render, screen } from '@/test/test-utils';
-import { Footer } from '@/components/layout/footer';
+import { Footer } from '@thedaviddias/web-core/layout/footer';
 import { getRoute } from '@thedaviddias/web-core/routes';
 import { siteCopy } from '@thedaviddias/web-core/site-copy';
 import { siteConfig } from '@thedaviddias/web-core/site-config';
 
-jest.mock('@/components/mode-toggle', () => ({
+jest.mock('@thedaviddias/web-core/mode-toggle', () => ({
   ModeToggle: () => <button type="button">Toggle theme</button>,
 }));
 

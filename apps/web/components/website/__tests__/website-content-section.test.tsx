@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { WebsiteContentSection } from '@/components/website/website-content-section';
+import { WebsiteContentSectionRoute as WebsiteContentSection } from '@thedaviddias/web-core/website/website-content-section-route';
 import type { WebsiteMetadata } from '@/lib/content-loader';
 
 jest.mock('next-mdx-remote/rsc', () => ({

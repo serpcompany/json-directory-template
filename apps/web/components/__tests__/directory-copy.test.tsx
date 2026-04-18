@@ -1,25 +1,25 @@
 import { render, screen } from '@/test/test-utils'
-import { CategoryWebsitesList } from '@/components/category-websites-list'
-import { StaticWebsitesList } from '@/components/static-websites-list'
-import { WebsitesListWithSort } from '@/components/websites-list-with-sort'
-import { WebsitesListWithSearch } from '@/components/websites-list-with-search'
+import { CategoryWebsitesListRoute as CategoryWebsitesList } from '@thedaviddias/web-core/category-websites-list-route'
+import { StaticWebsitesListRoute as StaticWebsitesList } from '@thedaviddias/web-core/sections/static-websites-list-route'
+import { WebsitesListWithSortRoute as WebsitesListWithSort } from '@thedaviddias/web-core/websites-list-with-sort-route'
+import { WebsitesListWithSearchRoute as WebsitesListWithSearch } from '@thedaviddias/web-core/websites-list-with-search-route'
 import { siteCopy } from '@thedaviddias/web-core/site-copy'
 
-jest.mock('@/components/analytics-tracker', () => ({
+jest.mock('@thedaviddias/web-core/root-shell-client', () => ({
   useAnalyticsEvents: () => ({
     trackSearch: jest.fn(),
     trackSortChange: jest.fn()
   })
 }))
 
-jest.mock('@/hooks/use-favorites-filter', () => ({
+jest.mock('@thedaviddias/web-core/hooks/use-favorites-filter', () => ({
   useFavoritesFilter: (websites: unknown[]) => ({
     favoriteWebsites: websites,
     hasFavorites: false
   })
 }))
 
-jest.mock('@/components/llm/llm-grid', () => ({
+jest.mock('@thedaviddias/web-core/llm/llm-grid', () => ({
   LLMGrid: () => <div data-testid="llm-grid" />
 }))
 

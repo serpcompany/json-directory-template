@@ -1,8 +1,8 @@
 import { render, screen } from '@/test/test-utils'
-import { WebsitesListWithSort } from '@/components/websites-list-with-sort'
+import { WebsitesListWithSortRoute as WebsitesListWithSort } from '@thedaviddias/web-core/websites-list-with-sort-route'
 import type { WebsiteMetadata } from '@/lib/content-loader'
 
-jest.mock('@/components/analytics-tracker', () => ({
+jest.mock('@thedaviddias/web-core/root-shell-client', () => ({
   useAnalyticsEvents: () => ({
     trackSortChange: jest.fn()
   })

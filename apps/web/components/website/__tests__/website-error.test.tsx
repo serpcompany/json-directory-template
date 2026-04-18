@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { WebsiteError } from '@/components/website/website-error'
+import { WebsiteErrorRoute as WebsiteError } from '@thedaviddias/web-core/website/website-error-route'
 
 describe('WebsiteError', () => {
   it('renders the generic website error state through the package-owned wrapper', () => {

@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { WebsiteHero } from '@/components/website/website-hero'
+import { WebsiteHeroRoute as WebsiteHero } from '@thedaviddias/web-core/website/website-hero-route'
 import type { WebsiteMetadata } from '@/lib/content-loader'
 
 jest.mock('@thedaviddias/design-system/breadcrumb', () => ({

@@ -2,15 +2,34 @@ import { render, screen } from '@/test/test-utils'
 
 const mockNotFound = jest.fn()
 const mockSiteConfig = {
+  branding: {
+    appleTouchIconUrl: 'https://example.com/apple-touch-icon.png',
+    faviconUrl: 'https://example.com/favicon.ico',
+    logoUrl: 'https://example.com/logo.png',
+    ogImageUrl: 'https://example.com/opengraph-image.png'
+  },
+  copy: {
+    listingName: {
+      plural: 'listings',
+      singular: 'listing'
+    },
+    submitLabel: 'Submit a Listing'
+  },
+  description: 'Curated directory of listings and resources.',
   docsRouteBasePath: 'docs',
   features: {
     showAuth: true
   },
   listingRouteBasePath: 'listing',
-  networkRouteBasePath: 'network'
+  name: 'Directory Starter',
+  networkRouteBasePath: 'network',
+  publicUrl: 'https://example.com',
+  tagline: 'Discover listings and resources',
+  twitterUrl: 'https://x.com/serpcompany'
 }
 
 jest.mock('@thedaviddias/web-core/site-config', () => ({
+  hasConfiguredPublicSocialLinks: jest.fn(() => false),
   getTwitterHandleFromUrl: jest.fn(() => '@serpcompany'),
   siteConfig: mockSiteConfig
 }))
@@ -21,7 +40,7 @@ jest.mock('@/lib/auth', () => ({
   isGitHubAuthConfigured: jest.fn(() => true)
 }))
 
-jest.mock('@/components/auth/github-sign-in-button', () => ({
+jest.mock('@thedaviddias/web-core/auth/github-sign-in-button', () => ({
   GitHubSignInButton: ({ disabled }: { disabled?: boolean }) => (
     <button type="button" disabled={disabled}>
       Continue with GitHub

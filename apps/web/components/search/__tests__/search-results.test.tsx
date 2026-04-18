@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { SearchResults } from '@/components/search/search-results'
+import { SearchResultsRoute as SearchResults } from '@thedaviddias/web-core/search/search-results-route'
 import { useSearch } from '@thedaviddias/web-core/search/use-search'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 

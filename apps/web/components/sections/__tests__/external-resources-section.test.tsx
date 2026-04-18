@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
+import { ExternalResourcesSectionRoute as ExternalResourcesSection } from '@thedaviddias/web-core/sections/external-resources-section-route'
 
 describe('ExternalResourcesSection', () => {
   it('does not ship llms-specific external tool cards in the default starter', () => {

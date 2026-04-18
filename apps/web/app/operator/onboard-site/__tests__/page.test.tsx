@@ -37,7 +37,7 @@ jest.mock('@thedaviddias/web-core/site-config', () => ({
   }
 }))
 
-jest.mock('@/components/operator/site-onboarding-form', () => ({
+jest.mock('@thedaviddias/web-core/operator/site-onboarding-form', () => ({
   SiteOnboardingForm: () => <div>Mock Site Onboarding Form</div>
 }))
 

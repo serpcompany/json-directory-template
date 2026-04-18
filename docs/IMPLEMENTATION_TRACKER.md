@@ -31,6 +31,25 @@ Reference architectures:
 
 ## Immediate Queue
 
+### Phase 7. Apps Web Normalization
+
+- [x] Record the new decision explicitly: active-site wrapper work is complete, and the remaining
+      architecture work is normalizing `apps/web` into an intentional thin starter wrapper rather
+      than a privileged implementation app.
+- [x] Extract remaining starter-wide/public route surfaces out of `apps/web/components/**` into
+      packages.
+  Login/auth button, submit form/guidelines, and operator onboarding now live in `packages/web-core`,
+  and the `apps/web` login/submit/operator routes import those package-owned surfaces directly.
+- [ ] Normalize tooling and defaults that still hardcode or privilege `apps/web`.
+  Hooks, validators, default site config, and docs still treat `apps/web` as special in places.
+- [ ] Delete dead compatibility shims in `apps/web/components/**` once their consumers import
+      package-owned modules directly.
+
+Acceptance:
+
+- [ ] `apps/web` is an intentional thin starter wrapper rather than a privileged implementation app.
+- [ ] Tooling/defaults/docs no longer hide hard dependencies on `apps/web`.
+
 ### Phase 6. Thin-Wrapper Completion
 
 - [x] Correct the tracker/plan state so it matches the current repo shape.
@@ -57,8 +76,9 @@ Reference architectures:
   now also live in `packages/web-core`, the active wrapper's explicit local support graph in
   `apps/serpdownloaders.com/components/**` has been eliminated, and `apps/web/app/**` now imports
   those package-owned route/UI modules directly instead of routing through local compatibility
-  wrappers. Remaining `apps/web/components/**` debt is legacy shim cleanup for non-route consumers
-  plus truly app-specific/operator UI.
+  wrappers, and the first batch of route-only compatibility shims has been deleted. Remaining
+  `apps/web/components/**` debt is legacy shim cleanup for non-route consumers plus truly
+  app-specific/operator UI.
 - [x] Stop treating `apps/web` as the canonical implementation app for the active site.
 - [x] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
 - [x] Remove remaining build-source assumptions that still hardcode `apps/web` as the source app.

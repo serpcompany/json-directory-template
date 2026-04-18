@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { Header } from '@/components/layout/header'
+import { Header } from '@thedaviddias/web-core/layout/header'
 import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 

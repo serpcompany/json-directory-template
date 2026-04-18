@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section'
+import { FeaturedGuidesSectionRoute as FeaturedGuidesSection } from '@thedaviddias/web-core/sections/featured-guides-section-route'
 
 jest.mock('@thedaviddias/web-core/sections/guide-card-route', () => ({
   GuideCardRoute: ({ guide }: { guide: { title: string } }) => (

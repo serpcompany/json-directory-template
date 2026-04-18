@@ -1,6 +1,6 @@
 'use client'
 
-import { GitHubIssueSubmitForm } from '@/components/forms/github-issue-submit-form'
+import { GitHubIssueSubmitForm } from '@thedaviddias/web-core/forms/github-issue-submit-form'
 
 export default function SubmitPage() {
   return (

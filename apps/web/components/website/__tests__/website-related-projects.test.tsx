@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { WebsiteRelatedProjects } from '@/components/website/website-related-projects'
+import { WebsiteRelatedProjectsRoute as WebsiteRelatedProjects } from '@thedaviddias/web-core/website/website-related-projects-route'
 
 jest.mock('@thedaviddias/web-core/llm/llm-grid', () => ({
   LLMGrid: ({ items }: { items: Array<{ name: string }> }) => (

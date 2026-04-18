@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@/test/test-utils'
-import { CreatorProjectsSection } from '@/components/sections/creator-projects-section'
+import { CreatorProjectsSectionRoute as CreatorProjectsSection } from '@thedaviddias/web-core/sections/creator-projects-section-route'
 import { analytics } from '@thedaviddias/web-core/analytics'
 
 jest.mock('@thedaviddias/web-core/analytics', () => ({

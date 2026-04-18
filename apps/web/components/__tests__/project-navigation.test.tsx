@@ -1,7 +1,7 @@
 import { render, screen } from '@/test/test-utils'
-import { ProjectNavigation } from '@/components/project-navigation'
+import { ProjectNavigation } from '@thedaviddias/web-core/project-navigation'
 
-jest.mock('@/components/ui/favicon-with-fallback', () => ({
+jest.mock('@thedaviddias/web-core/ui/favicon-with-fallback', () => ({
   FaviconWithFallback: ({
     logoUrl,
     name

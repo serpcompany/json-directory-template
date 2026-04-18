@@ -1,6 +1,6 @@
 import { render, screen } from '@/test/test-utils'
-import { FeaturedProjectsSection } from '@/components/sections/featured-projects-section'
-import { RecentlyAddedSection } from '@/components/sections/recently-added-section'
+import { FeaturedProjectsSectionRoute as FeaturedProjectsSection } from '@thedaviddias/web-core/sections/featured-projects-section-route'
+import { RecentlyAddedSectionRoute as RecentlyAddedSection } from '@thedaviddias/web-core/sections/recently-added-section-route'
 
 jest.mock('@thedaviddias/web-core/llm/llm-grid', () => ({
   LLMGrid: ({ items }: { items: Array<{ slug: string }> }) => (

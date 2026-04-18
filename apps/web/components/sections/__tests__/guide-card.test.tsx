@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { GuideCard } from '@/components/sections/guide-card'
+import { GuideCardRoute as GuideCard } from '@thedaviddias/web-core/sections/guide-card-route'
 
 jest.mock('next/image', () => ({
   __esModule: true,

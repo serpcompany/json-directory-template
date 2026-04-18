@@ -1,8 +1,8 @@
 import { render, screen } from '@/test/test-utils';
-import { WebsiteRelatedProjects } from '@/components/website/website-related-projects';
-import { WebsiteResourcesSection } from '@/components/website/website-resources-section';
+import { WebsiteRelatedProjectsRoute as WebsiteRelatedProjects } from '@thedaviddias/web-core/website/website-related-projects-route';
+import { WebsiteResourcesSectionRoute as WebsiteResourcesSection } from '@thedaviddias/web-core/website/website-resources-section-route';
 
-jest.mock('@/components/ui/favorite-button', () => ({
+jest.mock('@thedaviddias/web-core/ui/favorite-button', () => ({
   FavoriteButton: () => <div data-testid="favorite-button" />,
 }));
 
