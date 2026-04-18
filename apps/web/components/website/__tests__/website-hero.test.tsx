@@ -6,11 +6,11 @@ jest.mock('@thedaviddias/design-system/breadcrumb', () => ({
   Breadcrumb: () => <nav data-testid="breadcrumb" />
 }))
 
-jest.mock('@/components/ui/favorite-button', () => ({
+jest.mock('@thedaviddias/web-core/ui/favorite-button', () => ({
   FavoriteButton: () => <div data-testid="favorite-button" />
 }))
 
-jest.mock('@/components/ui/favicon-with-fallback', () => ({
+jest.mock('@thedaviddias/web-core/ui/favicon-with-fallback', () => ({
   FaviconWithFallback: ({
     logoUrl,
     name

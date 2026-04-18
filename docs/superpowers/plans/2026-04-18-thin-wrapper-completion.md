@@ -20,6 +20,9 @@
 - favorites/list-control primitives and the shared listing grid now also live in `packages/web-core`;
   the remaining list-stack debt is now mostly app-local analytics glue plus the section-level
   adapters that still sit above the package-owned list wrappers.
+- category/homepage list wrappers and the shared website-detail route adapters now also live in
+  `packages/web-core`; the remaining debt is concentrated in section-level wrappers that still
+  inject app-local analytics or data glue.
 - active-site build/search-index/dev flows no longer target `apps/web`, but wrapper isolation is
   not complete until the copied support graph is reduced to package-owned exports plus a thin app
   shell.

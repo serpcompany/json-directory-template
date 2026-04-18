@@ -1,7 +1,7 @@
 import { render, screen } from '@/test/test-utils'
 import { WebsiteRelatedProjects } from '@/components/website/website-related-projects'
 
-jest.mock('@/components/llm/llm-grid', () => ({
+jest.mock('@thedaviddias/web-core/llm/llm-grid', () => ({
   LLMGrid: ({ items }: { items: Array<{ name: string }> }) => (
     <div data-testid="llm-grid">{items.map(item => item.name).join(', ')}</div>
   )
