@@ -1,6 +1,6 @@
-import { Section } from '@/components/layout/section'
 import type { WebsiteMetadata } from '@/lib/content-loader'
-import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { StaticWebsitesList as PackageStaticWebsitesList } from '@thedaviddias/web-core/sections/static-websites-list'
+import { Section } from '@/components/layout/section'
 import { WebsitesListWithSearch } from './websites-list-with-search'
 
 interface StaticWebsitesListProps {
@@ -18,18 +18,11 @@ export function StaticWebsitesList({
   displayLimit
 }: StaticWebsitesListProps) {
   return (
-    <Section
-      title="Browse the Directory"
-      description="Explore the complete directory and search by name, category, or description."
-      titleId={siteCopy.allAnchorId}
-    >
-      <WebsitesListWithSearch
-        initialWebsites={websites}
-        totalCount={totalCount}
-        displayLimit={displayLimit}
-        emptyTitle="No entries found"
-        emptyDescription={`There are no directory entries available. Try checking back later or ${siteCopy.submitLabel.toLowerCase()}.`}
-      />
-    </Section>
+    <PackageStaticWebsitesList
+      websites={websites}
+      totalCount={totalCount}
+      displayLimit={displayLimit}
+      slots={{ Section, WebsitesListWithSearch }}
+    />
   )
 }
