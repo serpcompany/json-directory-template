@@ -5,7 +5,7 @@ import {
   getUnknownCategorySlugs,
   hasFeaturedListings,
   listingMatchesCategory,
-} from '@/lib/category-navigation';
+} from '@thedaviddias/web-core/category-navigation';
 
 const sampleListings = [
   {

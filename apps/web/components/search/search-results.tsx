@@ -6,10 +6,10 @@ import { EmptyState } from '@/components/empty-state';
 import { SearchFilters } from '@/components/search/search-filters';
 import { useSearch } from '@/components/search/use-search';
 import { WebsitesListWithSort } from '@/components/websites-list-with-sort';
-import { getCategoryDisplayName } from '@/lib/category-display';
-import { getRoute } from '@/lib/routes';
-import { siteCopy } from '@/lib/site-copy';
-import { siteConfig } from '@/lib/site-config';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
+import { getRoute } from '@thedaviddias/web-core/routes';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
+import { siteConfig } from '@thedaviddias/web-core/site-config';
 
 /**
  * Search results component for displaying and filtering websites

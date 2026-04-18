@@ -1,4 +1,4 @@
-import { resolveSiteCopy } from '@/lib/site-copy'
+import { resolveSiteCopy } from '@thedaviddias/web-core/site-copy'
 
 describe('resolveSiteCopy', () => {
   it('derives listing-neutral anchor and placeholder copy from the configured plural name', () => {

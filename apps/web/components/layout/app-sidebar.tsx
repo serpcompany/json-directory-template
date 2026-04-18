@@ -3,11 +3,11 @@
 import { ExternalLink, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { FavoritesLink } from '@/components/ui/favorites-link';
-import { getCategoryDisplayName } from '@/lib/category-display';
-import { categories } from '@/lib/categories';
-import { externalResources } from '@/lib/external-resources';
-import { getRoute } from '@/lib/routes';
-import { siteConfig } from '@/lib/site-config';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
+import { categories } from '@thedaviddias/web-core/categories';
+import { externalResources } from '@thedaviddias/web-core/external-resources';
+import { getRoute } from '@thedaviddias/web-core/routes';
+import { siteConfig } from '@thedaviddias/web-core/site-config';
 
 interface AppSidebarProps {
   availableCategorySlugs?: string[];

@@ -1,6 +1,6 @@
 import { render, screen } from '@/test/test-utils'
 import { CommunitiesSection } from '@/components/sections/communities-section'
-import { siteConfig } from '@/lib/site-config'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 describe('CommunitiesSection', () => {
   it('uses configured social and repo URLs', () => {

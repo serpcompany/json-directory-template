@@ -8,8 +8,8 @@ import { EmptyState } from '@/components/empty-state'
 import { LLMGrid } from '@/components/llm/llm-grid'
 import { useWebsiteFilters } from '@/hooks/use-website-filters'
 import type { WebsiteMetadata } from '@/lib/content-loader'
-import { getRoute } from '@/lib/routes'
-import { siteCopy } from '@/lib/site-copy'
+import { getRoute } from '@thedaviddias/web-core/routes'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 
 interface HomepageWebsitesListProps {
   initialWebsites: WebsiteMetadata[]

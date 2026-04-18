@@ -1,6 +1,6 @@
 import { render, screen } from '@/test/test-utils'
 import { HeroSection } from '@/components/sections/hero-section'
-import { siteConfig } from '@/lib/site-config'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 jest.mock('@/lib/content-loader', () => ({
   getWebsites: jest.fn(async () => new Array(42).fill(null))

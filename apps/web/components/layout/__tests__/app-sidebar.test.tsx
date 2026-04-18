@@ -1,6 +1,6 @@
 import { render, screen } from '@/test/test-utils';
 import { AppSidebar } from '@/components/layout/app-sidebar';
-import { categories } from '@/lib/categories';
+import { categories } from '@thedaviddias/web-core/categories';
 
 jest.mock('@/components/ui/favorites-link', () => ({
   FavoritesLink: () => <a href="/favorites">Favorites</a>,

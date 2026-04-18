@@ -3,7 +3,7 @@ import {
   hasConfiguredGitHubIssueTarget,
   hasConfiguredPublicSocialLinks,
   resolveSiteConfig
-} from '@/lib/site-config'
+} from '@thedaviddias/web-core/site-config'
 
 describe('resolveSiteConfig', () => {
   it('loads the checked-in per-site config for serpdownloaders.com', () => {

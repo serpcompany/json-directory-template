@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getAboutPage } from '@/lib/content-loader'
-import { getRoute } from '@/lib/routes'
-import { generateBaseMetadata } from '@/lib/seo/seo-config'
+import { getRoute } from '@thedaviddias/web-core/routes'
+import { generateBaseMetadata } from '@thedaviddias/web-core/seo-config'
 
 const ABOUT_STEP_ICONS = {
   code: Code,

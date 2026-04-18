@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { FaviconWithFallback } from '@/components/ui/favicon-with-fallback'
-import { getRoute } from '@/lib/routes'
+import { getRoute } from '@thedaviddias/web-core/routes'
 
 interface ProjectNavItem {
   media?: {

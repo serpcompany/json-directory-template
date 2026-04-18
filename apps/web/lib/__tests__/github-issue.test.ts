@@ -1,6 +1,6 @@
 import { buildSubmissionIssueUrl } from '@/lib/github-issue'
-import { siteConfig } from '@/lib/site-config'
-import { siteCopy } from '@/lib/site-copy'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 
 describe('buildSubmissionIssueUrl', () => {
   it('builds a prefilled GitHub issue URL with the required submission fields', () => {

@@ -4,9 +4,9 @@ import {
   SITE_FAVICON_URL,
   SITE_NAME,
   SITE_PUBLIC_URL
-} from '@/lib/seo/seo-config'
-import { siteCopy } from '@/lib/site-copy'
-import { getRoute } from '@/lib/routes'
+} from '@thedaviddias/web-core/seo-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { getRoute } from '@thedaviddias/web-core/routes'
 
 const baseUrl = SITE_PUBLIC_URL
 

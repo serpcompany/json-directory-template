@@ -1,7 +1,7 @@
 import { render, screen } from '@/test/test-utils';
 import { MobileDrawer } from '@/components/layout/mobile-drawer';
-import { categories } from '@/lib/categories';
-import { siteCopy } from '@/lib/site-copy';
+import { categories } from '@thedaviddias/web-core/categories';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
 
 jest.mock('@/components/auth/sign-out-button', () => ({
   SignOutButton: () => <button type="button">Sign out</button>,

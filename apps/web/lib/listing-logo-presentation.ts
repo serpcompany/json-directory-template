@@ -1,4 +1,4 @@
-import { siteConfig } from '@/lib/site-config';
+import { siteConfig } from '@thedaviddias/web-core/site-config';
 
 export const DEFAULT_SITE_LISTING_LOGO_FALLBACK_PATH = '/placeholder.svg';
 export const SITE_BRAND_LISTING_LOGO_FALLBACK_PATH = '/logo.png';

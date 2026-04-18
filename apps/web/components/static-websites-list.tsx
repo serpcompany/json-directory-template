@@ -1,6 +1,6 @@
 import { Section } from '@/components/layout/section'
 import type { WebsiteMetadata } from '@/lib/content-loader'
-import { siteCopy } from '@/lib/site-copy'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { WebsitesListWithSearch } from './websites-list-with-search'
 
 interface StaticWebsitesListProps {

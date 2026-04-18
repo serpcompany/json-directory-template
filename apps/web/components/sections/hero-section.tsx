@@ -2,9 +2,9 @@ import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { AnimatedBackground } from '@/components/ui/animated-background'
 import { getWebsites } from '@/lib/content-loader'
-import { getRoute } from '@/lib/routes'
-import { siteCopy } from '@/lib/site-copy'
-import { siteConfig } from '@/lib/site-config'
+import { getRoute } from '@thedaviddias/web-core/routes'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 /**
  * Hero section component for the homepage

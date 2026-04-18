@@ -1,4 +1,4 @@
-import { resolveSiteContent } from '@/lib/site-content'
+import { resolveSiteContent } from '@thedaviddias/web-core/site-content'
 
 describe('resolveSiteContent', () => {
   it('loads the checked-in SERP Downloaders site-owned content', () => {

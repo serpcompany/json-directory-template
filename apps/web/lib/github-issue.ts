@@ -1,5 +1,5 @@
-import { siteCopy } from '@/lib/site-copy'
-import { siteConfig } from '@/lib/site-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 export interface SubmissionIssueInput {
   category: string

@@ -5,16 +5,16 @@ import { ArrowRight, ExternalLink, Plus } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
-import { networkLinks } from '@/lib/network-links'
-import { getRoute } from '@/lib/routes'
+import { networkLinks } from '@thedaviddias/web-core/network-links'
+import { getRoute } from '@thedaviddias/web-core/routes'
 import {
   generateDisabledRouteMetadata,
   isRouteFeatureEnabled,
   requireRouteFeature
 } from '@/lib/route-feature-gates'
-import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
-import { siteCopy } from '@/lib/site-copy'
-import { siteConfig } from '@/lib/site-config'
+import { SITE_PUBLIC_URL, generateBaseMetadata } from '@thedaviddias/web-core/seo-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 export function generateMetadata(): Metadata {
   if (!isRouteFeatureEnabled('showProjects')) {

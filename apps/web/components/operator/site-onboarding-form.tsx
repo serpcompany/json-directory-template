@@ -18,7 +18,7 @@ import {
   operatorListingFormSchema,
   operatorSiteFormSchema,
   type OperatorOnboardingDocument,
-} from '@/lib/operator-onboarding';
+} from '@thedaviddias/site-contract/operator-onboarding';
 
 const operatorSiteUiSchema: UiSchema = {
   categoryLabels: {

@@ -3,7 +3,7 @@ import { CategoryWebsitesList } from '@/components/category-websites-list'
 import { StaticWebsitesList } from '@/components/static-websites-list'
 import { WebsitesListWithSort } from '@/components/websites-list-with-sort'
 import { WebsitesListWithSearch } from '@/components/websites-list-with-search'
-import { siteCopy } from '@/lib/site-copy'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 
 jest.mock('@/components/analytics-tracker', () => ({
   useAnalyticsEvents: () => ({

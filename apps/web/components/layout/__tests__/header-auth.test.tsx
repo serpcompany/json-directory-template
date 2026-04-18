@@ -1,8 +1,8 @@
 import { render, screen } from '@/test/test-utils'
 import { Header } from '@/components/layout/header'
 
-jest.mock('@/lib/site-config', () => {
-  const actual = jest.requireActual('@/lib/site-config')
+jest.mock('@thedaviddias/web-core/site-config', () => {
+  const actual = jest.requireActual('@thedaviddias/web-core/site-config')
 
   return {
     ...actual,

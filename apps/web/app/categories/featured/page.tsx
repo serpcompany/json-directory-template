@@ -12,17 +12,17 @@ import { ExternalResourcesSection } from '@/components/sections/external-resourc
 import {
   getActiveCategories,
   getFeaturedListingCount,
-} from '@/lib/category-navigation';
+} from '@thedaviddias/web-core/category-navigation';
 import { getGuides } from '@/lib/content-loader';
-import { getRoute } from '@/lib/routes';
+import { getRoute } from '@thedaviddias/web-core/routes';
 import {
   SITE_LOGO_URL,
   SITE_NAME,
   SITE_PUBLIC_URL,
   generateBaseMetadata,
-} from '@/lib/seo/seo-config';
-import { siteCopy } from '@/lib/site-copy';
-import { siteConfig } from '@/lib/site-config';
+} from '@thedaviddias/web-core/seo-config';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
+import { siteConfig } from '@thedaviddias/web-core/site-config';
 
 export const metadata: Metadata = generateBaseMetadata({
   title: `Featured ${siteCopy.listingName.pluralTitle} - ${SITE_NAME}`,

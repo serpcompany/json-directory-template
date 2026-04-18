@@ -2,7 +2,7 @@ import { render, screen } from '@/test/test-utils'
 import { CommunitiesSection } from '@/components/sections/communities-section'
 import { HowItWorksSection } from '@/components/sections/how-it-works-section'
 import { TestimonialsSection } from '@/components/sections/testimonials-section'
-import { siteConfig } from '@/lib/site-config'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 describe('starter section copy', () => {
   it('uses neutral directory copy in the how-it-works section', () => {

@@ -24,7 +24,7 @@ const mockSiteConfig = {
   twitterUrl: 'https://x.com/serpcompany'
 }
 
-jest.mock('@/lib/site-config', () => ({
+jest.mock('@thedaviddias/web-core/site-config', () => ({
   getTwitterHandleFromUrl: jest.fn(() => '@serpcompany'),
   siteConfig: mockSiteConfig
 }))
@@ -65,7 +65,7 @@ describe('DocPage', () => {
 
   it('uses generic documentation metadata on the configured docs route', async () => {
     const { generateMetadata } = await import('@/app/docs/[slug]/page')
-    const { getRoute } = await import('@/lib/routes')
+    const { getRoute } = await import('@thedaviddias/web-core/routes')
 
     const metadata = await generateMetadata({
       params: Promise.resolve({

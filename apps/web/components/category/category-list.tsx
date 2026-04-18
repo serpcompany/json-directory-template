@@ -5,9 +5,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { getCategoryDisplayName } from '@/lib/category-display';
-import { categories } from '@/lib/categories';
-import { getRoute } from '@/lib/routes';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
+import { categories } from '@thedaviddias/web-core/categories';
+import { getRoute } from '@thedaviddias/web-core/routes';
 
 /**
  * Renders a grid of category cards linking to their respective pages

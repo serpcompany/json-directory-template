@@ -3,7 +3,7 @@ import { Book, GraduationCap } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
-import { getRoute } from '@/lib/routes'
+import { getRoute } from '@thedaviddias/web-core/routes'
 import type { Guide } from '@/types/types'
 
 interface GuideCardProps {

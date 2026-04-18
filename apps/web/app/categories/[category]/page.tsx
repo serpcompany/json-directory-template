@@ -8,25 +8,25 @@ import { AppSidebar } from '@/components/layout/app-sidebar';
 import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section';
 import { NewsletterSection } from '@/components/sections/newsletter-section';
 import { ExternalResourcesSection } from '@/components/sections/external-resources-section';
-import { getCategoryDisplayName } from '@/lib/category-display';
-import { categories, getCategoryBySlug } from '@/lib/categories';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
+import { categories, getCategoryBySlug } from '@thedaviddias/web-core/categories';
 import { getGuides, getWebsites } from '@/lib/content-loader';
 import {
   getActiveCategories,
   getFeaturedListingCount,
   listingMatchesCategory,
-} from '@/lib/category-navigation';
-import { getRoute } from '@/lib/routes';
-import { getCategorySEO } from '@/lib/seo/category-seo';
+} from '@thedaviddias/web-core/category-navigation';
+import { getRoute } from '@thedaviddias/web-core/routes';
+import { getCategorySEO } from '@thedaviddias/web-core/category-seo';
 import {
   SITE_LOGO_URL,
   SITE_NAME,
   SITE_PUBLIC_URL,
   generateDynamicMetadata,
   optimizeMetaDescription,
-} from '@/lib/seo/seo-config';
-import { siteCopy } from '@/lib/site-copy';
-import { siteConfig } from '@/lib/site-config';
+} from '@thedaviddias/web-core/seo-config';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
+import { siteConfig } from '@thedaviddias/web-core/site-config';
 
 interface CategoryPageProps {
   params: Promise<{ category: string }>;

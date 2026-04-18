@@ -14,13 +14,13 @@ import {
   getWebsites,
   type WebsiteMetadata,
 } from '@/lib/content-loader';
-import { getCategoryDisplayName } from '@/lib/category-display';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
 import { resolveListingDetailTemplate } from '@/lib/listing-detail-template';
-import { getRoute } from '@/lib/routes';
-import { generateWebsiteDetailSchema } from '@/lib/schema';
-import { SITE_NAME, generateDynamicMetadata } from '@/lib/seo/seo-config';
-import { siteCopy } from '@/lib/site-copy';
-import { siteConfig } from '@/lib/site-config';
+import { getRoute } from '@thedaviddias/web-core/routes';
+import { generateWebsiteDetailSchema } from '@thedaviddias/web-core/schema';
+import { SITE_NAME, generateDynamicMetadata } from '@thedaviddias/web-core/seo-config';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
+import { siteConfig } from '@thedaviddias/web-core/site-config';
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;

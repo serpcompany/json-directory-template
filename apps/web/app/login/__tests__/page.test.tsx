@@ -10,7 +10,7 @@ const mockSiteConfig = {
   networkRouteBasePath: 'network'
 }
 
-jest.mock('@/lib/site-config', () => ({
+jest.mock('@thedaviddias/web-core/site-config', () => ({
   getTwitterHandleFromUrl: jest.fn(() => '@serpcompany'),
   siteConfig: mockSiteConfig
 }))

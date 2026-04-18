@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { resolveOperatorSourcePath } from '@/lib/operator-onboarding-server'
+import { resolveOperatorSourcePath } from '@thedaviddias/site-contract/operator-onboarding-server'
 
 describe('resolveOperatorSourcePath', () => {
   it('resolves site source files from the app working directory', () => {

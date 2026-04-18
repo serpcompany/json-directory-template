@@ -25,7 +25,7 @@ const mockSiteConfig = {
   description: 'Curated directory of listings and resources.'
 }
 
-jest.mock('@/lib/site-config', () => ({
+jest.mock('@thedaviddias/web-core/site-config', () => ({
   getTwitterHandleFromUrl: jest.fn(() => '@serpcompany'),
   siteConfig: mockSiteConfig
 }))

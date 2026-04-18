@@ -1,7 +1,7 @@
 import { Terminal } from 'lucide-react'
 import { CopyButton } from '@/components/ui/copy-button'
 import type { WebsiteMetadata } from '@/lib/content-loader'
-import { siteContent } from '@/lib/site-content'
+import { siteContent } from '@thedaviddias/web-core/site-content'
 
 interface WebsiteCliSectionProps {
   website: WebsiteMetadata

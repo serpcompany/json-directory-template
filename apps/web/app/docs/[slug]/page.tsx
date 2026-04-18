@@ -5,15 +5,15 @@ import { MDXRemote } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
 import { components } from '@/components/mdx'
 import { type DocMetadata, getDocBySlug, getDocs } from '@/lib/content-loader'
-import { getRoute } from '@/lib/routes'
+import { getRoute } from '@thedaviddias/web-core/routes'
 import {
   generateDisabledRouteMetadata,
   isRouteFeatureEnabled,
   requireRouteFeature
 } from '@/lib/route-feature-gates'
-import { SITE_PUBLIC_URL, generateDynamicMetadata } from '@/lib/seo/seo-config'
-import { siteCopy } from '@/lib/site-copy'
-import { siteConfig } from '@/lib/site-config'
+import { SITE_PUBLIC_URL, generateDynamicMetadata } from '@thedaviddias/web-core/seo-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 interface DocPageProps {
   params: Promise<{

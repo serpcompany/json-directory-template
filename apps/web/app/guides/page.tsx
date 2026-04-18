@@ -4,15 +4,15 @@ import { EmptyState } from '@/components/empty-state'
 import { JsonLd } from '@/components/json-ld'
 import { GuideCard } from '@/components/sections/guide-card'
 import { type GuideMetadata, getGuides } from '@/lib/content-loader'
-import { getRoute } from '@/lib/routes'
+import { getRoute } from '@thedaviddias/web-core/routes'
 import {
   generateDisabledRouteMetadata,
   isRouteFeatureEnabled,
   requireRouteFeature
 } from '@/lib/route-feature-gates'
-import { generateGuideSchema } from '@/lib/schema'
-import { SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
-import { siteConfig } from '@/lib/site-config'
+import { generateGuideSchema } from '@thedaviddias/web-core/schema'
+import { SITE_PUBLIC_URL, generateBaseMetadata } from '@thedaviddias/web-core/seo-config'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 export function generateMetadata(): Metadata {
   if (!isRouteFeatureEnabled('showGuides')) {

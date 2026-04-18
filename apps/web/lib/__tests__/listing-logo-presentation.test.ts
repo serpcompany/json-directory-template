@@ -4,7 +4,7 @@ import {
   shouldUseProvidedListingLogo,
 } from '@/lib/listing-logo-presentation';
 
-jest.mock('@/lib/site-config', () => ({
+jest.mock('@thedaviddias/web-core/site-config', () => ({
   siteConfig: {
     branding: {},
     id: 'default',
@@ -49,7 +49,7 @@ describe('listing-logo-presentation', () => {
   });
 
   it('uses a configured site-brand fallback when one exists', async () => {
-    const { siteConfig } = await import('@/lib/site-config');
+    const { siteConfig } = await import('@thedaviddias/web-core/site-config');
     siteConfig.branding.logoUrl = '/logo.png';
 
     expect(getListingLogoFallbackPath()).toBe('/logo.png');

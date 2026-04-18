@@ -3,14 +3,14 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { SearchResults } from '@/components/search/search-results';
-import { getActiveCategories } from '@/lib/category-navigation';
-import { getCategoryDisplayName } from '@/lib/category-display';
+import { getActiveCategories } from '@thedaviddias/web-core/category-navigation';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
 import { getWebsites } from '@/lib/content-loader';
-import { externalResources } from '@/lib/external-resources';
-import { getRoute } from '@/lib/routes';
-import { generateBaseMetadata } from '@/lib/seo/seo-config';
-import { siteCopy } from '@/lib/site-copy';
-import { siteConfig } from '@/lib/site-config';
+import { externalResources } from '@thedaviddias/web-core/external-resources';
+import { getRoute } from '@thedaviddias/web-core/routes';
+import { generateBaseMetadata } from '@thedaviddias/web-core/seo-config';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
+import { siteConfig } from '@thedaviddias/web-core/site-config';
 
 /**
  * Generate metadata for the static search shell.

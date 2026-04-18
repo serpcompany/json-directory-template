@@ -12,7 +12,7 @@ import { Header } from '@/components/layout/header'
 import { BackToTop } from '@/components/ui/back-to-top'
 import { FavoritesProvider } from '@/contexts/favorites-context'
 import { getHeaderAuthState } from '@/lib/auth'
-import { getActiveCategories, getFeaturedListingCount } from '@/lib/category-navigation'
+import { getActiveCategories, getFeaturedListingCount } from '@thedaviddias/web-core/category-navigation'
 import { getWebsites } from '@/lib/content-loader'
 import {
   SITE_APPLE_TOUCH_ICON_URL,
@@ -21,10 +21,10 @@ import {
   SITE_NAME,
   SITE_TAGLINE,
   SITE_URL
-} from '@/lib/seo/seo-config'
-import { resolveGoogleTagManagerId } from '@/lib/google-tag-manager'
-import { siteCopy } from '@/lib/site-copy'
-import { resolveSiteConfig } from '@/lib/site-config'
+} from '@thedaviddias/web-core/seo-config'
+import { resolveGoogleTagManagerId } from '@thedaviddias/web-core/google-tag-manager'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { resolveSiteConfig } from '@thedaviddias/web-core/site-config'
 
 export const metadata: import('next').Metadata = {
   title: {

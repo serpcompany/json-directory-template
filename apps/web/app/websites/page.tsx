@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { SITE_NAME, SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
+import { SITE_NAME, SITE_PUBLIC_URL } from '@thedaviddias/web-core/seo-config'
 
 export function generateMetadata(): Metadata {
   return {

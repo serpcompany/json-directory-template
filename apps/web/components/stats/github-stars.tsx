@@ -3,7 +3,7 @@
 import { SiGithub } from '@icons-pack/react-simple-icons'
 import { StarIcon } from 'lucide-react'
 import Link from 'next/link'
-import { hasConfiguredPublicSocialLinks, siteConfig } from '@/lib/site-config'
+import { hasConfiguredPublicSocialLinks, siteConfig } from '@thedaviddias/web-core/site-config'
 
 interface StarsProps {
   mobileCompact?: boolean

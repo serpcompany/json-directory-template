@@ -1,7 +1,7 @@
 import { render, screen } from '@/test/test-utils'
 import { Header } from '@/components/layout/header'
-import { siteCopy } from '@/lib/site-copy'
-import { siteConfig } from '@/lib/site-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 jest.mock('@/components/analytics-tracker', () => ({
   useAnalyticsEvents: () => ({

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import { SITE_NAME, generateBaseMetadata } from '@/lib/seo/seo-config'
-import { siteCopy } from '@/lib/site-copy'
+import { SITE_NAME, generateBaseMetadata } from '@thedaviddias/web-core/seo-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: siteCopy.submitLabel,

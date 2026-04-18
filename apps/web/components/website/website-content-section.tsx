@@ -2,9 +2,9 @@ import { Info } from 'lucide-react';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import { components } from '@/components/mdx';
-import { getCategoryDisplayName } from '@/lib/category-display';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
 import type { WebsiteMetadata } from '@/lib/content-loader';
-import { siteCopy } from '@/lib/site-copy';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
 import { stripHtmlTags } from '@/lib/utils';
 
 interface WebsiteContentSectionProps {

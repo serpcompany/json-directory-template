@@ -1,4 +1,4 @@
-import { resolveGoogleTagManagerId } from '@/lib/google-tag-manager'
+import { resolveGoogleTagManagerId } from '@thedaviddias/web-core/google-tag-manager'
 
 describe('resolveGoogleTagManagerId', () => {
   it('returns the configured GTM id in production', () => {

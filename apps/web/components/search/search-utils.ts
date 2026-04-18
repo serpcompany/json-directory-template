@@ -3,7 +3,7 @@
  */
 
 import { logger } from '@thedaviddias/logging';
-import type { SearchIndexEntry } from '@/lib/search-index';
+import type { SearchIndexEntry } from '@thedaviddias/web-core/search-index';
 
 export interface WebsiteMetadata {
   url: string;

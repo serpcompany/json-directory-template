@@ -1,5 +1,5 @@
 import type { WebsiteMetadata } from '@/lib/content-loader';
-import { siteCopy } from '@/lib/site-copy';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
 import { WebsitesListWithSort } from './websites-list-with-sort';
 
 interface CategoryWebsitesListProps {

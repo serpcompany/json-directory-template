@@ -1,7 +1,7 @@
 import { Compass, Search, Send } from 'lucide-react'
 import { Section } from '@/components/layout/section'
 import { Card, CardContent } from '@/components/ui/card'
-import { siteCopy } from '@/lib/site-copy'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 
 /**
  * Renders a neutral starter explainer section

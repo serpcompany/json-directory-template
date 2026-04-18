@@ -1,6 +1,6 @@
 import { render, screen } from '@/test/test-utils';
 import ListingDetailPage from '@/app/websites/[slug]/page';
-import { siteCopy } from '@/lib/site-copy';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
 
 jest.mock('@/components/json-ld', () => ({
   JsonLd: () => null,
@@ -80,7 +80,7 @@ jest.mock('@/lib/listing-detail-template', () => ({
   resolveListingDetailTemplate: () => 'default',
 }));
 
-jest.mock('@/lib/schema', () => ({
+jest.mock('@thedaviddias/web-core/schema', () => ({
   generateWebsiteDetailSchema: () => ({}),
 }));
 

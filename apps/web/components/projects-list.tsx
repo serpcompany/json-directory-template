@@ -11,12 +11,12 @@ import { useEffect, useState } from 'react';
 import { EmptyState } from '@/components/empty-state';
 import { LLMGrid } from '@/components/llm/llm-grid';
 import { useWebsiteFilters } from '@/hooks/use-website-filters';
-import { getCategoryDisplayName } from '@/lib/category-display';
-import { listingMatchesCategory } from '@/lib/category-navigation';
-import { categories } from '@/lib/categories';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
+import { listingMatchesCategory } from '@thedaviddias/web-core/category-navigation';
+import { categories } from '@thedaviddias/web-core/categories';
 import type { WebsiteMetadata } from '@/lib/content-loader';
-import { getRoute } from '@/lib/routes';
-import { siteCopy } from '@/lib/site-copy';
+import { getRoute } from '@thedaviddias/web-core/routes';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
 
 interface ClientProjectsListProps {
   initialWebsites: WebsiteMetadata[];

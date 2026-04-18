@@ -1,4 +1,4 @@
-import { getTwitterHandleFromUrl, siteConfig } from '@/lib/site-config';
+import { getTwitterHandleFromUrl, siteConfig } from '@thedaviddias/web-core/site-config';
 import {
   DEFAULT_OG_IMAGE,
   KEYWORDS,
@@ -12,7 +12,7 @@ import {
   generateAltText,
   generateDynamicMetadata,
   generateWebsiteSchema as generateRootWebsiteSchema,
-} from '@/lib/seo/seo-config';
+} from '@thedaviddias/web-core/seo-config';
 
 describe('seo-config', () => {
   it('uses the runtime site config for core brand values', () => {

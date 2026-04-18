@@ -1,7 +1,7 @@
 import { Section } from '@/components/layout/section'
 import { LLMGrid } from '@/components/llm/llm-grid'
 import type { WebsiteMetadata } from '@/lib/content-loader'
-import { siteConfig } from '@/lib/site-config'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 interface RecentlyAddedSectionProps {
   websites: WebsiteMetadata[]

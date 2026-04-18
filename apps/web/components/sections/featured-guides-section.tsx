@@ -1,5 +1,5 @@
 import { Section } from '@/components/layout/section'
-import { getRoute } from '@/lib/routes'
+import { getRoute } from '@thedaviddias/web-core/routes'
 import type { Guide } from '@/types/types'
 import { GuideCard } from './guide-card'
 

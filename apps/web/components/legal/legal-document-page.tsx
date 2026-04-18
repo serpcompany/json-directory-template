@@ -3,7 +3,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import { components } from '@/components/mdx';
 import { getLegalContent } from '@/lib/content-loader';
-import { SITE_PUBLIC_URL } from '@/lib/seo/seo-config';
+import { SITE_PUBLIC_URL } from '@thedaviddias/web-core/seo-config';
 
 interface LegalDocumentPageProps {
   contentKey: string;

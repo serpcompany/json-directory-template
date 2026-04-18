@@ -1,9 +1,9 @@
 import { Button } from '@thedaviddias/design-system/button'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { getRoute } from '@/lib/routes'
-import { generateBaseMetadata } from '@/lib/seo/seo-config'
-import { siteConfig } from '@/lib/site-config'
+import { getRoute } from '@thedaviddias/web-core/routes'
+import { generateBaseMetadata } from '@thedaviddias/web-core/seo-config'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: 'Page Not Found',

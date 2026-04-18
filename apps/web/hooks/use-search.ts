@@ -4,7 +4,7 @@ import { useDebounce } from '@thedaviddias/hooks/use-debounce'
 import { useRouter } from 'next/navigation'
 import type React from 'react'
 import { useCallback, useState } from 'react'
-import { getRoute } from '@/lib/routes'
+import { getRoute } from '@thedaviddias/web-core/routes'
 
 /**
  * Hook that manages search query state and navigation to search results

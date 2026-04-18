@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { generateBaseMetadata } from '@/lib/seo/seo-config'
-import { siteConfig, type SiteConfig } from '@/lib/site-config'
+import { generateBaseMetadata } from '@thedaviddias/web-core/seo-config'
+import { siteConfig, type SiteConfig } from '@thedaviddias/web-core/site-config'
 
 type RoutableSiteFeature = keyof Pick<
   SiteConfig['features'],

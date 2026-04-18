@@ -2,7 +2,7 @@
 import { Search } from 'lucide-react'
 import { useRef } from 'react'
 import { SearchAutocomplete } from '@/components/search/search-autocomplete'
-import { siteCopy } from '@/lib/site-copy'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 
 interface DesktopSearchFormProps {
   availableCategorySlugs: string[]

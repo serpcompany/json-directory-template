@@ -5,7 +5,7 @@
 import { logger } from '@thedaviddias/logging'
 import { useEffect, useState } from 'react'
 import type { WebsiteMetadata } from '@/components/search/search-utils'
-import { SEARCH_INDEX_PUBLIC_PATH, searchIndexSchema, type SearchIndexEntry } from '@/lib/search-index'
+import { SEARCH_INDEX_PUBLIC_PATH, searchIndexSchema, type SearchIndexEntry } from '@thedaviddias/web-core/search-index'
 import {
   filterAndSortEntries,
   transformAndSanitizeEntries,

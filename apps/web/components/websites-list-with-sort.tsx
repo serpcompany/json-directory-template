@@ -10,8 +10,8 @@ import { EmptyState } from '@/components/empty-state'
 import { Card } from '@/components/ui/card'
 import { FaviconWithFallback } from '@/components/ui/favicon-with-fallback'
 import type { WebsiteMetadata } from '@/lib/content-loader'
-import { getRoute } from '@/lib/routes'
-import { siteCopy } from '@/lib/site-copy'
+import { getRoute } from '@thedaviddias/web-core/routes'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { stripHtmlTags } from '@/lib/utils'
 
 interface WebsitesListWithSortProps {

@@ -1,8 +1,8 @@
 import { SiGithub, SiReddit, SiX } from '@icons-pack/react-simple-icons'
 import { Section } from '@/components/layout/section'
 import { Card } from '@/components/ui/card'
-import { siteCopy } from '@/lib/site-copy'
-import { hasConfiguredPublicSocialLinks, siteConfig } from '@/lib/site-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { hasConfiguredPublicSocialLinks, siteConfig } from '@thedaviddias/web-core/site-config'
 
 const communities = [
   {

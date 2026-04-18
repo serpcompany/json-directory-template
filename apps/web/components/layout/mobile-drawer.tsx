@@ -8,12 +8,12 @@ import { useEffect } from 'react';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { FavoritesLink } from '@/components/ui/favorites-link';
 import type { HeaderAuthState } from '@/lib/auth';
-import { getCategoryDisplayName } from '@/lib/category-display';
-import { categories } from '@/lib/categories';
-import { externalResources } from '@/lib/external-resources';
-import { getRoute } from '@/lib/routes';
-import { siteCopy } from '@/lib/site-copy';
-import { siteConfig } from '@/lib/site-config';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
+import { categories } from '@thedaviddias/web-core/categories';
+import { externalResources } from '@thedaviddias/web-core/external-resources';
+import { getRoute } from '@thedaviddias/web-core/routes';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
+import { siteConfig } from '@thedaviddias/web-core/site-config';
 
 interface MobileDrawerProps {
   availableCategorySlugs?: string[];

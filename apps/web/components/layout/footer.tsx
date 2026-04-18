@@ -1,9 +1,9 @@
 import { SiGithub, SiReddit, SiX } from '@icons-pack/react-simple-icons';
 import Link from 'next/link';
 import { ModeToggle } from '@/components/mode-toggle';
-import { getRoute } from '@/lib/routes';
-import { siteCopy } from '@/lib/site-copy';
-import { hasConfiguredPublicSocialLinks, siteConfig } from '@/lib/site-config';
+import { getRoute } from '@thedaviddias/web-core/routes';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
+import { hasConfiguredPublicSocialLinks, siteConfig } from '@thedaviddias/web-core/site-config';
 
 type FooterLink = {
   href: string;

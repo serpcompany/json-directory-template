@@ -10,10 +10,10 @@ import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { RecentlyAddedSection } from '@/components/sections/recently-added-section'
 import { ExternalResourcesSection } from '@/components/sections/external-resources-section'
 import { StaticWebsitesList } from '@/components/static-websites-list'
-import { getActiveCategories } from '@/lib/category-navigation'
-import { generateBaseMetadata, generateWebsiteSchema, KEYWORDS } from '@/lib/seo/seo-config'
-import { siteCopy } from '@/lib/site-copy'
-import { siteConfig } from '@/lib/site-config'
+import { getActiveCategories } from '@thedaviddias/web-core/category-navigation'
+import { generateBaseMetadata, generateWebsiteSchema, KEYWORDS } from '@thedaviddias/web-core/seo-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: `${siteConfig.name} Directory of ${siteCopy.listingName.pluralTitle} and Resources`,

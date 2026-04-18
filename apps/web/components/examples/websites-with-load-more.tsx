@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card'
 import { FaviconWithFallback } from '@/components/ui/favicon-with-fallback'
 import { WebsitesPaginatedGrid } from '@/components/ui/paginated-content'
 import type { WebsiteMetadata } from '@/lib/content-loader'
-import { getRoute } from '@/lib/routes'
+import { getRoute } from '@thedaviddias/web-core/routes'
 import { stripHtmlTags } from '@/lib/utils'
 
 interface WebsitesWithLoadMoreProps {

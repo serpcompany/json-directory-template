@@ -3,7 +3,7 @@ import {
   matchesSearchQuery,
   transformToWebsiteMetadata,
 } from '@/components/search/search-utils';
-import type { SearchIndexEntry } from '@/lib/search-index';
+import type { SearchIndexEntry } from '@thedaviddias/web-core/search-index';
 
 const entry: SearchIndexEntry = {
   category: 'video-downloaders',

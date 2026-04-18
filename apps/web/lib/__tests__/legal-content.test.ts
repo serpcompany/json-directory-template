@@ -1,5 +1,5 @@
 import { getLegalContent } from '@/lib/content-loader';
-import { siteConfig } from '@/lib/site-config';
+import { siteConfig } from '@thedaviddias/web-core/site-config';
 
 describe('legal content', () => {
   it('renders privacy content with current site branding and no template placeholders', async () => {

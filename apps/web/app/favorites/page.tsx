@@ -7,11 +7,11 @@ import { AppSidebar } from '@/components/layout/app-sidebar'
 import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section'
 import { NewsletterSection } from '@/components/sections/newsletter-section'
 import { WebsitesListWithSearch } from '@/components/websites-list-with-search'
-import { getActiveCategories } from '@/lib/category-navigation'
+import { getActiveCategories } from '@thedaviddias/web-core/category-navigation'
 import { getGuides } from '@/lib/content-loader'
 import { requireRouteFeature } from '@/lib/route-feature-gates'
-import { SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@/lib/seo/seo-config'
-import { siteCopy } from '@/lib/site-copy'
+import { SITE_NAME, SITE_PUBLIC_URL, generateBaseMetadata } from '@thedaviddias/web-core/seo-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: `Saved Favorites - ${SITE_NAME}`,

@@ -6,13 +6,13 @@ import { ArrowRight, Clock, Search, TrendingUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAnalyticsEvents } from '@/components/analytics-tracker';
-import { getCategoryDisplayName } from '@/lib/category-display';
-import { categories } from '@/lib/categories';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
+import { categories } from '@thedaviddias/web-core/categories';
 import {
   SEARCH_INDEX_PUBLIC_PATH,
   searchIndexSchema,
-} from '@/lib/search-index';
-import { getRoute } from '@/lib/routes';
+} from '@thedaviddias/web-core/search-index';
+import { getRoute } from '@thedaviddias/web-core/routes';
 import { Favicon } from './favicon';
 
 interface SearchSuggestion {

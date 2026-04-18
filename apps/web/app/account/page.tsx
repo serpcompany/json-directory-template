@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@thedaviddias/design-system/avatar'
 import { redirect } from 'next/navigation'
-import { getRoute } from '@/lib/routes'
+import { getRoute } from '@thedaviddias/web-core/routes'
 import { requireRouteFeature } from '@/lib/route-feature-gates'
 import { getSafeCallbackUrl, getSession } from '@/lib/auth'
 import { isStaticExportBuild } from '@/lib/runtime-mode'

@@ -1,4 +1,4 @@
-import { getSiteRootListingAliases } from '@/lib/site-root-listing-aliases'
+import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases'
 
 describe('site root listing aliases', () => {
   it('returns root-path aliases for all serpdownloaders product slugs', () => {

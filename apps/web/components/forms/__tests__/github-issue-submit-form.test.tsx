@@ -1,6 +1,6 @@
 import { render, screen } from '@/test/test-utils'
 import { GitHubIssueSubmitForm } from '@/components/forms/github-issue-submit-form'
-import { categories } from '@/lib/categories'
+import { categories } from '@thedaviddias/web-core/categories'
 
 describe('GitHubIssueSubmitForm', () => {
   it('uses neutral starter copy for the submit flow', () => {

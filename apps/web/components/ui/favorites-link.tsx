@@ -5,7 +5,7 @@ import { Heart } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useFavorites } from '@/contexts/favorites-context'
-import { getRoute } from '@/lib/routes'
+import { getRoute } from '@thedaviddias/web-core/routes'
 
 interface FavoritesLinkProps {
   className?: string

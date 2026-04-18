@@ -9,8 +9,8 @@ import {
 } from '@thedaviddias/design-system/dropdown-menu';
 import { Filter, X } from 'lucide-react';
 import { useState } from 'react';
-import { getCategoryDisplayName } from '@/lib/category-display';
-import { categories } from '@/lib/categories';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
+import { categories } from '@thedaviddias/web-core/categories';
 
 interface SearchFiltersProps {
   selectedCategories: string[];

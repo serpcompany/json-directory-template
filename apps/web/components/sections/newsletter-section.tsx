@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { getRoute } from '@/lib/routes'
-import { siteCopy } from '@/lib/site-copy'
+import { getRoute } from '@thedaviddias/web-core/routes'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 
 export function NewsletterSection() {
   return (

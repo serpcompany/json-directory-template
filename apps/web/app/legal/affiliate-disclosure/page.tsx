@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { LegalDocumentPage } from '@/components/legal/legal-document-page';
-import { SITE_NAME, generateBaseMetadata } from '@/lib/seo/seo-config';
+import { SITE_NAME, generateBaseMetadata } from '@thedaviddias/web-core/seo-config';
 
 export const metadata: Metadata = generateBaseMetadata({
   title: 'Affiliate Disclosure',

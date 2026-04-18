@@ -1,4 +1,4 @@
-import { resolveCategoryDisplayName } from '@/lib/category-display';
+import { resolveCategoryDisplayName } from '@thedaviddias/web-core/category-display';
 
 describe('resolveCategoryDisplayName', () => {
   it('falls back to the shared category label when no site override exists', () => {

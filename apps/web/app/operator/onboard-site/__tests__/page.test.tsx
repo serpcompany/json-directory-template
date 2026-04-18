@@ -26,12 +26,12 @@ const mockLoadOperatorOnboardingDocument = jest.fn(() => ({
 
 const mockNotFound = jest.fn()
 
-jest.mock('@/lib/operator-onboarding-server', () => ({
+jest.mock('@thedaviddias/site-contract/operator-onboarding-server', () => ({
   loadOperatorOnboardingDocument: (...args: unknown[]) =>
     mockLoadOperatorOnboardingDocument(...args)
 }))
 
-jest.mock('@/lib/site-config', () => ({
+jest.mock('@thedaviddias/web-core/site-config', () => ({
   siteConfig: {
     id: 'serpdownloaders.com'
   }

@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { buildSubmissionIssueUrl } from '@/lib/github-issue';
-import { getCategoryDisplayName } from '@/lib/category-display';
-import { categories } from '@/lib/categories';
-import { siteCopy } from '@/lib/site-copy';
-import { hasConfiguredGitHubIssueTarget, siteConfig } from '@/lib/site-config';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
+import { categories } from '@thedaviddias/web-core/categories';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
+import { hasConfiguredGitHubIssueTarget, siteConfig } from '@thedaviddias/web-core/site-config';
 import { SubmitFormGuidelines } from './submit-form-guidelines';
 
 interface SubmissionFormState {

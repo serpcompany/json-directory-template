@@ -20,7 +20,7 @@ const mockSiteConfig = {
   twitterUrl: 'https://x.com/serpcompany'
 }
 
-jest.mock('@/lib/site-config', () => ({
+jest.mock('@thedaviddias/web-core/site-config', () => ({
   getTwitterHandleFromUrl: jest.fn(() => '@serpcompany'),
   siteConfig: mockSiteConfig
 }))

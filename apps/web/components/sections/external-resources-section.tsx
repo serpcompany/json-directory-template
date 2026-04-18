@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Section } from '@/components/layout/section'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { externalResources } from '@/lib/external-resources'
+import { externalResources } from '@thedaviddias/web-core/external-resources'
 
 interface ExternalResourcesSectionProps {
   layout?: 'default' | 'compact'

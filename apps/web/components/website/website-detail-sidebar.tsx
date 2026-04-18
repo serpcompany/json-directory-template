@@ -1,9 +1,9 @@
 import registryData from '@cli-data/registry.json';
 import { Calendar, Download, Hash } from 'lucide-react';
 import Link from 'next/link';
-import { getCategoryDisplayName } from '@/lib/category-display';
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
 import type { WebsiteMetadata } from '@/lib/content-loader';
-import { getRoute } from '@/lib/routes';
+import { getRoute } from '@thedaviddias/web-core/routes';
 
 const webSlugToCliSlug = new Map<string, string>();
 for (const entry of registryData as { slug: string; webSlug?: string }[]) {

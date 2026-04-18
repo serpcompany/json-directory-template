@@ -1,4 +1,4 @@
-import { categories, normalizeCategorySlug, resolveCategories } from '@/lib/categories'
+import { categories, normalizeCategorySlug, resolveCategories } from '@thedaviddias/web-core/categories'
 
 describe('normalizeCategorySlug', () => {
   it('maps legacy aliases to the active category slug', () => {

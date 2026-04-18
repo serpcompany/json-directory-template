@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { FavoriteButton } from '@/components/ui/favorite-button'
 import { FaviconWithFallback } from '@/components/ui/favicon-with-fallback'
 import type { WebsiteMetadata } from '@/lib/content-loader'
-import { SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
+import { SITE_PUBLIC_URL } from '@thedaviddias/web-core/seo-config'
 
 interface WebsiteHeroProps {
   website: WebsiteMetadata

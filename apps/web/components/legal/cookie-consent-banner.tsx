@@ -5,7 +5,7 @@ import { logger } from '@thedaviddias/logging'
 import { X } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { getRoute } from '@/lib/routes'
+import { getRoute } from '@thedaviddias/web-core/routes'
 
 const COOKIE_CONSENT_KEY = 'cookie-consent'
 const COOKIE_CONSENT_VERSION = '1.0'

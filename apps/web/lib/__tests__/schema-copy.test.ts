@@ -1,5 +1,5 @@
-import { siteCopy } from '@/lib/site-copy'
-import { generateArticleSchema, generateWebsiteDetailSchema } from '@/lib/schema'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { generateArticleSchema, generateWebsiteDetailSchema } from '@thedaviddias/web-core/schema'
 import type { WebsiteMetadata } from '@/lib/content-loader'
 
 const sampleWebsite: WebsiteMetadata = {

@@ -1,6 +1,6 @@
 'use client'
 
-import { siteCopy } from '@/lib/site-copy'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 
 /**
  * Guidelines section for the submit form

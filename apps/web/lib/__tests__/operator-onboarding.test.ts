@@ -4,8 +4,8 @@ import {
   createEmptyOperatorListing,
   operatorOnboardingDocumentSchema,
   operatorOnboardingFormSchema,
-} from '@/lib/operator-onboarding';
-import { buildOperatorOnboardingDocument } from '@/lib/operator-onboarding-server';
+} from '@thedaviddias/site-contract/operator-onboarding';
+import { buildOperatorOnboardingDocument } from '@thedaviddias/site-contract/operator-onboarding-server';
 
 describe('operator onboarding helpers', () => {
   it('builds an operator document from checked-in site config and products', () => {

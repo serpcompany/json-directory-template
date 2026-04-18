@@ -7,8 +7,8 @@ import { LLMGrid } from '@/components/llm/llm-grid';
 import { WebsitesSearchControls } from '@/components/websites-search-controls';
 import { useFavoritesFilter } from '@/hooks/use-favorites-filter';
 import type { WebsiteMetadata } from '@/lib/content-loader';
-import { getRoute } from '@/lib/routes';
-import { siteCopy } from '@/lib/site-copy';
+import { getRoute } from '@thedaviddias/web-core/routes';
+import { siteCopy } from '@thedaviddias/web-core/site-copy';
 
 interface WebsitesListWithSearchProps {
   initialWebsites: WebsiteMetadata[];

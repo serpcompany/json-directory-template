@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { SearchResults } from '@/components/search/search-results'
 import { useSearch } from '@/components/search/use-search'
-import { siteConfig } from '@/lib/site-config'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 // Mock Next.js navigation hooks
 jest.mock('next/navigation', () => ({
@@ -50,7 +50,7 @@ jest.mock('@/components/websites-list-with-sort', () => ({
   )
 }))
 
-jest.mock('@/lib/routes', () => ({
+jest.mock('@thedaviddias/web-core/routes', () => ({
   getRoute: jest.fn(() => '/')
 }))
 

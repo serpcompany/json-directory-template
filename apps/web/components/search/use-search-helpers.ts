@@ -9,7 +9,7 @@ import {
   matchesSearchQuery,
   transformToWebsiteMetadata
 } from '@/components/search/search-utils'
-import type { SearchIndexEntry } from '@/lib/search-index'
+import type { SearchIndexEntry } from '@thedaviddias/web-core/search-index'
 
 /**
  * Filter and sort entries by relevance to query

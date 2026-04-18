@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { SITE_PUBLIC_URL } from '@/lib/seo/seo-config'
+import { SITE_PUBLIC_URL } from '@thedaviddias/web-core/seo-config'
 
 export const dynamic = 'force-static'
 

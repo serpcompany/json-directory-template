@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@thedaviddias/design-system/alert'
 import { AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
-import { getRoute } from '@/lib/routes'
+import { getRoute } from '@thedaviddias/web-core/routes'
 
 /**
  * Error display component for website pages
