@@ -68,9 +68,11 @@ Acceptance:
 
 - [x] Define the shared `packages/web-core` boundary.
 - [ ] Define thin-wrapper responsibilities for `apps/<site>`.
-- [ ] Migrate shared logic from `apps/web` into `packages/web-core`.
+- [ ] Migrate the coupled content-loading layer using the app-load / package-query split.
+- [ ] Consolidate remaining file-backed resource loading behind the same boundary.
 - [ ] Create an `apps/serpdownloaders.com` wrapper.
-- [ ] Preserve artifact output and deploy behavior during the migration.
+- [ ] Repoint build/validate/deploy flows to the wrapper app without changing artifacts.
+- [ ] Delete dead `apps/web/lib/*` shims after direct package imports settle.
 
 Acceptance:
 
@@ -78,9 +80,34 @@ Acceptance:
 
 Status note:
 
-- An initial `packages/web-core` package now exists and owns the first shared runtime/build-facing
-  helper slice. `apps/web/lib/*` compatibility shims and site-aware script imports were updated to
-  start the extraction without changing the current `apps/web` app path.
+- `packages/web-core` and `packages/site-contract` now own most of the low-coupling shared helper
+  slices.
+- The biggest remaining migration item is still `apps/web/lib/content-loader.ts` and adjacent
+  file-backed content access.
+- Full execution plan for the remaining wrapper migration now lives in:
+  [docs/superpowers/plans/2026-04-18-wrapper-app-migration.md](/Users/devin/dev/repos/json-directory-template/docs/superpowers/plans/2026-04-18-wrapper-app-migration.md)
+
+#### Subagent Queue
+
+Use the following order for subagent execution. Each item is intentionally bounded and should be
+handled as its own reviewable unit.
+
+1. [x] Task 1: split `apps/web/lib/content-loader.ts` into app-owned loading and
+       `packages/web-core/src/content-query.ts`
+2. [ ] Task 2: consolidate `apps/web/lib/resources.ts` into the same content-loading boundary
+3. [ ] Task 3: document thin-wrapper responsibilities in docs
+4. [ ] Task 4: create `apps/serpdownloaders.com` thin wrapper skeleton
+5. [ ] Task 5: repoint build/validate/deploy to the wrapper app
+6. [ ] Task 6: remove dead `apps/web/lib/*` re-export shims
+7. [ ] Task 7: run the final Phase 4 acceptance pass
+
+Execution note:
+
+- Tasks 4-6 should not begin until Task 1 verification is green across `/about`, docs, guides,
+  legal, search, website detail, RSS, and active category routes.
+- Use the exact task-specific verification commands from
+  [docs/superpowers/plans/2026-04-18-wrapper-app-migration.md](/Users/devin/dev/repos/json-directory-template/docs/superpowers/plans/2026-04-18-wrapper-app-migration.md)
+  instead of ad hoc checks.
 
 ### Phase 5. Site Promotion Contract
 

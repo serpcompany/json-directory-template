@@ -8,6 +8,7 @@
     "./category-display": "./src/category-display.ts",
     "./category-navigation": "./src/category-navigation.ts",
     "./category-seo": "./src/category-seo.ts",
+    "./content-query": "./src/content-query.ts",
     "./external-resources": "./src/external-resources.ts",
     "./github-issue": "./src/github-issue.ts",
     "./google-tag-manager": "./src/google-tag-manager.ts",

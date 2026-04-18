@@ -6,6 +6,12 @@ jest.mock('remark-gfm', () => jest.fn())
 
 const mockNotFound = jest.fn()
 const mockSiteConfig = {
+  branding: {
+    appleTouchIconUrl: 'https://example.com/apple-touch-icon.png',
+    faviconUrl: 'https://example.com/favicon.ico',
+    logoUrl: 'https://example.com/logo.png',
+    ogImageUrl: 'https://example.com/opengraph-image.png'
+  },
   copy: {
     docsLabel: 'Docs',
     listingName: {
@@ -28,7 +34,9 @@ const mockSiteConfig = {
 }
 
 jest.mock('@thedaviddias/web-core/site-config', () => ({
+  getConfiguredSocialLinks: jest.fn(() => ['https://x.com/serpcompany']),
   getTwitterHandleFromUrl: jest.fn(() => '@serpcompany'),
+  hasConfiguredPublicSocialLinks: jest.fn(() => true),
   siteConfig: mockSiteConfig
 }))
 
