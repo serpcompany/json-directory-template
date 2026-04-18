@@ -36,6 +36,7 @@
     "./root-shell-client": "./src/root-shell-client.tsx",
     "./routes": "./src/routes.ts",
     "./search/favicon": "./src/search/favicon.tsx",
+    "./search/index-page": "./src/search/index-page.tsx",
     "./search/search-autocomplete": "./src/search/search-autocomplete.tsx",
     "./search-index": "./src/search-index.ts",
     "./schema": "./src/schema.ts",
