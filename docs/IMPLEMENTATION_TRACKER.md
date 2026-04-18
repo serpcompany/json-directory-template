@@ -38,28 +38,31 @@ Reference architectures:
 - [x] Extract the homepage route implementation out of `apps/web/app/page.tsx` into `packages/web-core`.
 - [ ] Extract the remaining content-driven route modules out of `apps/web/app/**` into `packages/web-core`.
   Docs, guides, search, about, legal/news static pages, website detail, and favorites routes are
-  now package-owned. Remaining heavy families are the directory-shell flows that still depend on
-  app-owned route-facing UI, especially categories and the shared homepage/category/favorites UI
-  kit under `apps/web/components/**`.
+  package-owned, and `apps/serpdownloaders.com` now owns explicit entrypoints for the active-site
+  surfaces that ship today (`/`, `/about`, `/categories/**`, `/products/**`, `/legal/**`,
+  `/search`, `/rss.xml`, `/robots.txt`, `/sitemap.xml`). Remaining route debt is the wrapper-local
+  fallback layer that still resolves some UI/support modules from `apps/web`.
 - [ ] Extract shared route-facing UI out of `apps/web/components/**` into `packages/web-core`.
   Shared layout/sidebar primitives, hero/animated background, newsletter/external-resources
-  blocks, homepage list sections, creator-projects, and the featured-guides/category/search
-  wrapper components now live in `packages/web-core`, along with the website-detail presentation
-  stack. Remaining app-owned route-facing UI is now mostly the guide card and any wrapper-local
-  slot injection still needed to avoid pulling app-only dependencies into `packages/web-core`.
-- [ ] Stop treating `apps/web` as the canonical implementation app for the active site.
-- [ ] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
-- [ ] Remove remaining build-source assumptions that still hardcode `apps/web` as the source app.
-  Build-site staging now derives source-app paths from the configured app out dir. Remaining work is
-  to finish wrapper ownership and any leftover repo defaults that still treat `apps/web` as the
-  implicit source app.
+  blocks, homepage list sections, creator-projects, featured-guides/search/category/search wrappers,
+  guide-card, and the website-detail presentation stack now live in `packages/web-core`. Remaining
+  app-owned route-facing UI is the wrapper-local fallback layer still pulled through
+  `apps/serpdownloaders.com` via `@/* -> ../web/*`, especially MDX/rendering primitives, search UI,
+  favorites/search controls, and listing card support components.
+- [x] Stop treating `apps/web` as the canonical implementation app for the active site.
+- [x] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
+- [x] Remove remaining build-source assumptions that still hardcode `apps/web` as the source app.
+  `apps/serpdownloaders.com` now self-builds with local `next build`, `dev:site` starts the wrapper
+  app through its own package script, `search-index-generator` writes into the selected wrapper
+  app's `public/search` directory, and the active checked-in site points its `appOutDir` at
+  `apps/serpdownloaders.com/out`.
 
 Acceptance:
 
-- [ ] `apps/serpdownloaders.com` is the canonical active-site wrapper app.
-- [ ] `apps/web` is no longer the source implementation app for the active-site build.
+- [x] `apps/serpdownloaders.com` is the canonical active-site wrapper app.
+- [x] `apps/web` is no longer the source implementation app for the active-site build.
 - [ ] Shared route logic and shared route-facing UI live in `packages/web-core`.
-- [ ] Active-site build/deploy no longer rely on `apps/web` as the canonical source app.
+- [x] Active-site build/deploy no longer rely on `apps/web` as the canonical source app.
 
 ### Phase 1. Active-Site Cleanup
 
@@ -132,9 +135,11 @@ Status note:
 
 - `packages/web-core` and `packages/site-contract` now own most of the low-coupling shared helper
   slices.
-- `apps/serpdownloaders.com` now exists as the first thin wrapper app, and `build:site` reaches
-  the active site through that wrapper package while `apps/web` remains the canonical
-  implementation.
+- `apps/serpdownloaders.com` now owns the active-site build/dev/typecheck entrypoint and the
+  active route files that ship `serpdownloaders.com` today.
+- The main remaining gap is wrapper isolation: `apps/serpdownloaders.com` still uses a
+  local-first `@/*` alias fallback into `../web/*`, so some route-supporting modules still resolve
+  through `apps/web/components/**` instead of local shims or package-owned exports.
 - Phase 4 wrapper extraction tasks are complete and verified through validate/build/deploy dry-run
   plus focused route and shim test suites.
 - Full execution plan for the remaining wrapper migration now lives in:

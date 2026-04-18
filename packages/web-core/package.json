@@ -43,7 +43,6 @@
     "./search/index-page": "./src/search/index-page.tsx",
     "./search/search-results": "./src/search/search-results.tsx",
     "./search/search-autocomplete": "./src/search/search-autocomplete.tsx",
-    "./search/search-results": "./src/search/search-results.tsx",
     "./search-index": "./src/search-index.ts",
     "./schema": "./src/schema.ts",
     "./sections/creator-projects-section": "./src/sections/creator-projects-section.tsx",

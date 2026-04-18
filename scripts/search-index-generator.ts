@@ -2,6 +2,11 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  loadCheckedInSiteFromInput,
+  parseSiteInputArgs,
+  resolveSiteAppOutDir,
+} from './site-config.ts';
+import {
   searchIndexSchema,
   type SearchIndexEntry,
 } from '@thedaviddias/web-core/search-index';
@@ -100,10 +105,14 @@ function writeSearchIndex(
 }
 
 export function main(): void {
+  const siteDefinition = loadCheckedInSiteFromInput(parseSiteInputArgs(process.argv.slice(2)));
   const inputPath = process.env.WEBSITE_DATA_PATH || 'data/listings.json';
   const outputPath =
     process.env.SEARCH_INDEX_OUTPUT_PATH ||
-    'apps/web/public/search/search-index.json';
+    resolve(
+      dirname(resolveSiteAppOutDir(siteDefinition)),
+      'public/search/search-index.json'
+    );
   const listingBasePath = process.env.LISTING_ROUTE_BASE_PATH || 'listing';
 
   const sourceEntries = loadSearchSourceEntries(inputPath);

@@ -150,6 +150,70 @@ importers:
         specifier: ^1.58.2
         version: 1.58.2
 
+  apps/serpdownloaders.com:
+    dependencies:
+      '@content-collections/core':
+        specifier: ^0.8.2
+        version: 0.8.2(typescript@5.9.3)
+      '@content-collections/next':
+        specifier: ^0.2.10
+        version: 0.2.10(@content-collections/core@0.8.2(typescript@5.9.3))(next@16.1.6(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
+      '@next/mdx':
+        specifier: 16.1.6
+        version: 16.1.6(@mdx-js/loader@3.1.1(acorn@8.15.0)(webpack@5.98.0(@swc/core@1.11.5(@swc/helpers@0.5.15))(esbuild@0.25.0)))(@mdx-js/react@3.1.1(@types/react@19.2.14)(react@19.2.4))
+      '@thedaviddias/config-next':
+        specifier: workspace:*
+        version: link:../../configs/next
+      '@thedaviddias/design-system':
+        specifier: workspace:*
+        version: link:../../packages/design-system
+      '@thedaviddias/logging':
+        specifier: workspace:*
+        version: link:../../packages/logging
+      '@thedaviddias/site-contract':
+        specifier: workspace:*
+        version: link:../../packages/site-contract
+      '@thedaviddias/web-core':
+        specifier: workspace:*
+        version: link:../../packages/web-core
+      fast-xml-parser:
+        specifier: ^5.3.5
+        version: 5.3.5
+      lucide-react:
+        specifier: ^0.486.0
+        version: 0.486.0(react@19.2.4)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      next-auth:
+        specifier: 5.0.0-beta.30
+        version: 5.0.0-beta.30(next@16.1.6(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.4(react@19.2.4)
+    devDependencies:
+      '@tailwindcss/postcss':
+        specifier: ^4.1.18
+        version: 4.1.18
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.19.11
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.14)
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
   apps/web:
     dependencies:
       '@clerk/nextjs':
@@ -812,6 +876,12 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
+      zod-to-json-schema:
+        specifier: ^3.25.1
+        version: 3.25.1(zod@3.25.76)
 
   packages/utils:
     dependencies:
@@ -840,6 +910,18 @@ importers:
 
   packages/web-core:
     dependencies:
+      '@icons-pack/react-simple-icons':
+        specifier: ^12.9.0
+        version: 12.9.0(react@19.2.4)
+      '@thedaviddias/design-system':
+        specifier: workspace:*
+        version: link:../design-system
+      '@thedaviddias/hooks':
+        specifier: workspace:*
+        version: link:../hooks
+      '@thedaviddias/logging':
+        specifier: workspace:*
+        version: link:../logging
       '@thedaviddias/site-contract':
         specifier: workspace:*
         version: link:../site-contract
@@ -849,6 +931,27 @@ importers:
       lucide-react:
         specifier: ^0.486.0
         version: 0.486.0(react@19.2.4)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      next-auth:
+        specifier: 5.0.0-beta.30
+        version: 5.0.0-beta.30(next@16.1.6(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+      next-mdx-remote:
+        specifier: ^6.0.0
+        version: 6.0.0(@types/react@19.2.14)(acorn@8.15.0)(react@19.2.4)
+      next-themes:
+        specifier: ^0.4.6
+        version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.4(react@19.2.4)
+      remark-gfm:
+        specifier: ^4.0.1
+        version: 4.0.1
       zod:
         specifier: 'catalog:'
         version: 3.25.76

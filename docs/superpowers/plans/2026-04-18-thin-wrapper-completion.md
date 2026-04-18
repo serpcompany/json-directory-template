@@ -6,10 +6,13 @@
 
 ## Current Reality
 
-- `apps/serpdownloaders.com` exists, but it still delegates to `apps/web`.
+- `apps/serpdownloaders.com` now self-builds and owns the active-site route entrypoints that ship
+  `serpdownloaders.com` today.
 - `apps/web/app/**` still owns most route implementations.
-- `apps/web/components/**` still owns most shared route-facing UI.
-- build-site still stages/search-indexes/brands against `apps/web` paths.
+- `apps/web/components/**` still owns a fallback layer of route-supporting UI that the active
+  wrapper can still reach through `@/* -> ../web/*`.
+- active-site build/search-index/dev flows no longer target `apps/web`, but wrapper isolation is
+  not complete until the `../web/*` alias fallback and component re-export chain are removed.
 
 ## Task 1: Extract Shared Root Shell Into `packages/web-core`
 
@@ -105,6 +108,13 @@
 - Run: `pnpm --filter serpdownloaders.com build`
 - Confirm `apps/serpdownloaders.com/app/**` imports package-owned modules rather than `apps/web/app/**`
 
+Status:
+
+- Completed for the active-site surfaces that currently ship (`/`, `/about`, `/categories/**`,
+  `/products/**`, `/legal/**`, `/search`, `/rss.xml`, `/robots.txt`, `/sitemap.xml`).
+- Remaining follow-up is to remove the wrapper's `@/* -> ../web/*` fallback so these entrypoints do
+  not silently rely on sibling-app components.
+
 ## Task 6: Remove Remaining `apps/web` Build-Source Assumptions
 
 **Intent:**
@@ -129,6 +139,35 @@
   - `rss.xml`
   - `sitemap-index.xml`
   - staged brand assets and search index output
+
+Status:
+
+- Completed for the active site. `sites/serpdownloaders.com/site-config.ts` now points `appOutDir`
+  at `apps/serpdownloaders.com/out`, `search-index-generator` writes into the selected wrapper app,
+  and `dev:site` starts the wrapper package rather than hardcoding `web`.
+
+## Task 6a: Remove Wrapper Alias Fallback And Remaining `apps/web` Component Re-exports
+
+**Intent:**
+
+- Finish the isolation step that the self-building wrapper surfaced.
+- Make `apps/serpdownloaders.com` resolve route-supporting UI explicitly through local shims or
+  package exports instead of silently falling back to `../web/*`.
+
+**Files:**
+
+- Modify: `apps/serpdownloaders.com/tsconfig.json`
+- Modify: `apps/serpdownloaders.com/components/**`
+- Create: any missing local support shims needed for the active-site surfaces
+- Modify: `packages/web-core/src/**` and exports where shared UI should become package-owned
+
+**Verification:**
+
+- Run: `pnpm --filter serpdownloaders.com typecheck`
+- Run: `pnpm --filter serpdownloaders.com build`
+- Run: `pnpm build:site -- --site serpdownloaders.com`
+- Confirm `apps/serpdownloaders.com/tsconfig.json` no longer maps `@/*` to `../web/*`
+- Confirm active wrapper routes no longer rely on `../../web/components/**` re-export chains
 
 ## Task 7: Final Thin-Wrapper Acceptance Pass
 

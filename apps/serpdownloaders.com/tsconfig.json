@@ -3,13 +3,16 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["../web/*"],
+      "@/*": ["./*", "../web/*"],
       "@cli-data/*": ["../../packages/cli/data/*"],
-      "content-collections": ["../web/.content-collections/generated"]
+      "content-collections": ["./.content-collections/generated"]
     }
   },
   "include": [
-    "app/**/*.ts",
-    "app/**/*.tsx"
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".content-collections/generated/**/*.ts"
   ]
 }
