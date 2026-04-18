@@ -1,10 +1,10 @@
 import { Section } from '@/components/layout/section'
-import { getRoute } from '@thedaviddias/web-core/routes'
-import type { Guide } from '@/types/types'
+import { FeaturedGuidesSection as PackageFeaturedGuidesSection } from '@thedaviddias/web-core/sections/featured-guides-section'
+import type { GuideMetadata } from '@/lib/content-loader'
 import { GuideCard } from './guide-card'
 
 interface FeaturedGuidesSectionProps {
-  guides: Guide[]
+  guides: GuideMetadata[]
 }
 
 /**
@@ -15,22 +15,10 @@ interface FeaturedGuidesSectionProps {
  * @returns React component
  */
 export function FeaturedGuidesSection({ guides }: FeaturedGuidesSectionProps) {
-  if (guides.length === 0) {
-    return null
-  }
-
   return (
-    <Section
-      title="Featured Posts"
-      description="Explore posts, walkthroughs, and reference notes for this directory."
-      viewAllHref={getRoute('guides.list')}
-      viewAllText="All posts"
-    >
-      <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6">
-        {guides.map(guide => (
-          <GuideCard key={guide.slug} guide={guide} />
-        ))}
-      </div>
-    </Section>
+    <PackageFeaturedGuidesSection
+      guides={guides}
+      slots={{ GuideCard, Section }}
+    />
   )
 }

@@ -1,5 +1,5 @@
 import type { WebsiteMetadata } from '@/lib/content-loader';
-import { siteCopy } from '@thedaviddias/web-core/site-copy';
+import { CategoryWebsitesList as SharedCategoryWebsitesList } from '@thedaviddias/web-core/category-websites-list';
 import { WebsitesListWithSort } from './websites-list-with-sort';
 
 interface CategoryWebsitesListProps {
@@ -13,10 +13,9 @@ export function CategoryWebsitesList({
   initialWebsites,
 }: CategoryWebsitesListProps) {
   return (
-    <WebsitesListWithSort
+    <SharedCategoryWebsitesList
       initialWebsites={initialWebsites}
-      emptyTitle={siteCopy.categoryEmptyTitle}
-      emptyDescription={siteCopy.categoryEmptyDescription}
+      slots={{ WebsitesListWithSort }}
     />
   );
 }

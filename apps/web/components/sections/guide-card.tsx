@@ -4,10 +4,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { getRoute } from '@thedaviddias/web-core/routes'
-import type { Guide } from '@/types/types'
+import type { GuideMetadata } from '@/lib/content-loader'
 
 interface GuideCardProps {
-  guide: Guide
+  guide: GuideMetadata
   index?: number
 }
 
@@ -17,7 +17,7 @@ interface GuideCardProps {
  * @param difficulty - The difficulty level of the guide
  * @returns CSS class string for styling the difficulty badge
  */
-function getDifficultyColor(difficulty: Guide['difficulty']) {
+function getDifficultyColor(difficulty: GuideMetadata['difficulty']) {
   switch (difficulty) {
     case 'beginner':
       return 'bg-green-500/10 text-green-500 dark:bg-green-500/20'
