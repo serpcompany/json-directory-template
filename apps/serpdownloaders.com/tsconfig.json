@@ -1,0 +1,15 @@
+{
+  "extends": "../web/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["../web/*"],
+      "@cli-data/*": ["../../packages/cli/data/*"],
+      "content-collections": ["../web/.content-collections/generated"]
+    }
+  },
+  "include": [
+    "app/**/*.ts",
+    "app/**/*.tsx"
+  ]
+}
