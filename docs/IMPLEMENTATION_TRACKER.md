@@ -35,7 +35,7 @@ Reference architectures:
 
 - [x] Correct the tracker/plan state so it matches the current repo shape.
 - [x] Extract the shared root app shell out of `apps/web/app/layout.tsx` into `packages/web-core`.
-- [ ] Extract the homepage route implementation out of `apps/web/app/page.tsx` into `packages/web-core`.
+- [x] Extract the homepage route implementation out of `apps/web/app/page.tsx` into `packages/web-core`.
 - [ ] Extract the remaining content-driven route modules out of `apps/web/app/**` into `packages/web-core`.
 - [ ] Extract shared route-facing UI out of `apps/web/components/**` into `packages/web-core`.
 - [ ] Stop treating `apps/web` as the canonical implementation app for the active site.

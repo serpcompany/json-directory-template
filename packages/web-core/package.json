@@ -12,6 +12,7 @@
     "./content-query": "./src/content-query.ts",
     "./external-resources": "./src/external-resources.ts",
     "./github-issue": "./src/github-issue.ts",
+    "./home-page": "./src/home-page.tsx",
     "./hooks/use-search": "./src/hooks/use-search.ts",
     "./google-tag-manager": "./src/google-tag-manager.ts",
     "./layout/footer": "./src/layout/footer.tsx",
