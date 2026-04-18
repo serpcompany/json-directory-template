@@ -153,6 +153,27 @@ Acceptance:
 
 - promoting site #2 is a deliberate operational step, not an accidental codebase side effect
 
+### Phase 6. Thin-Wrapper Completion
+
+- finish the extraction that Phase 4 stopped short of:
+  - move the shared root app shell out of `apps/web/app/layout.tsx`
+  - move shared route implementations out of `apps/web/app/**`
+  - move shared route-facing UI out of `apps/web/components/**`
+  - make `apps/serpdownloaders.com` the canonical active-site wrapper app
+  - stop treating `apps/web` as the canonical implementation app for the active site
+  - remove build-source assumptions that still hardcode `apps/web`
+- keep route behavior and built artifacts stable while ownership flips
+- use
+  [docs/superpowers/plans/2026-04-18-thin-wrapper-completion.md](/Users/devin/dev/repos/json-directory-template/docs/superpowers/plans/2026-04-18-thin-wrapper-completion.md)
+  as the execution plan for this phase
+
+Acceptance:
+
+- `apps/serpdownloaders.com` is the canonical thin wrapper app for the active site
+- `apps/web` is no longer the source implementation app for active-site build output
+- shared route logic and shared route-facing UI live in `packages/web-core`
+- active-site build/deploy no longer rely on `apps/web` as the canonical source app
+
 ## Important Implementation Areas
 
 The implementation should expect to touch these kinds of surfaces:

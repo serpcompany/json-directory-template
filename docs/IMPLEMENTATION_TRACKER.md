@@ -27,9 +27,27 @@ Reference architectures:
 - [x] `serpdownloaders.com` is the only site currently powering this repo.
 - [x] `serp.co`, `extensions.serp.co`, and `serp.software` are removed from the active registry.
 - [x] Active-vs-incubating site rules are documented and enforced.
-- [x] Thin wrapper apps plus a shared `packages/web-core` boundary are in place.
+- [ ] Thin wrapper apps plus a shared `packages/web-core` boundary are fully in place.
 
 ## Immediate Queue
+
+### Phase 6. Thin-Wrapper Completion
+
+- [ ] Correct the tracker/plan state so it matches the current repo shape.
+- [ ] Extract the shared root app shell out of `apps/web/app/layout.tsx` into `packages/web-core`.
+- [ ] Extract the homepage route implementation out of `apps/web/app/page.tsx` into `packages/web-core`.
+- [ ] Extract the remaining content-driven route modules out of `apps/web/app/**` into `packages/web-core`.
+- [ ] Extract shared route-facing UI out of `apps/web/components/**` into `packages/web-core`.
+- [ ] Stop treating `apps/web` as the canonical implementation app for the active site.
+- [ ] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
+- [ ] Remove remaining build-source assumptions that still hardcode `apps/web` as the source app.
+
+Acceptance:
+
+- [ ] `apps/serpdownloaders.com` is the canonical active-site wrapper app.
+- [ ] `apps/web` is no longer the source implementation app for the active-site build.
+- [ ] Shared route logic and shared route-facing UI live in `packages/web-core`.
+- [ ] Active-site build/deploy no longer rely on `apps/web` as the canonical source app.
 
 ### Phase 1. Active-Site Cleanup
 
@@ -157,4 +175,4 @@ Acceptance:
 - [x] The active registry contains only approved active sites.
 - [x] Inactive sites are preserved without affecting runtime/build/deploy.
 - [x] `serpdownloaders.com` remains healthy through the full pipeline.
-- [x] The repo has an explicit, documented path toward thin wrapper apps plus shared core runtime.
+- [ ] The repo has an explicit, implemented path toward thin wrapper apps plus shared core runtime.
