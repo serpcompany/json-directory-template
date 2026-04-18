@@ -20,6 +20,7 @@ For completed execution history, see:
 - `apps/serpdownloaders.com` is the active checked-in site wrapper.
 - Shared runtime and route logic lives in `packages/web-core`.
 - Checked-in site contract and site resolution live in `packages/site-contract`.
+- The starter submit flow now supports self-service badge verification with a GitHub fallback path.
 
 ## Current priorities
 

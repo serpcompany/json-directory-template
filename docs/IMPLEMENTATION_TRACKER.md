@@ -17,6 +17,7 @@ Historical note:
 - Shared route/runtime logic lives in `packages/web-core`.
 - Site contract logic lives in `packages/site-contract`.
 - Build/deploy tooling now targets wrapper apps instead of the old shared app.
+- The starter submit flow now supports self-service badge verification with pending/verified submission storage and a GitHub fallback path.
 
 ## Verified pipeline
 

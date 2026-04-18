@@ -206,6 +206,7 @@ The public `/submit` form intentionally mirrors the core fields for one listing:
 - `website`
 - `category`
 - `description`
-- optional reviewer notes
+- optional `content`
+- optional `resourceLinks`
 
 That gives maintainers a quick way to test the minimum one-record contract even before a bulk import flow exists.

@@ -13,6 +13,7 @@
     "./site-content": "./src/site-content.ts",
     "./starter-app-defaults": "./src/starter-app-defaults.ts",
     "./site-root-listing-aliases": "./src/site-root-listing-aliases.ts",
+    "./submission-schema": "./src/submission-schema.ts",
     "./trial-product-schema": "./src/trial-product-schema.ts",
     "./trial-products": "./src/trial-products.ts",
     "./types": "./src/types.ts"

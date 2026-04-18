@@ -5,10 +5,11 @@ The current starter keeps submissions static-friendly.
 That means the active path is:
 
 1. a visitor submits through `/submit`
-2. the app sends them to a prefilled GitHub issue
-3. a maintainer reviews the issue
-4. if accepted, the maintainer opens or updates a PR that edits the active checked-in listing source
-5. CI validates the active checked-in site data before merge
+2. the app stores a pending submission and returns a verification token
+3. the visitor lands on `/submit/verify?token=...` and publishes the badge snippet on their site
+4. `/api/verify-badge` checks for the backlink and verification token
+5. if accepted, the app appends the listing to the active checked-in listing source and revalidates the affected pages
+6. maintainers can still fall back to the GitHub issue path when needed
 
 ## Active validation strategy
 
@@ -24,8 +25,9 @@ The repo now uses two layers:
 
 This keeps the current strategy explicit:
 
-- GitHub issue intake is the public submission handoff
-- PRs are the reviewable write path
+- self-serve badge verification is the primary public submission handoff
+- GitHub issue intake remains as a fallback/operator path
+- PRs are still the reviewable write path for broader listing-data changes
 - the default starter still uses `data/listings.json`
 - the current active checked-in site uses `sites/serpdownloaders.com/products.json`
 - this is the current static-starter bridge flow, not the long-term hosted auth/submission architecture
@@ -49,12 +51,13 @@ If validation fails on a PR:
 3. push the correction to the same PR
 4. wait for `Validate Listing Data` to pass
 
-If the problem came from a GitHub issue submission, fix the checked-in JSON in the maintainer PR rather than trying to make the issue itself the source of truth.
+If the problem came from a GitHub fallback submission, fix the checked-in JSON in the maintainer PR rather than trying to make the issue itself the source of truth.
 
 ## Related files
 
 - `.github/workflows/pr-review.yml`
 - `.github/workflows/update-listings-json.yml`
+- `docs/SUBMISSION_FLOW.md`
 - `scripts/validate-data.ts`
 - `packages/content/data/docs/submit-workflow.mdx`
 - [hosted-submission-extension-path.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/hosted-submission-extension-path.md)
