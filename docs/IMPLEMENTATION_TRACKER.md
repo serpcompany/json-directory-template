@@ -48,10 +48,10 @@ Reference architectures:
   blocks, homepage list sections, creator-projects, featured-guides/search/category/search wrappers,
   guide-card, website-detail presentation stack, and the shared support primitives for empty-state,
   MDX rendering, project navigation, card/copy/favicon UI, listing-logo presentation, generic
-  search helpers/filtering UI, and `JsonLd` now live in `packages/web-core`. Remaining app-owned
-  route-facing UI is the explicit local support graph in `apps/serpdownloaders.com/components/**`,
-  especially the search-results wrapper, favorites/search controls, listing-card support components,
-  and analytics/favorites hooks that
+  search helpers/filtering UI, `JsonLd`, favorites/list-control/card primitives, and the shared
+  listing grid now live in `packages/web-core`. Remaining app-owned route-facing UI is the explicit
+  local support graph in `apps/serpdownloaders.com/components/**`, especially the search-results
+  wrapper, websites-list wrappers, analytics helpers, and any remaining route-facing adapters that
   are still app-bound rather than package-owned.
 - [x] Stop treating `apps/web` as the canonical implementation app for the active site.
 - [x] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.

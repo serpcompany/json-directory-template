@@ -17,6 +17,8 @@
 - generic search helpers/filtering UI and `JsonLd` now also live in `packages/web-core`; the
   remaining search debt is mostly the route-facing search-results wrapper plus favorites/analytics
   coupling in the list stack.
+- favorites/list-control primitives and the shared listing grid now also live in `packages/web-core`;
+  the remaining list-stack debt is mostly the websites-list wrappers plus app-local analytics glue.
 - active-site build/search-index/dev flows no longer target `apps/web`, but wrapper isolation is
   not complete until the copied support graph is reduced to package-owned exports plus a thin app
   shell.
