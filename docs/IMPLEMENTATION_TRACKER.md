@@ -43,10 +43,10 @@ Reference architectures:
   kit under `apps/web/components/**`.
 - [ ] Extract shared route-facing UI out of `apps/web/components/**` into `packages/web-core`.
   Shared layout/sidebar primitives, hero/animated background, newsletter/external-resources
-  blocks, homepage list sections, and the featured-guides/category wrapper components now live in
-  `packages/web-core`. Remaining app-owned route-facing UI still includes the guide card and
-  listing-grid/search wrappers, creator-projects section, and the website detail presentation
-  components.
+  blocks, homepage list sections, creator-projects, and the featured-guides/category/search
+  wrapper components now live in `packages/web-core`. Remaining app-owned route-facing UI still
+  includes the guide card, website detail presentation components, and any wrapper-local slot
+  injection still needed to avoid pulling app-only dependencies into `packages/web-core`.
 - [ ] Stop treating `apps/web` as the canonical implementation app for the active site.
 - [ ] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
 - [ ] Remove remaining build-source assumptions that still hardcode `apps/web` as the source app.
