@@ -95,6 +95,18 @@ Build behavior:
 - runs the static export build
 - writes the final artifact to `dist/sites/<site-id>`
 
+Promotion rule:
+
+- `pnpm validate:sites` is not enough by itself to promote a site into the active registry
+- promotion also requires:
+  - `pnpm validate:site -- --site <site-id>`
+  - `pnpm build:site -- --site <site-id>`
+  - `pnpm deploy:site -- --site <site-id> --dry-run`
+  - wrapper-app readiness, docs/runbook updates, and active-registry test coverage
+- use
+  [SITE_PROMOTION_CHECKLIST.md](./SITE_PROMOTION_CHECKLIST.md)
+  as the final promotion gate
+
 Current supported staged asset shapes:
 
 - favicon -> `sites/<site-id>/assets/favicon.ico`

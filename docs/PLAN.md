@@ -145,6 +145,9 @@ Acceptance:
   - validation/build/deploy coverage
   - docs/runbook updates
   - tests
+- use
+  [docs/SITE_PROMOTION_CHECKLIST.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_PROMOTION_CHECKLIST.md)
+  as the operational gate for site promotion
 
 Acceptance:
 

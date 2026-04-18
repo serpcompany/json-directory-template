@@ -11,6 +11,7 @@ Key context:
 - [README.md](/Users/devin/dev/repos/json-directory-template/README.md)
 - [docs/BUILD_PIPELINE.md](/Users/devin/dev/repos/json-directory-template/docs/BUILD_PIPELINE.md)
 - [docs/DEPLOY_RUNBOOK.md](/Users/devin/dev/repos/json-directory-template/docs/DEPLOY_RUNBOOK.md)
+- [docs/SITE_PROMOTION_CHECKLIST.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_PROMOTION_CHECKLIST.md)
 - [docs/SITE_CONFIG_INVENTORY.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_INVENTORY.md)
 - [docs/knowledge/site-config.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/site-config.md)
 - [docs/knowledge/github-pages-static-export.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/github-pages-static-export.md)
@@ -26,7 +27,7 @@ Reference architectures:
 - [x] `serpdownloaders.com` is the only site currently powering this repo.
 - [x] `serp.co`, `extensions.serp.co`, and `serp.software` are removed from the active registry.
 - [x] Active-vs-incubating site rules are documented and enforced.
-- [ ] Thin wrapper apps plus a shared `packages/web-core` boundary are in place.
+- [x] Thin wrapper apps plus a shared `packages/web-core` boundary are in place.
 
 ## Immediate Queue
 
@@ -77,7 +78,7 @@ Acceptance:
 
 Acceptance:
 
-- [ ] `serpdownloaders.com` still ships correctly after extraction.
+- [x] `serpdownloaders.com` still ships correctly after extraction.
 
 Phase 4 ownership model:
 
@@ -124,7 +125,7 @@ handled as its own reviewable unit.
 4. [x] Task 4: create `apps/serpdownloaders.com` thin wrapper skeleton
 5. [x] Task 5: repoint build/validate/deploy to the wrapper app
 6. [x] Task 6: remove dead `apps/web/lib/*` re-export shims
-7. [ ] Task 7: run the final Phase 4 acceptance pass
+7. [x] Task 7: run the final Phase 4 acceptance pass
 
 Execution note:
 
@@ -136,24 +137,24 @@ Execution note:
 
 ### Phase 5. Site Promotion Contract
 
-- [ ] Document the checklist for promoting a new site into the active registry.
-- [ ] Require validation/build/deploy/docs/tests before promotion.
+- [x] Document the checklist for promoting a new site into the active registry.
+- [x] Require validation/build/deploy/docs/tests before promotion.
 
 Acceptance:
 
-- [ ] Adding site #2 becomes a deliberate promotion step instead of an ad hoc branch action.
+- [x] Adding site #2 becomes a deliberate promotion step instead of an ad hoc branch action.
 
 ## Verification Checklist
 
-- [ ] `pnpm validate:site -- --site serpdownloaders.com`
-- [ ] `pnpm build:site -- --site serpdownloaders.com`
-- [ ] `pnpm deploy:site -- --site serpdownloaders.com --dry-run`
-- [ ] active site registry tests pass
-- [ ] inactive/unregistered site rejection tests pass
+- [x] `pnpm validate:site -- --site serpdownloaders.com`
+- [x] `pnpm build:site -- --site serpdownloaders.com`
+- [x] `pnpm deploy:site -- --site serpdownloaders.com --dry-run`
+- [x] active site registry tests pass
+- [x] inactive/unregistered site rejection tests pass
 
 ## Done Conditions
 
-- [ ] The active registry contains only approved active sites.
-- [ ] Inactive sites are preserved without affecting runtime/build/deploy.
-- [ ] `serpdownloaders.com` remains healthy through the full pipeline.
-- [ ] The repo has an explicit, documented path toward thin wrapper apps plus shared core runtime.
+- [x] The active registry contains only approved active sites.
+- [x] Inactive sites are preserved without affecting runtime/build/deploy.
+- [x] `serpdownloaders.com` remains healthy through the full pipeline.
+- [x] The repo has an explicit, documented path toward thin wrapper apps plus shared core runtime.

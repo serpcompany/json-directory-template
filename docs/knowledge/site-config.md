@@ -28,6 +28,12 @@ If a file can be reused by more than one site app, it should not live under `app
 If a file defines checked-in site data rather than shared runtime behavior, it should not live in
 `packages/web-core`.
 
+Promotion rule:
+
+- `sites/<site-id>` content alone does not make a site active
+- activation requires explicit promotion into the active registry plus green validation, build,
+  deploy dry-run, docs, and tests
+
 Important distinction:
 
 - `sites/site-config.default.ts` and `sites/<id>/site-config.ts` are declarative checked-in source
