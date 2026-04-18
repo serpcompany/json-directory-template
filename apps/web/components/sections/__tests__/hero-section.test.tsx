@@ -2,17 +2,13 @@ import { render, screen } from '@/test/test-utils'
 import { HeroSection } from '@/components/sections/hero-section'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 
-jest.mock('@/lib/content-loader', () => ({
-  getWebsites: jest.fn(async () => new Array(42).fill(null))
-}))
-
 jest.mock('@thedaviddias/web-core/ui/animated-background', () => ({
   AnimatedBackground: () => <div data-testid="animated-background" />
 }))
 
 describe('HeroSection', () => {
   it('renders the configured site name with generic directory copy', async () => {
-    render(await HeroSection())
+    render(<HeroSection websiteCount={42} />)
 
     expect(screen.getByRole('heading', { name: siteConfig.name })).toBeInTheDocument()
     expect(screen.getByText(new RegExp(siteConfig.tagline, 'i'))).toBeInTheDocument()

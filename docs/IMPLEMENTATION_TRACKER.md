@@ -52,10 +52,10 @@ Reference architectures:
   listing grid now live in `packages/web-core`, along with package-owned route wrappers for search
   results, the websites-list search/sort adapters, category/homepage list wrappers, and the shared
   website-detail route adapters, plus package-owned route wrappers for homepage list sections and
-  guide/external-resources cards. Remaining app-owned route-facing UI is the explicit local support
-  graph in `apps/serpdownloaders.com/components/**`, now mostly the creator-projects analytics
-  adapter, a dead hero shim, analytics helpers, and any route-facing glue that is still app-bound
-  rather than package-owned.
+  guide/external-resources cards. Shared analytics helpers and the creator-projects route wrapper
+  now also live in `packages/web-core`, and the active wrapper's explicit local support graph in
+  `apps/serpdownloaders.com/components/**` has been reduced to thin re-exports plus a few tiny
+  helper shims rather than route-owned UI logic.
 - [x] Stop treating `apps/web` as the canonical implementation app for the active site.
 - [x] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
 - [x] Remove remaining build-source assumptions that still hardcode `apps/web` as the source app.
@@ -145,9 +145,9 @@ Status note:
 - `apps/serpdownloaders.com` now owns the active-site build/dev/typecheck entrypoint and the
   active route files that ship `serpdownloaders.com` today.
 - The main remaining gap is package ownership cleanup: the active wrapper now resolves its own
-  route-supporting modules explicitly, but the last meaningful support debt is concentrated in a
-  very small set of section/analytics adapters rather than the broader homepage and website-detail
-  stacks that now live in `packages/web-core`.
+  route-supporting modules explicitly, and the active wrapper support graph is now effectively
+  thin. The remaining repo-level gap is broader cleanup of legacy `apps/web` route-facing UI and
+  any direct app-level imports that should become package-owned or package-direct.
 - Phase 4 wrapper extraction tasks are complete and verified through validate/build/deploy dry-run
   plus focused route and shim test suites.
 - Full execution plan for the remaining wrapper migration now lives in:

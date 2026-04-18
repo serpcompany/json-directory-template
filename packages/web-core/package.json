@@ -4,6 +4,7 @@
   "private": true,
   "exports": {
     "./asset-reference": "./src/asset-reference.ts",
+    "./analytics": "./src/analytics.ts",
     "./auth/sign-out-button": "./src/auth/sign-out-button.tsx",
     "./categories": "./src/categories.ts",
     "./category-websites-list-route": "./src/category-websites-list-route.tsx",
@@ -59,6 +60,7 @@
     "./search-index": "./src/search-index.ts",
     "./schema": "./src/schema.ts",
     "./sections/creator-projects-section": "./src/sections/creator-projects-section.tsx",
+    "./sections/creator-projects-section-route": "./src/sections/creator-projects-section-route.tsx",
     "./sections/external-resources-section": "./src/sections/external-resources-section.tsx",
     "./sections/external-resources-section-route": "./src/sections/external-resources-section-route.tsx",
     "./sections/guide-card": "./src/sections/guide-card.tsx",
