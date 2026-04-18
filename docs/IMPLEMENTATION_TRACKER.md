@@ -51,10 +51,11 @@ Reference architectures:
   search helpers/filtering UI, `JsonLd`, favorites/list-control/card primitives, and the shared
   listing grid now live in `packages/web-core`, along with package-owned route wrappers for search
   results, the websites-list search/sort adapters, category/homepage list wrappers, and the shared
-  website-detail route adapters. Remaining app-owned route-facing UI is the explicit local support
-  graph in `apps/serpdownloaders.com/components/**`, now mostly a small set of section-level
-  adapters plus analytics helpers and any route-facing glue that is still app-bound rather than
-  package-owned.
+  website-detail route adapters, plus package-owned route wrappers for homepage list sections and
+  guide/external-resources cards. Remaining app-owned route-facing UI is the explicit local support
+  graph in `apps/serpdownloaders.com/components/**`, now mostly the creator-projects analytics
+  adapter, a dead hero shim, analytics helpers, and any route-facing glue that is still app-bound
+  rather than package-owned.
 - [x] Stop treating `apps/web` as the canonical implementation app for the active site.
 - [x] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
 - [x] Remove remaining build-source assumptions that still hardcode `apps/web` as the source app.
@@ -144,8 +145,9 @@ Status note:
 - `apps/serpdownloaders.com` now owns the active-site build/dev/typecheck entrypoint and the
   active route files that ship `serpdownloaders.com` today.
 - The main remaining gap is package ownership cleanup: the active wrapper now resolves its own
-  route-supporting modules explicitly, but many of those support components are still copied or
-  app-local instead of package-owned.
+  route-supporting modules explicitly, but the last meaningful support debt is concentrated in a
+  very small set of section/analytics adapters rather than the broader homepage and website-detail
+  stacks that now live in `packages/web-core`.
 - Phase 4 wrapper extraction tasks are complete and verified through validate/build/deploy dry-run
   plus focused route and shim test suites.
 - Full execution plan for the remaining wrapper migration now lives in:

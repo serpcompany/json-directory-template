@@ -23,6 +23,9 @@
 - category/homepage list wrappers and the shared website-detail route adapters now also live in
   `packages/web-core`; the remaining debt is concentrated in section-level wrappers that still
   inject app-local analytics or data glue.
+- homepage list-section wrappers and guide/external-resource card wrappers now also live in
+  `packages/web-core`; the remaining active-wrapper debt is mostly the creator-project analytics
+  adapter plus the now-dead hero shim and shared analytics helpers.
 - active-site build/search-index/dev flows no longer target `apps/web`, but wrapper isolation is
   not complete until the copied support graph is reduced to package-owned exports plus a thin app
   shell.

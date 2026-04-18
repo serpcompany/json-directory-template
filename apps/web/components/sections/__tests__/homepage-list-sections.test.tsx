@@ -2,7 +2,7 @@ import { render, screen } from '@/test/test-utils'
 import { FeaturedProjectsSection } from '@/components/sections/featured-projects-section'
 import { RecentlyAddedSection } from '@/components/sections/recently-added-section'
 
-jest.mock('@/components/llm/llm-grid', () => ({
+jest.mock('@thedaviddias/web-core/llm/llm-grid', () => ({
   LLMGrid: ({ items }: { items: Array<{ slug: string }> }) => (
     <div data-testid="llm-grid">{items.map((item) => item.slug).join(',')}</div>
   )

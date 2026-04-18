@@ -1,8 +1,8 @@
 import { render, screen } from '@/test/test-utils'
 import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section'
 
-jest.mock('@/components/sections/guide-card', () => ({
-  GuideCard: ({ guide }: { guide: { title: string } }) => (
+jest.mock('@thedaviddias/web-core/sections/guide-card-route', () => ({
+  GuideCardRoute: ({ guide }: { guide: { title: string } }) => (
     <div data-testid="guide-card">{guide.title}</div>
   )
 }))
