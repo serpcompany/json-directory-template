@@ -1,10 +1,11 @@
+import { DEFAULT_STARTER_APP_OUT_DIR, DEFAULT_STARTER_APP_PACKAGE_NAME } from './starter-app-defaults';
 import type { CheckedInSiteConfig } from './types';
 
 export const defaultSiteConfig: CheckedInSiteConfig = {
   branding: {},
   build: {
-    appPackageName: 'web',
-    appOutDir: 'apps/web/out',
+    appPackageName: DEFAULT_STARTER_APP_PACKAGE_NAME,
+    appOutDir: DEFAULT_STARTER_APP_OUT_DIR,
     artifactDir: 'dist/sites/default',
     mode: 'static-directory',
   },

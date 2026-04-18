@@ -1,4 +1,4 @@
-import { getHomePageData } from '../actions/get-home-page-data'
+import { getHomePageData } from '@/actions/get-home-page-data'
 import { HomePageRoute, homePageMetadata } from '@thedaviddias/web-core/home-page'
 import { JsonLd } from '@thedaviddias/web-core/json-ld'
 import { CreatorProjectsSectionRoute as CreatorProjectsSection } from '@thedaviddias/web-core/sections/creator-projects-section-route'

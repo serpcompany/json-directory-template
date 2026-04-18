@@ -73,21 +73,21 @@ pre-commit:
 
     # Relative imports validation
     check-relative-imports:
-      glob: "apps/web/**/*.{ts,tsx,js,jsx}"
-      exclude: "apps/web/**/node_modules/**"
+      glob: "apps/**/*.{ts,tsx,js,jsx}"
+      exclude: "apps/**/node_modules/**"
       run: pnpm tsx scripts/check-relative-imports.ts {staged_files}
 
     # Test modified test files
     test-modified:
-      glob: "apps/web/**/*.{test,spec}.{js,ts,tsx}"
-      run: cd apps/web && pnpm test:related {staged_files}
+      glob: "apps/**/*.{test,spec}.{js,ts,tsx}"
+      run: pnpm tsx scripts/run-app-tests.ts {staged_files}
 
 # Pre-push validation
 pre-push:
   commands:
     # Run tests
     test-all:
-      run: turbo test --filter=web
+      run: pnpm tsx scripts/run-app-tests.ts
 
 # Commit message validation
 commit-msg:

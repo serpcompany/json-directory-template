@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import {
   defaultSiteConfig,
+  DEFAULT_STARTER_APP_OUT_DIR,
+  DEFAULT_STARTER_APP_PACKAGE_NAME,
   resolveCheckedInSiteConfig,
 } from '@thedaviddias/site-contract';
 import {
@@ -93,8 +95,8 @@ const checkedInSiteConfigSchema = z.object({
     opengraphImage: assetSourceSchema.optional(),
   }),
   build: z.object({
-    appPackageName: z.string().min(1).default('web'),
-    appOutDir: z.string().min(1).default('apps/web/out'),
+    appPackageName: z.string().min(1).default(DEFAULT_STARTER_APP_PACKAGE_NAME),
+    appOutDir: z.string().min(1).default(DEFAULT_STARTER_APP_OUT_DIR),
     artifactDir: z.string().min(1),
     mode: z.literal('static-directory').default('static-directory'),
   }),

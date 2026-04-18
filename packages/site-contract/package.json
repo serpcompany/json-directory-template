@@ -11,6 +11,7 @@
     "./operator-onboarding": "./src/operator-onboarding.ts",
     "./operator-onboarding-server": "./src/operator-onboarding-server.ts",
     "./site-content": "./src/site-content.ts",
+    "./starter-app-defaults": "./src/starter-app-defaults.ts",
     "./site-root-listing-aliases": "./src/site-root-listing-aliases.ts",
     "./trial-product-schema": "./src/trial-product-schema.ts",
     "./trial-products": "./src/trial-products.ts",

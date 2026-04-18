@@ -22,15 +22,14 @@ interface ImportViolation {
   severity: 'error' | 'warning'
 }
 
-const ALIAS_MAPPINGS = {
-  '@/components': 'apps/web/components',
-  '@/lib': 'apps/web/lib',
-  '@/hooks': 'apps/web/hooks',
-  '@/contexts': 'apps/web/contexts',
-  '@/utils': 'apps/web/utils',
-  '@/__tests__': 'apps/web/__tests__',
-  '@/app': 'apps/web/app',
-  '@thedaviddias': 'packages'
+const APP_ALIAS_SUFFIXES = {
+  '@/components': 'components',
+  '@/lib': 'lib',
+  '@/hooks': 'hooks',
+  '@/contexts': 'contexts',
+  '@/utils': 'utils',
+  '@/__tests__': '__tests__',
+  '@/app': 'app',
 }
 
 const IMPORT_ORDER = [
@@ -114,12 +113,23 @@ class ImportValidator {
     const resolved = path.resolve(dir, importPath)
     const relative = path.relative(process.cwd(), resolved)
 
+    const appRootMatch = file.match(/^apps\/([^/]+)/)
+    const appRoot = appRootMatch ? `apps/${appRootMatch[1]}` : null
+
     // Find matching alias
-    for (const [alias, basePath] of Object.entries(ALIAS_MAPPINGS)) {
-      if (relative.startsWith(basePath)) {
-        const remaining = relative.slice(basePath.length).replace(/^\//, '')
-        return `Use: "${alias}${remaining ? `/${remaining}` : ''}"`
+    if (appRoot) {
+      for (const [alias, suffix] of Object.entries(APP_ALIAS_SUFFIXES)) {
+        const basePath = `${appRoot}/${suffix}`
+        if (relative.startsWith(basePath)) {
+          const remaining = relative.slice(basePath.length).replace(/^\//, '')
+          return `Use: "${alias}${remaining ? `/${remaining}` : ''}"`
+        }
       }
+    }
+
+    if (relative.startsWith('packages')) {
+      const remaining = relative.slice('packages'.length).replace(/^\//, '')
+      return `Use: "@thedaviddias/${remaining}"`
     }
 
     return 'Consider using a path alias'

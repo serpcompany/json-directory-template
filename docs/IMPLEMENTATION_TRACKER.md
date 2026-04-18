@@ -40,8 +40,11 @@ Reference architectures:
       packages.
   Login/auth button, submit form/guidelines, and operator onboarding now live in `packages/web-core`,
   and the `apps/web` login/submit/operator routes import those package-owned surfaces directly.
-- [ ] Normalize tooling and defaults that still hardcode or privilege `apps/web`.
-  Hooks, validators, default site config, and docs still treat `apps/web` as special in places.
+- [x] Normalize the live tooling/defaults that still hardcoded or privileged `apps/web`.
+  Root `pnpm dev` now follows the active-site wrapper flow instead of defaulting to the `web`
+  package, hook/test orchestration now runs through generic app-level scripts rather than `cd apps/web`,
+  and the starter `web` app defaults are now explicit single-sourced constants instead of duplicated
+  magic strings.
 - [ ] Delete dead compatibility shims in `apps/web/components/**` once their consumers import
       package-owned modules directly.
 

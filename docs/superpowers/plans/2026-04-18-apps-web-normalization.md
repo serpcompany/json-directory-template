@@ -112,6 +112,13 @@ Status:
 - Run: `pnpm --filter serpdownloaders.com typecheck`
 - Run: `pnpm build:site -- --site serpdownloaders.com`
 
+Status:
+
+- Completed for the live tooling layer. Root `dev` now follows the active-site wrapper path, hook
+  test orchestration is app-aware instead of `apps/web`-specific, and the starter `web` defaults
+  are single-sourced. Remaining work is doc cleanup plus any deeper alias-validation generalization
+  that becomes necessary as more app packages gain their own test/runtime surfaces.
+
 ## Task 4: Clean Up Legacy Compatibility Shims In `apps/web/components/**`
 
 **Intent:**
