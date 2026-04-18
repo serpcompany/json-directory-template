@@ -5,7 +5,7 @@ import {
   type Category,
 } from './categories';
 
-type CategoryLike = {
+export type CategoryLike = {
   categories?: string[];
   category?: string;
   featured?: boolean;
