@@ -42,6 +42,10 @@ Reference architectures:
   app-owned route-facing UI, especially categories and the shared homepage/category/favorites UI
   kit under `apps/web/components/**`.
 - [ ] Extract shared route-facing UI out of `apps/web/components/**` into `packages/web-core`.
+  Shared layout/sidebar primitives, newsletter/external-resources blocks, and homepage list sections
+  now live in `packages/web-core`. Remaining app-owned route-facing UI still includes the hero and
+  animated background, featured-guides / guide-card stack, category/listing list UIs, and website
+  detail presentation components.
 - [ ] Stop treating `apps/web` as the canonical implementation app for the active site.
 - [ ] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
 - [ ] Remove remaining build-source assumptions that still hardcode `apps/web` as the source app.
