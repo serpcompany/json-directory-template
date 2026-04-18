@@ -1,7 +1,7 @@
 import { Book, GraduationCap } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import type { ComponentType, ReactNode } from 'react'
+import type { ComponentType, CSSProperties, ReactNode } from 'react'
 import type { GuideMetadata } from '../content-query'
 import { getRoute } from '../routes'
 
@@ -14,7 +14,7 @@ type BadgeProps = {
 type CardProps = {
   children: ReactNode
   className?: string
-  style?: React.CSSProperties
+  style?: CSSProperties
 }
 
 type CardContentProps = {
