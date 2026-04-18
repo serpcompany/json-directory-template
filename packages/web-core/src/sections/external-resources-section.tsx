@@ -1,25 +1,29 @@
 import { ExternalLink } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { ComponentType, ReactNode } from 'react';
 import { externalResources } from '../external-resources';
 import { Section } from '../layout/section';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '../ui/card';
 
-interface ExternalResourcesSectionProps {
+export interface ExternalResourcesSectionProps {
   layout?: 'default' | 'compact';
   showImages?: boolean;
+  slots: {
+    Card: ComponentType<{ children: ReactNode; className?: string }>;
+    CardContent: ComponentType<{ children: ReactNode; className?: string }>;
+    CardDescription: ComponentType<{ children: ReactNode; className?: string }>;
+    CardHeader: ComponentType<{ children: ReactNode; className?: string }>;
+    CardTitle: ComponentType<{ children: ReactNode; className?: string }>;
+  };
 }
 
 export function ExternalResourcesSection({
   layout = 'default',
   showImages = true,
+  slots,
 }: ExternalResourcesSectionProps) {
+  const { Card, CardContent, CardDescription, CardHeader, CardTitle } = slots;
+
   if (!externalResources.length) {
     return null;
   }

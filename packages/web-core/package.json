@@ -54,7 +54,6 @@
     "./static-pages/legal-page": "./src/static-pages/legal-page.tsx",
     "./static-pages/news-page": "./src/static-pages/news-page.tsx",
     "./stats/github-stars": "./src/stats/github-stars.tsx",
-    "./ui/card": "./src/ui/card.tsx",
     "./ui/favorites-link": "./src/ui/favorites-link.tsx",
     "./website-routes/detail-page": "./src/website-routes/detail-page.tsx",
     "./website-schema": "./src/website-schema.ts",
