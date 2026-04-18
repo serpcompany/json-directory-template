@@ -1,13 +1,13 @@
 import { getHomePageData } from '@/actions/get-home-page-data'
-import { JsonLd } from '@/components/json-ld'
-import { FeaturedGuidesSection } from '@/components/sections/featured-guides-section'
-import { WebsitesListWithSearch } from '@/components/websites-list-with-search'
 import { getGuides } from '@/lib/content-loader'
 import {
   FavoritesIndexPage,
   favoritesPageMetadata,
 } from '@thedaviddias/web-core/favorites/index-page'
 import { requireRouteFeature } from '@/lib/route-feature-gates'
+import { JsonLd } from '@thedaviddias/web-core/json-ld'
+import { FeaturedGuidesSectionRoute as FeaturedGuidesSection } from '@thedaviddias/web-core/sections/featured-guides-section-route'
+import { WebsitesListWithSearchRoute as WebsitesListWithSearch } from '@thedaviddias/web-core/websites-list-with-search-route'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = favoritesPageMetadata

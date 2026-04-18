@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import { SearchResults } from '@/components/search/search-results';
 import { getWebsites } from '@/lib/content-loader';
 import {
   SearchIndexPage,
   generateSearchPageMetadata,
 } from '@thedaviddias/web-core/search/index-page';
+import { SearchResultsRoute as SearchResults } from '@thedaviddias/web-core/search/search-results-route';
 
 /**
  * Generate metadata for the static search shell.

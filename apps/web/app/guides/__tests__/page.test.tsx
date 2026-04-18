@@ -53,7 +53,7 @@ jest.mock('@thedaviddias/design-system/breadcrumb', () => ({
   Breadcrumb: () => <nav aria-label="breadcrumb" />
 }))
 
-jest.mock('@/components/json-ld', () => ({
+jest.mock('@thedaviddias/web-core/json-ld', () => ({
   JsonLd: () => null
 }))
 

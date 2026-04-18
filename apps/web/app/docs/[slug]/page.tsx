@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { components } from '@/components/mdx'
 import { getDocBySlug, getDocs } from '@/lib/content-loader'
 import {
   DocDetailPage,
   generateDocDetailMetadata,
   generateDocDetailStaticParams,
 } from '@thedaviddias/web-core/docs/doc-page'
+import { components } from '@thedaviddias/web-core/mdx-components'
 import {
   generateDisabledRouteMetadata,
   isRouteFeatureEnabled,

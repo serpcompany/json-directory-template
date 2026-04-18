@@ -58,7 +58,7 @@ jest.mock('next/navigation', () => ({
   notFound: () => mockNotFound()
 }))
 
-jest.mock('@/components/json-ld', () => ({
+jest.mock('@thedaviddias/web-core/json-ld', () => ({
   JsonLd: () => null
 }))
 

@@ -1,4 +1,5 @@
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
+import type { MDXComponents } from 'mdx/types'
 import type { Metadata } from 'next'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
@@ -9,7 +10,7 @@ import { siteCopy } from '../site-copy'
 
 interface DocDetailPageProps {
   doc: DocMetadata
-  mdxComponents: Record<string, unknown>
+  mdxComponents: MDXComponents
   slug: string
 }
 

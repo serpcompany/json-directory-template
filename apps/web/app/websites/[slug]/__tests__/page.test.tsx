@@ -74,36 +74,36 @@ jest.mock('@thedaviddias/web-core/website-routes/detail-page', () => ({
     mockGenerateWebsiteDetailRouteStaticParams(...args),
 }));
 
-jest.mock('@/components/json-ld', () => ({
+jest.mock('@thedaviddias/web-core/json-ld', () => ({
   JsonLd: () => null,
 }));
 
-jest.mock('@/components/project-navigation', () => ({
+jest.mock('@thedaviddias/web-core/project-navigation', () => ({
   ProjectNavigation: () => <div data-testid="project-navigation" />,
 }));
 
-jest.mock('@/components/sections/external-resources-section', () => ({
-  ExternalResourcesSection: () => <div data-testid="external-resources" />,
+jest.mock('@thedaviddias/web-core/sections/external-resources-section-route', () => ({
+  ExternalResourcesSectionRoute: () => <div data-testid="external-resources" />,
 }));
 
-jest.mock('@/components/website/website-content-section', () => ({
-  WebsiteContentSection: () => (
+jest.mock('@thedaviddias/web-core/website/website-content-section-route', () => ({
+  WebsiteContentSectionRoute: () => (
     <section data-testid="content-section">Content</section>
   ),
 }));
 
-jest.mock('@/components/website/website-detail-sidebar', () => ({
+jest.mock('@thedaviddias/web-core/website/website-detail-sidebar', () => ({
   WebsiteDetailSidebar: () => (
     <aside data-testid="detail-sidebar">Sidebar</aside>
   ),
 }));
 
-jest.mock('@/components/website/website-error', () => ({
-  WebsiteError: () => <div data-testid="website-error">Error</div>,
+jest.mock('@thedaviddias/web-core/website/website-error-route', () => ({
+  WebsiteErrorRoute: () => <div data-testid="website-error">Error</div>,
 }));
 
-jest.mock('@/components/website/website-hero', () => ({
-  WebsiteHero: ({
+jest.mock('@thedaviddias/web-core/website/website-hero-route', () => ({
+  WebsiteHeroRoute: ({
     breadcrumbItems,
   }: {
     breadcrumbItems: Array<{ href: string; name: string }>;
@@ -116,14 +116,14 @@ jest.mock('@/components/website/website-hero', () => ({
   ),
 }));
 
-jest.mock('@/components/website/website-related-projects', () => ({
-  WebsiteRelatedProjects: () => (
+jest.mock('@thedaviddias/web-core/website/website-related-projects-route', () => ({
+  WebsiteRelatedProjectsRoute: () => (
     <section data-testid="related-projects">Related</section>
   ),
 }));
 
-jest.mock('@/components/website/website-resources-section', () => ({
-  WebsiteResourcesSection: () => (
+jest.mock('@thedaviddias/web-core/website/website-resources-section-route', () => ({
+  WebsiteResourcesSectionRoute: () => (
     <section data-testid="links-section">Links</section>
   ),
 }));

@@ -36,14 +36,15 @@ Reference architectures:
 - [x] Correct the tracker/plan state so it matches the current repo shape.
 - [x] Extract the shared root app shell out of `apps/web/app/layout.tsx` into `packages/web-core`.
 - [x] Extract the homepage route implementation out of `apps/web/app/page.tsx` into `packages/web-core`.
-- [ ] Extract the remaining content-driven route modules out of `apps/web/app/**` into `packages/web-core`.
+- [x] Extract the remaining content-driven route modules out of `apps/web/app/**` into `packages/web-core`.
   Docs, guides, search, about, legal/news static pages, website detail, and favorites routes are
-  package-owned, and `apps/serpdownloaders.com` now owns explicit entrypoints for the active-site
-  surfaces that ship today (`/`, `/about`, `/categories/**`, `/products/**`, `/legal/**`,
-  `/search`, `/rss.xml`, `/robots.txt`, `/sitemap.xml`). Remaining route debt is shrinking the
-  explicit app-local support graph that still lives under `apps/serpdownloaders.com/components/**`
-  and deciding which pieces should be promoted into `packages/web-core`.
-- [ ] Extract shared route-facing UI out of `apps/web/components/**` into `packages/web-core`.
+  package-owned, `apps/serpdownloaders.com` now imports those package modules directly for the
+  active-site surfaces that ship today (`/`, `/about`, `/categories/**`, `/products/**`,
+  `/legal/**`, `/search`, `/rss.xml`, `/robots.txt`, `/sitemap.xml`), and `apps/web/app/**` now
+  imports package-owned modules directly for the shared content-driven routes instead of routing
+  through app-local shim files. Remaining route debt is no longer in route ownership; it is the
+  cleanup of legacy compatibility shims and any still-app-specific UI under `apps/web/components/**`.
+- [x] Extract shared route-facing UI out of `apps/web/components/**` into `packages/web-core`.
   Shared layout/sidebar primitives, hero/animated background, newsletter/external-resources
   blocks, homepage list sections, creator-projects, featured-guides/search/category/search wrappers,
   guide-card, website-detail presentation stack, and the shared support primitives for empty-state,
@@ -53,9 +54,11 @@ Reference architectures:
   results, the websites-list search/sort adapters, category/homepage list wrappers, and the shared
   website-detail route adapters, plus package-owned route wrappers for homepage list sections and
   guide/external-resources cards. Shared analytics helpers and the creator-projects route wrapper
-  now also live in `packages/web-core`, and the active wrapper's explicit local support graph in
-  `apps/serpdownloaders.com/components/**` has been eliminated: `apps/serpdownloaders.com/app/**`
-  now imports package-owned modules directly instead of routing through a local shim tree.
+  now also live in `packages/web-core`, the active wrapper's explicit local support graph in
+  `apps/serpdownloaders.com/components/**` has been eliminated, and `apps/web/app/**` now imports
+  those package-owned route/UI modules directly instead of routing through local compatibility
+  wrappers. Remaining `apps/web/components/**` debt is legacy shim cleanup for non-route consumers
+  plus truly app-specific/operator UI.
 - [x] Stop treating `apps/web` as the canonical implementation app for the active site.
 - [x] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
 - [x] Remove remaining build-source assumptions that still hardcode `apps/web` as the source app.
@@ -68,7 +71,7 @@ Acceptance:
 
 - [x] `apps/serpdownloaders.com` is the canonical active-site wrapper app.
 - [x] `apps/web` is no longer the source implementation app for the active-site build.
-- [ ] Shared route logic and shared route-facing UI live in `packages/web-core`.
+- [x] Shared route logic and shared route-facing UI live in `packages/web-core`.
 - [x] Active-site build/deploy no longer rely on `apps/web` as the canonical source app.
 
 ### Phase 1. Active-Site Cleanup
@@ -200,4 +203,4 @@ Acceptance:
 - [x] The active registry contains only approved active sites.
 - [x] Inactive sites are preserved without affecting runtime/build/deploy.
 - [x] `serpdownloaders.com` remains healthy through the full pipeline.
-- [ ] The repo has an explicit, implemented path toward thin wrapper apps plus shared core runtime.
+- [x] The repo has an explicit, implemented path toward thin wrapper apps plus shared core runtime.

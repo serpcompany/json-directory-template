@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { GuideHeader } from '@/components/guide-header'
-import { JsonLd } from '@/components/json-ld'
-import { components } from '@/components/mdx'
 import { type GuideMetadata, getGuideBySlug, getGuides } from '@/lib/content-loader'
 import {
   GuideDetailPage,
   generateGuideDetailMetadata,
   generateGuideDetailStaticParams,
 } from '@thedaviddias/web-core/guides/guide-page'
+import { JsonLd } from '@thedaviddias/web-core/json-ld'
+import { components } from '@thedaviddias/web-core/mdx-components'
 import { getRoute } from '@thedaviddias/web-core/routes'
 import {
   generateDisabledRouteMetadata,

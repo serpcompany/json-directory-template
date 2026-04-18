@@ -2,8 +2,8 @@ import { render, screen } from '@/test/test-utils'
 import SearchPage, { generateMetadata } from '@/app/search/page'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 
-jest.mock('@/components/search/search-results', () => ({
-  SearchResults: () => <div>Search Results</div>
+jest.mock('@thedaviddias/web-core/search/search-results-route', () => ({
+  SearchResultsRoute: () => <div>Search Results</div>
 }))
 
 describe('SearchPage', () => {

@@ -1,4 +1,5 @@
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
+import type { MDXComponents } from 'mdx/types'
 import type { Metadata } from 'next'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
@@ -10,7 +11,7 @@ import { siteConfig } from '../site-config'
 
 interface DocsIndexPageProps {
   doc: DocMetadata
-  mdxComponents: Record<string, unknown>
+  mdxComponents: MDXComponents
 }
 
 export function generateDocsIndexMetadata(): Metadata {

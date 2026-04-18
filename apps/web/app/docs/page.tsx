@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation'
-import { components } from '@/components/mdx'
 import { getDocBySlug } from '@/lib/content-loader'
 import {
   DocsIndexPage,
   generateDocsIndexMetadata,
 } from '@thedaviddias/web-core/docs/index-page'
+import { components } from '@thedaviddias/web-core/mdx-components'
 import {
   generateDisabledRouteMetadata,
   isRouteFeatureEnabled,

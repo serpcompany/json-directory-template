@@ -32,6 +32,9 @@
 - `apps/serpdownloaders.com/app/**` now imports package-owned modules directly for the active
   homepage, category, search, detail, about, and legal routes, and the wrapper-local
   `apps/serpdownloaders.com/components/**` shim tree has been removed entirely.
+- `apps/web/app/**` now also imports package-owned modules directly for the shared content-driven
+  routes instead of routing through local compatibility wrappers. The remaining `apps/web`
+  cleanup is mostly legacy shim deletion for non-route consumers plus truly app-specific UI.
 - active-site build/search-index/dev flows no longer target `apps/web`, but wrapper isolation is
   not complete until the copied support graph is reduced to package-owned exports plus a thin app
   shell.
