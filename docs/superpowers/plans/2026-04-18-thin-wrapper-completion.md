@@ -14,6 +14,9 @@
   reduced or promoted into `packages/web-core`.
 - shared support primitives for empty-state, MDX rendering, project navigation, card/copy/favicon
   UI, and listing-logo presentation now live in `packages/web-core`.
+- generic search helpers/filtering UI and `JsonLd` now also live in `packages/web-core`; the
+  remaining search debt is mostly the route-facing search-results wrapper plus favorites/analytics
+  coupling in the list stack.
 - active-site build/search-index/dev flows no longer target `apps/web`, but wrapper isolation is
   not complete until the copied support graph is reduced to package-owned exports plus a thin app
   shell.
