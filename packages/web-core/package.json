@@ -16,6 +16,7 @@
     "./docs/index-page": "./src/docs/index-page.tsx",
     "./docs/layout": "./src/docs/layout.tsx",
     "./external-resources": "./src/external-resources.ts",
+    "./favorites/index-page": "./src/favorites/index-page.tsx",
     "./github-issue": "./src/github-issue.ts",
     "./guides/guide-page": "./src/guides/guide-page.tsx",
     "./guides/index-page": "./src/guides/index-page.tsx",

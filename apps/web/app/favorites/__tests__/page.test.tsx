@@ -1,5 +1,8 @@
 const mockNotFound = jest.fn()
 const mockSiteConfig = {
+  branding: {
+    logoUrl: '/logo.png'
+  },
   copy: {
     listingName: {
       plural: 'listings',
@@ -21,6 +24,7 @@ const mockSiteConfig = {
 }
 
 jest.mock('@thedaviddias/web-core/site-config', () => ({
+  hasConfiguredPublicSocialLinks: jest.fn(() => false),
   getTwitterHandleFromUrl: jest.fn(() => '@serpcompany'),
   siteConfig: mockSiteConfig
 }))
