@@ -94,7 +94,9 @@ handled as its own reviewable unit.
 
 1. [x] Task 1: split `apps/web/lib/content-loader.ts` into app-owned loading and
        `packages/web-core/src/content-query.ts`
-2. [ ] Task 2: consolidate `apps/web/lib/resources.ts` into the same content-loading boundary
+2. [x] Task 2: consolidate `apps/web/lib/resources.ts` into the same content-loading boundary
+   No active callers remain; the file is documented in-place as inactive legacy code and should
+   not be expanded further without a new task that reintroduces app-layer file-backed resources.
 3. [ ] Task 3: document thin-wrapper responsibilities in docs
 4. [ ] Task 4: create `apps/serpdownloaders.com` thin wrapper skeleton
 5. [ ] Task 5: repoint build/validate/deploy to the wrapper app

@@ -4,6 +4,13 @@ import { logger } from '@thedaviddias/logging'
 import matter from 'gray-matter'
 import { resolveWorkspacePath } from '@thedaviddias/web-core/workspace-path'
 
+/**
+ * Legacy file-backed resource loader.
+ *
+ * Task 2 of the 2026-04-18 wrapper-app migration confirmed that this module
+ * has no active callers. Keep it frozen as inactive legacy code unless a new
+ * task explicitly reintroduces app-layer file-backed resource loading.
+ */
 const resourcesDirectory = resolveWorkspacePath('content/resources')
 
 export interface Resource {
