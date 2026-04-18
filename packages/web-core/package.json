@@ -69,6 +69,7 @@
     "./website/website-cli-section": "./src/website/website-cli-section.tsx",
     "./website/website-content-section": "./src/website/website-content-section.tsx",
     "./website/website-detail-sidebar": "./src/website/website-detail-sidebar.tsx",
+    "./website/website-error": "./src/website/website-error.tsx",
     "./website/website-related-projects": "./src/website/website-related-projects.tsx",
     "./website/website-resources-section": "./src/website/website-resources-section.tsx",
     "./website-routes/detail-page": "./src/website-routes/detail-page.tsx",
