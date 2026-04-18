@@ -105,8 +105,8 @@ Status note:
 - `apps/serpdownloaders.com` now exists as the first thin wrapper app, and `build:site` reaches
   the active site through that wrapper package while `apps/web` remains the canonical
   implementation.
-- The biggest remaining migration item is deleting the leftover `apps/web/lib/*` compatibility
-  shims once direct package imports are fully settled.
+- Phase 4 wrapper extraction tasks are complete and verified through validate/build/deploy dry-run
+  plus focused route and shim test suites.
 - Full execution plan for the remaining wrapper migration now lives in:
   [docs/superpowers/plans/2026-04-18-wrapper-app-migration.md](/Users/devin/dev/repos/json-directory-template/docs/superpowers/plans/2026-04-18-wrapper-app-migration.md)
 
