@@ -64,6 +64,7 @@
     "./ui/animated-background": "./src/ui/animated-background.tsx",
     "./ui/favorites-link": "./src/ui/favorites-link.tsx",
     "./website-routes/detail-page": "./src/website-routes/detail-page.tsx",
+    "./websites-list-with-search": "./src/websites-list-with-search.tsx",
     "./websites-list-with-sort": "./src/websites-list-with-sort.tsx",
     "./website-schema": "./src/website-schema.ts",
     "./workspace-path": "./src/workspace-path.ts"
