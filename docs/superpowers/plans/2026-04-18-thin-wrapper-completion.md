@@ -12,6 +12,8 @@
 - `apps/web/components/**` is no longer in the active wrapper resolution path, but there is still
   a sizeable app-local support graph under `apps/serpdownloaders.com/components/**` that should be
   reduced or promoted into `packages/web-core`.
+- shared support primitives for empty-state, MDX rendering, project navigation, card/copy/favicon
+  UI, and listing-logo presentation now live in `packages/web-core`.
 - active-site build/search-index/dev flows no longer target `apps/web`, but wrapper isolation is
   not complete until the copied support graph is reduced to package-owned exports plus a thin app
   shell.
