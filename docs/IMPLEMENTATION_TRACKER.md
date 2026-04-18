@@ -37,9 +37,10 @@ Reference architectures:
 - [x] Extract the shared root app shell out of `apps/web/app/layout.tsx` into `packages/web-core`.
 - [x] Extract the homepage route implementation out of `apps/web/app/page.tsx` into `packages/web-core`.
 - [ ] Extract the remaining content-driven route modules out of `apps/web/app/**` into `packages/web-core`.
-  Docs, guides, search, about, legal/news static pages, and website detail routes are now
-  package-owned. Remaining heavy families are the directory-shell flows that still depend on
-  app-owned route-facing UI, especially categories and favorites.
+  Docs, guides, search, about, legal/news static pages, website detail, and favorites routes are
+  now package-owned. Remaining heavy families are the directory-shell flows that still depend on
+  app-owned route-facing UI, especially categories and the shared homepage/category/favorites UI
+  kit under `apps/web/components/**`.
 - [ ] Extract shared route-facing UI out of `apps/web/components/**` into `packages/web-core`.
 - [ ] Stop treating `apps/web` as the canonical implementation app for the active site.
 - [ ] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
