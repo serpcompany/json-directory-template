@@ -1,7 +1,11 @@
 {
-  "extends": "../../configs/typescript/base.json",
+  "extends": "../../configs/typescript/nextjs.json",
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@thedaviddias/*": ["../../packages/*"]
+    },
     "noEmit": true
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

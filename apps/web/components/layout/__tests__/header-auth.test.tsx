@@ -21,13 +21,13 @@ jest.mock('next-auth/react', () => ({
   signOut: jest.fn()
 }))
 
-jest.mock('@/components/analytics-tracker', () => ({
+jest.mock('@thedaviddias/web-core/root-shell-client', () => ({
   useAnalyticsEvents: () => ({
     trackSearch: jest.fn()
   })
 }))
 
-jest.mock('@/hooks/use-search', () => ({
+jest.mock('@thedaviddias/web-core/hooks/use-search', () => ({
   useSearch: () => ({
     searchQuery: '',
     setSearchQuery: jest.fn(),
@@ -35,23 +35,27 @@ jest.mock('@/hooks/use-search', () => ({
   })
 }))
 
-jest.mock('../header-search', () => ({
+jest.mock('@thedaviddias/web-core/layout/header-search', () => ({
   DesktopSearchForm: () => <div data-testid="desktop-search" />,
   MobileSearchOverlay: () => null
 }))
 
-jest.mock('../mobile-drawer', () => ({
+jest.mock('@thedaviddias/web-core/layout/mobile-drawer', () => ({
   MobileDrawer: () => null
 }))
 
-jest.mock('../header-nav-link', () => ({
+jest.mock('@thedaviddias/web-core/layout/header-nav-link', () => ({
   NavLink: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
   )
 }))
 
-jest.mock('@/components/stats/github-stars', () => ({
+jest.mock('@thedaviddias/web-core/stats/github-stars', () => ({
   GithubStars: () => <div data-testid="github-stars" />
+}))
+
+jest.mock('@thedaviddias/web-core/auth/sign-out-button', () => ({
+  SignOutButton: () => <button type="button">Sign out</button>
 }))
 
 describe('Header auth actions', () => {

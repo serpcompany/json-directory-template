@@ -1,7 +1,7 @@
 import { render, screen } from '@/test/test-utils'
 import { DesktopSearchForm, MobileSearchOverlay } from '@/components/layout/header-search'
 
-jest.mock('@/components/search/search-autocomplete', () => ({
+jest.mock('@thedaviddias/web-core/search/search-autocomplete', () => ({
   SearchAutocomplete: () => null
 }))
 
