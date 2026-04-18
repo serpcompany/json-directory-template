@@ -1,4 +1,4 @@
-import { resolveListingDetailTemplate } from '@/lib/listing-detail-template'
+import { resolveListingDetailTemplate } from '@thedaviddias/web-core/listing-detail-template'
 
 describe('resolveListingDetailTemplate', () => {
   it('returns the matching template for supported entity types', () => {

@@ -73,7 +73,7 @@ Acceptance:
 - [x] Consolidate remaining file-backed resource loading behind the same boundary.
 - [x] Create an `apps/serpdownloaders.com` wrapper.
 - [x] Repoint build/validate/deploy flows to the wrapper app without changing artifacts.
-- [ ] Delete dead `apps/web/lib/*` shims after direct package imports settle.
+- [x] Delete dead `apps/web/lib/*` shims after direct package imports settle.
 
 Acceptance:
 
@@ -123,7 +123,7 @@ handled as its own reviewable unit.
        `packages/site-contract`, and `sites/<site>` in docs
 4. [x] Task 4: create `apps/serpdownloaders.com` thin wrapper skeleton
 5. [x] Task 5: repoint build/validate/deploy to the wrapper app
-6. [ ] Task 6: remove dead `apps/web/lib/*` re-export shims
+6. [x] Task 6: remove dead `apps/web/lib/*` re-export shims
 7. [ ] Task 7: run the final Phase 4 acceptance pass
 
 Execution note:

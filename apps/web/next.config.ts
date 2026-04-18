@@ -3,10 +3,10 @@ import { withContentCollections } from '@content-collections/next';
 import withMDX from '@next/mdx';
 import { baseConfig, withAnalyzer } from '@thedaviddias/config-next';
 import { defaultSiteConfig, resolveCheckedInSiteConfig } from '@thedaviddias/site-contract';
+import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases';
+import { categories } from '@thedaviddias/web-core/categories';
 import type { NextConfig } from 'next';
-import { categories } from './lib/categories';
 import { isStaticExportBuild } from './lib/runtime-mode';
-import { getSiteRootListingAliases } from './lib/site-root-listing-aliases';
 
 export const INTERNAL_PACKAGES = [
   '@thedaviddias/design-system',

@@ -1,4 +1,4 @@
-import { buildSubmissionIssueUrl } from '@/lib/github-issue'
+import { buildSubmissionIssueUrl } from '@thedaviddias/web-core/github-issue'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 import { siteCopy } from '@thedaviddias/web-core/site-copy'
 

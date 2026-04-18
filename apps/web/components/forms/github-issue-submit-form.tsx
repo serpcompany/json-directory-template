@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { buildSubmissionIssueUrl } from '@/lib/github-issue';
+import { buildSubmissionIssueUrl } from '@thedaviddias/web-core/github-issue';
 import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
 import { categories } from '@thedaviddias/web-core/categories';
 import { siteCopy } from '@thedaviddias/web-core/site-copy';

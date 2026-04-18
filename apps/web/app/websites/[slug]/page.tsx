@@ -15,7 +15,7 @@ import {
   type WebsiteMetadata,
 } from '@/lib/content-loader';
 import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
-import { resolveListingDetailTemplate } from '@/lib/listing-detail-template';
+import { resolveListingDetailTemplate } from '@thedaviddias/web-core/listing-detail-template';
 import { getRoute } from '@thedaviddias/web-core/routes';
 import { generateWebsiteDetailSchema } from '@thedaviddias/web-core/schema';
 import { SITE_NAME, generateDynamicMetadata } from '@thedaviddias/web-core/seo-config';

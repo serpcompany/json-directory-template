@@ -180,7 +180,7 @@ describe('Basic Component Rendering', () => {
     })
 
     it('should export route functions', async () => {
-      const { getRoute } = await import('../lib/routes')
+      const { getRoute } = await import('@thedaviddias/web-core/routes')
       expect(typeof getRoute).toBe('function')
       const result = getRoute('home')
       expect(typeof result).toBe('string')
@@ -198,7 +198,7 @@ describe('Basic Component Rendering', () => {
     })
 
     it('should export categories data', async () => {
-      const { categories } = await import('../lib/categories')
+      const { categories } = await import('@thedaviddias/web-core/categories')
       expect(Array.isArray(categories)).toBe(true)
       expect(categories.length).toBeGreaterThan(0)
     })

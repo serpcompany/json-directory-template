@@ -76,7 +76,7 @@ jest.mock('@/lib/content-loader', () => ({
   ]),
 }));
 
-jest.mock('@/lib/listing-detail-template', () => ({
+jest.mock('@thedaviddias/web-core/listing-detail-template', () => ({
   resolveListingDetailTemplate: () => 'default',
 }));
 

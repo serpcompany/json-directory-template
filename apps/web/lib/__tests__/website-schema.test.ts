@@ -2,7 +2,7 @@ import {
   normalizeJsonWebsite,
   parseJsonWebsiteEntries,
   type WebsiteJsonEntry,
-} from '@/lib/website-schema';
+} from '@thedaviddias/web-core/website-schema';
 
 function buildWebsiteEntry(
   overrides: Partial<WebsiteJsonEntry> = {}
