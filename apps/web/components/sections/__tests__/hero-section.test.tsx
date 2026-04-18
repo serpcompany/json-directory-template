@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { HeroSection } from '@/components/sections/hero-section'
+import { HeroSection } from '@thedaviddias/web-core/sections/hero-section'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 jest.mock('@thedaviddias/web-core/ui/animated-background', () => ({

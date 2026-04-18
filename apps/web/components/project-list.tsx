@@ -1,7 +1,7 @@
 import { Badge } from '@thedaviddias/design-system/badge'
 import Link from 'next/link'
-import { FaviconWithFallback } from '@/components/ui/favicon-with-fallback'
 import { getRoute } from '@thedaviddias/web-core/routes'
+import { FaviconWithFallback } from '@thedaviddias/web-core/ui/favicon-with-fallback'
 import { stripHtmlTags } from '@/lib/utils'
 
 interface ProjectListProps {

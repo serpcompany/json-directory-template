@@ -1,5 +1,5 @@
-import { Section } from '@/components/layout/section'
 import { Card, CardContent } from '@/components/ui/card'
+import { Section } from '@thedaviddias/web-core/layout/section'
 
 const proofPoints = [
   {

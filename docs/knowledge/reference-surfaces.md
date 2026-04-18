@@ -25,7 +25,7 @@ Use it as a quick reference, not as a source of truth for active product behavio
 
 - Representative route: `/`
 - Source: `apps/web/app/page.tsx`
-- Main supporting files: `apps/web/components/sections/hero-section.tsx`, `apps/web/components/static-websites-list.tsx`, `apps/web/components/sections/recently-added-section.tsx`
+- Main supporting modules: `packages/web-core/src/home-page.tsx`, `packages/web-core/src/sections/hero-section.tsx`, `packages/web-core/src/sections/static-websites-list-route.tsx`, `packages/web-core/src/sections/recently-added-section-route.tsx`
 - Why keep it: This is the broadest snapshot of the current starter shell. It shows the hero, sidebar layout, featured modules, and the main directory listing in one place.
 - Recommended action: `Keep + refresh first`
 
@@ -33,7 +33,7 @@ Use it as a quick reference, not as a source of truth for active product behavio
 
 - Representative route: `/listing/[slug]`
 - Source: `apps/web/app/websites/[slug]/page.tsx`
-- Main supporting files: `apps/web/components/website/website-hero.tsx`, `apps/web/components/website/website-resources-section.tsx`, `apps/web/components/website/website-detail-sidebar.tsx`
+- Main supporting modules: `packages/web-core/src/website-routes/detail-page.tsx`, `packages/web-core/src/website/website-hero-route.tsx`, `packages/web-core/src/website/website-resources-section-route.tsx`, `packages/web-core/src/website/website-detail-sidebar.tsx`
 - Data source: `data/listings.json`
 - Why keep it: This is the most important detail-page pattern in the repo. It captures the hero, resource links, sidebar, related projects, and navigation treatment.
 - Recommended action: `Keep + refresh first`
@@ -58,7 +58,7 @@ Use it as a quick reference, not as a source of truth for active product behavio
 
 - Representative route: `/submit`
 - Source: `apps/web/app/submit/page.tsx`
-- Main supporting files: `apps/web/components/forms/github-issue-submit-form.tsx`, `apps/web/lib/github-issue.ts`
+- Main supporting modules: `packages/web-core/src/forms/github-issue-submit-form.tsx`, `packages/web-core/src/forms/submit-form-guidelines.tsx`, `apps/web/lib/github-issue.ts`
 - Why keep it: This captures the current static-friendly contribution flow and the form pattern that hands off to GitHub.
 - Recommended action: `Keep + refresh first`
 
@@ -73,7 +73,7 @@ Use it as a quick reference, not as a source of truth for active product behavio
 
 - Representative route: `/favorites`
 - Source: `apps/web/app/favorites/page.tsx`
-- Main supporting files: `apps/web/contexts/favorites-context.tsx`, `apps/web/components/websites-list-with-search.tsx`
+- Main supporting modules: `apps/web/contexts/favorites-context.tsx`, `packages/web-core/src/websites-list-with-search-route.tsx`
 - Why keep it: This captures the local-storage favorites experience and the current mixed "directory plus extra sections" layout.
 - Recommended action: `Keep + refresh first`
 

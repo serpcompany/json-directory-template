@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { render, screen } from '@/test/test-utils';
-import { SiteOnboardingForm } from '@/components/operator/site-onboarding-form';
+import { SiteOnboardingForm } from '@thedaviddias/web-core/operator/site-onboarding-form';
 
 jest.mock('@rjsf/core', () => ({
   __esModule: true,

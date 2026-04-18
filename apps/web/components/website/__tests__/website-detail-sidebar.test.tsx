@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils';
-import { WebsiteDetailSidebar } from '@/components/website/website-detail-sidebar';
+import { WebsiteDetailSidebar } from '@thedaviddias/web-core/website/website-detail-sidebar';
 import type { WebsiteMetadata } from '@/lib/content-loader';
 
 const website: WebsiteMetadata = {

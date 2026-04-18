@@ -2,7 +2,7 @@ import {
   canTransformToWebsiteMetadata,
   matchesSearchQuery,
   transformToWebsiteMetadata,
-} from '@/components/search/search-utils';
+} from '@thedaviddias/web-core/search/search-utils';
 import type { SearchIndexEntry } from '@thedaviddias/web-core/search-index';
 
 const entry: SearchIndexEntry = {

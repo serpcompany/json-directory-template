@@ -2,12 +2,12 @@
 
 import { Badge } from '@thedaviddias/design-system/badge'
 import Link from 'next/link'
-import { EmptyState } from '@/components/empty-state'
 import { Card } from '@/components/ui/card'
-import { FaviconWithFallback } from '@/components/ui/favicon-with-fallback'
 import { WebsitesPaginatedGrid } from '@/components/ui/paginated-content'
 import type { WebsiteMetadata } from '@/lib/content-loader'
+import { EmptyState } from '@thedaviddias/web-core/empty-state'
 import { getRoute } from '@thedaviddias/web-core/routes'
+import { FaviconWithFallback } from '@thedaviddias/web-core/ui/favicon-with-fallback'
 import { stripHtmlTags } from '@/lib/utils'
 
 interface WebsitesWithLoadMoreProps {

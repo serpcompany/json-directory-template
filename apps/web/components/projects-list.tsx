@@ -8,9 +8,9 @@ import {
 } from '@thedaviddias/design-system/toggle-group';
 import { Clock, Grid, List, SortAsc } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { EmptyState } from '@/components/empty-state';
-import { LLMGrid } from '@/components/llm/llm-grid';
 import { useWebsiteFilters } from '@/hooks/use-website-filters';
+import { EmptyState } from '@thedaviddias/web-core/empty-state';
+import { LLMGrid } from '@thedaviddias/web-core/llm/llm-grid';
 import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
 import { listingMatchesCategory } from '@thedaviddias/web-core/category-navigation';
 import { categories } from '@thedaviddias/web-core/categories';

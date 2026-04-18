@@ -45,12 +45,15 @@ Reference architectures:
   package, hook/test orchestration now runs through generic app-level scripts rather than `cd apps/web`,
   and the starter `web` app defaults are now explicit single-sourced constants instead of duplicated
   magic strings.
-- [ ] Delete dead compatibility shims in `apps/web/components/**` once their consumers import
+- [x] Delete dead compatibility shims in `apps/web/components/**` once their consumers import
       package-owned modules directly.
+  Route-only and test-only compatibility re-exports have been removed, and remaining files under
+  `apps/web/components/**` are now real app-specific or non-trivial components rather than package
+  passthrough stubs.
 
 Acceptance:
 
-- [ ] `apps/web` is an intentional thin starter wrapper rather than a privileged implementation app.
+- [x] `apps/web` is an intentional thin starter wrapper rather than a privileged implementation app.
 - [ ] Tooling/defaults/docs no longer hide hard dependencies on `apps/web`.
 
 ### Phase 6. Thin-Wrapper Completion

@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { NewsletterSection } from '@/components/sections/newsletter-section'
+import { NewsletterSection } from '@thedaviddias/web-core/sections/newsletter-section'
 import { siteCopy } from '@thedaviddias/web-core/site-copy'
 
 describe('NewsletterSection', () => {

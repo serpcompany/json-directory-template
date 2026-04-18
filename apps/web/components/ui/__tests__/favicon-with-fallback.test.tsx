@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@/test/test-utils';
-import { FaviconWithFallback } from '@/components/ui/favicon-with-fallback';
 import { LISTING_LOGO_FALLBACK_PATH } from '@/lib/listing-logo-presentation';
+import { FaviconWithFallback } from '@thedaviddias/web-core/ui/favicon-with-fallback';
 
 describe('FaviconWithFallback', () => {
   it('uses the listing logo when one is provided', () => {

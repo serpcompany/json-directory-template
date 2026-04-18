@@ -1,7 +1,7 @@
 import { ArrowRight, Rss } from 'lucide-react'
 import Link from 'next/link'
-import { LLMGrid } from '@/components/llm/llm-grid'
 import type { WebsiteMetadata } from '@/lib/content-loader'
+import { LLMGrid } from '@thedaviddias/web-core/llm/llm-grid'
 import { getRoute } from '@thedaviddias/web-core/routes'
 
 interface LatestUpdatesSectionProps {

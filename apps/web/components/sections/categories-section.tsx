@@ -1,5 +1,5 @@
 import { CategoryList } from '@/components/category/category-list'
-import { Section } from '@/components/layout/section'
+import { Section } from '@thedaviddias/web-core/layout/section'
 export function CategoriesSection() {
   return (
     <Section title="Explore Categories">

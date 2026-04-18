@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { GitHubIssueSubmitForm } from '@/components/forms/github-issue-submit-form'
+import { GitHubIssueSubmitForm } from '@thedaviddias/web-core/forms/github-issue-submit-form'
 import { categories } from '@thedaviddias/web-core/categories'
 
 describe('GitHubIssueSubmitForm', () => {

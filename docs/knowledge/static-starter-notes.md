@@ -2,9 +2,9 @@
 
 ## Dev Port
 
-- Root `pnpm dev` now targets the web app only through `pnpm --filter web dev`.
+- Root `pnpm dev` now follows the active site wrapper through `pnpm dev:site -- --site serpdownloaders.com`.
 - The default web dev script now uses `next dev --webpack` because Turbopack can hang on the first `/` compile in this repo's current Tailwind/PostCSS setup.
-- The web package no longer forces `--inspect` during normal local dev; use `pnpm --filter web dev:inspect` when you explicitly want the Node inspector.
+- The web package no longer forces `--inspect` during normal local dev; use `pnpm dev:starter` to run the starter wrapper and `pnpm --filter web dev:inspect` when you explicitly want the Node inspector.
 - Use `pnpm dev:all` when you explicitly want the old Turbo parallel workspace behavior.
 - `apps/web/next.config.ts` still pins `turbopack.root` to this repo root so future Turbopack runs do not walk up to unrelated parent lockfiles during dev.
 
@@ -64,7 +64,7 @@
 
 ## Brand Touchpoints
 
-- The main shell brand strings live in `apps/web/app/layout.tsx`, `apps/web/lib/seo/seo-config.ts`, `apps/web/components/layout/header.tsx`, and `apps/web/components/layout/footer.tsx`.
+- The main shell brand strings now resolve through `apps/web/app/layout.tsx`, `apps/web/lib/seo/seo-config.ts`, and the package-owned shell modules in `packages/web-core/src/layout/**`.
 - When you add starter-level site config, centralize `name`, `domain`, `tagline`, and social URLs in `sites/site-config.default.ts` and per-site overrides before wiring those values into the shell. The internal reference now lives in `docs/knowledge/site-config.md`.
 - The first active starter-neutral pass is complete for `apps/web/app/page.tsx`, `apps/web/app/websites/[slug]/page.tsx`, `apps/web/app/submit/page.tsx`, and `apps/web/app/favorites/page.tsx`.
 - The starter now keeps the raw `website` destination field for compatibility, but removes `llmsUrl` / `llmsFullUrl` from the active listing contract and routes listing extras through generic resource links instead.
@@ -75,7 +75,7 @@
 - The live legal copy comes from `packages/content/data/legal/*.mdx`; changing those files updates the current frontend without changing the route components.
 - The main visual brand assets live in `apps/web/app/favicon.ico`, `apps/web/app/opengraph-image.png`, `apps/web/app/opengraph-image.alt.txt`, and `apps/web/public/img/**`.
 - Legal contact details live in `packages/content/data/legal/**`.
-- The submit flow points at a GitHub repo from `apps/web/lib/github-issue.ts`, so new site launches usually need that updated too.
+- The submit flow points at a GitHub repo from `apps/web/lib/github-issue.ts`, while the shared form UI now lives in `packages/web-core/src/forms/**`.
 
 ## Agent Verification Quirk
 

@@ -1,8 +1,8 @@
 import { render, screen } from '@/test/test-utils'
-import { LLMGrid } from '@/components/llm/llm-grid'
 import type { WebsiteMetadata } from '@/lib/content-loader'
+import { LLMGrid } from '@thedaviddias/web-core/llm/llm-grid'
 
-jest.mock('@/components/ui/favicon-with-fallback', () => ({
+jest.mock('@thedaviddias/web-core/ui/favicon-with-fallback', () => ({
   FaviconWithFallback: ({
     logoUrl,
     name
@@ -18,7 +18,7 @@ jest.mock('@/components/ui/favicon-with-fallback', () => ({
   )
 }))
 
-jest.mock('@/components/ui/favorite-button', () => ({
+jest.mock('@thedaviddias/web-core/ui/favorite-button', () => ({
   FavoriteButton: () => <div data-testid="favorite-button" />
 }))
 

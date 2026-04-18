@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { WebsiteCliSection } from '@/components/website/website-cli-section'
+import { WebsiteCliSectionRoute as WebsiteCliSection } from '@thedaviddias/web-core/website/website-cli-section-route'
 import type { WebsiteMetadata } from '@/lib/content-loader'
 
 const website: WebsiteMetadata = {
