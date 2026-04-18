@@ -10,6 +10,9 @@
     "./category-navigation": "./src/category-navigation.ts",
     "./category-seo": "./src/category-seo.ts",
     "./content-query": "./src/content-query.ts",
+    "./docs/doc-page": "./src/docs/doc-page.tsx",
+    "./docs/index-page": "./src/docs/index-page.tsx",
+    "./docs/layout": "./src/docs/layout.tsx",
     "./external-resources": "./src/external-resources.ts",
     "./github-issue": "./src/github-issue.ts",
     "./home-page": "./src/home-page.tsx",
@@ -51,10 +54,12 @@
     "@icons-pack/react-simple-icons": "^12.9.0",
     "lucide-react": "^0.486.0",
     "next": "catalog:",
+    "next-mdx-remote": "^6.0.0",
     "next-auth": "5.0.0-beta.30",
     "next-themes": "^0.4.6",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "remark-gfm": "^4.0.1",
     "zod": "catalog:"
   },
   "devDependencies": {

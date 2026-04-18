@@ -1,8 +1,21 @@
+import { render, screen } from '@/test/test-utils'
+
 jest.mock('next-mdx-remote/rsc', () => ({
   MDXRemote: () => null
 }))
 
 jest.mock('remark-gfm', () => jest.fn())
+
+const mockRenderDocsIndexPage = jest.fn(() => <div data-testid="docs-index-page" />)
+const mockGenerateDocsIndexMetadata = jest.fn(() => ({
+  description: 'mock docs metadata',
+  title: 'mock docs title',
+}))
+
+jest.mock('@thedaviddias/web-core/docs/index-page', () => ({
+  DocsIndexPage: (props: unknown) => mockRenderDocsIndexPage(props),
+  generateDocsIndexMetadata: (...args: unknown[]) => mockGenerateDocsIndexMetadata(...args),
+}))
 
 const mockNotFound = jest.fn()
 const mockSiteConfig = {
@@ -73,11 +86,11 @@ describe('DocsPage', () => {
     const { generateMetadata } = await import('@/app/docs/page')
     const metadata = generateMetadata()
 
-    expect(metadata.title).toBe(`${mockSiteConfig.copy.docsLabel} - ${mockSiteConfig.name}`)
-    expect(metadata.description).toBe(
-      `Reference docs, setup notes, and workflow details for ${mockSiteConfig.name}.`
-    )
-    expect(metadata.keywords).not.toContain('llmstxt-cli')
+    expect(mockGenerateDocsIndexMetadata).toHaveBeenCalled()
+    expect(metadata).toEqual({
+      description: 'mock docs metadata',
+      title: 'mock docs title',
+    })
   })
 
   it('uses not-found metadata when docs are disabled', async () => {
@@ -91,5 +104,16 @@ describe('DocsPage', () => {
       index: false,
       follow: false
     })
+  })
+
+  it('delegates docs index rendering to the package-owned route module', async () => {
+    const { default: DocsPage } = await import('@/app/docs/page')
+
+    const result = await DocsPage()
+
+    render(result)
+
+    expect(screen.getByTestId('docs-index-page')).toBeInTheDocument()
+    expect(mockRenderDocsIndexPage).toHaveBeenCalled()
   })
 })

@@ -1,18 +1,17 @@
-import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { MDXRemote } from 'next-mdx-remote/rsc'
-import remarkGfm from 'remark-gfm'
 import { components } from '@/components/mdx'
-import { type DocMetadata, getDocBySlug, getDocs } from '@/lib/content-loader'
-import { getRoute } from '@thedaviddias/web-core/routes'
+import { getDocBySlug, getDocs } from '@/lib/content-loader'
+import {
+  DocDetailPage,
+  generateDocDetailMetadata,
+  generateDocDetailStaticParams,
+} from '@thedaviddias/web-core/docs/doc-page'
 import {
   generateDisabledRouteMetadata,
   isRouteFeatureEnabled,
   requireRouteFeature
 } from '@/lib/route-feature-gates'
-import { SITE_PUBLIC_URL, generateDynamicMetadata } from '@thedaviddias/web-core/seo-config'
-import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 
 interface DocPageProps {
@@ -38,13 +37,7 @@ export async function generateMetadata(props: DocPageProps): Promise<Metadata> {
     return {}
   }
 
-  return generateDynamicMetadata({
-    type: 'doc',
-    name: doc.title,
-    description: doc.description,
-    slug: doc.slug,
-    additionalKeywords: ['documentation', 'reference', 'workflow notes']
-  })
+  return generateDocDetailMetadata(doc)
 }
 
 /**
@@ -55,13 +48,7 @@ export async function generateStaticParams(): Promise<Awaited<DocPageProps['para
     return []
   }
 
-  const docs = getDocs()
-
-  return docs
-    .filter((doc: DocMetadata) => doc.slug !== 'getting-started')
-    .map((doc: DocMetadata) => ({
-      slug: doc.slug
-    }))
+  return generateDocDetailStaticParams(getDocs())
 }
 
 export default async function DocPage({ params }: DocPageProps) {
@@ -74,29 +61,5 @@ export default async function DocPage({ params }: DocPageProps) {
     notFound()
   }
 
-  const breadcrumbItems = [
-    { name: siteCopy.docsLabel, href: getRoute('docs.list') },
-    { name: doc.title, href: getRoute('docs.doc', { slug }) }
-  ]
-
-  return (
-    <article>
-      <Breadcrumb items={breadcrumbItems} baseUrl={SITE_PUBLIC_URL} />
-      <div className="space-y-2 mt-6 mb-8">
-        <h1 className="text-4xl font-bold tracking-tight">{doc.title}</h1>
-        <p className="text-lg text-muted-foreground">{doc.description}</p>
-      </div>
-      <div className="prose dark:prose-invert max-w-none">
-        <MDXRemote
-          source={doc.content || ''}
-          components={components}
-          options={{
-            mdxOptions: {
-              remarkPlugins: [remarkGfm]
-            }
-          }}
-        />
-      </div>
-    </article>
-  )
+  return <DocDetailPage doc={doc} mdxComponents={components} slug={slug} />
 }

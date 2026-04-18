@@ -1,8 +1,24 @@
+import { render, screen } from '@/test/test-utils'
+
 jest.mock('next-mdx-remote/rsc', () => ({
   MDXRemote: () => null
 }))
 
 jest.mock('remark-gfm', () => jest.fn())
+
+const mockRenderDocDetailPage = jest.fn(() => <div data-testid="doc-detail-page" />)
+const mockGenerateDocDetailMetadata = jest.fn(async () => ({
+  description: 'mock doc metadata',
+  title: 'mock doc title',
+}))
+const mockGenerateDocDetailStaticParams = jest.fn(() => [{ slug: 'commands' }])
+
+jest.mock('@thedaviddias/web-core/docs/doc-page', () => ({
+  DocDetailPage: (props: unknown) => mockRenderDocDetailPage(props),
+  generateDocDetailMetadata: (...args: unknown[]) => mockGenerateDocDetailMetadata(...args),
+  generateDocDetailStaticParams: (...args: unknown[]) =>
+    mockGenerateDocDetailStaticParams(...args),
+}))
 
 const mockNotFound = jest.fn()
 const mockSiteConfig = {
@@ -73,7 +89,6 @@ describe('DocPage', () => {
 
   it('uses generic documentation metadata on the configured docs route', async () => {
     const { generateMetadata } = await import('@/app/docs/[slug]/page')
-    const { getRoute } = await import('@thedaviddias/web-core/routes')
 
     const metadata = await generateMetadata({
       params: Promise.resolve({
@@ -81,11 +96,11 @@ describe('DocPage', () => {
       })
     })
 
-    expect(metadata.title).toBe('CLI Install - Docs')
-    expect(metadata.alternates?.canonical).toBe(`https://example.com${getRoute('docs.doc', { slug: 'cli-install' })}`)
-    expect(metadata.keywords).toContain('documentation')
-    expect(metadata.keywords).toContain('reference')
-    expect(metadata.keywords).not.toContain('llmstxt-cli')
+    expect(mockGenerateDocDetailMetadata).toHaveBeenCalled()
+    expect(metadata).toEqual({
+      description: 'mock doc metadata',
+      title: 'mock doc title',
+    })
   })
 
   it('uses not-found metadata when docs are disabled', async () => {
@@ -104,5 +119,29 @@ describe('DocPage', () => {
       index: false,
       follow: false
     })
+  })
+
+  it('delegates doc rendering to the package-owned route module', async () => {
+    const { default: DocPage } = await import('@/app/docs/[slug]/page')
+
+    const result = await DocPage({
+      params: Promise.resolve({
+        slug: 'cli-install'
+      })
+    })
+
+    render(result)
+
+    expect(screen.getByTestId('doc-detail-page')).toBeInTheDocument()
+    expect(mockRenderDocDetailPage).toHaveBeenCalled()
+  })
+
+  it('delegates static params generation to the package-owned route module', async () => {
+    const { generateStaticParams } = await import('@/app/docs/[slug]/page')
+
+    const params = await generateStaticParams()
+
+    expect(mockGenerateDocDetailStaticParams).toHaveBeenCalledWith([])
+    expect(params).toEqual([{ slug: 'commands' }])
   })
 })
