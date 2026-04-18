@@ -720,6 +720,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
   const definition = loadCheckedInSiteFromInput(input);
   const appOutDir = resolveSiteAppOutDir(definition);
   const artifactDir = resolveSiteArtifactDir(definition);
+  const legacySlugs = getSiteRootListingAliases(definition.id);
   const notFoundSourcePath = resolve(appOutDir, '_not-found/index.html');
   const notFoundTargetPath = resolve(artifactDir, '404.html');
   const noJekyllPath = resolve(artifactDir, '.nojekyll');
@@ -751,6 +752,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
   });
   writeSplitSitemaps(artifactDir, {
     baseUrl: definition.site.publicUrl,
+    excludedPaths: legacySlugs.map(slug => `/${slug}`),
     listingBasePath: definition.routes.listingBasePath,
   });
 

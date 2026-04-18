@@ -54,6 +54,10 @@ if (typeof global.Response === 'undefined') {
     async json() {
       return typeof this.body === 'string' ? JSON.parse(this.body) : this.body
     }
+
+    async text() {
+      return typeof this.body === 'string' ? this.body : String(this.body ?? '')
+    }
   }
 }
 

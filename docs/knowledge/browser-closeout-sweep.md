@@ -12,8 +12,7 @@ For each verified site:
 - open the submit page and confirm the GitHub-issue flow still makes sense
 - open privacy, terms, and cookies pages
 - open `robots.txt` and confirm it points at the correct sitemap entrypoint for that environment
-- for shipped static artifacts and live static sites, expect `sitemap-index.xml`
-- for direct app/runtime environments, expect `sitemap.xml`
+- for both direct app/runtime environments and shipped static artifacts, expect `sitemap-index.xml` to be the canonical entrypoint
 - confirm `sitemap-index.xml` resolves and reflects sitemap-index output
 - confirm `sitemap.xml` also resolves as the compatibility twin
 - confirm disabled optional routes are not publicly available when their feature flags are off

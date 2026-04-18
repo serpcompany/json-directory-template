@@ -55,12 +55,12 @@
 
 ## Sitemaps
 
-- Direct app environments still advertise `sitemap.xml`, because that is the app-served sitemap route.
-- The final static artifact writes `sitemap-index.xml` as the canonical shipped sitemap entrypoint and also keeps `sitemap.xml` as a compatibility twin with the same sitemap-index XML.
-- Split sitemap families are emitted as `pages-index.xml`, `<listingBasePath>-index.xml`, and `categories-index.xml`, with `10,000` URLs per leaf file by default.
-- `routes.listingBasePath` cannot use reserved values like `pages` or `sitemap`, because those would collide with sitemap family filenames.
-- Category sitemap files are emitted only when the final artifact actually contains category pages.
-- The sitemap split runs against the finalized static artifact, so it reflects the shipped public route map after pruning and public path remaps.
+- Both direct app environments and final static artifacts now treat `sitemap-index.xml` as the canonical sitemap entrypoint.
+- `sitemap.xml` remains as a compatibility redirect/twin to the canonical sitemap index.
+- Split sitemap families are emitted as fixed route names:
+  `pages-sitemap.xml`, `listings-sitemap.xml`, `taxonomies-sitemap.xml`, plus optional empty-or-omitted `docs-sitemap.xml` and `posts-sitemap.xml` depending on the site feature set and final artifact contents.
+- `routes.listingBasePath` cannot use reserved values like `sitemap` or the fixed sitemap-family route names, because those would collide with sitemap endpoints.
+- The sitemap split runs against the finalized static artifact, so it reflects the shipped public route map after pruning, public path remaps, and legacy root-listing alias exclusion.
 
 ## Brand Touchpoints
 
