@@ -1,6 +1,6 @@
 import type { WebsiteMetadata } from '@/lib/content-loader'
+import { Section } from '@thedaviddias/web-core/layout/section'
 import { RecentlyAddedSection as PackageRecentlyAddedSection } from '@thedaviddias/web-core/sections/recently-added-section'
-import { Section } from '@/components/layout/section'
 import { LLMGrid } from '@/components/llm/llm-grid'
 
 interface RecentlyAddedSectionProps {

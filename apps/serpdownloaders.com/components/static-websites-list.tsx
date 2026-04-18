@@ -1,6 +1,6 @@
 import type { WebsiteMetadata } from '@/lib/content-loader'
+import { Section } from '@thedaviddias/web-core/layout/section'
 import { StaticWebsitesList as PackageStaticWebsitesList } from '@thedaviddias/web-core/sections/static-websites-list'
-import { Section } from '@/components/layout/section'
 import { WebsitesListWithSearch } from './websites-list-with-search'
 
 interface StaticWebsitesListProps {

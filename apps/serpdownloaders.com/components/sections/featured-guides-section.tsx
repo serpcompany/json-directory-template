@@ -1,4 +1,4 @@
-import { Section } from '@/components/layout/section'
+import { Section } from '@thedaviddias/web-core/layout/section'
 import { FeaturedGuidesSection as PackageFeaturedGuidesSection } from '@thedaviddias/web-core/sections/featured-guides-section'
 import type { GuideMetadata } from '@/lib/content-loader'
 import { GuideCard } from './guide-card'
