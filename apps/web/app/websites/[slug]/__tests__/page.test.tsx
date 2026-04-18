@@ -2,6 +2,78 @@ import { render, screen } from '@/test/test-utils';
 import ListingDetailPage from '@/app/websites/[slug]/page';
 import { siteCopy } from '@thedaviddias/web-core/site-copy';
 
+const mockRenderWebsiteDetailRoutePage = jest.fn(
+  ({
+    project,
+    slots,
+  }: {
+    project: {
+      name: string;
+      nextWebsite: null;
+      previousWebsite: null;
+      relatedWebsites: [];
+      slug: string;
+      website: string;
+    };
+    slots: {
+      ExternalResourcesSection: React.ComponentType<{
+        layout?: 'default' | 'compact';
+        showImages?: boolean;
+      }>;
+      ProjectNavigation: React.ComponentType<{
+        nextWebsite: null;
+        previousWebsite: null;
+      }>;
+      WebsiteContentSection: React.ComponentType<{ website: unknown }>;
+      WebsiteHero: React.ComponentType<{
+        breadcrumbItems: Array<{ href: string; name: string }>;
+        website: unknown;
+      }>;
+      WebsiteRelatedProjects: React.ComponentType<{ websites: [] }>;
+      WebsiteResourcesSection: React.ComponentType<{ website: unknown }>;
+    };
+  }) => (
+    <div data-testid="website-detail-route-page">
+      <slots.WebsiteHero
+        website={project}
+        breadcrumbItems={[
+          {
+            name: siteCopy.listingName.pluralTitle,
+            href: '/listing',
+          },
+          {
+            name: project.name,
+            href: `/listing/${project.slug}`,
+          },
+        ]}
+      />
+      <slots.WebsiteContentSection website={project} />
+      <slots.ExternalResourcesSection layout="default" showImages={false} />
+      <slots.WebsiteResourcesSection website={project} />
+      <slots.ProjectNavigation
+        previousWebsite={project.previousWebsite}
+        nextWebsite={project.nextWebsite}
+      />
+      <slots.WebsiteRelatedProjects websites={project.relatedWebsites} />
+    </div>
+  )
+);
+const mockGenerateWebsiteDetailRouteMetadata = jest.fn(async () => ({
+  description: 'mock website detail metadata',
+  title: 'mock website detail title',
+}));
+const mockGenerateWebsiteDetailRouteStaticParams = jest.fn(() => [
+  { slug: 'example-product' },
+]);
+
+jest.mock('@thedaviddias/web-core/website-routes/detail-page', () => ({
+  WebsiteDetailRoutePage: (props: unknown) => mockRenderWebsiteDetailRoutePage(props as never),
+  generateWebsiteDetailRouteMetadata: (...args: unknown[]) =>
+    mockGenerateWebsiteDetailRouteMetadata(...args),
+  generateWebsiteDetailRouteStaticParams: (...args: unknown[]) =>
+    mockGenerateWebsiteDetailRouteStaticParams(...args),
+}));
+
 jest.mock('@/components/json-ld', () => ({
   JsonLd: () => null,
 }));
@@ -85,6 +157,12 @@ jest.mock('@thedaviddias/web-core/schema', () => ({
 }));
 
 describe('ListingDetailPage', () => {
+  beforeEach(() => {
+    mockGenerateWebsiteDetailRouteMetadata.mockClear();
+    mockGenerateWebsiteDetailRouteStaticParams.mockClear();
+    mockRenderWebsiteDetailRoutePage.mockClear();
+  });
+
   it('uses the configured listing label in the breadcrumb instead of the old directory placeholder', async () => {
     render(
       await ListingDetailPage({
@@ -114,5 +192,30 @@ describe('ListingDetailPage', () => {
       contentSection.compareDocumentPosition(linksSection) &
         Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy();
+  });
+
+  it('delegates website detail metadata generation to the package-owned route module', async () => {
+    const { generateMetadata } = await import('@/app/websites/[slug]/page');
+
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ slug: 'example-product' }),
+    });
+
+    expect(mockGenerateWebsiteDetailRouteMetadata).toHaveBeenCalled();
+    expect(metadata).toEqual({
+      description: 'mock website detail metadata',
+      title: 'mock website detail title',
+    });
+  });
+
+  it('delegates static params generation to the package-owned route module', async () => {
+    const { generateStaticParams } = await import('@/app/websites/[slug]/page');
+
+    const params = await generateStaticParams();
+
+    expect(mockGenerateWebsiteDetailRouteStaticParams).toHaveBeenCalledWith([
+      { slug: 'example-product' },
+    ]);
+    expect(params).toEqual([{ slug: 'example-product' }]);
   });
 });

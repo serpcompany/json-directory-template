@@ -45,8 +45,12 @@
     "./site-config": "./src/site-config.ts",
     "./site-copy": "./src/site-copy.ts",
     "./site-content": "./src/site-content.ts",
+    "./static-pages/about-page": "./src/static-pages/about-page.tsx",
+    "./static-pages/legal-page": "./src/static-pages/legal-page.tsx",
+    "./static-pages/news-page": "./src/static-pages/news-page.tsx",
     "./stats/github-stars": "./src/stats/github-stars.tsx",
     "./ui/favorites-link": "./src/ui/favorites-link.tsx",
+    "./website-routes/detail-page": "./src/website-routes/detail-page.tsx",
     "./website-schema": "./src/website-schema.ts",
     "./workspace-path": "./src/workspace-path.ts"
   },

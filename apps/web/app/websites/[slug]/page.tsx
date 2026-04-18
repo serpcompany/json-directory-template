@@ -10,17 +10,16 @@ import { WebsiteHero } from '@/components/website/website-hero';
 import { WebsiteRelatedProjects } from '@/components/website/website-related-projects';
 import { WebsiteResourcesSection } from '@/components/website/website-resources-section';
 import {
+  generateWebsiteDetailRouteMetadata,
+  generateWebsiteDetailRouteStaticParams,
+  WebsiteDetailRoutePage,
+} from '@thedaviddias/web-core/website-routes/detail-page';
+import {
   getWebsiteBySlug,
   getWebsites,
-  type WebsiteMetadata,
 } from '@/lib/content-loader';
-import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
-import { resolveListingDetailTemplate } from '@thedaviddias/web-core/listing-detail-template';
-import { getRoute } from '@thedaviddias/web-core/routes';
-import { generateWebsiteDetailSchema } from '@thedaviddias/web-core/schema';
-import { SITE_NAME, generateDynamicMetadata } from '@thedaviddias/web-core/seo-config';
 import { siteCopy } from '@thedaviddias/web-core/site-copy';
-import { siteConfig } from '@thedaviddias/web-core/site-config';
+import { SITE_NAME } from '@thedaviddias/web-core/seo-config';
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
@@ -44,41 +43,7 @@ export async function generateMetadata({
       return {};
     }
 
-    // Format category for display
-    const categoryFormatted = project.category
-      ? getCategoryDisplayName(project.category)
-      : null;
-
-    // Create an SEO-optimized description
-    const seoDescription = `${project.description} Explore ${
-      project.name
-    } in the ${
-      siteConfig.name
-    } directory, with resource links, category details, and related entries.${
-      categoryFormatted ? ` Category: ${categoryFormatted}.` : ''
-    }`;
-
-    // Generate comprehensive keywords
-    const keywords = [
-      project.name,
-      `${project.name} ${siteCopy.listingName.singular}`,
-      `${project.name} resources`,
-      project.category,
-      `${siteCopy.listingName.singular} details`,
-      'directory listings',
-      'resource links',
-      categoryFormatted,
-    ].filter(Boolean) as string[];
-
-    return generateDynamicMetadata({
-      type: 'listing',
-      name: project.name,
-      description:
-        seoDescription.length > 160 ? project.description : seoDescription,
-      slug: project.slug,
-      additionalKeywords: keywords,
-      publishedAt: project.publishedAt,
-    });
+    return generateWebsiteDetailRouteMetadata(project);
   } catch (_error) {
     return {
       title: `${siteCopy.listingName.singularTitle} | ${SITE_NAME}`,
@@ -94,23 +59,7 @@ export async function generateMetadata({
  */
 export async function generateStaticParams() {
   try {
-    const websites = await getWebsites();
-
-    if (!websites || websites.length === 0) {
-      return [];
-    }
-
-    // Only include websites with valid string slugs
-    const params = websites
-      .filter(
-        (website: WebsiteMetadata) =>
-          website.slug && typeof website.slug === 'string'
-      )
-      .map((website: WebsiteMetadata) => ({
-        slug: website.slug,
-      }));
-
-    return params;
+    return generateWebsiteDetailRouteStaticParams(await getWebsites());
   } catch (_error) {
     return [];
   }
@@ -132,98 +81,21 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       notFound();
     }
 
-    const breadcrumbItems = [
-      {
-        name: siteCopy.listingName.pluralTitle,
-        href: getRoute('listing.list'),
-      },
-      {
-        name: project.name,
-        href: getRoute('listing.detail', { slug: project.slug }),
-      },
-    ];
-    const detailTemplate = resolveListingDetailTemplate(project.entityType);
-
-    const detailPage = (
-      <div
-        className="min-h-screen"
-        data-entity-type={project.entityType || 'listing'}
-        data-listing-template={detailTemplate}
-      >
-        <JsonLd data={generateWebsiteDetailSchema(project)} />
-
-        {/* Hero Section */}
-        <WebsiteHero website={project} breadcrumbItems={breadcrumbItems} />
-
-        {/* Main Content Area */}
-        <div className="container mx-auto px-6 py-10 md:py-14">
-          <div className="max-w-6xl mx-auto">
-            {/* Two-column grid: content + sidebar */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-              {/* Main content column */}
-              <div className="lg:col-span-8 space-y-14 md:space-y-16">
-                {/* Content Section */}
-                <WebsiteContentSection website={project} />
-
-                {/* External resources section */}
-                {siteConfig.features.showExternalResources && (
-                  <section className="animate-fade-in-up opacity-0 stagger-5">
-                    <ExternalResourcesSection
-                      layout="default"
-                      showImages={false}
-                    />
-                  </section>
-                )}
-
-                {/* Supplemental resources */}
-                <WebsiteResourcesSection website={project} />
-              </div>
-
-              {/* Sidebar column */}
-              <div className="lg:col-span-4">
-                <WebsiteDetailSidebar website={project} />
-              </div>
-            </div>
-
-            {/* Full-width sections below the grid */}
-            <div className="mt-14 md:mt-16 space-y-14 md:space-y-16">
-              {/* Navigation */}
-              <section
-                className="animate-fade-in-up opacity-0 stagger-6"
-                aria-labelledby="browse-more-heading"
-              >
-                <div className="rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-6 md:p-8">
-                  <h2
-                    id="browse-more-heading"
-                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4"
-                  >
-                    Browse more
-                  </h2>
-                  <ProjectNavigation
-                    previousWebsite={project.previousWebsite}
-                    nextWebsite={project.nextWebsite}
-                  />
-                </div>
-              </section>
-
-              {/* Related Projects */}
-              {project.relatedWebsites?.length > 0 && (
-                <WebsiteRelatedProjects websites={project.relatedWebsites} />
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+    return (
+      <WebsiteDetailRoutePage
+        project={project}
+        slots={{
+          ExternalResourcesSection,
+          JsonLd,
+          ProjectNavigation,
+          WebsiteContentSection,
+          WebsiteDetailSidebar,
+          WebsiteHero,
+          WebsiteRelatedProjects,
+          WebsiteResourcesSection,
+        }}
+      />
     );
-
-    switch (detailTemplate) {
-      case 'movie':
-      case 'person':
-      case 'product':
-      case 'default':
-      default:
-        return detailPage;
-    }
   } catch (_error) {
     return <WebsiteError />;
   }
