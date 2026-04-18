@@ -104,11 +104,33 @@ Acceptance:
 
 - define the target repo shape:
   - `apps/<site>` thin wrappers
+    - Next config, env wiring, generated content-collections entrypoints, and other framework hooks
+    - no reusable business logic
+  - `packages/site-contract` checked-in site contract, source-path resolution, and site-owned config/content/category resolution
+    - checked-in site resolution and sparse per-site normalization
+    - onboarding helpers and source-path ownership
   - `packages/web-core` shared rendering/runtime/build-facing logic
+    - reusable runtime/query/render helpers that can be shared across site apps
   - `sites/<site>` site-owned config/content/assets
+    - declarative per-site data, sparse overrides, and site-owned assets only
+    - no shared runtime or resolver logic
   - `dist/sites/<site>` build artifacts
 - extract shared logic from `apps/web` into `packages/web-core`
 - keep `serpdownloaders.com` behavior stable during the extraction
+
+Execution detail:
+
+- the current subagent-ready execution plan for this phase lives in
+  [docs/superpowers/plans/2026-04-18-wrapper-app-migration.md](/Users/devin/dev/repos/json-directory-template/docs/superpowers/plans/2026-04-18-wrapper-app-migration.md)
+- the critical path is the `content-loader` split:
+  - keep generated collection loading in the app layer
+  - move reusable content shaping/query logic into `packages/web-core`
+- the ownership model for this phase is:
+  - `apps/<site>` = thin wrapper app only
+  - `packages/web-core` = reusable runtime/query/render helpers
+  - `packages/site-contract` = checked-in site contract and source-path resolution
+  - `sites/<site>` = declarative per-site config/content/assets only
+- wrapper app creation and build-pipeline retargeting should wait until that split is stable
 
 Acceptance:
 

@@ -78,6 +78,24 @@ Acceptance:
 
 - [ ] `serpdownloaders.com` still ships correctly after extraction.
 
+Phase 4 ownership model:
+
+- `apps/<site>`
+  - thin wrapper apps only
+  - Next config, env wiring, generated content-collections entrypoints, and framework-specific runtime hooks
+  - no reusable business logic
+- `packages/web-core`
+  - reusable runtime/query/render helpers
+  - routes, site copy, SEO, schema generation, category/query helpers, and shared listing/runtime helpers
+- `packages/site-contract`
+  - checked-in site contract
+  - checked-in site config/category/content resolution
+  - onboarding helpers, source-path resolution, and trial product normalization
+- `sites/<site>`
+  - declarative checked-in site data/config/assets only
+  - sparse per-site overrides and site-owned content/assets
+  - no shared resolver logic
+
 Status note:
 
 - `packages/web-core` and `packages/site-contract` now own most of the low-coupling shared helper
