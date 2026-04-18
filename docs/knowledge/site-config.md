@@ -64,10 +64,10 @@ Recommended authoring rule:
 
 Current adapter files:
 
-- `apps/web/lib/site-config.ts`
-- `apps/web/lib/site-copy.ts`
-- `apps/web/lib/site-content.ts`
-- `apps/web/lib/network-links.ts`
+- `apps/starter/lib/site-config.ts`
+- `apps/starter/lib/site-copy.ts`
+- `apps/starter/lib/site-content.ts`
+- `apps/starter/lib/network-links.ts`
 
 These app-local files are compatibility shims while the wrapper-app migration is in progress. The
 target state is for active callers to import package modules directly, with only truly Next-specific
@@ -295,7 +295,7 @@ Operational guidance:
 - Put canonical site values in the checked-in `sites/**` config files.
 - Put small reusable site wording such as listing terminology and submit CTA labels in `copy.*`.
 - Use raw resolved values such as `siteConfig.name` in metadata, links, and plain text rendering.
-- Use `apps/web/lib/site-copy.ts` when you need derived UI labels like `All Listings` so the string construction stays centralized.
+- Use `apps/starter/lib/site-copy.ts` when you need derived UI labels like `All Listings` so the string construction stays centralized.
 - The current low-risk consumers are the header, footer, hero section, search titles, GitHub issue helpers, and SEO/feed output files.
 - Use tiny wrapper components such as `<SiteName />` only when you want a reusable JSX helper.
 - Keep the config values plain. Do not store JSX inside the config for basic fields like the site name or tagline.

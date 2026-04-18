@@ -38,7 +38,7 @@ Useful repo checks:
 
 ```bash
 pnpm test:repo
-pnpm --dir apps/web exec jest --runInBand
+pnpm --dir apps/starter exec jest --runInBand
 ```
 
 ## Current source of truth

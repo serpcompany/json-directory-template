@@ -3,8 +3,8 @@
 ## Where The Shape Lives
 
 - Raw listing entry data lives in `data/listings.json`.
-- The formal runtime schema for those JSON rows lives in `apps/web/lib/website-schema.ts`.
-- The active loader that validates and normalizes those rows for the app lives in `apps/web/lib/content-loader.ts`.
+- The formal runtime schema for those JSON rows lives in `apps/starter/lib/website-schema.ts`.
+- The active loader that validates and normalizes those rows for the app lives in `apps/starter/lib/content-loader.ts`.
 - `data/listings.json` is only for the main listing collection. Docs, posts, legal pages, and future first-party tools do not belong in this file.
 
 ## Current Raw JSON Shape
@@ -90,7 +90,7 @@ These are not authored directly in `data/listings.json`:
 - `previousWebsite`
 - `nextWebsite`
 
-They are added in `apps/web/lib/content-loader.ts` when `getWebsiteBySlug()` builds the detail page data.
+They are added in `apps/starter/lib/content-loader.ts` when `getWebsiteBySlug()` builds the detail page data.
 
 ## Important Notes
 

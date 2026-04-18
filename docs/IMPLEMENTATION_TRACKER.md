@@ -34,42 +34,42 @@ Reference architectures:
 ### Phase 7. Apps Web Normalization
 
 - [x] Record the new decision explicitly: active-site wrapper work is complete, and the remaining
-      architecture work is normalizing `apps/web` into an intentional thin starter wrapper rather
+      architecture work is normalizing `apps/starter` into an intentional thin starter wrapper rather
       than a privileged implementation app.
-- [x] Extract remaining starter-wide/public route surfaces out of `apps/web/components/**` into
+- [x] Extract remaining starter-wide/public route surfaces out of `apps/starter/components/**` into
       packages.
   Login/auth button, submit form/guidelines, and operator onboarding now live in `packages/web-core`,
-  and the `apps/web` login/submit/operator routes import those package-owned surfaces directly.
-- [x] Normalize the live tooling/defaults that still hardcoded or privileged `apps/web`.
+  and the `apps/starter` login/submit/operator routes import those package-owned surfaces directly.
+- [x] Normalize the live tooling/defaults that still hardcoded or privileged `apps/starter`.
   Root `pnpm dev` now follows the active-site wrapper flow instead of defaulting to the `web`
-  package, hook/test orchestration now runs through generic app-level scripts rather than `cd apps/web`,
+  package, hook/test orchestration now runs through generic app-level scripts rather than `cd apps/starter`,
   and the starter `web` app defaults are now explicit single-sourced constants instead of duplicated
   magic strings.
-- [x] Delete dead compatibility shims in `apps/web/components/**` once their consumers import
+- [x] Delete dead compatibility shims in `apps/starter/components/**` once their consumers import
       package-owned modules directly.
   Route-only and test-only compatibility re-exports have been removed, and remaining files under
-  `apps/web/components/**` are now real app-specific or non-trivial components rather than package
+  `apps/starter/components/**` are now real app-specific or non-trivial components rather than package
   passthrough stubs.
 
 Acceptance:
 
-- [x] `apps/web` is an intentional thin starter wrapper rather than a privileged implementation app.
-- [x] Tooling/defaults/docs no longer hide hard dependencies on `apps/web`.
+- [x] `apps/starter` is an intentional thin starter wrapper rather than a privileged implementation app.
+- [x] Tooling/defaults/docs no longer hide hard dependencies on `apps/starter`.
 
 ### Phase 6. Thin-Wrapper Completion
 
 - [x] Correct the tracker/plan state so it matches the current repo shape.
-- [x] Extract the shared root app shell out of `apps/web/app/layout.tsx` into `packages/web-core`.
-- [x] Extract the homepage route implementation out of `apps/web/app/page.tsx` into `packages/web-core`.
-- [x] Extract the remaining content-driven route modules out of `apps/web/app/**` into `packages/web-core`.
+- [x] Extract the shared root app shell out of `apps/starter/app/layout.tsx` into `packages/web-core`.
+- [x] Extract the homepage route implementation out of `apps/starter/app/page.tsx` into `packages/web-core`.
+- [x] Extract the remaining content-driven route modules out of `apps/starter/app/**` into `packages/web-core`.
   Docs, guides, search, about, legal/news static pages, website detail, and favorites routes are
   package-owned, `apps/serpdownloaders.com` now imports those package modules directly for the
   active-site surfaces that ship today (`/`, `/about`, `/categories/**`, `/products/**`,
-  `/legal/**`, `/search`, `/rss.xml`, `/robots.txt`, `/sitemap.xml`), and `apps/web/app/**` now
+  `/legal/**`, `/search`, `/rss.xml`, `/robots.txt`, `/sitemap.xml`), and `apps/starter/app/**` now
   imports package-owned modules directly for the shared content-driven routes instead of routing
   through app-local shim files. Remaining route debt is no longer in route ownership; it is the
-  cleanup of legacy compatibility shims and any still-app-specific UI under `apps/web/components/**`.
-- [x] Extract shared route-facing UI out of `apps/web/components/**` into `packages/web-core`.
+  cleanup of legacy compatibility shims and any still-app-specific UI under `apps/starter/components/**`.
+- [x] Extract shared route-facing UI out of `apps/starter/components/**` into `packages/web-core`.
   Shared layout/sidebar primitives, hero/animated background, newsletter/external-resources
   blocks, homepage list sections, creator-projects, featured-guides/search/category/search wrappers,
   guide-card, website-detail presentation stack, and the shared support primitives for empty-state,
@@ -80,14 +80,14 @@ Acceptance:
   website-detail route adapters, plus package-owned route wrappers for homepage list sections and
   guide/external-resources cards. Shared analytics helpers and the creator-projects route wrapper
   now also live in `packages/web-core`, the active wrapper's explicit local support graph in
-  `apps/serpdownloaders.com/components/**` has been eliminated, and `apps/web/app/**` now imports
+  `apps/serpdownloaders.com/components/**` has been eliminated, and `apps/starter/app/**` now imports
   those package-owned route/UI modules directly instead of routing through local compatibility
   wrappers, and the first batch of route-only compatibility shims has been deleted. Remaining
-  `apps/web/components/**` debt is legacy shim cleanup for non-route consumers plus truly
+  `apps/starter/components/**` debt is legacy shim cleanup for non-route consumers plus truly
   app-specific/operator UI.
-- [x] Stop treating `apps/web` as the canonical implementation app for the active site.
-- [x] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/web`.
-- [x] Remove remaining build-source assumptions that still hardcode `apps/web` as the source app.
+- [x] Stop treating `apps/starter` as the canonical implementation app for the active site.
+- [x] Make `apps/serpdownloaders.com` own explicit thin route entrypoints that import package modules instead of `apps/starter`.
+- [x] Remove remaining build-source assumptions that still hardcode `apps/starter` as the source app.
   `apps/serpdownloaders.com` now self-builds with local `next build`, `dev:site` starts the wrapper
   app through its own package script, `search-index-generator` writes into the selected wrapper
   app's `public/search` directory, and the active checked-in site points its `appOutDir` at
@@ -96,9 +96,9 @@ Acceptance:
 Acceptance:
 
 - [x] `apps/serpdownloaders.com` is the canonical active-site wrapper app.
-- [x] `apps/web` is no longer the source implementation app for the active-site build.
+- [x] `apps/starter` is no longer the source implementation app for the active-site build.
 - [x] Shared route logic and shared route-facing UI live in `packages/web-core`.
-- [x] Active-site build/deploy no longer rely on `apps/web` as the canonical source app.
+- [x] Active-site build/deploy no longer rely on `apps/starter` as the canonical source app.
 
 ### Phase 1. Active-Site Cleanup
 
@@ -143,7 +143,7 @@ Acceptance:
 - [x] Consolidate remaining file-backed resource loading behind the same boundary.
 - [x] Create an `apps/serpdownloaders.com` wrapper.
 - [x] Repoint build/validate/deploy flows to the wrapper app without changing artifacts.
-- [x] Delete dead `apps/web/lib/*` shims after direct package imports settle.
+- [x] Delete dead `apps/starter/lib/*` shims after direct package imports settle.
 
 Acceptance:
 
@@ -175,7 +175,7 @@ Status note:
   active route files that ship `serpdownloaders.com` today.
 - The main remaining gap is package ownership cleanup: the active wrapper now resolves its own
   route-supporting modules explicitly, and the active wrapper support graph is now package-direct.
-  The remaining repo-level gap is broader cleanup of legacy `apps/web` route-facing UI and any
+  The remaining repo-level gap is broader cleanup of legacy `apps/starter` route-facing UI and any
   direct app-level imports there that should become package-owned or package-direct.
 - Phase 4 wrapper extraction tasks are complete and verified through validate/build/deploy dry-run
   plus focused route and shim test suites.
@@ -187,16 +187,16 @@ Status note:
 Use the following order for subagent execution. Each item is intentionally bounded and should be
 handled as its own reviewable unit.
 
-1. [x] Task 1: split `apps/web/lib/content-loader.ts` into app-owned loading and
+1. [x] Task 1: split `apps/starter/lib/content-loader.ts` into app-owned loading and
        `packages/web-core/src/content-query.ts`
-2. [x] Task 2: consolidate `apps/web/lib/resources.ts` into the same content-loading boundary
+2. [x] Task 2: consolidate `apps/starter/lib/resources.ts` into the same content-loading boundary
    No active callers remain; the file is documented in-place as inactive legacy code and should
    not be expanded further without a new task that reintroduces app-layer file-backed resources.
 3. [x] Task 3: document thin-wrapper responsibilities plus explicit ownership for `packages/web-core`,
        `packages/site-contract`, and `sites/<site>` in docs
 4. [x] Task 4: create `apps/serpdownloaders.com` thin wrapper skeleton
 5. [x] Task 5: repoint build/validate/deploy to the wrapper app
-6. [x] Task 6: remove dead `apps/web/lib/*` re-export shims
+6. [x] Task 6: remove dead `apps/starter/lib/*` re-export shims
 7. [x] Task 7: run the final Phase 4 acceptance pass
 
 Execution note:

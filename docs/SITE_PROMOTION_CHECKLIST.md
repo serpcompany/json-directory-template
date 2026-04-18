@@ -17,7 +17,7 @@ stay parked or incubating until every item below is complete.
 3. The site has a wrapper app target.
    - `apps/<site>` exists as a thin wrapper app.
    - Reusable logic stays in `packages/web-core` and `packages/site-contract`.
-   - The wrapper app does not fork shared business logic from `apps/web`.
+   - The wrapper app does not fork shared business logic from `apps/starter`.
 4. Validation is green.
    - Run `pnpm validate:site -- --site <site-id>`.
    - Run active-site contract tests such as `pnpm exec vitest run scripts/validate-active-sites.test.ts scripts/site-config.test.ts`.

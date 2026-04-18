@@ -70,9 +70,9 @@ Helpful reviewer context.
 
 ## Files that control the flow
 
-- `apps/web/app/submit/page.tsx` renders the public submit page.
+- `apps/starter/app/submit/page.tsx` renders the public submit page.
 - `packages/web-core/src/forms/github-issue-submit-form.tsx` renders the form and handles the client-side redirect.
-- `apps/web/lib/github-issue.ts` builds the final GitHub issue URL, template, title, and body.
+- `apps/starter/lib/github-issue.ts` builds the final GitHub issue URL, template, title, and body.
 - `sites/site-config.default.ts` plus `sites/<id>/site-config.ts` provide the checked-in owner, repo, issue URL, and template values.
 - `.github/workflows/update-listings-json.yml` validates accepted listing changes when `data/listings.json` is edited in a PR or on `main`.
 - `docs/knowledge/taxonomy-discovery-contract.md` records the current shared starter taxonomy and single-category intake rule.

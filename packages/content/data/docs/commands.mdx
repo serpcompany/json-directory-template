@@ -41,7 +41,7 @@ pnpm dev:site -- --site serpdownloaders.com
 Run the starter wrapper with the Node inspector attached:
 
 ```bash
-pnpm --filter web dev:inspect
+pnpm --filter starter dev:inspect
 ```
 
 ## Validation and tests
@@ -61,7 +61,7 @@ pnpm test
 Run focused starter-wrapper tests:
 
 ```bash
-pnpm --dir apps/web exec jest --runInBand --runTestsByPath app/docs/__tests__/page.test.tsx
+pnpm --dir apps/starter exec jest --runInBand --runTestsByPath app/docs/__tests__/page.test.tsx
 ```
 
 ## Build output

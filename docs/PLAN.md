@@ -115,7 +115,7 @@ Acceptance:
     - declarative per-site data, sparse overrides, and site-owned assets only
     - no shared runtime or resolver logic
   - `dist/sites/<site>` build artifacts
-- extract shared logic from `apps/web` into `packages/web-core`
+- extract shared logic from `apps/starter` into `packages/web-core`
 - keep `serpdownloaders.com` behavior stable during the extraction
 
 Execution detail:
@@ -156,12 +156,12 @@ Acceptance:
 ### Phase 6. Thin-Wrapper Completion
 
 - finish the extraction that Phase 4 stopped short of:
-  - move the shared root app shell out of `apps/web/app/layout.tsx`
-  - move shared route implementations out of `apps/web/app/**`
-  - move shared route-facing UI out of `apps/web/components/**`
+  - move the shared root app shell out of `apps/starter/app/layout.tsx`
+  - move shared route implementations out of `apps/starter/app/**`
+  - move shared route-facing UI out of `apps/starter/components/**`
   - make `apps/serpdownloaders.com` the canonical active-site wrapper app
-  - stop treating `apps/web` as the canonical implementation app for the active site
-  - remove build-source assumptions that still hardcode `apps/web`
+  - stop treating `apps/starter` as the canonical implementation app for the active site
+  - remove build-source assumptions that still hardcode `apps/starter`
 - keep route behavior and built artifacts stable while ownership flips
 - use
   [docs/superpowers/plans/2026-04-18-thin-wrapper-completion.md](/Users/devin/dev/repos/json-directory-template/docs/superpowers/plans/2026-04-18-thin-wrapper-completion.md)
@@ -170,9 +170,9 @@ Acceptance:
 Acceptance:
 
 - `apps/serpdownloaders.com` is the canonical thin wrapper app for the active site
-- `apps/web` is no longer the source implementation app for active-site build output
+- `apps/starter` is no longer the source implementation app for active-site build output
 - shared route logic and shared route-facing UI live in `packages/web-core`
-- active-site build/deploy no longer rely on `apps/web` as the canonical source app
+- active-site build/deploy no longer rely on `apps/starter` as the canonical source app
 
 ## Important Implementation Areas
 
@@ -181,8 +181,8 @@ The implementation should expect to touch these kinds of surfaces:
 - active site registry and checked-in site exports:
   `sites/index.ts`, `sites/categories.ts`, `sites/**/site-config.ts`
 - shared app config and site adaptation:
-  `apps/web/lib/site-config.ts`, `apps/web/lib/categories.ts`,
-  `apps/web/lib/category-navigation.ts`
+  `apps/starter/lib/site-config.ts`, `apps/starter/lib/categories.ts`,
+  `apps/starter/lib/category-navigation.ts`
 - build/validation/deploy entrypoints:
   `scripts/validate-site.ts`, `scripts/validate-active-sites.ts`,
   `scripts/build-site.ts`, `scripts/deploy-site.ts`
