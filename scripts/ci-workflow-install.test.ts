@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import yaml from 'js-yaml';
 import { describe, expect, it } from 'vitest';
@@ -50,5 +50,11 @@ describe('ci workflow install isolation', () => {
     expect(buildWorkflow.concurrency?.group).toBe(releaseWorkflow.concurrency?.group);
     expect(releaseWorkflow.concurrency?.['cancel-in-progress']).toBe(false);
     expect(buildWorkflow.concurrency?.['cancel-in-progress']).toBe(false);
+  });
+
+  it('keeps the changesets action configured for release runs', () => {
+    expect(existsSync(resolve(process.cwd(), '.changeset/config.json'))).toBe(
+      true
+    );
   });
 });
