@@ -24,8 +24,8 @@ on:
         default: 'main'
 
 concurrency:
-  group: build-deploy-${{ github.ref }}-${{ github.event.inputs.site_id || vars.SITE_ID || 'default' }}
-  cancel-in-progress: true
+  group: main-ci-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   validate:
