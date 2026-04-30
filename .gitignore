@@ -68,3 +68,5 @@ tmp/sites/
 .agents/
 
 .cursor/
+
+**/next-env.d.ts

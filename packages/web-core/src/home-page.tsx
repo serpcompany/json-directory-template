@@ -71,7 +71,7 @@ interface HomePageRouteProps {
 }
 
 export function HomePageRoute({ data, slots }: HomePageRouteProps): ReactElement {
-  const HOMEPAGE_SECTION_LIMIT = 50
+  const HOMEPAGE_SECTION_LIMIT = 200
   const {
     allProjects,
     featuredGuides,

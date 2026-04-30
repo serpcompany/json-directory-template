@@ -62,7 +62,7 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     githubIssueRepo: 'json-directory-template',
     githubIssuesUrl:
       'https://github.com/serpcompany/json-directory-template/issues/new/choose',
-    githubRepoUrl: 'https://github.com/serpcompany/json-directory-template',
+    githubRepoUrl: 'https://github.com/serpdownloaders',
     githubUrl: 'https://github.com/serpdownloaders',
     redditUrl: 'https://www.reddit.com/r/serpdownloaders/',
     twitterUrl: 'https://x.com/serpapps',
