@@ -162,6 +162,7 @@ function getStaticPagePaths(): string[] {
     getRoute('cookies'),
     getRoute('dmca'),
     getRoute('terms'),
+    ...(siteConfig.features.showBrands ? [getRoute('brands')] : []),
     ...(siteConfig.features.showProjects ? [getRoute('projects')] : []),
   ]
 }

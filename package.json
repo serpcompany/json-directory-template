@@ -20,6 +20,7 @@
     "generate-search-index": "pnpm tsx scripts/search-index-generator.ts",
     "normalize:listing-logos": "pnpm tsx scripts/normalize-listing-logos-to-png.ts",
     "prepare:site": "pnpm tsx scripts/site-data.ts",
+    "sync:network-brands": "pnpm tsx scripts/sync-network-brands.ts",
     "sync:listing-logos": "pnpm tsx scripts/sync-listing-logos.ts",
     "validate-data": "tsx scripts/validate-data.ts",
     "validate:listings": "tsx scripts/validate-data.ts",

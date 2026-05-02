@@ -1,0 +1,140 @@
+{
+  "brands": {
+    "serp-co": {
+      "name": "SERP",
+      "url": "https://serp.co"
+    },
+    "serp-ai": {
+      "name": "SERP AI",
+      "url": "https://serp.ai"
+    },
+    "serp-games": {
+      "name": "SERP Games",
+      "url": "https://serp.games"
+    },
+    "games-serp-co": {
+      "name": "SERP Games",
+      "url": "https://games.serp.co"
+    },
+    "tools-serp-co": {
+      "name": "SERP Tools",
+      "url": "https://tools.serp.co"
+    },
+    "apps-serp-co": {
+      "name": "SERP Apps",
+      "url": "https://apps.serp.co"
+    },
+    "devin-schumacher": {
+      "name": "Devin Schumacher",
+      "url": "https://devinschumacher.com"
+    },
+    "browserextensions-io": {
+      "name": "Browser Extensions IO",
+      "url": "https://browserextensions.io"
+    },
+    "best-serp-co": {
+      "name": "SERP Best",
+      "url": "https://best.serp.co"
+    },
+    "serp-best": {
+      "name": "SERP Best",
+      "url": "https://serp.best"
+    },
+    "serp-lists": {
+      "name": "SERP Lists",
+      "url": "https://serplists.com"
+    },
+    "serp-software": {
+      "name": "SERP Software",
+      "url": "https://serp.software"
+    },
+    "serp-video": {
+      "name": "SERP Video",
+      "url": "https://serp.video"
+    },
+    "serp-download": {
+      "name": "SERP Download",
+      "url": "https://serp.download"
+    },
+    "serp-downloaders": {
+      "name": "SERP Downloaders",
+      "url": "https://serpdownloaders.com"
+    },
+    "blocks-serp-co": {
+      "name": "SERP Blocks",
+      "url": "https://blocks.serp.co"
+    },
+    "extensions-serp-co": {
+      "name": "SERP Extensions",
+      "url": "https://extensions.serp.co"
+    },
+    "serp-wiki": {
+      "name": "SERP Wiki",
+      "url": "https://serp.wiki"
+    },
+    "subs-marine": {
+      "name": "Subs Marine",
+      "url": "https://subsmarine.com"
+    },
+    "serp-media": {
+      "name": "SERP Media",
+      "url": "https://serp.media"
+    },
+    "skool-downloader": {
+      "name": "Skool Downloader",
+      "url": "https://skooldownloader.com"
+    },
+    "boxing-undefeated": {
+      "name": "Boxing Undefeated",
+      "url": "https://boxingundefeated.com"
+    },
+    "theme-cobra": {
+      "name": "Theme Cobra",
+      "url": "https://themecobra.com"
+    },
+    "awesome-shadcn-ui": {
+      "name": "Awesome Shadcn UI",
+      "url": "https://awesome-shadcn-ui.com"
+    },
+    "dr-serp-co": {
+      "name": "SERP DR",
+      "url": "https://dr.serp.co"
+    },
+    "download-vimeo": {
+      "name": "Download Vimeo",
+      "url": "https://downloadvimeo.com"
+    },
+    "getlooma-org": {
+      "name": "Get Looma",
+      "url": "https://getlooma.org"
+    },
+    "onlyfans-video-downloader": {
+      "name": "OnlyFans Video Downloader",
+      "url": "https://onlyfansvideodownloader.com"
+    },
+    "wistia-downloader": {
+      "name": "Wistia Downloader",
+      "url": "https://wistiadownloader.com"
+    },
+    "justforfans-downloader": {
+      "name": "JustForFans Downloader",
+      "url": "https://justforfansdownloader.com"
+    },
+    "how-to-download-videos": {
+      "name": "How to Download Videos",
+      "url": "https://howtodownloadvideos.com"
+    },
+    "serp-xxx": {
+      "name": "SERP XXX",
+      "url": "https://serp.xxx"
+    },
+    "whop-video-downloader": {
+      "name": "Whop Video Downloader",
+      "url": "https://whopvideodownloader.com"
+    },
+    "getlooma-com": {
+      "name": "Get Looma",
+      "url": "https://getlooma.com"
+    }
+  }
+}

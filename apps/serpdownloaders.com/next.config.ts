@@ -65,6 +65,7 @@ const runtimeSiteConfig = resolveCheckedInSiteConfig(
 const listingBasePath = normalizeBasePath(runtimeSiteConfig.routes.listingBasePath)
 const docsBasePath = normalizeBasePath(runtimeSiteConfig.routes.docsBasePath)
 const networkBasePath = normalizeBasePath(runtimeSiteConfig.routes.networkBasePath)
+const brandsBasePath = normalizeBasePath(runtimeSiteConfig.routes.brandsBasePath)
 const rootListingAliases = getSiteRootListingAliases(runtimeSiteConfig.id)
 
 let nextConfig: NextConfig = {
@@ -119,6 +120,7 @@ let nextConfig: NextConfig = {
       ...createAliasRewrites(listingBasePath, 'products'),
       ...createAliasRewrites(docsBasePath, 'docs'),
       ...createAliasRewrites(networkBasePath, 'projects'),
+      ...createAliasRewrites(brandsBasePath, 'brands'),
       ...createAliasRewrites('posts', 'guides'),
     ],
   }),
@@ -148,6 +150,10 @@ let nextConfig: NextConfig = {
         permanent: true,
       })),
       ...createAliasRewrites('projects', networkBasePath).map(rule => ({
+        ...rule,
+        permanent: true,
+      })),
+      ...createAliasRewrites('brands', brandsBasePath).map(rule => ({
         ...rule,
         permanent: true,
       })),

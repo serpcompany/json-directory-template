@@ -48,6 +48,7 @@ describe('pruneStaticArtifactDir', () => {
     writeFile(resolve(artifactDir, 'account/index.html'));
     writeFile(resolve(artifactDir, 'login/index.html'));
     writeFile(resolve(artifactDir, 'favorites/index.html'));
+    writeFile(resolve(artifactDir, 'brands/index.html'));
     writeFile(resolve(artifactDir, 'projects/index.html'));
     writeFile(resolve(artifactDir, 'docs/index.html'));
     writeFile(resolve(artifactDir, 'guides/index.html'));
@@ -58,6 +59,7 @@ describe('pruneStaticArtifactDir', () => {
 
     pruneStaticArtifactDir(artifactDir, {
       showAuth: false,
+      showBrands: false,
       showDocs: false,
       showFavorites: false,
       showGuides: false,
@@ -72,6 +74,7 @@ describe('pruneStaticArtifactDir', () => {
     expect(existsSync(resolve(artifactDir, 'account'))).toBe(false);
     expect(existsSync(resolve(artifactDir, 'login'))).toBe(false);
     expect(existsSync(resolve(artifactDir, 'favorites'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, 'brands'))).toBe(false);
     expect(existsSync(resolve(artifactDir, 'projects'))).toBe(false);
     expect(existsSync(resolve(artifactDir, 'docs'))).toBe(false);
     expect(existsSync(resolve(artifactDir, 'guides'))).toBe(false);
@@ -86,6 +89,7 @@ describe('pruneStaticArtifactDir', () => {
     const artifactDir = makeTempArtifactDir();
 
     writeFile(resolve(artifactDir, 'projects/index.html'));
+    writeFile(resolve(artifactDir, 'brands/index.html'));
     writeFile(resolve(artifactDir, 'docs/index.html'));
     writeFile(resolve(artifactDir, 'guides/index.html'));
     writeFile(resolve(artifactDir, 'featured/index.html'));
@@ -93,6 +97,7 @@ describe('pruneStaticArtifactDir', () => {
 
     pruneStaticArtifactDir(artifactDir, {
       showAuth: false,
+      showBrands: true,
       showDocs: true,
       showFavorites: false,
       showGuides: true,
@@ -100,6 +105,7 @@ describe('pruneStaticArtifactDir', () => {
     });
 
     expect(existsSync(resolve(artifactDir, 'projects'))).toBe(true);
+    expect(existsSync(resolve(artifactDir, 'brands'))).toBe(true);
     expect(existsSync(resolve(artifactDir, 'docs'))).toBe(true);
     expect(existsSync(resolve(artifactDir, 'guides'))).toBe(true);
     expect(existsSync(resolve(artifactDir, 'featured'))).toBe(true);
@@ -145,10 +151,13 @@ describe('applyConfiguredPublicRoutePaths', () => {
     writeFile(resolve(artifactDir, 'guides/launch-notes/index.html'));
     writeFile(resolve(artifactDir, 'projects/index.html'));
     writeFile(resolve(artifactDir, 'projects/repository/index.html'));
+    writeFile(resolve(artifactDir, 'brands/index.html'));
+    writeFile(resolve(artifactDir, 'brands/serp/index.html'));
     writeFile(resolve(artifactDir, 'featured/index.html'));
     writeFile(resolve(artifactDir, 'developer-tools/index.html'));
 
     applyConfiguredPublicRoutePaths(artifactDir, {
+      brandsBasePath: 'partners',
       docsBasePath: 'seo-docs',
       listingBasePath: 'listing',
       networkBasePath: 'network',
@@ -157,6 +166,7 @@ describe('applyConfiguredPublicRoutePaths', () => {
     expect(existsSync(resolve(artifactDir, 'docs'))).toBe(false);
     expect(existsSync(resolve(artifactDir, 'guides'))).toBe(false);
     expect(existsSync(resolve(artifactDir, 'projects'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, 'brands'))).toBe(false);
     expect(existsSync(resolve(artifactDir, 'seo-docs/index.html'))).toBe(true);
     expect(
       existsSync(resolve(artifactDir, 'seo-docs/getting-started/index.html'))
@@ -175,6 +185,10 @@ describe('applyConfiguredPublicRoutePaths', () => {
     expect(existsSync(resolve(artifactDir, 'network/index.html'))).toBe(true);
     expect(
       existsSync(resolve(artifactDir, 'network/repository/index.html'))
+    ).toBe(true);
+    expect(existsSync(resolve(artifactDir, 'partners/index.html'))).toBe(true);
+    expect(
+      existsSync(resolve(artifactDir, 'partners/serp/index.html'))
     ).toBe(true);
   });
 });

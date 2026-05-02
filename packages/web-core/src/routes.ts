@@ -27,6 +27,10 @@ function buildNetworkRoute(pattern = ''): string {
   return buildRouteFromBase(siteConfig.networkRouteBasePath, pattern);
 }
 
+function buildBrandsRoute(pattern = ''): string {
+  return buildRouteFromBase(siteConfig.brandsRouteBasePath, pattern);
+}
+
 export const routes = {
   home: '/',
   listing: {
@@ -49,6 +53,7 @@ export const routes = {
   about: '/about',
   account: '/account',
   affiliateDisclosure: '/legal/affiliate-disclosure',
+  brands: buildBrandsRoute(),
   favorites: '/favorites',
   docs: {
     list: buildDocsRoute(),
@@ -83,6 +88,7 @@ type StaticRoutes =
   | 'docs.list'
   | 'favorites'
   | 'affiliateDisclosure'
+  | 'brands'
   | 'guides.list'
   | 'news'
   | 'privacy'

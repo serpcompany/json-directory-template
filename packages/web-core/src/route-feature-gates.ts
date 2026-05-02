@@ -4,7 +4,12 @@ import { siteConfig, type SiteConfig } from './site-config';
 
 export type RoutableSiteFeature = keyof Pick<
   SiteConfig['features'],
-  'showAuth' | 'showDocs' | 'showFavorites' | 'showGuides' | 'showProjects'
+  | 'showAuth'
+  | 'showBrands'
+  | 'showDocs'
+  | 'showFavorites'
+  | 'showGuides'
+  | 'showProjects'
 >;
 
 export function isRouteFeatureEnabled(feature: RoutableSiteFeature): boolean {

@@ -31,6 +31,13 @@ export function Footer() {
     });
   }
 
+  if (siteConfig.features.showBrands) {
+    resourceLinks.push({
+      href: getRoute('brands'),
+      label: siteCopy.brandsLabel,
+    });
+  }
+
   if (siteConfig.features.showDocs) {
     resourceLinks.push({
       href: getRoute('docs.list'),

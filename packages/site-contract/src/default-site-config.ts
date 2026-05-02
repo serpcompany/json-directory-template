@@ -10,6 +10,7 @@ export const defaultSiteConfig: CheckedInSiteConfig = {
     mode: 'static-directory',
   },
   copy: {
+    brandsLabel: 'Brands',
     categoryLabels: {},
     docsLabel: 'Docs',
     listingName: {
@@ -28,6 +29,7 @@ export const defaultSiteConfig: CheckedInSiteConfig = {
   },
   features: {
     showAuth: false,
+    showBrands: false,
     showCreatorProjects: false,
     showDocs: false,
     showExternalResources: false,
@@ -39,6 +41,7 @@ export const defaultSiteConfig: CheckedInSiteConfig = {
   },
   id: 'default',
   routes: {
+    brandsBasePath: 'brands',
     docsBasePath: 'docs',
     listingBasePath: 'listing',
     networkBasePath: 'network',

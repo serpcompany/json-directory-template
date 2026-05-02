@@ -23,8 +23,10 @@ describe('loadCheckedInSite', () => {
     expect(config.routes.listingBasePath).toBe('products');
     expect(config.routes.docsBasePath).toBe('docs');
     expect(config.routes.networkBasePath).toBe('network');
+    expect(config.routes.brandsBasePath).toBe('brands');
     expect(config.content.listingSource.outputPath).toBe('data/listings.json');
     expect(config.copy).toEqual({
+      brandsLabel: 'Brands',
       categoryLabels: {},
       docsLabel: 'Docs',
       listingName: {
@@ -41,6 +43,7 @@ describe('loadCheckedInSite', () => {
     expect(config.features.showGuides).toBe(false);
     expect(config.features.showNewsletter).toBe(true);
     expect(config.features.showProjects).toBe(false);
+    expect(config.features.showBrands).toBe(true);
     expect(config.analytics?.gtmId).toBe('GTM-M82HC3SC');
     expect(config.deploy?.strategy).toBe('github-pages-repo-sync');
   });
@@ -56,7 +59,9 @@ describe('loadCheckedInSite', () => {
     expect(config.routes.listingBasePath).toBe('products');
     expect(config.routes.docsBasePath).toBe('docs');
     expect(config.routes.networkBasePath).toBe('network');
+    expect(config.routes.brandsBasePath).toBe('brands');
     expect(config.copy.submitLabel).toBe('Submit a Product');
+    expect(config.copy.brandsLabel).toBe('Brands');
     expect(config.copy.docsLabel).toBe('Docs');
     expect(config.copy.networkLabel).toBe('Network');
     expect(config.analytics?.gtmId).toBe('GTM-M82HC3SC');
@@ -86,10 +91,13 @@ describe('loadCheckedInSite', () => {
     expect(config.routes.listingBasePath).toBe('listing');
     expect(config.routes.docsBasePath).toBe('docs');
     expect(config.routes.networkBasePath).toBe('network');
+    expect(config.routes.brandsBasePath).toBe('brands');
     expect(config.analytics?.gtmId).toBeUndefined();
     expect(config.copy.listingName.singular).toBe('listing');
+    expect(config.copy.brandsLabel).toBe('Brands');
     expect(config.copy.docsLabel).toBe('Docs');
     expect(config.copy.networkLabel).toBe('Network');
+    expect(config.features.showBrands).toBe(false);
   });
 });
 
@@ -113,6 +121,30 @@ describe('validateCheckedInSiteConfig', () => {
           message:
             'routes.listingBasePath cannot reuse "docs" because routes.docsBasePath already uses it.',
           path: ['routes', 'listingBasePath'],
+        }),
+      ])
+    );
+  });
+
+  it('rejects brands route base paths that collide with other public routes', () => {
+    const invalidConfig = cloneDefaultSiteConfig();
+    invalidConfig.routes.brandsBasePath = invalidConfig.routes.networkBasePath;
+
+    let error: unknown;
+
+    try {
+      validateCheckedInSiteConfig(invalidConfig);
+    } catch (caughtError) {
+      error = caughtError;
+    }
+
+    expect(error).toBeInstanceOf(ZodError);
+    expect((error as ZodError).issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message:
+            'routes.brandsBasePath cannot reuse "network" because routes.networkBasePath already uses it.',
+          path: ['routes', 'brandsBasePath'],
         }),
       ])
     );
@@ -234,6 +266,7 @@ describe('resolveResolvedSiteConfig', () => {
       githubIssueRepo: 'json-directory-template',
       id: 'serpdownloaders.com',
       docsRouteBasePath: 'docs',
+      brandsRouteBasePath: 'brands',
       listingRouteBasePath: 'products',
       name: 'SERP Downloaders',
       networkRouteBasePath: 'network',

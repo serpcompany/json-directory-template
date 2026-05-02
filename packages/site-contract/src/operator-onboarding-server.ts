@@ -30,6 +30,8 @@ function toOperatorSiteDocument(
       : new Date().toISOString().slice(0, 10);
 
   return operatorSiteDocumentSchema.parse({
+    brandsLabel: siteConfig.copy.brandsLabel,
+    brandsRouteBasePath: siteConfig.routes.brandsBasePath,
     categoryLabels: siteConfig.copy.categoryLabels,
     defaultCategory,
     description: siteConfig.site.description,

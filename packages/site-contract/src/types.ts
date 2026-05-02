@@ -24,6 +24,7 @@ export type ListingSourceConfig =
     };
 
 export type SiteCopyConfig = {
+  brandsLabel: string;
   categoryLabels: Record<string, string>;
   docsLabel: string;
   listingName: {
@@ -91,6 +92,7 @@ export type DeployConfig = {
 
 export type SiteFeatureFlags = {
   showAuth: boolean;
+  showBrands: boolean;
   showCreatorProjects: boolean;
   showDocs: boolean;
   showExternalResources: boolean;
@@ -122,6 +124,7 @@ export type CheckedInSiteConfig = {
   features: SiteFeatureFlags;
   id: string;
   routes: {
+    brandsBasePath: string;
     docsBasePath: string;
     listingBasePath: string;
     networkBasePath: string;

@@ -19,14 +19,16 @@ describe('resolveSiteConfig', () => {
     expect(config.githubIssuesUrl).toBe(
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     )
-    expect(config.githubRepoUrl).toBe('https://github.com/serpcompany/json-directory-template')
+    expect(config.githubRepoUrl).toBe('https://github.com/serpdownloaders')
     expect(config.githubUrl).toBe('https://github.com/serpdownloaders')
     expect(config.publicUrl).toBe('https://serpdownloaders.com')
     expect(config.gtmId).toBe('GTM-M82HC3SC')
     expect(config.listingRouteBasePath).toBe('products')
     expect(config.docsRouteBasePath).toBe('docs')
     expect(config.networkRouteBasePath).toBe('network')
+    expect(config.brandsRouteBasePath).toBe('brands')
     expect(config.copy).toEqual({
+      brandsLabel: 'Brands',
       categoryLabels: {},
       docsLabel: 'Docs',
       listingName: {
@@ -38,6 +40,7 @@ describe('resolveSiteConfig', () => {
     })
     expect(config.features).toEqual({
       showAuth: false,
+      showBrands: true,
       showCreatorProjects: false,
       showDocs: false,
       showExternalResources: false,
@@ -71,11 +74,13 @@ describe('resolveSiteConfig', () => {
     expect(config.githubIssuesUrl).toBe(
       'https://github.com/serpcompany/json-directory-template/issues/new/choose'
     )
-    expect(config.githubRepoUrl).toBe('https://github.com/serpcompany/json-directory-template')
+    expect(config.githubRepoUrl).toBe('https://github.com/serpdownloaders')
     expect(config.githubUrl).toBe('https://github.com/serpdownloaders')
     expect(config.listingRouteBasePath).toBe('products')
     expect(config.docsRouteBasePath).toBe('docs')
     expect(config.networkRouteBasePath).toBe('network')
+    expect(config.brandsRouteBasePath).toBe('brands')
+    expect(config.copy.brandsLabel).toBe('Brands')
     expect(config.copy.docsLabel).toBe('Docs')
     expect(config.copy.networkLabel).toBe('Network')
     expect(config.copy.submitLabel).toBe('Submit a Product')
@@ -100,7 +105,9 @@ describe('resolveSiteConfig', () => {
     expect(config.listingRouteBasePath).toBe('listing')
     expect(config.docsRouteBasePath).toBe('docs')
     expect(config.networkRouteBasePath).toBe('network')
+    expect(config.brandsRouteBasePath).toBe('brands')
     expect(config.copy).toEqual({
+      brandsLabel: 'Brands',
       categoryLabels: {},
       docsLabel: 'Docs',
       listingName: {

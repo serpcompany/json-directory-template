@@ -76,6 +76,7 @@ describe('generateSiteWrapper', () => {
       })
     )
     writeFile(resolve(workspaceRoot, 'apps/starter/app/layout.tsx'), 'export default function Layout() { return null }\n')
+    writeFile(resolve(workspaceRoot, 'apps/starter/app/brands/page.tsx'), "export { default } from '@thedaviddias/web-core/static-pages/brands-page'\n")
     writeFile(resolve(workspaceRoot, 'apps/starter/app/sitemap-index.xml/route.ts'), 'export async function GET() { return new Response("ok") }\n')
     writeFile(resolve(workspaceRoot, 'apps/starter/app/__tests__/ignore.test.ts'), 'ignored\n')
     writeFile(resolve(workspaceRoot, 'apps/starter/public/logo.png'), 'png')
@@ -93,6 +94,7 @@ describe('generateSiteWrapper', () => {
 
     expect(result.expectedAppOutDir).toBe('apps/example.com/out')
     expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/layout.tsx'))).toBe(true)
+    expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/brands/page.tsx'))).toBe(true)
     expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/sitemap-index.xml/route.ts'))).toBe(true)
     expect(existsSync(resolve(workspaceRoot, 'apps/example.com/public/logo.png'))).toBe(true)
     expect(existsSync(resolve(workspaceRoot, 'apps/example.com/public/search/search-index.json'))).toBe(false)

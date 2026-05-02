@@ -1,0 +1,78 @@
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { afterEach, describe, expect, it } from 'vitest'
+import { getDefaultNetworkBrandsPaths, syncNetworkBrands } from './sync-network-brands.ts'
+
+const tempDirs: string[] = []
+
+function makeTempDir(): string {
+  mkdirSync(resolve(process.cwd(), 'tmp'), { recursive: true })
+  const dir = mkdtempSync(resolve(process.cwd(), 'tmp/sync-network-brands-'))
+  tempDirs.push(dir)
+  return dir
+}
+
+function writeJsonFile(path: string, value: unknown): void {
+  mkdirSync(dirname(path), { recursive: true })
+  writeFileSync(path, `${JSON.stringify(value)}\n`)
+}
+
+afterEach(() => {
+  tempDirs.splice(0).forEach(dir => {
+    rmSync(dir, { force: true, recursive: true })
+  })
+})
+
+describe('syncNetworkBrands', () => {
+  it('copies validated source JSON to the runtime target', () => {
+    const tempDir = makeTempDir()
+    const sourcePath = resolve(tempDir, 'source/network-brands.json')
+    const targetPath = resolve(tempDir, 'target/network-brands.json')
+
+    writeJsonFile(sourcePath, {
+      brands: {
+        alpha: { name: 'Alpha', url: 'https://alpha.example' }
+      }
+    })
+
+    const result = syncNetworkBrands({ sourcePath, targetPath })
+
+    expect(result).toEqual({
+      brandCount: 1,
+      sourcePath,
+      targetPath
+    })
+    expect(JSON.parse(readFileSync(targetPath, 'utf8'))).toEqual({
+      brands: {
+        alpha: { name: 'Alpha', url: 'https://alpha.example' }
+      }
+    })
+    expect(readFileSync(targetPath, 'utf8')).toContain('\n')
+  })
+
+  it('rejects JSON without a brands object and leaves target untouched', () => {
+    const tempDir = makeTempDir()
+    const sourcePath = resolve(tempDir, 'source/network-brands.json')
+    const targetPath = resolve(tempDir, 'target/network-brands.json')
+
+    writeJsonFile(sourcePath, { items: [] })
+
+    expect(() => syncNetworkBrands({ sourcePath, targetPath })).toThrow(
+      `Network brands source "${sourcePath}" must contain a brands object`
+    )
+    expect(existsSync(targetPath)).toBe(false)
+  })
+
+  it('defaults to the SERP docs source and web-core runtime target', () => {
+    const paths = getDefaultNetworkBrandsPaths({
+      homeDir: '/Users/example',
+      repoRoot: '/workspace/json-directory-template'
+    })
+
+    expect(paths).toEqual({
+      sourcePath: '/Users/example/dev/repos/serp/docs/network-brands/network-brands.json',
+      targetPath:
+        '/workspace/json-directory-template/packages/web-core/src/data/network-brands.json'
+    })
+  })
+})

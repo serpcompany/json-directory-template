@@ -3,6 +3,7 @@ import { siteConfig, type SiteConfig } from './site-config';
 export type ResolvedSiteCopy = {
   allLabel: string;
   allAnchorId: string;
+  brandsLabel: string;
   categoryEmptyDescription: string;
   categoryEmptyTitle: string;
   docsLabel: string;
@@ -39,6 +40,7 @@ export function resolveSiteCopy(config: SiteConfig = siteConfig): ResolvedSiteCo
   return {
     allLabel: `All ${pluralTitle}`,
     allAnchorId: `all-${toAnchorId(plural)}`,
+    brandsLabel: config.copy.brandsLabel,
     categoryEmptyDescription: `There are no ${plural} in this category yet. Try checking back later or ${submitLabelSentence}.`,
     categoryEmptyTitle: `No ${plural} found`,
     docsLabel: config.copy.docsLabel,

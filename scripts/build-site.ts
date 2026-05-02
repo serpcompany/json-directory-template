@@ -45,6 +45,7 @@ type BuildSourceAppPaths = {
   appleTouchIconPath: string;
   authRouteBackupPath: string;
   authRoutePath: string;
+  brandsRoutePath: string;
   docsRoutePath: string;
   favoritesRoutePath: string;
   faviconPath: string;
@@ -77,6 +78,7 @@ export function resolveBuildSourceAppPaths({
       'app/api/auth/[...nextauth]/route.static-export-disabled'
     ),
     authRoutePath: resolve(appDir, 'app/api/auth/[...nextauth]/route.ts'),
+    brandsRoutePath: resolve(appDir, 'app/brands'),
     docsRoutePath: resolve(appDir, 'app/docs'),
     favoritesRoutePath: resolve(appDir, 'app/favorites'),
     faviconPath: resolve(appDir, 'app/favicon.ico'),
@@ -500,6 +502,10 @@ function prepareDisabledRoutesForStaticExport(
     maybeStage(sourceAppPaths.projectsRoutePath, 'projects');
   }
 
+  if (!definition.features.showBrands) {
+    maybeStage(sourceAppPaths.brandsRoutePath, 'brands');
+  }
+
   if (!definition.features.showDocs) {
     maybeStage(sourceAppPaths.docsRoutePath, 'docs');
   }
@@ -518,6 +524,7 @@ function prepareDisabledRoutesForStaticExport(
 
 type ArtifactSurfaceFlags = {
   showAuth: boolean;
+  showBrands: boolean;
   showDocs: boolean;
   showFavorites: boolean;
   showGuides: boolean;
@@ -583,6 +590,7 @@ function applyPublicRouteBasePath(
 }
 
 type ArtifactPublicRoutePaths = {
+  brandsBasePath: string;
   docsBasePath: string;
   listingBasePath: string;
   networkBasePath: string;
@@ -615,6 +623,7 @@ export function applyConfiguredPublicRoutePaths(
   paths: ArtifactPublicRoutePaths
 ): void {
   applyListingRouteBasePath(artifactDir, paths.listingBasePath);
+  applyPublicRouteBasePath(artifactDir, 'brands', paths.brandsBasePath);
   applyPublicRouteBasePath(artifactDir, 'docs', paths.docsBasePath);
   applyPublicRouteBasePath(artifactDir, 'guides', 'posts');
   applyPublicRouteBasePath(artifactDir, 'projects', paths.networkBasePath);
@@ -706,6 +715,10 @@ export function pruneStaticArtifactDir(
     removeArtifactPath(resolve(artifactDir, 'projects'));
   }
 
+  if (!flags.showBrands) {
+    removeArtifactPath(resolve(artifactDir, 'brands'));
+  }
+
   if (!flags.showDocs) {
     removeArtifactPath(resolve(artifactDir, 'docs'));
   }
@@ -736,12 +749,14 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
 
   pruneStaticArtifactDir(artifactDir, {
     showAuth: definition.features.showAuth,
+    showBrands: definition.features.showBrands,
     showDocs: definition.features.showDocs,
     showFavorites: definition.features.showFavorites,
     showGuides: definition.features.showGuides,
     showProjects: definition.features.showProjects,
   });
   applyConfiguredPublicRoutePaths(artifactDir, {
+    brandsBasePath: definition.routes.brandsBasePath,
     docsBasePath: definition.routes.docsBasePath,
     listingBasePath: definition.routes.listingBasePath,
     networkBasePath: definition.routes.networkBasePath,

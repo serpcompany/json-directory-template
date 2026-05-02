@@ -68,6 +68,7 @@ describe('sitemap routes', () => {
     expect(pagesXml).toContain('<loc>https://example.com/</loc>')
     expect(pagesXml).toContain('<loc>https://example.com/about</loc>')
     expect(pagesXml).toContain('<loc>https://example.com/legal/privacy</loc>')
+    expect(pagesXml).not.toContain('https://example.com/brands')
     expect(pagesXml).not.toContain('https://example.com/listing')
 
     expect(listingsXml).toContain(

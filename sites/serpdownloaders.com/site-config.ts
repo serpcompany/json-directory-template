@@ -47,6 +47,9 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     strategy: 'github-pages-repo-sync',
   },
   id: 'serpdownloaders.com',
+  features: {
+    showBrands: true,
+  },
   routes: {
     listingBasePath: 'products',
   },

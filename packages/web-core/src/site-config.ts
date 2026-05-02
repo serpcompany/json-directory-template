@@ -16,6 +16,7 @@ type SiteBrandingConfig = {
 };
 
 export type SiteConfig = {
+  brandsRouteBasePath: string;
   branding: SiteBrandingConfig;
   copy: SiteCopyConfig;
   description: string;
@@ -133,6 +134,7 @@ export function resolveSiteConfig(
         'opengraphImage'
       ),
     },
+    brandsRouteBasePath: configuredSite.routes.brandsBasePath,
     copy: configuredSite.copy,
     description: configuredSite.site.description,
     docsRouteBasePath: configuredSite.routes.docsBasePath,

@@ -14,6 +14,12 @@ const categorySlugValues = defaultSiteCategories.map((category) => category.slug
 
 export const operatorSiteDocumentSchema = z.object({
   categoryLabels: z.record(z.string().trim().min(1)).default({}),
+  brandsLabel: z.string().trim().min(1).default('Brands'),
+  brandsRouteBasePath: z
+    .string()
+    .trim()
+    .regex(/^[a-z0-9-]+$/)
+    .default('brands'),
   defaultCategory: z.enum(categorySlugValues),
   description: z.string().trim().min(1),
   docsLabel: z.string().trim().min(1),
@@ -128,6 +134,7 @@ export function buildOperatorOnboardingExport(
         },
       },
       copy: {
+        brandsLabel: parsedDocument.site.brandsLabel,
         categoryLabels: parsedDocument.site.categoryLabels,
         docsLabel: parsedDocument.site.docsLabel,
         listingName: {
@@ -139,6 +146,7 @@ export function buildOperatorOnboardingExport(
       },
       id: parsedDocument.site.siteId,
       routes: {
+        brandsBasePath: parsedDocument.site.brandsRouteBasePath,
         docsBasePath: parsedDocument.site.docsRouteBasePath,
         listingBasePath: parsedDocument.site.listingRouteBasePath,
         networkBasePath: parsedDocument.site.networkRouteBasePath,

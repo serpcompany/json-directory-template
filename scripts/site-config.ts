@@ -11,6 +11,7 @@ import {
 
 const reservedPublicRouteBasePaths = {
   categories: 'Public category pages always use /categories/[slug].',
+  pages: 'The app reserves /pages-sitemap.xml for the static pages sitemap family.',
   'pages-sitemap': 'The app reserves /pages-sitemap.xml for the static pages sitemap.',
   'listings-sitemap': 'The app reserves /listings-sitemap.xml for listing detail URLs.',
   'taxonomies-sitemap': 'The app reserves /taxonomies-sitemap.xml for listing index and category URLs.',
@@ -61,6 +62,7 @@ const trialProductsSourceSchema = z.object({
 const siteCopyDefaults = defaultSiteConfig.copy;
 
 const siteCopySchema = z.object({
+  brandsLabel: z.string().min(1).default(siteCopyDefaults.brandsLabel),
   categoryLabels: z
     .record(z.string().min(1))
     .default(siteCopyDefaults.categoryLabels),
@@ -80,6 +82,7 @@ const siteCopySchema = z.object({
 
 const featureFlagsSchema = z.object({
   showAuth: z.boolean().default(false),
+  showBrands: z.boolean().default(false),
   showCreatorProjects: z.boolean().default(false),
   showDocs: z.boolean().default(false),
   showExternalResources: z.boolean().default(false),
@@ -124,6 +127,10 @@ const checkedInSiteConfigSchema = z.object({
   id: z.string().min(1),
   routes: z
     .object({
+      brandsBasePath: z
+        .string()
+        .regex(/^[a-z0-9-]+$/)
+        .default('brands'),
       docsBasePath: z
         .string()
         .regex(/^[a-z0-9-]+$/)
@@ -148,6 +155,7 @@ const checkedInSiteConfigSchema = z.object({
           'networkBasePath',
           normalizePublicRouteBasePath(routes.networkBasePath),
         ],
+        ['brandsBasePath', normalizePublicRouteBasePath(routes.brandsBasePath)],
       ] as const;
 
       const seenRouteFields = new Map<
@@ -270,6 +278,7 @@ export function resolveSiteAppOutDir(siteConfig: CheckedInSiteConfig): string {
 export function resolveResolvedSiteConfig(siteConfig: CheckedInSiteConfig) {
   return {
     copy: siteConfig.copy,
+    brandsRouteBasePath: siteConfig.routes.brandsBasePath,
     description: siteConfig.site.description,
     docsRouteBasePath: siteConfig.routes.docsBasePath,
     domain: siteConfig.site.domain,
