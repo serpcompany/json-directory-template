@@ -57,10 +57,10 @@ export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   },
   social: {
     githubIssueOwner: 'serpcompany',
-    githubIssueRepo: 'json-directory-template',
-    githubIssuesUrl: 'https://github.com/serpcompany/json-directory-template/issues/new/choose',
+    githubIssueRepo: 'pornvideodownloaders.com',
+    githubIssuesUrl: 'https://github.com/serpcompany/pornvideodownloaders.com/issues/new/choose',
     githubRepoUrl: 'https://github.com/serpxxx',
-    githubUrl: 'https://github.com/serpdownloaders',
+    githubUrl: 'https://github.com/serpxxx',
     redditUrl: 'https://www.reddit.com/r/serpxxx/',
     twitterUrl: 'https://x.com/serpapps'
   }

@@ -1,0 +1,5 @@
+- read the docs before u do anything
+- do not make things up
+- do not take shortcuts
+- do things properly
+- deploy a subagent whose sole responsibility it is to police your decisions and make sure you are not cutting corners, or being lazy
