@@ -1,6 +1,7 @@
-import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { loadCheckedInSite } from './site-config.ts'
 
 const TEMPLATE_APP_ID = 'starter'
 
@@ -98,6 +99,39 @@ function assertRequiredWrapperPaths(targetAppDir: string): void {
   }
 }
 
+function resolveWrapperListingBasePath(siteId: string): string {
+  try {
+    return loadCheckedInSite(siteId).routes.listingBasePath
+  } catch {
+    return loadCheckedInSite().routes.listingBasePath
+  }
+}
+
+function applyConfiguredListingRoute({
+  listingBasePath,
+  targetAppDir,
+}: {
+  listingBasePath: string
+  targetAppDir: string
+}): void {
+  const sourceRoutePath = resolve(targetAppDir, 'app/websites')
+  const targetRoutePath = resolve(targetAppDir, 'app', listingBasePath)
+
+  if (listingBasePath === 'websites' || !existsSync(sourceRoutePath)) {
+    return
+  }
+
+  rmSync(targetRoutePath, { force: true, recursive: true })
+  renameSync(sourceRoutePath, targetRoutePath)
+}
+
+function rewriteWrapperNextConfig(nextConfigSource: string): string {
+  return nextConfigSource.replace(
+    /^\s*\.\.\.createAliasRewrites\(listingBasePath,\s*'[^']+'\),\n?/m,
+    ''
+  )
+}
+
 function buildWrapperScripts(
   siteId: string,
   templateScripts: Record<string, string>
@@ -164,6 +198,15 @@ export function generateSiteWrapper({
     }
 
     copyEntry({ sourcePath, targetPath })
+  }
+
+  const listingBasePath = resolveWrapperListingBasePath(siteId)
+  applyConfiguredListingRoute({ listingBasePath, targetAppDir })
+
+  const nextConfigPath = resolve(targetAppDir, 'next.config.ts')
+  if (existsSync(nextConfigPath)) {
+    const nextConfigSource = readFileSync(nextConfigPath, 'utf8')
+    writeFileSync(nextConfigPath, rewriteWrapperNextConfig(nextConfigSource))
   }
 
   const packageJsonPath = resolve(targetAppDir, 'package.json')

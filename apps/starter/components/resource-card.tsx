@@ -1,7 +1,7 @@
 import { Badge } from '@thedaviddias/design-system/badge'
 import { ExternalLink } from 'lucide-react'
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
+import { Card } from '@thedaviddias/web-core/ui/card'
 import { formatDate } from '@/lib/utils'
 
 interface ResourceCardProps {

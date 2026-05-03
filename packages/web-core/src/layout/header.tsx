@@ -1,9 +1,8 @@
 'use client'
 import { Menu, Plus, Search } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
+import { useEffect, useState, type ChangeEvent, type FormEvent, type ReactNode } from 'react'
 import { useAnalyticsEvents } from '../root-shell-client'
-import { SignOutButton } from '../auth/sign-out-button'
 import { useSearch } from '../hooks/use-search'
 import { GithubStars } from '../stats/github-stars'
 import type { HeaderAuthState } from './header-auth-state'
@@ -22,11 +21,15 @@ import { MobileDrawer } from './mobile-drawer'
 export function Header({
   activeCategorySlugs = [],
   authState,
-  featuredCount = 0
+  desktopSignOutButton,
+  featuredCount = 0,
+  mobileSignOutButton
 }: {
   activeCategorySlugs?: string[]
   authState?: HeaderAuthState
+  desktopSignOutButton?: ReactNode
   featuredCount?: number
+  mobileSignOutButton?: ReactNode
 }) {
   const [showMobileSearch, setShowMobileSearch] = useState(false)
   const [showMobileDrawer, setShowMobileDrawer] = useState(false)
@@ -196,7 +199,7 @@ export function Header({
                 >
                   Account
                 </Link>
-                <SignOutButton className="hidden sm:inline-flex rounded-none text-sm font-bold h-9 px-4" />
+                {desktopSignOutButton}
               </>
             ) : siteConfig.features.showAuth && isAuthConfigured ? (
               <Link
@@ -238,6 +241,7 @@ export function Header({
         featuredCount={featuredCount}
         showFeaturedCategory={featuredCount > 0}
         authState={authState}
+        signOutButton={mobileSignOutButton}
       />
     </>
   )

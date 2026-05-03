@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { loadCheckedInSite } from './site-config.ts'
@@ -20,6 +20,26 @@ describe('getActiveCheckedInSiteIds', () => {
 
       expect(siteConfig.features.showBrands, `${siteId} must enable /brands`).toBe(true)
       expect(existsSync(brandsPagePath), `${siteId} must scaffold app/brands/page.tsx`).toBe(true)
+    }
+  })
+
+  it('requires every active checked-in site to expose its configured listing route', () => {
+    for (const siteId of getActiveCheckedInSiteIds()) {
+      const siteConfig = loadCheckedInSite(siteId)
+      const appRoot = resolve(process.cwd(), siteConfig.build.appOutDir, '../app')
+      const listingRoutePath = resolve(appRoot, siteConfig.routes.listingBasePath)
+
+      expect(
+        existsSync(resolve(listingRoutePath, 'page.tsx')),
+        `${siteId} must scaffold app/${siteConfig.routes.listingBasePath}/page.tsx`
+      ).toBe(true)
+      expect(
+        existsSync(resolve(listingRoutePath, '[slug]/page.tsx')),
+        `${siteId} must scaffold app/${siteConfig.routes.listingBasePath}/[slug]/page.tsx`
+      ).toBe(true)
+
+      const nextConfigSource = readFileSync(resolve(appRoot, '../next.config.ts'), 'utf8')
+      expect(nextConfigSource).not.toContain('createAliasRewrites(listingBasePath,')
     }
   })
 })

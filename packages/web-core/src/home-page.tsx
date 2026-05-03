@@ -17,6 +17,45 @@ export interface HomePageData {
   totalCount: number
 }
 
+interface BuildHomePageDataInput {
+  guides: GuideMetadata[]
+  websites: WebsiteMetadata[]
+}
+
+export function getFeaturedProjects(projects: WebsiteMetadata[]): WebsiteMetadata[] {
+  const featuredProjects = projects.filter(project => project.featured === true)
+
+  if (featuredProjects.length) {
+    return featuredProjects.slice(0, 8)
+  }
+
+  return [...projects]
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .slice(0, 8)
+}
+
+export function getRecentlyUpdatedProjects(
+  projects: WebsiteMetadata[],
+  limit = 5
+): WebsiteMetadata[] {
+  return [...projects]
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .slice(0, limit)
+}
+
+export function buildHomePageData({
+  guides,
+  websites,
+}: BuildHomePageDataInput): HomePageData {
+  return {
+    allProjects: websites,
+    featuredGuides: guides,
+    featuredProjects: getFeaturedProjects(websites),
+    recentlyUpdatedProjects: getRecentlyUpdatedProjects(websites, 8),
+    totalCount: websites.length,
+  }
+}
+
 interface JsonLdProps {
   data: Record<string, any>
 }

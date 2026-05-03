@@ -2,6 +2,12 @@ import { renderToStaticMarkup } from 'react-dom/server.node'
 import { rootLayoutMetadata, RootAppShell } from '@thedaviddias/web-core/root-shell'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 
+jest.mock('@thedaviddias/design-system/theme-provider', () => ({
+  DesignSystemProvider: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="design-system-provider">{children}</div>
+  ),
+}))
+
 jest.mock('@thedaviddias/web-core/root-shell-client', () => ({
   AnalyticsTracker: () => <div data-testid="analytics-tracker" />,
   BackToTop: () => <button type="button">Back to top</button>,
@@ -44,6 +50,7 @@ describe('RootAppShell', () => {
     expect(markup).toContain('data-testid="gtm-script"')
     expect(markup).toContain('data-gtm-id="GTM-TEST"')
     expect(markup).toContain('data-testid="gtm-noscript"')
+    expect(markup).toContain('data-testid="design-system-provider"')
     expect(markup).toContain('data-testid="favorites-provider"')
     expect(markup).toContain('data-testid="analytics-tracker"')
     expect(markup).toContain('Header slot')

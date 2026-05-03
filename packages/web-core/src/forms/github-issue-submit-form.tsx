@@ -32,7 +32,13 @@ const INITIAL_FORM_STATE: SubmissionFormState = {
   resourceLinks: [{ label: '', url: '' }],
 }
 
-export function GitHubIssueSubmitForm() {
+type GitHubIssueSubmitFormProps = {
+  submitEndpoint: string
+}
+
+export function GitHubIssueSubmitForm({
+  submitEndpoint,
+}: GitHubIssueSubmitFormProps) {
   const router = useRouter()
   const [formState, setFormState] =
     useState<SubmissionFormState>(INITIAL_FORM_STATE)
@@ -89,7 +95,7 @@ export function GitHubIssueSubmitForm() {
     setSubmitError(null)
 
     try {
-      const response = await fetch('/api/submit', {
+      const response = await fetch(submitEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -16,11 +16,6 @@ jest.mock('@thedaviddias/web-core/site-config', () => {
   }
 })
 
-jest.mock('next-auth/react', () => ({
-  signIn: jest.fn(),
-  signOut: jest.fn()
-}))
-
 jest.mock('@thedaviddias/web-core/root-shell-client', () => ({
   useAnalyticsEvents: () => ({
     trackSearch: jest.fn()
@@ -54,10 +49,6 @@ jest.mock('@thedaviddias/web-core/stats/github-stars', () => ({
   GithubStars: () => <div data-testid="github-stars" />
 }))
 
-jest.mock('@thedaviddias/web-core/auth/sign-out-button', () => ({
-  SignOutButton: () => <button type="button">Sign out</button>
-}))
-
 describe('Header auth actions', () => {
   it('shows a combined sign up and sign in link when signed out', () => {
     render(<Header authState={{ isAuthenticated: false }} />)
@@ -78,6 +69,7 @@ describe('Header auth actions', () => {
             name: 'Devin'
           }
         }}
+        desktopSignOutButton={<button type="button">Sign out</button>}
       />
     )
 

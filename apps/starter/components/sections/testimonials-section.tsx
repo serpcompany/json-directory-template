@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent } from '@thedaviddias/web-core/ui/card'
 import { Section } from '@thedaviddias/web-core/layout/section'
 
 const proofPoints = [

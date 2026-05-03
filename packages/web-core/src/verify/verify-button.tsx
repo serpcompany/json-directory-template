@@ -9,9 +9,10 @@ type VerifyState = 'idle' | 'loading' | 'success' | 'error'
 
 interface VerifyButtonProps {
   token: string
+  verifyEndpoint: string
 }
 
-export function VerifyButton({ token }: VerifyButtonProps) {
+export function VerifyButton({ token, verifyEndpoint }: VerifyButtonProps) {
   const [state, setState] = useState<VerifyState>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [slug, setSlug] = useState('')
@@ -20,7 +21,7 @@ export function VerifyButton({ token }: VerifyButtonProps) {
     setState('loading')
 
     try {
-      const response = await fetch('/api/verify-badge', {
+      const response = await fetch(verifyEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token }),

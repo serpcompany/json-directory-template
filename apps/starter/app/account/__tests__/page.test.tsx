@@ -1,6 +1,13 @@
 const mockNotFound = jest.fn()
 const notFoundError = new Error('NEXT_HTTP_ERROR_FALLBACK;404')
 const mockSiteConfig = {
+  branding: {
+    appleTouchIconUrl: 'https://example.com/apple-touch-icon.png',
+    faviconUrl: 'https://example.com/favicon.ico',
+    logoUrl: 'https://example.com/logo.png',
+    ogImageUrl: 'https://example.com/opengraph-image.png'
+  },
+  brandsRouteBasePath: 'brands',
   copy: {
     listingName: {
       plural: 'listings',
@@ -22,6 +29,7 @@ const mockSiteConfig = {
 
 jest.mock('@thedaviddias/web-core/site-config', () => ({
   getTwitterHandleFromUrl: jest.fn(() => '@serpcompany'),
+  hasConfiguredPublicSocialLinks: jest.fn(() => false),
   siteConfig: mockSiteConfig
 }))
 

@@ -2,6 +2,7 @@ import { ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import type { ComponentType, ReactNode } from 'react'
 import type { WebsiteMetadata } from '../content-query'
+import { getListingSpecificResourceLinks } from '../resource-links'
 
 type SectionProps = {
   children: ReactNode
@@ -26,7 +27,7 @@ export function WebsiteResourcesSection({
   website,
   slots: { Section, WebsiteCliSection },
 }: WebsiteResourcesSectionProps) {
-  const resourceLinks = website.resourceLinks ?? []
+  const resourceLinks = getListingSpecificResourceLinks(website.resourceLinks)
 
   return (
     <>

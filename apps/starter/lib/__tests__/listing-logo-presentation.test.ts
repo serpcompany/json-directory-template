@@ -2,7 +2,7 @@ import {
   DEFAULT_SITE_LISTING_LOGO_FALLBACK_PATH,
   getListingLogoFallbackPath,
   shouldUseProvidedListingLogo,
-} from '@/lib/listing-logo-presentation';
+} from '@thedaviddias/web-core/listing-logo-presentation';
 
 jest.mock('@thedaviddias/web-core/site-config', () => ({
   siteConfig: {

@@ -60,9 +60,16 @@ describe('Footer', () => {
     expect(
       screen.queryByRole('link', { name: 'Advertise' })
     ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole('link', { name: 'Brands' })
-    ).not.toBeInTheDocument();
+    if (siteConfig.features.showBrands) {
+      expect(screen.getByRole('link', { name: siteCopy.brandsLabel })).toHaveAttribute(
+        'href',
+        '/brands'
+      );
+    } else {
+      expect(
+        screen.queryByRole('link', { name: siteCopy.brandsLabel })
+      ).not.toBeInTheDocument();
+    }
     expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute(
       'href',
       '/about'

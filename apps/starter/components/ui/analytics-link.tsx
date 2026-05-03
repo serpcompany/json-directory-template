@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { analytics } from '@/lib/analytics'
+import { analytics } from '@thedaviddias/web-core/analytics'
 
 interface AnalyticsLinkProps {
   href: string

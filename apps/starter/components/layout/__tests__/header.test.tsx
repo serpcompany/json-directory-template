@@ -9,10 +9,6 @@ jest.mock('@thedaviddias/web-core/root-shell-client', () => ({
   })
 }))
 
-jest.mock('@thedaviddias/web-core/auth/sign-out-button', () => ({
-  SignOutButton: () => <button type="button">Sign out</button>
-}))
-
 jest.mock('@thedaviddias/web-core/hooks/use-search', () => ({
   useSearch: () => ({
     searchQuery: '',
