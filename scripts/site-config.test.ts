@@ -48,6 +48,41 @@ describe('loadCheckedInSite', () => {
     expect(config.deploy?.strategy).toBe('github-pages-repo-sync');
   });
 
+  it('loads the checked-in pornvideodownloaders.com site config', () => {
+    const config = loadCheckedInSite('pornvideodownloaders.com');
+
+    expect(config.id).toBe('pornvideodownloaders.com');
+    expect(config.content.listingSource).toEqual({
+      category: 'video-downloaders',
+      featuredCount: 6,
+      kind: 'trial-products-json',
+      outputPath: 'data/listings.json',
+      path: 'sites/pornvideodownloaders.com/products.json',
+      publishedAt: '2026-05-03',
+    });
+    expect(config.site).toMatchObject({
+      domain: 'pornvideodownloaders.com',
+      name: 'Porn Video Downloaders',
+      publicUrl: 'https://pornvideodownloaders.com',
+    });
+    expect(config.build).toMatchObject({
+      appPackageName: 'pornvideodownloaders.com',
+      appOutDir: 'apps/pornvideodownloaders.com/out',
+      artifactDir: 'dist/sites/pornvideodownloaders.com',
+    });
+    expect(config.routes.listingBasePath).toBe('products');
+    expect(config.copy.listingName).toEqual({
+      plural: 'products',
+      singular: 'product',
+    });
+    expect(config.deploy).toEqual({
+      branch: 'main',
+      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+      repoUrl: 'https://github.com/serpcompany/pornvideodownloaders.com.git',
+      strategy: 'github-pages-repo-sync',
+    });
+  });
+
   it('inherits default values when a site override does not redefine them', () => {
     const config = loadCheckedInSite('serpdownloaders.com');
 
@@ -231,6 +266,12 @@ describe('resolveSiteArtifactDir', () => {
       resolveSiteArtifactDir(loadCheckedInSite('serpdownloaders.com'))
     ).toBe('dist/sites/serpdownloaders.com');
   });
+
+  it('resolves the configured pornvideodownloaders artifact directory', () => {
+    expect(
+      resolveSiteArtifactDir(loadCheckedInSite('pornvideodownloaders.com'))
+    ).toBe('dist/sites/pornvideodownloaders.com');
+  });
 });
 
 describe('buildSiteEnvironment', () => {
@@ -242,6 +283,17 @@ describe('buildSiteEnvironment', () => {
       NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'products',
       NEXT_PUBLIC_SITE_ID: 'serpdownloaders.com',
       SITE_ID: 'serpdownloaders.com',
+    });
+  });
+
+  it('maps pornvideodownloaders.com config to the minimal app env contract', () => {
+    expect(
+      buildSiteEnvironment(loadCheckedInSite('pornvideodownloaders.com'))
+    ).toEqual({
+      LISTING_ROUTE_BASE_PATH: 'products',
+      NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'products',
+      NEXT_PUBLIC_SITE_ID: 'pornvideodownloaders.com',
+      SITE_ID: 'pornvideodownloaders.com',
     });
   });
 });
@@ -275,4 +327,31 @@ describe('resolveResolvedSiteConfig', () => {
     });
   });
 
+  it('resolves pornvideodownloaders.com into the app-facing shape', () => {
+    expect(
+      resolveResolvedSiteConfig(loadCheckedInSite('pornvideodownloaders.com'))
+    ).toMatchObject({
+      copy: {
+        listingName: {
+          plural: 'products',
+          singular: 'product',
+        },
+        submitLabel: 'Submit a Product',
+      },
+      description: 'Downloaders for adult video platforms and creator sites.',
+      domain: 'pornvideodownloaders.com',
+      githubIssueOwner: 'serpcompany',
+      githubIssueRepo: 'json-directory-template',
+      githubIssuesUrl:
+        'https://github.com/serpcompany/json-directory-template/issues/new/choose',
+      id: 'pornvideodownloaders.com',
+      docsRouteBasePath: 'docs',
+      brandsRouteBasePath: 'brands',
+      listingRouteBasePath: 'products',
+      name: 'Porn Video Downloaders',
+      networkRouteBasePath: 'network',
+      publicUrl: 'https://pornvideodownloaders.com',
+      tagline: 'Adult video downloader tools in one searchable directory.',
+    });
+  });
 });

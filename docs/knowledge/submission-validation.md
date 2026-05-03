@@ -21,7 +21,7 @@ The repo now uses two layers:
 - `Validate Listing Data`
   - runs when the active checked-in listing sources change on a PR or on `main`
   - executes `pnpm tsx scripts/validate-data.ts data/listings.json`
-  - executes `pnpm validate:site -- --site serpdownloaders.com`
+  - executes `pnpm validate:sites`
 
 This keeps the current strategy explicit:
 
@@ -29,7 +29,7 @@ This keeps the current strategy explicit:
 - GitHub issue intake remains as a fallback/operator path
 - PRs are still the reviewable write path for broader listing-data changes
 - the default starter still uses `data/listings.json`
-- the current active checked-in site uses `sites/serpdownloaders.com/products.json`
+- the current active checked-in sites use their own `sites/<site-id>/products.json` sources
 - this is the current static-starter bridge flow, not the long-term hosted auth/submission architecture
 
 ## What fails early
