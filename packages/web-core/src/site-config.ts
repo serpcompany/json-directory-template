@@ -21,9 +21,9 @@ export type SiteConfig = {
   domain: string
   features: SiteFeatureFlags
   gtmId?: string
-  githubIssueOwner: string
-  githubIssueRepo: string
-  githubIssuesUrl: string
+  githubIssueOwner: string | null
+  githubIssueRepo: string | null
+  githubIssuesUrl: string | null
   githubRepoUrl: string
   githubUrl: string
   id: string
@@ -69,6 +69,10 @@ export function getTwitterHandleFromUrl(url: string): string | null {
 }
 
 export function hasConfiguredGitHubIssueTarget(config: SiteConfig): boolean {
+  if (!config.githubIssueOwner || !config.githubIssueRepo || !config.githubIssuesUrl) {
+    return false
+  }
+
   return !(
     config.id === 'default' &&
     config.githubIssueOwner === DEFAULT_STARTER_PLACEHOLDER.githubIssueOwner &&

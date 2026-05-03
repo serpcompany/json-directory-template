@@ -29,9 +29,9 @@ export const operatorSiteDocumentSchema = z.object({
     .regex(/^[a-z0-9-]+$/),
   domain: z.string().trim().min(1),
   featuredCount: z.number().int().nonnegative(),
-  githubIssueOwner: z.string().trim().min(1),
-  githubIssueRepo: z.string().trim().min(1),
-  githubIssuesUrl: z.string().url(),
+  githubIssueOwner: z.string().trim().min(1).nullable(),
+  githubIssueRepo: z.string().trim().min(1).nullable(),
+  githubIssuesUrl: z.string().url().nullable(),
   githubRepoUrl: z.string().url(),
   githubUrl: z.string().url(),
   listingPluralLabel: z.string().trim().min(1),
@@ -53,6 +53,28 @@ export const operatorSiteDocumentSchema = z.object({
   submitLabel: z.string().trim().min(1),
   tagline: z.string().trim().min(1),
   twitterUrl: z.string().url(),
+}).superRefine((site, context) => {
+  const issueFields = [
+    ['githubIssueOwner', site.githubIssueOwner],
+    ['githubIssueRepo', site.githubIssueRepo],
+    ['githubIssuesUrl', site.githubIssuesUrl],
+  ] as const;
+  const configuredCount = issueFields.filter(([, value]) => value !== null).length;
+
+  if (configuredCount === 0 || configuredCount === issueFields.length) {
+    return;
+  }
+
+  for (const [fieldName, value] of issueFields) {
+    if (value === null) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          'GitHub issue target fields must either all be configured or all be null.',
+        path: [fieldName],
+      });
+    }
+  }
 });
 
 export const operatorOnboardingDocumentSchema = z

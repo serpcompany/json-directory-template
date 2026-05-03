@@ -109,9 +109,9 @@ export type CheckedInSiteConfig = {
   social: {
     githubUrl: string;
     githubRepoUrl: string;
-    githubIssueOwner: string;
-    githubIssueRepo: string;
-    githubIssuesUrl: string;
+    githubIssueOwner: string | null;
+    githubIssueRepo: string | null;
+    githubIssuesUrl: string | null;
     redditUrl: string;
     twitterUrl: string;
   };
@@ -218,6 +218,11 @@ Depending on the chosen source:
 
 Important:
 
+- Use `null` for all three GitHub issue target fields when a site does not have an issue repo
+  ready yet. Do not use blank strings. Omitting the fields means the site inherits starter
+  defaults; `null` is the explicit "disabled for now" value.
+- Configure `social.githubIssueOwner`, `social.githubIssueRepo`, and `social.githubIssuesUrl` as a
+  set. Validation rejects mixed states where only some issue target fields are configured.
 - `site-config` does not own the individual listing names.
 - Shell labels like `Listings`, `Docs`, `Network`, and `Submit` come from `copy.*` in `sites/<id>/site-config.ts`.
 - `copy.listingName.singular` and `copy.listingName.plural` are public-facing copy only. They drive headings, search placeholders, CTA text, and helper copy like `All Listings`. They do not change route paths.

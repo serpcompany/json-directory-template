@@ -1,6 +1,9 @@
 import type { CheckedInSiteConfigOverride } from '../types'
 
 export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
+  analytics: {
+    gtmId: 'GTM-PWB7MRW9',
+  },
   branding: {
     favicon: {
       path: 'sites/pornvideodownloaders.com/assets/favicon.ico',
@@ -56,9 +59,9 @@ export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     tagline: 'Adult video downloader tools in one searchable directory.'
   },
   social: {
-    githubIssueOwner: 'serpcompany',
-    githubIssueRepo: 'pornvideodownloaders.com',
-    githubIssuesUrl: 'https://github.com/serpcompany/pornvideodownloaders.com/issues/new/choose',
+    githubIssueOwner: null,
+    githubIssueRepo: null,
+    githubIssuesUrl: null,
     githubRepoUrl: 'https://github.com/serpxxx',
     githubUrl: 'https://github.com/serpxxx',
     redditUrl: 'https://www.reddit.com/r/serpxxx/',

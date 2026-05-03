@@ -27,11 +27,11 @@ function deepMerge<T>(base: T, override: DeepPartial<T> | undefined): T {
   }
 
   if (Array.isArray(base) || Array.isArray(override)) {
-    return (override as T) ?? base;
+    return override as T;
   }
 
   if (!isPlainObject(base) || !isPlainObject(override)) {
-    return (override as T) ?? base;
+    return override as T;
   }
 
   const baseRecord = base as Record<string, unknown>;
