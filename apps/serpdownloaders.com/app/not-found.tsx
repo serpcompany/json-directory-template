@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getRoute } from '@thedaviddias/web-core/routes'
 import { generateBaseMetadata } from '@thedaviddias/web-core/seo-config'
-import { siteConfig } from '@thedaviddias/web-core/site-config'
+import { hasConfiguredGitHubIssueTarget, siteConfig } from '@thedaviddias/web-core/site-config'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: 'Page Not Found',
@@ -13,7 +13,7 @@ export const metadata: Metadata = generateBaseMetadata({
 })
 
 export default function NotFound() {
-  const showIssueLink = siteConfig.id !== 'default'
+  const issueHref = hasConfiguredGitHubIssueTarget(siteConfig) ? siteConfig.githubIssuesUrl : null
 
   return (
     <main className="mx-auto relative container flex flex-col items-center justify-center px-4">
@@ -27,11 +27,11 @@ export default function NotFound() {
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-center text-base text-neutral-400">
             The page you are looking for does not exist. <br />
-            {showIssueLink ? (
+            {issueHref ? (
               <>
                 But don&apos;t worry, we&apos;ve got you covered. You can{' '}
                 <Link
-                  href={siteConfig.githubIssuesUrl}
+                  href={issueHref}
                   className="text-foreground"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -41,7 +41,7 @@ export default function NotFound() {
                 .
               </>
             ) : (
-              <>Try the homepage or one of the starter listings instead.</>
+              'Try the homepage or one of the starter listings instead.'
             )}
           </p>
           <Button asChild className="mt-8">
