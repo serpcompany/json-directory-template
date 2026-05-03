@@ -30,6 +30,9 @@ describe('syncNetworkBrands', () => {
     const targetPath = resolve(tempDir, 'target/network-brands.json')
 
     writeJsonFile(sourcePath, {
+      brandGroups: {
+        example: ['alpha']
+      },
       brands: {
         alpha: { name: 'Alpha', url: 'https://alpha.example' }
       }
@@ -43,6 +46,9 @@ describe('syncNetworkBrands', () => {
       targetPath
     })
     expect(JSON.parse(readFileSync(targetPath, 'utf8'))).toEqual({
+      brandGroups: {
+        example: ['alpha']
+      },
       brands: {
         alpha: { name: 'Alpha', url: 'https://alpha.example' }
       }

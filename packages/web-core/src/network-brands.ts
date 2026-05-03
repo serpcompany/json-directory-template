@@ -13,11 +13,22 @@ type RawNetworkBrand = {
 }
 
 type RawNetworkBrandsData = {
+  brandGroups?: Record<string, string[]>
   brands?: Record<string, RawNetworkBrand>
 }
 
 export function getNetworkBrands(): NetworkBrandEntry[] {
   return parseNetworkBrands(networkBrandsData)
+}
+
+export function getNetworkBrandsForGroup(
+  groupSlug: string | null | undefined
+): NetworkBrandEntry[] {
+  if (!groupSlug) {
+    return getNetworkBrands()
+  }
+
+  return parseNetworkBrandGroup(networkBrandsData, groupSlug)
 }
 
 export function parseNetworkBrands(data: RawNetworkBrandsData): NetworkBrandEntry[] {
@@ -27,6 +38,29 @@ export function parseNetworkBrands(data: RawNetworkBrandsData): NetworkBrandEntr
   return Object.entries(brands)
     .map(([slug, brand]) => toNetworkBrandEntry(slug, brand, seenUrls))
     .sort(compareNetworkBrands)
+}
+
+export function parseNetworkBrandGroup(
+  data: RawNetworkBrandsData,
+  groupSlug: string
+): NetworkBrandEntry[] {
+  const group = data.brandGroups?.[groupSlug]
+
+  if (!group) {
+    throw new Error(`Network brand group "${groupSlug}" does not exist`)
+  }
+
+  const seenUrls = new Map<string, string>()
+
+  return group.map(slug => {
+    const brand = data.brands?.[slug]
+
+    if (!brand) {
+      throw new Error(`Network brand group "${groupSlug}" references missing brand "${slug}"`)
+    }
+
+    return toNetworkBrandEntry(slug, brand, seenUrls)
+  })
 }
 
 function toNetworkBrandEntry(

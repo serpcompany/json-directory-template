@@ -17,6 +17,7 @@ type SyncNetworkBrandsOptions = {
 }
 
 type RawNetworkBrandsData = {
+  brandGroups?: unknown
   brands?: unknown
 }
 
@@ -54,7 +55,10 @@ export function syncNetworkBrands({ sourcePath, targetPath }: SyncNetworkBrandsO
   }
 }
 
-function readNetworkBrandsJson(sourcePath: string): { brands: Record<string, unknown> } {
+function readNetworkBrandsJson(sourcePath: string): {
+  brandGroups?: unknown
+  brands: Record<string, unknown>
+} {
   const parsed = JSON.parse(readFileSync(sourcePath, 'utf8')) as RawNetworkBrandsData
 
   if (!parsed.brands || typeof parsed.brands !== 'object' || Array.isArray(parsed.brands)) {
