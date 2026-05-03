@@ -133,9 +133,9 @@ export type CheckedInSiteConfig = {
     tagline: string
   }
   social: {
-    githubIssueOwner: string
-    githubIssueRepo: string
-    githubIssuesUrl: string
+    githubIssueOwner: string | null
+    githubIssueRepo: string | null
+    githubIssuesUrl: string | null
     githubRepoUrl: string
     githubUrl: string
     redditUrl: string
