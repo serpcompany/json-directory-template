@@ -90,6 +90,40 @@ const featureFlagsSchema = z.object({
   showProjects: z.boolean().default(false)
 })
 
+const socialConfigSchema = z
+  .object({
+    githubIssueOwner: z.string().min(1).nullable(),
+    githubIssueRepo: z.string().min(1).nullable(),
+    githubIssuesUrl: z.string().url().nullable(),
+    githubRepoUrl: z.string().url(),
+    githubUrl: z.string().url(),
+    redditUrl: z.string().url(),
+    twitterUrl: z.string().url()
+  })
+  .superRefine((social, ctx) => {
+    const issueFields = [
+      ['githubIssueOwner', social.githubIssueOwner],
+      ['githubIssueRepo', social.githubIssueRepo],
+      ['githubIssuesUrl', social.githubIssuesUrl]
+    ] as const
+    const configuredCount = issueFields.filter(([, value]) => value !== null).length
+
+    if (configuredCount === 0 || configuredCount === issueFields.length) {
+      return
+    }
+
+    for (const [fieldName, value] of issueFields) {
+      if (value === null) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            'GitHub issue target fields must either all be configured or all be null.',
+          path: [fieldName]
+        })
+      }
+    }
+  })
+
 const checkedInSiteConfigSchema = z.object({
   analytics: siteAnalyticsSchema,
   branding: z.object({
@@ -180,15 +214,7 @@ const checkedInSiteConfigSchema = z.object({
     publicUrl: z.string().url(),
     tagline: z.string().min(1)
   }),
-  social: z.object({
-    githubIssueOwner: z.string().min(1),
-    githubIssueRepo: z.string().min(1),
-    githubIssuesUrl: z.string().url(),
-    githubRepoUrl: z.string().url(),
-    githubUrl: z.string().url(),
-    redditUrl: z.string().url(),
-    twitterUrl: z.string().url()
-  }),
+  social: socialConfigSchema,
   version: z.literal(1)
 })
 

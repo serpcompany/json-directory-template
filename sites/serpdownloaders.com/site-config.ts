@@ -47,6 +47,7 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     strategy: 'github-pages-repo-sync',
   },
   id: 'serpdownloaders.com',
+  networkBrandGroup: 'mainGroup',
   features: {
     showBrands: true,
   },
@@ -61,10 +62,9 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     tagline: 'For the people who just like to get down...loading',
   },
   social: {
-    githubIssueOwner: 'serpcompany',
-    githubIssueRepo: 'json-directory-template',
-    githubIssuesUrl:
-      'https://github.com/serpcompany/json-directory-template/issues/new/choose',
+    githubIssueOwner: null,
+    githubIssueRepo: null,
+    githubIssuesUrl: null,
     githubRepoUrl: 'https://github.com/serpdownloaders',
     githubUrl: 'https://github.com/serpdownloaders',
     redditUrl: 'https://www.reddit.com/r/serpdownloaders/',

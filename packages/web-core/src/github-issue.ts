@@ -31,6 +31,10 @@ function buildIssueBody(input: SubmissionIssueInput): string {
 }
 
 export function buildSubmissionIssueUrl(input: SubmissionIssueInput): string {
+  if (!siteConfig.githubIssueOwner || !siteConfig.githubIssueRepo) {
+    throw new Error('GitHub issue target is not configured for this site.');
+  }
+
   const url = new URL(
     `https://github.com/${siteConfig.githubIssueOwner}/${siteConfig.githubIssueRepo}/issues/new`
   );

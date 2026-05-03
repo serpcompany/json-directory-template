@@ -126,13 +126,15 @@ export function GitHubIssueSubmitForm({
     }
   }
 
-  const githubIssueUrl = buildSubmissionIssueUrl({
-    category: formState.category,
-    description: formState.description,
-    name: formState.name,
-    notes: formState.content,
-    website: formState.website,
-  })
+  const githubIssueUrl = hasConfiguredIssueTarget
+    ? buildSubmissionIssueUrl({
+        category: formState.category,
+        description: formState.description,
+        name: formState.name,
+        notes: formState.content,
+        website: formState.website,
+      })
+    : null
 
   const isSubmitDisabled =
     isSubmitting ||
@@ -299,7 +301,7 @@ export function GitHubIssueSubmitForm({
           >
             Reset
           </button>
-          {hasConfiguredIssueTarget ? (
+          {githubIssueUrl ? (
             <a
               href={githubIssueUrl}
               target="_blank"
