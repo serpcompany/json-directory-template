@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 const TEMPLATE_APP_ID = 'starter'
 
 const WRAPPER_TEMPLATE_ENTRIES = [
+  'actions',
   'app',
   'auth.ts',
   'content-collections.ts',
@@ -22,6 +23,7 @@ const WRAPPER_TEMPLATE_ENTRIES = [
 const EXCLUDED_PATH_SEGMENTS = new Set([
   '__tests__',
   '.next',
+  'api',
   'coverage',
   'node_modules',
   'out',
@@ -65,9 +67,13 @@ function shouldCopyRelativePath(relativePath: string): boolean {
     return false
   }
 
+  if (normalizedRelativePath.endsWith('.test.ts') || normalizedRelativePath.endsWith('.test.tsx')) {
+    return false
+  }
+
   return normalizedRelativePath
     .split('/')
-    .every(segment => !EXCLUDED_PATH_SEGMENTS.has(segment))
+    .every(segment => !EXCLUDED_PATH_SEGMENTS.has(segment) && segment !== 'submit')
 }
 
 function copyEntry({

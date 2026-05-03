@@ -5,8 +5,7 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 Historical note:
 
 - older entries in this checklist mention `serp.software` from an earlier proof-site pass
-- `serpdownloaders.com` is now the only active non-default site in the current runtime/build/deploy
-  graph
+- `serpdownloaders.com` and `pornvideodownloaders.com` are active non-default sites in the current runtime/build/deploy graph
 - treat the `serp.software` references below as historical verification notes, not current active
   requirements
 

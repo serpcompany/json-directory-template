@@ -11,9 +11,9 @@
 ## Website Data
 
 - `data/listings.json` is the active website-entry source for the default starter only.
-- `sites/serpdownloaders.com/products.json` is the active checked-in listing source for the only currently powered checked-in site.
+- `sites/serpdownloaders.com/products.json` and `sites/pornvideodownloaders.com/products.json` are active checked-in listing sources for powered checked-in sites.
 - `pnpm tsx scripts/validate-data.ts data/listings.json` validates the default starter JSON source.
-- `pnpm validate:site -- --site serpdownloaders.com` validates the active checked-in site's real source and generated surface contract.
+- `pnpm validate:site -- --site <id>` validates an active checked-in site's real source and generated surface contract.
 - `pnpm validate:sites` validates the active non-default checked-in sites; run `pnpm validate:site -- --site default` separately for the default starter.
 - Site-specific build flows can transform alternative checked-in inputs into the shared listing shape during build time.
 - The active loader now expects `slug`, `website`, `description`, `category`, `publishedAt`, and optional metadata like `featured`, `priority`, `content`, and `resourceLinks`.

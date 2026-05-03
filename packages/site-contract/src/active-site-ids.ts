@@ -1,4 +1,7 @@
-export const activeCheckedInSiteIds = ['serpdownloaders.com'] as const;
+export const activeCheckedInSiteIds = [
+  'pornvideodownloaders.com',
+  'serpdownloaders.com',
+] as const;
 const activeCheckedInSiteIdSet = new Set<string>(activeCheckedInSiteIds);
 
 export const removedSiteIds = new Set([
