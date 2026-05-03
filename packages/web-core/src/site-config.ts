@@ -1,49 +1,47 @@
-import {
-  defaultSiteConfig,
-  resolveCheckedInSiteConfig,
-} from '@thedaviddias/site-contract';
-import {
-  type AssetSource,
-  type SiteCopyConfig,
-  type SiteFeatureFlags,
-} from '@thedaviddias/site-contract/types';
+import { defaultSiteConfig, resolveCheckedInSiteConfig } from '@thedaviddias/site-contract'
+import type {
+  AssetSource,
+  SiteCopyConfig,
+  SiteFeatureFlags
+} from '@thedaviddias/site-contract/types'
 
 type SiteBrandingConfig = {
-  appleTouchIconUrl?: string;
-  faviconUrl?: string;
-  logoUrl?: string;
-  opengraphImageUrl?: string;
-};
+  appleTouchIconUrl?: string
+  faviconUrl?: string
+  logoUrl?: string
+  opengraphImageUrl?: string
+}
 
 export type SiteConfig = {
-  brandsRouteBasePath: string;
-  branding: SiteBrandingConfig;
-  copy: SiteCopyConfig;
-  description: string;
-  docsRouteBasePath: string;
-  domain: string;
-  features: SiteFeatureFlags;
-  gtmId?: string;
-  githubIssueOwner: string;
-  githubIssueRepo: string;
-  githubIssuesUrl: string;
-  githubRepoUrl: string;
-  githubUrl: string;
-  id: string;
-  listingRouteBasePath: string;
-  name: string;
-  networkRouteBasePath: string;
-  publicUrl: string;
-  redditUrl: string;
-  tagline: string;
-  twitterUrl: string;
-};
+  brandsRouteBasePath: string
+  branding: SiteBrandingConfig
+  copy: SiteCopyConfig
+  description: string
+  docsRouteBasePath: string
+  domain: string
+  features: SiteFeatureFlags
+  gtmId?: string
+  githubIssueOwner: string
+  githubIssueRepo: string
+  githubIssuesUrl: string
+  githubRepoUrl: string
+  githubUrl: string
+  id: string
+  listingRouteBasePath: string
+  name: string
+  networkBrandGroup: string | null
+  networkRouteBasePath: string
+  publicUrl: string
+  redditUrl: string
+  tagline: string
+  twitterUrl: string
+}
 
 const runtimeBrandAssetPaths = {
   favicon: '/favicon.ico',
   logo: '/logo.png',
-  opengraphImage: '/opengraph-image.png',
-} as const;
+  opengraphImage: '/opengraph-image.png'
+} as const
 
 const DEFAULT_STARTER_PLACEHOLDER = {
   githubIssueOwner: 'example',
@@ -51,8 +49,8 @@ const DEFAULT_STARTER_PLACEHOLDER = {
   githubRepoUrl: 'https://github.com/example/directory-starter',
   githubUrl: 'https://github.com/example',
   redditUrl: 'https://www.reddit.com/r/directorystarter/',
-  twitterUrl: 'https://x.com/directorystarter',
-} as const;
+  twitterUrl: 'https://x.com/directorystarter'
+} as const
 
 export function getTwitterHandleFromUrl(url: string): string | null {
   try {
@@ -101,38 +99,32 @@ function resolveRuntimeBrandAssetUrl(
   kind: keyof typeof runtimeBrandAssetPaths
 ): string | undefined {
   if (!asset) {
-    return undefined;
+    return undefined
   }
 
   if (asset.source === 'url') {
-    return asset.url;
+    return asset.url
   }
 
-  return runtimeBrandAssetPaths[kind];
+  return runtimeBrandAssetPaths[kind]
 }
 
 export function resolveSiteConfig(
   siteId = process.env.NEXT_PUBLIC_SITE_ID || process.env.SITE_ID || defaultSiteConfig.id
 ): SiteConfig {
-  const configuredSite = resolveCheckedInSiteConfig(siteId);
+  const configuredSite = resolveCheckedInSiteConfig(siteId)
 
   return {
     branding: {
-      appleTouchIconUrl: resolveRuntimeBrandAssetUrl(
-        configuredSite.branding.logo,
-        'logo'
-      )
+      appleTouchIconUrl: resolveRuntimeBrandAssetUrl(configuredSite.branding.logo, 'logo')
         ? '/apple-touch-icon.png'
         : undefined,
-      faviconUrl: resolveRuntimeBrandAssetUrl(
-        configuredSite.branding.favicon,
-        'favicon'
-      ),
+      faviconUrl: resolveRuntimeBrandAssetUrl(configuredSite.branding.favicon, 'favicon'),
       logoUrl: resolveRuntimeBrandAssetUrl(configuredSite.branding.logo, 'logo'),
       opengraphImageUrl: resolveRuntimeBrandAssetUrl(
         configuredSite.branding.opengraphImage,
         'opengraphImage'
-      ),
+      )
     },
     brandsRouteBasePath: configuredSite.routes.brandsBasePath,
     copy: configuredSite.copy,
@@ -149,12 +141,13 @@ export function resolveSiteConfig(
     id: configuredSite.id,
     listingRouteBasePath: configuredSite.routes.listingBasePath,
     name: configuredSite.site.name,
+    networkBrandGroup: configuredSite.networkBrandGroup,
     networkRouteBasePath: configuredSite.routes.networkBasePath,
     publicUrl: configuredSite.site.publicUrl,
     redditUrl: configuredSite.social.redditUrl,
     tagline: configuredSite.site.tagline,
-    twitterUrl: configuredSite.social.twitterUrl,
-  };
+    twitterUrl: configuredSite.social.twitterUrl
+  }
 }
 
-export const siteConfig: SiteConfig = resolveSiteConfig();
+export const siteConfig: SiteConfig = resolveSiteConfig()

@@ -43,6 +43,7 @@ export const defaultSiteConfig: CheckedInSiteConfig = {
     showProjects: false
   },
   id: 'default',
+  networkBrandGroup: null,
   routes: {
     brandsBasePath: 'brands',
     docsBasePath: 'docs',

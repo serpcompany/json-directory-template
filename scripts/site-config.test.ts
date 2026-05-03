@@ -78,6 +78,7 @@ describe('loadCheckedInSite', () => {
     })
     expect(config.copy.brandsLabel).toBe('Brands')
     expect(config.features.showBrands).toBe(true)
+    expect(config.networkBrandGroup).toBe('serpxxxGroup')
     expect(config.deploy).toEqual({
       branch: 'main',
       preserve: ['.github/workflows/deploy.yml', 'CNAME'],
@@ -136,6 +137,7 @@ describe('loadCheckedInSite', () => {
     expect(config.copy.docsLabel).toBe('Docs')
     expect(config.copy.networkLabel).toBe('Network')
     expect(config.features.showBrands).toBe(true)
+    expect(config.networkBrandGroup).toBeNull()
   })
 })
 
@@ -338,6 +340,7 @@ describe('resolveResolvedSiteConfig', () => {
       githubIssueRepo: 'json-directory-template',
       githubIssuesUrl: 'https://github.com/serpcompany/json-directory-template/issues/new/choose',
       id: 'pornvideodownloaders.com',
+      networkBrandGroup: 'serpxxxGroup',
       docsRouteBasePath: 'docs',
       brandsRouteBasePath: 'brands',
       listingRouteBasePath: 'products',

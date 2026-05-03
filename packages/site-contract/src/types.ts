@@ -1,165 +1,159 @@
 export type AssetSource =
   | {
-      path: string;
-      source: 'local-path';
+      path: string
+      source: 'local-path'
     }
   | {
-      source: 'url';
-      url: string;
-    };
+      source: 'url'
+      url: string
+    }
 
 export type ListingSourceConfig =
   | {
-      kind: 'listing-json';
-      outputPath?: string;
-      path: string;
+      kind: 'listing-json'
+      outputPath?: string
+      path: string
     }
   | {
-      category: string;
-      featuredCount: number;
-      kind: 'trial-products-json';
-      outputPath?: string;
-      path: string;
-      publishedAt: string;
-    };
+      category: string
+      featuredCount: number
+      kind: 'trial-products-json'
+      outputPath?: string
+      path: string
+      publishedAt: string
+    }
 
 export type SiteCopyConfig = {
-  brandsLabel: string;
-  categoryLabels: Record<string, string>;
-  docsLabel: string;
+  brandsLabel: string
+  categoryLabels: Record<string, string>
+  docsLabel: string
   listingName: {
-    plural: string;
-    singular: string;
-  };
-  networkLabel: string;
-  submitLabel: string;
-};
+    plural: string
+    singular: string
+  }
+  networkLabel: string
+  submitLabel: string
+}
 
-export type SiteExternalResourceIcon =
-  | 'chrome'
-  | 'code2'
-  | 'command'
-  | 'gitBranch'
-  | 'terminal';
+export type SiteExternalResourceIcon = 'chrome' | 'code2' | 'command' | 'gitBranch' | 'terminal'
 
-export type SiteCategoryPriority = 'high' | 'medium' | 'low';
+export type SiteCategoryPriority = 'high' | 'medium' | 'low'
 
 export type SiteCategoryInput = {
-  description?: string;
-  name: string;
-  priority?: SiteCategoryPriority;
-  slug: string;
-};
+  description?: string
+  name: string
+  priority?: SiteCategoryPriority
+  slug: string
+}
 
 export type SiteExternalResource = {
-  description: string;
-  href: string;
-  icon: SiteExternalResourceIcon;
-  imageAlt?: string;
-  imageSrc?: string;
-  name: string;
-  slug: string;
-};
+  description: string
+  href: string
+  icon: SiteExternalResourceIcon
+  imageAlt?: string
+  imageSrc?: string
+  name: string
+  slug: string
+}
 
 export type SiteListingCliInstall = {
-  commandPrefix: string;
-  installTargetByListingSlug: Record<string, string>;
-};
+  commandPrefix: string
+  installTargetByListingSlug: Record<string, string>
+}
 
 export type SiteNetworkLink = {
-  description: string;
-  href: string;
-  label: string;
-  title: string;
-};
+  description: string
+  href: string
+  label: string
+  title: string
+}
 
 export type SiteOwnedContent = {
-  externalResources: SiteExternalResource[];
-  listingCliInstall: SiteListingCliInstall | null;
-  networkLinks: SiteNetworkLink[];
-};
+  externalResources: SiteExternalResource[]
+  listingCliInstall: SiteListingCliInstall | null
+  networkLinks: SiteNetworkLink[]
+}
 
 export type SiteAnalyticsConfig = {
-  gtmId?: string;
-};
+  gtmId?: string
+}
 
 export type DeployConfig = {
-  branch: string;
-  preserve: string[];
-  repoUrl: string;
-  strategy: 'github-pages-repo-sync';
-};
+  branch: string
+  preserve: string[]
+  repoUrl: string
+  strategy: 'github-pages-repo-sync'
+}
 
 export type SiteFeatureFlags = {
-  showAuth: boolean;
-  showBrands: boolean;
-  showCreatorProjects: boolean;
-  showDocs: boolean;
-  showExternalResources: boolean;
-  showFavorites: boolean;
-  showFeaturedGuides: boolean;
-  showGuides: boolean;
-  showNewsletter: boolean;
-  showProjects: boolean;
-};
+  showAuth: boolean
+  showBrands: boolean
+  showCreatorProjects: boolean
+  showDocs: boolean
+  showExternalResources: boolean
+  showFavorites: boolean
+  showFeaturedGuides: boolean
+  showGuides: boolean
+  showNewsletter: boolean
+  showProjects: boolean
+}
 
 export type CheckedInSiteConfig = {
-  analytics?: SiteAnalyticsConfig;
+  analytics?: SiteAnalyticsConfig
   branding: {
-    favicon?: AssetSource;
-    logo?: AssetSource;
-    opengraphImage?: AssetSource;
-  };
+    favicon?: AssetSource
+    logo?: AssetSource
+    opengraphImage?: AssetSource
+  }
   build: {
-    appPackageName: string;
-    appOutDir: string;
-    artifactDir: string;
-    mode: 'static-directory';
-  };
-  copy: SiteCopyConfig;
+    appPackageName: string
+    appOutDir: string
+    artifactDir: string
+    mode: 'static-directory'
+  }
+  copy: SiteCopyConfig
   content: {
-    listingSource: ListingSourceConfig;
-  };
-  deploy?: DeployConfig;
-  features: SiteFeatureFlags;
-  id: string;
+    listingSource: ListingSourceConfig
+  }
+  deploy?: DeployConfig
+  features: SiteFeatureFlags
+  id: string
+  networkBrandGroup: string | null
   routes: {
-    brandsBasePath: string;
-    docsBasePath: string;
-    listingBasePath: string;
-    networkBasePath: string;
-  };
+    brandsBasePath: string
+    docsBasePath: string
+    listingBasePath: string
+    networkBasePath: string
+  }
   site: {
-    description: string;
-    domain: string;
-    name: string;
-    publicUrl: string;
-    tagline: string;
-  };
+    description: string
+    domain: string
+    name: string
+    publicUrl: string
+    tagline: string
+  }
   social: {
-    githubIssueOwner: string;
-    githubIssueRepo: string;
-    githubIssuesUrl: string;
-    githubRepoUrl: string;
-    githubUrl: string;
-    redditUrl: string;
-    twitterUrl: string;
-  };
-  version: 1;
-};
+    githubIssueOwner: string
+    githubIssueRepo: string
+    githubIssuesUrl: string
+    githubRepoUrl: string
+    githubUrl: string
+    redditUrl: string
+    twitterUrl: string
+  }
+  version: 1
+}
 
-type Primitive = boolean | null | number | string | undefined;
+type Primitive = boolean | null | number | string | undefined
 
 export type DeepPartial<T> = T extends Primitive
   ? T
   : T extends Array<infer U>
     ? Array<DeepPartial<U>>
     : {
-        [K in keyof T]?: DeepPartial<T[K]>;
-      };
+        [K in keyof T]?: DeepPartial<T[K]>
+      }
 
-export type CheckedInSiteConfigOverride = DeepPartial<
-  Omit<CheckedInSiteConfig, 'id'>
-> & {
-  id: string;
-};
+export type CheckedInSiteConfigOverride = DeepPartial<Omit<CheckedInSiteConfig, 'id'>> & {
+  id: string
+}

@@ -26,4 +26,35 @@ describe('Shared brands page content', () => {
     )
     expect(screen.queryByRole('link', { name: /^visit$/i })).not.toBeInTheDocument()
   })
+
+  it('uses the configured SERPXXX brand group for pornvideodownloaders.com', async () => {
+    process.env.NEXT_PUBLIC_SITE_ID = 'pornvideodownloaders.com'
+    process.env.SITE_ID = 'pornvideodownloaders.com'
+
+    const { default: BrandsPage } = await import('@thedaviddias/web-core/static-pages/brands-page')
+
+    render(<BrandsPage />)
+
+    expect(screen.getByRole('link', { name: /serp xxx/i })).toHaveAttribute(
+      'href',
+      'https://serp.xxx'
+    )
+    expect(screen.getByRole('link', { name: /onlyfans video downloader/i })).toHaveAttribute(
+      'href',
+      'https://onlyfansvideodownloader.com'
+    )
+    expect(screen.getByRole('link', { name: /justforfans downloader/i })).toHaveAttribute(
+      'href',
+      'https://justforfansdownloader.com'
+    )
+    expect(screen.getByRole('link', { name: /porn video downloaders/i })).toHaveAttribute(
+      'href',
+      'https://pornvideodownloaders.com'
+    )
+    expect(screen.getByRole('link', { name: /porno downloaders/i })).toHaveAttribute(
+      'href',
+      'https://pornodownloaders.com'
+    )
+    expect(screen.queryByRole('link', { name: /awesome shadcn ui/i })).not.toBeInTheDocument()
+  })
 })

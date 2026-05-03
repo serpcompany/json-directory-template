@@ -117,6 +117,7 @@ const checkedInSiteConfigSchema = z.object({
     .optional(),
   features: featureFlagsSchema.default({}),
   id: z.string().min(1),
+  networkBrandGroup: z.string().min(1).nullable().default(null),
   routes: z
     .object({
       brandsBasePath: z
@@ -263,6 +264,7 @@ export function resolveResolvedSiteConfig(siteConfig: CheckedInSiteConfig) {
     id: siteConfig.id,
     listingRouteBasePath: siteConfig.routes.listingBasePath,
     name: siteConfig.site.name,
+    networkBrandGroup: siteConfig.networkBrandGroup,
     networkRouteBasePath: siteConfig.routes.networkBasePath,
     publicUrl: siteConfig.site.publicUrl,
     redditUrl: siteConfig.social.redditUrl,

@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { getNetworkBrands, parseNetworkBrands } from '../packages/web-core/src/network-brands.ts'
+import {
+  getNetworkBrands,
+  getNetworkBrandsForGroup,
+  parseNetworkBrandGroup,
+  parseNetworkBrands
+} from '../packages/web-core/src/network-brands.ts'
 
 describe('parseNetworkBrands', () => {
   it('returns sorted brand entries with hostnames', () => {
@@ -71,5 +76,53 @@ describe('parseNetworkBrands', () => {
         url: expect.stringMatching(/^https?:\/\//)
       })
     )
+  })
+
+  it('returns the committed SERPXXX brand group from the shared source data', () => {
+    const brands = getNetworkBrandsForGroup('serpxxxGroup')
+
+    expect(brands.map(brand => brand.slug)).toEqual([
+      'serp-xxx',
+      'onlyfans-video-downloader',
+      'justforfans-downloader',
+      'porn-video-downloaders',
+      'porno-downloaders'
+    ])
+    expect(brands).toEqual([
+      expect.objectContaining({
+        name: 'SERP XXX',
+        url: 'https://serp.xxx'
+      }),
+      expect.objectContaining({
+        name: 'OnlyFans Video Downloader',
+        url: 'https://onlyfansvideodownloader.com'
+      }),
+      expect.objectContaining({
+        name: 'JustForFans Downloader',
+        url: 'https://justforfansdownloader.com'
+      }),
+      expect.objectContaining({
+        name: 'Porn Video Downloaders',
+        url: 'https://pornvideodownloaders.com'
+      }),
+      expect.objectContaining({
+        name: 'Porno Downloaders',
+        url: 'https://pornodownloaders.com'
+      })
+    ])
+  })
+
+  it('rejects brand groups that reference missing brand entries', () => {
+    expect(() =>
+      parseNetworkBrandGroup(
+        {
+          brandGroups: {
+            example: ['missing-brand']
+          },
+          brands: {}
+        },
+        'example'
+      )
+    ).toThrow('Network brand group "example" references missing brand "missing-brand"')
   })
 })
