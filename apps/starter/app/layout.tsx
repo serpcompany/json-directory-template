@@ -1,6 +1,5 @@
 import type { ReactElement, ReactNode } from 'react'
 import './globals.css'
-import { DesignSystemProvider } from '@thedaviddias/design-system/theme-provider'
 import { fonts } from '@thedaviddias/design-system/lib/fonts'
 import { getHeaderAuthState } from '@/lib/auth'
 import { getActiveCategories, getFeaturedListingCount } from '@thedaviddias/web-core/category-navigation'
@@ -41,7 +40,7 @@ export default async function RootLayout({ children }: RootLayoutProps): Promise
         />
       }
     >
-      <DesignSystemProvider>{children}</DesignSystemProvider>
+      {children}
     </RootAppShell>
   )
 }

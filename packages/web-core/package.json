@@ -54,6 +54,7 @@
     "./root-shell": "./src/root-shell.tsx",
     "./root-shell-client": "./src/root-shell-client.tsx",
     "./routes": "./src/routes.ts",
+    "./resource-links": "./src/resource-links.ts",
     "./search/favicon": "./src/search/favicon.tsx",
     "./search/search-filters": "./src/search/search-filters.tsx",
     "./search/search-results-route": "./src/search/search-results-route.tsx",

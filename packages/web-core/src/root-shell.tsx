@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
+import { DesignSystemProvider } from '@thedaviddias/design-system/theme-provider'
 import {
   SITE_APPLE_TOUCH_ICON_URL,
   SITE_DESCRIPTION,
@@ -59,15 +60,17 @@ export function RootAppShell({
       </head>
       <body className={bodyClassName}>
         <GoogleTagManagerNoScript gtmId={gtmId} />
-        <FavoritesProvider>
-          <AnalyticsTracker />
-          <div className="flex min-h-screen flex-col">
-            {header}
-            <main className="flex flex-1 flex-col">{children}</main>
-            {footer}
-          </div>
-          <BackToTop />
-        </FavoritesProvider>
+        <DesignSystemProvider>
+          <FavoritesProvider>
+            <AnalyticsTracker />
+            <div className="flex min-h-screen flex-col">
+              {header}
+              <main className="flex flex-1 flex-col">{children}</main>
+              {footer}
+            </div>
+            <BackToTop />
+          </FavoritesProvider>
+        </DesignSystemProvider>
       </body>
     </html>
   )

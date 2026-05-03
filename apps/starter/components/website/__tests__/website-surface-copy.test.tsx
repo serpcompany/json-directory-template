@@ -46,6 +46,27 @@ describe('website surface copy', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('does not render a generic GitHub organization link from stale listing data', () => {
+    render(
+      <WebsiteResourcesSection
+        website={{
+          ...sampleWebsite,
+          resourceLinks: [
+            {
+              label: 'GitHub',
+              url: 'https://github.com/serpapps',
+            },
+          ],
+        }}
+      />
+    );
+
+    expect(
+      screen.queryByRole('heading', { name: /^links$/i })
+    ).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /github/i })).not.toBeInTheDocument();
+  });
+
   it('uses generic related-entry copy on website detail pages', () => {
     render(<WebsiteRelatedProjects websites={[sampleWebsite]} />);
 

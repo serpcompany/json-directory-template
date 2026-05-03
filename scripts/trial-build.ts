@@ -6,6 +6,7 @@ import {
   type NormalizedTrialProduct,
   type TrialProducts,
 } from '@thedaviddias/site-contract/trial-products';
+import { getListingSpecificResourceLinks } from '@thedaviddias/web-core/resource-links';
 
 export { canonicalizeTrialProducts } from '@thedaviddias/site-contract/trial-products';
 export type { TrialProducts } from '@thedaviddias/site-contract/trial-products';
@@ -75,7 +76,11 @@ function buildContent(product: NormalizedTrialProduct): string | undefined {
 function buildResourceLinks(
   product: NormalizedTrialProduct
 ): WebsiteJsonEntry['resourceLinks'] {
-  return product.resourceLinks;
+  const listingSpecificLinks = getListingSpecificResourceLinks(product.resourceLinks);
+
+  return listingSpecificLinks && listingSpecificLinks.length > 0
+    ? listingSpecificLinks
+    : undefined;
 }
 
 export function buildTrialWebsiteEntries(

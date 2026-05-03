@@ -70,6 +70,69 @@ describe('buildTrialWebsiteEntries', () => {
     ]);
   });
 
+  it('does not expose generic GitHub organization links as listing resource links', () => {
+    const [entry] = buildTrialWebsiteEntries(
+      {
+        'example-downloader': {
+          product: {
+            productPage: 'https://serp.ly/example-downloader',
+            slug: 'example-downloader',
+            tagline: 'Download videos from ExampleVideo in one click.',
+            title: 'SERP Example Downloader',
+          },
+          relatedLinks: [
+            {
+              label: 'Github',
+              url: 'https://github.com/serpapps',
+            },
+            {
+              label: 'Release Notes',
+              url: 'https://example.com/example-downloader/releases',
+            },
+          ],
+        },
+      },
+      {
+        category: 'developer-tools',
+        publishedAt: '2026-03-24',
+      }
+    );
+
+    expect(entry.resourceLinks).toEqual([
+      {
+        label: 'Release Notes',
+        url: 'https://example.com/example-downloader/releases',
+      },
+    ]);
+  });
+
+  it('omits the links section data when a trial product only has generic GitHub organization links', () => {
+    const [entry] = buildTrialWebsiteEntries(
+      {
+        'example-downloader': {
+          product: {
+            productPage: 'https://serp.ly/example-downloader',
+            slug: 'example-downloader',
+            tagline: 'Download videos from ExampleVideo in one click.',
+            title: 'SERP Example Downloader',
+          },
+          relatedLinks: [
+            {
+              label: 'Github',
+              url: 'https://github.com/serpapps',
+            },
+          ],
+        },
+      },
+      {
+        category: 'developer-tools',
+        publishedAt: '2026-03-24',
+      }
+    );
+
+    expect(entry.resourceLinks).toBeUndefined();
+  });
+
   it('uses the first category as the primary route category when only categories are provided', () => {
     const [entry] = buildTrialWebsiteEntries(
       {

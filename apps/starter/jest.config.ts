@@ -76,6 +76,10 @@ const config: Config.InitialOptions = {
     '@t3-oss/env-nextjs': '<rootDir>/__mocks__/@t3-oss/env-nextjs.ts',
     '@thedaviddias/rate-limiting': '<rootDir>/__mocks__/@thedaviddias/rate-limiting.ts',
     '^@thedaviddias/([^/]+)$': ['<rootDir>/../../packages/$1/src', '<rootDir>/../../packages/$1'],
+    '^@thedaviddias/design-system/theme-provider$':
+      '<rootDir>/../../packages/design-system/index.tsx',
+    '^@thedaviddias/design-system/lib/fonts$':
+      '<rootDir>/../../packages/design-system/lib/fonts.ts',
     '^@thedaviddias/design-system/lib/utils$':
       '<rootDir>/../../packages/design-system/lib/utils.ts',
     '^@thedaviddias/design-system/(.*)$':
