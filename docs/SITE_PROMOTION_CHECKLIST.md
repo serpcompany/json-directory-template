@@ -17,6 +17,7 @@ stay parked or incubating until every item below is complete.
 3. The site has a wrapper app target.
    - Run `pnpm generate:site-wrapper -- --site <site-id>` unless the wrapper already exists.
    - `apps/<site>` exists as a thin wrapper app.
+   - `apps/<site>/app/brands/page.tsx` exists and the resolved site config keeps `features.showBrands` enabled.
    - `sites/<site>/site-config.ts` sets `build.appPackageName` to `<site-id>`.
    - `sites/<site>/site-config.ts` sets `build.appOutDir` to `apps/<site-id>/out`.
    - Reusable logic stays in `packages/web-core` and `packages/site-contract`.
