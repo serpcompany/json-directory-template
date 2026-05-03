@@ -2,6 +2,9 @@ import { defineConfig, devices } from '@playwright/test'
 
 const playwrightPort = Number(process.env.PLAYWRIGHT_PORT ?? 3100)
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${playwrightPort}`
+const webServerCommand =
+  process.env.PLAYWRIGHT_WEB_SERVER_COMMAND ??
+  `cd ../starter && pnpm exec next dev --hostname 127.0.0.1 --port ${playwrightPort}`
 
 export default defineConfig({
   testDir: './tests',
@@ -59,7 +62,7 @@ export default defineConfig({
     // Mobile testing (reduced for speed)
     {
       name: 'mobile',
-      testMatch: ['**/pages.spec.ts', '**/interactions.spec.ts'],
+      testMatch: ['**/pages.spec.ts', '**/interactions.spec.ts', '**/visual.spec.ts'],
       use: {
         ...devices['Pixel 5']
       }
@@ -77,7 +80,7 @@ export default defineConfig({
     // }
   ],
   webServer: {
-    command: `cd ../starter && pnpm exec next dev --hostname 127.0.0.1 --port ${playwrightPort}`,
+    command: webServerCommand,
     url: baseUrl,
     reuseExistingServer: !process.env.CI,
     timeout: 60000, // 1 minute to start server
@@ -92,11 +95,13 @@ export default defineConfig({
       GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID || 'playwright-github-client-id',
       GITHUB_CLIENT_SECRET:
         process.env.GITHUB_CLIENT_SECRET || 'playwright-github-client-secret',
+      AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST || 'true',
       NEXTAUTH_SECRET:
         process.env.NEXTAUTH_SECRET || 'playwright-nextauth-secret-playwright-nextauth-secret',
       NEXTAUTH_URL: process.env.NEXTAUTH_URL || baseUrl,
       // Faster builds
-      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_TELEMETRY_DISABLED: '1',
+      FORCE_COLOR: '0'
     }
   }
 })

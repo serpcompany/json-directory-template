@@ -3,10 +3,6 @@ import { categories } from '@thedaviddias/web-core/categories';
 import { MobileDrawer } from '@thedaviddias/web-core/layout/mobile-drawer';
 import { siteCopy } from '@thedaviddias/web-core/site-copy';
 
-jest.mock('@thedaviddias/web-core/auth/sign-out-button', () => ({
-  SignOutButton: () => <button type="button">Sign out</button>,
-}));
-
 jest.mock('@thedaviddias/web-core/ui/favorites-link', () => ({
   FavoritesLink: () => <a href="/favorites">Favorites</a>,
 }));

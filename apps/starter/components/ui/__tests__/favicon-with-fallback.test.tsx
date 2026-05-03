@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@/test/test-utils';
-import { LISTING_LOGO_FALLBACK_PATH } from '@/lib/listing-logo-presentation';
+import { LISTING_LOGO_FALLBACK_PATH } from '@thedaviddias/web-core/listing-logo-presentation';
 import { FaviconWithFallback } from '@thedaviddias/web-core/ui/favicon-with-fallback';
 
 describe('FaviconWithFallback', () => {

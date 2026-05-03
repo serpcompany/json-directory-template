@@ -1,5 +1,5 @@
 import { SiGithub, SiReddit, SiX } from '@icons-pack/react-simple-icons'
-import { Card } from '@/components/ui/card'
+import { Card } from '@thedaviddias/web-core/ui/card'
 import { Section } from '@thedaviddias/web-core/layout/section'
 import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { hasConfiguredPublicSocialLinks, siteConfig } from '@thedaviddias/web-core/site-config'

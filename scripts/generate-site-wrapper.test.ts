@@ -87,6 +87,14 @@ describe('generateSiteWrapper', () => {
       "export { default } from '@thedaviddias/web-core/static-pages/brands-page'\n"
     )
     writeFile(
+      resolve(workspaceRoot, 'apps/starter/app/websites/page.tsx'),
+      'export default function WebsitesPage() { return null }\n'
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/app/websites/[slug]/page.tsx'),
+      'export default function WebsitePage() { return null }\n'
+    )
+    writeFile(
       resolve(workspaceRoot, 'apps/starter/app/sitemap-index.xml/route.ts'),
       'export async function GET() { return new Response("ok") }\n'
     )
@@ -109,7 +117,10 @@ describe('generateSiteWrapper', () => {
       resolve(workspaceRoot, 'apps/starter/lib/content-loader.ts'),
       'export function getWebsites() { return [] }\n'
     )
-    writeFile(resolve(workspaceRoot, 'apps/starter/next.config.ts'), 'export default {}\n')
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/next.config.ts'),
+      "const listingBasePath = 'listing'\nconst rewrites = [\n  ...createAliasRewrites(listingBasePath, 'websites'),\n]\nexport default {}\n"
+    )
     writeFile(resolve(workspaceRoot, 'apps/starter/postcss.config.js'), 'module.exports = {}\n')
     writeFile(resolve(workspaceRoot, 'apps/starter/tsconfig.json'), '{"extends":"test"}\n')
     writeFile(resolve(workspaceRoot, 'apps/starter/turbopack-empty.ts'), 'export {}\n')
@@ -122,6 +133,13 @@ describe('generateSiteWrapper', () => {
     expect(result.expectedAppOutDir).toBe('apps/example.com/out')
     expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/layout.tsx'))).toBe(true)
     expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/brands/page.tsx'))).toBe(true)
+    expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/listing/page.tsx'))).toBe(true)
+    expect(
+      existsSync(resolve(workspaceRoot, 'apps/example.com/app/listing/[slug]/page.tsx'))
+    ).toBe(true)
+    expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/websites/page.tsx'))).toBe(
+      false
+    )
     expect(
       existsSync(resolve(workspaceRoot, 'apps/example.com/app/sitemap-index.xml/route.ts'))
     ).toBe(true)
@@ -148,9 +166,72 @@ describe('generateSiteWrapper', () => {
     const generatedPackageJson = JSON.parse(
       readFileSync(resolve(workspaceRoot, 'apps/example.com/package.json'), 'utf8')
     ) as { name: string; scripts: Record<string, string> }
+    const generatedNextConfig = readFileSync(
+      resolve(workspaceRoot, 'apps/example.com/next.config.ts'),
+      'utf8'
+    )
 
     expect(generatedPackageJson.name).toBe('example.com')
     expect(generatedPackageJson.scripts.dev).toContain('SITE_ID=example.com')
+    expect(generatedNextConfig).not.toContain('createAliasRewrites(listingBasePath,')
+  })
+
+  it('scaffolds the listing route from a checked-in site config', () => {
+    const workspaceRoot = makeTempWorkspace()
+
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/package.json'),
+      JSON.stringify({
+        name: 'starter',
+        scripts: {
+          analyze: 'ANALYZE=true pnpm build',
+          build: 'next build',
+          clean: 'git clean -xdf .next',
+          dev: 'next dev --webpack --port 3005',
+          lint: 'biome check --write',
+          start: 'next start',
+          typecheck: 'tsc --noEmit'
+        }
+      })
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/app/brands/page.tsx'),
+      "export { default } from '@thedaviddias/web-core/static-pages/brands-page'\n"
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/app/websites/page.tsx'),
+      'export default function WebsitesPage() { return null }\n'
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/app/websites/[slug]/page.tsx'),
+      'export default function WebsitePage() { return null }\n'
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/next.config.ts'),
+      "const listingBasePath = 'listing'\nconst rewrites = [\n  ...createAliasRewrites(listingBasePath, 'websites'),\n  ...createAliasRewrites('websites', listingBasePath),\n]\nexport default {}\n"
+    )
+
+    generateSiteWrapper({
+      siteId: 'serpdownloaders.com',
+      workspaceRoot
+    })
+
+    expect(existsSync(resolve(workspaceRoot, 'apps/serpdownloaders.com/app/products/page.tsx'))).toBe(
+      true
+    )
+    expect(
+      existsSync(resolve(workspaceRoot, 'apps/serpdownloaders.com/app/products/[slug]/page.tsx'))
+    ).toBe(true)
+    expect(existsSync(resolve(workspaceRoot, 'apps/serpdownloaders.com/app/websites/page.tsx'))).toBe(
+      false
+    )
+
+    const generatedNextConfig = readFileSync(
+      resolve(workspaceRoot, 'apps/serpdownloaders.com/next.config.ts'),
+      'utf8'
+    )
+    expect(generatedNextConfig).not.toContain('createAliasRewrites(listingBasePath,')
+    expect(generatedNextConfig).toContain("createAliasRewrites('websites', listingBasePath)")
   })
 
   it('rejects scaffolds when the starter template does not include a brands route', () => {

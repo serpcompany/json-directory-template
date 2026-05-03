@@ -15,6 +15,7 @@ const mockSiteConfig = {
     },
     submitLabel: 'Submit a Listing'
   },
+  brandsRouteBasePath: 'brands',
   description: 'Curated directory of listings and resources.',
   docsRouteBasePath: 'docs',
   features: {
@@ -40,7 +41,7 @@ jest.mock('@/lib/auth', () => ({
   isGitHubAuthConfigured: jest.fn(() => true)
 }))
 
-jest.mock('@thedaviddias/web-core/auth/github-sign-in-button', () => ({
+jest.mock('@/components/auth/github-sign-in-button', () => ({
   GitHubSignInButton: ({ disabled }: { disabled?: boolean }) => (
     <button type="button" disabled={disabled}>
       Continue with GitHub

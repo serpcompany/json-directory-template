@@ -13,7 +13,7 @@ test.describe('Minimal Tests', () => {
 
     // Basic content check
     const title = await page.title()
-    expect(title).toContain('llms.txt')
+    expect(title).toContain('Directory Starter')
   })
 
   test('about page loads', async ({ page }) => {

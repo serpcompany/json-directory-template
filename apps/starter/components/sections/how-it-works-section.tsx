@@ -1,5 +1,5 @@
 import { Compass, Search, Send } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent } from '@thedaviddias/web-core/ui/card'
 import { Section } from '@thedaviddias/web-core/layout/section'
 import { siteCopy } from '@thedaviddias/web-core/site-copy'
 

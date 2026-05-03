@@ -1,5 +1,5 @@
 import { getGuides, getWebsites } from '@/lib/content-loader'
-import { getFeaturedProjects, getRecentlyUpdatedProjects } from '@/lib/project-utils'
+import { buildHomePageData } from '@thedaviddias/web-core/home-page'
 
 /**
  * Fetches homepage data including featured projects, recently updated projects, and initial website list
@@ -8,16 +8,8 @@ import { getFeaturedProjects, getRecentlyUpdatedProjects } from '@/lib/project-u
  * @returns Promise containing homepage data with pagination info
  */
 export async function getHomePageData() {
-  const allProjects = getWebsites()
-  const featuredProjects = getFeaturedProjects(allProjects)
-  const recentlyUpdatedProjects = getRecentlyUpdatedProjects(allProjects, 8)
-  const featuredGuides = getGuides()
-
-  return {
-    allProjects,
-    featuredProjects,
-    recentlyUpdatedProjects,
-    totalCount: allProjects.length,
-    featuredGuides
-  }
+  return buildHomePageData({
+    guides: getGuides(),
+    websites: getWebsites(),
+  })
 }

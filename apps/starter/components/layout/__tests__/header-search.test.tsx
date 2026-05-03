@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils'
-import { DesktopSearchForm, MobileSearchOverlay } from '@/components/layout/header-search'
+import { DesktopSearchForm, MobileSearchOverlay } from '@thedaviddias/web-core/layout/header-search'
 
 jest.mock('@thedaviddias/web-core/search/search-autocomplete', () => ({
   SearchAutocomplete: () => null
