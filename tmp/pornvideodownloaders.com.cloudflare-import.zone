@@ -1,0 +1,26 @@
+; Cloudflare DNS import file for pornvideodownloaders.com
+; Format: BIND zone file
+; Import in Cloudflare: DNS -> Records -> Import and Export -> Import DNS records
+; Source references:
+; - GitHub Pages custom domain DNS: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
+; - Cloudflare import format: https://developers.cloudflare.com/dns/manage-dns-records/how-to/import-and-export/
+;
+; Notes:
+; - The apex records below point pornvideodownloaders.com at GitHub Pages.
+; - The www record points at the GitHub Pages organization host.
+; - After import, leave these records DNS-only in Cloudflare until the Pages custom domain and HTTPS are healthy.
+
+$ORIGIN pornvideodownloaders.com.
+$TTL 3600
+
+@       IN A      185.199.108.153
+@       IN A      185.199.109.153
+@       IN A      185.199.110.153
+@       IN A      185.199.111.153
+
+@       IN AAAA   2606:50c0:8000::153
+@       IN AAAA   2606:50c0:8001::153
+@       IN AAAA   2606:50c0:8002::153
+@       IN AAAA   2606:50c0:8003::153
+
+www     IN CNAME  serpcompany.github.io.

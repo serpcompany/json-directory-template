@@ -18,7 +18,7 @@ pnpm install
 pnpm dev
 ```
 
-That starts the active site wrapper, currently `serpdownloaders.com`, at `http://localhost:3005`.
+That starts the default active site wrapper, currently `serpdownloaders.com`, at `http://localhost:3005`.
 
 If you want the starter wrapper specifically:
 
@@ -41,6 +41,9 @@ pnpm validate:site -- --site serpdownloaders.com
 pnpm build:site -- --site serpdownloaders.com
 pnpm deploy:site -- --site serpdownloaders.com
 ```
+
+Other active checked-in sites can be selected with `--site`, for example
+`pornvideodownloaders.com`.
 
 Starter wrapper:
 
