@@ -1,7 +1,7 @@
 import { ExternalLink } from 'lucide-react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getNetworkBrands } from '../network-brands'
+import { getNetworkBrandsForGroup } from '../network-brands'
 import { generateDisabledRouteMetadata } from '../route-feature-gates'
 import { getRoute } from '../routes'
 import { generateBaseMetadata } from '../seo-config'
@@ -29,7 +29,7 @@ export default function BrandsPage() {
     notFound()
   }
 
-  const brands = getNetworkBrands()
+  const brands = getNetworkBrandsForGroup(siteConfig.networkBrandGroup)
 
   return (
     <main className="container mx-auto py-8">

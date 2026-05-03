@@ -3,6 +3,7 @@
 - normalized listing dataset -> data/listings.json
 - site-specific source input for transformed builds -> sites/<id>/products.json
 - standard thin wrapper scaffold -> `pnpm generate:site-wrapper -- --site <site-id>`
+- the wrapper scaffold must include `app/brands/page.tsx`; `features.showBrands` defaults on so every site exports the brands page unless a future product decision changes the contract
 - internal generated snapshots -> records/build-inputs/\*\* (do not edit by hand)
 - reusable onboarding SOP template pack -> docs/examples/new-site-onboarding-sop.template-pack.json
 - optional local operator helper -> pnpm dev:operator -- --site <id> then open /operator/onboard-site

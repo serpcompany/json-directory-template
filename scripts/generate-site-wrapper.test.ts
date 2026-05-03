@@ -1,10 +1,7 @@
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import {
-  generateSiteWrapper,
-  rewriteWrapperPackageJson,
-} from './generate-site-wrapper.ts'
+import { generateSiteWrapper, rewriteWrapperPackageJson } from './generate-site-wrapper.ts'
 
 const tempDirs: string[] = []
 
@@ -38,8 +35,8 @@ describe('rewriteWrapperPackageJson', () => {
           dev: 'next dev --webpack --port 3005',
           lint: 'biome check --write',
           start: 'next start',
-          typecheck: 'tsc --noEmit',
-        },
+          typecheck: 'tsc --noEmit'
+        }
       }),
       'example.com'
     )
@@ -52,7 +49,9 @@ describe('rewriteWrapperPackageJson', () => {
     expect(parsed.name).toBe('example.com')
     expect(parsed.scripts.build).toContain('NEXT_PUBLIC_SITE_ID=example.com SITE_ID=example.com')
     expect(parsed.scripts.dev).toContain('NEXT_PUBLIC_SITE_ID=example.com SITE_ID=example.com')
-    expect(parsed.scripts.typecheck).toContain('NEXT_PUBLIC_SITE_ID=example.com SITE_ID=example.com')
+    expect(parsed.scripts.typecheck).toContain(
+      'NEXT_PUBLIC_SITE_ID=example.com SITE_ID=example.com'
+    )
   })
 })
 
@@ -71,21 +70,45 @@ describe('generateSiteWrapper', () => {
           dev: 'next dev --webpack --port 3005',
           lint: 'biome check --write',
           start: 'next start',
-          typecheck: 'tsc --noEmit',
-        },
+          typecheck: 'tsc --noEmit'
+        }
       })
     )
-    writeFile(resolve(workspaceRoot, 'apps/starter/app/layout.tsx'), 'export default function Layout() { return null }\n')
-    writeFile(resolve(workspaceRoot, 'apps/starter/app/api/submission/route.ts'), 'export async function POST() { return new Response("ok") }\n')
-    writeFile(resolve(workspaceRoot, 'apps/starter/app/brands/page.tsx'), "export { default } from '@thedaviddias/web-core/static-pages/brands-page'\n")
-    writeFile(resolve(workspaceRoot, 'apps/starter/app/sitemap-index.xml/route.ts'), 'export async function GET() { return new Response("ok") }\n')
-    writeFile(resolve(workspaceRoot, 'apps/starter/app/submit/verify/page.tsx'), 'export default function Verify() { return null }\n')
-    writeFile(resolve(workspaceRoot, 'apps/starter/app/(files)/rss.xml/route.test.ts'), 'ignored test\n')
-    writeFile(resolve(workspaceRoot, 'apps/starter/actions/get-home-page-data.ts'), 'export async function getHomePageData() { return {} }\n')
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/app/layout.tsx'),
+      'export default function Layout() { return null }\n'
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/app/api/submission/route.ts'),
+      'export async function POST() { return new Response("ok") }\n'
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/app/brands/page.tsx'),
+      "export { default } from '@thedaviddias/web-core/static-pages/brands-page'\n"
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/app/sitemap-index.xml/route.ts'),
+      'export async function GET() { return new Response("ok") }\n'
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/app/submit/verify/page.tsx'),
+      'export default function Verify() { return null }\n'
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/app/(files)/rss.xml/route.test.ts'),
+      'ignored test\n'
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/actions/get-home-page-data.ts'),
+      'export async function getHomePageData() { return {} }\n'
+    )
     writeFile(resolve(workspaceRoot, 'apps/starter/app/__tests__/ignore.test.ts'), 'ignored\n')
     writeFile(resolve(workspaceRoot, 'apps/starter/public/logo.png'), 'png')
     writeFile(resolve(workspaceRoot, 'apps/starter/public/search/search-index.json'), '{}')
-    writeFile(resolve(workspaceRoot, 'apps/starter/lib/content-loader.ts'), 'export function getWebsites() { return [] }\n')
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/lib/content-loader.ts'),
+      'export function getWebsites() { return [] }\n'
+    )
     writeFile(resolve(workspaceRoot, 'apps/starter/next.config.ts'), 'export default {}\n')
     writeFile(resolve(workspaceRoot, 'apps/starter/postcss.config.js'), 'module.exports = {}\n')
     writeFile(resolve(workspaceRoot, 'apps/starter/tsconfig.json'), '{"extends":"test"}\n')
@@ -93,20 +116,34 @@ describe('generateSiteWrapper', () => {
 
     const result = generateSiteWrapper({
       siteId: 'example.com',
-      workspaceRoot,
+      workspaceRoot
     })
 
     expect(result.expectedAppOutDir).toBe('apps/example.com/out')
     expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/layout.tsx'))).toBe(true)
     expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/brands/page.tsx'))).toBe(true)
-    expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/sitemap-index.xml/route.ts'))).toBe(true)
-    expect(existsSync(resolve(workspaceRoot, 'apps/example.com/actions/get-home-page-data.ts'))).toBe(true)
+    expect(
+      existsSync(resolve(workspaceRoot, 'apps/example.com/app/sitemap-index.xml/route.ts'))
+    ).toBe(true)
+    expect(
+      existsSync(resolve(workspaceRoot, 'apps/example.com/actions/get-home-page-data.ts'))
+    ).toBe(true)
     expect(existsSync(resolve(workspaceRoot, 'apps/example.com/public/logo.png'))).toBe(true)
-    expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/api/submission/route.ts'))).toBe(false)
-    expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/submit/verify/page.tsx'))).toBe(false)
-    expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/(files)/rss.xml/route.test.ts'))).toBe(false)
-    expect(existsSync(resolve(workspaceRoot, 'apps/example.com/public/search/search-index.json'))).toBe(false)
-    expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/__tests__/ignore.test.ts'))).toBe(false)
+    expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/api/submission/route.ts'))).toBe(
+      false
+    )
+    expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/submit/verify/page.tsx'))).toBe(
+      false
+    )
+    expect(
+      existsSync(resolve(workspaceRoot, 'apps/example.com/app/(files)/rss.xml/route.test.ts'))
+    ).toBe(false)
+    expect(
+      existsSync(resolve(workspaceRoot, 'apps/example.com/public/search/search-index.json'))
+    ).toBe(false)
+    expect(
+      existsSync(resolve(workspaceRoot, 'apps/example.com/app/__tests__/ignore.test.ts'))
+    ).toBe(false)
 
     const generatedPackageJson = JSON.parse(
       readFileSync(resolve(workspaceRoot, 'apps/example.com/package.json'), 'utf8')
@@ -114,5 +151,40 @@ describe('generateSiteWrapper', () => {
 
     expect(generatedPackageJson.name).toBe('example.com')
     expect(generatedPackageJson.scripts.dev).toContain('SITE_ID=example.com')
+  })
+
+  it('rejects scaffolds when the starter template does not include a brands route', () => {
+    const workspaceRoot = makeTempWorkspace()
+
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/package.json'),
+      JSON.stringify({
+        name: 'starter',
+        scripts: {
+          analyze: 'ANALYZE=true pnpm build',
+          build: 'next build',
+          clean: 'git clean -xdf .next',
+          dev: 'next dev --webpack --port 3005',
+          lint: 'biome check --write',
+          start: 'next start',
+          typecheck: 'tsc --noEmit'
+        }
+      })
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/app/layout.tsx'),
+      'export default function Layout() { return null }\n'
+    )
+    writeFile(resolve(workspaceRoot, 'apps/starter/next.config.ts'), 'export default {}\n')
+    writeFile(resolve(workspaceRoot, 'apps/starter/postcss.config.js'), 'module.exports = {}\n')
+    writeFile(resolve(workspaceRoot, 'apps/starter/tsconfig.json'), '{"extends":"test"}\n')
+    writeFile(resolve(workspaceRoot, 'apps/starter/turbopack-empty.ts'), 'export {}\n')
+
+    expect(() =>
+      generateSiteWrapper({
+        siteId: 'example.com',
+        workspaceRoot
+      })
+    ).toThrow('Generated wrapper app is missing required route "app/brands/page.tsx".')
   })
 })

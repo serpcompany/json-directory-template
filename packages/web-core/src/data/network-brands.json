@@ -135,6 +135,56 @@
     "getlooma-com": {
       "name": "Get Looma",
       "url": "https://getlooma.com"
+    },
+    "porn-video-downloaders": {
+      "name": "Porn Video Downloaders",
+      "url": "https://pornvideodownloaders.com"
+    },
+    "porno-downloaders": {
+      "name": "Porno Downloaders",
+      "url": "https://pornodownloaders.com"
     }
+  },
+  "brandGroups": {
+    "mainGroup": [
+      "serp-co",
+      "serp-ai",
+      "serp-games",
+      "games-serp-co",
+      "tools-serp-co",
+      "apps-serp-co",
+      "devin-schumacher",
+      "browserextensions-io",
+      "best-serp-co",
+      "serp-best",
+      "serp-lists",
+      "serp-software",
+      "serp-video",
+      "serp-download",
+      "serp-downloaders",
+      "blocks-serp-co",
+      "extensions-serp-co",
+      "serp-wiki",
+      "subs-marine",
+      "serp-media",
+      "skool-downloader",
+      "boxing-undefeated",
+      "theme-cobra",
+      "awesome-shadcn-ui",
+      "dr-serp-co",
+      "download-vimeo",
+      "getlooma-org",
+      "wistia-downloader",
+      "how-to-download-videos",
+      "whop-video-downloader",
+      "getlooma-com"
+    ],
+    "serpxxxGroup": [
+      "serp-xxx",
+      "onlyfans-video-downloader",
+      "justforfans-downloader",
+      "porn-video-downloaders",
+      "porno-downloaders"
+    ]
   }
 }

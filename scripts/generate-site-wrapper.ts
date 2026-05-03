@@ -1,5 +1,5 @@
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, relative, resolve } from 'node:path'
+import { relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const TEMPLATE_APP_ID = 'starter'
@@ -17,7 +17,7 @@ const WRAPPER_TEMPLATE_ENTRIES = [
   'postcss.config.js',
   'public',
   'tsconfig.json',
-  'turbopack-empty.ts',
+  'turbopack-empty.ts'
 ] as const
 
 const EXCLUDED_PATH_SEGMENTS = new Set([
@@ -26,14 +26,16 @@ const EXCLUDED_PATH_SEGMENTS = new Set([
   'api',
   'coverage',
   'node_modules',
-  'out',
+  'out'
 ])
 
 const EXCLUDED_RELATIVE_PATHS = new Set([
   'next-env.d.ts',
   'search/search-index.json',
-  'public/search/search-index.json',
+  'public/search/search-index.json'
 ])
+
+const REQUIRED_WRAPPER_RELATIVE_PATHS = ['app/brands/page.tsx'] as const
 
 type GenerateSiteWrapperOptions = {
   overwrite?: boolean
@@ -42,17 +44,19 @@ type GenerateSiteWrapperOptions = {
 }
 
 function parseArgs(argv: string[]): GenerateSiteWrapperOptions {
-  const siteFlagIndex = argv.findIndex(argument => argument === '--site')
+  const siteFlagIndex = argv.indexOf('--site')
   const siteId = siteFlagIndex >= 0 ? argv[siteFlagIndex + 1] : undefined
   const overwrite = argv.includes('--overwrite')
 
   if (!siteId) {
-    throw new Error('Usage: pnpm tsx scripts/generate-site-wrapper.ts -- --site <site-id> [--overwrite]')
+    throw new Error(
+      'Usage: pnpm tsx scripts/generate-site-wrapper.ts -- --site <site-id> [--overwrite]'
+    )
   }
 
   return {
     overwrite,
-    siteId,
+    siteId
   }
 }
 
@@ -76,23 +80,28 @@ function shouldCopyRelativePath(relativePath: string): boolean {
     .every(segment => !EXCLUDED_PATH_SEGMENTS.has(segment) && segment !== 'submit')
 }
 
-function copyEntry({
-  sourcePath,
-  targetPath,
-}: {
-  sourcePath: string
-  targetPath: string
-}): void {
+function copyEntry({ sourcePath, targetPath }: { sourcePath: string; targetPath: string }): void {
   cpSync(sourcePath, targetPath, {
     filter: (candidatePath: string) => {
       const relativePath = relative(sourcePath, candidatePath)
       return shouldCopyRelativePath(relativePath)
     },
-    recursive: true,
+    recursive: true
   })
 }
 
-function buildWrapperScripts(siteId: string, templateScripts: Record<string, string>): Record<string, string> {
+function assertRequiredWrapperPaths(targetAppDir: string): void {
+  for (const relativePath of REQUIRED_WRAPPER_RELATIVE_PATHS) {
+    if (!existsSync(resolve(targetAppDir, relativePath))) {
+      throw new Error(`Generated wrapper app is missing required route "${relativePath}".`)
+    }
+  }
+}
+
+function buildWrapperScripts(
+  siteId: string,
+  templateScripts: Record<string, string>
+): Record<string, string> {
   const buildPrefix = `NEXT_PUBLIC_SITE_ID=${siteId} SITE_ID=${siteId}`
 
   return {
@@ -103,14 +112,11 @@ function buildWrapperScripts(siteId: string, templateScripts: Record<string, str
     'dev:inspect': `NODE_OPTIONS='--inspect' ${buildPrefix} next dev --webpack --port \${PORT:-3005}`,
     lint: templateScripts.lint,
     start: templateScripts.start,
-    typecheck: `${buildPrefix} tsc --noEmit --emitDeclarationOnly false`,
+    typecheck: `${buildPrefix} tsc --noEmit --emitDeclarationOnly false`
   }
 }
 
-export function rewriteWrapperPackageJson(
-  packageJsonSource: string,
-  siteId: string
-): string {
+export function rewriteWrapperPackageJson(packageJsonSource: string, siteId: string): string {
   const packageJson = JSON.parse(packageJsonSource) as {
     name: string
     scripts: Record<string, string>
@@ -125,7 +131,7 @@ export function rewriteWrapperPackageJson(
 export function generateSiteWrapper({
   overwrite = false,
   siteId,
-  workspaceRoot = process.cwd(),
+  workspaceRoot = process.cwd()
 }: GenerateSiteWrapperOptions): {
   targetAppDir: string
   expectedAppOutDir: string
@@ -163,10 +169,11 @@ export function generateSiteWrapper({
   const packageJsonPath = resolve(targetAppDir, 'package.json')
   const packageJsonSource = readFileSync(packageJsonPath, 'utf8')
   writeFileSync(packageJsonPath, rewriteWrapperPackageJson(packageJsonSource, siteId))
+  assertRequiredWrapperPaths(targetAppDir)
 
   return {
     expectedAppOutDir: `apps/${siteId}/out`,
-    targetAppDir,
+    targetAppDir
   }
 }
 
@@ -176,7 +183,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 
   const packageNameReminder = [
     `Generated wrapper app at ${result.targetAppDir}.`,
-    `Next step: set build.appPackageName to "${options.siteId}" and build.appOutDir to "${result.expectedAppOutDir}" in sites/${options.siteId}/site-config.ts before promotion.`,
+    `Next step: set build.appPackageName to "${options.siteId}" and build.appOutDir to "${result.expectedAppOutDir}" in sites/${options.siteId}/site-config.ts before promotion.`
   ].join('\n')
 
   console.log(packageNameReminder)
