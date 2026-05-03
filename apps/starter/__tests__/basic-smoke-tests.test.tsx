@@ -35,7 +35,7 @@ jest.mock('@clerk/nextjs', () => ({
 }))
 
 // Mock analytics
-jest.mock('../lib/analytics', () => ({
+jest.mock('@thedaviddias/web-core/analytics', () => ({
   analytics: {
     toggleFavorite: jest.fn()
   }
@@ -58,7 +58,7 @@ describe('Basic Component Rendering', () => {
     })
 
     it('should render EmptyState component', async () => {
-      const { EmptyState } = await import('../components/empty-state')
+      const { EmptyState } = await import('@thedaviddias/web-core/empty-state')
       const { container } = render(
         <EmptyState title="Test Title" description="Test Description" actionLabel="Action" />
       )
@@ -66,7 +66,7 @@ describe('Basic Component Rendering', () => {
     })
 
     it('should render FavoriteButton component with provider', async () => {
-      const { FavoriteButton } = await import('../components/ui/favorite-button')
+      const { FavoriteButton } = await import('@thedaviddias/web-core/ui/favorite-button')
       const { container } = render(
         <FavoritesProvider>
           <FavoriteButton slug="test-slug" />
@@ -78,7 +78,9 @@ describe('Basic Component Rendering', () => {
 
   describe('Card Components', () => {
     it('should render GuideCard component', async () => {
-      const { GuideCard } = await import('../components/sections/guide-card')
+      const { GuideCardRoute: GuideCard } = await import(
+        '@thedaviddias/web-core/sections/guide-card-route'
+      )
       const mockGuide = {
         slug: 'test-guide',
         title: 'Test Guide',
@@ -135,7 +137,7 @@ describe('Basic Component Rendering', () => {
 
   describe('Section Components', () => {
     it('should render Section component', async () => {
-      const { Section } = await import('../components/layout/section')
+      const { Section } = await import('@thedaviddias/web-core/layout/section')
       const { container } = render(
         <Section title="Test Section" description="Test Description">
           <div>Content</div>
@@ -157,14 +159,14 @@ describe('Basic Component Rendering', () => {
     })
 
     it('should render NewsletterSection component', async () => {
-      const { NewsletterSection } = await import('../components/sections/newsletter-section')
+      const { NewsletterSection } = await import('@thedaviddias/web-core/sections/newsletter-section')
       const { container } = render(<NewsletterSection />)
       expect(container).toBeInTheDocument()
     })
 
     it('should render ExternalResourcesSection component', async () => {
-      const { ExternalResourcesSection } = await import(
-        '../components/sections/external-resources-section'
+      const { ExternalResourcesSectionRoute: ExternalResourcesSection } = await import(
+        '@thedaviddias/web-core/sections/external-resources-section-route'
       )
       const { container } = render(<ExternalResourcesSection />)
       expect(container).toBeInTheDocument()
@@ -279,7 +281,7 @@ describe('Error Handling', () => {
 
 describe('Component Integration', () => {
   it('should render LLMGrid with empty items', async () => {
-    const { LLMGrid } = await import('../components/llm/llm-grid')
+    const { LLMGrid } = await import('@thedaviddias/web-core/llm/llm-grid')
     const { container } = render(
       <FavoritesProvider>
         <LLMGrid items={[]} variant="default" />

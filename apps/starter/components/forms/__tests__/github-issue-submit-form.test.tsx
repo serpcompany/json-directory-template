@@ -4,25 +4,23 @@ import { categories } from '@thedaviddias/web-core/categories'
 
 describe('GitHubIssueSubmitForm', () => {
   it('uses neutral starter copy for the submit flow', () => {
-    render(<GitHubIssueSubmitForm />)
+    render(<GitHubIssueSubmitForm submitEndpoint="/api/submit" />)
 
     expect(screen.getByRole('heading', { name: /submit a listing/i })).toBeInTheDocument()
-    expect(screen.getByText(/reviewed through github issues/i)).toBeInTheDocument()
+    expect(screen.getByText(/receive a token to track your submission status/i)).toBeInTheDocument()
     expect(
-      screen.getByText(/before enabling starter submissions\./i, { selector: 'div' })
+      screen.getByText(/github fallback submission is disabled/i)
     ).toBeInTheDocument()
     expect(screen.getByLabelText(/^name$/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/listing url/i)).toBeInTheDocument()
-    expect(screen.getByText(/the main url for the listing you are submitting/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/website url/i)).toBeInTheDocument()
     expect(screen.queryByLabelText(/llms/i)).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/project name/i)).not.toBeInTheDocument()
-    expect(screen.queryByLabelText(/website url/i)).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /llmstxt\\.org/i })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /continue on github/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /submit listing/i })).toBeDisabled()
   })
 
   it('derives category choices from the canonical category taxonomy', () => {
-    render(<GitHubIssueSubmitForm />)
+    render(<GitHubIssueSubmitForm submitEndpoint="/api/submit" />)
 
     const categorySelect = screen.getByLabelText(/category/i)
     const optionLabels = Array.from(categorySelect.querySelectorAll('option')).map(option =>

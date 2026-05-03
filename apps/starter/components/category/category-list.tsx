@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@thedaviddias/web-core/ui/card';
 import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
 import { categories } from '@thedaviddias/web-core/categories';
 import { getRoute } from '@thedaviddias/web-core/routes';

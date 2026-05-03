@@ -117,7 +117,6 @@ let nextConfig: NextConfig = {
   },
   rewrites: async () => ({
     beforeFiles: [
-      ...createAliasRewrites(listingBasePath, 'products'),
       ...createAliasRewrites(docsBasePath, 'docs'),
       ...createAliasRewrites(networkBasePath, 'projects'),
       ...createAliasRewrites(brandsBasePath, 'brands'),

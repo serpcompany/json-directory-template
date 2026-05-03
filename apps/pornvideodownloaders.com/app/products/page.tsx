@@ -7,12 +7,11 @@ export function generateMetadata(): Metadata {
     title: `Directory - ${SITE_NAME}`,
     description: 'Discover a curated list of directory listings and resources.',
     alternates: {
-      canonical: `${SITE_PUBLIC_URL}/`
-    }
+      canonical: `${SITE_PUBLIC_URL}/`,
+    },
   }
 }
 
-export default function ProjectsPage() {
-  // Redirect to homepage where all listings are now displayed
+export default function ProductsPage() {
   redirect('/')
 }

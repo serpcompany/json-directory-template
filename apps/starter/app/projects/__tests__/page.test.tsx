@@ -2,6 +2,12 @@ import { render, screen } from '@/test/test-utils'
 
 const mockNotFound = jest.fn()
 const mockSiteConfig = {
+  branding: {
+    appleTouchIconUrl: 'https://example.com/apple-touch-icon.png',
+    faviconUrl: 'https://example.com/favicon.ico',
+    logoUrl: 'https://example.com/logo.png',
+    ogImageUrl: 'https://example.com/opengraph-image.png'
+  },
   copy: {
     listingName: {
       plural: 'listings',
@@ -10,11 +16,14 @@ const mockSiteConfig = {
     networkLabel: 'Network',
     submitLabel: 'Submit a Listing'
   },
+  brandsRouteBasePath: 'brands',
   docsRouteBasePath: 'docs',
   features: {
     showProjects: true
   },
   githubRepoUrl: 'https://github.com/serpcompany/json-directory-template',
+  githubIssuesUrl: 'https://github.com/serpcompany/json-directory-template/issues',
+  githubUrl: 'https://github.com/serpcompany',
   listingRouteBasePath: 'listing',
   name: 'Directory Starter',
   networkRouteBasePath: 'network',
@@ -27,6 +36,7 @@ const mockSiteConfig = {
 
 jest.mock('@thedaviddias/web-core/site-config', () => ({
   getTwitterHandleFromUrl: jest.fn(() => '@serpcompany'),
+  hasConfiguredPublicSocialLinks: jest.fn(() => true),
   siteConfig: mockSiteConfig
 }))
 

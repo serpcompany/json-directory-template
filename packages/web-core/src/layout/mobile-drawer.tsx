@@ -4,8 +4,7 @@ import { cn } from '../../../design-system/lib/utils';
 import { ExternalLink, Trophy, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
-import { SignOutButton } from '../auth/sign-out-button';
+import { useEffect, type ReactNode } from 'react';
 import { FavoritesLink } from '../ui/favorites-link';
 import type { HeaderAuthState } from './header-auth-state';
 import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
@@ -21,6 +20,7 @@ interface MobileDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   featuredCount?: number;
+  signOutButton?: ReactNode;
   showFeaturedCategory?: boolean;
 }
 
@@ -33,6 +33,7 @@ export function MobileDrawer({
   isOpen,
   onClose,
   featuredCount,
+  signOutButton,
   showFeaturedCategory = Boolean(featuredCount),
 }: MobileDrawerProps) {
   const pathname = usePathname();
@@ -189,7 +190,7 @@ export function MobileDrawer({
                 News
               </Link> */}
               {siteConfig.features.showAuth && isAuthenticated ? (
-                <SignOutButton className="w-full justify-start rounded-md px-2 py-1.5 text-sm font-normal" />
+                signOutButton
               ) : null}
             </nav>
           </div>

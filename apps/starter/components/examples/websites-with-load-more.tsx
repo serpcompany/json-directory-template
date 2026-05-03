@@ -2,7 +2,7 @@
 
 import { Badge } from '@thedaviddias/design-system/badge'
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
+import { Card } from '@thedaviddias/web-core/ui/card'
 import { WebsitesPaginatedGrid } from '@/components/ui/paginated-content'
 import type { WebsiteMetadata } from '@/lib/content-loader'
 import { EmptyState } from '@thedaviddias/web-core/empty-state'

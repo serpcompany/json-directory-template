@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '@thedaviddias/design-system/tooltip'
 import type { LucideIcon } from 'lucide-react'
-import { Card } from '@/components/ui/card'
+import { Card } from '@thedaviddias/web-core/ui/card'
 
 interface StatCardProps {
   title: string

@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from 'react'
 import './globals.css'
-import { DesignSystemProvider } from '@thedaviddias/design-system/theme-provider'
 import { fonts } from '@thedaviddias/design-system/lib/fonts'
+import { SignOutButton } from '../components/auth/sign-out-button'
 import { Footer } from '@thedaviddias/web-core/layout/footer'
 import { Header } from '@thedaviddias/web-core/layout/header'
 import { getHeaderAuthState } from '../lib/auth'
@@ -37,11 +37,17 @@ export default async function RootLayout({ children }: RootLayoutProps): Promise
         <Header
           activeCategorySlugs={activeCategorySlugs}
           authState={authState}
+          desktopSignOutButton={
+            <SignOutButton className="hidden sm:inline-flex rounded-none text-sm font-bold h-9 px-4" />
+          }
           featuredCount={featuredCount}
+          mobileSignOutButton={
+            <SignOutButton className="w-full justify-start rounded-md px-2 py-1.5 text-sm font-normal" />
+          }
         />
       }
     >
-      <DesignSystemProvider>{children}</DesignSystemProvider>
+      {children}
     </RootAppShell>
   )
 }
