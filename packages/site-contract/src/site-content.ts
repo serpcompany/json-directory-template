@@ -1,4 +1,5 @@
 import { pornvideodownloadersComSiteContent } from '../../../sites/pornvideodownloaders.com/site-content';
+import { serpSoftwareSiteContent } from '../../../sites/serp.software/site-content';
 import { serpdownloadersComSiteContent } from '../../../sites/serpdownloaders.com/site-content';
 import { assertSiteIdIsNotRemoved } from './active-site-ids';
 import { defaultSiteConfig } from './default-site-config';
@@ -7,6 +8,7 @@ import type { SiteOwnedContent } from './types';
 
 const siteContentById: Record<string, SiteOwnedContent> = {
   'pornvideodownloaders.com': pornvideodownloadersComSiteContent,
+  'serp.software': serpSoftwareSiteContent,
   'serpdownloaders.com': serpdownloadersComSiteContent,
 };
 

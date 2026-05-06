@@ -143,6 +143,10 @@
     "porno-downloaders": {
       "name": "Porno Downloaders",
       "url": "https://pornodownloaders.com"
+    },
+    "kajabivideodownloader": {
+      "name": "Kajabi Video Downloader",
+      "url": "https://kajabivideodownloader.com"
     }
   },
   "brandGroups": {
@@ -177,7 +181,8 @@
       "wistia-downloader",
       "how-to-download-videos",
       "whop-video-downloader",
-      "getlooma-com"
+      "getlooma-com",
+      "kajabivideodownloader"
     ],
     "serpxxxGroup": [
       "serp-xxx",

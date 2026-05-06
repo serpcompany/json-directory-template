@@ -77,6 +77,7 @@ cp -R "$BUILD_DIR/." "$DEPLOY_TMP/"
 if [[ -d "$PRESERVE_TMP" ]]; then
   echo "==> Restoring preserved target paths..."
   cp -R "$PRESERVE_TMP/." "$DEPLOY_TMP/"
+  rm -rf "$PRESERVE_TMP"
 fi
 
 if [[ -f "$TARGET_PAGES_WORKFLOW_TEMPLATE" ]]; then

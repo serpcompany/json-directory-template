@@ -9,6 +9,7 @@ const WRAPPER_TEMPLATE_ENTRIES = [
   'actions',
   'app',
   'auth.ts',
+  'components/auth',
   'content-collections.ts',
   'contexts',
   'hooks',

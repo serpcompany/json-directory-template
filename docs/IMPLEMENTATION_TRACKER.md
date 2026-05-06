@@ -8,12 +8,12 @@ Historical note:
 
 ## Completed outcomes
 
-- `serpdownloaders.com` and `pornvideodownloaders.com` are active checked-in sites in the runtime/build/deploy graph.
+- `serpdownloaders.com`, `pornvideodownloaders.com`, and `serp.software` are active checked-in sites in the runtime/build/deploy graph.
 - Inactive sites are parked and excluded from active resolution paths.
 - Thin wrapper apps are in place.
 - `apps/web` was removed.
 - `apps/starter` is the neutral starter wrapper.
-- `apps/serpdownloaders.com` and `apps/pornvideodownloaders.com` are active-site wrappers.
+- `apps/serpdownloaders.com`, `apps/pornvideodownloaders.com`, and `apps/serp.software` are active-site wrappers.
 - Shared route/runtime logic lives in `packages/web-core`.
 - Site contract logic lives in `packages/site-contract`.
 - Build/deploy tooling now targets wrapper apps instead of the old shared app.
@@ -27,6 +27,9 @@ Historical note:
 - `pnpm validate:site -- --site pornvideodownloaders.com`
 - `pnpm build:site -- --site pornvideodownloaders.com`
 - `pnpm deploy:site -- --site pornvideodownloaders.com --dry-run`
+- `pnpm validate:site -- --site serp.software`
+- `pnpm build:site -- --site serp.software`
+- `pnpm deploy:site -- --site serp.software --dry-run`
 
 ## Historical execution plans
 

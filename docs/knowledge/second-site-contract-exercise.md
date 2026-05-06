@@ -60,4 +60,4 @@ Do not treat the raw Next route log alone as the final public route contract for
 
 ## Current status
 
-`serp.software` is no longer an active checked-in site in this repo. The current active registry includes `serpdownloaders.com` and `pornvideodownloaders.com`, and parked site material now lives under `_archive/incubating-sites/**`.
+`serp.software` has been reactivated as a checked-in downloader catalog site. The earlier proof-site material remains historical context; current behavior is governed by `sites/serp.software`, the active-site registry, and the generated `apps/serp.software` wrapper.

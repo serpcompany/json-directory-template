@@ -5,9 +5,10 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 Historical note:
 
 - older entries in this checklist mention `serp.software` from an earlier proof-site pass
-- `serpdownloaders.com` and `pornvideodownloaders.com` are active non-default sites in the current runtime/build/deploy graph
-- treat the `serp.software` references below as historical verification notes, not current active
-  requirements
+- `serpdownloaders.com`, `pornvideodownloaders.com`, and `serp.software` are active
+  non-default sites in the current runtime/build/deploy graph
+- treat the older `serp.software` proof-site notes below as historical verification context;
+  current `serp.software` requirements live in its checked-in site config and active-site tests
 
 ## 1. Wash alignment
 

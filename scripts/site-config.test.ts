@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { ZodError } from 'zod'
+import { resolveCheckedInSiteCategories } from '@thedaviddias/site-contract/categories'
 import { defaultSiteConfig } from '../sites/site-config.default.ts'
 import {
   buildSiteEnvironment,
@@ -94,6 +95,56 @@ describe('loadCheckedInSite', () => {
     })
   })
 
+  it('loads the checked-in serp.software site config', () => {
+    const config = loadCheckedInSite('serp.software')
+
+    expect(config.id).toBe('serp.software')
+    expect(config.content.listingSource).toEqual({
+      category: 'video-downloaders',
+      featuredCount: 6,
+      kind: 'trial-products-json',
+      outputPath: 'data/listings.json',
+      path: 'sites/serp.software/products.json',
+      publishedAt: '2026-05-07'
+    })
+    expect(config.site).toMatchObject({
+      domain: 'serp.software',
+      name: 'SERP Software',
+      publicUrl: 'https://serp.software'
+    })
+    expect(config.build).toMatchObject({
+      appPackageName: 'serp.software',
+      appOutDir: 'apps/serp.software/out',
+      artifactDir: 'dist/sites/serp.software'
+    })
+    expect(config.routes.listingBasePath).toBe('products')
+    expect(config.copy.listingName).toEqual({
+      plural: 'products',
+      singular: 'product'
+    })
+    expect(config.copy.submitLabel).toBe('Submit a Product')
+    expect(config.features.showBrands).toBe(true)
+    expect(config.analytics?.gtmId).toBe('GTM-W59GNHXF')
+    expect(config.social.githubIssueOwner).toBeNull()
+    expect(config.social.githubIssueRepo).toBeNull()
+    expect(config.social.githubIssuesUrl).toBeNull()
+    expect(config.deploy).toEqual({
+      branch: 'main',
+      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+      repoUrl: 'https://github.com/serpcompany/serp.software.git',
+      strategy: 'github-pages-repo-sync'
+    })
+  })
+
+  it('loads serp.software checked-in categories instead of default categories', () => {
+    expect(resolveCheckedInSiteCategories('serp.software')).toEqual([
+      {
+        name: 'Video Downloaders',
+        slug: 'video-downloaders'
+      }
+    ])
+  })
+
   it('inherits default values when a site override does not redefine them', () => {
     const config = loadCheckedInSite('serpdownloaders.com')
 
@@ -113,7 +164,7 @@ describe('loadCheckedInSite', () => {
   })
 
   it('rejects parked site ids that were removed from the active registry', () => {
-    for (const siteId of ['serp.co', 'serp.software', 'extensions.serp.co']) {
+    for (const siteId of ['serp.co', 'extensions.serp.co']) {
       expect(() => loadCheckedInSite(siteId)).toThrow(
         `Site "${siteId}" was removed from this repo. Use a supported checked-in site id instead.`
       )

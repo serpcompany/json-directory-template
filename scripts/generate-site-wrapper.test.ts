@@ -110,6 +110,14 @@ describe('generateSiteWrapper', () => {
       resolve(workspaceRoot, 'apps/starter/actions/get-home-page-data.ts'),
       'export async function getHomePageData() { return {} }\n'
     )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/components/auth/sign-out-button.tsx'),
+      'export function SignOutButton() { return null }\n'
+    )
+    writeFile(
+      resolve(workspaceRoot, 'apps/starter/components/auth/sign-out-button.test.tsx'),
+      'ignored component test\n'
+    )
     writeFile(resolve(workspaceRoot, 'apps/starter/app/__tests__/ignore.test.ts'), 'ignored\n')
     writeFile(resolve(workspaceRoot, 'apps/starter/public/logo.png'), 'png')
     writeFile(resolve(workspaceRoot, 'apps/starter/public/search/search-index.json'), '{}')
@@ -146,6 +154,12 @@ describe('generateSiteWrapper', () => {
     expect(
       existsSync(resolve(workspaceRoot, 'apps/example.com/actions/get-home-page-data.ts'))
     ).toBe(true)
+    expect(
+      existsSync(resolve(workspaceRoot, 'apps/example.com/components/auth/sign-out-button.tsx'))
+    ).toBe(true)
+    expect(
+      existsSync(resolve(workspaceRoot, 'apps/example.com/components/auth/sign-out-button.test.tsx'))
+    ).toBe(false)
     expect(existsSync(resolve(workspaceRoot, 'apps/example.com/public/logo.png'))).toBe(true)
     expect(existsSync(resolve(workspaceRoot, 'apps/example.com/app/api/submission/route.ts'))).toBe(
       false

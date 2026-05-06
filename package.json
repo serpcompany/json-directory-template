@@ -14,6 +14,7 @@
     "dev:all": "cross-env FORCE_COLOR=1 turbo dev --parallel",
     "dev:operator": "pnpm tsx scripts/dev-operator.ts",
     "dev:serpdownloaders": "pnpm dev:site -- --site serpdownloaders.com",
+    "dev:serpsoftware": "pnpm dev:site -- --site serp.software",
     "dev:pornvideodownloaders": "pnpm dev:site -- --site pornvideodownloaders.com",
     "dev:starter": "pnpm --filter starter dev",
     "dev:site": "pnpm tsx scripts/dev-site.ts",

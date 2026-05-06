@@ -1,4 +1,5 @@
 import { pornvideodownloadersComSiteConfig } from '../../../sites/pornvideodownloaders.com/site-config';
+import { serpSoftwareSiteConfig } from '../../../sites/serp.software/site-config';
 import { serpdownloadersComSiteConfig } from '../../../sites/serpdownloaders.com/site-config';
 import { assertSiteIdIsSupported } from './active-site-ids';
 import { defaultSiteConfig } from './default-site-config';
@@ -14,6 +15,7 @@ export type { CheckedInSiteConfig, CheckedInSiteConfigOverride } from './types';
 
 export const siteConfigsById: Record<string, CheckedInSiteConfigOverride> = {
   'pornvideodownloaders.com': pornvideodownloadersComSiteConfig,
+  'serp.software': serpSoftwareSiteConfig,
   'serpdownloaders.com': serpdownloadersComSiteConfig,
 };
 

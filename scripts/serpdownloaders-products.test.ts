@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
@@ -17,6 +17,10 @@ type SerpdownloadersProductEntry = {
 const productsPath = resolve(
   process.cwd(),
   'sites/serpdownloaders.com/products.json'
+)
+const serpSoftwareProductsPath = resolve(
+  process.cwd(),
+  'sites/serp.software/products.json'
 )
 
 const missing404ProductSlugs = [
@@ -64,6 +68,46 @@ describe('serpdownloaders checked-in products', () => {
         title: expect.any(String)
       })
       expect(products[slug]?.content?.body).toContain('## Overview')
+    }
+  })
+})
+
+describe('serp.software checked-in products', () => {
+  it('copies the full live downloader catalog from serpdownloaders.com', () => {
+    const serpdownloadersProducts = JSON.parse(
+      readFileSync(productsPath, 'utf8')
+    ) as Record<string, SerpdownloadersProductEntry>
+    const serpSoftwareProducts = JSON.parse(
+      readFileSync(serpSoftwareProductsPath, 'utf8')
+    ) as Record<string, SerpdownloadersProductEntry>
+
+    expect(Object.keys(serpSoftwareProducts)).toHaveLength(105)
+    expect(serpSoftwareProducts).toEqual(serpdownloadersProducts)
+  })
+
+  it('has wrapper-public files for copied root-relative listing logos', () => {
+    const serpSoftwareProducts = JSON.parse(
+      readFileSync(serpSoftwareProductsPath, 'utf8')
+    ) as Record<
+      string,
+      SerpdownloadersProductEntry & {
+        media?: {
+          logo?: string
+        }
+      }
+    >
+
+    for (const [slug, product] of Object.entries(serpSoftwareProducts)) {
+      const logoPath = product.media?.logo
+
+      if (!logoPath?.startsWith('/listing-logos/')) {
+        continue
+      }
+
+      expect(
+        existsSync(resolve(process.cwd(), 'apps/serp.software/public', logoPath.slice(1))),
+        `${slug} logo ${logoPath} must exist in the serp.software wrapper`
+      ).toBe(true)
     }
   })
 })

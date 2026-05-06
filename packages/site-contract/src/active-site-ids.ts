@@ -1,5 +1,6 @@
 export const activeCheckedInSiteIds = [
   'pornvideodownloaders.com',
+  'serp.software',
   'serpdownloaders.com',
 ] as const;
 const activeCheckedInSiteIdSet = new Set<string>(activeCheckedInSiteIds);
@@ -7,7 +8,6 @@ const activeCheckedInSiteIdSet = new Set<string>(activeCheckedInSiteIds);
 export const removedSiteIds = new Set([
   'extensions.serp.co',
   'serp.co',
-  'serp.software',
 ]);
 
 export function assertSiteIdIsNotRemoved(siteId: string): void {
