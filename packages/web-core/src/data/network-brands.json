@@ -104,10 +104,6 @@
       "name": "Download Vimeo",
       "url": "https://downloadvimeo.com"
     },
-    "getlooma-org": {
-      "name": "Get Looma",
-      "url": "https://getlooma.org"
-    },
     "onlyfans-video-downloader": {
       "name": "OnlyFans Video Downloader",
       "url": "https://onlyfansvideodownloader.com"
@@ -147,6 +143,10 @@
     "kajabivideodownloader": {
       "name": "Kajabi Video Downloader",
       "url": "https://kajabivideodownloader.com"
+    },
+    "skoolvideodownloader-app": {
+      "name": "Skool Video Downloader App",
+      "url": "https://skoolvideodownloader.app"
     }
   },
   "brandGroups": {
@@ -177,12 +177,12 @@
       "awesome-shadcn-ui",
       "dr-serp-co",
       "download-vimeo",
-      "getlooma-org",
       "wistia-downloader",
       "how-to-download-videos",
       "whop-video-downloader",
       "getlooma-com",
-      "kajabivideodownloader"
+      "kajabivideodownloader",
+      "skoolvideodownloader-app"
     ],
     "serpxxxGroup": [
       "serp-xxx",
