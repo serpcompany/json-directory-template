@@ -723,6 +723,41 @@ export function applyLegacyRootListingRedirects(
   }
 }
 
+export function removeUnsuffixedListingDetailArtifacts(
+  artifactDir: string,
+  input: { listingBasePath: string; listingDetailSuffix?: string }
+): void {
+  const suffix = input.listingDetailSuffix?.replace(/^\/+|\/+$/g, '');
+
+  if (!suffix) {
+    return;
+  }
+
+  const listingRoot = resolve(
+    artifactDir,
+    input.listingBasePath.replace(/^\/+|\/+$/g, '')
+  );
+
+  if (!existsSync(listingRoot)) {
+    return;
+  }
+
+  for (const entry of readdirSync(listingRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+
+    const directIndexPath = resolve(listingRoot, entry.name, 'index.html');
+    const suffixedIndexPath = resolve(listingRoot, entry.name, suffix, 'index.html');
+
+    if (!existsSync(directIndexPath) || !existsSync(suffixedIndexPath)) {
+      continue;
+    }
+
+    removeArtifactRouteIndex(resolve(listingRoot, entry.name));
+  }
+}
+
 function pruneArtifactTree(path: string): void {
   for (const entry of readdirSync(path, { withFileTypes: true })) {
     const entryPath = resolve(path, entry.name);
@@ -825,6 +860,13 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     listingBasePath: definition.routes.listingBasePath,
     networkBasePath: definition.routes.networkBasePath,
   });
+  removeUnsuffixedListingDetailArtifacts(artifactDir, {
+    listingBasePath: definition.routes.listingBasePath,
+    listingDetailSuffix: definition.sitemap.listingDetailSuffix,
+  });
+  if (definition.sitemap.categoryBasePath) {
+    removeArtifactPath(resolve(artifactDir, 'categories'));
+  }
   applyLegacyRootListingRedirects(artifactDir, {
     listingBasePath: definition.routes.listingBasePath,
     siteId: definition.id,
@@ -841,6 +883,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
       ...legacySlugs.map(slug => `/${slug}`),
       ...(definition.sitemap.excludedPaths ?? []),
     ],
+    indexGroupOrder: definition.sitemap.indexGroupOrder,
     listingDetailSuffix: definition.sitemap.listingDetailSuffix,
     listingBasePath: definition.routes.listingBasePath,
     sitemapPathByGroup: definition.sitemap.pathByGroup,

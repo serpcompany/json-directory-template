@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "adult",
+    "name": "Adult",
+    "description": "Browse adult listings and resources."
+  },
+  {
+    "slug": "course-platform-downloaders",
+    "name": "Course Platform Downloaders",
+    "description": "Browse course platform downloaders listings and resources."
+  },
+  {
+    "slug": "fansite-downloaders",
+    "name": "Fansite Downloaders",
+    "description": "Browse fansite downloaders listings and resources."
+  },
+  {
+    "slug": "gif-downloaders",
+    "name": "GIF Downloaders",
+    "description": "Browse gif downloaders listings and resources."
+  },
+  {
+    "slug": "image-downloaders",
+    "name": "Image Downloaders",
+    "description": "Browse image downloaders listings and resources."
+  },
+  {
+    "slug": "livestream-downloaders",
+    "name": "Livestream Downloaders",
+    "description": "Browse livestream downloaders listings and resources."
+  },
+  {
+    "slug": "movies-and-tv-downloaders",
+    "name": "Movies & TV Downloaders",
+    "description": "Browse movies & tv downloaders listings and resources."
+  },
+  {
+    "slug": "social-media-downloaders",
+    "name": "Social Media Downloaders",
+    "description": "Browse social media downloaders listings and resources."
+  },
+  {
+    "slug": "video-downloaders",
+    "name": "Video Downloaders",
+    "description": "Browse video downloaders listings and resources."
+  }
+]

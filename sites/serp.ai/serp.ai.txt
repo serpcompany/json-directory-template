@@ -1,0 +1,75 @@
+;;
+;; Domain:     serp.ai.
+;; Exported:   2026-05-16 14:06:44
+;;
+;; This file is intended for use for informational and archival
+;; purposes ONLY and MUST be edited before use on a production
+;; DNS server.  In particular, you must:
+;;   -- update the SOA record with the correct authoritative name server
+;;   -- update the SOA record with the contact e-mail address information
+;;   -- update the NS record(s) with the authoritative name servers for this domain.
+;;
+;; For further information, please consult the BIND documentation
+;; located on the following website:
+;;
+;; http://www.isc.org/
+;;
+;; And RFC 1035:
+;;
+;; http://www.ietf.org/rfc/rfc1035.txt
+;;
+;; Please note that we do NOT offer technical support for any use
+;; of this zone data, the BIND name server, or any other third-party
+;; DNS software.
+;;
+;; Use at your own risk.
+;; SOA Record
+serp.ai	3600	IN	SOA	aria.ns.cloudflare.com. dns.cloudflare.com. 2053060700 10000 2400 604800 3600
+
+;; NS Records
+serp.ai.	86400	IN	NS	aria.ns.cloudflare.com.
+serp.ai.	86400	IN	NS	lee.ns.cloudflare.com.
+
+;; A Records
+serp.ai.	1	IN	A	185.199.108.153 ; cf_tags=cf-proxied:false
+serp.ai.	1	IN	A	185.199.109.153 ; cf_tags=cf-proxied:false
+serp.ai.	1	IN	A	185.199.110.153 ; cf_tags=cf-proxied:false
+serp.ai.	1	IN	A	185.199.111.153 ; cf_tags=cf-proxied:false
+
+;; AAAA Records
+serp.ai.	1	IN	AAAA	2606:50c0:8000::153 ; cf_tags=cf-proxied:false
+serp.ai.	1	IN	AAAA	2606:50c0:8001::153 ; cf_tags=cf-proxied:false
+serp.ai.	1	IN	AAAA	2606:50c0:8002::153 ; cf_tags=cf-proxied:false
+serp.ai.	1	IN	AAAA	2606:50c0:8003::153 ; cf_tags=cf-proxied:false
+
+;; CNAME Records
+badges.serp.ai.	1	IN	CNAME	devinschumacher.github.io. ; cf_tags=cf-proxied:true
+status.serp.ai.	3600	IN	CNAME	statuspage.betteruptime.com. ; cf_tags=cf-proxied:false
+stuff.serp.ai.	1	IN	CNAME	domains.gumroad.com. ; cf_tags=cf-proxied:false
+www.serp.ai.	1	IN	CNAME	serpcompany.github.io. ; cf_tags=cf-proxied:false
+
+;; MX Records
+mail.mail.serp.ai.	1	IN	MX	10 feedback-smtp.us-east-1.amazonses.com.
+serp.ai.	3600	IN	MX	1 aspmx.l.google.com.
+serp.ai.	3600	IN	MX	5 alt1.aspmx.l.google.com.
+serp.ai.	3600	IN	MX	10 alt3.aspmx.l.google.com.
+serp.ai.	3600	IN	MX	10 alt4.aspmx.l.google.com.
+serp.ai.	3600	IN	MX	5 alt2.aspmx.l.google.com.
+
+;; TXT Records
+_dmarc.mg.serp.ai.	1	IN	TXT	"v=DMARC1; p=none; pct=100; fo=1; ri=3600; rua=mailto:df450fcd@dmarc.mailgun.org,mailto:9ce1d7d7@inbox.ondmarc.com; ruf=mailto:df450fcd@dmarc.mailgun.org,mailto:9ce1d7d7@inbox.ondmarc.com;"
+_dmarc.serp.ai.	1	IN	TXT	"v=DMARC1; p=none;"
+_github-pages-challenge-devinschumacher.badge.serp.ai.	1	IN	TXT	"d697d3f290fc6fe6e9c01f6db07bee"
+google._domainkey.serp.ai.	1	IN	TXT	"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgLFHSUdgnPeqIxbTVmTsp3H7fHTGw08EVFYZEQ0fb0XxJ5s650uoTHbjuY7RbOcqKxLht2Ns38r9zaOmSWKCiLGUQzk2XiXofffnG87A01lKfxuExCO2ZRoyYxKzwQuA4ZilV7Cb7Q/ae0T5VtqHR+Y56G/2YiG0E9/Xjz7H1I40ztSayc6HU+60D0IU+HFpq" "W23CEAyjghb4r8DQcr7NQzMkr6PBcz1vGa+khG2Ml94xKXvZ5LBCZpJrSH/BHLHZL7TQLoRXAly3HwaSEnzfiaTUkclSFtFWly6AtZK2CYTIHB1lk5y+PXghk2IfcQVCv6LUpskmaBI22kEUpkZBQIDAQAB"
+k1._domainkey.mg.serp.ai.	1	IN	TXT	"k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2bb4EamBnVei+Abdl3DYpkekRm+MfmR1ecauvetWcQm8VecdP2e55r7qQsnKs1QGDnUbV1rOuPfunupD72QXl5tGsvR/PVApYMgkIBWXg6PFhYvO/DjEo7cqzblZfyQpsra/MTIe8IwsbM9u/9IvE/rQYD8iWLBtpaBYOujBiGFtoD/yrPyN+hW4QLj2Q6rr1/416Qj9Td" "Eh7AJKBKi0kxd1UMMnoGQ8ETrvMjnZocVbXpM04OSyZ30Ga7Lk64iB6381AEBo+Hcvffz9SbWgbdRxxsK7WVgh5rfzgoa+H0tNqAx2N3X0FolpTc/K79IgtvmTV2PRSLErOKT9Dmsn3wIDAQAB"
+mail.mail.serp.ai.	1	IN	TXT	"v=spf1 include:amazonses.com ~all"
+mail.mail.serp.ai.	1	IN	TXT	"feedback-smtp.us-east-1.amazonses.com"
+serp.ai.	3600	IN	TXT	"google-site-verification=dvNK6wkfSNOqdT0qPx8VbWUxvXQS7LHRdKkBjMF4z-U"
+serp.ai.	3600	IN	TXT	"v=spf1 include:_spf.google.com -all"
+serp.ai.	1	IN	TXT	"pinterest-site-verification=2e15c8f7878c2124c1f3d2a3230e44a3"
+serp.ai.	1	IN	TXT	"ca3-5fcf7ad1445444ff9b5f669a30fd1a9d"
+serp.ai.	1	IN	TXT	"google-site-verification=H04nOL3UviZ_jF4-HOwA6gOX5F549d0iC97HehFK3fI"
+serp.ai.	1	IN	TXT	"google-site-verification=lkEGd81RN_cQ2UFZq4LIwUt5CYeqZ_Gaaeb_tlaOSRs"
+usesend._domainkey.mail.serp.ai.	1	IN	TXT	"p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8loj/f3ncXese9sbyRECV6xMcifA4pVDg0Mo/A3Iu1XZBLxUh4x3/Xug//55XbVHFNAosjyMKxIDR65yQBfKdMlpyYmNfFxMVXIHfDfBn4CihUWrC+OQDf3qpI3cmuQV+UHIBw3WQJAj5yHvwaXUOt3drcVJ2aAQtk/1ApP1m+QIDAQAB"
+usesend._domainkey.mail.serp.ai.	1	IN	TXT	"p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/QJIOA1x63T9RBvsDH+6pi0C4JYX9nxANe9CYDmpvaytuzUIj+ILXvvfvIAF3BAg2vEFNexE+IFdFlazvJNDtaFjQSsn42W96pH0q5Zm9WhObKOlz494MXpS1aL9LoN07I0gTJqV17WzbJMRlAcAH8YyIs1ffQYEnOrrpNaNucwIDAQAB"
+_vercel.serp.ai.	1	IN	TXT	"vc-domain-verify=staging.serp.ai,78fc940c9ec442efae8e"

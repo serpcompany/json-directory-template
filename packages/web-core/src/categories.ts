@@ -110,8 +110,14 @@ const categoryPresentationBySlug: Record<string, CategoryPresentation> = {
 };
 
 export const categoryAliases: Record<string, string> = {
-  'integration-automation': 'video-downloaders',
   'automation-workflow': 'video-downloaders',
+  'course-platforms': 'course-platform-downloaders',
+  'image-downloader': 'image-downloaders',
+  'image-hosting': 'image-downloaders',
+  'integration-automation': 'video-downloaders',
+  livestream: 'livestream-downloaders',
+  'movies-tv': 'movies-and-tv-downloaders',
+  'social-media': 'social-media-downloaders',
 };
 
 function resolveRuntimeSiteId(): string {

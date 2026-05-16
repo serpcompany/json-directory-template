@@ -105,6 +105,7 @@ export type SiteSitemapConfig = {
   artifactExcludedPaths?: string[]
   categoryBasePath?: string
   excludedPaths?: string[]
+  indexGroupOrder?: SiteSitemapGroupKey[]
   listingDetailSuffix?: string
   pathByGroup?: Partial<Record<SiteSitemapGroupKey, string>>
   staticPagePaths?: string[]

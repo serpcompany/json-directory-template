@@ -113,6 +113,9 @@ const sitemapConfigSchema = z
       .regex(/^[a-z0-9-]+(?:\/[a-z0-9-]+)*$/)
       .optional(),
     excludedPaths: z.array(z.string().regex(/^\/(?:[a-z0-9-]+\/?)*$/)).optional(),
+    indexGroupOrder: z
+      .array(z.enum(['docs', 'listings', 'pages', 'posts', 'taxonomies']))
+      .optional(),
     listingDetailSuffix: z.string().regex(/^[a-z0-9-]+$/).optional(),
     pathByGroup: z
       .object({

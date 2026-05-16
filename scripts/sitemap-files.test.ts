@@ -179,6 +179,7 @@ describe('writeSplitSitemaps', () => {
     writeFile(resolve(artifactDir, 'products/index.html'))
     writeFile(resolve(artifactDir, 'products/example-tool/index.html'))
     writeFile(resolve(artifactDir, 'products/example-tool/reviews/index.html'))
+    writeFile(resolve(artifactDir, 'products/best/video-downloaders/index.html'))
     writeFile(resolve(artifactDir, 'categories/developer-tools/index.html'))
     writeFile(resolve(artifactDir, 'categories/featured/index.html'))
 
@@ -214,6 +215,9 @@ describe('writeSplitSitemaps', () => {
     expect(listingsSitemap).not.toContain(
       '<loc>https://example.com/products/example-tool</loc>'
     )
+    expect(listingsSitemap).not.toContain(
+      '<loc>https://example.com/products/best/video-downloaders/reviews/</loc>'
+    )
 
     const taxonomiesSitemap = readFileSync(
       resolve(artifactDir, 'sitemaps/categories/1.xml'),
@@ -224,6 +228,9 @@ describe('writeSplitSitemaps', () => {
     )
     expect(taxonomiesSitemap).toContain(
       '<loc>https://example.com/products/best/legacy-category/</loc>'
+    )
+    expect(taxonomiesSitemap).toContain(
+      '<loc>https://example.com/products/best/video-downloaders/</loc>'
     )
     expect(taxonomiesSitemap).not.toContain(
       '<loc>https://example.com/categories/developer-tools</loc>'

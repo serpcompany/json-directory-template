@@ -14,6 +14,7 @@ type WriteSplitSitemapsOptions = {
   baseUrl: string
   categoryBasePath?: string
   excludedPaths?: string[]
+  indexGroupOrder?: SitemapGroup['key'][]
   listingDetailSuffix?: string
   listingBasePath: string
   pageSize?: number
@@ -225,6 +226,14 @@ function groupArtifactPaths(
       continue
     }
 
+    if (
+      categoryOutputPrefix !== categoryPrefix &&
+      (path === categoryOutputPrefix || path.startsWith(`${categoryOutputPrefix}/`))
+    ) {
+      taxonomies.push(path)
+      continue
+    }
+
     if (path === DOCS_PREFIX || path.startsWith(`${DOCS_PREFIX}/`)) {
       docs.push(path)
       continue
@@ -338,7 +347,20 @@ export function writeSplitSitemaps(
       ),
     ]).filter(path => !excludedPaths.has(path)),
   }))
+  const indexOrder = options.indexGroupOrder
+    ? new Map(options.indexGroupOrder.map((key, index) => [key, index]))
+    : null
   const sitemapIndexEntries = groupedPaths
+    .sort((left, right) => {
+      if (!indexOrder) {
+        return 0
+      }
+
+      return (
+        (indexOrder.get(left.key) ?? Number.MAX_SAFE_INTEGER) -
+        (indexOrder.get(right.key) ?? Number.MAX_SAFE_INTEGER)
+      )
+    })
     .map(group =>
       writeGroupSitemaps(
         artifactDir,

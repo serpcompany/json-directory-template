@@ -48,6 +48,17 @@ describe('buildDeployPlan', () => {
     })
   })
 
+  it('builds a deterministic deploy plan for serp.ai', () => {
+    expect(buildDeployPlan({ siteId: 'serp.ai' })).toEqual({
+      branch: 'main',
+      buildDir: expect.stringMatching(/dist\/sites\/serp.ai$/),
+      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+      repoUrl: 'https://github.com/serpcompany/serp.ai.git',
+      siteId: 'serp.ai',
+      strategy: 'github-pages-repo-sync'
+    })
+  })
+
   it('throws when the selected site has no deploy target', () => {
     expect(() => buildDeployPlan({ siteId: 'default' })).toThrow(
       /does not define a deploy target/

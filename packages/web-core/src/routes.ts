@@ -25,6 +25,15 @@ function buildRouteFromBase(basePath: string, pattern = ''): string {
 }
 
 function buildListingRoute(pattern = ''): string {
+  const listingDetailSuffix = siteConfig.sitemap.listingDetailSuffix;
+
+  if (pattern === '[slug]' && listingDetailSuffix) {
+    return buildRouteFromBase(
+      siteConfig.listingRouteBasePath,
+      `${pattern}/${listingDetailSuffix}`
+    );
+  }
+
   return buildRouteFromBase(siteConfig.listingRouteBasePath, pattern);
 }
 
@@ -38,6 +47,16 @@ function buildNetworkRoute(pattern = ''): string {
 
 function buildBrandsRoute(pattern = ''): string {
   return buildRouteFromBase(siteConfig.brandsRouteBasePath, pattern);
+}
+
+function buildCategoryRoute(pattern = '[category]'): string {
+  const categoryBasePath = siteConfig.sitemap.categoryBasePath;
+
+  if (categoryBasePath) {
+    return buildRouteFromBase(categoryBasePath, pattern);
+  }
+
+  return buildRouteFromBase('categories', pattern);
 }
 
 export const routes = {
@@ -57,7 +76,7 @@ export const routes = {
     withCategory: `${buildListingRoute()}?category=[category]`,
   },
   category: {
-    page: '/categories/[category]/',
+    page: buildCategoryRoute(),
   },
   about: '/about/',
   account: '/account/',

@@ -32,8 +32,9 @@ export function getDefaultNetworkBrandsPaths({
       'repos',
       'serp',
       'docs',
-      'network-brands',
-      'network-brands.json'
+      'websites',
+      'pages',
+      'brands.json'
     ),
     targetPath: join(targetRepoRoot, 'packages', 'web-core', 'src', 'data', 'network-brands.json')
   }

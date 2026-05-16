@@ -76,7 +76,7 @@ describe('syncNetworkBrands', () => {
     })
 
     expect(paths).toEqual({
-      sourcePath: '/Users/example/dev/repos/serp/docs/network-brands/network-brands.json',
+      sourcePath: '/Users/example/dev/repos/serp/docs/websites/pages/brands.json',
       targetPath:
         '/workspace/json-directory-template/packages/web-core/src/data/network-brands.json'
     })
