@@ -21,7 +21,8 @@ import { SITE_PUBLIC_URL } from '@thedaviddias/web-core/seo-config'
 export const metadata = featuredCategoryPageMetadata
 
 export default async function FeaturedPage() {
-  const { allProjects, featuredProjects } = await getHomePageData()
+  const { allProjects } = await getHomePageData()
+  const featuredProjects = allProjects.filter(project => project.featured === true)
   const featuredGuides = await getGuides()
   const featuredPath = getRoute('category.page', { category: 'featured' })
   const activeCategories = getActiveCategories(allProjects)

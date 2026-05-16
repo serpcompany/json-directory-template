@@ -50,6 +50,7 @@ export const canonicalTrialProductSchema = z.object({
       faq: z.array(trialFaqEntrySchema).optional(),
     })
     .optional(),
+  featured: z.boolean().optional(),
   media: trialMediaSchema.optional(),
   product: z.object({
     categories: z

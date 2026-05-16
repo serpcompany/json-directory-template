@@ -21,10 +21,16 @@ export const SITE_FAVICON_URL =
   siteConfig.branding.faviconUrl ?? `${SITE_URL}/favicon.ico`;
 export const SITE_APPLE_TOUCH_ICON_URL =
   siteConfig.branding.appleTouchIconUrl ?? `${SITE_URL}/apple-touch-icon.png`;
-export const SITE_LOGO_URL =
-  siteConfig.branding.logoUrl ?? `${SITE_URL}/placeholder.svg`;
-export const SITE_OG_IMAGE_URL =
-  siteConfig.branding.opengraphImageUrl ?? SITE_LOGO_URL;
+function absoluteSiteAssetUrl(url: string): string {
+  return new URL(url, SITE_URL).toString();
+}
+
+export const SITE_LOGO_URL = absoluteSiteAssetUrl(
+  siteConfig.branding.logoUrl ?? `${SITE_URL}/placeholder.svg`
+);
+export const SITE_OG_IMAGE_URL = absoluteSiteAssetUrl(
+  siteConfig.branding.opengraphImageUrl ?? SITE_LOGO_URL
+);
 export const DIRECTORY_LISTINGS_KEYWORD = `directory ${siteCopy.listingName.plural}`;
 
 export const DEFAULT_OG_IMAGE = {

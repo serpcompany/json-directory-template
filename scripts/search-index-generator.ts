@@ -64,7 +64,7 @@ export function buildSearchIndex(
       return {
         category: primaryCategory,
         categories,
-        content: entry.content || '',
+        content: '',
         description: entry.description || '',
         name: entry.name || '',
         slug,

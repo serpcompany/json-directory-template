@@ -43,7 +43,8 @@ pnpm deploy:site -- --site serpdownloaders.com
 ```
 
 Other active checked-in sites can be selected with `--site`, for example
-`pornvideodownloaders.com`.
+`browserextensions.io`, `pornvideodownloaders.com`, `serp.ai`, `serp.co`,
+or `serp.software`.
 
 Starter wrapper:
 

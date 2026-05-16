@@ -1,9 +1,12 @@
 import {
+  SiFacebook,
   SiGithub,
+  SiInstagram,
   SiReddit,
   SiX,
+  SiYoutube,
 } from '@icons-pack/react-simple-icons';
-import { Linkedin, Youtube } from 'lucide-react';
+import { Linkedin } from 'lucide-react';
 import Link from 'next/link';
 import type { ComponentType } from 'react';
 import { ModeToggle } from '../mode-toggle';
@@ -26,12 +29,24 @@ type SocialLink = {
 function getSiteContentSocialIcon(href: string): SocialLink['icon'] | null {
   const normalizedHref = href.toLowerCase();
 
-  if (normalizedHref.includes('linkedin.com')) {
+  if (normalizedHref.includes('linkedin.com') || normalizedHref.includes('/linkedin')) {
     return Linkedin;
   }
 
-  if (normalizedHref.includes('youtube.com') || normalizedHref.includes('youtu.be')) {
-    return Youtube;
+  if (
+    normalizedHref.includes('youtube.com') ||
+    normalizedHref.includes('youtu.be') ||
+    normalizedHref.includes('/youtube')
+  ) {
+    return SiYoutube;
+  }
+
+  if (normalizedHref.includes('facebook.com') || normalizedHref.includes('/facebook')) {
+    return SiFacebook;
+  }
+
+  if (normalizedHref.includes('instagram.com') || normalizedHref.includes('/instagram')) {
+    return SiInstagram;
   }
 
   return null;

@@ -17,7 +17,9 @@ For completed execution history, see:
 - The wrapper refactor is complete.
 - `apps/web` no longer exists.
 - `apps/starter` is the neutral starter wrapper.
-- `apps/serpdownloaders.com` and `apps/pornvideodownloaders.com` are active checked-in site wrappers.
+- `apps/browserextensions.io`, `apps/pornvideodownloaders.com`, `apps/serp.ai`,
+  `apps/serp.co`, `apps/serp.software`, and `apps/serpdownloaders.com` are
+  active checked-in site wrappers.
 - Shared runtime and route logic lives in `packages/web-core`.
 - Checked-in site contract and site resolution live in `packages/site-contract`.
 - The starter submit flow now supports self-service badge verification with a GitHub fallback path.
@@ -31,6 +33,9 @@ For completed execution history, see:
    - `pnpm validate:site -- --site pornvideodownloaders.com`
    - `pnpm build:site -- --site pornvideodownloaders.com`
    - `pnpm deploy:site -- --site pornvideodownloaders.com --dry-run`
+   - `pnpm validate:site -- --site serp.co`
+   - `pnpm build:site -- --site serp.co`
+   - `pnpm deploy:site -- --site serp.co --dry-run`
 2. Keep `apps/starter` thin and generic.
 3. Add or promote new sites only through the checked-in site contract and promotion checklist.
 4. Use `pnpm generate:site-wrapper -- --site <site-id>` as the standard starting point for new wrapper apps.

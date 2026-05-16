@@ -83,10 +83,19 @@ describe('parseNetworkBrands', () => {
 
     expect(brands.map(brand => brand.slug)).toEqual([
       'serp-xxx',
-      'onlyfans-video-downloader',
+      'onlyfansvideodownloader-com',
       'justforfans-downloader',
-      'porn-video-downloaders',
-      'porno-downloaders'
+      'pornvideodownloaders-com',
+      'porno-downloaders',
+      'thisvidvideodownloader-com',
+      'xhamstervideodownloader-com',
+      'pornhubvideodownloaderapp-com',
+      'boyfriendtvdownloader-com',
+      'spankbangvideodownloader-com',
+      'epornerdownloader-com',
+      'tnaflixvideodownloader-com',
+      'redgifsdownloaderapp-com',
+      'eromevideodownloader-com'
     ])
     expect(brands).toEqual([
       expect.objectContaining({
@@ -108,6 +117,42 @@ describe('parseNetworkBrands', () => {
       expect.objectContaining({
         name: 'Porno Downloaders',
         url: 'https://pornodownloaders.com'
+      }),
+      expect.objectContaining({
+        name: 'ThisVid Video Downloader',
+        url: 'https://thisvidvideodownloader.com'
+      }),
+      expect.objectContaining({
+        name: 'xHamster Video Downloader',
+        url: 'https://xhamstervideodownloader.com'
+      }),
+      expect.objectContaining({
+        name: 'Pornhub Video Downloader',
+        url: 'https://pornhubvideodownloaderapp.com'
+      }),
+      expect.objectContaining({
+        name: 'BoyfriendTV Downloader',
+        url: 'https://boyfriendtvdownloader.com'
+      }),
+      expect.objectContaining({
+        name: 'SpankBang Video Downloader',
+        url: 'https://spankbangvideodownloader.com'
+      }),
+      expect.objectContaining({
+        name: 'Eporner Video Downloader',
+        url: 'https://epornerdownloader.com'
+      }),
+      expect.objectContaining({
+        name: 'TNAFlix Video Downloader',
+        url: 'https://tnaflixvideodownloader.com'
+      }),
+      expect.objectContaining({
+        name: 'RedGIFs Downloader',
+        url: 'https://redgifsdownloaderapp.com'
+      }),
+      expect.objectContaining({
+        name: 'Erome Video Downloader',
+        url: 'https://eromevideodownloader.com'
       })
     ])
   })

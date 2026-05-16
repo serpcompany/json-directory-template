@@ -4,6 +4,10 @@ The active supported deploy path is `github-pages-repo-sync`.
 
 That means this repo builds a static artifact for one checked-in site and syncs that artifact into a target GitHub Pages repo.
 
+Current active checked-in deployable sites include `browserextensions.io`,
+`pornvideodownloaders.com`, `serp.ai`, `serp.co`, `serp.software`, and
+`serpdownloaders.com`.
+
 ## Prerequisites
 
 Before deploying, confirm:

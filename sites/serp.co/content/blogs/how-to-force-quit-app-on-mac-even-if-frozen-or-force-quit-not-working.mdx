@@ -1,0 +1,92 @@
+---
+title: "How to Force Quit App on Mac (Even if Frozen or Force Quit Not Working)"
+description: "If an app on your Mac is frozen or unresponsive—or you just want to flex your Terminal skills—here are two ways to force quit applications on macOS"
+featuredImageUrl: "https://gist.github.com/user-attachments/assets/a81fa372-30bb-4485-90ad-e9ecd47cce57"
+slug: "how-to-force-quit-app-on-mac-even-if-frozen-or-force-quit-not-working"
+tags: "Productivity"
+publishedAt: "2025-11-02T13:44:47.833Z"
+status: published
+visibility: public
+isPinned: false
+---
+
+If an app on your Mac is frozen or unresponsive—or you just want to flex your Terminal skills—here are two ways to force quit applications on macOS.
+
+## 1\. Use the Apple Menu to Force Quit (GUI)
+
+This is the simplest method and works 90% of the time.
+
+1.  Click the **Apple logo** in the top-left corner of your screen.
+2.  Select **Force Quit**.
+3.  Choose the application you want to close.
+4.  Click **Force Quit**, then confirm by clicking **Yes**.
+
+> ✅ This is ideal for quickly handling frozen apps without needing any commands.
+
+## 2\. Use Terminal to Force Quit (Advanced / Cool Points Bonus 😎)
+
+If GUI fails or you want to look like a hacker in front of your friends, here's the Terminal method:
+
+### Step 1: Open Terminal
+
+Use Spotlight (⌘ + Space) and search for **Terminal**. It looks like this:
+
+```
+
+#
+# Matrix-style black screen with white text—very hacker-chic.
+#
+`
+
+```
+
+### Step 2: List Active Processes
+
+Run this command to see what apps are actively using internet connections:
+
+```
+
+lsof -i
+
+```
+
+This will display a list of processes. Look for the name of the app you want to force quit.
+
+### Step 3: Kill the App
+
+Now that you know the process name, run:
+
+```
+
+killall -9 <process-name>
+
+```
+
+> Example: If you're trying to quit an app named `Claude`, you'd run:
+>
+> ```
+>
+> ```
+
+> killall -9 Claude
+>
+> ```
+>
+> ```
+
+Boom 💥 — it's gone.
+
+## Summary: Two Ways to Force Quit on Mac
+
+| Method     | Steps                                                  |
+| ---------- | ------------------------------------------------------ |
+| Apple Menu | Apple logo → Force Quit → Select App → Force Quit      |
+| Terminal   | `lsof -i` → Find process → `killall -9 <process-name>` |
+
+You can use either method depending on your mood, skill level, or desire to impress. If one doesn't work, try the other.
+
+## Bonus Rhyme to Remember 🧠
+
+> "Go to the Apple, hit Force Quit on it. Or use the Terminal, kill all with it."
+>
+> \[!IMPORTANT\] ✅ If this helped, send it to your aunt (seriously), and don’t forget to like & subscribe (if this were a video 😉).

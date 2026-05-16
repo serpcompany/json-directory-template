@@ -50,4 +50,23 @@ describe('buildSearchIndex', () => {
     expect(index[0]?.url).toBe('/custom/explicit-listing');
     expect(index[0]?.categories).toEqual(['developer-tools']);
   });
+
+  it('does not emit full listing body content into the client search index', () => {
+    const index = buildSearchIndex(
+      [
+        {
+          category: 'developer-tools',
+          content: 'Long imported listing body that should stay out of the browser search index.',
+          description: 'Searchable summary',
+          name: 'Compact Listing',
+          slug: 'compact-listing',
+          website: 'https://example.com',
+        },
+      ],
+      '/directory'
+    );
+
+    expect(index[0]?.content).toBe('');
+    expect(index[0]?.description).toBe('Searchable summary');
+  });
 });

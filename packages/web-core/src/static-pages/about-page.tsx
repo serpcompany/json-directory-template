@@ -5,6 +5,7 @@ import type { ComponentType, ReactNode } from 'react'
 import type { AboutPageMetadata } from '../content-query'
 import { getRoute } from '../routes'
 import { generateBaseMetadata } from '../seo-config'
+import { siteConfig } from '../site-config'
 
 const ABOUT_STEP_ICONS = {
   code: Code,
@@ -104,9 +105,11 @@ export function AboutStaticPage({ aboutPage, slots }: AboutStaticPageProps) {
             <Button asChild>
               <Link href={getRoute('submit')}>{aboutPage.primaryCtaLabel}</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href={getRoute('projects')}>{aboutPage.secondaryCtaLabel}</Link>
-            </Button>
+            {siteConfig.features.showProjects && (
+              <Button asChild variant="outline">
+                <Link href={getRoute('projects')}>{aboutPage.secondaryCtaLabel}</Link>
+              </Button>
+            )}
           </div>
         </section>
 

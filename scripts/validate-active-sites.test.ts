@@ -10,6 +10,7 @@ describe('getActiveCheckedInSiteIds', () => {
       'browserextensions.io',
       'pornvideodownloaders.com',
       'serp.ai',
+      'serp.co',
       'serp.software',
       'serpdownloaders.com'
     ])

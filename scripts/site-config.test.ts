@@ -161,6 +161,7 @@ describe('loadCheckedInSite', () => {
     })
     expect(config.copy.submitLabel).toBe('Submit a Product')
     expect(config.features.showBrands).toBe(true)
+    expect(config.networkBrandGroup).toBe('mainGroup')
     expect(config.analytics?.gtmId).toBe('GTM-W59GNHXF')
     expect(config.social.githubIssueOwner).toBeNull()
     expect(config.social.githubIssueRepo).toBeNull()
@@ -169,6 +170,52 @@ describe('loadCheckedInSite', () => {
       branch: 'main',
       preserve: ['.github/workflows/deploy.yml', 'CNAME'],
       repoUrl: 'https://github.com/serpcompany/serp.software.git',
+      strategy: 'github-pages-repo-sync'
+    })
+  })
+
+  it('loads the checked-in serp.co site config', () => {
+    const config = loadCheckedInSite('serp.co')
+
+    expect(config.id).toBe('serp.co')
+    expect(config.content.listingSource).toEqual({
+      category: 'other',
+      featuredCount: 12,
+      kind: 'trial-products-json',
+      outputPath: 'data/listings.json',
+      path: 'sites/serp.co/products.json',
+      publishedAt: '2026-05-16'
+    })
+    expect(config.site).toMatchObject({
+      domain: 'serp.co',
+      name: 'SERP',
+      publicUrl: 'https://serp.co'
+    })
+    expect(config.build).toMatchObject({
+      appPackageName: 'serp.co',
+      appOutDir: 'apps/serp.co/out',
+      artifactDir: 'dist/sites/serp.co'
+    })
+    expect(config.routes.listingBasePath).toBe('products')
+    expect(config.routes.brandsBasePath).toBe('brands')
+    expect(config.sitemap.categoryBasePath).toBe('products/best')
+    expect(config.sitemap.listingDetailSuffix).toBe('reviews')
+    expect(config.sitemap.pathByGroup).toEqual({
+      listings: '/sitemaps/directory/1.xml',
+      pages: '/sitemaps/pages/1.xml',
+      posts: '/sitemaps/blog/1.xml',
+      taxonomies: '/sitemaps/categories/1.xml'
+    })
+    expect(config.features.showBrands).toBe(true)
+    expect(config.features.showGuides).toBe(true)
+    expect(config.analytics?.gtmId).toBe('GTM-W59GNHXF')
+    expect(config.social.githubIssueOwner).toBeNull()
+    expect(config.social.githubIssueRepo).toBeNull()
+    expect(config.social.githubIssuesUrl).toBeNull()
+    expect(config.deploy).toEqual({
+      branch: 'main',
+      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+      repoUrl: 'https://github.com/serpcompany/serp.co.git',
       strategy: 'github-pages-repo-sync'
     })
   })
@@ -201,7 +248,7 @@ describe('loadCheckedInSite', () => {
   })
 
   it('rejects parked site ids that were removed from the active registry', () => {
-    for (const siteId of ['serp.co', 'extensions.serp.co']) {
+    for (const siteId of ['extensions.serp.co']) {
       expect(() => loadCheckedInSite(siteId)).toThrow(
         `Site "${siteId}" was removed from this repo. Use a supported checked-in site id instead.`
       )

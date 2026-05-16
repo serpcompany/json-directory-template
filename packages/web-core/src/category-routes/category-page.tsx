@@ -116,6 +116,10 @@ export function CategoryRoutePage({
       : allProjects
           .filter((project) => listingMatchesCategory(project, category.slug))
           .sort((a, b) => a.name.localeCompare(b.name));
+  const listedCategoryProjects =
+    category.slug === 'other' && categoryProjects.length > 200
+      ? categoryProjects.slice(0, 200)
+      : categoryProjects;
 
   return {
     categoryProjects,
@@ -228,7 +232,7 @@ export function CategoryRoutePage({
                   </div>
                   <p className="text-muted-foreground mt-1">{seoContent.introText}</p>
                 </div>
-                <CategoryWebsitesList initialWebsites={categoryProjects} />
+                <CategoryWebsitesList initialWebsites={listedCategoryProjects} />
               </section>
 
               {siteConfig.features.showExternalResources && <ExternalResourcesSection />}

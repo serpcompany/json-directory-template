@@ -157,6 +157,48 @@ describe('buildTrialWebsiteEntries', () => {
     });
   });
 
+  it('preserves an explicit featured flag from canonical trial products', () => {
+    const entries = buildTrialWebsiteEntries(
+      {
+        'featured-video-downloader': {
+          featured: true,
+          product: {
+            categories: ['video-downloaders'],
+            productPage: 'https://serp.ly/featured-video-downloader',
+            slug: 'featured-video-downloader',
+            tagline: 'Download videos from FeaturedVideo in one click.',
+            title: 'Featured Video Downloader',
+          },
+        },
+        'regular-image-downloader': {
+          product: {
+            categories: ['image-downloaders'],
+            productPage: 'https://serp.ly/regular-image-downloader',
+            slug: 'regular-image-downloader',
+            tagline: 'Download images from RegularImage in one click.',
+            title: 'Regular Image Downloader',
+          },
+        },
+      },
+      {
+        category: 'other',
+        featuredCount: 0,
+        publishedAt: '2026-03-24',
+      }
+    );
+
+    expect(entries).toEqual([
+      expect.objectContaining({
+        featured: true,
+        slug: 'featured-video-downloader',
+      }),
+      expect.objectContaining({
+        featured: false,
+        slug: 'regular-image-downloader',
+      }),
+    ]);
+  });
+
   it('keeps legacy nested trial product compatibility during the transition', () => {
     const entries = buildTrialWebsiteEntries(
       {

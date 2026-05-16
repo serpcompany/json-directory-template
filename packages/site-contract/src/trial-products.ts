@@ -24,6 +24,7 @@ type CanonicalTrialProductInput = {
     useCases?: string[];
     whyItExists?: string;
   };
+  featured?: boolean;
   links?: {
     productPage?: string;
     related?: TrialLinkInput[];
@@ -88,6 +89,7 @@ export type NormalizedTrialProduct = {
     }>;
   };
   description: string;
+  featured?: boolean;
   media?: {
     images?: string[];
     logo?: string;
@@ -327,6 +329,7 @@ function normalizeCanonicalTrialProduct(
       faq: cleanFaqEntries(product.content?.faq),
     },
     description,
+    featured: product.featured,
     media: cleanMedia(product.media),
     name,
     resourceLinks:
@@ -427,6 +430,10 @@ function buildCanonicalTrialProduct(
       body: product.content?.body,
       faq: product.content?.faq,
     };
+  }
+
+  if (product.featured !== undefined) {
+    canonicalProduct.featured = product.featured;
   }
 
   if (product.media) {

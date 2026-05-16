@@ -102,7 +102,8 @@ export function buildTrialWebsiteEntries(
         content: buildContent(normalizedProduct),
         description: normalizedProduct.description,
         favicon: buildFaviconUrl(normalizedWebsiteUrl),
-        featured: index < (options.featuredCount ?? 6),
+        featured:
+          normalizedProduct.featured ?? index < (options.featuredCount ?? 6),
         name: normalizedProduct.name,
         publishedAt: options.publishedAt,
         slug: normalizedProduct.slug,

@@ -1,0 +1,144 @@
+;;
+;; Domain:     serp.co.
+;; Exported:   2026-05-16 20:42:01
+;;
+;; This file is intended for use for informational and archival
+;; purposes ONLY and MUST be edited before use on a production
+;; DNS server.  In particular, you must:
+;;   -- update the SOA record with the correct authoritative name server
+;;   -- update the SOA record with the contact e-mail address information
+;;   -- update the NS record(s) with the authoritative name servers for this domain.
+;;
+;; For further information, please consult the BIND documentation
+;; located on the following website:
+;;
+;; http://www.isc.org/
+;;
+;; And RFC 1035:
+;;
+;; http://www.ietf.org/rfc/rfc1035.txt
+;;
+;; Please note that we do NOT offer technical support for any use
+;; of this zone data, the BIND name server, or any other third-party
+;; DNS software.
+;;
+;; Use at your own risk.
+;; SOA Record
+serp.co	3600	IN	SOA	aria.ns.cloudflare.com. dns.cloudflare.com. 2053063072 10000 2400 604800 3600
+
+;; NS Records
+serp.co.	86400	IN	NS	aria.ns.cloudflare.com.
+serp.co.	86400	IN	NS	lee.ns.cloudflare.com.
+
+;; A Records
+serp.co.	3600	IN	A	185.199.108.153 ; github pages cf_tags=cf-proxied:false
+serp.co.	3600	IN	A	185.199.109.153 ; github pages cf_tags=cf-proxied:false
+serp.co.	3600	IN	A	185.199.110.153 ; github pages cf_tags=cf-proxied:false
+serp.co.	3600	IN	A	185.199.111.153 ; github pages cf_tags=cf-proxied:false
+airflow.serp.co.	1	IN	A	38.99.106.18 ; cf_tags=cf-proxied:true
+api.serp.co.	1	IN	A	38.99.106.18 ; cf_tags=cf-proxied:true
+checklists.serp.co.	3600	IN	A	185.158.133.1 ; serp checklists saas app (lovable) cf_tags=cf-proxied:false
+cvat.serp.co.	1	IN	A	38.99.106.18 ; cf_tags=cf-proxied:true
+db.serp.co.	1	IN	A	38.99.106.18 ; cf_tags=cf-proxied:true
+games.serp.co.	1	IN	A	192.0.2.1 ; cf_tags=cf-proxied:true
+postiz.serp.co.	1	IN	A	38.99.106.18 ; cf_tags=cf-proxied:true
+secrets.serp.co.	1	IN	A	38.99.106.18 ; infisical secrets cf_tags=cf-proxied:true
+store.serp.co.	1	IN	A	192.0.2.1 ; cf_tags=cf-proxied:true
+youtube.serp.co.	1	IN	A	38.99.106.18 ; cf_tags=cf-proxied:true
+
+;; AAAA Records
+serp.co.	3600	IN	AAAA	2606:50c0:8000::153 ; github pages cf_tags=cf-proxied:false
+serp.co.	3600	IN	AAAA	2606:50c0:8001::153 ; github pages cf_tags=cf-proxied:false
+serp.co.	3600	IN	AAAA	2606:50c0:8002::153 ; github pages cf_tags=cf-proxied:false
+serp.co.	3600	IN	AAAA	2606:50c0:8003::153 ; github pages cf_tags=cf-proxied:false
+
+;; CNAME Records
+admin.serp.co.	1	IN	CNAME	serp.co. ; cf_tags=cf-proxied:true
+assets.games.serp.co.	1	IN	CNAME	public.r2.dev. ; cf_tags=cf-proxied:true
+best.serp.co.	1	IN	CNAME	f0935a15-f841-406f-8f2d-683c211383bd.cfargotunnel.com. ; Route best.serp.co through Cloudflare Tunnel to avoid intermittent origin 521s cf_tags=cf-proxied:true
+best-tunnel-test.serp.co.	1	IN	CNAME	f0935a15-f841-406f-8f2d-683c211383bd.cfargotunnel.com. ; cf_tags=cf-proxied:true
+cdn.serp.co.	1	IN	CNAME	public.r2.dev. ; cf_tags=cf-proxied:true
+certification.serp.co.	1	IN	CNAME	cname.vercel-dns.com. ; cf_tags=cf-proxied:true
+community.serp.co.	3600	IN	CNAME	clientportal.ludicrous.cloud. ; cf_tags=cf-proxied:false
+crisp._domainkey.crisp.serp.co.	3600	IN	CNAME	crisp._domainkey.crisp.email. ; cf_tags=cf-proxied:false
+_dmarc.crisp.serp.co.	3600	IN	CNAME	_dmarc.crisp.email. ; cf_tags=cf-proxied:false
+downloads.serp.co.	1	IN	CNAME	public.r2.dev. ; cf_tags=cf-proxied:true
+dr.serp.co.	600	IN	CNAME	754be5ca11d24103.vercel-dns-016.com. ; vercel cf_tags=cf-proxied:false
+embeds.serp.co.	1	IN	CNAME	public.r2.dev. ; cf_tags=cf-proxied:true
+extensions.serp.co.	1	IN	CNAME	afb463ab29eaa306.vercel-dns-016.com. ; cf_tags=cf-proxied:false
+ghcdn.serp.co.	1	IN	CNAME	devinschumacher.github.io. ; cf_tags=cf-proxied:true
+ghl.serp.co.	3600	IN	CNAME	brand.ludicrous.cloud. ; my GHL account API connection cf_tags=cf-proxied:false
+help.serp.co.	1	IN	CNAME	custom.crisp.help. ; cf_tags=cf-proxied:false
+images.serp.co.	1	IN	CNAME	public.r2.dev. ; cf_tags=cf-proxied:true
+links.crisp.serp.co.	3600	IN	CNAME	links.custom.crisp.email. ; cf_tags=cf-proxied:false
+media-embeds.serp.co.	1	IN	CNAME	public.r2.dev. ; cf_tags=cf-proxied:true
+n3ftztgfodxs5xxuxbfn3hjduow6udh4._domainkey.serp.co.	1	IN	CNAME	n3ftztgfodxs5xxuxbfn3hjduow6udh4.dkim.amazonses.com. ; amazon ses.serp.co cf_tags=cf-proxied:false
+newsletter.serp.co.	3600	IN	CNAME	sites.ludicrous.cloud. ; cf_tags=cf-proxied:false
+nmc5qpjq3abg6nchx4ezips4pvnhdots._domainkey.serp.co.	1	IN	CNAME	nmc5qpjq3abg6nchx4ezips4pvnhdots.dkim.amazonses.com. ; amazon ses.serp.co cf_tags=cf-proxied:false
+portal.serp.co.	3600	IN	CNAME	whitelabel.ludicrous.cloud. ; GHL whitelabel client portal cf_tags=cf-proxied:false
+sch4frysd5syedcxuq5owyepcimxs5ep._domainkey.serp.co.	1	IN	CNAME	sch4frysd5syedcxuq5owyepcimxs5ep.dkim.amazonses.com. ; amazon ses.serp.co cf_tags=cf-proxied:false
+screencast.serp.co.	1	IN	CNAME	serp-cast-app.pages.dev. ; cf_tags=cf-proxied:true
+solutions.serp.co.	1	IN	CNAME	serpcompany.github.io. ; cf_tags=cf-proxied:true
+staging-apps.serp.co.	600	IN	CNAME	52453840360e053d.vercel-dns-017.com. ; cf_tags=cf-proxied:false
+status.serp.co.	1	IN	CNAME	statuspage.betteruptime.com. ; better stack uptime monitoring status page cf_tags=cf-proxied:false
+stripe-extensions.serp.co.	1	IN	CNAME	db8ffd6c-9631-40e8-a6b8-558dbf53015b.cfargotunnel.com. ; cf_tags=cf-proxied:true
+tools.serp.co.	1	IN	CNAME	a41fd49d9b7f4f62.vercel-dns-016.com. ; cf_tags=cf-proxied:false
+wiki.serp.co.	1	IN	CNAME	serp.co. ; cf_tags=cf-proxied:true
+www.blocks.serp.co.	1	IN	CNAME	7b56a3509c9c957d.vercel-dns-017.com. ; cf_tags=cf-proxied:false
+www.serp.co.	3600	IN	CNAME	serpcompany.github.io. ; github pages cf_tags=cf-proxied:false
+zenbu.serp.co.	1	IN	CNAME	2ccae6b7-e70a-4a58-bc79-46b39aea348f.cfargotunnel.com. ; Route Zenbu API through Cloudflare Tunnel to avoid intermittent origin 521s cf_tags=cf-proxied:true
+zenbu-tunnel-test.serp.co.	1	IN	CNAME	2ccae6b7-e70a-4a58-bc79-46b39aea348f.cfargotunnel.com. ; cf_tags=cf-proxied:true
+
+;; MX Records
+crisp.serp.co.	300	IN	MX	10 inbound.crisp.email.
+mail.extensions.serp.co.	1	IN	MX	10 feedback-smtp.us-east-1.amazonses.com. ; unsend
+mail.mail.auth.serp.co.	1	IN	MX	10 feedback-smtp.us-east-1.amazonses.com.
+mail.mail.serp.co.	1	IN	MX	10 feedback-smtp.us-east-1.amazonses.com.
+mail.transcribe.serp.co.	1	IN	MX	10 feedback-smtp.us-east-1.amazonses.com.
+send.blocks.serp.co.	1	IN	MX	10 feedback-smtp.us-east-1.amazonses.com. ; resend serp blocks
+serp.co.	1	IN	MX	5 alt2.aspmx.l.google.com.
+serp.co.	1	IN	MX	5 alt1.aspmx.l.google.com.
+serp.co.	1	IN	MX	10 alt4.aspmx.l.google.com.
+serp.co.	1	IN	MX	10 alt3.aspmx.l.google.com.
+serp.co.	1	IN	MX	1 aspmx.l.google.com.
+ses.serp.co.	1	IN	MX	10 feedback-smtp.us-west-1.amazonses.com. ; amazon ses email sending
+
+;; TXT Records
+_cf-custom-hostname.status.serp.co.	1	IN	TXT	"fc4931a2-ced4-475a-9ffc-7da85ce0832f"
+_crisp.crisp.serp.co.	3600	IN	TXT	"crisp-website-id=18691785-2a7a-41f9-9fe5-541a946b8e16"
+_crisp.help.serp.co.	1	IN	TXT	"crisp-website-id=18691785-2a7a-41f9-9fe5-541a946b8e16"
+crisp.serp.co.	3600	IN	TXT	"v=spf1 redirect=_spf.crisp.email"
+default._bimi.ses.serp.co.	1	IN	TXT	"v=BIMI1;l=https://raw.githubusercontent.com/devinschumacher/BIMI1/b59118fa8c99c5835fe3ff17896d5b67b0c82a72/SERP-arrow-24x24_tiny_ps.svg; default._bimi.ses.serp.media"
+_dmarc.mail.auth.serp.co.	1	IN	TXT	"v=DMARC1; p=none;"
+_dmarc.mg.serp.co.	600	IN	TXT	"v=DMARC1;p=none;"
+_dmarc.serp.co.	1	IN	TXT	"v=DMARC1; p=none;"
+_dmarc.serp.co.	1	IN	TXT	"v=DMARC1; p=reject; rua=mailto:2984eaa6cc3d48c7872401ec4b597a03@dmarc-reports.cloudflare.net,mailto:abuse@serp.co; ruf=mailto:abuse@serp.co; fo=1;"
+_gh-serpapps-o.apps.serp.co.	1	IN	TXT	"157cfb3e10" ; verify apps.serp.co for github serpapps org
+_gh-serpapps-o.serp.co.	1	IN	TXT	"7e9662f184" ; verifying github serpapps org
+_gh-serpcompany-o.serp.co.	1	IN	TXT	"f5553a84d5"
+_github-pages-challenge-serpcompany.certification.serp.co.	1	IN	TXT	"e3829f0a5467252693c3f220505214" ; certification.serp.co // github pages
+google._domainkey.serp.co.	1	IN	TXT	"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiV1ijmgNeNQfrg18RvLrNrmXzdcJ40QEKO/1tC9Dy0mUTA23iKNqguzLlWCa+Au2KyLELmxoWIn/Tf+nTpbU76Aj5LqCn8ZqEvpdNAqQhhN7t5JWLjg7AzK5RSooiTDqiXTV+i4st/uyfBt9Z8LPq+abKdL9HGSVQdbCxNavwgETb8gI3x2nX7ZYx/mVWxvvK" "gGh8BjTaZ4BA8LygvzZJWVl7H2+E55GRK8FuLn3tcpfQzsIhYUigIRsvU0xUDYwO9YDue0VCaj17MRqD4ekmQaGsUE9UE1BqU4JBA3Jl3l3Yqk0gErVro0Wse48aMtfbWQwYPMAFcSHsW3lYc0u4wIDAQAB" ; G SUITE DKIM @serpco (@devinschumacher)
+_lovable.multi-llm.serp.co.	3600	IN	TXT	"lovable_verify=a123a5b4-e629-47ea-8d7d-aaa9faddb0da"
+mail.auth.serp.co.	1	IN	TXT	"v=spf1 include:amazonses.com ~all"
+mail.extensions.serp.co.	1	IN	TXT	"v=spf1 include:amazonses.com ~all"
+mailgun.serp.co.	1	IN	TXT	"v=spf1 include:mailgun.org ~all"
+mail.mail.auth.serp.co.	1	IN	TXT	"v=spf1 include:amazonses.com ~all"
+mail.mail.serp.co.	1	IN	TXT	"v=spf1 include:amazonses.com ~all"
+mailo._domainkey.mg.serp.co.	600	IN	TXT	"k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC28wyTLa/Z1hpxDMzglJN1XqAoI10trCp2SeSapv9WjO57ZE58i+6KrukjOAUxr0Uq4be18rVa+5t/GImvwdS4Pdeoym33gGpXXzbFPSB/KEXsR+UQqJaQq5powl6Ee2GqeqOOfHW922IXXzCPqqWT2WQxpkRc91YsKIzSsxnHkwIDAQAB"
+mailo._domainkey.mg.serp.co.	1	IN	TXT	"k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvJqyThy/0eGhEHC2lISX5a+sQTpxVX53bGd8YpAx//hKQTPkgamy9UPuTMFd+IqRfe7OUyRcvdSYZu7d51se7u/O7VDeHVyxPIErIVHGWuRCSoaZ6Ap/0c5bynPcgmM+VpAwMgUu2OGVWOQIv5lWFR32jlT+jtAEYyi9W7p+iROhiJjI198r3euyLGzPX3QyRHWCpBf5vh" "KKneuEeXaoarY7loS+mvQVsi2rTvpwAa3l394NFA47J2b/tN8aWuvSY109JGTPXhw7sIodh+oY5Oj2q8dEjPKSh+ZfT3q3Hig5dCCPNQIyOSwAe+Kcvxi9LfG1fGHtoEh8EyMcTH0npwIDAQAB"
+mail.transcribe.serp.co.	1	IN	TXT	"v=spf1 include:amazonses.com ~all"
+mx._domainkey.mailgun.serp.co.	1	IN	TXT	"k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzqkyyHBHVnb1yvSjZLnuWYMu7MZqxV+yjHDWX1LNMvCSDrWbDmqq18a84gv7fxBlAbi6YrZOFtPAfrNj1ieJqdw7bTM5lOaP3CZTWHXm+yEKqJxLeEZfuc13bFgM4aGUvBSi7W1sEZaKL+57LxeBWcH28ph+Qx0iB0kMsO124J55DiE9BZfSTvnr18mwxHpsrH40osQeAc" "OMS2s2gfgph1GDEnLYj19Rqb6j4QBjiPGd1gODcmPZ/3c1elJlysNAO6bLqqytYj/z7Ues5pZK6W0LAWfmxLPApjAkwBj+/Jmg5QaeiVhDeNP3CKSEqbbOiXQXvq/mqaHMfnwqpkbBpQIDAQAB"
+pic._domainkey.mail.serp.co.	1	IN	TXT	"k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt4QEzz9MA0ve2iP4vwrD/0okxPE7HqXCSZSFI9All09xUTuGbmPYl48Wf0KSbFDtWHIvdZjYUUvn8ZoJkgto7Nzs1UfvM0a6TWDVlgi+4HogP0OJYyPHdCqmwjsx+t0q7da4X4ZAuSDMpz882p68Tk26npOXZbaywHHKUMR4uYvfDDD9oskBbQMilpCPRKSmXgewvnK6j8" "gFEzorYq7TIvlEETAasRuYSyYNPi5DEG5BLj6JUWAVTKWek0wvF4RszCh9MBNLdr2wzZZSqdyGth80S6X6W30qSGWZVxxjWpFt6UGfEl3WGMnVNFjGVzmIQxwLzbCRH0zL4rMLfBzb6wIDAQAB" ; DKIM record mailgun - mail.serp.co
+resend._domainkey.blocks.serp.co.	1	IN	TXT	"p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/PSiC0dkTBKIFMIRSVCbvsl+d9q25hliLg3fnw5GrUE31dwUIQmXpl1uQAkq2R5x2QDuB5qGdtNu/2oOx3amqsuQk/BmR/3p1H5AZ50TopucutDX6sxjYRVNvoy32wflLewVA9ztxmSVJTQ1yVhY+O+2lRdaiuVtOIZ42T63HFwIDAQAB" ; resend serp blocks
+send.blocks.serp.co.	1	IN	TXT	"v=spf1 include:amazonses.com ~all" ; resend serp blocks
+serp.co.	1	IN	TXT	"v=spf1 include:_spf.google.com ~all"
+serp.co.	1	IN	TXT	"google-site-verification=7E4dTn8FATLhmpr-5U_gg3j7DJX3L0qTVRUas20Cl4A" ; G SUITE google site verification @serp.co / @devinschumacher
+ses.serp.co.	1	IN	TXT	"v=spf1 include:amazonses.com ~all"
+smtp._domainkey.mg.serp.co.	600	IN	TXT	"k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC1a6/sIe3sK7kqGQfPxVZq2dGSV2A4GF9BXHlacJLH6iqcJhzxN43wttucr/7FldIq+8W6oj2RxnmGUJDymt38wLUDYGSN141Lv5GNrT55bNqTUQoWt9NDbfgFCmFvPGrQECLFn893uobhhgDQ/6jEQY8pTWpD3b/AhLaJdPkvQwIDAQAB"
+usesend._domainkey.extensions.serp.co.	1	IN	TXT	"p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDLIPtXUjoC19z85is9CxjFb/DfrYUlwmw8Q+JT7JZXOlgNUBUfAxYqQU9vwLWU/ECCI1lFW9R36vrMwZcwkjlhcGk+rY70spZ5+S1yqS22qVfRVQ+PbdJ/5DFZmXRZFTjCtbZaxE0VbjaMSliiZfxxDn8I3rxUjEDwS/RkrjSrQwIDAQAB"
+usesend._domainkey.mail.auth.serp.co.	1	IN	TXT	"p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDBoJmxPDtryUOINDRjLFOxNKKJysEY7Jx0zHIpg8AEDxzlMf85M3F4J9LkUEWRbSB2xaW5ebdVN1lQbFmNOCsYizQ2ZP5t3LbxBJ5WINZUPjLJRqI4bXJIgl6Yv11Xh0T/haCcCilBJVH3yg9eKxLdiyiey9C4V58fNaoCQZupyQIDAQAB"
+usesend._domainkey.mail.serp.co.	1	IN	TXT	"p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3GVm8EcRvw+WLI46Wq/3qOMs6Ux8BxLHVARicWD8S/eCcq96D4v0nv7/bEXCvIKGrZhikE2txj2EbaT/d0vRGOybNAU5wOuevE2zFfpqDHFI1QW526bytCiVd/JVQndoJ3RqnTo72HV04lyqoH6rK2NG7zmlouAa0e7XlVkA3XwIDAQAB"
+usesend._domainkey.transcribe.serp.co.	1	IN	TXT	"p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9UBEg16ObaP5bU6oX7kLB9srC87jUGP5TgwpvHK6kYBZyjVqJ0mCbj55LV1v64X5rNrFHQk+FfkhtmBaO8leJ+3kPKdWapvPCP8ECTh/3l+xv4H4HpI2UA9RkXU6wD+aQXs6YZwiz/gVTOM6IMLyXJPuSClghM7aDhP7xs6zThwIDAQAB"
+_vercel.serp.co.	600	IN	TXT	"vc-domain-verify=dr.serp.co,60816e2be4ca46d36210,dc"
+_vercel.serp.co.	600	IN	TXT	"vc-domain-verify=staging-apps.serp.co,d85e12a6db0a1bb56dcc,dc"
+_vercel.serp.co.	1	IN	TXT	"vc-domain-verify=www.blocks.serp.co,6ce5a937a67084464590" ; blocks.serp.co

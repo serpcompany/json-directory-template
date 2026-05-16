@@ -1,6 +1,7 @@
 import { browserextensionsIoSiteContent } from '../../../sites/browserextensions.io/site-content';
 import { pornvideodownloadersComSiteContent } from '../../../sites/pornvideodownloaders.com/site-content';
 import { serpAiSiteContent } from '../../../sites/serp.ai/site-content';
+import { serpCoSiteContent } from '../../../sites/serp.co/site-content';
 import { serpSoftwareSiteContent } from '../../../sites/serp.software/site-content';
 import { serpdownloadersComSiteContent } from '../../../sites/serpdownloaders.com/site-content';
 import { assertSiteIdIsNotRemoved } from './active-site-ids';
@@ -12,6 +13,7 @@ const siteContentById: Record<string, SiteOwnedContent> = {
   'browserextensions.io': browserextensionsIoSiteContent,
   'pornvideodownloaders.com': pornvideodownloadersComSiteContent,
   'serp.ai': serpAiSiteContent,
+  'serp.co': serpCoSiteContent,
   'serp.software': serpSoftwareSiteContent,
   'serpdownloaders.com': serpdownloadersComSiteContent,
 };
