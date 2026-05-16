@@ -4,15 +4,24 @@ function normalizeBasePath(basePath: string): string {
   return basePath.replace(/^\/+|\/+$/g, '');
 }
 
+function withTrailingSlash(path: string): string {
+  const [pathAndQuery = '', hash = ''] = path.split('#');
+  const [pathname = '/', query = ''] = pathAndQuery.split('?');
+  const suffix = `${query ? `?${query}` : ''}${hash ? `#${hash}` : ''}`;
+  const normalizedPathname =
+    pathname === '/' || pathname.endsWith('/') || pathname.split('/').at(-1)?.includes('.')
+      ? pathname
+      : `${pathname}/`;
+
+  return `${normalizedPathname}${suffix}`;
+}
+
 function buildRouteFromBase(basePath: string, pattern = ''): string {
   const normalizedBasePath = normalizeBasePath(basePath);
-  const routeBasePath = `/${normalizedBasePath}`;
+  const normalizedPattern = pattern.replace(/^\/+|\/+$/g, '');
+  const routePath = `/${[normalizedBasePath, normalizedPattern].filter(Boolean).join('/')}`;
 
-  if (!pattern) {
-    return routeBasePath;
-  }
-
-  return `${routeBasePath}/${pattern}`;
+  return withTrailingSlash(routePath);
 }
 
 function buildListingRoute(pattern = ''): string {
@@ -48,30 +57,34 @@ export const routes = {
     withCategory: `${buildListingRoute()}?category=[category]`,
   },
   category: {
-    page: '/categories/[category]',
+    page: '/categories/[category]/',
   },
-  about: '/about',
-  account: '/account',
-  affiliateDisclosure: '/legal/affiliate-disclosure',
+  about: '/about/',
+  account: '/account/',
+  affiliateDisclosure: '/legal/affiliate-disclosure/',
   brands: buildBrandsRoute(),
-  favorites: '/favorites',
+  favorites: '/favorites/',
   docs: {
     list: buildDocsRoute(),
     doc: buildDocsRoute('[slug]'),
   },
   guides: {
-    list: '/posts',
-    guide: '/posts/[slug]',
+    list: '/posts/',
+    guide: '/posts/[slug]/',
   },
-  news: '/news',
-  privacy: '/legal/privacy',
-  cookies: '/legal/cookies',
-  dmca: '/legal/dmca',
+  news: '/news/',
+  privacy: siteConfig.sitemap.staticPagePaths?.includes('/legal/privacy-policy')
+    ? '/legal/privacy-policy/'
+    : '/legal/privacy/',
+  cookies: '/legal/cookies/',
+  dmca: '/legal/dmca/',
   projects: buildNetworkRoute(),
-  search: '/search',
-  login: '/login',
-  submit: '/submit',
-  terms: '/legal/terms',
+  search: '/search/',
+  login: '/login/',
+  submit: '/submit/',
+  terms: siteConfig.sitemap.staticPagePaths?.includes('/legal/terms-conditions')
+    ? '/legal/terms-conditions/'
+    : '/legal/terms/',
   rss: '/rss.xml',
 } as const;
 

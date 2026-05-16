@@ -1,8 +1,15 @@
-import { SiGithub, SiReddit, SiX } from '@icons-pack/react-simple-icons';
+import {
+  SiGithub,
+  SiReddit,
+  SiX,
+} from '@icons-pack/react-simple-icons';
+import { Linkedin, Youtube } from 'lucide-react';
 import Link from 'next/link';
+import type { ComponentType } from 'react';
 import { ModeToggle } from '../mode-toggle';
 import { getRoute } from '@thedaviddias/web-core/routes';
 import { siteCopy } from '@thedaviddias/web-core/site-copy';
+import { siteContent } from '@thedaviddias/web-core/site-content';
 import { hasConfiguredPublicSocialLinks, siteConfig } from '@thedaviddias/web-core/site-config';
 
 type FooterLink = {
@@ -10,12 +17,70 @@ type FooterLink = {
   label: string;
 };
 
+type SocialLink = {
+  href: string;
+  icon: ComponentType<{ className?: string }>;
+  label: string;
+};
+
+function getSiteContentSocialIcon(href: string): SocialLink['icon'] | null {
+  const normalizedHref = href.toLowerCase();
+
+  if (normalizedHref.includes('linkedin.com')) {
+    return Linkedin;
+  }
+
+  if (normalizedHref.includes('youtube.com') || normalizedHref.includes('youtu.be')) {
+    return Youtube;
+  }
+
+  return null;
+}
+
+function getFooterSocialLinks(): SocialLink[] {
+  const socialLinks = new Map<string, SocialLink>();
+
+  if (hasConfiguredPublicSocialLinks(siteConfig)) {
+    socialLinks.set(siteConfig.githubUrl, {
+      href: siteConfig.githubUrl,
+      icon: SiGithub,
+      label: 'GitHub',
+    });
+    socialLinks.set(siteConfig.redditUrl, {
+      href: siteConfig.redditUrl,
+      icon: SiReddit,
+      label: 'Reddit',
+    });
+    socialLinks.set(siteConfig.twitterUrl, {
+      href: siteConfig.twitterUrl,
+      icon: SiX,
+      label: 'X (Twitter)',
+    });
+  }
+
+  for (const link of siteContent.networkLinks) {
+    const icon = getSiteContentSocialIcon(link.href);
+
+    if (!icon) {
+      continue;
+    }
+
+    socialLinks.set(link.href, {
+      href: link.href,
+      icon,
+      label: link.label,
+    });
+  }
+
+  return Array.from(socialLinks.values());
+}
+
 /**
  * Footer component with site navigation and external links
  * Features: Bold typography, refined spacing, clean layout
  */
 export function Footer() {
-  const showSocialLinks = hasConfiguredPublicSocialLinks(siteConfig);
+  const socialLinks = getFooterSocialLinks();
   const directoryLinks: FooterLink[] = [
     {
       href: getRoute('submit'),
@@ -66,35 +131,20 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-1 my-6">
               <ModeToggle />
-              {showSocialLinks ? (
+              {socialLinks.length > 0 ? (
                 <>
-                  <Link
-                    href={siteConfig.githubUrl}
-                    className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <SiGithub className="size-5" />
-                    <span className="sr-only">GitHub</span>
-                  </Link>
-                  <Link
-                    href={siteConfig.redditUrl}
-                    className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <SiReddit className="size-5" />
-                    <span className="sr-only">Reddit</span>
-                  </Link>
-                  <Link
-                    href={siteConfig.twitterUrl}
-                    className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <SiX className="size-5" />
-                    <span className="sr-only">X (Twitter)</span>
-                  </Link>
+                  {socialLinks.map(({ href, icon: Icon, label }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Icon className="size-5" />
+                      <span className="sr-only">{label}</span>
+                    </Link>
+                  ))}
                 </>
               ) : null}
             </div>

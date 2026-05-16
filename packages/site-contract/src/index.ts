@@ -1,3 +1,4 @@
+import { browserextensionsIoSiteConfig } from '../../../sites/browserextensions.io/site-config';
 import { pornvideodownloadersComSiteConfig } from '../../../sites/pornvideodownloaders.com/site-config';
 import { serpSoftwareSiteConfig } from '../../../sites/serp.software/site-config';
 import { serpdownloadersComSiteConfig } from '../../../sites/serpdownloaders.com/site-config';
@@ -14,6 +15,7 @@ export { defaultSiteConfig, defaultSiteContent, resolveSiteContent };
 export type { CheckedInSiteConfig, CheckedInSiteConfigOverride } from './types';
 
 export const siteConfigsById: Record<string, CheckedInSiteConfigOverride> = {
+  'browserextensions.io': browserextensionsIoSiteConfig,
   'pornvideodownloaders.com': pornvideodownloadersComSiteConfig,
   'serp.software': serpSoftwareSiteConfig,
   'serpdownloaders.com': serpdownloadersComSiteConfig,

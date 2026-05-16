@@ -27,12 +27,18 @@ export function FeaturedProjectsSection({
   projects,
   slots: { LLMGrid, Section },
 }: FeaturedProjectsSectionProps) {
+  const hasFeaturedListings = projects.some(project => project.featured === true)
+
   return (
     <Section
       title="Featured Listings"
       description="Discover standout listings from this directory"
-      viewAllHref={getRoute('category.page', { category: 'featured' })}
-      viewAllText="All featured"
+      viewAllHref={
+        hasFeaturedListings
+          ? getRoute('category.page', { category: 'featured' })
+          : undefined
+      }
+      viewAllText={hasFeaturedListings ? 'All featured' : undefined}
     >
       {projects.length > 0 && <LLMGrid items={projects} />}
     </Section>

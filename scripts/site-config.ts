@@ -90,6 +90,45 @@ const featureFlagsSchema = z.object({
   showProjects: z.boolean().default(false)
 })
 
+const sitemapGroupPathSchema = z
+  .string()
+  .regex(/^\/?[a-z0-9-]+(?:\/[a-z0-9-]+)*\.xml$/)
+
+const sitemapConfigSchema = z
+  .object({
+    additionalPathsByGroup: z
+      .object({
+        docs: z.array(z.string().regex(/^\/(?:[a-z0-9-]+\/?)*$/)).optional(),
+        listings: z.array(z.string().regex(/^\/(?:[a-z0-9-]+\/?)*$/)).optional(),
+        pages: z.array(z.string().regex(/^\/(?:[a-z0-9-]+\/?)*$/)).optional(),
+        posts: z.array(z.string().regex(/^\/(?:[a-z0-9-]+\/?)*$/)).optional(),
+        taxonomies: z.array(z.string().regex(/^\/(?:[a-z0-9-]+\/?)*$/)).optional()
+      })
+      .default({}),
+    artifactExcludedPaths: z
+      .array(z.string().regex(/^\/(?:[a-z0-9-]+\/?)*$/))
+      .optional(),
+    categoryBasePath: z
+      .string()
+      .regex(/^[a-z0-9-]+(?:\/[a-z0-9-]+)*$/)
+      .optional(),
+    excludedPaths: z.array(z.string().regex(/^\/(?:[a-z0-9-]+\/?)*$/)).optional(),
+    listingDetailSuffix: z.string().regex(/^[a-z0-9-]+$/).optional(),
+    pathByGroup: z
+      .object({
+        docs: sitemapGroupPathSchema.optional(),
+        listings: sitemapGroupPathSchema.optional(),
+        pages: sitemapGroupPathSchema.optional(),
+        posts: sitemapGroupPathSchema.optional(),
+        taxonomies: sitemapGroupPathSchema.optional()
+      })
+      .default({}),
+    staticPagePaths: z
+      .array(z.string().regex(/^\/(?:[a-z0-9-]+\/?)*$/))
+      .optional()
+  })
+  .default({})
+
 const socialConfigSchema = z
   .object({
     githubIssueOwner: z.string().min(1).nullable(),
@@ -214,6 +253,7 @@ const checkedInSiteConfigSchema = z.object({
     publicUrl: z.string().url(),
     tagline: z.string().min(1)
   }),
+  sitemap: sitemapConfigSchema,
   social: socialConfigSchema,
   version: z.literal(1)
 })
@@ -294,6 +334,7 @@ export function resolveResolvedSiteConfig(siteConfig: CheckedInSiteConfig) {
     networkRouteBasePath: siteConfig.routes.networkBasePath,
     publicUrl: siteConfig.site.publicUrl,
     redditUrl: siteConfig.social.redditUrl,
+    sitemap: siteConfig.sitemap,
     tagline: siteConfig.site.tagline,
     twitterUrl: siteConfig.social.twitterUrl
   }

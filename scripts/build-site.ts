@@ -417,9 +417,21 @@ async function prepareBrandAssets(
         resolve(restoreDir.path, 'logo.png.backup')
       )
     );
+
+    const explicitAppleTouchIconPath = resolve(
+      workspaceRoot,
+      'sites',
+      siteConfig.id,
+      'assets',
+      'apple-touch-icon.png'
+    );
+    const appleTouchIconSourcePath = existsSync(explicitAppleTouchIconPath)
+      ? explicitAppleTouchIconPath
+      : logoSourcePath;
+
     stages.push(
       stageLocalAsset(
-        logoSourcePath,
+        appleTouchIconSourcePath,
         sourceAppPaths.appleTouchIconPath,
         resolve(restoreDir.path, 'apple-touch-icon.png.backup')
       )
@@ -523,6 +535,7 @@ function prepareDisabledRoutesForStaticExport(
 }
 
 type ArtifactSurfaceFlags = {
+  preservePostsRoute: boolean;
   showAuth: boolean;
   showBrands: boolean;
   showDocs: boolean;
@@ -539,6 +552,54 @@ const categoryArtifactSlugs = [
 function removeArtifactPath(path: string): void {
   if (existsSync(path)) {
     rmSync(path, { force: true, recursive: true });
+  }
+}
+
+function removeArtifactRouteIndex(path: string): void {
+  if (!existsSync(path)) {
+    return;
+  }
+
+  if (!statSync(path).isDirectory()) {
+    removeArtifactPath(path);
+    return;
+  }
+
+  removeArtifactPath(resolve(path, 'index.html'));
+
+  if (existsSync(path) && readdirSync(path).length === 0) {
+    removeArtifactPath(path);
+  }
+}
+
+function normalizePublicArtifactPath(path: string): string | null {
+  const normalizedPath = path.trim().replace(/[?#].*$/, '').replace(/^\/+|\/+$/g, '');
+
+  if (!normalizedPath) {
+    return null;
+  }
+
+  const segments = normalizedPath.split('/').filter(Boolean);
+
+  if (segments.some(segment => segment === '..')) {
+    return null;
+  }
+
+  return segments.join('/');
+}
+
+export function removeExcludedStaticArtifactPaths(
+  artifactDir: string,
+  excludedPaths: string[]
+): void {
+  for (const excludedPath of excludedPaths) {
+    const normalizedPath = normalizePublicArtifactPath(excludedPath);
+
+    if (!normalizedPath) {
+      continue;
+    }
+
+    removeArtifactRouteIndex(resolve(artifactDir, normalizedPath));
   }
 }
 
@@ -725,7 +786,9 @@ export function pruneStaticArtifactDir(
 
   if (!flags.showGuides) {
     removeArtifactPath(resolve(artifactDir, 'guides'));
-    removeArtifactPath(resolve(artifactDir, 'posts'));
+    if (!flags.preservePostsRoute) {
+      removeArtifactPath(resolve(artifactDir, 'posts'));
+    }
   }
 }
 
@@ -748,6 +811,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
   }
 
   pruneStaticArtifactDir(artifactDir, {
+    preservePostsRoute: definition.sitemap.staticPagePaths?.includes('/posts') ?? false,
     showAuth: definition.features.showAuth,
     showBrands: definition.features.showBrands,
     showDocs: definition.features.showDocs,
@@ -765,10 +829,22 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     listingBasePath: definition.routes.listingBasePath,
     siteId: definition.id,
   });
+  removeExcludedStaticArtifactPaths(
+    artifactDir,
+    definition.sitemap.artifactExcludedPaths ?? definition.sitemap.excludedPaths ?? []
+  );
   writeSplitSitemaps(artifactDir, {
+    additionalPathsByGroup: definition.sitemap.additionalPathsByGroup,
     baseUrl: definition.site.publicUrl,
-    excludedPaths: legacySlugs.map(slug => `/${slug}`),
+    categoryBasePath: definition.sitemap.categoryBasePath,
+    excludedPaths: [
+      ...legacySlugs.map(slug => `/${slug}`),
+      ...(definition.sitemap.excludedPaths ?? []),
+    ],
+    listingDetailSuffix: definition.sitemap.listingDetailSuffix,
     listingBasePath: definition.routes.listingBasePath,
+    sitemapPathByGroup: definition.sitemap.pathByGroup,
+    staticPagePaths: definition.sitemap.staticPagePaths,
   });
 
   closeSync(openSync(noJekyllPath, 'w'));

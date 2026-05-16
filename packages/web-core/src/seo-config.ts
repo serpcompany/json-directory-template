@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getRoute } from './routes';
 import { siteCopy } from './site-copy';
+import { siteContent } from './site-content';
 import {
   getConfiguredSocialLinks,
   getTwitterHandleFromUrl,
@@ -222,6 +223,11 @@ export function generateBreadcrumbSchema(items: Array<{ name: string; url?: stri
 }
 
 export function generateWebsiteSchema() {
+  const sameAs = [
+    ...getConfiguredSocialLinks(siteConfig),
+    ...siteContent.networkLinks.map(link => link.href),
+  ];
+
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -232,7 +238,7 @@ export function generateWebsiteSchema() {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `${SITE_PUBLIC_URL}/search?q={search_term_string}`,
+        urlTemplate: `${SITE_PUBLIC_URL}/search/?q={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },
@@ -244,7 +250,7 @@ export function generateWebsiteSchema() {
         '@type': 'ImageObject',
         url: SITE_LOGO_URL,
       },
-      sameAs: getConfiguredSocialLinks(siteConfig),
+      sameAs: [...new Set(sameAs)],
     },
   };
 }

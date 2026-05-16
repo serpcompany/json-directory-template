@@ -1,3 +1,4 @@
+import { browserextensionsIoSiteContent } from '../../../sites/browserextensions.io/site-content';
 import { pornvideodownloadersComSiteContent } from '../../../sites/pornvideodownloaders.com/site-content';
 import { serpSoftwareSiteContent } from '../../../sites/serp.software/site-content';
 import { serpdownloadersComSiteContent } from '../../../sites/serpdownloaders.com/site-content';
@@ -7,6 +8,7 @@ import { defaultSiteContent } from './default-site-content';
 import type { SiteOwnedContent } from './types';
 
 const siteContentById: Record<string, SiteOwnedContent> = {
+  'browserextensions.io': browserextensionsIoSiteContent,
   'pornvideodownloaders.com': pornvideodownloadersComSiteContent,
   'serp.software': serpSoftwareSiteContent,
   'serpdownloaders.com': serpdownloadersComSiteContent,

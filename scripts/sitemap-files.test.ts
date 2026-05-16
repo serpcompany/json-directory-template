@@ -76,8 +76,8 @@ describe('writeSplitSitemaps', () => {
 
     const pagesSitemap = readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')
     expect(pagesSitemap).toContain('<loc>https://example.com/</loc>')
-    expect(pagesSitemap).toContain('<loc>https://example.com/about</loc>')
-    expect(pagesSitemap).toContain('<loc>https://example.com/legal/privacy</loc>')
+    expect(pagesSitemap).toContain('<loc>https://example.com/about/</loc>')
+    expect(pagesSitemap).toContain('<loc>https://example.com/legal/privacy/</loc>')
     expect(pagesSitemap).not.toContain('https://example.com/cookies')
     expect(pagesSitemap).not.toContain('https://example.com/news')
     expect(pagesSitemap).not.toContain('https://example.com/privacy')
@@ -86,17 +86,17 @@ describe('writeSplitSitemaps', () => {
     expect(pagesSitemap).not.toContain('https://example.com/submit')
 
     const listingSitemap = readFileSync(resolve(artifactDir, 'listings-sitemap.xml'), 'utf8')
-    expect(listingSitemap).toContain('<loc>https://example.com/products/example-tool</loc>')
+    expect(listingSitemap).toContain('<loc>https://example.com/products/example-tool/</loc>')
 
     const taxonomiesSitemap = readFileSync(resolve(artifactDir, 'taxonomies-sitemap.xml'), 'utf8')
-    expect(taxonomiesSitemap).toContain('<loc>https://example.com/products</loc>')
+    expect(taxonomiesSitemap).toContain('<loc>https://example.com/products/</loc>')
     expect(taxonomiesSitemap).toContain(
-      '<loc>https://example.com/categories/developer-tools</loc>'
+      '<loc>https://example.com/categories/developer-tools/</loc>'
     )
-    expect(taxonomiesSitemap).toContain('<loc>https://example.com/categories/featured</loc>')
+    expect(taxonomiesSitemap).toContain('<loc>https://example.com/categories/featured/</loc>')
 
     const docsSitemap = readFileSync(resolve(artifactDir, 'docs-sitemap.xml'), 'utf8')
-    expect(docsSitemap).toContain('<loc>https://example.com/docs</loc>')
+    expect(docsSitemap).toContain('<loc>https://example.com/docs/</loc>')
   })
 
   it('skips optional sitemap families when there are no matching public routes', () => {
@@ -166,7 +166,76 @@ describe('writeSplitSitemaps', () => {
     expect(pagesSitemap).not.toContain('<loc>https://example.com/example-tool</loc>')
     expect(listingsSitemap).not.toContain('<loc>https://example.com/example-tool</loc>')
     expect(listingsSitemap).toContain(
+      '<loc>https://example.com/products/example-tool/</loc>'
+    )
+  })
+
+  it('can emit configured sitemap paths and public URL shapes', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    writeFile(resolve(artifactDir, 'index.html'))
+    writeFile(resolve(artifactDir, 'contact/index.html'))
+    writeFile(resolve(artifactDir, 'posts/index.html'))
+    writeFile(resolve(artifactDir, 'products/index.html'))
+    writeFile(resolve(artifactDir, 'products/example-tool/index.html'))
+    writeFile(resolve(artifactDir, 'products/example-tool/reviews/index.html'))
+    writeFile(resolve(artifactDir, 'categories/developer-tools/index.html'))
+    writeFile(resolve(artifactDir, 'categories/featured/index.html'))
+
+    writeSplitSitemaps(artifactDir, {
+      additionalPathsByGroup: {
+        taxonomies: ['/products/best/legacy-category'],
+      },
+      baseUrl: 'https://example.com',
+      categoryBasePath: 'products/best',
+      excludedPaths: ['/products/best/featured'],
+      listingBasePath: 'products',
+      listingDetailSuffix: 'reviews',
+      sitemapPathByGroup: {
+        listings: '/sitemaps/directory/1.xml',
+        pages: '/sitemaps/pages/1.xml',
+        posts: '/sitemaps/blog/1.xml',
+        taxonomies: '/sitemaps/categories/1.xml',
+      },
+      staticPagePaths: ['/', '/contact', '/posts', '/submit'],
+    })
+
+    expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).toContain(
+      '<loc>https://example.com/sitemaps/directory/1.xml</loc>'
+    )
+
+    const listingsSitemap = readFileSync(
+      resolve(artifactDir, 'sitemaps/directory/1.xml'),
+      'utf8'
+    )
+    expect(listingsSitemap).toContain(
+      '<loc>https://example.com/products/example-tool/reviews/</loc>'
+    )
+    expect(listingsSitemap).not.toContain(
       '<loc>https://example.com/products/example-tool</loc>'
     )
+
+    const taxonomiesSitemap = readFileSync(
+      resolve(artifactDir, 'sitemaps/categories/1.xml'),
+      'utf8'
+    )
+    expect(taxonomiesSitemap).toContain(
+      '<loc>https://example.com/products/best/developer-tools/</loc>'
+    )
+    expect(taxonomiesSitemap).toContain(
+      '<loc>https://example.com/products/best/legacy-category/</loc>'
+    )
+    expect(taxonomiesSitemap).not.toContain(
+      '<loc>https://example.com/categories/developer-tools</loc>'
+    )
+    expect(taxonomiesSitemap).not.toContain(
+      '<loc>https://example.com/products/best/featured</loc>'
+    )
+
+    const pagesSitemap = readFileSync(resolve(artifactDir, 'sitemaps/pages/1.xml'), 'utf8')
+    expect(pagesSitemap).toContain('<loc>https://example.com/</loc>')
+    expect(pagesSitemap).toContain('<loc>https://example.com/contact/</loc>')
+    expect(pagesSitemap).toContain('<loc>https://example.com/posts/</loc>')
+    expect(pagesSitemap).not.toContain('<loc>https://example.com/products</loc>')
   })
 })

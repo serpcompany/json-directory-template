@@ -1,3 +1,4 @@
+import browserextensionsIoCategories from '../../../sites/browserextensions.io/categories.json';
 import defaultCategories from '../../../sites/default/categories.json';
 import pornvideodownloadersCategories from '../../../sites/pornvideodownloaders.com/categories.json';
 import serpSoftwareCategories from '../../../sites/serp.software/categories.json';
@@ -7,6 +8,7 @@ import { defaultSiteConfig } from './default-site-config';
 import type { SiteCategoryInput } from './types';
 
 const siteCategoriesById: Record<string, SiteCategoryInput[]> = {
+  'browserextensions.io': browserextensionsIoCategories as SiteCategoryInput[],
   'pornvideodownloaders.com':
     pornvideodownloadersCategories as SiteCategoryInput[],
   'serp.software': serpSoftwareCategories as SiteCategoryInput[],

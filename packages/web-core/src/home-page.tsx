@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import type { ComponentType, ReactElement } from 'react'
-import { getActiveCategories } from './category-navigation'
+import {
+  getActiveCategories,
+  getFeaturedListingCount,
+} from './category-navigation'
 import type { GuideMetadata, WebsiteMetadata } from './content-query'
 import { AppSidebar } from './layout/app-sidebar'
 import { generateBaseMetadata, generateWebsiteSchema, KEYWORDS } from './seo-config'
@@ -144,7 +147,7 @@ export function HomePageRoute({ data, slots }: HomePageRouteProps): ReactElement
         <div className="relative flex h-full w-full max-w-full flex-row flex-nowrap">
           <AppSidebar
             availableCategorySlugs={activeCategorySlugs}
-            featuredCount={featuredProjects.length}
+            featuredCount={getFeaturedListingCount(featuredProjects)}
           />
 
           <div className="relative flex h-full w-full flex-col px-6 pt-6 pb-16 space-y-8">

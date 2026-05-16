@@ -1,4 +1,5 @@
 export const activeCheckedInSiteIds = [
+  'browserextensions.io',
   'pornvideodownloaders.com',
   'serp.software',
   'serpdownloaders.com',

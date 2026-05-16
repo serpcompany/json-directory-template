@@ -15,6 +15,43 @@ function cloneDefaultSiteConfig() {
 }
 
 describe('loadCheckedInSite', () => {
+  it('loads the checked-in browserextensions.io site config', () => {
+    const config = loadCheckedInSite('browserextensions.io')
+
+    expect(config.id).toBe('browserextensions.io')
+    expect(config.content.listingSource).toEqual({
+      category: 'video-downloaders',
+      featuredCount: 0,
+      kind: 'trial-products-json',
+      outputPath: 'data/listings.json',
+      path: 'sites/browserextensions.io/products.json',
+      publishedAt: '2026-05-16'
+    })
+    expect(config.site).toMatchObject({
+      domain: 'browserextensions.io',
+      name: 'BrowserExtensions.io',
+      publicUrl: 'https://browserextensions.io'
+    })
+    expect(config.build).toMatchObject({
+      appPackageName: 'browserextensions.io',
+      appOutDir: 'apps/browserextensions.io/out',
+      artifactDir: 'dist/sites/browserextensions.io'
+    })
+    expect(config.routes.listingBasePath).toBe('products')
+    expect(config.sitemap.pathByGroup).toEqual({
+      listings: '/sitemaps/directory/1.xml',
+      pages: '/sitemaps/pages/1.xml',
+      taxonomies: '/sitemaps/categories/1.xml'
+    })
+    expect(config.features.showBrands).toBe(true)
+    expect(config.deploy).toEqual({
+      branch: 'main',
+      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+      repoUrl: 'https://github.com/serpcompany/browserextensions.io.git',
+      strategy: 'github-pages-repo-sync'
+    })
+  })
+
   it('loads the checked-in serpdownloaders.com site config', () => {
     const config = loadCheckedInSite('serpdownloaders.com')
 

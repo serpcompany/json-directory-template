@@ -2,7 +2,8 @@ import { defaultSiteConfig, resolveCheckedInSiteConfig } from '@thedaviddias/sit
 import type {
   AssetSource,
   SiteCopyConfig,
-  SiteFeatureFlags
+  SiteFeatureFlags,
+  SiteSitemapConfig
 } from '@thedaviddias/site-contract/types'
 
 type SiteBrandingConfig = {
@@ -33,6 +34,7 @@ export type SiteConfig = {
   networkRouteBasePath: string
   publicUrl: string
   redditUrl: string
+  sitemap: SiteSitemapConfig
   tagline: string
   twitterUrl: string
 }
@@ -149,6 +151,7 @@ export function resolveSiteConfig(
     networkRouteBasePath: configuredSite.routes.networkBasePath,
     publicUrl: configuredSite.site.publicUrl,
     redditUrl: configuredSite.social.redditUrl,
+    sitemap: configuredSite.sitemap,
     tagline: configuredSite.site.tagline,
     twitterUrl: configuredSite.social.twitterUrl
   }

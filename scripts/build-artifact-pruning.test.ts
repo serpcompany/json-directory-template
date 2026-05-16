@@ -12,6 +12,7 @@ import {
   applyLegacyRootListingRedirects,
   applyConfiguredPublicRoutePaths,
   applyListingRouteBasePath,
+  removeExcludedStaticArtifactPaths,
   pruneStaticArtifactDir,
 } from './build-site.ts';
 
@@ -58,6 +59,7 @@ describe('pruneStaticArtifactDir', () => {
     writeFile(resolve(artifactDir, '404/index.html'));
 
     pruneStaticArtifactDir(artifactDir, {
+      preservePostsRoute: false,
       showAuth: false,
       showBrands: false,
       showDocs: false,
@@ -96,6 +98,7 @@ describe('pruneStaticArtifactDir', () => {
     writeFile(resolve(artifactDir, 'developer-tools/index.html'));
 
     pruneStaticArtifactDir(artifactDir, {
+      preservePostsRoute: false,
       showAuth: false,
       showBrands: true,
       showDocs: true,
@@ -110,6 +113,50 @@ describe('pruneStaticArtifactDir', () => {
     expect(existsSync(resolve(artifactDir, 'guides'))).toBe(true);
     expect(existsSync(resolve(artifactDir, 'featured'))).toBe(true);
     expect(existsSync(resolve(artifactDir, 'developer-tools'))).toBe(true);
+  });
+});
+
+describe('removeExcludedStaticArtifactPaths', () => {
+  it('removes configured public route paths from the static artifact', () => {
+    const artifactDir = makeTempArtifactDir();
+
+    writeFile(resolve(artifactDir, 'categories/featured/index.html'));
+    writeFile(resolve(artifactDir, 'products/index.html'));
+    writeFile(resolve(artifactDir, 'products/example-extension/index.html'));
+    writeFile(resolve(artifactDir, 'search/index.html'));
+    writeFile(resolve(artifactDir, 'legal/privacy/index.html'));
+    writeFile(resolve(artifactDir, 'legal/terms/index.html'));
+    writeFile(resolve(artifactDir, 'legal/privacy-policy/index.html'));
+
+    removeExcludedStaticArtifactPaths(artifactDir, [
+      '/categories/featured',
+      '/products',
+      '/search',
+      '/legal/privacy',
+      '/legal/terms',
+    ]);
+
+    expect(existsSync(resolve(artifactDir, 'categories/featured'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, 'products/index.html'))).toBe(false);
+    expect(
+      existsSync(resolve(artifactDir, 'products/example-extension/index.html'))
+    ).toBe(true);
+    expect(existsSync(resolve(artifactDir, 'search'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, 'legal/privacy'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, 'legal/terms'))).toBe(false);
+    expect(
+      existsSync(resolve(artifactDir, 'legal/privacy-policy/index.html'))
+    ).toBe(true);
+  });
+
+  it('does not remove the artifact root for slash or empty paths', () => {
+    const artifactDir = makeTempArtifactDir();
+
+    writeFile(resolve(artifactDir, 'index.html'));
+
+    removeExcludedStaticArtifactPaths(artifactDir, ['/', '', '  ']);
+
+    expect(existsSync(resolve(artifactDir, 'index.html'))).toBe(true);
   });
 });
 

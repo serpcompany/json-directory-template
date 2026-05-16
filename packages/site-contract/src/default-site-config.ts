@@ -57,6 +57,7 @@ export const defaultSiteConfig: CheckedInSiteConfig = {
     publicUrl: 'https://example.com',
     tagline: 'Discover listings and resources'
   },
+  sitemap: {},
   social: {
     githubIssueOwner: 'example',
     githubIssueRepo: 'directory-starter',

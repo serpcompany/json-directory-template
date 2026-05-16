@@ -98,6 +98,18 @@ export type SiteFeatureFlags = {
   showProjects: boolean
 }
 
+export type SiteSitemapGroupKey = 'docs' | 'listings' | 'pages' | 'posts' | 'taxonomies'
+
+export type SiteSitemapConfig = {
+  additionalPathsByGroup?: Partial<Record<SiteSitemapGroupKey, string[]>>
+  artifactExcludedPaths?: string[]
+  categoryBasePath?: string
+  excludedPaths?: string[]
+  listingDetailSuffix?: string
+  pathByGroup?: Partial<Record<SiteSitemapGroupKey, string>>
+  staticPagePaths?: string[]
+}
+
 export type CheckedInSiteConfig = {
   analytics?: SiteAnalyticsConfig
   branding: {
@@ -132,6 +144,7 @@ export type CheckedInSiteConfig = {
     publicUrl: string
     tagline: string
   }
+  sitemap: SiteSitemapConfig
   social: {
     githubIssueOwner: string | null
     githubIssueRepo: string | null

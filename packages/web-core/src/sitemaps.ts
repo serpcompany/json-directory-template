@@ -42,9 +42,44 @@ function normalizeBaseUrl(baseUrl: string): string {
   return baseUrl.replace(/\/+$/, '')
 }
 
-function toAbsoluteUrl(path: string, baseUrl = SITE_PUBLIC_URL): string {
+function withTrailingSlash(path: string): string {
+  if (path === '/') {
+    return path
+  }
+
+  if (path.endsWith('/') || path.split('/').at(-1)?.includes('.')) {
+    return path
+  }
+
+  return `${path}/`
+}
+
+function toAbsoluteUrl(
+  path: string,
+  baseUrl = SITE_PUBLIC_URL,
+  options: { trailingSlash?: boolean } = {}
+): string {
   const normalizedBaseUrl = normalizeBaseUrl(baseUrl)
-  return path === '/' ? `${normalizedBaseUrl}/` : `${normalizedBaseUrl}${path}`
+  const normalizedPath = options.trailingSlash ? withTrailingSlash(path) : path
+  return normalizedPath === '/' ? `${normalizedBaseUrl}/` : `${normalizedBaseUrl}${normalizedPath}`
+}
+
+function appendPathSegment(path: string, segment: string | undefined): string {
+  if (!segment) {
+    return path
+  }
+
+  const normalizedSegment = segment.replace(/^\/+|\/+$/g, '')
+
+  if (!normalizedSegment) {
+    return path
+  }
+
+  if (path.replace(/\/+$/g, '').endsWith(`/${normalizedSegment}`)) {
+    return path
+  }
+
+  return `${path.replace(/\/+$/g, '')}/${normalizedSegment}`
 }
 
 function escapeXml(value: string): string {
@@ -102,6 +137,21 @@ function sortUniquePaths(paths: string[]): string[] {
   })
 }
 
+function normalizeComparablePath(path: string): string {
+  if (path === '/') {
+    return path
+  }
+
+  return `/${path.replace(/^\/+|\/+$/g, '')}`
+}
+
+function withoutConfiguredExcludedPaths(paths: string[]): string[] {
+  const excludedPaths = new Set(
+    (siteConfig.sitemap.excludedPaths ?? []).map(path => normalizeComparablePath(path))
+  )
+  return paths.filter(path => !excludedPaths.has(normalizeComparablePath(path)))
+}
+
 function getBuildDate(): string {
   return new Date().toISOString()
 }
@@ -149,12 +199,19 @@ function buildUrlEntries(paths: string[], baseUrl = SITE_PUBLIC_URL): SitemapEnt
 
   return sortUniquePaths(paths).map(path => ({
     lastmod: buildDate,
-    loc: toAbsoluteUrl(path, baseUrl),
+    loc: toAbsoluteUrl(path, baseUrl, { trailingSlash: true }),
   }))
 }
 
 function getStaticPagePaths(): string[] {
-  return [
+  if (siteConfig.sitemap.staticPagePaths?.length) {
+    return withoutConfiguredExcludedPaths([
+      ...siteConfig.sitemap.staticPagePaths,
+      ...(siteConfig.sitemap.additionalPathsByGroup?.pages ?? []),
+    ])
+  }
+
+  return withoutConfiguredExcludedPaths([
     '/',
     getRoute('about'),
     getRoute('affiliateDisclosure'),
@@ -164,7 +221,8 @@ function getStaticPagePaths(): string[] {
     getRoute('terms'),
     ...(siteConfig.features.showBrands ? [getRoute('brands')] : []),
     ...(siteConfig.features.showProjects ? [getRoute('projects')] : []),
-  ]
+    ...(siteConfig.sitemap.additionalPathsByGroup?.pages ?? []),
+  ])
 }
 
 function getDocsPaths(getDocs: (() => DocSitemapEntry[]) | undefined): string[] {
@@ -190,26 +248,52 @@ function getPostsPaths(getGuides: (() => GuideSitemapEntry[]) | undefined): stri
 }
 
 function getListingPaths(getWebsites: () => WebsiteSitemapEntry[]): SitemapEntry[] {
-  return getWebsites().map(website => ({
+  return getWebsites()
+    .map(website => ({
     lastmod: new Date(website.publishedAt).toISOString(),
-    loc: toAbsoluteUrl(getRoute('listing.detail', { slug: website.slug })),
+    loc: toAbsoluteUrl(
+      appendPathSegment(
+        getRoute('listing.detail', { slug: website.slug }),
+        siteConfig.sitemap.listingDetailSuffix
+      ),
+      SITE_PUBLIC_URL,
+      { trailingSlash: true }
+    ),
   }))
+    .filter(entry => {
+      const excludedPaths = new Set(
+        (siteConfig.sitemap.excludedPaths ?? []).map(path => normalizeComparablePath(path))
+      )
+      return !excludedPaths.has(normalizeComparablePath(new URL(entry.loc).pathname))
+    })
 }
 
 function getTaxonomyPaths(getWebsites: () => WebsiteSitemapEntry[]): string[] {
   const websites = getWebsites()
-  const paths = [getRoute('listing.list')]
+  const paths = siteConfig.sitemap.categoryBasePath ? [] : [getRoute('listing.list')]
   const activeCategories = getActiveCategories(websites)
 
   for (const category of activeCategories) {
+    if (siteConfig.sitemap.categoryBasePath) {
+      paths.push(`/${siteConfig.sitemap.categoryBasePath}/${category.slug}`)
+      continue
+    }
+
     paths.push(getRoute('category.page', { category: category.slug }))
   }
 
   if (hasFeaturedListings(websites)) {
-    paths.push(getRoute('category.page', { category: 'featured' }))
+    if (siteConfig.sitemap.categoryBasePath) {
+      paths.push(`/${siteConfig.sitemap.categoryBasePath}/featured`)
+    } else {
+      paths.push(getRoute('category.page', { category: 'featured' }))
+    }
   }
 
-  return paths
+  return withoutConfiguredExcludedPaths([
+    ...paths,
+    ...(siteConfig.sitemap.additionalPathsByGroup?.taxonomies ?? []),
+  ])
 }
 
 function getIndexEntries(loaders: SitemapContentLoaders): SitemapEntry[] {
@@ -217,29 +301,31 @@ function getIndexEntries(loaders: SitemapContentLoaders): SitemapEntry[] {
   const entries: SitemapEntry[] = [
     {
       lastmod: buildDate,
-      loc: toAbsoluteUrl('/pages-sitemap.xml'),
+      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.pages || '/pages-sitemap.xml'),
     },
     {
       lastmod: buildDate,
-      loc: toAbsoluteUrl('/listings-sitemap.xml'),
+      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.listings || '/listings-sitemap.xml'),
     },
     {
       lastmod: buildDate,
-      loc: toAbsoluteUrl('/taxonomies-sitemap.xml'),
+      loc: toAbsoluteUrl(
+        siteConfig.sitemap.pathByGroup?.taxonomies || '/taxonomies-sitemap.xml'
+      ),
     },
   ]
 
   if (getDocsPaths(loaders.getDocs).length > 0) {
     entries.push({
       lastmod: buildDate,
-      loc: toAbsoluteUrl('/docs-sitemap.xml'),
+      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.docs || '/docs-sitemap.xml'),
     })
   }
 
   if (getPostsPaths(loaders.getGuides).length > 0) {
     entries.push({
       lastmod: buildDate,
-      loc: toAbsoluteUrl('/posts-sitemap.xml'),
+      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.posts || '/posts-sitemap.xml'),
     })
   }
 
