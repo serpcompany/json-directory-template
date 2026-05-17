@@ -42,6 +42,47 @@ function loadServiceAccount(env: NodeJS.ProcessEnv): ServiceAccount | undefined 
   return undefined
 }
 
+async function getOauthRefreshTokenAccessToken(
+  env: NodeJS.ProcessEnv
+): Promise<string | undefined> {
+  const clientId = env.GSC_OAUTH_CLIENT_ID
+  const clientSecret = env.GSC_OAUTH_CLIENT_SECRET
+  const refreshToken = env.GSC_OAUTH_REFRESH_TOKEN
+
+  if (!clientId && !clientSecret && !refreshToken) {
+    return undefined
+  }
+
+  if (!clientId || !clientSecret || !refreshToken) {
+    throw new Error(
+      'Incomplete OAuth credentials. Set GSC_OAUTH_CLIENT_ID, GSC_OAUTH_CLIENT_SECRET, and GSC_OAUTH_REFRESH_TOKEN.'
+    )
+  }
+
+  const response = await fetch('https://oauth2.googleapis.com/token', {
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken
+    }),
+    method: 'POST'
+  })
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to refresh Google OAuth access token: ${response.status} ${await response.text()}`
+    )
+  }
+
+  const body = (await response.json()) as { access_token?: string }
+  if (!body.access_token) {
+    throw new Error('Google OAuth refresh response did not include access_token')
+  }
+
+  return body.access_token
+}
+
 function siteUrlFor(domain: string, env: NodeJS.ProcessEnv): string {
   const siteUrlMap = env.GSC_SITE_URL_MAP
     ? (JSON.parse(env.GSC_SITE_URL_MAP) as Record<string, string>)
@@ -55,10 +96,15 @@ async function getAccessToken(env: NodeJS.ProcessEnv): Promise<string> {
     return env.GSC_ACCESS_TOKEN
   }
 
+  const oauthAccessToken = await getOauthRefreshTokenAccessToken(env)
+  if (oauthAccessToken) {
+    return oauthAccessToken
+  }
+
   const serviceAccount = loadServiceAccount(env)
   if (!serviceAccount?.client_email || !serviceAccount.private_key) {
     throw new Error(
-      'Missing GSC credentials. Set GSC_SERVICE_ACCOUNT_JSON, GOOGLE_APPLICATION_CREDENTIALS, or GSC_ACCESS_TOKEN.'
+      'Missing GSC credentials. Set OAuth refresh credentials, GSC_SERVICE_ACCOUNT_JSON, GOOGLE_APPLICATION_CREDENTIALS, or GSC_ACCESS_TOKEN.'
     )
   }
 
