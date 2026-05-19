@@ -50,4 +50,13 @@ describe('pr-review workflow', () => {
     expect(stepRuns).not.toContain('pnpm validate:site -- --site serp.software')
     expect(stepRuns).not.toContain('pnpm check:frontmatter')
   })
+
+  it('installs Playwright browsers without sudo-only system dependency escalation', () => {
+    const workflow = loadWorkflow()
+    const e2eJob = workflow.jobs.e2e
+    const stepRuns = e2eJob.steps?.map(step => step.run).filter(Boolean)
+
+    expect(stepRuns).toContain('pnpm --filter e2e test:install')
+    expect(stepRuns).not.toContain('npx playwright install --with-deps')
+  })
 })
