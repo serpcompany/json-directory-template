@@ -1,16 +1,19 @@
 import { expect, test } from '@playwright/test'
 
 const detailListing = {
-  name: 'Example API Toolkit',
-  slug: 'example-api-toolkit'
+  name: '123Movies Video Downloader',
+  slug: '123movies-downloader'
 } as const
 
 const searchListing = {
-  name: 'Northwind Analytics',
-  query: 'northwind'
+  name: '123Movies Downloader',
+  query: '123movies'
 } as const
 
-async function expectUnavailableRoute(page: Parameters<typeof test>[1] extends never ? never : any, path: string) {
+async function expectUnavailableRoute(
+  page: Parameters<typeof test>[1] extends never ? never : any,
+  path: string
+) {
   const response = await page.goto(path, { waitUntil: 'domcontentloaded' })
   const status = response?.status()
 
@@ -22,7 +25,7 @@ async function expectUnavailableRoute(page: Parameters<typeof test>[1] extends n
 }
 
 test.describe('Main Pages', () => {
-  test('homepage should load and display key elements', async ({ page }) => {
+  test('homepage should load and display key elements', async ({ page }, testInfo) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' })
 
     await expect(page.getByRole('link', { name: /^Directory Starter$/ })).toBeVisible()
@@ -30,9 +33,14 @@ test.describe('Main Pages', () => {
     await expect(
       page.getByRole('banner').getByRole('link', { name: /submit a listing/i })
     ).toBeVisible()
-    await expect(
-      page.getByPlaceholder(/search listings, categories, and descriptions/i)
-    ).toBeVisible()
+
+    if (testInfo.project.name === 'mobile') {
+      await expect(page.getByRole('button', { name: /toggle search/i })).toBeVisible()
+    } else {
+      await expect(
+        page.getByPlaceholder(/search listings, categories, and descriptions/i)
+      ).toBeVisible()
+    }
   })
 
   test('about page should load and display content', async ({ page }) => {
@@ -46,11 +54,18 @@ test.describe('Main Pages', () => {
     await page.goto('/submit')
 
     await expect(page.getByRole('heading', { level: 1, name: /submit a listing/i })).toBeVisible()
-    await expect(page.getByText(/prefilled github issue/i)).toBeVisible()
+    await expect(page.getByText(/github fallback submission is disabled/i)).toBeVisible()
   })
 
   test('disabled optional routes should not be publicly available by default', async ({ page }) => {
-    const disabledRoutes = ['/login', '/account', '/favorites', '/docs', '/posts', '/network'] as const
+    const disabledRoutes = [
+      '/login',
+      '/account',
+      '/favorites',
+      '/docs',
+      '/posts',
+      '/network'
+    ] as const
 
     for (const path of disabledRoutes) {
       await expectUnavailableRoute(page, path)
@@ -65,37 +80,47 @@ test.describe('Listing and Category Pages', () => {
     await expect(page.getByRole('heading', { level: 1, name: detailListing.name })).toBeVisible()
   })
 
-  test('developer-tools category should load', async ({ page }) => {
-    await page.goto('/developer-tools')
+  test('video downloaders category should load', async ({ page }) => {
+    await page.goto('/categories/video-downloaders/', { waitUntil: 'commit' })
 
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: /video downloaders/i })).toBeVisible()
   })
 
   test('featured category should load', async ({ page }) => {
-    await page.goto('/featured')
+    await page.goto('/categories/featured')
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   })
 })
 
 test.describe('Search and Navigation', () => {
-  test('search page should work with a query parameter', async ({ page }) => {
+  test('search page should work with a query parameter', async ({ page }, testInfo) => {
     await page.goto(`/search?q=${searchListing.query}`)
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-    await expect(page.getByRole('textbox').first()).toBeVisible()
-    await expect(page.getByRole('link', { name: new RegExp(searchListing.name, 'i') })).toBeVisible()
+    if (testInfo.project.name !== 'mobile') {
+      await expect(page.getByRole('textbox').first()).toBeVisible()
+    }
+    await expect(
+      page.getByRole('link', { name: new RegExp(searchListing.name, 'i') })
+    ).toBeVisible()
   })
 
   test('primary navigation links should work correctly', async ({ page }) => {
     await page.goto('/')
 
-    await page.getByRole('banner').getByRole('link', { name: /submit a listing/i }).click()
+    await page
+      .getByRole('banner')
+      .getByRole('link', { name: /submit a listing/i })
+      .click()
     await expect(page).toHaveURL(/\/submit/)
     await expect(page.getByRole('heading', { level: 1, name: /submit a listing/i })).toBeVisible()
 
     await page.goto('/')
-    await page.getByRole('contentinfo').getByRole('link', { name: /^About$/ }).click()
+    await page
+      .getByRole('contentinfo')
+      .getByRole('link', { name: /^About$/ })
+      .click()
     await expect(page).toHaveURL(/\/about/)
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   })
@@ -121,12 +146,16 @@ test.describe('Legal Pages', () => {
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page.getByRole('main')).toBeVisible()
-    await expect(page.getByText(/most starter sites do not set login or analytics cookies by default/i)).toBeVisible()
+    await expect(
+      page.getByText(/most starter sites do not set login or analytics cookies by default/i)
+    ).toBeVisible()
   })
 })
 
 test.describe('Error Pages', () => {
-  test('default 404 page stays on-site instead of pointing at the template repo issue flow', async ({ page }) => {
+  test('default 404 page stays on-site instead of pointing at the template repo issue flow', async ({
+    page
+  }) => {
     await page.goto('/404.html')
 
     await expect(page.getByRole('heading', { level: 1, name: /page not found/i })).toBeVisible()

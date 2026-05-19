@@ -1,27 +1,27 @@
-import type { CheckedInSiteConfigOverride } from '../types';
+import type { CheckedInSiteConfigOverride } from '../types'
 
 export const browserextensionsIoSiteConfig: CheckedInSiteConfigOverride = {
   branding: {
     favicon: {
       path: 'sites/browserextensions.io/assets/favicon.ico',
-      source: 'local-path',
+      source: 'local-path'
     },
     logo: {
       path: 'sites/browserextensions.io/assets/logo.png',
-      source: 'local-path',
+      source: 'local-path'
     },
     opengraphImage: {
       path: 'sites/browserextensions.io/assets/opengraph-image.png',
-      source: 'local-path',
-    },
+      source: 'local-path'
+    }
   },
   build: {
     appPackageName: 'browserextensions.io',
     appOutDir: 'apps/browserextensions.io/out',
-    artifactDir: 'dist/sites/browserextensions.io',
+    artifactDir: 'dist/sites/browserextensions.io'
   },
   analytics: {
-    gtmId: 'GTM-NL242383',
+    gtmId: 'GTM-NL242383'
   },
   content: {
     listingSource: {
@@ -30,29 +30,29 @@ export const browserextensionsIoSiteConfig: CheckedInSiteConfigOverride = {
       kind: 'trial-products-json',
       outputPath: 'data/listings.json',
       path: 'sites/browserextensions.io/products.json',
-      publishedAt: '2026-05-16',
-    },
+      publishedAt: '2026-05-16'
+    }
   },
   copy: {
     listingName: {
       plural: 'products',
-      singular: 'product',
+      singular: 'product'
     },
-    submitLabel: 'Submit Your Browser Extension',
+    submitLabel: 'Submit Yours'
   },
   deploy: {
     branch: 'main',
     preserve: ['.github/workflows/deploy.yml', 'CNAME'],
     repoUrl: 'https://github.com/serpcompany/browserextensions.io.git',
-    strategy: 'github-pages-repo-sync',
+    strategy: 'github-pages-repo-sync'
   },
   id: 'browserextensions.io',
   networkBrandGroup: 'mainGroup',
   features: {
-    showBrands: true,
+    showBrands: true
   },
   routes: {
-    listingBasePath: 'products',
+    listingBasePath: 'products'
   },
   sitemap: {
     additionalPathsByGroup: {
@@ -62,25 +62,21 @@ export const browserextensionsIoSiteConfig: CheckedInSiteConfigOverride = {
         '/categories/image-hosting',
         '/categories/livestream',
         '/categories/movies-and-tv',
-        '/categories/social-media',
-      ],
+        '/categories/social-media'
+      ]
     },
-    artifactExcludedPaths: [
-      '/categories/featured',
-      '/legal/privacy',
-      '/legal/terms',
-    ],
+    artifactExcludedPaths: ['/categories/featured', '/legal/privacy', '/legal/terms'],
     excludedPaths: [
       '/categories/featured',
       '/legal/privacy',
       '/legal/terms',
       '/products',
-      '/search',
+      '/search'
     ],
     pathByGroup: {
       listings: '/sitemaps/directory/1.xml',
       pages: '/sitemaps/pages/1.xml',
-      taxonomies: '/sitemaps/categories/1.xml',
+      taxonomies: '/sitemaps/categories/1.xml'
     },
     staticPagePaths: [
       '/',
@@ -95,8 +91,8 @@ export const browserextensionsIoSiteConfig: CheckedInSiteConfigOverride = {
       '/posts',
       '/pricing',
       '/sponsor',
-      '/submit',
-    ],
+      '/submit'
+    ]
   },
   site: {
     description:
@@ -104,7 +100,7 @@ export const browserextensionsIoSiteConfig: CheckedInSiteConfigOverride = {
     domain: 'browserextensions.io',
     name: 'BrowserExtensions.io',
     publicUrl: 'https://browserextensions.io',
-    tagline: 'Discover the best browser extensions',
+    tagline: 'Discover the best browser extensions'
   },
   social: {
     githubIssueOwner: null,
@@ -113,6 +109,6 @@ export const browserextensionsIoSiteConfig: CheckedInSiteConfigOverride = {
     githubRepoUrl: 'https://github.com/serpcompany',
     githubUrl: 'https://github.com/serpcompany',
     redditUrl: 'https://www.reddit.com/r/BrowserExtensionsIO/',
-    twitterUrl: 'https://x.com/serpcompany',
-  },
-};
+    twitterUrl: 'https://x.com/serpcompany'
+  }
+}

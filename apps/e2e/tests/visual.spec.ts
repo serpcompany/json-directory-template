@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, type Page, test } from '@playwright/test'
 
 const listingRouteBasePath = process.env.E2E_LISTING_ROUTE_BASE_PATH ?? 'listing'
 
@@ -18,7 +18,7 @@ async function prepareVisualPage(page: Page, path: string) {
       nextjs-portal {
         display: none !important;
       }
-    `,
+    `
   })
   await expect(page.getByRole('main').first()).toBeVisible()
 }
@@ -29,17 +29,19 @@ test.describe('visual regression coverage', () => {
 
     await expect(page).toHaveScreenshot('home-page.png', {
       fullPage: true,
-      maxDiffPixelRatio: 0.02,
+      maxDiffPixelRatio: 0.02
     })
   })
 
   test('listing detail page remains visually stable', async ({ page }) => {
     await prepareVisualPage(page, `/${listingRouteBasePath}/123movies-downloader`)
-    await expect(page.getByRole('heading', { level: 1, name: /123movies downloader/i })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { level: 1, name: /123movies video downloader/i })
+    ).toBeVisible()
 
     await expect(page).toHaveScreenshot('listing-detail-page.png', {
       fullPage: true,
-      maxDiffPixelRatio: 0.02,
+      maxDiffPixelRatio: 0.02
     })
   })
 
@@ -48,7 +50,7 @@ test.describe('visual regression coverage', () => {
 
     await expect(page).toHaveScreenshot('brands-page.png', {
       fullPage: true,
-      maxDiffPixelRatio: 0.02,
+      maxDiffPixelRatio: 0.02
     })
   })
 
@@ -58,7 +60,7 @@ test.describe('visual regression coverage', () => {
 
     await expect(page).toHaveScreenshot('search-page.png', {
       fullPage: true,
-      maxDiffPixelRatio: 0.02,
+      maxDiffPixelRatio: 0.02
     })
   })
 
@@ -68,7 +70,7 @@ test.describe('visual regression coverage', () => {
 
     await expect(page).toHaveScreenshot('submit-verify-not-found-page.png', {
       fullPage: true,
-      maxDiffPixelRatio: 0.02,
+      maxDiffPixelRatio: 0.02
     })
   })
 })

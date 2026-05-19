@@ -5,21 +5,23 @@ test.describe('User Interactions', () => {
     await page.goto('/')
 
     const searchInput = page.getByRole('textbox').first()
-    await searchInput.fill('northwind')
+    await searchInput.fill('123movies')
     await searchInput.press('Enter')
 
     await page.waitForURL(/\/search\/?\?.+/)
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-    await expect(page.getByRole('link', { name: /Northwind Analytics/i })).toBeVisible()
+    await expect(page.getByRole('link', { name: /123Movies Downloader/i })).toBeVisible()
   })
 
   test('listing detail pages should allow local favorite toggles', async ({ page }) => {
-    await page.goto('/listing/example-api-toolkit')
+    await page.goto('/listing/123movies-downloader')
 
     const favoriteButton = page.getByRole('button', { name: /add to favorites/i }).first()
     if (await favoriteButton.isVisible()) {
       await favoriteButton.click()
-      await expect(page.getByRole('button', { name: /remove from favorites/i }).first()).toBeVisible()
+      await expect(
+        page.getByRole('button', { name: /remove from favorites/i }).first()
+      ).toBeVisible()
     }
   })
 
@@ -101,7 +103,10 @@ test.describe('Mobile Interactions', () => {
       await mobileMenuBtn.click()
       await expect(page.getByRole('heading', { name: /^Menu$/ })).toBeVisible()
 
-      const drawerNav = page.getByRole('navigation').filter({ hasText: /submit a listing/i }).last()
+      const drawerNav = page
+        .getByRole('navigation')
+        .filter({ hasText: /submit a listing/i })
+        .last()
       await drawerNav.getByRole('link', { name: /submit a listing/i }).click()
       await expect(page).toHaveURL(/\/submit/)
     } else {
@@ -120,7 +125,7 @@ test.describe('Mobile Interactions', () => {
 
       const searchInput = page.getByRole('textbox').first()
       if (await searchInput.isVisible()) {
-        await searchInput.fill('northwind')
+        await searchInput.fill('123movies')
         await searchInput.press('Enter')
         await expect(page).toHaveURL(/\/search\/?\?.+/, { timeout: 10000 })
       }

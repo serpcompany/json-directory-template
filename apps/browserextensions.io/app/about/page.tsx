@@ -1,7 +1,7 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
 import { getRoute } from '@thedaviddias/web-core/routes'
 import { generateBaseMetadata } from '@thedaviddias/web-core/seo-config'
+import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: 'About BrowserExtensions.io',
@@ -12,8 +12,8 @@ export const metadata: Metadata = generateBaseMetadata({
     'BrowserExtensions.io',
     'browser extensions directory',
     'browser extension discovery',
-    'extension submissions',
-  ],
+    'extension submissions'
+  ]
 })
 
 export default function AboutPage() {
@@ -21,13 +21,10 @@ export default function AboutPage() {
     <main className="container mx-auto max-w-3xl px-6 py-12">
       <div className="space-y-10">
         <section className="space-y-4">
-          <h1 className="text-4xl font-bold tracking-tight">
-            About BrowserExtensions.io
-          </h1>
+          <h1 className="text-4xl font-bold tracking-tight">About BrowserExtensions.io</h1>
           <p className="text-xl text-muted-foreground">
-            BrowserExtensions.io is a curated directory that helps people
-            discover great products quickly, and helps builders get discovered
-            by the right audience.
+            BrowserExtensions.io is a curated directory that helps people discover great products
+            quickly, and helps builders get discovered by the right audience.
           </p>
         </section>
 
@@ -54,7 +51,7 @@ export default function AboutPage() {
             className="inline-flex h-10 items-center justify-center bg-foreground px-4 text-sm font-semibold text-background hover:bg-foreground/90"
             href={getRoute('submit')}
           >
-            Submit Your Browser Extension
+            Submit Yours
           </Link>
           <Link
             className="inline-flex h-10 items-center justify-center border border-border px-4 text-sm font-semibold hover:bg-muted"

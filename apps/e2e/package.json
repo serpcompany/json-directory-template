@@ -9,6 +9,7 @@
     "test:e2e:fast": "playwright test --project=chromium",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:smoke": "playwright test tests/smoke.spec.ts --project=chromium",
+    "test:e2e:visual": "E2E_VISUAL=1 playwright test tests/visual.spec.ts --project=chromium",
     "test:e2e:ui": "playwright test --ui",
     "test:install": "playwright install chromium"
   },
