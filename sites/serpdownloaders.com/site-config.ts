@@ -54,6 +54,9 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   routes: {
     listingBasePath: 'products',
   },
+  sitemap: {
+    excludedPaths: ['/products'],
+  },
   site: {
     description: 'A collection of tools to help you download anything from anywhere, anytime.',
     domain: 'serpdownloaders.com',

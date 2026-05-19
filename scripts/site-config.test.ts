@@ -404,6 +404,83 @@ describe('validateCheckedInSiteConfig', () => {
     )
   })
 
+  it('rejects duplicate sitemap group output paths', () => {
+    const invalidConfig = cloneDefaultSiteConfig()
+    invalidConfig.sitemap.pathByGroup = {
+      listings: '/sitemaps/shared.xml',
+      pages: '/sitemaps/shared.xml'
+    }
+
+    let error: unknown
+
+    try {
+      validateCheckedInSiteConfig(invalidConfig)
+    } catch (caughtError) {
+      error = caughtError
+    }
+
+    expect(error).toBeInstanceOf(ZodError)
+    expect((error as ZodError).issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message:
+            'sitemap.pathByGroup.pages cannot reuse "/sitemaps/shared.xml" because sitemap.pathByGroup.listings already uses it.',
+          path: ['sitemap', 'pathByGroup', 'pages']
+        })
+      ])
+    )
+  })
+
+  it('rejects reserved canonical sitemap output paths for group files', () => {
+    const invalidConfig = cloneDefaultSiteConfig()
+    invalidConfig.sitemap.pathByGroup = {
+      pages: '/sitemap-index.xml'
+    }
+
+    let error: unknown
+
+    try {
+      validateCheckedInSiteConfig(invalidConfig)
+    } catch (caughtError) {
+      error = caughtError
+    }
+
+    expect(error).toBeInstanceOf(ZodError)
+    expect((error as ZodError).issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message:
+            'sitemap.pathByGroup.pages cannot use reserved sitemap output path "/sitemap-index.xml".',
+          path: ['sitemap', 'pathByGroup', 'pages']
+        })
+      ])
+    )
+  })
+
+  it('rejects static sitemap page paths that are also excluded', () => {
+    const invalidConfig = cloneDefaultSiteConfig()
+    invalidConfig.sitemap.staticPagePaths = ['/', '/search']
+    invalidConfig.sitemap.excludedPaths = ['/search']
+
+    let error: unknown
+
+    try {
+      validateCheckedInSiteConfig(invalidConfig)
+    } catch (caughtError) {
+      error = caughtError
+    }
+
+    expect(error).toBeInstanceOf(ZodError)
+    expect((error as ZodError).issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message: 'sitemap.staticPagePaths cannot also be excluded: /search.',
+          path: ['sitemap', 'staticPagePaths']
+        })
+      ])
+    )
+  })
+
   it('rejects partially configured GitHub issue targets', () => {
     const invalidConfig = cloneDefaultSiteConfig()
     invalidConfig.social.githubIssueOwner = null

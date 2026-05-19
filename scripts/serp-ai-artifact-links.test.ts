@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 const artifactRoot = resolve(process.cwd(), 'dist/sites/serp.ai')
 const serpBrandsJsonPath = '/Users/devin/dev/repos/serp/docs/websites/pages/brands.json'
@@ -61,7 +61,14 @@ function readSitemapLocs(relativePath: string): string[] {
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1] ?? '')
 }
 
-describe.runIf(existsSync(artifactRoot))('serp.ai artifact links', () => {
+describe('serp.ai artifact links', () => {
+  beforeAll(() => {
+    expect(
+      existsSync(artifactRoot),
+      'Run `pnpm build:site -- --site serp.ai` before artifact tests.'
+    ).toBe(true)
+  })
+
   it('emits route indexes for live product, category, and brands pages', () => {
     expect(routeIndexExists('/products/tiktok-downloader/reviews')).toBe(true)
     expect(routeIndexExists('/products/best/video-downloaders')).toBe(true)

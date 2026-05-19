@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { join, resolve } from 'node:path'
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 const artifactRoot = resolve(process.cwd(), 'dist/sites/browserextensions.io')
 const nextyExportRoot = '/Users/devin/dev/repos/nexty-monorepo/tmp/browserextensions-io'
@@ -53,7 +53,14 @@ function readSitemapLocs(relativePath: string): string[] {
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1] ?? '')
 }
 
-describe.runIf(existsSync(artifactRoot))('browserextensions.io artifact links', () => {
+describe('browserextensions.io artifact links', () => {
+  beforeAll(() => {
+    expect(
+      existsSync(artifactRoot),
+      'Run `pnpm build:site -- --site browserextensions.io` before artifact tests.'
+    ).toBe(true)
+  })
+
   it('does not emit known broken internal links', () => {
     const html = readArtifactHtml('index.html')
 

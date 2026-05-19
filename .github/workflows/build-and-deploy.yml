@@ -15,13 +15,6 @@ on:
         description: 'Checked-in site config id'
         required: true
         default: 'default'
-      deploy_repo:
-        description: 'Deploy target repo (owner/repo)'
-        required: false
-      deploy_branch:
-        description: 'Deploy target branch'
-        required: false
-        default: 'main'
 
 concurrency:
   group: main-ci-${{ github.ref }}
@@ -62,6 +55,11 @@ jobs:
           SITE_ID: ${{ needs.validate.outputs.site_id }}
         run: pnpm build:site
 
+      - name: Audit XML sitemaps
+        env:
+          SITE_ID: ${{ needs.validate.outputs.site_id }}
+        run: pnpm audit:sitemaps -- --site "$SITE_ID"
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -95,8 +93,6 @@ jobs:
 
       - name: Deploy
         env:
-          DEPLOY_REPO_URL: ${{ github.event.inputs.deploy_repo || vars.DEPLOY_REPO_URL || '' }}
-          DEPLOY_BRANCH: ${{ github.event.inputs.deploy_branch || vars.DEPLOY_BRANCH || 'main' }}
           DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
           SITE_ID: ${{ needs.validate.outputs.site_id }}
         run: pnpm deploy:site

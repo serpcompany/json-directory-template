@@ -1,4 +1,4 @@
-import { mkdirSync, readdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve, sep } from 'node:path'
 
 export const SITEMAP_PAGE_SIZE = 10_000
@@ -189,6 +189,63 @@ function listArtifactRoutePaths(
   return routePaths
 }
 
+function artifactRouteExists(artifactDir: string, path: string): boolean {
+  const normalizedPath = normalizeArtifactPath(path)
+  const routeFilePath =
+    normalizedPath === '/'
+      ? resolve(artifactDir, 'index.html')
+      : resolve(artifactDir, normalizedPath.slice(1), 'index.html')
+
+  return existsSync(routeFilePath)
+}
+
+function validateConfiguredSitemapRoutePaths(
+  artifactDir: string,
+  options: {
+    additionalPathsByGroup?: Partial<Record<SitemapGroup['key'], string[]>>
+    excludedPaths: Set<string>
+    staticPagePaths?: string[]
+  }
+): void {
+  const missingStaticPagePaths = (options.staticPagePaths ?? [])
+    .map(path => normalizeArtifactPath(path))
+    .filter(path => !artifactRouteExists(artifactDir, path))
+
+  const missingAdditionalPaths = Object.entries(
+    options.additionalPathsByGroup ?? {}
+  ).flatMap(([group, paths]) =>
+    (paths ?? [])
+      .map(path => normalizeArtifactPath(path))
+      .filter(path => !artifactRouteExists(artifactDir, path))
+      .map(path => `${group}:${path}`)
+  )
+
+  const excludedAdditionalPaths = Object.entries(
+    options.additionalPathsByGroup ?? {}
+  ).flatMap(([group, paths]) =>
+    (paths ?? [])
+      .map(path => normalizeArtifactPath(path))
+      .filter(path => options.excludedPaths.has(path))
+      .map(path => `${group}:${path}`)
+  )
+
+  const failures = [
+    missingStaticPagePaths.length > 0
+      ? `staticPagePaths without route artifacts: ${missingStaticPagePaths.join(', ')}`
+      : null,
+    missingAdditionalPaths.length > 0
+      ? `additionalPathsByGroup without route artifacts: ${missingAdditionalPaths.join(', ')}`
+      : null,
+    excludedAdditionalPaths.length > 0
+      ? `additionalPathsByGroup entries also excluded from sitemaps: ${excludedAdditionalPaths.join(', ')}`
+      : null,
+  ].filter((failure): failure is string => failure !== null)
+
+  if (failures.length > 0) {
+    throw new Error(`Invalid configured sitemap paths in ${artifactDir}\n${failures.join('\n')}`)
+  }
+}
+
 function sortPaths(paths: string[]): string[] {
   return [...new Set(paths)].sort((left, right) => {
     if (left === '/') return -1
@@ -327,6 +384,11 @@ export function writeSplitSitemaps(
   const excludedPaths = new Set(
     (options.excludedPaths ?? []).map(path => normalizeArtifactPath(path))
   )
+  validateConfiguredSitemapRoutePaths(artifactDir, {
+    additionalPathsByGroup: options.additionalPathsByGroup,
+    excludedPaths,
+    staticPagePaths: options.staticPagePaths,
+  })
   const includedPaths = new Set(
     (options.staticPagePaths ?? []).map(path => normalizeArtifactPath(path))
   )

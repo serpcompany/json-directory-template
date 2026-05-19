@@ -3,3 +3,7 @@
 - do not take shortcuts
 - do things properly
 - deploy a subagent whose sole responsibility it is to police your decisions and make sure you are not cutting corners, or being lazy
+- treat `pnpm deploy`, `pnpm deploy:site`, target GitHub Pages repo syncs, and any command that pushes a generated site artifact as git push operations
+- do not run a real deploy unless the user explicitly asks for that deploy and the source repo changes have already gone through gitflow: branch, commit, push, review/merge, then deploy from a clean branch synced with upstream or from GitHub Actions
+- when the source worktree has uncommitted, untracked, unpushed, behind, or diverged changes, only build, audit, report, or `--dry-run` deploy commands are allowed
+- do not use deploy target overrides such as `DEPLOY_REPO_URL` or `DEPLOY_BRANCH` in normal deploys; deploy targets must come from checked-in site config unless the user gives explicit same-turn emergency bypass approval

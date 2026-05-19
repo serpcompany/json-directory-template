@@ -51,6 +51,9 @@ export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   routes: {
     listingBasePath: 'products'
   },
+  sitemap: {
+    excludedPaths: ['/products']
+  },
   site: {
     description: 'Downloaders for adult video platforms and creator sites.',
     domain: 'pornvideodownloaders.com',

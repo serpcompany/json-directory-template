@@ -37,6 +37,9 @@ export const serpSoftwareSiteConfig: CheckedInSiteConfigOverride = {
   routes: {
     listingBasePath: 'products',
   },
+  sitemap: {
+    excludedPaths: ['/products'],
+  },
   site: {
     description: 'A searchable directory of downloader products from the SERP network.',
     domain: 'serp.software',

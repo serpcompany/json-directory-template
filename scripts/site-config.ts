@@ -94,6 +94,10 @@ const sitemapGroupPathSchema = z
   .string()
   .regex(/^\/?[a-z0-9-]+(?:\/[a-z0-9-]+)*\.xml$/)
 
+function normalizeSitemapPath(path: string): string {
+  return `/${path.replace(/^\/+|\/+$/g, '')}`
+}
+
 const sitemapConfigSchema = z
   .object({
     additionalPathsByGroup: z
@@ -129,6 +133,55 @@ const sitemapConfigSchema = z
     staticPagePaths: z
       .array(z.string().regex(/^\/(?:[a-z0-9-]+\/?)*$/))
       .optional()
+  })
+  .superRefine((sitemap, ctx) => {
+    const reservedSitemapOutputPaths = new Set(['/sitemap-index.xml', '/sitemap.xml'])
+    const seenOutputPaths = new Map<string, string>()
+
+    for (const [group, path] of Object.entries(sitemap.pathByGroup ?? {})) {
+      if (!path) {
+        continue
+      }
+
+      const normalizedPath = normalizeSitemapPath(path)
+      if (reservedSitemapOutputPaths.has(normalizedPath)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `sitemap.pathByGroup.${group} cannot use reserved sitemap output path "${normalizedPath}".`,
+          path: ['pathByGroup', group]
+        })
+      }
+
+      const previousGroup = seenOutputPaths.get(normalizedPath)
+      if (previousGroup) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `sitemap.pathByGroup.${group} cannot reuse "${normalizedPath}" because sitemap.pathByGroup.${previousGroup} already uses it.`,
+          path: ['pathByGroup', group]
+        })
+        continue
+      }
+
+      seenOutputPaths.set(normalizedPath, group)
+    }
+
+    const excludedPaths = new Set(
+      [
+        ...(sitemap.excludedPaths ?? []),
+        ...(sitemap.artifactExcludedPaths ?? [])
+      ].map(path => normalizeSitemapPath(path))
+    )
+    const excludedStaticPagePaths = (sitemap.staticPagePaths ?? [])
+      .map(path => normalizeSitemapPath(path))
+      .filter(path => excludedPaths.has(path))
+
+    if (excludedStaticPagePaths.length > 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `sitemap.staticPagePaths cannot also be excluded: ${excludedStaticPagePaths.join(', ')}.`,
+        path: ['staticPagePaths']
+      })
+    }
   })
   .default({})
 

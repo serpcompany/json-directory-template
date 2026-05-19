@@ -180,8 +180,10 @@ describe('writeSplitSitemaps', () => {
     writeFile(resolve(artifactDir, 'products/example-tool/index.html'))
     writeFile(resolve(artifactDir, 'products/example-tool/reviews/index.html'))
     writeFile(resolve(artifactDir, 'products/best/video-downloaders/index.html'))
+    writeFile(resolve(artifactDir, 'products/best/legacy-category/index.html'))
     writeFile(resolve(artifactDir, 'categories/developer-tools/index.html'))
     writeFile(resolve(artifactDir, 'categories/featured/index.html'))
+    writeFile(resolve(artifactDir, 'submit/index.html'))
 
     writeSplitSitemaps(artifactDir, {
       additionalPathsByGroup: {
@@ -244,5 +246,35 @@ describe('writeSplitSitemaps', () => {
     expect(pagesSitemap).toContain('<loc>https://example.com/contact/</loc>')
     expect(pagesSitemap).toContain('<loc>https://example.com/posts/</loc>')
     expect(pagesSitemap).not.toContain('<loc>https://example.com/products</loc>')
+  })
+
+  it('fails when configured static sitemap paths do not have route artifacts', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    writeFile(resolve(artifactDir, 'index.html'))
+
+    expect(() =>
+      writeSplitSitemaps(artifactDir, {
+        baseUrl: 'https://example.com',
+        listingBasePath: 'products',
+        staticPagePaths: ['/', '/missing-page'],
+      })
+    ).toThrow('staticPagePaths without route artifacts: /missing-page')
+  })
+
+  it('fails when configured additional sitemap paths do not have route artifacts', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    writeFile(resolve(artifactDir, 'index.html'))
+
+    expect(() =>
+      writeSplitSitemaps(artifactDir, {
+        additionalPathsByGroup: {
+          taxonomies: ['/missing-category'],
+        },
+        baseUrl: 'https://example.com',
+        listingBasePath: 'products',
+      })
+    ).toThrow('additionalPathsByGroup without route artifacts: taxonomies:/missing-category')
   })
 })

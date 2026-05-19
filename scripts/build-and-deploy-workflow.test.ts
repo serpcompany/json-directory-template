@@ -43,19 +43,23 @@ describe('build-and-deploy workflow', () => {
     expect(downloadStep).toBeDefined()
     expect(downloadStep?.with).toMatchObject({
       name: 'build-output',
-      path: '${{ needs.validate.outputs.artifact_dir }}'
+      path: `\${{ needs.validate.outputs.artifact_dir }}`
     })
   })
 
   it('requires a checked-in site id instead of an explicit build spec path', () => {
     const workflow = loadWorkflow()
-    const dispatchInputs = (workflow as WorkflowDefinition & {
-      on: { workflow_dispatch: { inputs: Record<string, { required?: boolean }> } }
-    }).on.workflow_dispatch.inputs
+    const dispatchInputs = (
+      workflow as WorkflowDefinition & {
+        on: { workflow_dispatch: { inputs: Record<string, { required?: boolean }> } }
+      }
+    ).on.workflow_dispatch.inputs
 
     expect(dispatchInputs.site_id).toBeDefined()
     expect(dispatchInputs.site_id?.required).toBe(true)
     expect(dispatchInputs.build_spec_path).toBeUndefined()
+    expect(dispatchInputs.deploy_repo).toBeUndefined()
+    expect(dispatchInputs.deploy_branch).toBeUndefined()
   })
 
   it('uses the configured GH_PAT secret for repo sync pushes', () => {
@@ -64,6 +68,16 @@ describe('build-and-deploy workflow', () => {
     const deployStep = deployJob.steps?.find(step => step.name === 'Deploy')
 
     expect(deployStep).toBeDefined()
-    expect(deployStep?.env?.DEPLOY_TOKEN).toBe('${{ secrets.GH_PAT }}')
+    expect(deployStep?.env?.DEPLOY_TOKEN).toBe(`\${{ secrets.GH_PAT }}`)
+  })
+
+  it('does not expose normal deploy target overrides in the workflow', () => {
+    const workflow = loadWorkflow()
+    const deployJob = workflow.jobs.deploy
+    const deployStep = deployJob.steps?.find(step => step.name === 'Deploy')
+
+    expect(deployStep).toBeDefined()
+    expect(deployStep?.env?.DEPLOY_REPO_URL).toBeUndefined()
+    expect(deployStep?.env?.DEPLOY_BRANCH).toBeUndefined()
   })
 })
