@@ -1,24 +1,20 @@
-jest.mock(
-  '@/.content-collections/generated',
-  () => ({
-    allAboutPages: [],
-    allDocs: [],
-    allGuides: [],
-    allLegals: [],
-    allResources: [],
-    allWebsites: [
-      {
-        category: 'developer-tools',
-        description: 'Legacy website collection entry.',
-        name: 'Legacy Website Entry',
-        publishedAt: '2026-01-01',
-        slug: 'legacy-website-entry',
-        website: 'https://legacy.example.com'
-      }
-    ]
-  }),
-  { virtual: true }
-)
+jest.mock('@/.content-collections/generated', () => ({
+  allAboutPages: [],
+  allDocs: [],
+  allGuides: [],
+  allLegals: [],
+  allResources: [],
+  allWebsites: [
+    {
+      category: 'developer-tools',
+      description: 'Legacy website collection entry.',
+      name: 'Legacy Website Entry',
+      publishedAt: '2026-01-01',
+      slug: 'legacy-website-entry',
+      website: 'https://legacy.example.com'
+    }
+  ]
+}))
 
 import { getWebsites } from '@/lib/content-loader'
 

@@ -70,6 +70,7 @@ const config: Config.InitialOptions = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
+    '^@/\\.content-collections/generated$': '<rootDir>/__mocks__/content-collections-generated.ts',
     '^@/(.*)$': '<rootDir>/$1',
     'lucide-react': require.resolve('lucide-react'),
     'react-markdown': '<rootDir>/__mocks__/react-markdown.tsx',
