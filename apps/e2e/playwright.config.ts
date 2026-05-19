@@ -5,6 +5,7 @@ const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${playwrigh
 const webServerCommand =
   process.env.PLAYWRIGHT_WEB_SERVER_COMMAND ??
   `cd ../starter && pnpm exec next dev --hostname 127.0.0.1 --port ${playwrightPort}`
+const workerCount = Number(process.env.E2E_WORKERS ?? 2)
 
 export default defineConfig({
   testDir: './tests',
@@ -12,7 +13,8 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : 2, // Use 2 workers locally for stability
+  globalTimeout: process.env.CI ? 20 * 60 * 1000 : undefined,
+  workers: workerCount,
   reporter: process.env.CI || process.env.CLAUDE ? [['line'], ['html', { open: 'never' }]] : 'html',
 
   // Performance optimizations
