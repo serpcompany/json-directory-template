@@ -25,13 +25,13 @@ function makeSiteConfig(artifactDir: string) {
     ...siteConfig,
     build: {
       ...siteConfig.build,
-      artifactDir: relative(process.cwd(), artifactDir),
+      artifactDir: relative(process.cwd(), artifactDir)
     },
     site: {
       ...siteConfig.site,
       domain: 'example.com',
-      publicUrl: 'https://example.com',
-    },
+      publicUrl: 'https://example.com'
+    }
   }
 }
 
@@ -39,10 +39,13 @@ function writeSitemapShellFiles(artifactDir: string): void {
   const sitemapIndex = [
     '<sitemapindex>',
     '<sitemap><loc>https://example.com/sitemaps/pages/1.xml</loc></sitemap>',
-    '</sitemapindex>',
+    '</sitemapindex>'
   ].join('')
 
-  writeFile(resolve(artifactDir, 'robots.txt'), 'User-agent: *\nAllow: /\nSitemap: https://example.com/sitemap-index.xml\n')
+  writeFile(
+    resolve(artifactDir, 'robots.txt'),
+    'User-agent: *\nAllow: /\nSitemap: https://example.com/sitemap-index.xml\n'
+  )
   writeFile(resolve(artifactDir, 'sitemap-index.xml'), sitemapIndex)
   writeFile(resolve(artifactDir, 'sitemap.xml'), sitemapIndex)
 }
@@ -58,9 +61,7 @@ afterEach(() => {
 describe('parseSitemapLocs', () => {
   it('extracts and decodes sitemap loc values', () => {
     expect(
-      parseSitemapLocs(
-        '<urlset><url><loc>https://example.com/a&amp;b/</loc></url></urlset>'
-      )
+      parseSitemapLocs('<urlset><url><loc>https://example.com/a&amp;b/</loc></url></urlset>')
     ).toEqual(['https://example.com/a&b/'])
   })
 })
@@ -76,7 +77,7 @@ describe('auditArtifactSitemaps', () => {
         '<urlset>',
         '<url><loc>https://example.com/</loc></url>',
         '<url><loc>https://example.com/about/</loc></url>',
-        '</urlset>',
+        '</urlset>'
       ].join('')
     )
     writeFile(resolve(artifactDir, 'index.html'))
@@ -93,7 +94,10 @@ describe('auditArtifactSitemaps', () => {
 
     const sitemapIndex =
       '<sitemapindex><sitemap><loc>https://example.com/sitemaps/missing.xml</loc></sitemap></sitemapindex>'
-    writeFile(resolve(artifactDir, 'robots.txt'), 'Sitemap: https://example.com/sitemap-index.xml\n')
+    writeFile(
+      resolve(artifactDir, 'robots.txt'),
+      'Sitemap: https://example.com/sitemap-index.xml\n'
+    )
     writeFile(resolve(artifactDir, 'sitemap-index.xml'), sitemapIndex)
     writeFile(resolve(artifactDir, 'sitemap.xml'), sitemapIndex)
 
@@ -103,7 +107,7 @@ describe('auditArtifactSitemaps', () => {
       expect.objectContaining({
         message: 'Sitemap file referenced by index is missing from artifact.',
         severity: 'error',
-        sitemapUrl: 'https://example.com/sitemaps/missing.xml',
+        sitemapUrl: 'https://example.com/sitemaps/missing.xml'
       })
     )
   })
@@ -113,7 +117,10 @@ describe('auditArtifactSitemaps', () => {
 
     const sitemapIndex =
       '<sitemapindex><sitemap><loc>https://example.com/pages-sitemap.xml</loc></sitemap></sitemapindex>'
-    writeFile(resolve(artifactDir, 'robots.txt'), 'Sitemap: https://example.com/sitemap-index.xml\n')
+    writeFile(
+      resolve(artifactDir, 'robots.txt'),
+      'Sitemap: https://example.com/sitemap-index.xml\n'
+    )
     writeFile(resolve(artifactDir, 'sitemap-index.xml'), sitemapIndex)
     writeFile(resolve(artifactDir, 'sitemap.xml'), sitemapIndex)
     writeFile(
@@ -127,7 +134,7 @@ describe('auditArtifactSitemaps', () => {
       expect.objectContaining({
         message: 'Sitemap entry does not map to a generated route artifact.',
         severity: 'error',
-        url: 'https://example.com/missing-page/',
+        url: 'https://example.com/missing-page/'
       })
     )
   })
@@ -138,7 +145,10 @@ describe('auditArtifactSitemaps', () => {
 
     const sitemapIndex =
       '<sitemapindex><sitemap><loc>https://example.com/pages-sitemap.xml</loc></sitemap></sitemapindex>'
-    writeFile(resolve(artifactDir, 'robots.txt'), 'Sitemap: https://example.com/sitemap-index.xml\n')
+    writeFile(
+      resolve(artifactDir, 'robots.txt'),
+      'Sitemap: https://example.com/sitemap-index.xml\n'
+    )
     writeFile(resolve(artifactDir, 'sitemap-index.xml'), sitemapIndex)
     writeFile(resolve(artifactDir, 'sitemap.xml'), sitemapIndex)
     writeFile(
@@ -151,15 +161,15 @@ describe('auditArtifactSitemaps', () => {
       ...siteConfig,
       sitemap: {
         ...siteConfig.sitemap,
-        excludedPaths: ['/search'],
-      },
+        excludedPaths: ['/search']
+      }
     })
 
     expect(audit.issues).toContainEqual(
       expect.objectContaining({
         message: 'Excluded path leaked into sitemap output.',
         severity: 'error',
-        url: 'https://example.com/search/',
+        url: 'https://example.com/search/'
       })
     )
   })

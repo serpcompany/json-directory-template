@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
 import { resolveCheckedInSiteConfig } from '@thedaviddias/site-contract'
+import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
 import type { CheckedInSiteConfig } from '@thedaviddias/site-contract/types'
 
 type AuditScope = 'artifact' | 'live'
@@ -154,7 +154,7 @@ function addIssue(
   audit.issues.push({
     message,
     severity,
-    ...details,
+    ...details
   })
 }
 
@@ -162,7 +162,7 @@ function configuredExcludedPaths(siteConfig: CheckedInSiteConfig): Set<string> {
   return new Set(
     [
       ...(siteConfig.sitemap.excludedPaths ?? []),
-      ...(siteConfig.sitemap.artifactExcludedPaths ?? []),
+      ...(siteConfig.sitemap.artifactExcludedPaths ?? [])
     ].map(path => normalizePath(path))
   )
 }
@@ -184,7 +184,7 @@ function validateArtifactPageUrl(
   if (!parsedUrl) {
     addIssue(audit, 'error', 'Sitemap entry is not a valid absolute URL.', {
       sitemapUrl,
-      url,
+      url
     })
     return
   }
@@ -192,7 +192,7 @@ function validateArtifactPageUrl(
   if (!sameOrigin(url, siteConfig.site.publicUrl)) {
     addIssue(audit, 'error', 'Sitemap entry points outside the site origin.', {
       sitemapUrl,
-      url,
+      url
     })
     return
   }
@@ -205,7 +205,7 @@ function validateArtifactPageUrl(
   if (!hasFinalTrailingSlash(parsedUrl.pathname)) {
     addIssue(audit, 'error', 'Final page sitemap URL is missing a trailing slash.', {
       sitemapUrl,
-      url,
+      url
     })
   }
 
@@ -213,7 +213,7 @@ function validateArtifactPageUrl(
   if (configuredExcludedPaths(siteConfig).has(normalizedPath)) {
     addIssue(audit, 'error', 'Excluded path leaked into sitemap output.', {
       sitemapUrl,
-      url,
+      url
     })
   }
 
@@ -221,7 +221,7 @@ function validateArtifactPageUrl(
   if (!routeIndexPath || !existsSync(routeIndexPath)) {
     addIssue(audit, 'error', 'Sitemap entry does not map to a generated route artifact.', {
       sitemapUrl,
-      url,
+      url
     })
     return
   }
@@ -229,7 +229,7 @@ function validateArtifactPageUrl(
   if (isRedirectOrErrorShell(routeIndexPath)) {
     addIssue(audit, 'error', 'Sitemap entry maps to a redirect or error shell.', {
       sitemapUrl,
-      url,
+      url
     })
   }
 }
@@ -255,7 +255,7 @@ function auditArtifactSitemapFile(
   const artifactPath = artifactFilePathForUrl(audit.artifactDir ?? '', sitemapUrl)
   if (!artifactPath || !existsSync(artifactPath)) {
     addIssue(audit, 'error', 'Sitemap file referenced by index is missing from artifact.', {
-      sitemapUrl,
+      sitemapUrl
     })
     return
   }
@@ -267,12 +267,12 @@ function auditArtifactSitemapFile(
   audit.childSitemaps.push({
     locCount: locs.length,
     sitemapUrl,
-    type,
+    type
   })
 
   if (type === 'unknown') {
     addIssue(audit, 'error', 'Sitemap file is not a sitemap index or URL set.', {
-      sitemapUrl,
+      sitemapUrl
     })
     return
   }
@@ -284,13 +284,7 @@ function auditArtifactSitemapFile(
 
   if (type === 'sitemapindex') {
     for (const childSitemapUrl of locs) {
-      auditArtifactSitemapFile(
-        audit,
-        siteConfig,
-        childSitemapUrl,
-        seenSitemaps,
-        seenPageUrls
-      )
+      auditArtifactSitemapFile(audit, siteConfig, childSitemapUrl, seenSitemaps, seenPageUrls)
     }
     return
   }
@@ -301,10 +295,7 @@ function auditArtifactSitemapFile(
   }
 }
 
-function validateArtifactRobots(
-  audit: SitemapSiteAudit,
-  siteConfig: CheckedInSiteConfig
-): void {
+function validateArtifactRobots(audit: SitemapSiteAudit, siteConfig: CheckedInSiteConfig): void {
   const robotsPath = resolve(audit.artifactDir ?? '', 'robots.txt')
 
   if (!existsSync(robotsPath)) {
@@ -321,7 +312,7 @@ function validateArtifactRobots(
 
   audit.robots = {
     sitemapTarget,
-    status: 200,
+    status: 200
   }
 
   if (sitemapTarget !== getSitemapIndexUrl(siteConfig)) {
@@ -344,7 +335,7 @@ function validateArtifactCompatibilitySitemap(
 
   if (!existsSync(compatibilityPath)) {
     addIssue(audit, 'error', 'Compatibility sitemap.xml is missing from artifact.', {
-      sitemapUrl: compatibilityUrl,
+      sitemapUrl: compatibilityUrl
     })
     return
   }
@@ -355,12 +346,12 @@ function validateArtifactCompatibilitySitemap(
     locCount: compatibilityLocs.length,
     sitemapUrl: compatibilityUrl,
     status: 200,
-    type: sitemapXmlType(compatibilityXml),
+    type: sitemapXmlType(compatibilityXml)
   }
 
   if (audit.compatibilitySitemap.type !== 'sitemapindex') {
     addIssue(audit, 'error', 'Compatibility sitemap.xml must be a sitemap index.', {
-      sitemapUrl: compatibilityUrl,
+      sitemapUrl: compatibilityUrl
     })
   }
 
@@ -387,12 +378,12 @@ export function auditArtifactSitemaps(siteConfig: CheckedInSiteConfig): SitemapS
     scope: 'artifact',
     siteId: siteConfig.id,
     sitemapIndexUrl: getSitemapIndexUrl(siteConfig),
-    urlCount: 0,
+    urlCount: 0
   }
 
   if (!existsSync(artifactDir)) {
     addIssue(audit, 'error', 'Artifact directory is missing. Build the site before auditing.', {
-      sitemapUrl: audit.sitemapIndexUrl,
+      sitemapUrl: audit.sitemapIndexUrl
     })
     return audit
   }
@@ -416,12 +407,12 @@ async function fetchText(
 ): Promise<{ body: string; contentType: string; status: number }> {
   const response = await fetch(url, {
     headers: { connection: 'close' },
-    signal: AbortSignal.timeout(timeoutMs),
+    signal: AbortSignal.timeout(timeoutMs)
   })
   return {
     body: await response.text(),
     contentType: response.headers.get('content-type') ?? '',
-    status: response.status,
+    status: response.status
   }
 }
 
@@ -430,7 +421,7 @@ async function fetchStatus(url: string, timeoutMs: number): Promise<number | str
     const response = await fetch(url, {
       headers: { connection: 'close' },
       redirect: 'manual',
-      signal: AbortSignal.timeout(timeoutMs),
+      signal: AbortSignal.timeout(timeoutMs)
     })
     await response.body?.cancel()
     return response.status
@@ -452,7 +443,7 @@ async function auditLivePageUrl(
   if (!parsedUrl) {
     addIssue(audit, 'error', 'Sitemap entry is not a valid absolute URL.', {
       sitemapUrl,
-      url,
+      url
     })
     return
   }
@@ -460,7 +451,7 @@ async function auditLivePageUrl(
   if (!sameOrigin(url, siteConfig.site.publicUrl)) {
     addIssue(audit, 'error', 'Sitemap entry points outside the site origin.', {
       sitemapUrl,
-      url,
+      url
     })
     return
   }
@@ -473,14 +464,14 @@ async function auditLivePageUrl(
   if (!hasFinalTrailingSlash(parsedUrl.pathname)) {
     addIssue(audit, 'error', 'Final page sitemap URL is missing a trailing slash.', {
       sitemapUrl,
-      url,
+      url
     })
   }
 
   if (configuredExcludedPaths(siteConfig).has(normalizePath(parsedUrl.pathname))) {
     addIssue(audit, 'error', 'Excluded path leaked into sitemap output.', {
       sitemapUrl,
-      url,
+      url
     })
   }
 
@@ -488,7 +479,7 @@ async function auditLivePageUrl(
   if (status !== 200) {
     addIssue(audit, 'error', `Live sitemap entry returned ${status}.`, {
       sitemapUrl,
-      url,
+      url
     })
   }
 }
@@ -532,7 +523,7 @@ async function auditLiveSitemapFile(
 
   if (!response.contentType.includes('xml')) {
     addIssue(audit, 'warning', `Sitemap file content-type is ${response.contentType}.`, {
-      sitemapUrl,
+      sitemapUrl
     })
   }
 
@@ -543,12 +534,12 @@ async function auditLiveSitemapFile(
     locCount: locs.length,
     sitemapUrl,
     status: response.status,
-    type,
+    type
   })
 
   if (type === 'unknown') {
     addIssue(audit, 'error', 'Sitemap file is not a sitemap index or URL set.', {
-      sitemapUrl,
+      sitemapUrl
     })
     return
   }
@@ -595,12 +586,12 @@ async function validateLiveRobots(
 
     audit.robots = {
       sitemapTarget,
-      status: response.status,
+      status: response.status
     }
 
     if (response.status !== 200) {
       addIssue(audit, 'error', `robots.txt returned ${response.status}.`, {
-        url: robotsUrl,
+        url: robotsUrl
       })
       return
     }
@@ -639,19 +630,19 @@ async function validateLiveCompatibilitySitemap(
       locCount: locs.length,
       sitemapUrl: compatibilityUrl,
       status: response.status,
-      type,
+      type
     }
 
     if (response.status !== 200) {
       addIssue(audit, 'error', `Compatibility sitemap.xml returned ${response.status}.`, {
-        sitemapUrl: compatibilityUrl,
+        sitemapUrl: compatibilityUrl
       })
       return
     }
 
     if (type !== 'sitemapindex') {
       addIssue(audit, 'error', 'Compatibility sitemap.xml must be a sitemap index.', {
-        sitemapUrl: compatibilityUrl,
+        sitemapUrl: compatibilityUrl
       })
     }
   } catch (error) {
@@ -677,7 +668,7 @@ export async function auditLiveSitemaps(
     scope: 'live',
     siteId: siteConfig.id,
     sitemapIndexUrl: getSitemapIndexUrl(siteConfig),
-    urlCount: 0,
+    urlCount: 0
   }
 
   await validateLiveRobots(audit, siteConfig, timeoutMs)
@@ -697,7 +688,7 @@ export async function auditLiveSitemaps(
 function issueCounts(audit: SitemapSiteAudit): { errors: number; warnings: number } {
   return {
     errors: audit.issues.filter(issue => issue.severity === 'error').length,
-    warnings: audit.issues.filter(issue => issue.severity === 'warning').length,
+    warnings: audit.issues.filter(issue => issue.severity === 'warning').length
   }
 }
 
@@ -706,7 +697,7 @@ export function formatConsoleReport(audits: SitemapSiteAudit[]): string {
     .map(audit => {
       const counts = issueCounts(audit)
       const lines = [
-        `${audit.scope} ${audit.siteId}: ${audit.urlCount} urls, ${audit.childSitemaps.length} sitemap files, ${counts.errors} errors, ${counts.warnings} warnings`,
+        `${audit.scope} ${audit.siteId}: ${audit.urlCount} urls, ${audit.childSitemaps.length} sitemap files, ${counts.errors} errors, ${counts.warnings} warnings`
       ]
 
       for (const issue of audit.issues) {
@@ -748,7 +739,7 @@ export function formatMarkdownReport(audits: SitemapSiteAudit[]): string {
         '',
         '| Child sitemap | Type | Status | Locs |',
         '| --- | --- | ---: | ---: |',
-        ...(childRows.length > 0 ? childRows : ['| none |  |  | 0 |']),
+        ...(childRows.length > 0 ? childRows : ['| none |  |  | 0 |'])
       ].join('\n')
 
       if (audit.issues.length === 0) {
@@ -769,7 +760,7 @@ export function formatMarkdownReport(audits: SitemapSiteAudit[]): string {
         '',
         '| Severity | Message | Sitemap | URL |',
         '| --- | --- | --- | --- |',
-        ...issueRows,
+        ...issueRows
       ].join('\n')
     })
     .join('\n\n')
@@ -786,7 +777,7 @@ export function formatMarkdownReport(audits: SitemapSiteAudit[]): string {
     '## Issues',
     '',
     issueSections,
-    '',
+    ''
   ].join('\n')
 }
 
@@ -795,7 +786,7 @@ function parseArgs(argv: string[]): CliOptions {
     json: false,
     scope: 'artifact',
     siteIds: [],
-    timeoutMs: DEFAULT_TIMEOUT_MS,
+    timeoutMs: DEFAULT_TIMEOUT_MS
   }
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -854,8 +845,7 @@ function parseArgs(argv: string[]): CliOptions {
 }
 
 async function runAudit(options: CliOptions): Promise<SitemapSiteAudit[]> {
-  const siteIds =
-    options.siteIds.length > 0 ? options.siteIds : [...activeCheckedInSiteIds]
+  const siteIds = options.siteIds.length > 0 ? options.siteIds : [...activeCheckedInSiteIds]
   const audits: SitemapSiteAudit[] = []
 
   for (const siteId of siteIds) {
@@ -876,9 +866,7 @@ async function runAudit(options: CliOptions): Promise<SitemapSiteAudit[]> {
 export async function runAuditSitemaps(argv = process.argv.slice(2)): Promise<void> {
   const options = parseArgs(argv)
   const audits = await runAudit(options)
-  const hasErrors = audits.some(audit =>
-    audit.issues.some(issue => issue.severity === 'error')
-  )
+  const hasErrors = audits.some(audit => audit.issues.some(issue => issue.severity === 'error'))
 
   if (options.reportPath) {
     const reportPath = resolve(process.cwd(), options.reportPath)
@@ -893,10 +881,7 @@ export async function runAuditSitemaps(argv = process.argv.slice(2)): Promise<vo
   }
 }
 
-if (
-  process.argv[1] &&
-  fileURLToPath(import.meta.url) === resolve(process.argv[1])
-) {
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
   runAuditSitemaps().catch(error => {
     console.error(error instanceof Error ? error.message : error)
     process.exitCode = 1

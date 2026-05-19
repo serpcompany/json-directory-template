@@ -5,9 +5,8 @@ on:
     branches: ['main']
 
 permissions:
-  checks: write
   contents: read
-  pull-requests: write
+  pull-requests: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -20,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Install
         uses: ./.github/actions/install
@@ -28,10 +29,7 @@ jobs:
         run: pnpm validate:sites
 
       - name: Run Biome Check
-        uses: mongolyy/reviewdog-action-biome@v2
-        with:
-          github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
+        run: pnpm exec biome check --changed --since=origin/main
 
       - name: Run repository policy tests
         run: pnpm test:repo

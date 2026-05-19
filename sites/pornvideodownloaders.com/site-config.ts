@@ -2,7 +2,7 @@ import type { CheckedInSiteConfigOverride } from '../types'
 
 export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   analytics: {
-    gtmId: 'GTM-PWB7MRW9',
+    gtmId: 'GTM-PWB7MRW9'
   },
   branding: {
     favicon: {

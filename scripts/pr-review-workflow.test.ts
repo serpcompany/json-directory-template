@@ -4,8 +4,10 @@ import yaml from 'js-yaml'
 import { describe, expect, it } from 'vitest'
 
 interface WorkflowStep {
+  uses?: string
   name?: string
   run?: string
+  with?: Record<string, string | number>
 }
 
 interface WorkflowJob {
@@ -25,13 +27,12 @@ function loadWorkflow(): WorkflowDefinition {
 }
 
 describe('pr-review workflow', () => {
-  it('grants explicit permissions for reviewdog and PR change detection', () => {
+  it('grants explicit permissions for PR change detection', () => {
     const workflow = loadWorkflow()
 
     expect(workflow.permissions).toMatchObject({
-      checks: 'write',
       contents: 'read',
-      'pull-requests': 'write'
+      'pull-requests': 'read'
     })
   })
 
@@ -39,8 +40,11 @@ describe('pr-review workflow', () => {
     const workflow = loadWorkflow()
     const validateJob = workflow.jobs.validate
     const stepRuns = validateJob.steps?.map(step => step.run).filter(Boolean)
+    const checkoutStep = validateJob.steps?.find(step => step.uses === 'actions/checkout@v6')
 
+    expect(checkoutStep?.with?.['fetch-depth']).toBe(0)
     expect(stepRuns).toContain('pnpm validate:sites')
+    expect(stepRuns).toContain('pnpm exec biome check --changed --since=origin/main')
     expect(stepRuns).not.toContain('pnpm validate:site -- --site default')
     expect(stepRuns).not.toContain('pnpm validate:site -- --site serpdownloaders.com')
     expect(stepRuns).not.toContain('pnpm validate:site -- --site serp.software')

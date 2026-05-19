@@ -1,15 +1,12 @@
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { createHash } from 'node:crypto'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { beforeAll, describe, expect, it } from 'vitest'
 
 const artifactRoot = resolve(process.cwd(), 'dist/sites/browserextensions.io')
 const nextyExportRoot = '/Users/devin/dev/repos/nexty-monorepo/tmp/browserextensions-io'
 const serpBrandsJsonPath = '/Users/devin/dev/repos/serp/docs/websites/pages/brands.json'
-const localBrandsJsonPath = resolve(
-  process.cwd(),
-  'packages/web-core/src/data/network-brands.json'
-)
+const localBrandsJsonPath = resolve(process.cwd(), 'packages/web-core/src/data/network-brands.json')
 const browserextensionsProductsJsonPath = resolve(
   process.cwd(),
   'sites/browserextensions.io/products.json'
@@ -86,12 +83,7 @@ describe('browserextensions.io artifact links', () => {
         const href = match[1] ?? ''
         const marker = match[2] ?? ''
 
-        if (
-          href !== '/' &&
-          !href.endsWith('/') &&
-          !href.includes('.') &&
-          marker !== '#'
-        ) {
+        if (href !== '/' && !href.endsWith('/') && !href.includes('.') && marker !== '#') {
           badLinks.push(`${filePath.replace(`${artifactRoot}/`, '')}: ${href}`)
         }
       }
@@ -104,7 +96,7 @@ describe('browserextensions.io artifact links', () => {
     const sitemapPaths = [
       'sitemaps/pages/1.xml',
       'sitemaps/directory/1.xml',
-      'sitemaps/categories/1.xml',
+      'sitemaps/categories/1.xml'
     ]
     const nonTrailingFinalUrls = sitemapPaths.flatMap(relativePath =>
       readSitemapLocs(relativePath).filter(url => !url.endsWith('/'))
@@ -114,7 +106,7 @@ describe('browserextensions.io artifact links', () => {
     expect(readSitemapLocs('sitemap-index.xml')).toEqual([
       'https://browserextensions.io/sitemaps/pages/1.xml',
       'https://browserextensions.io/sitemaps/directory/1.xml',
-      'https://browserextensions.io/sitemaps/categories/1.xml',
+      'https://browserextensions.io/sitemaps/categories/1.xml'
     ])
   })
 
@@ -193,16 +185,22 @@ describe('browserextensions.io artifact links', () => {
     expect(html).not.toContain('directory starter')
   })
 
-  it.runIf(existsSync(nextyExportRoot))('keeps the exported apple touch icon in the static artifact', () => {
-    expect(sha256(join(artifactRoot, 'apple-touch-icon.png'))).toBe(
-      sha256(join(nextyExportRoot, 'public/apple-touch-icon.png'))
-    )
-  })
+  it.runIf(existsSync(nextyExportRoot))(
+    'keeps the exported apple touch icon in the static artifact',
+    () => {
+      expect(sha256(join(artifactRoot, 'apple-touch-icon.png'))).toBe(
+        sha256(join(nextyExportRoot, 'public/apple-touch-icon.png'))
+      )
+    }
+  )
 
-  it.runIf(existsSync(serpBrandsJsonPath))('keeps the brands page data in parity with the serp project source JSON', () => {
-    const sourceBrands = JSON.parse(readFileSync(serpBrandsJsonPath, 'utf8'))
-    const localBrands = JSON.parse(readFileSync(localBrandsJsonPath, 'utf8'))
+  it.runIf(existsSync(serpBrandsJsonPath))(
+    'keeps the brands page data in parity with the serp project source JSON',
+    () => {
+      const sourceBrands = JSON.parse(readFileSync(serpBrandsJsonPath, 'utf8'))
+      const localBrands = JSON.parse(readFileSync(localBrandsJsonPath, 'utf8'))
 
-    expect(localBrands).toEqual(sourceBrands)
-  })
+      expect(localBrands).toEqual(sourceBrands)
+    }
+  )
 })

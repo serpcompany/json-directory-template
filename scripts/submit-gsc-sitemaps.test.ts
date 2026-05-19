@@ -1,5 +1,5 @@
-import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
 import { resolveCheckedInSiteConfig } from '@thedaviddias/site-contract'
+import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { getSitemapTargets, runSubmitGscSitemaps } from './submit-gsc-sitemaps.ts'
 
@@ -15,7 +15,7 @@ describe('getSitemapTargets', () => {
 
         return {
           domain: siteConfig.site.domain,
-          sitemapUrl: `${siteConfig.site.publicUrl}/sitemap-index.xml`,
+          sitemapUrl: `${siteConfig.site.publicUrl}/sitemap-index.xml`
         }
       })
     )
@@ -25,8 +25,8 @@ describe('getSitemapTargets', () => {
     expect(getSitemapTargets(['browserextensions.io'])).toEqual([
       {
         domain: 'browserextensions.io',
-        sitemapUrl: 'https://browserextensions.io/sitemap-index.xml',
-      },
+        sitemapUrl: 'https://browserextensions.io/sitemap-index.xml'
+      }
     ])
   })
 })
@@ -48,9 +48,7 @@ describe('runSubmitGscSitemaps', () => {
     await runSubmitGscSitemaps(['--dry-run'], {})
 
     expect(log).toHaveBeenCalledTimes(activeCheckedInSiteIds.length)
-    expect(log).toHaveBeenCalledWith(
-      'SUBMIT https://serp.co/ -> https://serp.co/sitemap-index.xml'
-    )
+    expect(log).toHaveBeenCalledWith('SUBMIT https://serp.co/ -> https://serp.co/sitemap-index.xml')
   })
 
   it('prints delete operations for stale sitemap URLs during dry-run', async () => {
@@ -61,7 +59,7 @@ describe('runSubmitGscSitemaps', () => {
         '--dry-run',
         '--no-submit',
         '--delete-sitemap',
-        'https://browserextensions.io/pages-sitemap.xml',
+        'https://browserextensions.io/pages-sitemap.xml'
       ],
       {}
     )
@@ -76,11 +74,11 @@ describe('runSubmitGscSitemaps', () => {
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       calls.push({
         method: init?.method ?? 'GET',
-        url,
+        url
       })
 
       return new Response('{}', {
-        status: 200,
+        status: 200
       })
     })
     vi.stubGlobal('fetch', fetchMock)
@@ -91,10 +89,10 @@ describe('runSubmitGscSitemaps', () => {
         '--site',
         'browserextensions.io',
         '--delete-sitemap',
-        'https://browserextensions.io/pages-sitemap.xml',
+        'https://browserextensions.io/pages-sitemap.xml'
       ],
       {
-        GSC_ACCESS_TOKEN: 'token',
+        GSC_ACCESS_TOKEN: 'token'
       }
     )
 
@@ -128,13 +126,13 @@ describe('runSubmitGscSitemaps', () => {
         '--site',
         'browserextensions.io',
         '--delete-sitemap',
-        'https://browserextensions.io/pages-sitemap.xml',
+        'https://browserextensions.io/pages-sitemap.xml'
       ],
       {
         GSC_ACCESS_TOKEN: 'token',
         GSC_SITE_URL_MAP: JSON.stringify({
-          'browserextensions.io': 'sc-domain:browserextensions.io',
-        }),
+          'browserextensions.io': 'sc-domain:browserextensions.io'
+        })
       }
     )
 
@@ -148,11 +146,11 @@ describe('runSubmitGscSitemaps', () => {
       vi.fn(async (url: string, init?: RequestInit) => {
         calls.push({
           method: init?.method ?? 'GET',
-          url,
+          url
         })
 
         return new Response('{}', {
-          status: init?.method === 'DELETE' ? 404 : 200,
+          status: init?.method === 'DELETE' ? 404 : 200
         })
       })
     )
@@ -163,10 +161,10 @@ describe('runSubmitGscSitemaps', () => {
         '--site',
         'browserextensions.io',
         '--delete-sitemap',
-        'https://browserextensions.io/pages-sitemap.xml',
+        'https://browserextensions.io/pages-sitemap.xml'
       ],
       {
-        GSC_ACCESS_TOKEN: 'token',
+        GSC_ACCESS_TOKEN: 'token'
       }
     )
 

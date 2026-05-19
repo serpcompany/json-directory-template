@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { writeSplitSitemaps } from './sitemap-files.ts'
@@ -157,7 +157,7 @@ describe('writeSplitSitemaps', () => {
     writeSplitSitemaps(artifactDir, {
       baseUrl: 'https://example.com',
       excludedPaths: ['/example-tool'],
-      listingBasePath: 'products',
+      listingBasePath: 'products'
     })
 
     const pagesSitemap = readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')
@@ -165,9 +165,7 @@ describe('writeSplitSitemaps', () => {
 
     expect(pagesSitemap).not.toContain('<loc>https://example.com/example-tool</loc>')
     expect(listingsSitemap).not.toContain('<loc>https://example.com/example-tool</loc>')
-    expect(listingsSitemap).toContain(
-      '<loc>https://example.com/products/example-tool/</loc>'
-    )
+    expect(listingsSitemap).toContain('<loc>https://example.com/products/example-tool/</loc>')
   })
 
   it('can emit configured sitemap paths and public URL shapes', () => {
@@ -187,7 +185,7 @@ describe('writeSplitSitemaps', () => {
 
     writeSplitSitemaps(artifactDir, {
       additionalPathsByGroup: {
-        taxonomies: ['/products/best/legacy-category'],
+        taxonomies: ['/products/best/legacy-category']
       },
       baseUrl: 'https://example.com',
       categoryBasePath: 'products/best',
@@ -198,25 +196,20 @@ describe('writeSplitSitemaps', () => {
         listings: '/sitemaps/directory/1.xml',
         pages: '/sitemaps/pages/1.xml',
         posts: '/sitemaps/blog/1.xml',
-        taxonomies: '/sitemaps/categories/1.xml',
+        taxonomies: '/sitemaps/categories/1.xml'
       },
-      staticPagePaths: ['/', '/contact', '/posts', '/submit'],
+      staticPagePaths: ['/', '/contact', '/posts', '/submit']
     })
 
     expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).toContain(
       '<loc>https://example.com/sitemaps/directory/1.xml</loc>'
     )
 
-    const listingsSitemap = readFileSync(
-      resolve(artifactDir, 'sitemaps/directory/1.xml'),
-      'utf8'
-    )
+    const listingsSitemap = readFileSync(resolve(artifactDir, 'sitemaps/directory/1.xml'), 'utf8')
     expect(listingsSitemap).toContain(
       '<loc>https://example.com/products/example-tool/reviews/</loc>'
     )
-    expect(listingsSitemap).not.toContain(
-      '<loc>https://example.com/products/example-tool</loc>'
-    )
+    expect(listingsSitemap).not.toContain('<loc>https://example.com/products/example-tool</loc>')
     expect(listingsSitemap).not.toContain(
       '<loc>https://example.com/products/best/video-downloaders/reviews/</loc>'
     )
@@ -237,9 +230,7 @@ describe('writeSplitSitemaps', () => {
     expect(taxonomiesSitemap).not.toContain(
       '<loc>https://example.com/categories/developer-tools</loc>'
     )
-    expect(taxonomiesSitemap).not.toContain(
-      '<loc>https://example.com/products/best/featured</loc>'
-    )
+    expect(taxonomiesSitemap).not.toContain('<loc>https://example.com/products/best/featured</loc>')
 
     const pagesSitemap = readFileSync(resolve(artifactDir, 'sitemaps/pages/1.xml'), 'utf8')
     expect(pagesSitemap).toContain('<loc>https://example.com/</loc>')
@@ -257,7 +248,7 @@ describe('writeSplitSitemaps', () => {
       writeSplitSitemaps(artifactDir, {
         baseUrl: 'https://example.com',
         listingBasePath: 'products',
-        staticPagePaths: ['/', '/missing-page'],
+        staticPagePaths: ['/', '/missing-page']
       })
     ).toThrow('staticPagePaths without route artifacts: /missing-page')
   })
@@ -270,10 +261,10 @@ describe('writeSplitSitemaps', () => {
     expect(() =>
       writeSplitSitemaps(artifactDir, {
         additionalPathsByGroup: {
-          taxonomies: ['/missing-category'],
+          taxonomies: ['/missing-category']
         },
         baseUrl: 'https://example.com',
-        listingBasePath: 'products',
+        listingBasePath: 'products'
       })
     ).toThrow('additionalPathsByGroup without route artifacts: taxonomies:/missing-category')
   })

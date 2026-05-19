@@ -2,8 +2,8 @@ import { createSign } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
 import { resolveCheckedInSiteConfig } from '@thedaviddias/site-contract'
+import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
 
 type ServiceAccount = {
   client_email: string
@@ -325,9 +325,7 @@ const invokedAsScript = process.argv.some(arg => {
   )
 })
 const invokedAsCommonJsScript =
-  typeof require !== 'undefined' &&
-  typeof module !== 'undefined' &&
-  require.main === module
+  typeof require !== 'undefined' && typeof module !== 'undefined' && require.main === module
 
 if (invokedAsScript || invokedAsCommonJsScript) {
   runSubmitGscSitemaps().catch(error => {

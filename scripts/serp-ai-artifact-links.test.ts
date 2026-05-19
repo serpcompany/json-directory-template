@@ -4,10 +4,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 
 const artifactRoot = resolve(process.cwd(), 'dist/sites/serp.ai')
 const serpBrandsJsonPath = '/Users/devin/dev/repos/serp/docs/websites/pages/brands.json'
-const localBrandsJsonPath = resolve(
-  process.cwd(),
-  'packages/web-core/src/data/network-brands.json'
-)
+const localBrandsJsonPath = resolve(process.cwd(), 'packages/web-core/src/data/network-brands.json')
 
 const liveCategoryPaths = [
   '/products/best/adult/',
@@ -24,7 +21,7 @@ const liveCategoryPaths = [
   '/products/best/movies-tv/',
   '/products/best/social-media/',
   '/products/best/social-media-downloaders/',
-  '/products/best/video-downloaders/',
+  '/products/best/video-downloaders/'
 ]
 
 function readArtifactHtml(relativePath: string): string {
@@ -90,12 +87,7 @@ describe('serp.ai artifact links', () => {
         const href = match[1] ?? ''
         const marker = match[2] ?? ''
 
-        if (
-          href !== '/' &&
-          !href.endsWith('/') &&
-          !href.includes('.') &&
-          marker !== '#'
-        ) {
+        if (href !== '/' && !href.endsWith('/') && !href.includes('.') && marker !== '#') {
           badLinks.push(`${filePath.replace(`${artifactRoot}/`, '')}: ${href}`)
         }
       }
@@ -108,7 +100,7 @@ describe('serp.ai artifact links', () => {
     const sitemapPaths = [
       'sitemaps/pages/1.xml',
       'sitemaps/categories/1.xml',
-      'sitemaps/directory/1.xml',
+      'sitemaps/directory/1.xml'
     ]
     const nonTrailingFinalUrls = sitemapPaths.flatMap(relativePath =>
       readSitemapLocs(relativePath).filter(url => !url.endsWith('/'))
@@ -118,7 +110,7 @@ describe('serp.ai artifact links', () => {
     expect(readSitemapLocs('sitemap-index.xml')).toEqual([
       'https://serp.ai/sitemaps/pages/1.xml',
       'https://serp.ai/sitemaps/categories/1.xml',
-      'https://serp.ai/sitemaps/directory/1.xml',
+      'https://serp.ai/sitemaps/directory/1.xml'
     ])
   })
 
@@ -164,10 +156,13 @@ describe('serp.ai artifact links', () => {
     expect(badSearchIndexEntries).toEqual([])
   })
 
-  it.runIf(existsSync(serpBrandsJsonPath))('keeps the brands page data in parity with the serp project source JSON', () => {
-    const sourceBrands = JSON.parse(readFileSync(serpBrandsJsonPath, 'utf8'))
-    const localBrands = JSON.parse(readFileSync(localBrandsJsonPath, 'utf8'))
+  it.runIf(existsSync(serpBrandsJsonPath))(
+    'keeps the brands page data in parity with the serp project source JSON',
+    () => {
+      const sourceBrands = JSON.parse(readFileSync(serpBrandsJsonPath, 'utf8'))
+      const localBrands = JSON.parse(readFileSync(localBrandsJsonPath, 'utf8'))
 
-    expect(localBrands).toEqual(sourceBrands)
-  })
+      expect(localBrands).toEqual(sourceBrands)
+    }
+  )
 })

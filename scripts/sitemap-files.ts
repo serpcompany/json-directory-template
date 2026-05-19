@@ -79,9 +79,7 @@ function buildUrl(
 ): string {
   const normalizedBaseUrl = normalizeBaseUrl(baseUrl)
   const normalizedPath = options.trailingSlash ? withTrailingSlash(path) : path
-  return normalizedPath === '/'
-    ? `${normalizedBaseUrl}/`
-    : `${normalizedBaseUrl}${normalizedPath}`
+  return normalizedPath === '/' ? `${normalizedBaseUrl}/` : `${normalizedBaseUrl}${normalizedPath}`
 }
 
 function appendPathSegment(path: string, segment: string | undefined): string {
@@ -128,8 +126,8 @@ function buildUrlSetXml(baseUrl: string, paths: string[]): string {
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...paths.map(path =>
-      `<url><loc>${escapeXml(buildUrl(baseUrl, path, { trailingSlash: true }))}</loc></url>`
+    ...paths.map(
+      path => `<url><loc>${escapeXml(buildUrl(baseUrl, path, { trailingSlash: true }))}</loc></url>`
     ),
     '</urlset>'
   ].join('')
@@ -139,8 +137,8 @@ function buildSitemapIndexXml(baseUrl: string, sitemapPaths: string[]): string {
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...sitemapPaths.map(path =>
-      `<sitemap><loc>${escapeXml(buildUrl(baseUrl, path))}</loc></sitemap>`
+    ...sitemapPaths.map(
+      path => `<sitemap><loc>${escapeXml(buildUrl(baseUrl, path))}</loc></sitemap>`
     ),
     '</sitemapindex>'
   ].join('')
@@ -211,22 +209,20 @@ function validateConfiguredSitemapRoutePaths(
     .map(path => normalizeArtifactPath(path))
     .filter(path => !artifactRouteExists(artifactDir, path))
 
-  const missingAdditionalPaths = Object.entries(
-    options.additionalPathsByGroup ?? {}
-  ).flatMap(([group, paths]) =>
-    (paths ?? [])
-      .map(path => normalizeArtifactPath(path))
-      .filter(path => !artifactRouteExists(artifactDir, path))
-      .map(path => `${group}:${path}`)
+  const missingAdditionalPaths = Object.entries(options.additionalPathsByGroup ?? {}).flatMap(
+    ([group, paths]) =>
+      (paths ?? [])
+        .map(path => normalizeArtifactPath(path))
+        .filter(path => !artifactRouteExists(artifactDir, path))
+        .map(path => `${group}:${path}`)
   )
 
-  const excludedAdditionalPaths = Object.entries(
-    options.additionalPathsByGroup ?? {}
-  ).flatMap(([group, paths]) =>
-    (paths ?? [])
-      .map(path => normalizeArtifactPath(path))
-      .filter(path => options.excludedPaths.has(path))
-      .map(path => `${group}:${path}`)
+  const excludedAdditionalPaths = Object.entries(options.additionalPathsByGroup ?? {}).flatMap(
+    ([group, paths]) =>
+      (paths ?? [])
+        .map(path => normalizeArtifactPath(path))
+        .filter(path => options.excludedPaths.has(path))
+        .map(path => `${group}:${path}`)
   )
 
   const failures = [
@@ -238,7 +234,7 @@ function validateConfiguredSitemapRoutePaths(
       : null,
     excludedAdditionalPaths.length > 0
       ? `additionalPathsByGroup entries also excluded from sitemaps: ${excludedAdditionalPaths.join(', ')}`
-      : null,
+      : null
   ].filter((failure): failure is string => failure !== null)
 
   if (failures.length > 0) {
@@ -330,7 +326,7 @@ function groupArtifactPaths(
     { key: 'listings', name: 'listings-sitemap', paths: sortPaths(listings) },
     { key: 'taxonomies', name: 'taxonomies-sitemap', paths: sortPaths(taxonomies) },
     { key: 'docs', name: 'docs-sitemap', paths: sortPaths(docs) },
-    { key: 'posts', name: 'posts-sitemap', paths: sortPaths(posts) },
+    { key: 'posts', name: 'posts-sitemap', paths: sortPaths(posts) }
   ]
 }
 
@@ -357,8 +353,7 @@ function writeGroupSitemaps(
   const sitemapIndexEntries: string[] = []
 
   pagePaths.forEach((paths, index) => {
-    const fileName =
-      pagePaths.length === 1 ? `${group.name}.xml` : `${group.name}-${index}.xml`
+    const fileName = pagePaths.length === 1 ? `${group.name}.xml` : `${group.name}-${index}.xml`
     writeFileSync(resolve(artifactDir, fileName), buildUrlSetXml(baseUrl, paths))
     sitemapIndexEntries.push(`/${fileName}`)
   })
@@ -376,10 +371,7 @@ function writeGroupSitemaps(
   return `/${indexFileName}`
 }
 
-export function writeSplitSitemaps(
-  artifactDir: string,
-  options: WriteSplitSitemapsOptions
-): void {
+export function writeSplitSitemaps(artifactDir: string, options: WriteSplitSitemapsOptions): void {
   const pageSize = options.pageSize ?? SITEMAP_PAGE_SIZE
   const excludedPaths = new Set(
     (options.excludedPaths ?? []).map(path => normalizeArtifactPath(path))
@@ -387,7 +379,7 @@ export function writeSplitSitemaps(
   validateConfiguredSitemapRoutePaths(artifactDir, {
     additionalPathsByGroup: options.additionalPathsByGroup,
     excludedPaths,
-    staticPagePaths: options.staticPagePaths,
+    staticPagePaths: options.staticPagePaths
   })
   const includedPaths = new Set(
     (options.staticPagePaths ?? []).map(path => normalizeArtifactPath(path))
@@ -399,15 +391,15 @@ export function writeSplitSitemaps(
     categoryBasePath: options.categoryBasePath,
     listingBasePath: options.listingBasePath.replace(/^\/+|\/+$/g, ''),
     listingDetailSuffix: options.listingDetailSuffix,
-    staticPagePaths: options.staticPagePaths,
+    staticPagePaths: options.staticPagePaths
   }).map(group => ({
     ...group,
     paths: sortPaths([
       ...group.paths,
       ...(options.additionalPathsByGroup?.[group.key] ?? []).map(path =>
         normalizeArtifactPath(path)
-      ),
-    ]).filter(path => !excludedPaths.has(path)),
+      )
+    ]).filter(path => !excludedPaths.has(path))
   }))
   const indexOrder = options.indexGroupOrder
     ? new Map(options.indexGroupOrder.map((key, index) => [key, index]))

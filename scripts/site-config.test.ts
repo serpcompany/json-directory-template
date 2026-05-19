@@ -1,6 +1,6 @@
+import { resolveCheckedInSiteCategories } from '@thedaviddias/site-contract/categories'
 import { describe, expect, it } from 'vitest'
 import { ZodError } from 'zod'
-import { resolveCheckedInSiteCategories } from '@thedaviddias/site-contract/categories'
 import { defaultSiteConfig } from '../sites/site-config.default.ts'
 import {
   buildSiteEnvironment,
@@ -497,8 +497,7 @@ describe('validateCheckedInSiteConfig', () => {
     expect((error as ZodError).issues).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message:
-            'GitHub issue target fields must either all be configured or all be null.',
+          message: 'GitHub issue target fields must either all be configured or all be null.',
           path: ['social', 'githubIssueOwner']
         })
       ])
