@@ -4,9 +4,9 @@
  */
 
 import { jest } from '@jest/globals'
+import { FavoritesProvider } from '@thedaviddias/web-core/root-shell-client'
 import { render } from '@/__tests__/utils/test-utils.helper'
 import NotFound from '@/app/not-found'
-import { FavoritesProvider } from '@thedaviddias/web-core/root-shell-client'
 
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
@@ -159,7 +159,9 @@ describe('Basic Component Rendering', () => {
     })
 
     it('should render NewsletterSection component', async () => {
-      const { NewsletterSection } = await import('@thedaviddias/web-core/sections/newsletter-section')
+      const { NewsletterSection } = await import(
+        '@thedaviddias/web-core/sections/newsletter-section'
+      )
       const { container } = render(<NewsletterSection />)
       expect(container).toBeInTheDocument()
     })
@@ -187,16 +189,16 @@ describe('Basic Component Rendering', () => {
       const result = getRoute('home')
       expect(typeof result).toBe('string')
       expect(result).toBe('/')
-      expect(getRoute('listing.list')).toBe('/listing')
-      expect(getRoute('listing.detail', { slug: 'example' })).toBe('/listing/example')
-      expect(getRoute('docs.list')).toBe('/docs')
-      expect(getRoute('docs.doc', { slug: 'getting-started' })).toBe('/docs/getting-started')
-      expect(getRoute('guides.list')).toBe('/posts')
-      expect(getRoute('guides.guide', { slug: 'launch-notes' })).toBe('/posts/launch-notes')
+      expect(getRoute('listing.list')).toBe('/listing/')
+      expect(getRoute('listing.detail', { slug: 'example' })).toBe('/listing/example/')
+      expect(getRoute('docs.list')).toBe('/docs/')
+      expect(getRoute('docs.doc', { slug: 'getting-started' })).toBe('/docs/getting-started/')
+      expect(getRoute('guides.list')).toBe('/posts/')
+      expect(getRoute('guides.guide', { slug: 'launch-notes' })).toBe('/posts/launch-notes/')
       expect(getRoute('category.page', { category: 'developer-tools' })).toBe(
-        '/categories/developer-tools'
+        '/categories/developer-tools/'
       )
-      expect(getRoute('projects')).toBe('/network')
+      expect(getRoute('projects')).toBe('/network/')
     })
 
     it('should export categories data', async () => {
@@ -209,7 +211,7 @@ describe('Basic Component Rendering', () => {
 
 describe('Metadata and SEO', () => {
   it('should export generateBaseMetadata function', async () => {
-      const { generateBaseMetadata } = await import('@thedaviddias/web-core/seo-config')
+    const { generateBaseMetadata } = await import('@thedaviddias/web-core/seo-config')
     expect(typeof generateBaseMetadata).toBe('function')
 
     const metadata = generateBaseMetadata({

@@ -9,12 +9,12 @@ jest.mock('remark-gfm', () => jest.fn())
 const mockRenderDocsIndexPage = jest.fn(() => <div data-testid="docs-index-page" />)
 const mockGenerateDocsIndexMetadata = jest.fn(() => ({
   description: 'mock docs metadata',
-  title: 'mock docs title',
+  title: 'mock docs title'
 }))
 
 jest.mock('@thedaviddias/web-core/docs/index-page', () => ({
   DocsIndexPage: (props: unknown) => mockRenderDocsIndexPage(props),
-  generateDocsIndexMetadata: (...args: unknown[]) => mockGenerateDocsIndexMetadata(...args),
+  generateDocsIndexMetadata: (...args: unknown[]) => mockGenerateDocsIndexMetadata(...args)
 }))
 
 const mockNotFound = jest.fn()
@@ -33,6 +33,7 @@ const mockSiteConfig = {
     },
     submitLabel: 'Submit a Listing'
   },
+  brandsRouteBasePath: 'brands',
   description: 'Curated directory of listings and resources.',
   docsRouteBasePath: 'docs',
   features: {
@@ -42,6 +43,11 @@ const mockSiteConfig = {
   name: 'Directory Starter',
   networkRouteBasePath: 'network',
   publicUrl: 'https://example.com',
+  sitemap: {
+    categoryBasePath: 'categories',
+    listingDetailSuffix: undefined,
+    staticPagePaths: []
+  },
   tagline: 'Discover listings and resources',
   twitterUrl: 'https://x.com/serpcompany'
 }
@@ -89,7 +95,7 @@ describe('DocsPage', () => {
     expect(mockGenerateDocsIndexMetadata).toHaveBeenCalled()
     expect(metadata).toEqual({
       description: 'mock docs metadata',
-      title: 'mock docs title',
+      title: 'mock docs title'
     })
   })
 

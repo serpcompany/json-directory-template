@@ -28,6 +28,11 @@ const mockSiteConfig = {
   name: 'Directory Starter',
   networkRouteBasePath: 'network',
   publicUrl: 'https://example.com',
+  sitemap: {
+    categoryBasePath: 'categories',
+    listingDetailSuffix: undefined,
+    staticPagePaths: []
+  },
   site: 'Directory Starter',
   tagline: 'Discover listings and resources',
   twitterUrl: 'https://x.com/serpcompany',
@@ -36,6 +41,7 @@ const mockSiteConfig = {
 
 jest.mock('@thedaviddias/web-core/site-config', () => ({
   getTwitterHandleFromUrl: jest.fn(() => '@serpcompany'),
+  hasConfiguredGitHubIssueTarget: jest.fn(() => true),
   hasConfiguredPublicSocialLinks: jest.fn(() => true),
   siteConfig: mockSiteConfig
 }))
@@ -80,7 +86,9 @@ describe('ProjectsPage', () => {
     render(<ProjectsPage />)
 
     expect(
-      screen.getByRole('heading', { name: new RegExp(`^${mockSiteConfig.copy.networkLabel}$`, 'i') })
+      screen.getByRole('heading', {
+        name: new RegExp(`^${mockSiteConfig.copy.networkLabel}$`, 'i')
+      })
     ).toBeInTheDocument()
     expect(
       screen.getByText(/browse linked brands, repositories, partner sites, and related resources/i)

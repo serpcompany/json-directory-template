@@ -23,6 +23,11 @@ const mockSiteConfig = {
   name: 'Directory Starter',
   networkRouteBasePath: 'network',
   publicUrl: 'https://example.com',
+  sitemap: {
+    categoryBasePath: 'categories',
+    listingDetailSuffix: undefined,
+    staticPagePaths: []
+  },
   tagline: 'Discover listings and resources',
   twitterUrl: 'https://x.com/serpcompany'
 }

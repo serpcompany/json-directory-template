@@ -25,6 +25,11 @@ const mockSiteConfig = {
   name: 'Directory Starter',
   networkRouteBasePath: 'network',
   publicUrl: 'https://example.com',
+  sitemap: {
+    categoryBasePath: 'categories',
+    listingDetailSuffix: undefined,
+    staticPagePaths: []
+  },
   tagline: 'Discover listings and resources',
   twitterUrl: 'https://x.com/serpcompany'
 }
@@ -81,7 +86,9 @@ describe('LoginPage', () => {
 
     render(page)
 
-    expect(screen.getByRole('heading', { level: 1, name: /sign up \/ sign in/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 1, name: /sign up \/ sign in/i })
+    ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /continue with github/i })).toBeInTheDocument()
   })
 })

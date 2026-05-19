@@ -64,7 +64,8 @@ const config: Config.InitialOptions = {
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/.next/',
-    '<rootDir>/__tests__/mocks/',
+    '<rootDir>/_archive/',
+    '<rootDir>/__tests__/mocks/'
   ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module

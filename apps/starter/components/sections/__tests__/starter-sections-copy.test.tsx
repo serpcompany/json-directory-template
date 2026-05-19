@@ -1,8 +1,8 @@
-import { render, screen } from '@/test/test-utils'
+import { hasConfiguredPublicSocialLinks, siteConfig } from '@thedaviddias/web-core/site-config'
 import { CommunitiesSection } from '@/components/sections/communities-section'
 import { HowItWorksSection } from '@/components/sections/how-it-works-section'
 import { TestimonialsSection } from '@/components/sections/testimonials-section'
-import { siteConfig } from '@thedaviddias/web-core/site-config'
+import { render, screen } from '@/test/test-utils'
 
 describe('starter section copy', () => {
   it('uses neutral directory copy in the how-it-works section', () => {
@@ -13,21 +13,11 @@ describe('starter section copy', () => {
     expect(screen.queryByText(/llms\.txt/i)).not.toBeInTheDocument()
   })
 
-  it('uses configured social links without hardcoded linkedin community links', () => {
-    render(<CommunitiesSection />)
+  it('does not render default placeholder social or hardcoded linkedin community links', () => {
+    const { container } = render(<CommunitiesSection />)
 
-    expect(screen.getByRole('heading', { name: /^reddit$/i }).closest('a')).toHaveAttribute(
-      'href',
-      siteConfig.redditUrl
-    )
-    expect(screen.getByRole('heading', { name: /^x$/i }).closest('a')).toHaveAttribute(
-      'href',
-      siteConfig.twitterUrl
-    )
-    expect(screen.getByRole('heading', { name: /^github$/i }).closest('a')).toHaveAttribute(
-      'href',
-      siteConfig.githubRepoUrl
-    )
+    expect(hasConfiguredPublicSocialLinks(siteConfig)).toBe(false)
+    expect(container.firstChild).toBeNull()
     expect(screen.queryByRole('heading', { name: /linkedin/i })).not.toBeInTheDocument()
   })
 

@@ -1,4 +1,8 @@
-import { categories, normalizeCategorySlug, resolveCategories } from '@thedaviddias/web-core/categories'
+import {
+  categories,
+  normalizeCategorySlug,
+  resolveCategories
+} from '@thedaviddias/web-core/categories'
 
 describe('normalizeCategorySlug', () => {
   it('maps legacy aliases to the active category slug', () => {
@@ -31,7 +35,7 @@ describe('categories', () => {
   })
 
   it('rejects removed site ids when resolving categories', () => {
-    for (const siteId of ['serp.co', 'serp.software']) {
+    for (const siteId of ['extensions.serp.co']) {
       expect(() => resolveCategories(siteId)).toThrow(
         `Site "${siteId}" was removed from this repo. Use a supported checked-in site id instead.`
       )

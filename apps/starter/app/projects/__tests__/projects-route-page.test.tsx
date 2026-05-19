@@ -5,21 +5,21 @@ const mockSiteConfig = {
     appleTouchIconUrl: 'https://example.com/apple-touch-icon.png',
     faviconUrl: 'https://example.com/favicon.ico',
     logoUrl: 'https://example.com/logo.png',
-    ogImageUrl: 'https://example.com/opengraph-image.png',
+    ogImageUrl: 'https://example.com/opengraph-image.png'
   },
   copy: {
     listingName: {
       plural: 'listings',
-      singular: 'listing',
+      singular: 'listing'
     },
     networkLabel: 'Network',
-    submitLabel: 'Submit a Listing',
+    submitLabel: 'Submit a Listing'
   },
   brandsRouteBasePath: 'brands',
   description: 'Curated directory of listings and resources.',
   docsRouteBasePath: 'docs',
   features: {
-    showProjects: true,
+    showProjects: true
   },
   githubRepoUrl: 'https://github.com/serpcompany/json-directory-template',
   githubIssuesUrl: 'https://github.com/serpcompany/json-directory-template/issues',
@@ -28,19 +28,25 @@ const mockSiteConfig = {
   name: 'Directory Starter',
   networkRouteBasePath: 'network',
   publicUrl: 'https://example.com',
+  sitemap: {
+    categoryBasePath: 'categories',
+    listingDetailSuffix: undefined,
+    staticPagePaths: []
+  },
   site: 'Directory Starter',
   tagline: 'Discover listings and resources',
-  twitterUrl: 'https://x.com/serpcompany',
+  twitterUrl: 'https://x.com/serpcompany'
 }
 
 jest.mock('@thedaviddias/web-core/site-config', () => ({
   getTwitterHandleFromUrl: jest.fn(() => '@serpcompany'),
+  hasConfiguredGitHubIssueTarget: jest.fn(() => true),
   hasConfiguredPublicSocialLinks: jest.fn(() => true),
-  siteConfig: mockSiteConfig,
+  siteConfig: mockSiteConfig
 }))
 
 jest.mock('@thedaviddias/design-system/breadcrumb', () => ({
-  Breadcrumb: () => <nav aria-label="breadcrumb" />,
+  Breadcrumb: () => <nav aria-label="breadcrumb" />
 }))
 
 describe('ProjectsPageRoute', () => {
@@ -61,7 +67,7 @@ describe('ProjectsPageRoute', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: new RegExp(`^${mockSiteConfig.copy.networkLabel}$`, 'i'),
+        name: new RegExp(`^${mockSiteConfig.copy.networkLabel}$`, 'i')
       })
     ).toBeInTheDocument()
     expect(
