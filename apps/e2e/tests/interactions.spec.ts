@@ -1,16 +1,24 @@
 import { expect, test } from '@playwright/test'
 
+const searchResultName = /123Movies(?: Video)? Downloader/i
+
 test.describe('User Interactions', () => {
-  test('search functionality should work from the homepage', async ({ page }) => {
+  test('search functionality should work from the homepage', async ({ page }, testInfo) => {
     await page.goto('/')
+
+    if (testInfo.project.name === 'mobile') {
+      const searchTrigger = page.getByRole('button', { name: 'Toggle search' })
+      if (await searchTrigger.isVisible()) {
+        await searchTrigger.click()
+      }
+    }
 
     const searchInput = page.getByRole('textbox').first()
     await searchInput.fill('123movies')
-    await searchInput.press('Enter')
 
-    await page.waitForURL(/\/search\/?\?.+/)
+    await Promise.all([page.waitForURL(/\/search\/?\?.+/), searchInput.press('Enter')])
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-    await expect(page.getByRole('link', { name: /123Movies Downloader/i })).toBeVisible()
+    await expect(page.getByRole('link', { name: searchResultName })).toBeVisible()
   })
 
   test('listing detail pages should allow local favorite toggles', async ({ page }) => {

@@ -6,7 +6,7 @@ const detailListing = {
 } as const
 
 const searchListing = {
-  name: '123Movies Downloader',
+  name: /123Movies(?: Video)? Downloader/i,
   query: '123movies'
 } as const
 
@@ -101,9 +101,7 @@ test.describe('Search and Navigation', () => {
     if (testInfo.project.name !== 'mobile') {
       await expect(page.getByRole('textbox').first()).toBeVisible()
     }
-    await expect(
-      page.getByRole('link', { name: new RegExp(searchListing.name, 'i') })
-    ).toBeVisible()
+    await expect(page.getByRole('link', { name: searchListing.name })).toBeVisible()
   })
 
   test('primary navigation links should work correctly', async ({ page }) => {
