@@ -110,6 +110,14 @@ describe('browserextensions.io artifact links', () => {
     ])
   })
 
+  it('does not emit duplicate legacy root sitemap files', () => {
+    expect(existsSync(join(artifactRoot, 'pages-sitemap.xml'))).toBe(false)
+    expect(existsSync(join(artifactRoot, 'listings-sitemap.xml'))).toBe(false)
+    expect(existsSync(join(artifactRoot, 'taxonomies-sitemap.xml'))).toBe(false)
+    expect(existsSync(join(artifactRoot, 'docs-sitemap.xml'))).toBe(false)
+    expect(existsSync(join(artifactRoot, 'posts-sitemap.xml'))).toBe(false)
+  })
+
   it('renders all configured social links and includes them in website schema', () => {
     const html = readArtifactHtml('index.html')
 

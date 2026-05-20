@@ -1,3 +1,7 @@
-export { GET } from '../../../pages-sitemap.xml/route'
+import { createPagesSitemapResponse } from '@thedaviddias/web-core/sitemaps'
 
 export const dynamic = 'force-static'
+
+export async function GET(): Promise<Response> {
+  return createPagesSitemapResponse()
+}

@@ -89,6 +89,31 @@ describe('auditArtifactSitemaps', () => {
     expect(audit.issues).toEqual([])
   })
 
+  it('reports unreferenced sitemap files left in the artifact', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    writeSitemapShellFiles(artifactDir)
+    writeFile(
+      resolve(artifactDir, 'sitemaps/pages/1.xml'),
+      '<urlset><url><loc>https://example.com/</loc></url></urlset>'
+    )
+    writeFile(
+      resolve(artifactDir, 'pages-sitemap.xml'),
+      '<urlset><url><loc>https://example.com/</loc></url></urlset>'
+    )
+    writeFile(resolve(artifactDir, 'index.html'))
+
+    const audit = auditArtifactSitemaps(makeSiteConfig(artifactDir))
+
+    expect(audit.issues).toContainEqual(
+      expect.objectContaining({
+        message: 'Unreferenced sitemap file is present in artifact.',
+        severity: 'error',
+        sitemapUrl: 'https://example.com/pages-sitemap.xml'
+      })
+    )
+  })
+
   it('reports missing child sitemap files from the sitemap index', () => {
     const artifactDir = makeTempArtifactDir()
 

@@ -84,10 +84,8 @@ describe('serp.co artifact links', () => {
     const html = readRouteIndex('/products/best/featured')
     const linkedFeaturedSlugs = [
       ...new Set(
-        [...html.matchAll(/href="\/products\/([^"/]+)\/reviews\/"/g)].map(
-          match => match[1] ?? ''
-        )
-      ),
+        [...html.matchAll(/href="\/products\/([^"/]+)\/reviews\/"/g)].map(match => match[1] ?? '')
+      )
     ].sort()
 
     expect(expectedFeaturedSlugs.length).toBeGreaterThan(8)
@@ -114,12 +112,7 @@ describe('serp.co artifact links', () => {
         const href = match[1] ?? ''
         const marker = match[2] ?? ''
 
-        if (
-          href !== '/' &&
-          !href.endsWith('/') &&
-          !href.includes('.') &&
-          marker !== '#'
-        ) {
+        if (href !== '/' && !href.endsWith('/') && !href.includes('.') && marker !== '#') {
           badLinks.push(`${filePath.replace(`${artifactRoot}/`, '')}: ${href}`)
         }
       }
@@ -202,14 +195,10 @@ describe('serp.co artifact links', () => {
     }
 
     expect(
-      [...badTargets.entries()]
-        .map(([target, source]) => `${target} from ${source}`)
-        .sort()
+      [...badTargets.entries()].map(([target, source]) => `${target} from ${source}`).sort()
     ).toEqual([])
     expect(
-      [...shellTargets.entries()]
-        .map(([target, source]) => `${target} from ${source}`)
-        .sort()
+      [...shellTargets.entries()].map(([target, source]) => `${target} from ${source}`).sort()
     ).toEqual([])
   })
 
@@ -218,7 +207,7 @@ describe('serp.co artifact links', () => {
       'sitemaps/pages/1.xml',
       'sitemaps/blog/1.xml',
       'sitemaps/categories/1.xml',
-      'sitemaps/directory/1.xml',
+      'sitemaps/directory/1.xml'
     ]
     const nonTrailingFinalUrls = sitemapPaths.flatMap(relativePath =>
       readSitemapLocs(relativePath).filter(url => !url.endsWith('/'))
@@ -233,7 +222,7 @@ describe('serp.co artifact links', () => {
       'https://serp.co/sitemaps/pages/1.xml',
       'https://serp.co/sitemaps/directory/1.xml',
       'https://serp.co/sitemaps/categories/1.xml',
-      'https://serp.co/sitemaps/blog/1.xml',
+      'https://serp.co/sitemaps/blog/1.xml'
     ])
   })
 
@@ -242,7 +231,7 @@ describe('serp.co artifact links', () => {
       'sitemaps/pages/1.xml',
       'sitemaps/blog/1.xml',
       'sitemaps/categories/1.xml',
-      'sitemaps/directory/1.xml',
+      'sitemaps/directory/1.xml'
     ]
     const badTargets = sitemapPaths.flatMap(relativePath =>
       readSitemapLocs(relativePath)
@@ -252,6 +241,14 @@ describe('serp.co artifact links', () => {
     )
 
     expect(badTargets).toEqual([])
+  })
+
+  it('does not emit duplicate legacy root sitemap files', () => {
+    expect(existsSync(join(artifactRoot, 'pages-sitemap.xml'))).toBe(false)
+    expect(existsSync(join(artifactRoot, 'listings-sitemap.xml'))).toBe(false)
+    expect(existsSync(join(artifactRoot, 'taxonomies-sitemap.xml'))).toBe(false)
+    expect(existsSync(join(artifactRoot, 'docs-sitemap.xml'))).toBe(false)
+    expect(existsSync(join(artifactRoot, 'posts-sitemap.xml'))).toBe(false)
   })
 
   it('renders schema.org data on product, category, brands, and homepage surfaces', () => {
@@ -283,8 +280,9 @@ describe('serp.co artifact links', () => {
     const searchIndex = JSON.parse(
       readFileSync(join(artifactRoot, 'search/search-index.json'), 'utf8')
     ) as Array<{ categories?: string[]; category?: string; slug: string; website: string }>
-    const downloaderEntries = searchIndex.filter(entry =>
-      entry.categories?.includes('video-downloaders') || entry.category === 'video-downloaders'
+    const downloaderEntries = searchIndex.filter(
+      entry =>
+        entry.categories?.includes('video-downloaders') || entry.category === 'video-downloaders'
     )
     const badDownloaderEntries = downloaderEntries
       .filter(entry => !entry.website.startsWith('https://serp.ly/'))

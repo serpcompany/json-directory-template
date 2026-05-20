@@ -1,5 +1,5 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { resolveCheckedInSiteConfig } from '@thedaviddias/site-contract'
 import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
@@ -50,6 +50,14 @@ type CliOptions = {
 
 const DEFAULT_TIMEOUT_MS = 10_000
 const SITEMAP_INDEX_PATH = '/sitemap-index.xml'
+const SITEMAP_COMPATIBILITY_PATH = '/sitemap.xml'
+const LEGACY_GROUP_SITEMAP_PATHS = [
+  '/pages-sitemap.xml',
+  '/listings-sitemap.xml',
+  '/taxonomies-sitemap.xml',
+  '/docs-sitemap.xml',
+  '/posts-sitemap.xml'
+] as const
 
 function escapeMarkdownCell(value: string): string {
   return value.replaceAll('|', '\\|').replaceAll('\n', '<br>')
@@ -130,6 +138,42 @@ function artifactFilePathForUrl(artifactDir: string, url: string): string | null
 
   const normalizedPath = normalizePath(parsedUrl.pathname)
   return resolve(artifactDir, normalizedPath.slice(1))
+}
+
+function publicPathForArtifactFile(artifactDir: string, filePath: string): string {
+  return normalizePath(filePath.slice(artifactDir.length + 1).replaceAll('\\', '/'))
+}
+
+function isSitemapArtifactPath(publicPath: string): boolean {
+  const normalizedPath = normalizePath(publicPath)
+  const fileName = normalizedPath.split('/').at(-1) ?? ''
+
+  return (
+    normalizedPath === SITEMAP_INDEX_PATH ||
+    normalizedPath === SITEMAP_COMPATIBILITY_PATH ||
+    normalizedPath.startsWith('/sitemaps/') ||
+    (fileName.includes('sitemap') && fileName.endsWith('.xml'))
+  )
+}
+
+function listSitemapArtifactPaths(artifactDir: string, currentDir = artifactDir): string[] {
+  const sitemapPaths: string[] = []
+
+  for (const entry of readdirSync(currentDir, { withFileTypes: true })) {
+    const entryPath = join(currentDir, entry.name)
+
+    if (entry.isDirectory()) {
+      sitemapPaths.push(...listSitemapArtifactPaths(artifactDir, entryPath))
+      continue
+    }
+
+    const publicPath = publicPathForArtifactFile(artifactDir, entryPath)
+    if (isSitemapArtifactPath(publicPath)) {
+      sitemapPaths.push(publicPath)
+    }
+  }
+
+  return sitemapPaths
 }
 
 function artifactRouteIndexPathForUrl(artifactDir: string, url: string): string | null {
@@ -368,6 +412,26 @@ function validateArtifactCompatibilitySitemap(
   }
 }
 
+function validateArtifactUnreferencedSitemapFiles(
+  audit: SitemapSiteAudit,
+  siteConfig: CheckedInSiteConfig,
+  referencedSitemapUrls: Set<string>
+): void {
+  const allowedSitemapUrls = new Set([
+    ...referencedSitemapUrls,
+    toAbsoluteUrl(siteConfig.site.publicUrl, SITEMAP_COMPATIBILITY_PATH)
+  ])
+
+  for (const publicPath of listSitemapArtifactPaths(audit.artifactDir ?? '')) {
+    const sitemapUrl = toAbsoluteUrl(siteConfig.site.publicUrl, publicPath)
+    if (!allowedSitemapUrls.has(sitemapUrl)) {
+      addIssue(audit, 'error', 'Unreferenced sitemap file is present in artifact.', {
+        sitemapUrl
+      })
+    }
+  }
+}
+
 export function auditArtifactSitemaps(siteConfig: CheckedInSiteConfig): SitemapSiteAudit {
   const artifactDir = resolve(process.cwd(), siteConfig.build.artifactDir)
   const audit: SitemapSiteAudit = {
@@ -388,15 +452,18 @@ export function auditArtifactSitemaps(siteConfig: CheckedInSiteConfig): SitemapS
     return audit
   }
 
+  const referencedSitemaps = new Set<string>()
+
   validateArtifactRobots(audit, siteConfig)
   validateArtifactCompatibilitySitemap(audit, siteConfig)
   auditArtifactSitemapFile(
     audit,
     siteConfig,
     audit.sitemapIndexUrl,
-    new Set<string>(),
+    referencedSitemaps,
     new Set<string>()
   )
+  validateArtifactUnreferencedSitemapFiles(audit, siteConfig, referencedSitemaps)
 
   return audit
 }
@@ -657,6 +724,32 @@ async function validateLiveCompatibilitySitemap(
   }
 }
 
+async function validateLiveKnownUnreferencedSitemapFiles(
+  audit: SitemapSiteAudit,
+  siteConfig: CheckedInSiteConfig,
+  timeoutMs: number,
+  referencedSitemapUrls: Set<string>
+): Promise<void> {
+  const allowedSitemapUrls = new Set([
+    ...referencedSitemapUrls,
+    toAbsoluteUrl(siteConfig.site.publicUrl, SITEMAP_COMPATIBILITY_PATH)
+  ])
+
+  for (const publicPath of LEGACY_GROUP_SITEMAP_PATHS) {
+    const sitemapUrl = toAbsoluteUrl(siteConfig.site.publicUrl, publicPath)
+    if (allowedSitemapUrls.has(sitemapUrl)) {
+      continue
+    }
+
+    const status = await fetchStatus(sitemapUrl, timeoutMs)
+    if (typeof status === 'number' && status < 400) {
+      addIssue(audit, 'error', 'Unreferenced sitemap file is publicly accessible.', {
+        sitemapUrl
+      })
+    }
+  }
+}
+
 export async function auditLiveSitemaps(
   siteConfig: CheckedInSiteConfig,
   timeoutMs = DEFAULT_TIMEOUT_MS
@@ -671,6 +764,8 @@ export async function auditLiveSitemaps(
     urlCount: 0
   }
 
+  const referencedSitemaps = new Set<string>()
+
   await validateLiveRobots(audit, siteConfig, timeoutMs)
   await validateLiveCompatibilitySitemap(audit, siteConfig, timeoutMs)
   await auditLiveSitemapFile(
@@ -678,9 +773,10 @@ export async function auditLiveSitemaps(
     siteConfig,
     audit.sitemapIndexUrl,
     timeoutMs,
-    new Set<string>(),
+    referencedSitemaps,
     new Set<string>()
   )
+  await validateLiveKnownUnreferencedSitemapFiles(audit, siteConfig, timeoutMs, referencedSitemaps)
 
   return audit
 }
