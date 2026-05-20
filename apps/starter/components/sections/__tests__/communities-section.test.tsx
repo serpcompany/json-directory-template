@@ -1,25 +1,13 @@
-import { render, screen } from '@/test/test-utils'
+import { hasConfiguredPublicSocialLinks, siteConfig } from '@thedaviddias/web-core/site-config'
 import { CommunitiesSection } from '@/components/sections/communities-section'
-import { siteConfig } from '@thedaviddias/web-core/site-config'
+import { render, screen } from '@/test/test-utils'
 
 describe('CommunitiesSection', () => {
-  it('uses configured social and repo URLs', () => {
-    render(<CommunitiesSection />)
+  it('does not render default placeholder social links', () => {
+    const { container } = render(<CommunitiesSection />)
 
-    expect(screen.getByRole('heading', { name: /^reddit$/i }).closest('a')).toHaveAttribute(
-      'href',
-      siteConfig.redditUrl
-    )
-    expect(screen.getByRole('heading', { name: /^x$/i }).closest('a')).toHaveAttribute(
-      'href',
-      siteConfig.twitterUrl
-    )
-    expect(screen.getByRole('heading', { name: /^github$/i }).closest('a')).toHaveAttribute(
-      'href',
-      siteConfig.githubRepoUrl
-    )
-    expect(
-      screen.getByText(new RegExp(`Stay close to ${siteConfig.name}`, 'i'))
-    ).toBeInTheDocument()
+    expect(hasConfiguredPublicSocialLinks(siteConfig)).toBe(false)
+    expect(container.firstChild).toBeNull()
+    expect(screen.queryByRole('heading', { name: /^reddit$/i })).not.toBeInTheDocument()
   })
 })

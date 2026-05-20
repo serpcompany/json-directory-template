@@ -88,7 +88,9 @@ fi
 
 echo "==> Committing and pushing..."
 cd "$DEPLOY_TMP"
-git add -A
+# Force-add the generated artifact because operator/global ignore rules can
+# otherwise drop valid static routes such as product slugs ending in `.so`.
+git add -A -f
 
 COMMIT_MSG="deploy: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
 if [[ -n "${GITHUB_SHA:-}" ]]; then

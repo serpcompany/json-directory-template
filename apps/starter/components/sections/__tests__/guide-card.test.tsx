@@ -1,9 +1,11 @@
-import { render, screen } from '@/test/test-utils'
 import { GuideCardRoute as GuideCard } from '@thedaviddias/web-core/sections/guide-card-route'
+import { render, screen } from '@/test/test-utils'
 
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />
+  default: ({ alt = '', ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (
+    <img alt={alt} {...props} />
+  )
 }))
 
 describe('GuideCard', () => {
@@ -18,7 +20,7 @@ describe('GuideCard', () => {
           difficulty: 'beginner',
           published: true,
           slug: 'starter-guide',
-          title: 'Starter Guide',
+          title: 'Starter Guide'
         }}
       />
     )
@@ -26,7 +28,7 @@ describe('GuideCard', () => {
     expect(screen.getByText('beginner')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Starter Guide' })).toHaveAttribute(
       'href',
-      '/posts/starter-guide'
+      '/posts/starter-guide/'
     )
     expect(screen.getByText('How to use the directory')).toBeInTheDocument()
   })

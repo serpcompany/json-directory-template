@@ -1,11 +1,11 @@
+import { getRoute } from '@thedaviddias/web-core/routes'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { getRoute } from '@thedaviddias/web-core/routes'
 
 export const metadata: Metadata = {
   title: 'Pricing Plans',
   description:
-    'Choose the perfect plan to showcase your browser extension or add-on on BrowserExtensions.io.',
+    'Choose the perfect plan to showcase your browser extension or add-on on BrowserExtensions.io.'
 }
 
 export default function PricingPage() {
@@ -21,9 +21,7 @@ export default function PricingPage() {
         <div className="grid gap-4 sm:grid-cols-2">
           <section className="rounded-lg border p-6">
             <h2 className="text-xl font-semibold">Submit</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Submit your browser extension for directory review.
-            </p>
+            <p className="mt-2 text-sm text-muted-foreground">Submit Yours for directory review.</p>
             <Link className="mt-4 inline-flex font-medium text-primary" href={getRoute('submit')}>
               Submit your extension
             </Link>

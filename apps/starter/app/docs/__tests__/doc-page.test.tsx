@@ -9,15 +9,14 @@ jest.mock('remark-gfm', () => jest.fn())
 const mockRenderDocDetailPage = jest.fn(() => <div data-testid="doc-detail-page" />)
 const mockGenerateDocDetailMetadata = jest.fn(async () => ({
   description: 'mock doc metadata',
-  title: 'mock doc title',
+  title: 'mock doc title'
 }))
 const mockGenerateDocDetailStaticParams = jest.fn(() => [{ slug: 'commands' }])
 
 jest.mock('@thedaviddias/web-core/docs/doc-page', () => ({
   DocDetailPage: (props: unknown) => mockRenderDocDetailPage(props),
   generateDocDetailMetadata: (...args: unknown[]) => mockGenerateDocDetailMetadata(...args),
-  generateDocDetailStaticParams: (...args: unknown[]) =>
-    mockGenerateDocDetailStaticParams(...args),
+  generateDocDetailStaticParams: (...args: unknown[]) => mockGenerateDocDetailStaticParams(...args)
 }))
 
 const mockNotFound = jest.fn()
@@ -36,6 +35,7 @@ const mockSiteConfig = {
     },
     submitLabel: 'Submit a Listing'
   },
+  brandsRouteBasePath: 'brands',
   docsRouteBasePath: 'docs',
   features: {
     showDocs: true
@@ -43,6 +43,11 @@ const mockSiteConfig = {
   listingRouteBasePath: 'listing',
   networkRouteBasePath: 'network',
   publicUrl: 'https://example.com',
+  sitemap: {
+    categoryBasePath: 'categories',
+    listingDetailSuffix: undefined,
+    staticPagePaths: []
+  },
   twitterUrl: 'https://x.com/serpcompany'
 }
 
@@ -99,7 +104,7 @@ describe('DocPage', () => {
     expect(mockGenerateDocDetailMetadata).toHaveBeenCalled()
     expect(metadata).toEqual({
       description: 'mock doc metadata',
-      title: 'mock doc title',
+      title: 'mock doc title'
     })
   })
 

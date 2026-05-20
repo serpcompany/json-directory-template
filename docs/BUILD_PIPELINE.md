@@ -10,7 +10,7 @@ In scope now:
 
 - checked-in site config via `sites/site-config.default.ts` and `sites/<site-id>/site-config.ts`
 - checked-in canonical site assets in `sites/<site-id>/assets/*`
-- validate -> build -> deploy for one site per run
+- validate -> build -> audit -> deploy for one site per run
 - static export output for GitHub Pages
 - repo-to-repo deploy sync with preserve rules
 
@@ -33,7 +33,8 @@ The pipeline works from one canonical checked-in config model:
 2. each site defines its own sparse checked-in override in `sites/<site-id>/site-config.ts`
 3. the pipeline validates the resolved site config and source data
 4. the pipeline builds one static artifact
-5. the pipeline deploys that artifact to the configured target
+5. the pipeline audits the generated sitemap surface against the artifact
+6. the pipeline deploys that artifact to the checked-in target only after source changes are reviewable
 
 If required inputs are missing, the pipeline should fail early and say exactly what is incomplete.
 
@@ -122,6 +123,14 @@ Failure behavior:
 
 ### 4. Deploy
 
+Dry-run target inspection is allowed during local verification:
+
+```bash
+pnpm deploy:site -- --site your-site-id --dry-run
+```
+
+Real deploys push generated artifacts into a target GitHub Pages repo:
+
 ```bash
 pnpm deploy:site -- --site your-site-id
 ```
@@ -132,6 +141,9 @@ Deploy behavior:
 - syncs the built artifact into the target repo
 - preserves configured target-managed files such as `CNAME` and required Pages workflow files
 - relies on the target repo’s Pages workflow to publish the final site
+- refuses normal deploy target overrides from environment variables
+- refuses local real deploys when the source branch has uncommitted, untracked, unpushed, behind, or diverged changes
+- allows GitHub Actions deploys because the workflow deploys a checked-out source commit
 
 ## Workflow behavior
 
@@ -140,6 +152,7 @@ The GitHub Actions path resolves the build run before validate/build/deploy:
 - `site_id` selects the checked-in site config
 - artifact upload/download follows the resolved artifact directory instead of assuming a hardcoded path
 - workflow concurrency is keyed by ref plus site id to reduce overlapping runs for the same target
+- deploy repo and branch are not workflow inputs during normal deploys; they must come from checked-in site config
 
 ## Design rules
 

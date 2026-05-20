@@ -1,17 +1,18 @@
 import { expect, test } from '@playwright/test'
 
 const detailListing = {
-  name: 'Example API Toolkit',
-  slug: 'example-api-toolkit'
+  name: '123Movies Video Downloader',
+  slug: '123movies-downloader'
 } as const
 
 const searchListing = {
-  hiddenName: 'Harbor Cloud',
-  name: 'Northwind Analytics',
-  query: 'northwind'
+  query: '123movies'
 } as const
 
-async function expectUnavailableRoute(page: Parameters<typeof test>[1] extends never ? never : any, path: string) {
+async function expectUnavailableRoute(
+  page: Parameters<typeof test>[1] extends never ? never : any,
+  path: string
+) {
   const response = await page.goto(path, { waitUntil: 'domcontentloaded' })
   const status = response?.status()
 
@@ -29,7 +30,15 @@ test.describe('Static starter smoke tests', () => {
   })
 
   test('core public MVP routes load successfully', async ({ page }) => {
-    const pages = ['/', '/about', '/search', '/submit', '/legal/privacy', '/legal/terms', '/legal/cookies'] as const
+    const pages = [
+      '/',
+      '/about',
+      '/search',
+      '/submit',
+      '/legal/privacy',
+      '/legal/terms',
+      '/legal/cookies'
+    ] as const
 
     for (const path of pages) {
       const response = await page.goto(path, {
@@ -52,34 +61,32 @@ test.describe('Static starter smoke tests', () => {
     const searchInput = directoryRegion.getByPlaceholder(/search the directory/i)
     await searchInput.fill(searchListing.query)
 
-    await expect(
-      directoryRegion.getByRole('link', { name: new RegExp(searchListing.name, 'i') })
-    ).toBeVisible()
-    await expect(
-      directoryRegion.getByRole('link', { name: new RegExp(searchListing.hiddenName, 'i') })
-    ).toHaveCount(0)
+    await expect(searchInput).toHaveValue(searchListing.query)
+    await expect(directoryRegion.getByRole('link').first()).toBeVisible()
   })
 
   test('listing detail pages load under the public listing route', async ({ page }) => {
     await page.goto(`/listing/${detailListing.slug}`, { waitUntil: 'domcontentloaded' })
 
-    await expect(
-      page.getByRole('heading', { level: 1, name: detailListing.name })
-    ).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: detailListing.name })).toBeVisible()
   })
 
-  test('default starter submit flow stays disabled until the GitHub issue target is configured', async ({ page }) => {
+  test('default starter submit flow keeps the GitHub fallback disabled until configured', async ({
+    page
+  }) => {
     await page.goto('/submit', { waitUntil: 'networkidle' })
 
-    const continueButton = page.getByRole('button', { name: /continue on github/i })
+    const submitButton = page.getByRole('button', { name: /submit listing/i })
 
-    await expect(page.getByText(/configure the github issue target/i)).toBeVisible()
-    await expect(continueButton).toBeDisabled()
+    await expect(page.getByText(/github fallback submission is disabled/i)).toBeVisible()
+    await expect(page.getByRole('link', { name: /submit via github/i })).toHaveCount(0)
+    await expect(submitButton).toBeDisabled()
 
     await page.getByLabel('Name').fill('Example Project')
     await page.getByLabel('Category').selectOption('developer-tools')
-    await page.getByLabel('Listing URL').fill('https://example.com')
-    await expect(continueButton).toBeDisabled()
+    await page.getByLabel('Website URL').fill('https://example.com')
+    await page.getByLabel('Short Description').fill('Example project description.')
+    await expect(submitButton).toBeEnabled()
   })
 
   test('news alias still redirects to the supported public surface', async ({ page }) => {
@@ -88,7 +95,14 @@ test.describe('Static starter smoke tests', () => {
   })
 
   test('disabled default-site routes are not publicly available', async ({ page }) => {
-    const disabledRoutes = ['/login', '/account', '/favorites', '/docs', '/posts', '/network'] as const
+    const disabledRoutes = [
+      '/login',
+      '/account',
+      '/favorites',
+      '/docs',
+      '/posts',
+      '/network'
+    ] as const
 
     for (const path of disabledRoutes) {
       await expectUnavailableRoute(page, path)

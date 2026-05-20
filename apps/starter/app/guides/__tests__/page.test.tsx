@@ -3,12 +3,12 @@ import { render, screen } from '@/test/test-utils'
 const mockRenderGuidesIndexPage = jest.fn(() => <div data-testid="guides-index-page" />)
 const mockGenerateGuidesIndexMetadata = jest.fn(() => ({
   description: 'mock guides metadata',
-  title: 'mock guides title',
+  title: 'mock guides title'
 }))
 
 jest.mock('@thedaviddias/web-core/guides/index-page', () => ({
   GuidesIndexPage: (props: unknown) => mockRenderGuidesIndexPage(props),
-  generateGuidesIndexMetadata: (...args: unknown[]) => mockGenerateGuidesIndexMetadata(...args),
+  generateGuidesIndexMetadata: (...args: unknown[]) => mockGenerateGuidesIndexMetadata(...args)
 }))
 
 const mockNotFound = jest.fn()
@@ -26,6 +26,7 @@ const mockSiteConfig = {
     },
     submitLabel: 'Submit a Listing'
   },
+  brandsRouteBasePath: 'brands',
   description: 'Curated directory of listings and resources.',
   docsRouteBasePath: 'docs',
   features: {
@@ -35,6 +36,11 @@ const mockSiteConfig = {
   name: 'Directory Starter',
   networkRouteBasePath: 'network',
   publicUrl: 'https://example.com',
+  sitemap: {
+    categoryBasePath: 'categories',
+    listingDetailSuffix: undefined,
+    staticPagePaths: []
+  },
   tagline: 'Discover listings and resources',
   twitterUrl: 'https://x.com/serpcompany'
 }
@@ -84,7 +90,7 @@ describe('GuidesPage', () => {
     expect(mockGenerateGuidesIndexMetadata).toHaveBeenCalled()
     expect(metadata).toEqual({
       description: 'mock guides metadata',
-      title: 'mock guides title',
+      title: 'mock guides title'
     })
   })
 

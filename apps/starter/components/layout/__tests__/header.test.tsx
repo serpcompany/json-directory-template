@@ -1,7 +1,7 @@
-import { render, screen } from '@/test/test-utils'
 import { Header } from '@thedaviddias/web-core/layout/header'
-import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { render, screen } from '@/test/test-utils'
 
 jest.mock('@thedaviddias/web-core/root-shell-client', () => ({
   useAnalyticsEvents: () => ({
@@ -48,7 +48,7 @@ describe('Header', () => {
 
     expect(screen.getByRole('link', { name: siteCopy.submitLabel })).toHaveAttribute(
       'href',
-      '/submit'
+      '/submit/'
     )
   })
 })

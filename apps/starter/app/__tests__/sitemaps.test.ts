@@ -59,16 +59,16 @@ describe('sitemap routes', () => {
     ])
 
     expect(pagesXml).toContain('<loc>https://example.com/</loc>')
-    expect(pagesXml).toContain('<loc>https://example.com/about</loc>')
-    expect(pagesXml).toContain('<loc>https://example.com/brands</loc>')
-    expect(pagesXml).toContain('<loc>https://example.com/legal/privacy</loc>')
+    expect(pagesXml).toContain('<loc>https://example.com/about/</loc>')
+    expect(pagesXml).toContain('<loc>https://example.com/brands/</loc>')
+    expect(pagesXml).toContain('<loc>https://example.com/legal/privacy/</loc>')
     expect(pagesXml).not.toContain('https://example.com/listing')
 
-    expect(listingsXml).toContain('<loc>https://example.com/listing/example-listing</loc>')
+    expect(listingsXml).toContain('<loc>https://example.com/listing/example-listing/</loc>')
     expect(listingsXml).not.toContain('https://example.com/categories/')
 
-    expect(taxonomiesXml).toContain('<loc>https://example.com/listing</loc>')
-    expect(taxonomiesXml).toContain('<loc>https://example.com/categories/featured</loc>')
+    expect(taxonomiesXml).toContain('<loc>https://example.com/listing/</loc>')
+    expect(taxonomiesXml).toContain('<loc>https://example.com/categories/featured/</loc>')
 
     expect(docsXml).toBe(
       '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>'

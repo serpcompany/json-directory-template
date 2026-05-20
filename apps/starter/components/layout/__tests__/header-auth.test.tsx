@@ -1,5 +1,5 @@
-import { render, screen } from '@/test/test-utils'
 import { Header } from '@thedaviddias/web-core/layout/header'
+import { render, screen } from '@/test/test-utils'
 
 jest.mock('@thedaviddias/web-core/site-config', () => {
   const actual = jest.requireActual('@thedaviddias/web-core/site-config')
@@ -55,7 +55,7 @@ describe('Header auth actions', () => {
 
     expect(screen.getByRole('link', { name: /sign up \/ sign in/i })).toHaveAttribute(
       'href',
-      '/login'
+      '/login/'
     )
   })
 
@@ -73,7 +73,7 @@ describe('Header auth actions', () => {
       />
     )
 
-    expect(screen.getByRole('link', { name: /account/i })).toHaveAttribute('href', '/account')
+    expect(screen.getByRole('link', { name: /account/i })).toHaveAttribute('href', '/account/')
     expect(screen.getByRole('button', { name: /sign out/i })).toBeInTheDocument()
   })
 })

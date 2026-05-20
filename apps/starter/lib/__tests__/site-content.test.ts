@@ -12,8 +12,8 @@ describe('resolveSiteContent', () => {
   })
 
   it('rejects removed site ids explicitly', () => {
-    expect(() => resolveSiteContent('serp.software')).toThrow(
-      'Site "serp.software" was removed from this repo. Use a supported checked-in site id instead.'
+    expect(() => resolveSiteContent('extensions.serp.co')).toThrow(
+      'Site "extensions.serp.co" was removed from this repo. Use a supported checked-in site id instead.'
     )
   })
 })

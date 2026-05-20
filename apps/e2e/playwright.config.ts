@@ -5,17 +5,17 @@ const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${playwrigh
 const webServerCommand =
   process.env.PLAYWRIGHT_WEB_SERVER_COMMAND ??
   `cd ../starter && pnpm exec next dev --hostname 127.0.0.1 --port ${playwrightPort}`
+const workerCount = Number(process.env.E2E_WORKERS ?? 2)
 
 export default defineConfig({
   testDir: './tests',
+  testIgnore: process.env.E2E_VISUAL === '1' ? [] : ['**/visual.spec.ts'],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : 2, // Use 2 workers locally for stability
-  reporter:
-    process.env.CI || process.env.CLAUDE
-      ? [['line'], ['html', { open: 'never' }]]
-      : 'html',
+  globalTimeout: process.env.CI ? 20 * 60 * 1000 : undefined,
+  workers: workerCount,
+  reporter: process.env.CI || process.env.CLAUDE ? [['line'], ['html', { open: 'never' }]] : 'html',
 
   // Performance optimizations
   timeout: 60000, // 60 seconds per test (more generous for loaded apps)
@@ -93,8 +93,7 @@ export default defineConfig({
       SENTRY_PROJECT: process.env.SENTRY_PROJECT || 'dummy_project',
       LOG_LEVEL: process.env.LOG_LEVEL || 'error',
       GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID || 'playwright-github-client-id',
-      GITHUB_CLIENT_SECRET:
-        process.env.GITHUB_CLIENT_SECRET || 'playwright-github-client-secret',
+      GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET || 'playwright-github-client-secret',
       AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST || 'true',
       NEXTAUTH_SECRET:
         process.env.NEXTAUTH_SECRET || 'playwright-nextauth-secret-playwright-nextauth-secret',

@@ -11,20 +11,18 @@ jest.mock('@/.content-collections/generated', () => ({
       name: 'Legacy Website Entry',
       publishedAt: '2026-01-01',
       slug: 'legacy-website-entry',
-      website: 'https://legacy.example.com',
-    },
-  ],
-}));
+      website: 'https://legacy.example.com'
+    }
+  ]
+}))
 
-import { getWebsites } from '@/lib/content-loader';
+import { getWebsites } from '@/lib/content-loader'
 
 describe('getWebsites', () => {
   it('prefers checked-in JSON listing data over the legacy website content collection', () => {
-    const websites = getWebsites();
+    const websites = getWebsites()
 
-    expect(websites.length).toBeGreaterThan(0);
-    expect(
-      websites.some((website) => website.slug === 'legacy-website-entry')
-    ).toBe(false);
-  });
-});
+    expect(websites.length).toBeGreaterThan(0)
+    expect(websites.some(website => website.slug === 'legacy-website-entry')).toBe(false)
+  })
+})

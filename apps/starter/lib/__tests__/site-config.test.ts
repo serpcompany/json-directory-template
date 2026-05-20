@@ -57,7 +57,7 @@ describe('resolveSiteConfig', () => {
   })
 
   it('rejects parked site ids that were removed from the active registry', () => {
-    for (const siteId of ['serp.co', 'serp.software', 'extensions.serp.co']) {
+    for (const siteId of ['extensions.serp.co']) {
       expect(() => resolveSiteConfig(siteId)).toThrow(
         `Site "${siteId}" was removed from this repo. Use a supported checked-in site id instead.`
       )

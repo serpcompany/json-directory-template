@@ -2,7 +2,7 @@ import type { CheckedInSiteConfigOverride } from '../types'
 
 export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   analytics: {
-    gtmId: 'GTM-PWB7MRW9',
+    gtmId: 'GTM-PWB7MRW9'
   },
   branding: {
     favicon: {
@@ -50,6 +50,9 @@ export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   networkBrandGroup: 'serpxxxGroup',
   routes: {
     listingBasePath: 'products'
+  },
+  sitemap: {
+    excludedPaths: ['/products']
   },
   site: {
     description: 'Downloaders for adult video platforms and creator sites.',

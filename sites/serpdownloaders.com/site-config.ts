@@ -1,27 +1,27 @@
-import type { CheckedInSiteConfigOverride } from '../types';
+import type { CheckedInSiteConfigOverride } from '../types'
 
 export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   analytics: {
-    gtmId: 'GTM-M82HC3SC',
+    gtmId: 'GTM-M82HC3SC'
   },
   branding: {
     favicon: {
       path: 'sites/serpdownloaders.com/assets/favicon.ico',
-      source: 'local-path',
+      source: 'local-path'
     },
     logo: {
       path: 'sites/serpdownloaders.com/assets/logo.png',
-      source: 'local-path',
+      source: 'local-path'
     },
     opengraphImage: {
       path: 'sites/serpdownloaders.com/assets/opengraph-image.png',
-      source: 'local-path',
-    },
+      source: 'local-path'
+    }
   },
   build: {
     appPackageName: 'serpdownloaders.com',
     appOutDir: 'apps/serpdownloaders.com/out',
-    artifactDir: 'dist/sites/serpdownloaders.com',
+    artifactDir: 'dist/sites/serpdownloaders.com'
   },
   content: {
     listingSource: {
@@ -30,36 +30,39 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
       kind: 'trial-products-json',
       outputPath: 'data/listings.json',
       path: 'sites/serpdownloaders.com/products.json',
-      publishedAt: '2026-03-24',
-    },
+      publishedAt: '2026-03-24'
+    }
   },
   copy: {
     listingName: {
       plural: 'products',
-      singular: 'product',
+      singular: 'product'
     },
-    submitLabel: 'Submit a Product',
+    submitLabel: 'Submit a Product'
   },
   deploy: {
     branch: 'main',
     preserve: ['.github/workflows/deploy.yml', 'CNAME'],
     repoUrl: 'https://github.com/serpcompany/serpdownloaders.com.git',
-    strategy: 'github-pages-repo-sync',
+    strategy: 'github-pages-repo-sync'
   },
   id: 'serpdownloaders.com',
   networkBrandGroup: 'mainGroup',
   features: {
-    showBrands: true,
+    showBrands: true
   },
   routes: {
-    listingBasePath: 'products',
+    listingBasePath: 'products'
+  },
+  sitemap: {
+    excludedPaths: ['/products']
   },
   site: {
     description: 'A collection of tools to help you download anything from anywhere, anytime.',
     domain: 'serpdownloaders.com',
     name: 'SERP Downloaders',
     publicUrl: 'https://serpdownloaders.com',
-    tagline: 'For the people who just like to get down...loading',
+    tagline: 'For the people who just like to get down...loading'
   },
   social: {
     githubIssueOwner: null,
@@ -68,6 +71,6 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     githubRepoUrl: 'https://github.com/serpdownloaders',
     githubUrl: 'https://github.com/serpdownloaders',
     redditUrl: 'https://www.reddit.com/r/serpdownloaders/',
-    twitterUrl: 'https://x.com/serpapps',
-  },
-};
+    twitterUrl: 'https://x.com/serpapps'
+  }
+}

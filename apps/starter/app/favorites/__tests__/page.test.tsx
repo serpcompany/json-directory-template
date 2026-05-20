@@ -1,9 +1,7 @@
 import { render, screen } from '@/test/test-utils'
 
 const mockNotFound = jest.fn()
-const mockRenderFavoritesIndexPage = jest.fn(() => (
-  <div data-testid="favorites-index-page" />
-))
+const mockRenderFavoritesIndexPage = jest.fn(() => <div data-testid="favorites-index-page" />)
 const mockSiteConfig = {
   branding: {
     logoUrl: '/logo.png'
@@ -15,6 +13,7 @@ const mockSiteConfig = {
     },
     submitLabel: 'Submit a Listing'
   },
+  brandsRouteBasePath: 'brands',
   description: 'Curated directory of listings and resources.',
   docsRouteBasePath: 'docs',
   features: {
@@ -24,6 +23,11 @@ const mockSiteConfig = {
   name: 'Directory Starter',
   networkRouteBasePath: 'network',
   publicUrl: 'https://example.com',
+  sitemap: {
+    categoryBasePath: 'categories',
+    listingDetailSuffix: undefined,
+    staticPagePaths: []
+  },
   tagline: 'Discover listings and resources',
   twitterUrl: 'https://x.com/serpcompany'
 }
