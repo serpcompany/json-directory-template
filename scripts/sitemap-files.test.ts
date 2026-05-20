@@ -182,6 +182,11 @@ describe('writeSplitSitemaps', () => {
     writeFile(resolve(artifactDir, 'categories/developer-tools/index.html'))
     writeFile(resolve(artifactDir, 'categories/featured/index.html'))
     writeFile(resolve(artifactDir, 'submit/index.html'))
+    writeFile(resolve(artifactDir, 'pages-sitemap.xml'), '<urlset></urlset>')
+    writeFile(resolve(artifactDir, 'listings-sitemap.xml'), '<urlset></urlset>')
+    writeFile(resolve(artifactDir, 'taxonomies-sitemap.xml'), '<urlset></urlset>')
+    writeFile(resolve(artifactDir, 'docs-sitemap.xml'), '<urlset></urlset>')
+    writeFile(resolve(artifactDir, 'posts-sitemap.xml'), '<urlset></urlset>')
 
     writeSplitSitemaps(artifactDir, {
       additionalPathsByGroup: {
@@ -237,6 +242,12 @@ describe('writeSplitSitemaps', () => {
     expect(pagesSitemap).toContain('<loc>https://example.com/contact/</loc>')
     expect(pagesSitemap).toContain('<loc>https://example.com/posts/</loc>')
     expect(pagesSitemap).not.toContain('<loc>https://example.com/products</loc>')
+
+    expect(existsSync(resolve(artifactDir, 'pages-sitemap.xml'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'listings-sitemap.xml'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'taxonomies-sitemap.xml'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'docs-sitemap.xml'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'posts-sitemap.xml'))).toBe(false)
   })
 
   it('fails when configured static sitemap paths do not have route artifacts', () => {

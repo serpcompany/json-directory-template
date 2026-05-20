@@ -103,6 +103,17 @@ function parseDeleteSitemapUrls(value: string | undefined): string[] {
     .filter(Boolean)
 }
 
+function parseSiteIds(value: string | undefined): string[] {
+  if (!value) {
+    return []
+  }
+
+  return value
+    .split(/[\n,]/)
+    .map(siteId => siteId.trim())
+    .filter(Boolean)
+}
+
 function loadServiceAccount(env: NodeJS.ProcessEnv): ServiceAccount | undefined {
   if (env.GSC_SERVICE_ACCOUNT_JSON) {
     return JSON.parse(env.GSC_SERVICE_ACCOUNT_JSON) as ServiceAccount
@@ -283,12 +294,13 @@ export async function runSubmitGscSitemaps(
   env: NodeJS.ProcessEnv = process.env
 ): Promise<void> {
   const args = parseArgs(argv)
+  const siteIds = args.siteIds.length > 0 ? args.siteIds : parseSiteIds(env.GSC_SITE_IDS)
   const deleteSitemapUrls = [
     ...args.deleteSitemapUrls,
     ...parseDeleteSitemapUrls(env.GSC_STALE_SITEMAP_URLS),
     ...parseDeleteSitemapUrls(env.GSC_DELETE_SITEMAP_URLS)
   ]
-  const submitTargets = args.submitCanonical ? getSitemapTargets(args.siteIds) : []
+  const submitTargets = args.submitCanonical ? getSitemapTargets(siteIds) : []
   const deleteTargets = deleteTargetsForSitemapUrls([...new Set(deleteSitemapUrls)])
 
   if (args.dryRun) {

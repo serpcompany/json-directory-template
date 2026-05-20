@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve, sep } from 'node:path'
 
 export const SITEMAP_PAGE_SIZE = 10_000
@@ -37,6 +37,8 @@ const EXCLUDED_SITEMAP_PATHS = new Set([
 
 const DOCS_PREFIX = '/docs'
 const POSTS_PREFIX = '/posts'
+const SITEMAP_INDEX_PATH = '/sitemap-index.xml'
+const SITEMAP_COMPATIBILITY_PATH = '/sitemap.xml'
 
 function normalizeBaseUrl(baseUrl: string): string {
   return baseUrl.replace(/\/+$/, '')
@@ -60,6 +62,25 @@ function escapeXml(value: string): string {
     .replaceAll("'", '&apos;')
 }
 
+function decodeXmlEntity(value: string): string {
+  return value
+    .replaceAll('&amp;', '&')
+    .replaceAll('&lt;', '<')
+    .replaceAll('&gt;', '>')
+    .replaceAll('&quot;', '"')
+    .replaceAll('&apos;', "'")
+}
+
+function parseSitemapLocs(xml: string): string[] {
+  return [...xml.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)].map(match =>
+    decodeXmlEntity(match[1] ?? '')
+  )
+}
+
+function isSitemapIndexXml(xml: string): boolean {
+  return xml.includes('<sitemapindex')
+}
+
 function withTrailingSlash(path: string): string {
   if (path === '/') {
     return path
@@ -80,6 +101,106 @@ function buildUrl(
   const normalizedBaseUrl = normalizeBaseUrl(baseUrl)
   const normalizedPath = options.trailingSlash ? withTrailingSlash(path) : path
   return normalizedPath === '/' ? `${normalizedBaseUrl}/` : `${normalizedBaseUrl}${normalizedPath}`
+}
+
+function artifactFilePathForPublicPath(artifactDir: string, publicPath: string): string {
+  return resolve(artifactDir, normalizeArtifactPath(publicPath).slice(1))
+}
+
+function publicPathForArtifactFile(artifactDir: string, filePath: string): string {
+  return normalizeArtifactPath(filePath.slice(artifactDir.length + 1))
+}
+
+function sitemapPublicPathFromLoc(baseUrl: string, loc: string): string | null {
+  try {
+    const base = new URL(normalizeBaseUrl(baseUrl))
+    const parsed = new URL(loc, base)
+
+    if (parsed.origin !== base.origin) {
+      return null
+    }
+
+    return normalizeArtifactPath(parsed.pathname)
+  } catch {
+    return null
+  }
+}
+
+function isSitemapArtifactPath(publicPath: string): boolean {
+  const normalizedPath = normalizeArtifactPath(publicPath)
+  const fileName = normalizedPath.split('/').at(-1) ?? ''
+
+  return (
+    normalizedPath === SITEMAP_INDEX_PATH ||
+    normalizedPath === SITEMAP_COMPATIBILITY_PATH ||
+    normalizedPath.startsWith('/sitemaps/') ||
+    (fileName.includes('sitemap') && fileName.endsWith('.xml'))
+  )
+}
+
+function listSitemapArtifactPaths(artifactDir: string, currentDir = artifactDir): string[] {
+  const sitemapPaths: string[] = []
+
+  for (const entry of readdirSync(currentDir, { withFileTypes: true })) {
+    const entryPath = join(currentDir, entry.name)
+
+    if (entry.isDirectory()) {
+      sitemapPaths.push(...listSitemapArtifactPaths(artifactDir, entryPath))
+      continue
+    }
+
+    const publicPath = publicPathForArtifactFile(artifactDir, entryPath)
+    if (isSitemapArtifactPath(publicPath)) {
+      sitemapPaths.push(publicPath)
+    }
+  }
+
+  return sitemapPaths
+}
+
+function collectReachableSitemapPaths(
+  artifactDir: string,
+  baseUrl: string,
+  sitemapPath: string,
+  reachablePaths: Set<string>
+): void {
+  const normalizedPath = normalizeArtifactPath(sitemapPath)
+
+  if (reachablePaths.has(normalizedPath)) {
+    return
+  }
+
+  reachablePaths.add(normalizedPath)
+
+  const sitemapFilePath = artifactFilePathForPublicPath(artifactDir, normalizedPath)
+  if (!existsSync(sitemapFilePath)) {
+    return
+  }
+
+  const xml = readFileSync(sitemapFilePath, 'utf8')
+  if (!isSitemapIndexXml(xml)) {
+    return
+  }
+
+  for (const loc of parseSitemapLocs(xml)) {
+    const childPath = sitemapPublicPathFromLoc(baseUrl, loc)
+    if (childPath && isSitemapArtifactPath(childPath)) {
+      collectReachableSitemapPaths(artifactDir, baseUrl, childPath, reachablePaths)
+    }
+  }
+}
+
+function pruneUnreferencedSitemapFiles(artifactDir: string, baseUrl: string): void {
+  const reachablePaths = new Set<string>()
+
+  collectReachableSitemapPaths(artifactDir, baseUrl, SITEMAP_INDEX_PATH, reachablePaths)
+  collectReachableSitemapPaths(artifactDir, baseUrl, SITEMAP_COMPATIBILITY_PATH, reachablePaths)
+
+  for (const sitemapPath of listSitemapArtifactPaths(artifactDir)) {
+    if (!reachablePaths.has(sitemapPath)) {
+      rmSync(artifactFilePathForPublicPath(artifactDir, sitemapPath), { force: true })
+    }
+  }
 }
 
 function appendPathSegment(path: string, segment: string | undefined): string {
@@ -428,6 +549,7 @@ export function writeSplitSitemaps(artifactDir: string, options: WriteSplitSitem
 
   const sitemapIndexXml = buildSitemapIndexXml(options.baseUrl, sitemapIndexEntries)
 
-  writeFileSync(resolve(artifactDir, 'sitemap-index.xml'), sitemapIndexXml)
-  writeFileSync(resolve(artifactDir, 'sitemap.xml'), sitemapIndexXml)
+  writeFileSync(resolve(artifactDir, SITEMAP_INDEX_PATH.slice(1)), sitemapIndexXml)
+  writeFileSync(resolve(artifactDir, SITEMAP_COMPATIBILITY_PATH.slice(1)), sitemapIndexXml)
+  pruneUnreferencedSitemapFiles(artifactDir, options.baseUrl)
 }

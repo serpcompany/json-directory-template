@@ -51,6 +51,20 @@ describe('runSubmitGscSitemaps', () => {
     expect(log).toHaveBeenCalledWith('SUBMIT https://serp.co/ -> https://serp.co/sitemap-index.xml')
   })
 
+  it('can scope canonical submit operations from the workflow site id env', async () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => undefined)
+
+    await runSubmitGscSitemaps(['--dry-run'], {
+      GSC_SITE_IDS: 'browserextensions.io,serp.ai'
+    })
+
+    expect(log).toHaveBeenCalledTimes(2)
+    expect(log).toHaveBeenCalledWith(
+      'SUBMIT https://browserextensions.io/ -> https://browserextensions.io/sitemap-index.xml'
+    )
+    expect(log).toHaveBeenCalledWith('SUBMIT https://serp.ai/ -> https://serp.ai/sitemap-index.xml')
+  })
+
   it('prints delete operations for stale sitemap URLs during dry-run', async () => {
     const log = vi.spyOn(console, 'log').mockImplementation(() => undefined)
 
