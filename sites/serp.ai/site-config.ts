@@ -1,24 +1,24 @@
-import type { CheckedInSiteConfigOverride } from '../types';
+import type { CheckedInSiteConfigOverride } from '../types'
 
 export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
   branding: {
     favicon: {
       path: 'sites/serp.ai/assets/favicon.ico',
-      source: 'local-path',
+      source: 'local-path'
     },
     logo: {
       path: 'sites/serp.ai/assets/logo.png',
-      source: 'local-path',
+      source: 'local-path'
     },
     opengraphImage: {
       path: 'sites/serp.ai/assets/opengraph-image.png',
-      source: 'local-path',
-    },
+      source: 'local-path'
+    }
   },
   build: {
     appPackageName: 'serp.ai',
     appOutDir: 'apps/serp.ai/out',
-    artifactDir: 'dist/sites/serp.ai',
+    artifactDir: 'dist/sites/serp.ai'
   },
   content: {
     listingSource: {
@@ -27,8 +27,8 @@ export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
       kind: 'trial-products-json',
       outputPath: 'data/listings.json',
       path: 'sites/serp.ai/products.json',
-      publishedAt: '2026-05-16',
-    },
+      publishedAt: '2026-05-16'
+    }
   },
   copy: {
     categoryLabels: {
@@ -40,27 +40,27 @@ export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
       'livestream-downloaders': 'Livestream Downloaders',
       'movies-and-tv-downloaders': 'Movies & TV Downloaders',
       'social-media-downloaders': 'Social Media Downloaders',
-      'video-downloaders': 'Video Downloaders',
+      'video-downloaders': 'Video Downloaders'
     },
     listingName: {
       plural: 'products',
-      singular: 'product',
+      singular: 'product'
     },
-    submitLabel: 'Submit to SERP AI',
+    submitLabel: 'Submit to SERP AI'
   },
   deploy: {
     branch: 'main',
     preserve: ['.github/workflows/deploy.yml', 'CNAME'],
     repoUrl: 'https://github.com/serpcompany/serp.ai.git',
-    strategy: 'github-pages-repo-sync',
+    strategy: 'github-pages-repo-sync'
   },
   id: 'serp.ai',
   networkBrandGroup: 'mainGroup',
   features: {
-    showBrands: true,
+    showBrands: true
   },
   routes: {
-    listingBasePath: 'products',
+    listingBasePath: 'products'
   },
   sitemap: {
     additionalPathsByGroup: {
@@ -70,14 +70,14 @@ export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
         '/products/best/image-hosting',
         '/products/best/livestream',
         '/products/best/movies-tv',
-        '/products/best/social-media',
-      ],
+        '/products/best/social-media'
+      ]
     },
     artifactExcludedPaths: [
       '/categories/featured',
       '/legal/cookies',
       '/legal/privacy',
-      '/legal/terms',
+      '/legal/terms'
     ],
     categoryBasePath: 'products/best',
     excludedPaths: [
@@ -86,14 +86,14 @@ export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
       '/legal/privacy',
       '/legal/terms',
       '/products',
-      '/search',
+      '/search'
     ],
     indexGroupOrder: ['pages', 'taxonomies', 'listings'],
     listingDetailSuffix: 'reviews',
     pathByGroup: {
       listings: '/sitemaps/directory/1.xml',
       pages: '/sitemaps/pages/1.xml',
-      taxonomies: '/sitemaps/categories/1.xml',
+      taxonomies: '/sitemaps/categories/1.xml'
     },
     staticPagePaths: [
       '/',
@@ -108,8 +108,8 @@ export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
       '/posts',
       '/pricing',
       '/sponsor',
-      '/submit',
-    ],
+      '/submit'
+    ]
   },
   site: {
     description:
@@ -117,15 +117,15 @@ export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
     domain: 'serp.ai',
     name: 'SERP AI',
     publicUrl: 'https://serp.ai',
-    tagline: 'AI tools, companies, models, datasets, news, and resources',
+    tagline: 'AI tools, companies, models, datasets, news, and resources'
   },
   social: {
-    githubIssueOwner: null,
-    githubIssueRepo: null,
-    githubIssuesUrl: null,
+    githubIssueOwner: 'serpcompany',
+    githubIssueRepo: 'serp.ai',
+    githubIssuesUrl: 'https://github.com/serpcompany/serp.ai/issues',
     githubRepoUrl: 'https://github.com/serp-ai',
     githubUrl: 'https://github.com/serp-ai',
     redditUrl: 'https://www.reddit.com/r/serpdotai/',
-    twitterUrl: 'https://x.com/serpdotai',
-  },
-};
+    twitterUrl: 'https://x.com/serpdotai'
+  }
+}
