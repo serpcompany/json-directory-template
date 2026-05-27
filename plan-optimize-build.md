@@ -329,54 +329,63 @@ Important interpretation:
 - The `serp.co` target repo Pages workflow completed successfully after the explicit `workflow_dispatch` run with `site_id=serp.co`.
 - A wrong-site deploy happened before the hotfix because repo `vars.SITE_ID` overrode changed-path inference. The hotfix now keeps manual `SITE_ID` explicit and treats repo `SITE_ID` only as a push fallback when changed paths do not identify a site.
 
-## Next High-Confidence Work
+## Current Closeout Assessment
 
 Current assessment, 2026-05-27:
 
-- Phase 3A, Phase 3B, Phase 3C, and Phase 4A are implemented locally on the
-  dirty `build-optimization-phase-3-plus-more` branch, but still need normal
-  review/merge hygiene and CI confirmation before they should be treated as
-  production-proven.
-- Phase 3A still needs a post-merge `serp.co` GitHub Actions timing run to
-  compare the single-job workflow against the previous CI baseline.
-- Phase 3B still needs CI cache evidence from a warm run: confirm whether the
-  app-level `.next/cache` path is restored, whether Next stops warning about a
-  missing cache, and whether the cache materially improves CI wall time.
-- Phase 3C should not receive more local tuning unless CI or QA finds a
-  concrete regression. The remaining copy/finalization cost is no longer the
-  dominant measured bottleneck.
-- Phase 4A is the latest local payload win. It reduced product review HTML
-  logical bytes by `102,680,047` (`-12.3%`) while preserving `3,636` final
-  files, `3,206` product detail pages, sitemap audit health, own detail
-  content, resource links, canonical review URLs, JSON-LD, related entries, and
-  previous/next navigation.
-- The current branch mixes prior Phase 3 files and the Phase 4A payload work.
-  For review, either split into separate PRs or make the PR boundaries explicit
-  so deploy/workflow changes are not reviewed as product payload changes.
-- Do not run a real deploy from this dirty local branch. Only build, audit,
-  report, and dry-run deploy commands are allowed until the source changes have
-  gone through branch, commit, push, review/merge, and a clean upstream-synced
-  deploy path.
+- Phase 3A, the Phase 3B cache config, Phase 3C, Phase 4A, Phase 4B, and
+  Phase 4C have gone through PR review and merge. Phase 3A, Phase 3C, Phase 4A,
+  Phase 4B, and Phase 4C also have explicit post-merge `serp.co` GitHub
+  Actions verification.
+- PR #80 merged by rebase into `main` at source SHA
+  `71dc41b2b668224147703f392533d135657840ea` after CI passed.
+- The automatic push-triggered workflow after merge used the repository
+  `SITE_ID` fallback and deployed `serpdownloaders.com`, not `serp.co`. That run
+  is useful evidence that generic/shared path pushes still use the repo fallback,
+  but it is not `serp.co` acceptance evidence.
+- Explicit `workflow_dispatch` run `26494840409` with `site_id=serp.co` built,
+  audited, and deployed the merged source. It completed in `5m10s`; `Build
+  static site` took `1m57s`; sitemap audit passed with `3464 urls`, `5 sitemap
+  files`, `0 errors`, `0 warnings`; deploy targeted
+  `https://github.com/serpcompany/serp.co.git`; the target Pages workflow
+  completed successfully.
+- The first explicit `serp.co` run produced target repo commit `fd7ee35` because
+  the target artifact still differed from the newly merged optimized output.
+- Same-source explicit `workflow_dispatch` run `26495179828` with
+  `site_id=serp.co` completed in `4m24s`; `Build static site` took `2m00s`;
+  sitemap audit again passed with `3464 urls`, `5 sitemap files`, `0 errors`,
+  `0 warnings`; deploy logged `No changes to deploy.`
+- The same-source no-op deploy result confirms Phase 4C's practical target:
+  unchanged source/content can now avoid a target repo commit and avoid a new
+  target Pages deployment. The `serp.co` target repo remained at commit
+  `fd7ee35`, and no new target Pages workflow ran for the no-op dispatch.
+- Normal GitHub Actions deploys now keep build, audit, and deploy in one job.
+  Log checks on the explicit `serp.co` runs found no normal-path
+  `actions/upload-artifact` or `actions/download-artifact` handoff for the
+  large static artifact.
+- Phase 3B cache evidence is mixed and should not be counted as a material win
+  yet. The warm run restored the app-level cache key, but the restored archive
+  was effectively empty (`~0 MB`), and Next still emitted `No build cache
+  found`. Treat app-level Next cache behavior as remaining follow-up work.
+- Phase 3C should not receive more tuning unless CI or QA finds a concrete
+  regression. The measured remaining cost is dominated by generated payload size
+  and deploy/publish strategy, not finalizer copy mechanics.
 
 Recommended order from here:
 
-1. Review and merge the existing local Phase 3A/3B/3C work, or split it from
-   Phase 4A if the branch needs smaller review units.
-2. Run the post-merge `serp.co` GitHub Actions build/deploy path from the clean
-   merged source and record CI timing, cache behavior, artifact size, and target
-   repo sync behavior.
-3. Review and merge Phase 4A after confirming the same artifact invariants under
-   Node `24.13.1` or CI: `3,636` final files, `3,206` product detail pages,
-   sitemap audit `0 errors`, and representative page payload reductions.
-4. Implement Phase 4B next: reduce listing, category, and search page payloads,
-   especially `index.html`, `products/index.html`, and
-   `products/best/other/index.html`.
-5. Implement Phase 4C after payload work: make representative artifact output
-   deterministic and prove same-source rebuilds produce stable checksums before
-   relying on no-op deploy guards.
-6. Keep Phase 5 as planning only until the GitHub Pages repo-sync model becomes
-   the actual blocker. Use it to compare hosting options, not to change deploy
-   scripts prematurely.
+1. Treat Phase 3A, Phase 3C, Phase 4A, Phase 4B, and Phase 4C as closed unless
+   new CI or QA evidence finds a regression.
+2. Investigate Phase 3B as a narrow cache follow-up: verify the actual Next
+   cache path for Next `16.1.6`/Turbopack in this repo, explain why the restored
+   app cache is only `~0 MB`, and keep any fix limited to `.next/cache`-style
+   compiler cache surfaces rather than generated artifacts.
+3. Address the GitHub Actions Node 20 deprecation warning for
+   `pnpm/action-setup@v4` before the June 2, 2026 default Node 24 switch causes
+   avoidable CI noise.
+4. Move Phase 5 from planning to a concrete deploy-strategy proposal when target
+   repo history growth or the GitHub Pages `1 GB` ceiling becomes the next
+   operational blocker. Compare object storage plus CDN against the current
+   repo-sync model before changing deploy scripts.
 
 ## Phase 3/4 Subagent Execution Plan
 
@@ -536,7 +545,7 @@ Controller closeout after each part:
 
 ## Phase 3A: Single-Job CI Deploy Path
 
-Status: implemented locally on branch `build-optimization-phase-3-plus-more`; pending PR/merge and post-merge CI timing measurement.
+Status: implemented, merged in PR #80, and post-merge `serp.co` CI/deploy verified.
 
 Goal:
 
@@ -615,11 +624,11 @@ Local build smoke completed after Phase 3A:
   - Final artifact `dist/sites/serp.co`: `891M`.
   - Final product artifact `dist/sites/serp.co/products`: `852M`.
 
-Important limitation:
+Local limitation resolved by post-merge CI:
 
 - This local smoke proves the single-job workflow sequence still has a valid build artifact and deploy target plan.
-- It does not measure the real Phase 3A speed delta because the removed `891M` artifact upload/download only happens inside GitHub Actions.
-- The real speed result still requires a post-merge GitHub Actions run.
+- The real Phase 3A speed delta had to be measured inside GitHub Actions because the removed `891M` artifact upload/download only happened there.
+- Post-merge workflow evidence is now recorded below.
 
 Adversarial QA completed:
 
@@ -627,15 +636,31 @@ Adversarial QA completed:
 - Those issues were fixed in the workflow, workflow contract tests, runbook/docs, and this plan.
 - Final QA found one low-severity docs gap: `docs/DEPLOY_RUNBOOK.md` did not mention the repo `SITE_ID` fallback for generic push paths. The runbook now documents that fallback.
 
-Post-merge CI verification still required:
+Post-merge CI verification completed:
 
-- Run a manual `workflow_dispatch` for `serp.co` only after PR merge and only through GitHub Actions.
-- Compare timings against the post-merge baseline:
-  - full workflow wall time
-  - validate/build/audit/deploy step timings
-  - whether artifact upload/download still happens
-- Verify target repo is still `https://github.com/serpcompany/serp.co.git` for `serp.co`.
-- Verify target repo Pages workflow completes.
+- PR #80 merged by rebase into `main` at source SHA
+  `71dc41b2b668224147703f392533d135657840ea`.
+- Automatic push-triggered workflow run `26494689610` succeeded, but it used the
+  repo `SITE_ID` fallback and deployed `serpdownloaders.com`, not `serp.co`.
+  That run is not `serp.co` acceptance evidence.
+- Explicit `serp.co` workflow dispatch run `26494840409` succeeded:
+  - job time: `5m10s`
+  - build step: `1m57s`
+  - deploy step: `43s`
+  - sitemap audit: `3464 urls`, `5 sitemap files`, `0 errors`, `0 warnings`
+  - target repo: `https://github.com/serpcompany/serp.co.git`
+  - target commit: `fd7ee35`
+  - target repo Pages workflow completed successfully
+- Same-source explicit `serp.co` workflow dispatch run `26495179828` succeeded:
+  - job time: `4m24s`
+  - build step: `2m00s`
+  - deploy step: `12s`
+  - sitemap audit: `3464 urls`, `5 sitemap files`, `0 errors`, `0 warnings`
+  - deploy result: `No changes to deploy.`
+  - target repo remained at `fd7ee35`; no new target Pages workflow ran
+- The explicit `serp.co` logs did not contain normal-path
+  `actions/upload-artifact` or `actions/download-artifact` usage for the large
+  static artifact.
 
 Acceptance criteria:
 
@@ -654,7 +679,7 @@ QC risks:
 
 ## Phase 3B: Measure And Harden CI Cache Behavior
 
-Status: implemented locally; CI verification pending.
+Status: cache config merged, but material CI cache benefit is not proven.
 
 Goal:
 
@@ -697,6 +722,21 @@ Metrics to record:
 - Full workflow wall time.
 - Whether Next emits any no-cache warning.
 
+Post-merge cache evidence:
+
+- Explicit `serp.co` run `26494840409` restored a Next cache key, but the
+  restored archive was only about `742 B`; the post-job step saved a new Next
+  cache key.
+- Same-source explicit `serp.co` run `26495179828` restored that new Next cache
+  key, but the restored archive was still only about `750 B`.
+- The same-source run still emitted Next's `No build cache found` warning.
+- `Build static site` was `1m57s` on the first explicit `serp.co` run and
+  `2m00s` on the same-source rerun, so the current cache evidence does not show
+  a material warm-cache win.
+- Keep the existing low-risk app-level cache config, but treat Phase 3B as a
+  narrow follow-up to verify the actual Next `16.1.6`/Turbopack cache output
+  path before adding any more cache complexity.
+
 Acceptance criteria:
 
 - If cache hit improves build time materially, keep it and document the observed win.
@@ -711,7 +751,7 @@ QC risks:
 
 ## Phase 3C: Filter Artifact Copy
 
-Status: implemented locally on branch `build-optimization-phase-3-plus-more`.
+Status: implemented, merged in PR #80, and post-merge `serp.co` CI build/audit verified.
 
 Goal:
 
@@ -837,7 +877,7 @@ Adversarial QA completed:
 
 ## Phase 4A: Reduce Product Detail Page Payloads
 
-Status: implemented locally; CI verification pending.
+Status: implemented, merged in PR #80, and post-merge `serp.co` CI build/audit verified. Page-size deltas below are local artifact measurements.
 
 Goal:
 
@@ -970,7 +1010,7 @@ QC risks:
 
 ## Phase 4B: Reduce Listing, Category, And Search Payloads
 
-Status: implemented locally; CI verification pending.
+Status: implemented, merged in PR #80, and post-merge `serp.co` CI build/audit verified. Page-size deltas below are local artifact measurements.
 
 Goal:
 
@@ -1066,7 +1106,7 @@ QC risks:
 
 ## Phase 4C: Deterministic Artifacts And No-Op Deploy Guard
 
-Status: implemented locally; CI/no-op target repo verification pending.
+Status: implemented, merged in PR #80, and same-source post-merge no-op deploy verified.
 
 Goal:
 
@@ -1185,6 +1225,17 @@ Local verification completed on 2026-05-27 under Node `24.13.1`:
 - `git diff --check`
   - Passed.
 
+Post-merge no-op deploy verification completed:
+
+- First explicit `serp.co` workflow dispatch after merge, run `26494840409`,
+  deployed target repo commit `fd7ee35` because the target artifact still
+  differed from the newly optimized output.
+- Second explicit `serp.co` workflow dispatch from the same source SHA, run
+  `26495179828`, rebuilt and audited successfully, then logged
+  `No changes to deploy.`
+- The target repo remained at `fd7ee35`, and no new target Pages workflow ran
+  for the no-op dispatch.
+
 Remaining nondeterminism/risk:
 
 - The deterministic Next build id is revision-keyed, not output-keyed. A new
@@ -1201,9 +1252,9 @@ Remaining nondeterminism/risk:
   should fail validation or use checked-in source dates instead.
 - Some runtime/operator/test/archive code still records real event times. Those
   paths are outside the static `serp.co` artifact evidence collected here.
-- Final no-op deploy confirmation still requires post-merge GitHub Actions or a
-  clean target-repo comparison showing that the existing deploy script observes
-  no staged target changes.
+- Post-merge no-op deploy behavior is verified for same-source reruns. A new
+  source commit can still legitimately produce a target diff because the
+  deterministic Next build id is source-revision keyed.
 
 Acceptance criteria:
 
