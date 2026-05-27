@@ -85,12 +85,18 @@ describe('build-and-deploy workflow', () => {
     expect(deployStep?.env?.DEPLOY_BRANCH).toBeUndefined()
   })
 
-  it('lets the resolver infer push builds when no site input or repo variable is set', () => {
+  it('does not let repo variables override push path site inference', () => {
     const workflow = loadWorkflow()
     const validateJob = workflow.jobs.validate
     const resolveStep = validateJob.steps?.find(step => step.name === 'Resolve build input')
 
-    expect(resolveStep?.env?.SITE_ID).toBe(`\${{ github.event.inputs.site_id || vars.SITE_ID }}`)
+    expect(resolveStep?.env?.SITE_ID).toBe(
+      `\${{ github.event_name == 'workflow_dispatch' && github.event.inputs.site_id || '' }}`
+    )
+    expect(resolveStep?.env?.PUSH_FALLBACK_SITE_ID).toBe(
+      `\${{ github.event_name == 'push' && vars.SITE_ID || '' }}`
+    )
+    expect(resolveStep?.env?.SITE_ID).not.toContain('vars.SITE_ID')
   })
 
   it('runs for changes to active wrapper apps', () => {
