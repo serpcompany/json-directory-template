@@ -1,8 +1,8 @@
 'use client'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { Search } from 'lucide-react'
 import { useRef } from 'react'
 import { SearchAutocomplete } from '../search/search-autocomplete'
-import { siteCopy } from '@thedaviddias/web-core/site-copy'
 
 interface DesktopSearchFormProps {
   availableCategorySlugs: string[]
@@ -41,9 +41,14 @@ export function DesktopSearchForm({
 
   return (
     <div className="hidden md:block flex-1 2xl:flex-none 2xl:w-full max-w-2xl 2xl:max-w-none">
-      <form onSubmit={onSubmit} className="relative 2xl:max-w-2xl 2xl:mx-auto">
+      <form
+        aria-label="Desktop search"
+        onSubmit={onSubmit}
+        className="relative 2xl:max-w-2xl 2xl:mx-auto"
+      >
         <input
           ref={searchInputRef}
+          aria-label="Search listings"
           type="text"
           placeholder={siteCopy.listingSearchPlaceholder}
           value={searchQuery}
@@ -123,9 +128,10 @@ export function MobileSearchOverlay({
       {/* Search container */}
       <div className="md:hidden fixed inset-x-0 top-16 z-50 bg-background">
         <div className="px-4 sm:px-6 py-3 border-t">
-          <form onSubmit={onSubmit} className="relative">
+          <form aria-label="Mobile search" onSubmit={onSubmit} className="relative">
             <input
               ref={mobileSearchInputRef}
+              aria-label="Search listings"
               type="text"
               placeholder={siteCopy.listingSearchPlaceholder}
               value={searchQuery}

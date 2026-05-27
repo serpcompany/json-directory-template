@@ -134,20 +134,19 @@ test.describe('Mobile Interactions', () => {
     if (await searchTrigger.isVisible()) {
       await searchTrigger.click()
 
-      const searchInput = page.getByRole('textbox').first()
-      if (await searchInput.isVisible()) {
-        await searchInput.fill('directory')
-        await Promise.all([
-          page.waitForURL(/\/search\/?\?.+/, { timeout: 10000 }),
-          searchInput.press('Enter')
-        ]).catch(async () => {
-          await page
-            .getByRole('button', { name: /^search$/i })
-            .first()
-            .click()
-          await expect(page).toHaveURL(/\/search\/?\?.+/, { timeout: 10000 })
-        })
-      }
+      const mobileSearchForm = page.getByRole('form', { name: /mobile search/i })
+      const searchInput = mobileSearchForm.getByRole('textbox', { name: /search listings/i })
+
+      await expect(mobileSearchForm).toBeVisible()
+      await expect(searchInput).toBeVisible()
+      await searchInput.fill('directory')
+      await Promise.all([
+        page.waitForURL(/\/search\/?\?.+/, { timeout: 10000 }),
+        searchInput.press('Enter')
+      ]).catch(async () => {
+        await mobileSearchForm.getByRole('button', { name: /^search$/i }).click()
+        await expect(page).toHaveURL(/\/search\/?\?.+/, { timeout: 10000 })
+      })
     }
   })
 })

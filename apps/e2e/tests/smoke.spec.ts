@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, type Page, type Response, test } from '@playwright/test'
 
 const detailListing = {
   name: '123Movies Video Downloader',
@@ -9,11 +9,23 @@ const searchListing = {
   query: '123movies'
 } as const
 
-async function expectUnavailableRoute(
-  page: Parameters<typeof test>[1] extends never ? never : any,
-  path: string
-) {
-  const response = await page.goto(path, { waitUntil: 'domcontentloaded' })
+async function gotoWithRetry(page: Page, path: string): Promise<Response | null> {
+  let lastError: unknown
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      return await page.goto(path, { waitUntil: 'domcontentloaded' })
+    } catch (error) {
+      lastError = error
+      await page.waitForTimeout(1000)
+    }
+  }
+
+  throw lastError
+}
+
+async function expectUnavailableRoute(page: Page, path: string) {
+  const response = await gotoWithRetry(page, path)
   const status = response?.status()
 
   if (status === 404) {
@@ -59,6 +71,9 @@ test.describe('Static starter smoke tests', () => {
 
     const directoryRegion = page.getByRole('region', { name: /browse the directory/i })
     const searchInput = directoryRegion.getByPlaceholder(/search the directory/i)
+
+    await expect(directoryRegion).toBeVisible({ timeout: 60000 })
+    await expect(searchInput).toBeVisible({ timeout: 60000 })
     await searchInput.fill(searchListing.query)
 
     await expect(searchInput).toHaveValue(searchListing.query)
