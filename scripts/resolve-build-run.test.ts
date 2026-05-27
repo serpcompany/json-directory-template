@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { inferSiteIdFromChangedPaths, resolveBuildRun } from './resolve-build-run.ts'
+import {
+  inferSiteIdFromChangedPaths,
+  resolveBuildRun,
+  resolvePushSiteInputFromChangedPaths
+} from './resolve-build-run.ts'
 
 describe('resolveBuildRun', () => {
   it('resolves the artifact dir from the checked-in site config id', () => {
@@ -62,6 +66,17 @@ describe('resolveBuildRun', () => {
       inferSiteIdFromChangedPaths(['apps/serp.co/app/layout.tsx', 'apps/serp.ai/app/layout.tsx'])
     ).toThrow(
       'Push changed multiple site-specific paths (serp.ai, serp.co). Set SITE_ID explicitly or run workflow_dispatch for one site.'
+    )
+  })
+
+  it('rejects push builds that cannot infer a site-specific target', () => {
+    expect(() =>
+      resolvePushSiteInputFromChangedPaths([
+        '.github/workflows/build-and-deploy.yml',
+        'scripts/resolve-build-run.ts'
+      ])
+    ).toThrow(
+      'Push changed no site-specific paths. Set SITE_ID explicitly or run workflow_dispatch for one site.'
     )
   })
 })

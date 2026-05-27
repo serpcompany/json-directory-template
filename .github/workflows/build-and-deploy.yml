@@ -40,7 +40,7 @@ jobs:
       - name: Resolve build input
         id: resolve
         env:
-          SITE_ID: ${{ github.event.inputs.site_id || vars.SITE_ID }}
+          SITE_ID: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.site_id || '' }}
         run: ./node_modules/.bin/tsx scripts/resolve-build-run.ts >> "$GITHUB_OUTPUT"
 
       - name: Validate site data

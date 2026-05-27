@@ -67,6 +67,18 @@ export function inferSiteIdFromChangedPaths(paths: string[]): string | undefined
   return [...matchedSiteIds][0]
 }
 
+export function resolvePushSiteInputFromChangedPaths(paths: string[]): { siteId: string } {
+  const siteId = inferSiteIdFromChangedPaths(paths)
+
+  if (!siteId) {
+    throw new Error(
+      'Push changed no site-specific paths. Set SITE_ID explicitly or run workflow_dispatch for one site.'
+    )
+  }
+
+  return { siteId }
+}
+
 function readPushEventChangedPaths(env: NodeJS.ProcessEnv): string[] {
   if (env.GITHUB_EVENT_NAME !== 'push' || !env.GITHUB_EVENT_PATH) {
     return []
@@ -95,9 +107,9 @@ export function resolveBuildRun(
 } {
   const input = hasExplicitSiteInput(argv, env)
     ? parseSiteInputArgs(argv, env)
-    : {
-        siteId: inferSiteIdFromChangedPaths(readPushEventChangedPaths(env))
-      }
+    : env.GITHUB_EVENT_NAME === 'push'
+      ? resolvePushSiteInputFromChangedPaths(readPushEventChangedPaths(env))
+      : {}
   const definition = loadCheckedInSiteFromInput(input)
 
   return {
