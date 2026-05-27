@@ -34,6 +34,9 @@ This keeps the current strategy explicit:
 
 The public issue repo is never canonical listing data. Do not add automation that writes source JSON
 from public issues, and do not reintroduce badge-token runtime verification for the static flow.
+Offsite product URLs in public issue bodies are submission data only; they must not be used to infer
+which site should deploy. The deploy resolver only trusts checked-in site domains, public URLs, and
+configured issue repo links as site signals.
 
 ## What fails early
 

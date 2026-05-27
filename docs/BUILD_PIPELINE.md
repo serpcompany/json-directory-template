@@ -164,6 +164,26 @@ validate/build/audit/deploy in one job:
 - deploy repo and branch are not workflow inputs during normal deploys; they
   must come from checked-in site config
 
+The submission-aware metadata pass builds its signal map from checked-in site config only:
+
+- `site.id`
+- `site.domain`
+- `site.publicUrl`
+- `social.githubIssueOwner` plus `social.githubIssueRepo`
+- `social.githubIssuesUrl`
+
+When PR metadata links to a configured public issue repo, the resolver reads that public issue's
+title/body and scans it for the same checked-in signals. Product URLs inside public issue bodies
+are reviewer context only; an unrelated submitted product domain must not become a deploy target.
+
+Guardrails:
+
+- shared-only changes with no site signal skip deploy
+- starter/default deploys only when it is the only matched site
+- metadata that matches multiple concrete sites fails and asks for manual `workflow_dispatch`
+  per `site_id`
+- normal deploys do not use repository variables as fallback site IDs
+
 ## Design rules
 
 We should treat hosted/auth/submission as a future extension path, not active scope.
