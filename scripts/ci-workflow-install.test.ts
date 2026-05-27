@@ -29,15 +29,24 @@ function loadYamlFile<T>(path: string): T {
 }
 
 const githubExpression = (expression: string) => `$${expression}`
+const pnpmAction = 'pnpm/action-setup@v6'
 
 describe('ci workflow install isolation', () => {
   it('installs pnpm into a job-scoped temp directory on self-hosted runners', () => {
     const action = loadYamlFile<InstallAction>('.github/actions/install/action.yml')
-    const pnpmStep = action.runs.steps.find(step => step.uses === 'pnpm/action-setup@v4')
+    const pnpmStep = action.runs.steps.find(step => step.uses === pnpmAction)
 
     expect(pnpmStep?.with?.dest).toContain('runner.temp')
     expect(pnpmStep?.with?.dest).toContain('github.run_id')
     expect(pnpmStep?.with?.dest).toContain('github.job')
+  })
+
+  it('uses the Node 24-compatible pnpm setup action', () => {
+    const action = loadYamlFile<InstallAction>('.github/actions/install/action.yml')
+    const actionUses = action.runs.steps.map(step => step.uses).filter(Boolean)
+
+    expect(actionUses).toContain(pnpmAction)
+    expect(actionUses).not.toContain('pnpm/action-setup@v4')
   })
 
   it('serializes release and build-deploy workflows on main instead of canceling either run', () => {
@@ -67,6 +76,9 @@ describe('ci workflow install isolation', () => {
     expect(cachePath).not.toContain('apps/*/out')
     expect(cachePath).not.toContain('dist/sites')
     expect(cachePath).not.toContain('.next/**')
+    expect(cachePath).not.toContain('.next/server')
+    expect(cachePath).not.toContain('.next/static')
+    expect(cachePath).not.toContain('.next/build')
     expect(cacheStep?.with?.key).toContain("hashFiles('**/pnpm-lock.yaml')")
     expect(cacheStep?.with?.key).toContain(
       "hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx')"
