@@ -44,7 +44,9 @@ describe('pr-review workflow', () => {
 
     expect(checkoutStep?.with?.['fetch-depth']).toBe(0)
     expect(stepRuns).toContain('pnpm validate:sites')
-    expect(stepRuns).toContain('pnpm exec biome check --changed --since=origin/main')
+    expect(stepRuns).toContain(
+      'pnpm exec biome check --changed --since=origin/main --no-errors-on-unmatched'
+    )
     expect(stepRuns).not.toContain('pnpm validate:site -- --site default')
     expect(stepRuns).not.toContain('pnpm validate:site -- --site serpdownloaders.com')
     expect(stepRuns).not.toContain('pnpm validate:site -- --site serp.software')
