@@ -381,11 +381,13 @@ Recommended order from here:
    compiler cache surfaces rather than generated artifacts.
 3. Address the GitHub Actions Node 20 deprecation warning for
    `pnpm/action-setup@v4` before the June 2, 2026 default Node 24 switch causes
-   avoidable CI noise.
-4. Move Phase 5 from planning to a concrete deploy-strategy proposal when target
-   repo history growth or the GitHub Pages `1 GB` ceiling becomes the next
-   operational blocker. Compare object storage plus CDN against the current
-   repo-sync model before changing deploy scripts.
+   avoidable CI noise. Locally, this is now implemented by upgrading
+   `pnpm/action-setup` to `v6` and `dorny/paths-filter` to `v4`; it remains
+   CI-pending until a PR run confirms the warnings are gone.
+4. Move Phase 5 from planning to implementation only after review of the
+   concrete deploy-strategy proposal in `docs/DEPLOY_STRATEGY_EXIT_PLAN.md`.
+   The proposal recommends object storage plus CDN when measured artifact size,
+   target repo growth, or Pages limits become the operational blocker.
 
 ## Phase 3/4 Subagent Execution Plan
 
@@ -679,7 +681,8 @@ QC risks:
 
 ## Phase 3B: Measure And Harden CI Cache Behavior
 
-Status: cache config merged, but material CI cache benefit is not proven.
+Status: closed as not worth more complexity under the current Next
+`16.1.6`/Turbopack static-export output shape.
 
 Goal:
 
@@ -737,17 +740,92 @@ Post-merge cache evidence:
   narrow follow-up to verify the actual Next `16.1.6`/Turbopack cache output
   path before adding any more cache complexity.
 
+Local closeout evidence on 2026-05-27:
+
+- A Node `24.13.1` local `CI=true pnpm build:site -- --site serp.co` run passed
+  in `44.60s`.
+- After that build, `apps/serp.co/.next/cache` was only `12K` and contained only
+  `config.json`, `.rscinfo`, and `.previewinfo`.
+- The large generated output lived outside the safe cache surface:
+  - `apps/serp.co/.next/server`: `1.8G`
+  - `apps/serp.co/.next/static`: `4.0M`
+  - `apps/serp.co/.next/build`: `788K`
+  - `apps/serp.co/out`: `1.8G`
+- All active wrapper app `.next/cache` directories were tiny locally:
+  `8K` for most wrappers, `12K` for `serp.co`, and `72K` for `starter`.
+- These large paths are generated build/deploy output and remain deliberately
+  excluded from the GitHub Actions cache.
+- Conclusion: the configured `.next/cache` path matches official guidance, but
+  this repo's current static-export/Turbopack build does not put meaningful
+  reusable compiler output there. Caching `.next/server`, `.next/static`,
+  `.next/build`, `apps/*/out`, or `dist/sites/**` would be generated-artifact
+  caching with stale-output and restore/upload risks. Do not add deeper cache
+  complexity unless a future Next version writes a meaningful safe cache or CI
+  evidence changes.
+
 Acceptance criteria:
 
 - If cache hit improves build time materially, keep it and document the observed win.
 - If cache hit is negligible, keep only low-risk dependency/app cache config and do not add more cache complexity.
 - No generated artifacts are restored from cache into deploy outputs.
 
+Accepted result:
+
+- Phase 3B is closed with no cache path change. Keep the low-risk app-level
+  `.next/cache` path for compatibility with official guidance, but do not claim
+  a material cache win and do not cache generated artifacts.
+
 QC risks:
 
 - Cache keys that invalidate on every content-only change.
 - Cache archives that take longer to upload/download than the work they save.
 - Stale build output from caching more than `.next/cache`.
+
+## GitHub Actions Node 20 Warning Cleanup
+
+Status: implemented locally; CI-pending.
+
+Goal:
+
+- Remove the known Node 20 action deprecation warnings from PR Review and the
+  shared install action without changing build/deploy behavior.
+
+Implemented result:
+
+- Upgraded `.github/actions/install/action.yml` from `pnpm/action-setup@v4` to
+  `pnpm/action-setup@v6`.
+- Upgraded `.github/workflows/pr-review.yml` from `dorny/paths-filter@v3` to
+  `dorny/paths-filter@v4`.
+- Preserved the existing PR Review E2E filter paths:
+  `apps/starter/app/**`, `apps/starter/components/**`,
+  `apps/starter/lib/**`, `apps/starter/public/**`, `apps/e2e/**`, and
+  `packages/ui/**`.
+- Added workflow contract tests that assert docs-only and unrelated source paths
+  do not match the E2E filter while starter/e2e/UI paths still do.
+- No deploy target behavior changed.
+
+Local verification on 2026-05-27 under Node `24.13.1`:
+
+```sh
+pnpm exec vitest run scripts/ci-workflow-install.test.ts scripts/pr-review-workflow.test.ts scripts/build-and-deploy-workflow.test.ts scripts/next-config-build-id.test.ts
+pnpm test:repo
+pnpm exec biome check .github/actions/install/action.yml .github/workflows/pr-review.yml scripts/ci-workflow-install.test.ts scripts/pr-review-workflow.test.ts configs/next/index.ts scripts/next-config-build-id.test.ts
+git diff --check
+```
+
+Results:
+
+- Focused workflow/build-id tests passed: `4` files, `23` tests.
+- `pnpm test:repo` passed: `19` files, `125` tests.
+- Biome check passed on the touched managed workflow/test/config files.
+- Git diff whitespace check passed.
+
+CI-pending evidence:
+
+- A PR Review run should confirm that `pnpm/action-setup@v6` and
+  `dorny/paths-filter@v4` no longer emit Node 20 action deprecation warnings.
+- The same run should confirm docs-only changes still skip E2E, while E2E runs
+  for the preserved relevant paths.
 
 ## Phase 3C: Filter Artifact Copy
 
@@ -1256,6 +1334,41 @@ Remaining nondeterminism/risk:
   source commit can still legitimately produce a target diff because the
   deterministic Next build id is source-revision keyed.
 
+New-commit churn decision on 2026-05-27:
+
+- Two local Node `24.13.1` builds simulated different source revisions with
+  `NEXT_BUILD_ID=phase-churn-a` and `NEXT_BUILD_ID=phase-churn-b`, without
+  changing checked-in source.
+- The generated build IDs differed:
+  - `phase-churn-a`: `b190e64f5fa149c32591`
+  - `phase-churn-b`: `b189e96313455a051f22`
+- Raw artifact hashes differed because HTML/RSC references include
+  `_next/static/<buildId>`:
+  - `phase-churn-a` full-tree hash: `35312e7c573769bfb059eb6016c626cd72876014cc7f9fd9637ef4fdb452aaff`
+  - `phase-churn-b` full-tree hash: `7c6f8fd22d5de78a8387c76d5c6d88c788a32507db05dd841d5f2d776a26cc21`
+  - representative `index.html` and
+    `products/youtube-downloader/reviews/index.html` hashes also differed.
+- A normalized manifest that replaced the build ID in both file paths and file
+  contents matched for both builds:
+  `061554e7587eb6f6cea09ce2f5621eacb7e070a1665448dd16715180648092c9`.
+- Both builds produced `3,636` final files and `4,017,803` bytes under
+  `_next/static/**`.
+- `sitemap-index.xml` remained byte-identical:
+  `37a621ee489954fdd84b51bf92f82ae270c20b12ed43a408cdc433ef7c450e81`.
+- `pnpm audit:sitemaps -- --site serp.co --artifact` passed after the simulated
+  new-revision build: `3464 urls`, `5 sitemap files`, `0 errors`,
+  `0 warnings`.
+- `pnpm exec vitest run scripts/serp-co-artifact-links.test.ts` passed after the
+  simulated new-revision build: `12` tests.
+- JSON-LD/category dates remained checked-in source dates in representative
+  category output, for example `datePublished` and `dateModified` were
+  `2026-05-16` for `products/best/other`.
+- Decision: keep the source-revision-keyed build ID and accept new-commit
+  `_next/static/<buildId>` churn for now. An output-keyed build ID would need to
+  hash every deployed asset and every HTML/RSC reference before Next emits final
+  paths; this is not proven safe here and could reuse stale asset paths across
+  changed output.
+
 Acceptance criteria:
 
 - Repeated same-source local builds produce identical representative page checksums.
@@ -1270,7 +1383,7 @@ QC risks:
 
 ## Phase 5: Deploy Strategy Exit Plan
 
-Status: research/planning only.
+Status: decision-ready proposal documented; implementation not started.
 
 Goal:
 
@@ -1289,6 +1402,7 @@ Expected write set:
 
 - docs only at first
 - no deployment script changes unless a separate implementation phase is approved
+- current proposal: `docs/DEPLOY_STRATEGY_EXIT_PLAN.md`
 
 Research requirements:
 
@@ -1301,6 +1415,21 @@ Acceptance criteria for planning:
 - A migration proposal exists with cost, operational risk, rollback plan, and required secrets.
 - No real deploy is run.
 - No deploy target override is introduced.
+
+Implemented planning result:
+
+- Added `docs/DEPLOY_STRATEGY_EXIT_PLAN.md`.
+- Compared current GitHub Pages repo sync, GitHub Pages artifact deploy, object
+  storage plus CDN, and hosted Next runtime.
+- Recommended object storage plus CDN as the long-term path because it removes
+  target Git repo history growth and the GitHub Pages `1 GB` ceiling while
+  preserving static-first build authority.
+- Documented DNS/CNAME, cache headers, rollback, required secrets, artifact
+  retention, cost surfaces, migration sequence, and incident checks.
+- Trigger is tied to measured artifact size, target repo size/reliability, and
+  Pages publish limits. `serp.co` is already at about `892M`, so this is now a
+  planning trigger, not an automatic deploy-script change.
+- No deploy scripts or deploy target override patterns were changed.
 
 ## Guardrails
 
