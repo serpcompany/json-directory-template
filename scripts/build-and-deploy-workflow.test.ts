@@ -9,6 +9,7 @@ interface WorkflowJob {
   needs?: string | string[]
   steps?: Array<{
     env?: Record<string, string>
+    if?: string
     name?: string
     run?: string
     uses?: string
@@ -25,6 +26,7 @@ interface WorkflowDefinition {
       inputs: Record<string, { default?: string; required?: boolean }>
     }
   }
+  permissions?: Record<string, string>
   jobs: Record<string, WorkflowJob>
 }
 
@@ -87,13 +89,18 @@ describe('build-and-deploy workflow', () => {
     const auditStep = steps.find(step => step.name === 'Audit XML sitemaps')
     const deployStep = steps.find(step => step.name === 'Deploy')
     const stepNames = steps.map(step => step.name)
+    const deployGuard = `steps.resolve.outputs.should_deploy == 'true'`
 
+    expect(validateStep?.if).toBe(deployGuard)
     expect(validateStep?.run).toBe('pnpm validate:site')
     expect(validateStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
+    expect(buildStep?.if).toBe(deployGuard)
     expect(buildStep?.run).toBe('pnpm build:site')
     expect(buildStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
+    expect(auditStep?.if).toBe(deployGuard)
     expect(auditStep?.run).toBe('pnpm audit:sitemaps -- --site "$SITE_ID"')
     expect(auditStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
+    expect(deployStep?.if).toBe(deployGuard)
     expect(deployStep?.run).toBe('pnpm deploy:site')
     expect(deployStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
     expect(stepNames.indexOf('Validate site data')).toBeLessThan(
@@ -110,9 +117,11 @@ describe('build-and-deploy workflow', () => {
     const deployJob = workflow.jobs.deploy
     const deployStep = deployJob.steps?.find(step => step.name === 'Deploy')
     const authStep = deployJob.steps?.find(step => step.name === 'Verify deploy auth')
+    const deployGuard = `steps.resolve.outputs.should_deploy == 'true'`
 
     expect(deployStep).toBeDefined()
     expect(deployStep?.env?.DEPLOY_TOKEN).toBe(`\${{ secrets.GH_PAT }}`)
+    expect(authStep?.if).toBe(deployGuard)
     expect(authStep?.env?.DEPLOY_TOKEN).toBe(`\${{ secrets.GH_PAT }}`)
     expect(authStep?.run).toContain('Missing GH_PAT secret required for cross-repo deploy.')
   })
@@ -128,19 +137,55 @@ describe('build-and-deploy workflow', () => {
     expect(deployStep?.env?.DEPLOY_BRANCH).toBe('')
   })
 
-  it('does not let repo variables override push path site inference', () => {
+  it('does not use repo variables as a push fallback site id', () => {
     const workflow = loadWorkflow()
     const deployJob = workflow.jobs.deploy
     const resolveStep = deployJob.steps?.find(step => step.name === 'Resolve build input')
+    const workflowRaw = readFileSync(
+      resolve(process.cwd(), '.github/workflows/build-and-deploy.yml'),
+      'utf8'
+    )
+    const legacyPushFallbackEnv = ['PUSH', 'FALLBACK_SITE_ID'].join('_')
+    const legacyRepoSiteVariable = ['vars', 'SITE_ID'].join('.')
 
     expect(resolveStep?.env?.SITE_ID).toBe(
       `\${{ github.event_name == 'workflow_dispatch' && github.event.inputs.site_id || '' }}`
     )
-    expect(resolveStep?.env?.PUSH_FALLBACK_SITE_ID).toBe(
-      `\${{ github.event_name == 'push' && vars.SITE_ID || '' }}`
-    )
+    expect(resolveStep?.env?.[legacyPushFallbackEnv]).toBeUndefined()
     expect(resolveStep?.env?.NEXT_PUBLIC_SITE_ID).toBe('')
-    expect(resolveStep?.env?.SITE_ID).not.toContain('vars.SITE_ID')
+    expect(resolveStep?.env?.SITE_ID).not.toContain(legacyRepoSiteVariable)
+    expect(workflowRaw).not.toContain(legacyPushFallbackEnv)
+    expect(workflowRaw).not.toContain(legacyRepoSiteVariable)
+  })
+
+  it('passes the GitHub token to the resolver with PR read permissions', () => {
+    const workflow = loadWorkflow()
+    const deployJob = workflow.jobs.deploy
+    const resolveStep = deployJob.steps?.find(step => step.name === 'Resolve build input')
+
+    expect(resolveStep?.env?.GITHUB_TOKEN).toBe(`\${{ github.token }}`)
+    expect(workflow.permissions).toMatchObject({
+      contents: 'read',
+      'pull-requests': 'read'
+    })
+  })
+
+  it('guards deploy work when the resolver returns no deploy target', () => {
+    const workflow = loadWorkflow()
+    const deployJob = workflow.jobs.deploy
+    const guardedStepNames = [
+      'Validate site data',
+      'Build static site',
+      'Audit XML sitemaps',
+      'Verify deploy auth',
+      'Deploy'
+    ]
+
+    for (const stepName of guardedStepNames) {
+      const step = deployJob.steps?.find(candidate => candidate.name === stepName)
+
+      expect(step?.if).toBe(`steps.resolve.outputs.should_deploy == 'true'`)
+    }
   })
 
   it('runs for changes to active wrapper apps', () => {
