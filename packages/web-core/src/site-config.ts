@@ -28,6 +28,7 @@ export type SiteConfig = {
   githubRepoUrl: string
   githubUrl: string
   id: string
+  listingSourcePublishedAt?: string
   listingRouteBasePath: string
   name: string
   networkBrandGroup: string | null
@@ -119,6 +120,7 @@ export function resolveSiteConfig(
   siteId = process.env.NEXT_PUBLIC_SITE_ID || process.env.SITE_ID || defaultSiteConfig.id
 ): SiteConfig {
   const configuredSite = resolveCheckedInSiteConfig(siteId)
+  const { listingSource } = configuredSite.content
 
   return {
     branding: {
@@ -145,6 +147,8 @@ export function resolveSiteConfig(
     githubRepoUrl: configuredSite.social.githubRepoUrl,
     githubUrl: configuredSite.social.githubUrl,
     id: configuredSite.id,
+    listingSourcePublishedAt:
+      listingSource.kind === 'trial-products-json' ? listingSource.publishedAt : undefined,
     listingRouteBasePath: configuredSite.routes.listingBasePath,
     name: configuredSite.site.name,
     networkBrandGroup: configuredSite.networkBrandGroup,

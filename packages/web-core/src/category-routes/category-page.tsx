@@ -26,6 +26,7 @@ import {
 } from '../seo-config'
 import { siteConfig } from '../site-config'
 import { siteCopy } from '../site-copy'
+import { resolveCollectionPageSchemaDates } from './schema-dates'
 
 type JsonLdProps = {
   data: Record<string, unknown>
@@ -126,6 +127,7 @@ export function CategoryRoutePage({
       ? categoryProjects.slice(0, 200)
       : categoryProjects
   const listedCategoryProjectCards = listedCategoryProjects.map(toWebsiteBrowseCardMetadata)
+  const schemaDates = resolveCollectionPageSchemaDates(categoryProjects)
 
   return {
     categoryProjects,
@@ -199,8 +201,7 @@ export function CategoryRoutePage({
                 url: SITE_LOGO_URL
               }
             },
-            datePublished: new Date().toISOString(),
-            dateModified: new Date().toISOString()
+            ...schemaDates
           }}
         />
         {seoContent.faqQuestions && seoContent.faqQuestions.length > 0 && (
