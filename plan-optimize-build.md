@@ -381,9 +381,10 @@ Recommended order from here:
    compiler cache surfaces rather than generated artifacts.
 3. Address the GitHub Actions Node 20 deprecation warning for
    `pnpm/action-setup@v4` before the June 2, 2026 default Node 24 switch causes
-   avoidable CI noise. Locally, this is now implemented by upgrading
-   `pnpm/action-setup` to `v6` and `dorny/paths-filter` to `v4`; it remains
-   CI-pending until a PR run confirms the warnings are gone.
+   avoidable CI noise. This is now implemented and merged in PR #82:
+   `pnpm/action-setup` was upgraded to `v6` and `dorny/paths-filter` was
+   upgraded to `v4`; the PR and post-merge workflow logs showed those action
+   versions with no Node 20 deprecation warning matches.
 4. Move Phase 5 from planning to implementation only after review of the
    concrete deploy-strategy proposal in `docs/DEPLOY_STRATEGY_EXIT_PLAN.md`.
    The proposal recommends object storage plus CDN when measured artifact size,
@@ -783,7 +784,7 @@ QC risks:
 
 ## GitHub Actions Node 20 Warning Cleanup
 
-Status: implemented locally; CI-pending.
+Status: implemented, merged in PR #82, and CI verified.
 
 Goal:
 
@@ -820,12 +821,35 @@ Results:
 - Biome check passed on the touched managed workflow/test/config files.
 - Git diff whitespace check passed.
 
-CI-pending evidence:
+CI evidence:
 
-- A PR Review run should confirm that `pnpm/action-setup@v6` and
-  `dorny/paths-filter@v4` no longer emit Node 20 action deprecation warnings.
-- The same run should confirm docs-only changes still skip E2E, while E2E runs
-  for the preserved relevant paths.
+- PR #82 merged by rebase into `main` at source SHA
+  `81cc702143e505e59f3012002a3787bad4de0a77`.
+- PR Review run `26497894024` passed:
+  - `Validate`: passed in `2m10s`
+  - `Detect changes`: passed in `16s`
+  - `E2E Tests`: skipped for this non-E2E path set
+  - logs showed `pnpm/action-setup@v6` and `dorny/paths-filter@v4`
+  - log checks found no `Node.js 20` or `Node20` deprecation warning matches
+- Label PRs run `26497894026` passed.
+- Post-merge Build & Deploy run `26498049605` passed in `3m11s`.
+  Because this was a generic main push, it used the repo `SITE_ID` fallback and
+  deployed `serpdownloaders.com`, not `serp.co`.
+- Post-merge Build & Deploy evidence:
+  - resolved `PUSH_FALLBACK_SITE_ID=serpdownloaders.com`
+  - validated `105` entries
+  - built `130` static pages
+  - sitemap audit passed: `115 urls`, `4 sitemap files`, `0 errors`,
+    `0 warnings`
+  - deploy target was `https://github.com/serpcompany/serpdownloaders.com.git`
+  - target commit was `7f343aa`
+  - target Pages workflow run `26498139524` completed successfully
+- Post-merge Release run `26498049599` passed in `1m43s` and also used
+  `pnpm/action-setup@v6` with no Node 20 deprecation warning matches.
+- The post-merge Build & Deploy run still logged Next's
+  `No build cache found` warning and saved a tiny Next cache archive of `747`
+  bytes, which supports the Phase 3B decision to avoid deeper generated-output
+  caching.
 
 ## Phase 3C: Filter Artifact Copy
 
