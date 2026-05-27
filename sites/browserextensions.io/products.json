@@ -7746,5 +7746,59 @@
         "url": "https://browserextensions.io/products/youtube-downloader/"
       }
     ]
+  },
+  "video-downloadhelper": {
+    "product": {
+      "title": "Video DownloadHelper",
+      "slug": "video-downloadhelper",
+      "categories": [
+        "video-downloaders"
+      ],
+      "tagline": "Detect media on web pages and save supported video or audio files from your browser.",
+      "productPage": "https://www.downloadhelper.net/"
+    },
+    "content": {
+      "body": "## Overview\n\nVideo DownloadHelper is a browser extension for detecting media files on web pages and helping users save supported video or audio locally. It is aimed at people who need a browser-based media capture workflow instead of a separate desktop downloader.\n\nThe extension has public listings for Firefox and Chrome, plus an official help center. It is best treated as a general media detection tool: availability and output options depend on the current page, browser, and the site serving the media.\n\n## Key Features\n\n- Detects supported media files while you browse\n- Offers browser-based save actions for supported video and audio sources\n- Provides public extension builds for Firefox and Chrome\n- Includes official documentation for setup and usage questions\n- Works as a general-purpose helper rather than a site-specific downloader\n\n## Platform Support\n\n### Browsers\n\n- Firefox\n- Chrome\n\n## Privacy and Permissions\n\nOnly save media that you own or have permission to download. Platform terms, DRM, browser policies, and site-specific restrictions can limit what any downloader extension can access.",
+      "faq": [
+        {
+          "question": "What is Video DownloadHelper?",
+          "answer": "Video DownloadHelper is a browser extension that detects supported media on web pages and helps save video or audio files locally."
+        },
+        {
+          "question": "Which browsers does it support?",
+          "answer": "Video DownloadHelper has public extension listings for Firefox and Chrome."
+        },
+        {
+          "question": "Does it work on every website?",
+          "answer": "No. Media detection depends on the browser, page implementation, available streams, platform rules, and any DRM or access restrictions."
+        },
+        {
+          "question": "Is this listing copied automatically from the public issue?",
+          "answer": "No. A maintainer reviewed the public submission and added this checked-in listing through the normal source repository workflow."
+        }
+      ]
+    },
+    "relatedLinks": [
+      {
+        "label": "Official website",
+        "url": "https://www.downloadhelper.net/"
+      },
+      {
+        "label": "Firefox Add-ons",
+        "url": "https://addons.mozilla.org/firefox/addon/video-downloadhelper/"
+      },
+      {
+        "label": "Chrome Web Store",
+        "url": "https://chromewebstore.google.com/detail/video-downloadhelper/lmjnegcaeklhafolokijcfjliaokphfk"
+      },
+      {
+        "label": "Help Center",
+        "url": "https://help.downloadhelper.net/article/6-what-is-vdh"
+      },
+      {
+        "label": "BrowserExtensions.io submission",
+        "url": "https://github.com/serpcompany/browserextensions.io/issues/3"
+      }
+    ]
   }
 }
