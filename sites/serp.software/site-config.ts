@@ -48,9 +48,9 @@ export const serpSoftwareSiteConfig: CheckedInSiteConfigOverride = {
     tagline: 'Downloader software in one searchable directory.'
   },
   social: {
-    githubIssueOwner: null,
-    githubIssueRepo: null,
-    githubIssuesUrl: null,
+    githubIssueOwner: 'serpcompany',
+    githubIssueRepo: 'serp.software',
+    githubIssuesUrl: 'https://github.com/serpcompany/serp.software/issues',
     githubRepoUrl: 'https://github.com/serpcompany',
     githubUrl: 'https://github.com/serpcompany',
     redditUrl: 'https://www.reddit.com/r/serpapps/',
