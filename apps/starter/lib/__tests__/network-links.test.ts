@@ -16,15 +16,15 @@ describe('resolveNetworkLinks', () => {
     jest.resetModules()
   })
 
-  it('omits issue tracker links when the site has no GitHub issue target', async () => {
-    process.env.NEXT_PUBLIC_SITE_ID = 'serpdownloaders.com'
-    process.env.SITE_ID = 'serpdownloaders.com'
+  it('omits issue tracker links when the site has no configured public issue target', async () => {
+    process.env.NEXT_PUBLIC_SITE_ID = 'default'
+    process.env.SITE_ID = 'default'
     jest.resetModules()
 
     const { resolveNetworkLinks } = await import('@thedaviddias/web-core/network-links')
     const links = resolveNetworkLinks(emptySiteContent)
 
-    expect(links.map(link => link.label)).toEqual(['GitHub'])
+    expect(links.map(link => link.label)).toEqual([])
     expect(links).not.toEqual(
       expect.arrayContaining([
         expect.objectContaining({
