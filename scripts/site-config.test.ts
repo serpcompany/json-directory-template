@@ -128,9 +128,11 @@ describe('loadCheckedInSite', () => {
     expect(config.copy.brandsLabel).toBe('Brands')
     expect(config.features.showBrands).toBe(true)
     expect(config.networkBrandGroup).toBe('serpxxxGroup')
-    expect(config.social.githubIssueOwner).toBeNull()
-    expect(config.social.githubIssueRepo).toBeNull()
-    expect(config.social.githubIssuesUrl).toBeNull()
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('pornvideodownloaders.com')
+    expect(config.social.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/pornvideodownloaders.com/issues'
+    )
     expect(config.deploy).toEqual({
       branch: 'main',
       preserve: ['.github/workflows/deploy.yml', 'CNAME'],
@@ -587,9 +589,9 @@ describe('resolveResolvedSiteConfig', () => {
       },
       description: 'Downloaders for adult video platforms and creator sites.',
       domain: 'pornvideodownloaders.com',
-      githubIssueOwner: null,
-      githubIssueRepo: null,
-      githubIssuesUrl: null,
+      githubIssueOwner: 'serpcompany',
+      githubIssueRepo: 'pornvideodownloaders.com',
+      githubIssuesUrl: 'https://github.com/serpcompany/pornvideodownloaders.com/issues',
       id: 'pornvideodownloaders.com',
       networkBrandGroup: 'serpxxxGroup',
       docsRouteBasePath: 'docs',
