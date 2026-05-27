@@ -257,9 +257,9 @@ describe('loadCheckedInSite', () => {
     expect(config.features.showBrands).toBe(true)
     expect(config.features.showGuides).toBe(true)
     expect(config.analytics?.gtmId).toBe('GTM-W59GNHXF')
-    expect(config.social.githubIssueOwner).toBeNull()
-    expect(config.social.githubIssueRepo).toBeNull()
-    expect(config.social.githubIssuesUrl).toBeNull()
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('serp.co')
+    expect(config.social.githubIssuesUrl).toBe('https://github.com/serpcompany/serp.co/issues')
     expect(config.deploy).toEqual({
       branch: 'main',
       preserve: ['.github/workflows/deploy.yml', 'CNAME'],
