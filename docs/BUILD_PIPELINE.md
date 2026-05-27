@@ -154,8 +154,11 @@ validate/build/audit/deploy in one job:
 - push events first infer one changed checked-in site from the push payload
 - if the push payload only contains shared paths, the resolver checks the
   associated merged PR files through the GitHub API
-- shared-only pushes do not deploy; use workflow dispatch with `site_id` when a
-  shared change should intentionally deploy one site
+- if the associated merged PR also only contains shared paths, the resolver checks
+  PR title/body text, linked configured public issue URLs, linked public issue
+  body/title text, and push commit messages for exactly one checked-in site signal
+- shared-only pushes with no concrete site signal do not deploy; use workflow
+  dispatch with `site_id` when a shared change should intentionally deploy one site
 - the generated artifact stays in the job workspace for deploy; normal deploys do
   not upload/download the large artifact between jobs
 - deploy repo and branch are not workflow inputs during normal deploys; they

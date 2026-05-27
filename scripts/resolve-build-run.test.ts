@@ -216,8 +216,10 @@ describe('resolveBuildRun', () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
+          body: 'Shared resolver cleanup only.',
           merged_at: '2026-05-26T12:00:00Z',
-          number: 42
+          number: 42,
+          title: 'Update shared resolver'
         }
       ],
       'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
@@ -254,6 +256,334 @@ describe('resolveBuildRun', () => {
     ).resolves.toEqual({
       shouldDeploy: false
     })
+  })
+
+  it('resolves BrowserExtensions.io from a shared-only PR body site URL', async () => {
+    const fetch = createMockFetch({
+      'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
+        {
+          body: 'Maintainer-only data cleanup for https://browserextensions.io/products/example.',
+          merged_at: '2026-05-26T12:00:00Z',
+          number: 42,
+          title: 'Add accepted browser extension submission'
+        }
+      ],
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
+        {
+          filename: 'scripts/resolve-build-run.ts'
+        }
+      ]
+    })
+
+    await expect(
+      resolvePushSiteInput(
+        {
+          after: 'abc123',
+          commits: [
+            {
+              id: 'abc123',
+              modified: ['scripts/resolve-build-run.ts']
+            }
+          ],
+          repository: {
+            full_name: 'owner/repo'
+          }
+        },
+        {
+          GITHUB_API_URL: 'https://api.github.test',
+          GITHUB_EVENT_NAME: 'push',
+          GITHUB_TOKEN: 'token'
+        },
+        fetch
+      )
+    ).resolves.toEqual({
+      shouldDeploy: true,
+      siteId: 'browserextensions.io'
+    })
+  })
+
+  it('does not infer a site from a near-match PR body domain', async () => {
+    const fetch = createMockFetch({
+      'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
+        {
+          body: 'Shared cleanup for https://notbrowserextensions.io/products/example.',
+          merged_at: '2026-05-26T12:00:00Z',
+          number: 42,
+          title: 'Update shared resolver'
+        }
+      ],
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
+        {
+          filename: 'scripts/resolve-build-run.ts'
+        }
+      ]
+    })
+
+    await expect(
+      resolvePushSiteInput(
+        {
+          after: 'abc123',
+          commits: [
+            {
+              id: 'abc123',
+              modified: ['scripts/resolve-build-run.ts']
+            }
+          ],
+          repository: {
+            full_name: 'owner/repo'
+          }
+        },
+        {
+          GITHUB_API_URL: 'https://api.github.test',
+          GITHUB_EVENT_NAME: 'push',
+          GITHUB_TOKEN: 'token'
+        },
+        fetch
+      )
+    ).resolves.toEqual({
+      shouldDeploy: false
+    })
+  })
+
+  it('resolves BrowserExtensions.io from a linked configured public issue repo', async () => {
+    const fetch = createMockFetch({
+      'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
+        {
+          body: 'Accepted submission: https://github.com/serpcompany/browserextensions.io/issues/1',
+          merged_at: '2026-05-26T12:00:00Z',
+          number: 42,
+          title: 'Accept public browser extension submission'
+        }
+      ],
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
+        {
+          filename: 'docs/BUILD_PIPELINE.md'
+        }
+      ],
+      'https://api.github.test/repos/serpcompany/browserextensions.io/issues/1': {
+        body: 'Website URL: https://submitted-product.example',
+        title: 'Submission: Example extension'
+      }
+    })
+
+    await expect(
+      resolvePushSiteInput(
+        {
+          after: 'abc123',
+          commits: [
+            {
+              id: 'abc123',
+              modified: ['docs/BUILD_PIPELINE.md']
+            }
+          ],
+          repository: {
+            full_name: 'owner/repo'
+          }
+        },
+        {
+          GITHUB_API_URL: 'https://api.github.test',
+          GITHUB_EVENT_NAME: 'push',
+          GITHUB_TOKEN: 'token'
+        },
+        fetch
+      )
+    ).resolves.toEqual({
+      shouldDeploy: true,
+      siteId: 'browserextensions.io'
+    })
+    expect(fetch).toHaveBeenCalledWith(
+      new URL('https://api.github.test/repos/serpcompany/browserextensions.io/issues/1'),
+      expect.any(Object)
+    )
+  })
+
+  it('fetches and scans linked public issue body without treating product URLs as site targets', async () => {
+    const fetch = createMockFetch({
+      'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
+        {
+          body: 'Fixes https://github.com/serpcompany/browserextensions.io/issues/7',
+          merged_at: '2026-05-26T12:00:00Z',
+          number: 42,
+          title: 'Accept unrelated-domain submission'
+        }
+      ],
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
+        {
+          filename: 'scripts/resolve-build-run.ts'
+        }
+      ],
+      'https://api.github.test/repos/serpcompany/browserextensions.io/issues/7': {
+        body: [
+          'Website URL: https://serp.co/products/not-the-target',
+          'Submitted through https://browserextensions.io/submit'
+        ].join('\n'),
+        title: 'Submission for BrowserExtensions.io'
+      }
+    })
+
+    await expect(
+      resolvePushSiteInput(
+        {
+          after: 'abc123',
+          commits: [
+            {
+              id: 'abc123',
+              modified: ['scripts/resolve-build-run.ts']
+            }
+          ],
+          repository: {
+            full_name: 'owner/repo'
+          }
+        },
+        {
+          GITHUB_API_URL: 'https://api.github.test',
+          GITHUB_EVENT_NAME: 'push',
+          GITHUB_TOKEN: 'token'
+        },
+        fetch
+      )
+    ).resolves.toEqual({
+      shouldDeploy: true,
+      siteId: 'browserextensions.io'
+    })
+  })
+
+  it('resolves BrowserExtensions.io from a push commit message when associated PR files are shared-only', async () => {
+    const fetch = createMockFetch({
+      'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
+        {
+          body: null,
+          merged_at: '2026-05-26T12:00:00Z',
+          number: 42,
+          title: null
+        }
+      ],
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
+        {
+          filename: 'scripts/resolve-build-run.ts'
+        }
+      ]
+    })
+
+    await expect(
+      resolvePushSiteInput(
+        {
+          after: 'abc123',
+          commits: [
+            {
+              id: 'abc123',
+              message: 'Accept submission for browserextensions.io',
+              modified: ['scripts/resolve-build-run.ts']
+            }
+          ],
+          repository: {
+            full_name: 'owner/repo'
+          }
+        },
+        {
+          GITHUB_API_URL: 'https://api.github.test',
+          GITHUB_EVENT_NAME: 'push',
+          GITHUB_TOKEN: 'token'
+        },
+        fetch
+      )
+    ).resolves.toEqual({
+      shouldDeploy: true,
+      siteId: 'browserextensions.io'
+    })
+  })
+
+  it('requires manual workflow dispatch when PR metadata mentions multiple concrete sites', async () => {
+    const fetch = createMockFetch({
+      'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
+        {
+          body: 'Shared change affects https://browserextensions.io and https://serp.co.',
+          merged_at: '2026-05-26T12:00:00Z',
+          number: 42,
+          title: 'Shared multi-site deploy'
+        }
+      ],
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
+        {
+          filename: 'scripts/resolve-build-run.ts'
+        }
+      ]
+    })
+
+    await expect(
+      resolvePushSiteInput(
+        {
+          after: 'abc123',
+          commits: [
+            {
+              id: 'abc123',
+              modified: ['scripts/resolve-build-run.ts']
+            }
+          ],
+          repository: {
+            full_name: 'owner/repo'
+          }
+        },
+        {
+          GITHUB_API_URL: 'https://api.github.test',
+          GITHUB_EVENT_NAME: 'push',
+          GITHUB_TOKEN: 'token'
+        },
+        fetch
+      )
+    ).rejects.toThrow(
+      'Push metadata matched multiple concrete sites (browserextensions.io, serp.co); manual site_id required via workflow_dispatch for each site.'
+    )
+  })
+
+  it('fails clearly when linked public issue lookup fails', async () => {
+    const fetch = createMockFetch({
+      'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
+        {
+          body: 'Accepted submission: https://github.com/serpcompany/browserextensions.io/issues/1',
+          merged_at: '2026-05-26T12:00:00Z',
+          number: 42,
+          title: 'Accept public browser extension submission'
+        }
+      ],
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
+        {
+          filename: 'scripts/resolve-build-run.ts'
+        }
+      ],
+      'https://api.github.test/repos/serpcompany/browserextensions.io/issues/1': jsonResponse(
+        { message: 'API rate limit exceeded' },
+        {
+          status: 403,
+          statusText: 'Forbidden'
+        }
+      )
+    })
+
+    await expect(
+      resolvePushSiteInput(
+        {
+          after: 'abc123',
+          commits: [
+            {
+              id: 'abc123',
+              modified: ['scripts/resolve-build-run.ts']
+            }
+          ],
+          repository: {
+            full_name: 'owner/repo'
+          }
+        },
+        {
+          GITHUB_API_URL: 'https://api.github.test',
+          GITHUB_EVENT_NAME: 'push',
+          GITHUB_TOKEN: 'token'
+        },
+        fetch
+      )
+    ).rejects.toThrow(
+      'Failed to fetch linked public issue serpcompany/browserextensions.io#1: GitHub API request failed (403 Forbidden) for /repos/serpcompany/browserextensions.io/issues/1.'
+    )
   })
 
   it('requires manual workflow dispatch when associated PR files touch multiple concrete sites', async () => {

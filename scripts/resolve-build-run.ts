@@ -1,35 +1,32 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { loadCheckedInSiteFromInput, parseSiteInputArgs } from './site-config.ts'
+import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
+import { loadCheckedInSite, loadCheckedInSiteFromInput, parseSiteInputArgs } from './site-config.ts'
 
-const changedPathSitePrefixes = [
-  ['apps/browserextensions.io/', 'browserextensions.io'],
-  ['apps/pornvideodownloaders.com/', 'pornvideodownloaders.com'],
-  ['apps/serp.ai/', 'serp.ai'],
-  ['apps/serp.co/', 'serp.co'],
-  ['apps/serp.software/', 'serp.software'],
-  ['apps/serpdownloaders.com/', 'serpdownloaders.com'],
-  ['apps/starter/', 'default'],
-  ['sites/browserextensions.io/', 'browserextensions.io'],
-  ['sites/pornvideodownloaders.com/', 'pornvideodownloaders.com'],
-  ['sites/serp.ai/', 'serp.ai'],
-  ['sites/serp.co/', 'serp.co'],
-  ['sites/serp.software/', 'serp.software'],
-  ['sites/serpdownloaders.com/', 'serpdownloaders.com']
-] as const
+const defaultSiteId = 'default'
+
+const changedPathSitePrefixes: Array<readonly [string, string]> = [
+  ...activeCheckedInSiteIds.flatMap(siteId => [
+    [`apps/${siteId}/`, siteId] as const,
+    [`sites/${siteId}/`, siteId] as const
+  ]),
+  ['apps/starter/', defaultSiteId]
+]
 
 type GitHubPushEvent = {
   after?: string
   commits?: Array<{
     added?: string[]
     id?: string
+    message?: string
     modified?: string[]
     removed?: string[]
   }>
   head_commit?: {
     added?: string[]
     id?: string
+    message?: string
     modified?: string[]
     removed?: string[]
   } | null
@@ -39,14 +36,51 @@ type GitHubPushEvent = {
 }
 
 type GitHubPullRequest = {
+  body?: string | null
   merged_at?: string | null
   number: number
   state?: string
+  title?: string | null
 }
 
 type GitHubPullRequestFile = {
   filename: string
   previous_filename?: string
+}
+
+type GitHubIssue = {
+  body?: string | null
+  title?: string | null
+}
+
+type AssociatedMergedPullRequest = GitHubPullRequest & {
+  changedPaths: string[]
+}
+
+type GitHubReadContext = {
+  apiBaseUrl: string
+  fetch: typeof fetch
+  token: string
+}
+
+type CheckedInSiteSignal = {
+  githubIssueRepoKey?: string
+  githubIssuesUrl?: string
+  normalizedDomain: string
+  plainTextSignals: string[]
+  siteId: string
+}
+
+type GitHubIssueReference = {
+  issueNumber: string
+  owner: string
+  repo: string
+  siteIds: string[]
+}
+
+type MetadataMatch = {
+  issueReferences: GitHubIssueReference[]
+  siteIds: Set<string>
 }
 
 type PushSiteResolution = {
@@ -90,7 +124,7 @@ export function inferSiteIdFromChangedPaths(paths: string[]): string | undefined
     }
   }
 
-  const concreteSiteIds = [...matchedSiteIds].filter(siteId => siteId !== 'default').sort()
+  const concreteSiteIds = [...matchedSiteIds].filter(siteId => siteId !== defaultSiteId).sort()
 
   if (concreteSiteIds.length > 1) {
     throw new Error(
@@ -102,7 +136,7 @@ export function inferSiteIdFromChangedPaths(paths: string[]): string | undefined
     return concreteSiteIds[0]
   }
 
-  return matchedSiteIds.has('default') ? 'default' : undefined
+  return matchedSiteIds.has(defaultSiteId) ? defaultSiteId : undefined
 }
 
 export function resolvePushSiteInputFromChangedPaths(paths: string[]): PushSiteResolution {
@@ -160,6 +194,25 @@ function getPushCommitShas(event: GitHubPushEvent | undefined, env: NodeJS.Proce
   })
 }
 
+function getPushCommitMessages(event: GitHubPushEvent | undefined): string[] {
+  const messages = [
+    event?.head_commit?.message,
+    ...(event?.commits?.map(commit => commit.message) ?? [])
+  ]
+  const seen = new Set<string>()
+
+  return messages.flatMap(message => {
+    const normalizedMessage = message?.trim()
+
+    if (!normalizedMessage || seen.has(normalizedMessage)) {
+      return []
+    }
+
+    seen.add(normalizedMessage)
+    return [normalizedMessage]
+  })
+}
+
 function getRepositoryFullName(
   event: GitHubPushEvent | undefined,
   env: NodeJS.ProcessEnv
@@ -201,6 +254,245 @@ async function readGitHubJson<T>(url: URL, token: string, fetchImpl: typeof fetc
   }
 
   return (await response.json()) as T
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function normalizeHostname(value: string): string {
+  return value.toLowerCase().replace(/^www\./, '')
+}
+
+function normalizeUrlText(value: string): string {
+  return value.replace(/\/+$/, '').toLowerCase()
+}
+
+function issueRepoKey(owner: string, repo: string): string {
+  return `${owner.toLowerCase()}/${repo.toLowerCase()}`
+}
+
+function hasDelimitedText(haystack: string, needle: string): boolean {
+  return new RegExp(`(^|[^a-z0-9.-])${escapeRegExp(needle)}(?=$|[^a-z0-9.-])`, 'i').test(haystack)
+}
+
+function stripTrailingUrlPunctuation(value: string): string {
+  return value.replace(/[),.;!?\]]+$/g, '')
+}
+
+function extractUrls(text: string): URL[] {
+  const urls: URL[] = []
+  const urlPattern = /https?:\/\/[^\s<>"'`]+/gi
+
+  for (const match of text.matchAll(urlPattern)) {
+    try {
+      urls.push(new URL(stripTrailingUrlPunctuation(match[0])))
+    } catch {
+      // Ignore malformed free-form text URLs.
+    }
+  }
+
+  return urls
+}
+
+function parseGitHubIssueUrl(url: URL): Omit<GitHubIssueReference, 'siteIds'> | undefined {
+  if (normalizeHostname(url.hostname) !== 'github.com') {
+    return undefined
+  }
+
+  const [owner, repo, issuePath, issueNumber, ...rest] = url.pathname.split('/').filter(Boolean)
+
+  if (
+    !owner ||
+    !repo ||
+    issuePath !== 'issues' ||
+    !issueNumber ||
+    rest.length > 0 ||
+    !/^\d+$/.test(issueNumber)
+  ) {
+    return undefined
+  }
+
+  return {
+    issueNumber,
+    owner: decodeURIComponent(owner),
+    repo: decodeURIComponent(repo)
+  }
+}
+
+function buildCheckedInSiteSignals(): CheckedInSiteSignal[] {
+  const siteIds = [defaultSiteId, ...activeCheckedInSiteIds]
+
+  return siteIds.map(siteId => {
+    const siteConfig = loadCheckedInSite(siteId)
+    const plainTextSignals = new Set<string>([
+      siteConfig.id,
+      siteConfig.site.domain,
+      siteConfig.site.publicUrl
+    ])
+
+    if (siteConfig.id === defaultSiteId) {
+      plainTextSignals.delete(defaultSiteId)
+    }
+
+    if (siteConfig.social.githubIssuesUrl) {
+      plainTextSignals.add(siteConfig.social.githubIssuesUrl)
+    }
+
+    return {
+      githubIssueRepoKey:
+        siteConfig.social.githubIssueOwner && siteConfig.social.githubIssueRepo
+          ? issueRepoKey(siteConfig.social.githubIssueOwner, siteConfig.social.githubIssueRepo)
+          : undefined,
+      githubIssuesUrl: siteConfig.social.githubIssuesUrl
+        ? normalizeUrlText(siteConfig.social.githubIssuesUrl)
+        : undefined,
+      normalizedDomain: normalizeHostname(siteConfig.site.domain),
+      plainTextSignals: [...plainTextSignals].filter(Boolean),
+      siteId: siteConfig.id
+    }
+  })
+}
+
+function urlMatchesSiteSignal(url: URL, signal: CheckedInSiteSignal): boolean {
+  const normalizedHost = normalizeHostname(url.hostname)
+
+  if (normalizedHost === signal.normalizedDomain) {
+    return true
+  }
+
+  if (!signal.githubIssuesUrl) {
+    return false
+  }
+
+  const normalizedUrl = normalizeUrlText(url.toString())
+
+  return (
+    normalizedUrl === signal.githubIssuesUrl ||
+    normalizedUrl.startsWith(`${signal.githubIssuesUrl}/`) ||
+    normalizedUrl.startsWith(`${signal.githubIssuesUrl}?`)
+  )
+}
+
+function mergeIssueReference(
+  references: Map<string, GitHubIssueReference>,
+  reference: GitHubIssueReference
+): void {
+  const key = `${issueRepoKey(reference.owner, reference.repo)}#${reference.issueNumber}`
+  const existingReference = references.get(key)
+
+  if (!existingReference) {
+    references.set(key, reference)
+    return
+  }
+
+  existingReference.siteIds = [...new Set([...existingReference.siteIds, ...reference.siteIds])]
+}
+
+function collectMetadataMatches(
+  textValues: Array<string | null | undefined>,
+  signals: CheckedInSiteSignal[],
+  options: {
+    allowedSiteIds?: Set<string>
+    collectIssueReferences?: boolean
+  } = {}
+): MetadataMatch {
+  const allowedSignals = options.allowedSiteIds
+    ? signals.filter(signal => options.allowedSiteIds?.has(signal.siteId))
+    : signals
+  const collectIssueReferences = options.collectIssueReferences ?? true
+  const issueReferences = new Map<string, GitHubIssueReference>()
+  const siteIds = new Set<string>()
+
+  for (const textValue of textValues) {
+    const text = textValue?.trim()
+
+    if (!text) {
+      continue
+    }
+
+    for (const url of extractUrls(text)) {
+      for (const signal of allowedSignals) {
+        if (urlMatchesSiteSignal(url, signal)) {
+          siteIds.add(signal.siteId)
+        }
+      }
+
+      if (!collectIssueReferences) {
+        continue
+      }
+
+      const issueReference = parseGitHubIssueUrl(url)
+
+      if (!issueReference) {
+        continue
+      }
+
+      const matchedSignals = allowedSignals.filter(
+        signal =>
+          signal.githubIssueRepoKey === issueRepoKey(issueReference.owner, issueReference.repo)
+      )
+
+      if (matchedSignals.length === 0) {
+        continue
+      }
+
+      const matchedSiteIds = matchedSignals.map(signal => signal.siteId)
+
+      for (const siteId of matchedSiteIds) {
+        siteIds.add(siteId)
+      }
+
+      mergeIssueReference(issueReferences, {
+        ...issueReference,
+        siteIds: matchedSiteIds
+      })
+    }
+
+    for (const signal of allowedSignals) {
+      if (
+        signal.plainTextSignals.some(plainTextSignal => hasDelimitedText(text, plainTextSignal))
+      ) {
+        siteIds.add(signal.siteId)
+      }
+    }
+  }
+
+  return {
+    issueReferences: [...issueReferences.values()],
+    siteIds
+  }
+}
+
+function resolvePushSiteInputFromMatchedSiteIds(
+  siteIds: Set<string>,
+  sourceDescription: string
+): PushSiteResolution {
+  const concreteSiteIds = [...siteIds].filter(siteId => siteId !== defaultSiteId).sort()
+
+  if (concreteSiteIds.length > 1) {
+    throw new Error(
+      `Push ${sourceDescription} matched multiple concrete sites (${concreteSiteIds.join(', ')}); manual site_id required via workflow_dispatch for each site.`
+    )
+  }
+
+  if (concreteSiteIds.length === 1) {
+    return {
+      shouldDeploy: true,
+      siteId: concreteSiteIds[0]
+    }
+  }
+
+  if (siteIds.has(defaultSiteId)) {
+    return {
+      shouldDeploy: true,
+      siteId: defaultSiteId
+    }
+  }
+
+  return {
+    shouldDeploy: false
+  }
 }
 
 async function readAssociatedPullRequestsForCommit(
@@ -252,6 +544,27 @@ async function readPullRequestFiles(
   return files
 }
 
+async function readLinkedPublicIssue(
+  reference: GitHubIssueReference,
+  context: GitHubReadContext
+): Promise<GitHubIssue> {
+  const url = new URL(
+    `${context.apiBaseUrl}/repos/${encodeRepositoryPath(
+      `${reference.owner}/${reference.repo}`
+    )}/issues/${encodeURIComponent(reference.issueNumber)}`
+  )
+
+  try {
+    return await readGitHubJson<GitHubIssue>(url, context.token, context.fetch)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+
+    throw new Error(
+      `Failed to fetch linked public issue ${reference.owner}/${reference.repo}#${reference.issueNumber}: ${message}`
+    )
+  }
+}
+
 function isMergedPullRequest(pullRequest: GitHubPullRequest): boolean {
   return Boolean(pullRequest.merged_at)
 }
@@ -261,6 +574,16 @@ export async function readAssociatedMergedPullRequestChangedPaths(
   env: NodeJS.ProcessEnv,
   fetchImpl: typeof fetch = fetch
 ): Promise<string[]> {
+  const associatedPullRequests = await readAssociatedMergedPullRequests(event, env, fetchImpl)
+
+  return associatedPullRequests.flatMap(pullRequest => pullRequest.changedPaths)
+}
+
+async function readAssociatedMergedPullRequests(
+  event: GitHubPushEvent | undefined,
+  env: NodeJS.ProcessEnv,
+  fetchImpl: typeof fetch = fetch
+): Promise<AssociatedMergedPullRequest[]> {
   const commitShas = getPushCommitShas(event, env)
   const repositoryFullName = getRepositoryFullName(event, env)
 
@@ -294,21 +617,82 @@ export async function readAssociatedMergedPullRequestChangedPaths(
     }
   }
 
-  const paths: string[] = []
+  const associatedPullRequests: AssociatedMergedPullRequest[] = []
 
   for (const pullRequest of mergedPullRequests.values()) {
     const files = await readPullRequestFiles(pullRequest.number, context)
+    const changedPaths: string[] = []
 
     for (const file of files) {
-      paths.push(file.filename)
+      changedPaths.push(file.filename)
 
       if (file.previous_filename) {
-        paths.push(file.previous_filename)
+        changedPaths.push(file.previous_filename)
       }
+    }
+
+    associatedPullRequests.push({
+      ...pullRequest,
+      changedPaths
+    })
+  }
+
+  return associatedPullRequests
+}
+
+async function resolvePushSiteInputFromAssociatedPullRequestMetadata(
+  associatedPullRequests: AssociatedMergedPullRequest[],
+  event: GitHubPushEvent | undefined,
+  env: NodeJS.ProcessEnv,
+  fetchImpl: typeof fetch
+): Promise<PushSiteResolution> {
+  if (associatedPullRequests.length === 0) {
+    return {
+      shouldDeploy: false
     }
   }
 
-  return paths
+  const token = env.GITHUB_TOKEN?.trim()
+
+  if (!token) {
+    throw new Error(
+      'GITHUB_TOKEN is required to inspect associated merged PR metadata for push site inference.'
+    )
+  }
+
+  const signals = buildCheckedInSiteSignals()
+  const metadataMatch = collectMetadataMatches(
+    [
+      ...associatedPullRequests.flatMap(pullRequest => [pullRequest.title, pullRequest.body]),
+      ...getPushCommitMessages(event)
+    ],
+    signals
+  )
+  const issueContext = {
+    apiBaseUrl: getGitHubApiBaseUrl(env),
+    fetch: fetchImpl,
+    token
+  }
+
+  for (const issueReference of metadataMatch.issueReferences) {
+    const issue = await readLinkedPublicIssue(issueReference, issueContext)
+
+    for (const siteId of issueReference.siteIds) {
+      metadataMatch.siteIds.add(siteId)
+    }
+
+    const allowedSiteIds = new Set(issueReference.siteIds)
+    const issueMatch = collectMetadataMatches([issue.title, issue.body], signals, {
+      allowedSiteIds,
+      collectIssueReferences: false
+    })
+
+    for (const siteId of issueMatch.siteIds) {
+      metadataMatch.siteIds.add(siteId)
+    }
+  }
+
+  return resolvePushSiteInputFromMatchedSiteIds(metadataMatch.siteIds, 'metadata')
 }
 
 export async function resolvePushSiteInput(
@@ -324,13 +708,23 @@ export async function resolvePushSiteInput(
     return pushChangedPathResolution
   }
 
-  const pullRequestChangedPaths = await readAssociatedMergedPullRequestChangedPaths(
+  const associatedPullRequests = await readAssociatedMergedPullRequests(event, env, fetchImpl)
+  const pullRequestChangedPaths = associatedPullRequests.flatMap(
+    pullRequest => pullRequest.changedPaths
+  )
+  const pullRequestChangedPathResolution =
+    resolvePushSiteInputFromChangedPaths(pullRequestChangedPaths)
+
+  if (pullRequestChangedPathResolution.shouldDeploy) {
+    return pullRequestChangedPathResolution
+  }
+
+  return resolvePushSiteInputFromAssociatedPullRequestMetadata(
+    associatedPullRequests,
     event,
     env,
     fetchImpl
   )
-
-  return resolvePushSiteInputFromChangedPaths(pullRequestChangedPaths)
 }
 
 export async function resolveBuildRun(
