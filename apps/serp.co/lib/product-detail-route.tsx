@@ -21,19 +21,13 @@ import { WebsiteHeroRoute as WebsiteHero } from '@thedaviddias/web-core/website/
 import { WebsiteRelatedProjectsRoute as WebsiteRelatedProjects } from '@thedaviddias/web-core/website/website-related-projects-route';
 import { WebsiteResourcesSectionRoute as WebsiteResourcesSection } from '@thedaviddias/web-core/website/website-resources-section-route';
 
-interface ProjectPageProps {
+interface ProductDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
-/**
- * Generates metadata for the website page
- *
- * @param params - Page parameters containing the website slug
- * @returns Promise<Metadata> - Generated metadata for the page
- */
 export async function generateMetadata({
   params,
-}: ProjectPageProps): Promise<Metadata> {
+}: ProductDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
 
   try {
@@ -52,11 +46,6 @@ export async function generateMetadata({
   }
 }
 
-/**
- * Generates static parameters for all website pages
- *
- * @returns Promise<Array<{ slug: string }>> - Array of website slugs for static generation
- */
 export async function generateStaticParams() {
   try {
     return generateWebsiteDetailRouteStaticParams(await getWebsites());
@@ -65,38 +54,35 @@ export async function generateStaticParams() {
   }
 }
 
-/**
- * Website detail page component
- *
- * @param params - Page parameters containing the website slug
- * @returns Promise<JSX.Element> - Rendered website page
- */
-export default async function ProjectPage({ params }: ProjectPageProps) {
+export default async function ProductDetailPage({
+  params,
+}: ProductDetailPageProps) {
+  const { slug } = await params;
+  let project;
+
   try {
-    const { slug } = await params;
-
-    const project = await getWebsiteBySlug(slug);
-
-    if (!project) {
-      notFound();
-    }
-
-    return (
-      <WebsiteDetailRoutePage
-        project={project}
-        slots={{
-          ExternalResourcesSection,
-          JsonLd,
-          ProjectNavigation,
-          WebsiteContentSection,
-          WebsiteDetailSidebar,
-          WebsiteHero,
-          WebsiteRelatedProjects,
-          WebsiteResourcesSection,
-        }}
-      />
-    );
+    project = await getWebsiteBySlug(slug);
   } catch (_error) {
     return <WebsiteError />;
   }
+
+  if (!project) {
+    notFound();
+  }
+
+  return (
+    <WebsiteDetailRoutePage
+      project={project}
+      slots={{
+        ExternalResourcesSection,
+        JsonLd,
+        ProjectNavigation,
+        WebsiteContentSection,
+        WebsiteDetailSidebar,
+        WebsiteHero,
+        WebsiteRelatedProjects,
+        WebsiteResourcesSection,
+      }}
+    />
+  );
 }

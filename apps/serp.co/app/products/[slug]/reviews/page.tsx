@@ -1,5 +1,7 @@
+export const dynamicParams = false;
+
 export {
   default,
   generateMetadata,
   generateStaticParams,
-} from '../page';
+} from '@/lib/product-detail-route';
