@@ -147,12 +147,16 @@ Deploy behavior:
 
 ## Workflow behavior
 
-The GitHub Actions path resolves the build run before validate/build/deploy:
+The GitHub Actions path resolves the build run once, then runs
+validate/build/audit/deploy in one job:
 
-- `site_id` selects the checked-in site config
-- artifact upload/download follows the resolved artifact directory instead of assuming a hardcoded path
-- workflow concurrency is keyed by ref plus site id to reduce overlapping runs for the same target
-- deploy repo and branch are not workflow inputs during normal deploys; they must come from checked-in site config
+- workflow dispatch `site_id` selects the checked-in site config explicitly
+- push events infer one changed checked-in site when possible, with the repo
+  `SITE_ID` variable only as a fallback
+- the generated artifact stays in the job workspace for deploy; normal deploys do
+  not upload/download the large artifact between jobs
+- deploy repo and branch are not workflow inputs during normal deploys; they
+  must come from checked-in site config
 
 ## Design rules
 

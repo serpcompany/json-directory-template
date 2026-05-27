@@ -10,6 +10,7 @@ interface WorkflowJob {
   steps?: Array<{
     env?: Record<string, string>
     name?: string
+    run?: string
     uses?: string
     with?: Record<string, string>
   }>
@@ -21,7 +22,7 @@ interface WorkflowDefinition {
       paths?: string[]
     }
     workflow_dispatch: {
-      inputs: Record<string, { required?: boolean }>
+      inputs: Record<string, { default?: string; required?: boolean }>
     }
   }
   jobs: Record<string, WorkflowJob>
@@ -35,24 +36,34 @@ function loadWorkflow(): WorkflowDefinition {
 }
 
 describe('build-and-deploy workflow', () => {
-  it('makes deploy depend on validate outputs as well as build completion', () => {
+  it('runs validate, build, audit, and deploy in one job', () => {
     const workflow = loadWorkflow()
+    const jobNames = Object.keys(workflow.jobs)
     const deployJob = workflow.jobs.deploy
+    const namedSteps = deployJob.steps?.filter(step => step.name).map(step => step.name)
 
+    expect(jobNames).toEqual(['deploy'])
     expect(deployJob).toBeDefined()
-    expect(deployJob.needs).toEqual(['validate', 'build'])
+    expect(deployJob.needs).toBeUndefined()
+    expect(namedSteps).toEqual([
+      'Resolve build input',
+      'Validate site data',
+      'Build static site',
+      'Audit XML sitemaps',
+      'Verify deploy auth',
+      'Deploy'
+    ])
   })
 
-  it('downloads the build artifact into the validated artifact directory', () => {
+  it('does not upload or download build artifacts for the normal deploy path', () => {
     const workflow = loadWorkflow()
     const deployJob = workflow.jobs.deploy
-    const downloadStep = deployJob.steps?.find(step => step.uses === 'actions/download-artifact@v4')
+    const stepActions = deployJob.steps?.map(step => step.uses).filter(Boolean) ?? []
+    const artifactActions = stepActions.filter(
+      action => action?.includes('upload-artifact') || action?.includes('download-artifact')
+    )
 
-    expect(downloadStep).toBeDefined()
-    expect(downloadStep?.with).toMatchObject({
-      name: 'build-output',
-      path: `\${{ needs.validate.outputs.artifact_dir }}`
-    })
+    expect(artifactActions).toEqual([])
   })
 
   it('requires a checked-in site id instead of an explicit build spec path', () => {
@@ -61,34 +72,66 @@ describe('build-and-deploy workflow', () => {
 
     expect(dispatchInputs.site_id).toBeDefined()
     expect(dispatchInputs.site_id?.required).toBe(true)
+    expect(dispatchInputs.site_id?.default).toBeUndefined()
     expect(dispatchInputs.build_spec_path).toBeUndefined()
     expect(dispatchInputs.deploy_repo).toBeUndefined()
     expect(dispatchInputs.deploy_branch).toBeUndefined()
+  })
+
+  it('does not bypass validation or sitemap audit before deploy', () => {
+    const workflow = loadWorkflow()
+    const deployJob = workflow.jobs.deploy
+    const steps = deployJob.steps ?? []
+    const validateStep = steps.find(step => step.name === 'Validate site data')
+    const buildStep = steps.find(step => step.name === 'Build static site')
+    const auditStep = steps.find(step => step.name === 'Audit XML sitemaps')
+    const deployStep = steps.find(step => step.name === 'Deploy')
+    const stepNames = steps.map(step => step.name)
+
+    expect(validateStep?.run).toBe('pnpm validate:site')
+    expect(validateStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
+    expect(buildStep?.run).toBe('pnpm build:site')
+    expect(buildStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
+    expect(auditStep?.run).toBe('pnpm audit:sitemaps -- --site "$SITE_ID"')
+    expect(auditStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
+    expect(deployStep?.run).toBe('pnpm deploy:site')
+    expect(deployStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
+    expect(stepNames.indexOf('Validate site data')).toBeLessThan(
+      stepNames.indexOf('Build static site')
+    )
+    expect(stepNames.indexOf('Build static site')).toBeLessThan(
+      stepNames.indexOf('Audit XML sitemaps')
+    )
+    expect(stepNames.indexOf('Audit XML sitemaps')).toBeLessThan(stepNames.indexOf('Deploy'))
   })
 
   it('uses the configured GH_PAT secret for repo sync pushes', () => {
     const workflow = loadWorkflow()
     const deployJob = workflow.jobs.deploy
     const deployStep = deployJob.steps?.find(step => step.name === 'Deploy')
+    const authStep = deployJob.steps?.find(step => step.name === 'Verify deploy auth')
 
     expect(deployStep).toBeDefined()
     expect(deployStep?.env?.DEPLOY_TOKEN).toBe(`\${{ secrets.GH_PAT }}`)
+    expect(authStep?.env?.DEPLOY_TOKEN).toBe(`\${{ secrets.GH_PAT }}`)
+    expect(authStep?.run).toContain('Missing GH_PAT secret required for cross-repo deploy.')
   })
 
-  it('does not expose normal deploy target overrides in the workflow', () => {
+  it('clears inherited normal deploy target overrides in the workflow', () => {
     const workflow = loadWorkflow()
     const deployJob = workflow.jobs.deploy
     const deployStep = deployJob.steps?.find(step => step.name === 'Deploy')
 
     expect(deployStep).toBeDefined()
-    expect(deployStep?.env?.DEPLOY_REPO_URL).toBeUndefined()
-    expect(deployStep?.env?.DEPLOY_BRANCH).toBeUndefined()
+    expect(deployStep?.env?.ALLOW_DEPLOY_TARGET_OVERRIDE).toBe('')
+    expect(deployStep?.env?.DEPLOY_REPO_URL).toBe('')
+    expect(deployStep?.env?.DEPLOY_BRANCH).toBe('')
   })
 
   it('does not let repo variables override push path site inference', () => {
     const workflow = loadWorkflow()
-    const validateJob = workflow.jobs.validate
-    const resolveStep = validateJob.steps?.find(step => step.name === 'Resolve build input')
+    const deployJob = workflow.jobs.deploy
+    const resolveStep = deployJob.steps?.find(step => step.name === 'Resolve build input')
 
     expect(resolveStep?.env?.SITE_ID).toBe(
       `\${{ github.event_name == 'workflow_dispatch' && github.event.inputs.site_id || '' }}`
@@ -96,6 +139,7 @@ describe('build-and-deploy workflow', () => {
     expect(resolveStep?.env?.PUSH_FALLBACK_SITE_ID).toBe(
       `\${{ github.event_name == 'push' && vars.SITE_ID || '' }}`
     )
+    expect(resolveStep?.env?.NEXT_PUBLIC_SITE_ID).toBe('')
     expect(resolveStep?.env?.SITE_ID).not.toContain('vars.SITE_ID')
   })
 

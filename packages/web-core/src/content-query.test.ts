@@ -14,7 +14,20 @@ const websites: WebsiteMetadata[] = [
     website: 'https://newer.example.com',
     category: 'alpha',
     categories: ['alpha'],
-    publishedAt: '2026-01-03'
+    publishedAt: '2026-01-03',
+    isUnofficial: true,
+    media: {
+      logo: '/logos/newer.png',
+      images: ['/images/newer-screenshot.png'],
+      video: 'https://newer.example.com/demo.mp4'
+    },
+    content: 'Newer listing body.',
+    resourceLinks: [
+      {
+        label: 'Newer Docs',
+        url: 'https://newer.example.com/docs'
+      }
+    ]
   },
   {
     slug: 'target-listing',
@@ -24,7 +37,17 @@ const websites: WebsiteMetadata[] = [
     category: 'alpha',
     categories: ['alpha', 'beta'],
     publishedAt: '2026-01-02',
-    content: 'Target listing body.'
+    media: {
+      logo: '/logos/target.png',
+      images: ['/images/target-screenshot.png']
+    },
+    content: 'Target listing body.',
+    resourceLinks: [
+      {
+        label: 'Target Docs',
+        url: 'https://target.example.com/docs'
+      }
+    ]
   },
   {
     slug: 'older-listing',
@@ -33,7 +56,18 @@ const websites: WebsiteMetadata[] = [
     website: 'https://older.example.com',
     category: 'beta',
     categories: ['beta'],
-    publishedAt: '2026-01-01'
+    publishedAt: '2026-01-01',
+    media: {
+      logo: '/logos/older.png',
+      images: ['/images/older-screenshot.png']
+    },
+    content: 'Older listing body.',
+    resourceLinks: [
+      {
+        label: 'Older Docs',
+        url: 'https://older.example.com/docs'
+      }
+    ]
   },
   {
     slug: 'unrelated-listing',
@@ -55,6 +89,14 @@ describe('website lookup index', () => {
 
     expect(detail?.slug).toBe('target-listing')
     expect(detail?.content).toBe('Target listing body.')
+    expect(detail?.categories).toEqual(['alpha', 'beta'])
+    expect(detail?.media?.images).toEqual(['/images/target-screenshot.png'])
+    expect(detail?.resourceLinks).toEqual([
+      {
+        label: 'Target Docs',
+        url: 'https://target.example.com/docs'
+      }
+    ])
     expect(detail?.previousWebsite?.slug).toBe('newer-listing')
     expect(detail?.nextWebsite?.slug).toBe('older-listing')
   })
@@ -69,6 +111,68 @@ describe('website lookup index', () => {
       'newer-listing',
       'older-listing'
     ])
+  })
+
+  it('returns slim related card and navigation payloads', () => {
+    const detail = resolveWebsiteBySlugFromIndex(
+      buildWebsiteLookupIndex(websites),
+      'target-listing'
+    )
+
+    expect(detail?.relatedWebsites).toEqual([
+      {
+        slug: 'newer-listing',
+        name: 'Newer Listing',
+        description: 'Newer listing.',
+        website: 'https://newer.example.com',
+        isUnofficial: true,
+        media: {
+          logo: '/logos/newer.png'
+        }
+      },
+      {
+        slug: 'older-listing',
+        name: 'Older Listing',
+        description: 'Older listing.',
+        website: 'https://older.example.com',
+        media: {
+          logo: '/logos/older.png'
+        }
+      }
+    ])
+    expect(detail?.previousWebsite).toEqual({
+      slug: 'newer-listing',
+      name: 'Newer Listing',
+      website: 'https://newer.example.com',
+      media: {
+        logo: '/logos/newer.png'
+      }
+    })
+    expect(detail?.nextWebsite).toEqual({
+      slug: 'older-listing',
+      name: 'Older Listing',
+      website: 'https://older.example.com',
+      media: {
+        logo: '/logos/older.png'
+      }
+    })
+
+    for (const relatedWebsite of detail?.relatedWebsites || []) {
+      expect(relatedWebsite).not.toHaveProperty('content')
+      expect(relatedWebsite).not.toHaveProperty('resourceLinks')
+      expect(relatedWebsite).not.toHaveProperty('categories')
+      expect(relatedWebsite.media).not.toHaveProperty('images')
+      expect(relatedWebsite.media).not.toHaveProperty('video')
+    }
+
+    for (const navWebsite of [detail?.previousWebsite, detail?.nextWebsite]) {
+      expect(navWebsite).not.toHaveProperty('content')
+      expect(navWebsite).not.toHaveProperty('resourceLinks')
+      expect(navWebsite).not.toHaveProperty('categories')
+      expect(navWebsite).not.toHaveProperty('description')
+      expect(navWebsite?.media).not.toHaveProperty('images')
+      expect(navWebsite?.media).not.toHaveProperty('video')
+    }
   })
 
   it('preserves first-match slug semantics for duplicate slugs', () => {

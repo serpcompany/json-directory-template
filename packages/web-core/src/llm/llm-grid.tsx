@@ -3,14 +3,14 @@
 import { Badge } from '@thedaviddias/design-system/badge'
 import { cn } from '@thedaviddias/design-system/lib/utils'
 import Link from 'next/link'
-import type { WebsiteMetadata } from '../content-query'
+import type { WebsiteRelatedCardMetadata } from '../content-query'
 import { getRoute } from '../routes'
 import { Card } from '../ui/card'
-import { FavoriteButton } from '../ui/favorite-button'
 import { FaviconWithFallback } from '../ui/favicon-with-fallback'
+import { FavoriteButton } from '../ui/favorite-button'
 
 interface LLMGridProps {
-  items: WebsiteMetadata[]
+  items: WebsiteRelatedCardMetadata[]
   variant?: 'default' | 'compact'
   className?: string
   maxItems?: number
@@ -31,7 +31,7 @@ export function LLMGrid({
   maxItems,
   animateIn = true,
   analyticsSource,
-  overrideGrid = false,
+  overrideGrid = false
 }: LLMGridProps) {
   if (!items?.length) {
     return null
