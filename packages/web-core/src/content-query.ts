@@ -43,6 +43,13 @@ export interface WebsiteRelatedCardMetadata {
   media?: Pick<WebsiteMedia, 'logo'>
 }
 
+export interface WebsiteBrowseCardMetadata extends WebsiteRelatedCardMetadata {
+  category: string
+  categories?: string[]
+  publishedAt: string
+  featured?: boolean
+}
+
 export interface WebsiteNavigationMetadata {
   slug: string
   name: string
@@ -194,6 +201,36 @@ function toRelatedCardMetadata(website: WebsiteMetadata): WebsiteRelatedCardMeta
   }
 
   return relatedCard
+}
+
+export function toWebsiteBrowseCardMetadata(website: WebsiteMetadata): WebsiteBrowseCardMetadata {
+  const browseCard: WebsiteBrowseCardMetadata = {
+    slug: website.slug,
+    name: website.name,
+    description: website.description,
+    website: website.website,
+    category: website.category,
+    publishedAt: website.publishedAt
+  }
+  const media = toLogoOnlyMedia(website.media)
+
+  if (website.categories) {
+    browseCard.categories = [...website.categories]
+  }
+
+  if (website.featured === true) {
+    browseCard.featured = true
+  }
+
+  if (website.isUnofficial === true) {
+    browseCard.isUnofficial = true
+  }
+
+  if (media) {
+    browseCard.media = media
+  }
+
+  return browseCard
 }
 
 function toNavigationMetadata(

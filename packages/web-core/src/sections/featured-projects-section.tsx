@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from 'react'
-import type { WebsiteMetadata } from '../content-query'
+import type { WebsiteBrowseCardMetadata, WebsiteRelatedCardMetadata } from '../content-query'
 import { getRoute } from '../routes'
 
 type SectionProps = {
@@ -12,11 +12,11 @@ type SectionProps = {
 }
 
 type LLMGridProps = {
-  items: WebsiteMetadata[]
+  items: WebsiteRelatedCardMetadata[]
 }
 
 interface FeaturedProjectsSectionProps {
-  projects: WebsiteMetadata[]
+  projects: WebsiteBrowseCardMetadata[]
   slots: {
     LLMGrid: ComponentType<LLMGridProps>
     Section: ComponentType<SectionProps>
@@ -25,7 +25,7 @@ interface FeaturedProjectsSectionProps {
 
 export function FeaturedProjectsSection({
   projects,
-  slots: { LLMGrid, Section },
+  slots: { LLMGrid, Section }
 }: FeaturedProjectsSectionProps) {
   const hasFeaturedListings = projects.some(project => project.featured === true)
 
@@ -34,9 +34,7 @@ export function FeaturedProjectsSection({
       title="Featured Listings"
       description="Discover standout listings from this directory"
       viewAllHref={
-        hasFeaturedListings
-          ? getRoute('category.page', { category: 'featured' })
-          : undefined
+        hasFeaturedListings ? getRoute('category.page', { category: 'featured' }) : undefined
       }
       viewAllText={hasFeaturedListings ? 'All featured' : undefined}
     >

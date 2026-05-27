@@ -1,16 +1,16 @@
-import type { WebsiteMetadata } from '../content-query'
+import type { WebsiteBrowseCardMetadata } from '../content-query'
 import { Section } from '../layout/section'
 import { LLMGrid } from '../llm/llm-grid'
 import { RecentlyAddedSection as SharedRecentlyAddedSection } from './recently-added-section'
 
 interface RecentlyAddedSectionRouteProps {
-  websites: WebsiteMetadata[]
+  websites: WebsiteBrowseCardMetadata[]
   maxItems?: number
 }
 
 export function RecentlyAddedSectionRoute({
   websites,
-  maxItems = 8,
+  maxItems = 8
 }: RecentlyAddedSectionRouteProps) {
   return (
     <SharedRecentlyAddedSection

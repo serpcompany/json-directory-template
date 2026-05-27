@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from 'react'
-import type { WebsiteMetadata } from '../content-query'
+import type { WebsiteBrowseCardMetadata } from '../content-query'
 import { siteCopy } from '../site-copy'
 
 type SectionProps = {
@@ -12,7 +12,7 @@ type SectionProps = {
 }
 
 type WebsitesListWithSearchProps = {
-  initialWebsites: WebsiteMetadata[]
+  initialWebsites: WebsiteBrowseCardMetadata[]
   totalCount?: number
   displayLimit?: number
   emptyTitle?: string
@@ -20,7 +20,7 @@ type WebsitesListWithSearchProps = {
 }
 
 interface StaticWebsitesListProps {
-  websites: WebsiteMetadata[]
+  websites: WebsiteBrowseCardMetadata[]
   totalCount?: number
   displayLimit?: number
   slots: {
@@ -33,7 +33,7 @@ export function StaticWebsitesList({
   websites,
   totalCount,
   displayLimit,
-  slots: { Section, WebsitesListWithSearch },
+  slots: { Section, WebsitesListWithSearch }
 }: StaticWebsitesListProps) {
   return (
     <Section

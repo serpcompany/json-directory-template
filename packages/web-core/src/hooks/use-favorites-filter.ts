@@ -1,10 +1,11 @@
 'use client'
 
 import { useMemo } from 'react'
-import type { WebsiteMetadata } from '../content-query'
 import { useFavorites } from '../root-shell-client'
 
-export function useFavoritesFilter(websites: WebsiteMetadata[]) {
+export function useFavoritesFilter<TWebsite extends { slug: string }>(
+  websites: readonly TWebsite[]
+) {
   const { favorites } = useFavorites()
 
   const favoriteWebsites = useMemo(() => {
@@ -14,6 +15,6 @@ export function useFavoritesFilter(websites: WebsiteMetadata[]) {
   return {
     favoriteWebsites,
     hasFavorites: favorites.length > 0,
-    favoritesCount: favorites.length,
+    favoritesCount: favorites.length
   }
 }
