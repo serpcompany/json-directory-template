@@ -22,7 +22,8 @@ For completed execution history, see:
   active checked-in site wrappers.
 - Shared runtime and route logic lives in `packages/web-core`.
 - Checked-in site contract and site resolution live in `packages/site-contract`.
-- The starter submit flow now supports self-service badge verification with a GitHub fallback path.
+- The starter submit flow now uses a static-friendly GitHub issue handoff with PR-reviewed
+  checked-in source updates.
 
 ## Current priorities
 

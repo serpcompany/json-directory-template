@@ -71,22 +71,29 @@ test.describe('Static starter smoke tests', () => {
     await expect(page.getByRole('heading', { level: 1, name: detailListing.name })).toBeVisible()
   })
 
-  test('default starter submit flow keeps the GitHub fallback disabled until configured', async ({
+  test('default starter submit flow keeps GitHub issue submission disabled until configured', async ({
     page
   }) => {
     await page.goto('/submit', { waitUntil: 'networkidle' })
 
-    const submitButton = page.getByRole('button', { name: /submit listing/i })
+    const submitButton = page.getByRole('button', { name: /^submit$/i })
 
-    await expect(page.getByText(/github fallback submission is disabled/i)).toBeVisible()
+    await expect(page.getByText(/github issue submission is disabled/i)).toBeVisible()
     await expect(page.getByRole('link', { name: /submit via github/i })).toHaveCount(0)
     await expect(submitButton).toBeDisabled()
 
     await page.getByLabel('Name').fill('Example Project')
     await page.getByLabel('Category').selectOption('developer-tools')
     await page.getByLabel('Website URL').fill('https://example.com')
+    await page.getByLabel('Logo URL').fill('https://example.com/logo.png')
+    await page.getByLabel('Video URL').fill('https://www.youtube.com/watch?v=abc123')
     await page.getByLabel('Short Description').fill('Example project description.')
-    await expect(submitButton).toBeEnabled()
+    await page.getByLabel('Full Description').fill('Detailed example project description.')
+    await page.getByLabel('FAQ question').fill('Does it work in Chrome?')
+    await page.getByLabel('FAQ answer').fill('Yes.')
+    await page.getByLabel('Resource link label').fill('Docs')
+    await page.getByLabel('Resource link URL').fill('https://example.com/docs')
+    await expect(submitButton).toBeDisabled()
   })
 
   test('news alias still redirects to the supported public surface', async ({ page }) => {

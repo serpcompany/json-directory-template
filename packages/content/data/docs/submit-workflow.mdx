@@ -28,11 +28,11 @@ Instead, the repo becomes the source of truth and GitHub becomes the audit trail
 ## What happens when someone submits
 
 1. The user opens `/submit`.
-2. The form collects the listing name, category, website URL, description, and any optional notes.
-3. When the user clicks **Continue on GitHub**, the client builds a GitHub issue URL.
-4. The browser navigates to the GitHub issue composer with a template, title, and prefilled body.
-5. A maintainer reviews the issue and, if approved, updates repo data such as `data/listings.json`.
-6. If that accepted change becomes a PR, CI validates `data/listings.json` before merge.
+2. The form collects the required listing name, category, website URL, logo URL, video URL, descriptions, FAQ, and resource link.
+3. When the user clicks **Submit**, the client builds a GitHub issue URL.
+4. The browser navigates to the GitHub issue composer with a title and prefilled body.
+5. A maintainer reviews the issue and, if approved, updates the active checked-in listing source.
+6. That accepted change becomes a PR, and CI validates the configured listing source before merge.
 
 ## Current category rule
 
@@ -45,8 +45,7 @@ If the listing needs secondary categories, maintainers add them later during rev
 
 ```txt
 https://github.com/OWNER/REPO/issues/new
-  ?template=submit-website.yml
-  &title=Submit listing: Example Project
+  ?title=Submit listing: Example Project
   &body=...
 ```
 
@@ -63,6 +62,21 @@ Category: developer-tools
 
 A short summary of what the project does.
 
+## Media
+
+Logo URL: https://example.com/logo.png
+Video URL: https://www.youtube.com/watch?v=abc123
+
+## Resource links
+
+- Docs: https://example.com/docs
+
+## FAQs
+
+### Does it work in Chrome?
+
+Yes.
+
 ## Additional notes
 
 Helpful reviewer context.
@@ -72,8 +86,8 @@ Helpful reviewer context.
 
 - `apps/starter/app/submit/page.tsx` renders the public submit page.
 - `packages/web-core/src/forms/github-issue-submit-form.tsx` renders the form and handles the client-side redirect.
-- `apps/starter/lib/github-issue.ts` builds the final GitHub issue URL, template, title, and body.
-- `sites/site-config.default.ts` plus `sites/<id>/site-config.ts` provide the checked-in owner, repo, issue URL, and template values.
+- `packages/web-core/src/github-issue.ts` builds the final GitHub issue URL, title, and body.
+- `sites/site-config.default.ts` plus `sites/<id>/site-config.ts` provide the checked-in owner, repo, and issue URL values.
 - `.github/workflows/update-listings-json.yml` validates accepted listing changes when `data/listings.json` is edited in a PR or on `main`.
 - `docs/knowledge/taxonomy-discovery-contract.md` records the current shared starter taxonomy and single-category intake rule.
 
@@ -85,11 +99,15 @@ That means:
 
 - the public site does not write listing JSON directly
 - maintainers review submissions in GitHub first
-- any accepted edit to `data/listings.json` must pass the dedicated listing-data validation workflow before merge
+- any accepted edit to the active checked-in listing source must pass validation before merge
+
+For BrowserExtensions.io, accepted listings are edited in `sites/browserextensions.io/products.json`
+through the private source repo's normal PR, validation, build, and deploy process. The public
+`serpcompany/browserextensions.io` repo is only the issue inbox and static artifact host.
 
 ## What to change if you customize it
 
-- Change the GitHub owner, repo, or template in the checked-in site config.
+- Change the GitHub owner or repo in the checked-in site config.
 - Add or remove fields in `packages/web-core/src/forms/github-issue-submit-form.tsx`.
 - Keep the GitHub issue handoff if you want to stay static-friendly with no runtime infrastructure.
 
