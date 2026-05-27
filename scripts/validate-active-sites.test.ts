@@ -35,15 +35,18 @@ describe('getActiveCheckedInSiteIds', () => {
       const siteConfig = loadCheckedInSite(siteId)
       const appRoot = resolve(process.cwd(), siteConfig.build.appOutDir, '../app')
       const listingRoutePath = resolve(appRoot, siteConfig.routes.listingBasePath)
+      const detailRoutePath = siteConfig.sitemap.listingDetailSuffix
+        ? resolve(listingRoutePath, '[slug]', siteConfig.sitemap.listingDetailSuffix, 'page.tsx')
+        : resolve(listingRoutePath, '[slug]/page.tsx')
+      const detailRouteLabel = siteConfig.sitemap.listingDetailSuffix
+        ? `app/${siteConfig.routes.listingBasePath}/[slug]/${siteConfig.sitemap.listingDetailSuffix}/page.tsx`
+        : `app/${siteConfig.routes.listingBasePath}/[slug]/page.tsx`
 
       expect(
         existsSync(resolve(listingRoutePath, 'page.tsx')),
         `${siteId} must scaffold app/${siteConfig.routes.listingBasePath}/page.tsx`
       ).toBe(true)
-      expect(
-        existsSync(resolve(listingRoutePath, '[slug]/page.tsx')),
-        `${siteId} must scaffold app/${siteConfig.routes.listingBasePath}/[slug]/page.tsx`
-      ).toBe(true)
+      expect(existsSync(detailRoutePath), `${siteId} must scaffold ${detailRouteLabel}`).toBe(true)
 
       const nextConfigSource = readFileSync(resolve(appRoot, '../next.config.ts'), 'utf8')
       expect(nextConfigSource).not.toContain('createAliasRewrites(listingBasePath,')
