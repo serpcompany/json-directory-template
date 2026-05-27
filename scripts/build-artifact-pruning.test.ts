@@ -12,6 +12,7 @@ import {
   applyLegacyRootListingRedirects,
   applyConfiguredPublicRoutePaths,
   applyListingRouteBasePath,
+  copyDeployableStaticArtifactFiles,
   removeExcludedStaticArtifactPaths,
   pruneStaticArtifactDir,
 } from './build-site.ts';
@@ -113,6 +114,115 @@ describe('pruneStaticArtifactDir', () => {
     expect(existsSync(resolve(artifactDir, 'guides'))).toBe(true);
     expect(existsSync(resolve(artifactDir, 'featured'))).toBe(true);
     expect(existsSync(resolve(artifactDir, 'developer-tools'))).toBe(true);
+  });
+});
+
+describe('copyDeployableStaticArtifactFiles', () => {
+  it('copies only deployable files while preserving final route remaps', () => {
+    const sourceDir = makeTempArtifactDir();
+    const artifactDir = makeTempArtifactDir();
+
+    writeFile(resolve(sourceDir, '.DS_Store'));
+    writeFile(resolve(sourceDir, '_next/static/chunks/app.js'));
+    writeFile(resolve(sourceDir, '_next/static/chunks/app.js.map'));
+    writeFile(resolve(sourceDir, '__next._tree.txt'));
+    writeFile(resolve(sourceDir, '_not-found/index.html'), 'not found');
+    writeFile(resolve(sourceDir, '404/index.html'));
+    writeFile(resolve(sourceDir, '404.html'), 'next 404');
+    writeFile(resolve(sourceDir, 'account/index.html'));
+    writeFile(resolve(sourceDir, 'brands/index.html'), 'brands');
+    writeFile(resolve(sourceDir, 'docs/index.html'), 'docs');
+    writeFile(resolve(sourceDir, 'projects/index.html'), 'projects');
+    writeFile(resolve(sourceDir, 'posts/legacy/index.html'), 'legacy post');
+    writeFile(resolve(sourceDir, 'guides/launch/index.html'), 'guide post');
+    writeFile(resolve(sourceDir, 'websites/example/index.html'), 'unsuffixed');
+    writeFile(resolve(sourceDir, 'websites/example/reviews/index.html'), 'suffixed');
+    writeFile(resolve(sourceDir, 'websites/index.html'));
+    writeFile(resolve(sourceDir, 'search/index.html'));
+    writeFile(resolve(sourceDir, 'featured/index.html'), 'root featured');
+    writeFile(resolve(sourceDir, 'categories/featured/index.html'), 'raw featured');
+    writeFile(resolve(sourceDir, 'categories/extra/index.html'), 'extra category');
+
+    copyDeployableStaticArtifactFiles(sourceDir, artifactDir, {
+      artifactExcludedPaths: ['/products', '/search'],
+      artifactFlags: {
+        preservePostsRoute: false,
+        showAuth: false,
+        showBrands: true,
+        showDocs: true,
+        showFavorites: false,
+        showGuides: true,
+        showProjects: true,
+      },
+      brandsBasePath: 'partners',
+      docsBasePath: 'learn',
+      listingBasePath: 'products',
+      listingDetailSuffix: 'reviews',
+      networkBasePath: 'network',
+    });
+
+    expect(existsSync(resolve(artifactDir, '_next/static/chunks/app.js'))).toBe(true);
+    expect(existsSync(resolve(artifactDir, '_next/static/chunks/app.js.map'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, '__next._tree.txt'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, '_not-found'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, '404'))).toBe(false);
+    expect(readFileSync(resolve(artifactDir, '404.html'), 'utf8')).toBe('next 404');
+    expect(existsSync(resolve(artifactDir, 'account'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, 'brands'))).toBe(false);
+    expect(readFileSync(resolve(artifactDir, 'partners/index.html'), 'utf8')).toBe('brands');
+    expect(existsSync(resolve(artifactDir, 'docs'))).toBe(false);
+    expect(readFileSync(resolve(artifactDir, 'learn/index.html'), 'utf8')).toBe('docs');
+    expect(existsSync(resolve(artifactDir, 'projects'))).toBe(false);
+    expect(readFileSync(resolve(artifactDir, 'network/index.html'), 'utf8')).toBe('projects');
+    expect(existsSync(resolve(artifactDir, 'posts/legacy'))).toBe(false);
+    expect(readFileSync(resolve(artifactDir, 'posts/launch/index.html'), 'utf8')).toBe(
+      'guide post'
+    );
+    expect(existsSync(resolve(artifactDir, 'websites'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, 'products/index.html'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, 'products/example/index.html'))).toBe(false);
+    expect(
+      readFileSync(resolve(artifactDir, 'products/example/reviews/index.html'), 'utf8')
+    ).toBe('suffixed');
+    expect(existsSync(resolve(artifactDir, 'search'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, 'featured'))).toBe(false);
+    expect(readFileSync(resolve(artifactDir, 'categories/featured/index.html'), 'utf8')).toBe(
+      'root featured'
+    );
+    expect(readFileSync(resolve(artifactDir, 'categories/extra/index.html'), 'utf8')).toBe(
+      'extra category'
+    );
+  });
+
+  it('skips generated category aliases when a category base path is configured', () => {
+    const sourceDir = makeTempArtifactDir();
+    const artifactDir = makeTempArtifactDir();
+
+    writeFile(resolve(sourceDir, 'categories/featured/index.html'));
+    writeFile(resolve(sourceDir, 'featured/index.html'));
+    writeFile(resolve(sourceDir, 'products/best/featured/index.html'));
+
+    copyDeployableStaticArtifactFiles(sourceDir, artifactDir, {
+      artifactExcludedPaths: [],
+      artifactFlags: {
+        preservePostsRoute: false,
+        showAuth: false,
+        showBrands: false,
+        showDocs: false,
+        showFavorites: false,
+        showGuides: false,
+        showProjects: false,
+      },
+      brandsBasePath: 'brands',
+      categoryBasePath: 'products/best',
+      docsBasePath: 'docs',
+      listingBasePath: 'products',
+      networkBasePath: 'network',
+    });
+
+    expect(existsSync(resolve(artifactDir, 'categories'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, 'featured'))).toBe(false);
+    expect(existsSync(resolve(artifactDir, 'products/best/featured/index.html'))).toBe(true);
   });
 });
 

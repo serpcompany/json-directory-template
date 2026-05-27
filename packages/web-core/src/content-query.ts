@@ -31,10 +31,23 @@ export interface WebsiteMetadata {
   media?: WebsiteMedia
   content?: string
   resourceLinks?: WebsiteResourceLink[]
-  relatedWebsites?: WebsiteMetadata[]
-  previousWebsite?: WebsiteMetadata | null
-  nextWebsite?: WebsiteMetadata | null
   _meta?: ContentMeta
+}
+
+export interface WebsiteRelatedCardMetadata {
+  slug: string
+  name: string
+  description: string
+  website: string
+  isUnofficial?: boolean
+  media?: Pick<WebsiteMedia, 'logo'>
+}
+
+export interface WebsiteNavigationMetadata {
+  slug: string
+  name: string
+  website: string
+  media?: Pick<WebsiteMedia, 'logo'>
 }
 
 export interface GuideMetadata {
@@ -116,9 +129,9 @@ export interface LegalEntry {
 }
 
 export interface WebsiteDetailMetadata extends WebsiteMetadata {
-  relatedWebsites: WebsiteMetadata[]
-  previousWebsite: WebsiteMetadata | null
-  nextWebsite: WebsiteMetadata | null
+  relatedWebsites: WebsiteRelatedCardMetadata[]
+  previousWebsite: WebsiteNavigationMetadata | null
+  nextWebsite: WebsiteNavigationMetadata | null
 }
 
 export interface WebsiteLookupIndex {
@@ -159,6 +172,51 @@ export function buildWebsiteLookupIndex(websites: readonly WebsiteMetadata[]): W
   }
 }
 
+function toLogoOnlyMedia(media?: WebsiteMedia): Pick<WebsiteMedia, 'logo'> | undefined {
+  return media?.logo ? { logo: media.logo } : undefined
+}
+
+function toRelatedCardMetadata(website: WebsiteMetadata): WebsiteRelatedCardMetadata {
+  const relatedCard: WebsiteRelatedCardMetadata = {
+    slug: website.slug,
+    name: website.name,
+    description: website.description,
+    website: website.website
+  }
+  const media = toLogoOnlyMedia(website.media)
+
+  if (website.isUnofficial !== undefined) {
+    relatedCard.isUnofficial = website.isUnofficial
+  }
+
+  if (media) {
+    relatedCard.media = media
+  }
+
+  return relatedCard
+}
+
+function toNavigationMetadata(
+  website: WebsiteMetadata | undefined
+): WebsiteNavigationMetadata | null {
+  if (!website) {
+    return null
+  }
+
+  const navigationMetadata: WebsiteNavigationMetadata = {
+    slug: website.slug,
+    name: website.name,
+    website: website.website
+  }
+  const media = toLogoOnlyMedia(website.media)
+
+  if (media) {
+    navigationMetadata.media = media
+  }
+
+  return navigationMetadata
+}
+
 export function resolveWebsiteBySlugFromIndex(
   index: WebsiteLookupIndex,
   slug: string
@@ -181,8 +239,8 @@ export function resolveWebsiteBySlugFromIndex(
     return null
   }
 
-  const previousWebsite = websites[currentIndex - 1] || null
-  const nextWebsite = websites[currentIndex + 1] || null
+  const previousWebsite = toNavigationMetadata(websites[currentIndex - 1])
+  const nextWebsite = toNavigationMetadata(websites[currentIndex + 1])
   const websiteCategorySlugs = new Set(getListingCategories(website))
   const relatedWebsites = websites
     .map(site => ({
@@ -199,8 +257,8 @@ export function resolveWebsiteBySlugFromIndex(
 
       return left.site.name.localeCompare(right.site.name)
     })
-    .map(({ site }) => site)
     .slice(0, 4)
+    .map(({ site }) => toRelatedCardMetadata(site))
 
   return {
     ...website,

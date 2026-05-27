@@ -20,19 +20,15 @@ on:
       site_id:
         description: 'Checked-in site config id'
         required: true
-        default: 'default'
 
 concurrency:
   group: main-ci-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  validate:
-    name: Validate Data
+  deploy:
+    name: Validate, Build & Deploy
     runs-on: self-hosted
-    outputs:
-      artifact_dir: ${{ steps.resolve.outputs.artifact_dir }}
-      site_id: ${{ steps.resolve.outputs.site_id }}
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/install
@@ -41,6 +37,7 @@ jobs:
         id: resolve
         env:
           SITE_ID: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.site_id || '' }}
+          NEXT_PUBLIC_SITE_ID: ''
           PUSH_FALLBACK_SITE_ID: ${{ github.event_name == 'push' && vars.SITE_ID || '' }}
         run: ./node_modules/.bin/tsx scripts/resolve-build-run.ts >> "$GITHUB_OUTPUT"
 
@@ -49,45 +46,15 @@ jobs:
           SITE_ID: ${{ steps.resolve.outputs.site_id }}
         run: pnpm validate:site
 
-  build:
-    name: Build
-    needs: validate
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/install
-
       - name: Build static site
         env:
-          SITE_ID: ${{ needs.validate.outputs.site_id }}
+          SITE_ID: ${{ steps.resolve.outputs.site_id }}
         run: pnpm build:site
 
       - name: Audit XML sitemaps
         env:
-          SITE_ID: ${{ needs.validate.outputs.site_id }}
+          SITE_ID: ${{ steps.resolve.outputs.site_id }}
         run: pnpm audit:sitemaps -- --site "$SITE_ID"
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: ${{ needs.validate.outputs.artifact_dir }}/
-          retention-days: 1
-
-  deploy:
-    name: Deploy to Repo
-    needs: [validate, build]
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: ./.github/actions/install
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output
-          path: ${{ needs.validate.outputs.artifact_dir }}
 
       - name: Verify deploy auth
         env:
@@ -100,6 +67,9 @@ jobs:
 
       - name: Deploy
         env:
+          ALLOW_DEPLOY_TARGET_OVERRIDE: ''
           DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
-          SITE_ID: ${{ needs.validate.outputs.site_id }}
+          DEPLOY_BRANCH: ''
+          DEPLOY_REPO_URL: ''
+          SITE_ID: ${{ steps.resolve.outputs.site_id }}
         run: pnpm deploy:site

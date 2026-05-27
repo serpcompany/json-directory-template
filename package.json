@@ -47,7 +47,7 @@
     "test:e2e:smoke": "turbo test:e2e:smoke --filter=e2e",
     "test:e2e:ui": "turbo test:e2e:ui --filter=e2e",
     "test:e2e:debug": "turbo test:e2e:debug --filter=e2e",
-    "test:repo": "pnpm exec vitest run scripts/pr-review-workflow.test.ts scripts/labels-workflow.test.ts scripts/update-listings-json-workflow.test.ts scripts/ci-workflow-install.test.ts scripts/build-and-deploy-workflow.test.ts scripts/validate-active-sites.test.ts scripts/validate-data.test.ts scripts/generate-site-wrapper.test.ts scripts/thin-wrapper-runtime.test.ts scripts/web-core-runtime-boundary.test.ts scripts/site-config.test.ts scripts/sitemap-files.test.ts scripts/audit-sitemaps.test.ts scripts/submit-gsc-sitemaps.test.ts scripts/deploy-site.test.ts scripts/deploy-to-repo-script.test.ts",
+    "test:repo": "pnpm exec vitest run scripts/pr-review-workflow.test.ts scripts/labels-workflow.test.ts scripts/update-listings-json-workflow.test.ts scripts/ci-workflow-install.test.ts scripts/build-and-deploy-workflow.test.ts scripts/validate-active-sites.test.ts scripts/validate-data.test.ts scripts/generate-site-wrapper.test.ts scripts/thin-wrapper-runtime.test.ts scripts/web-core-runtime-boundary.test.ts scripts/site-config.test.ts scripts/sitemap-files.test.ts scripts/audit-sitemaps.test.ts scripts/build-artifact-pruning.test.ts scripts/submit-gsc-sitemaps.test.ts scripts/deploy-site.test.ts scripts/deploy-to-repo-script.test.ts",
     "test:watch": "turbo test:watch --cache-dir=.turbo",
     "typecheck": "turbo typecheck",
     "update": "pnpm update -r",

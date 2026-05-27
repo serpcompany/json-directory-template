@@ -1,8 +1,8 @@
 import { ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import type { ComponentType, ReactNode } from 'react'
-import type { WebsiteMetadata } from '../content-query'
 import { getListingSpecificResourceLinks } from '../resource-links'
+import type { WebsiteResourceLink } from '../website-schema'
 
 type SectionProps = {
   children: ReactNode
@@ -12,11 +12,18 @@ type SectionProps = {
 }
 
 type WebsiteCliSectionProps = {
-  website: WebsiteMetadata
+  website: {
+    slug: string
+  }
+}
+
+type WebsiteResourcesWebsite = {
+  slug: string
+  resourceLinks?: WebsiteResourceLink[]
 }
 
 export interface WebsiteResourcesSectionProps {
-  website: WebsiteMetadata
+  website: WebsiteResourcesWebsite
   slots: {
     Section: ComponentType<SectionProps>
     WebsiteCliSection: ComponentType<WebsiteCliSectionProps>
@@ -25,24 +32,20 @@ export interface WebsiteResourcesSectionProps {
 
 export function WebsiteResourcesSection({
   website,
-  slots: { Section, WebsiteCliSection },
+  slots: { Section, WebsiteCliSection }
 }: WebsiteResourcesSectionProps) {
   const resourceLinks = getListingSpecificResourceLinks(website.resourceLinks)
 
   return (
     <>
-      <WebsiteCliSection website={website} />
+      <WebsiteCliSection website={{ slug: website.slug }} />
 
       {resourceLinks.length > 0 ? (
         <section className="animate-fade-in-up opacity-0 stagger-3">
-          <Section
-            title="Links"
-            description="Helpful links for this entry"
-            titleId="links"
-          >
+          <Section title="Links" description="Helpful links for this entry" titleId="links">
             <div className="rounded-2xl border bg-card/50 backdrop-blur-sm overflow-hidden">
               <ul className="divide-y divide-border/80">
-                {resourceLinks.map((link) => (
+                {resourceLinks.map(link => (
                   <li key={`${link.label}-${link.url}`}>
                     <Link
                       href={link.url}

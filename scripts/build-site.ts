@@ -1,12 +1,11 @@
 import {
   closeSync,
+  constants as fsConstants,
   copyFileSync,
-  cpSync,
   existsSync,
   mkdirSync,
   openSync,
   readdirSync,
-  readFileSync,
   renameSync,
   rmSync,
   statSync,
@@ -588,6 +587,302 @@ function normalizePublicArtifactPath(path: string): string | null {
   return segments.join('/');
 }
 
+function normalizePublicArtifactSegments(path: string): string[] | null {
+  const normalizedPath = normalizePublicArtifactPath(path);
+
+  return normalizedPath ? normalizedPath.split('/') : null;
+}
+
+function segmentsEqual(left: string[], right: string[]): boolean {
+  return left.length === right.length && left.every((segment, index) => segment === right[index]);
+}
+
+function hasSegmentPrefix(pathSegments: string[], prefixSegments: string[]): boolean {
+  return (
+    pathSegments.length >= prefixSegments.length &&
+    prefixSegments.every((segment, index) => pathSegments[index] === segment)
+  );
+}
+
+function replaceSegmentPrefix(
+  pathSegments: string[],
+  sourcePrefix: string[],
+  targetPrefix: string[]
+): string[] {
+  if (!hasSegmentPrefix(pathSegments, sourcePrefix)) {
+    return pathSegments;
+  }
+
+  return [...targetPrefix, ...pathSegments.slice(sourcePrefix.length)];
+}
+
+function isPrunedArtifactFileName(name: string): boolean {
+  return (
+    name === '.DS_Store' ||
+    name.endsWith('.map') ||
+    (name.startsWith('__next') && name.endsWith('.txt')) ||
+    name === 'index.txt'
+  );
+}
+
+type ArtifactCopyRouteMapping = {
+  source: string[];
+  target: string[];
+};
+
+function createArtifactCopyRouteMappings(input: {
+  appOutDir: string;
+  artifactFlags: ArtifactSurfaceFlags;
+  brandsBasePath: string;
+  categoryBasePath?: string;
+  docsBasePath: string;
+  listingBasePath: string;
+  networkBasePath: string;
+}): ArtifactCopyRouteMapping[] {
+  const mappings: ArtifactCopyRouteMapping[] = [];
+  const addMapping = (sourcePath: string, targetPath: string): void => {
+    const source = normalizePublicArtifactSegments(sourcePath);
+    const target = normalizePublicArtifactSegments(targetPath);
+
+    if (!source || !target || segmentsEqual(source, target)) {
+      return;
+    }
+
+    mappings.push({ source, target });
+  };
+
+  addMapping('websites', input.listingBasePath);
+
+  if (input.artifactFlags.showBrands) {
+    addMapping('brands', input.brandsBasePath);
+  }
+
+  if (input.artifactFlags.showDocs) {
+    addMapping('docs', input.docsBasePath);
+  }
+
+  if (input.artifactFlags.showGuides) {
+    addMapping('guides', 'posts');
+  }
+
+  if (input.artifactFlags.showProjects) {
+    addMapping('projects', input.networkBasePath);
+  }
+
+  if (!input.categoryBasePath) {
+    for (const slug of categoryArtifactSlugs) {
+      addMapping(slug, `categories/${slug}`);
+    }
+  }
+
+  return mappings.filter(({ source }) => existsSync(resolve(input.appOutDir, ...source)));
+}
+
+function createSkippedArtifactSourceRoots(input: {
+  appOutDir: string;
+  artifactFlags: ArtifactSurfaceFlags;
+  categoryBasePath?: string;
+  routeMappings: ArtifactCopyRouteMapping[];
+}): string[][] {
+  const skippedRoots: string[][] = [['_not-found'], ['404'], ['operator']];
+
+  if (!input.artifactFlags.showAuth) {
+    skippedRoots.push(['account'], ['login']);
+  }
+
+  if (!input.artifactFlags.showFavorites) {
+    skippedRoots.push(['favorites']);
+  }
+
+  if (!input.artifactFlags.showProjects) {
+    skippedRoots.push(['projects']);
+  }
+
+  if (!input.artifactFlags.showBrands) {
+    skippedRoots.push(['brands']);
+  }
+
+  if (!input.artifactFlags.showDocs) {
+    skippedRoots.push(['docs']);
+  }
+
+  if (!input.artifactFlags.showGuides) {
+    skippedRoots.push(['guides']);
+    if (!input.artifactFlags.preservePostsRoute) {
+      skippedRoots.push(['posts']);
+    }
+  }
+
+  if (input.categoryBasePath) {
+    skippedRoots.push(['categories']);
+    for (const slug of categoryArtifactSlugs) {
+      skippedRoots.push([slug]);
+    }
+  }
+
+  for (const { source, target } of input.routeMappings) {
+    if (segmentsEqual(source, target)) {
+      continue;
+    }
+
+    skippedRoots.push(target);
+  }
+
+  return skippedRoots.filter((segments, index, allSegments) =>
+    allSegments.findIndex(candidate => segmentsEqual(candidate, segments)) === index
+  );
+}
+
+function mapDeployableArtifactSegments(
+  sourceSegments: string[],
+  routeMappings: ArtifactCopyRouteMapping[]
+): string[] {
+  for (const { source, target } of routeMappings) {
+    if (hasSegmentPrefix(sourceSegments, source)) {
+      return replaceSegmentPrefix(sourceSegments, source, target);
+    }
+  }
+
+  return sourceSegments;
+}
+
+function isExcludedArtifactRouteIndex(
+  targetFileSegments: string[],
+  excludedRouteSegments: string[][]
+): boolean {
+  return excludedRouteSegments.some(routeSegments =>
+    segmentsEqual(targetFileSegments, routeSegments) ||
+    segmentsEqual(targetFileSegments, [...routeSegments, 'index.html'])
+  );
+}
+
+function isUnsuffixedListingDetailIndex(input: {
+  appOutDir: string;
+  listingBasePath: string;
+  listingDetailSuffix?: string;
+  sourceFileSegments: string[];
+  targetFileSegments: string[];
+}): boolean {
+  const suffix = input.listingDetailSuffix?.replace(/^\/+|\/+$/g, '');
+
+  if (!suffix) {
+    return false;
+  }
+
+  const listingBaseSegments = normalizePublicArtifactSegments(input.listingBasePath);
+
+  if (!listingBaseSegments) {
+    return false;
+  }
+
+  if (
+    input.targetFileSegments.length !== listingBaseSegments.length + 2 ||
+    input.targetFileSegments.at(-1) !== 'index.html' ||
+    !hasSegmentPrefix(input.targetFileSegments, listingBaseSegments)
+  ) {
+    return false;
+  }
+
+  const suffixedSourceIndexPath = resolve(
+    input.appOutDir,
+    ...input.sourceFileSegments.slice(0, -1),
+    suffix,
+    'index.html'
+  );
+
+  return existsSync(suffixedSourceIndexPath);
+}
+
+export function copyDeployableStaticArtifactFiles(
+  appOutDir: string,
+  artifactDir: string,
+  input: {
+    artifactExcludedPaths: string[];
+    artifactFlags: ArtifactSurfaceFlags;
+    brandsBasePath: string;
+    categoryBasePath?: string;
+    docsBasePath: string;
+    listingBasePath: string;
+    listingDetailSuffix?: string;
+    networkBasePath: string;
+  }
+): void {
+  const routeMappings = createArtifactCopyRouteMappings({
+    appOutDir,
+    artifactFlags: input.artifactFlags,
+    brandsBasePath: input.brandsBasePath,
+    categoryBasePath: input.categoryBasePath,
+    docsBasePath: input.docsBasePath,
+    listingBasePath: input.listingBasePath,
+    networkBasePath: input.networkBasePath,
+  });
+  const skippedSourceRoots = createSkippedArtifactSourceRoots({
+    appOutDir,
+    artifactFlags: input.artifactFlags,
+    categoryBasePath: input.categoryBasePath,
+    routeMappings,
+  });
+  const excludedRouteSegments = input.artifactExcludedPaths
+    .map(normalizePublicArtifactSegments)
+    .filter((segments): segments is string[] => Boolean(segments));
+
+  const copyTree = (sourceSegments: string[]): void => {
+    if (skippedSourceRoots.some(root => hasSegmentPrefix(sourceSegments, root))) {
+      return;
+    }
+
+    const sourcePath = resolve(appOutDir, ...sourceSegments);
+    const entries = readdirSync(sourcePath, { withFileTypes: true }).sort((left, right) =>
+      left.name.localeCompare(right.name)
+    );
+
+    for (const entry of entries) {
+      const entrySourceSegments = [...sourceSegments, entry.name];
+
+      if (entry.isDirectory()) {
+        copyTree(entrySourceSegments);
+        continue;
+      }
+
+      if (isPrunedArtifactFileName(entry.name)) {
+        continue;
+      }
+
+      const targetFileSegments = mapDeployableArtifactSegments(
+        entrySourceSegments,
+        routeMappings
+      );
+
+      if (isExcludedArtifactRouteIndex(targetFileSegments, excludedRouteSegments)) {
+        continue;
+      }
+
+      if (
+        isUnsuffixedListingDetailIndex({
+          appOutDir,
+          listingBasePath: input.listingBasePath,
+          listingDetailSuffix: input.listingDetailSuffix,
+          sourceFileSegments: entrySourceSegments,
+          targetFileSegments,
+        })
+      ) {
+        continue;
+      }
+
+      const targetPath = resolve(artifactDir, ...targetFileSegments);
+      mkdirSync(dirname(targetPath), { recursive: true });
+      copyFileSync(
+        resolve(appOutDir, ...entrySourceSegments),
+        targetPath,
+        fsConstants.COPYFILE_FICLONE
+      );
+    }
+  };
+
+  mkdirSync(artifactDir, { recursive: true });
+  copyTree([]);
+}
+
 export function removeExcludedStaticArtifactPaths(
   artifactDir: string,
   excludedPaths: string[]
@@ -836,16 +1131,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
   const notFoundTargetPath = resolve(artifactDir, '404.html');
   const noJekyllPath = resolve(artifactDir, '.nojekyll');
   const cnamePath = resolve(artifactDir, 'CNAME');
-
-  rmSync(artifactDir, { force: true, recursive: true });
-  mkdirSync(dirname(artifactDir), { recursive: true });
-  cpSync(appOutDir, artifactDir, { recursive: true });
-
-  if (existsSync(notFoundSourcePath)) {
-    copyFileSync(notFoundSourcePath, notFoundTargetPath);
-  }
-
-  pruneStaticArtifactDir(artifactDir, {
+  const artifactFlags = {
     preservePostsRoute: definition.sitemap.staticPagePaths?.includes('/posts') ?? false,
     showAuth: definition.features.showAuth,
     showBrands: definition.features.showBrands,
@@ -853,7 +1139,28 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     showFavorites: definition.features.showFavorites,
     showGuides: definition.features.showGuides,
     showProjects: definition.features.showProjects,
+  };
+  const artifactExcludedPaths =
+    definition.sitemap.artifactExcludedPaths ?? definition.sitemap.excludedPaths ?? [];
+
+  rmSync(artifactDir, { force: true, recursive: true });
+  mkdirSync(dirname(artifactDir), { recursive: true });
+  copyDeployableStaticArtifactFiles(appOutDir, artifactDir, {
+    artifactExcludedPaths,
+    artifactFlags,
+    brandsBasePath: definition.routes.brandsBasePath,
+    categoryBasePath: definition.sitemap.categoryBasePath,
+    docsBasePath: definition.routes.docsBasePath,
+    listingBasePath: definition.routes.listingBasePath,
+    listingDetailSuffix: definition.sitemap.listingDetailSuffix,
+    networkBasePath: definition.routes.networkBasePath,
   });
+
+  if (existsSync(notFoundSourcePath)) {
+    copyFileSync(notFoundSourcePath, notFoundTargetPath);
+  }
+
+  pruneStaticArtifactDir(artifactDir, artifactFlags);
   applyConfiguredPublicRoutePaths(artifactDir, {
     brandsBasePath: definition.routes.brandsBasePath,
     docsBasePath: definition.routes.docsBasePath,
@@ -871,10 +1178,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     listingBasePath: definition.routes.listingBasePath,
     siteId: definition.id,
   });
-  removeExcludedStaticArtifactPaths(
-    artifactDir,
-    definition.sitemap.artifactExcludedPaths ?? definition.sitemap.excludedPaths ?? []
-  );
+  removeExcludedStaticArtifactPaths(artifactDir, artifactExcludedPaths);
   writeSplitSitemaps(artifactDir, {
     additionalPathsByGroup: definition.sitemap.additionalPathsByGroup,
     baseUrl: definition.site.publicUrl,

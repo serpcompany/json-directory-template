@@ -1,19 +1,12 @@
-import type { WebsiteMetadata } from '../content-query'
-import { LLMGrid } from '../llm/llm-grid'
+import type { WebsiteRelatedCardMetadata } from '../content-query'
 import { Section } from '../layout/section'
+import { LLMGrid } from '../llm/llm-grid'
 import { WebsiteRelatedProjects as SharedWebsiteRelatedProjects } from './website-related-projects'
 
 interface WebsiteRelatedProjectsRouteProps {
-  websites: WebsiteMetadata[]
+  websites: WebsiteRelatedCardMetadata[]
 }
 
-export function WebsiteRelatedProjectsRoute({
-  websites,
-}: WebsiteRelatedProjectsRouteProps) {
-  return (
-    <SharedWebsiteRelatedProjects
-      websites={websites}
-      slots={{ LLMGrid, Section }}
-    />
-  )
+export function WebsiteRelatedProjectsRoute({ websites }: WebsiteRelatedProjectsRouteProps) {
+  return <SharedWebsiteRelatedProjects websites={websites} slots={{ LLMGrid, Section }} />
 }

@@ -1,38 +1,38 @@
-import type { ComponentType, ReactNode } from 'react';
-import type { WebsiteMetadata } from '../content-query';
-import { getRoute } from '../routes';
+import type { ComponentType, ReactNode } from 'react'
+import type { WebsiteRelatedCardMetadata } from '../content-query'
+import { getRoute } from '../routes'
 
 type SectionProps = {
-  children: ReactNode;
-  description?: string;
-  title: string;
-  titleId?: string;
-  viewAllHref?: string;
-  viewAllText?: string;
-};
+  children: ReactNode
+  description?: string
+  title: string
+  titleId?: string
+  viewAllHref?: string
+  viewAllText?: string
+}
 
 type LLMGridProps = {
-  analyticsSource?: string;
-  animateIn?: boolean;
-  className?: string;
-  items: WebsiteMetadata[];
-  overrideGrid?: boolean;
-};
+  analyticsSource?: string
+  animateIn?: boolean
+  className?: string
+  items: WebsiteRelatedCardMetadata[]
+  overrideGrid?: boolean
+}
 
 export type WebsiteRelatedProjectsProps = {
-  websites: WebsiteMetadata[];
+  websites: WebsiteRelatedCardMetadata[]
   slots: {
-    LLMGrid: ComponentType<LLMGridProps>;
-    Section: ComponentType<SectionProps>;
-  };
-};
+    LLMGrid: ComponentType<LLMGridProps>
+    Section: ComponentType<SectionProps>
+  }
+}
 
 export function WebsiteRelatedProjects({
   websites,
-  slots: { LLMGrid, Section },
+  slots: { LLMGrid, Section }
 }: WebsiteRelatedProjectsProps) {
   if (websites.length === 0) {
-    return null;
+    return null
   }
 
   return (
@@ -53,5 +53,5 @@ export function WebsiteRelatedProjects({
         />
       </Section>
     </section>
-  );
+  )
 }

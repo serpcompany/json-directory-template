@@ -87,13 +87,16 @@ The repo workflow is `.github/workflows/build-and-deploy.yml`.
 
 The workflow:
 
-1. resolves the active site from `site_id`
+1. resolves the active site from workflow dispatch `site_id`, push inference, or repo `SITE_ID` fallback for generic push paths
 2. runs `pnpm validate:site`
 3. runs `pnpm build:site`
 4. runs `pnpm audit:sitemaps`
-5. uploads the resolved artifact
-6. downloads the artifact into the deploy job
-7. runs `pnpm deploy:site` against the checked-in site config deploy target
+5. verifies the `GH_PAT` deploy secret
+6. runs `pnpm deploy:site` against the checked-in site config deploy target
+
+The generated artifact stays in the same GitHub Actions job workspace between
+build, audit, and deploy. Normal deploys do not upload/download the large
+artifact between jobs.
 
 ## Redeploy after a normal content or brand change
 
