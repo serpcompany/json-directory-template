@@ -29,7 +29,7 @@ jobs:
         run: pnpm validate:sites
 
       - name: Run Biome Check
-        run: pnpm exec biome check --changed --since=origin/main
+        run: pnpm exec biome check --changed --since=origin/main --no-errors-on-unmatched
 
       - name: Run repository policy tests
         run: pnpm test:repo
