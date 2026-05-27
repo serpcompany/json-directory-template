@@ -97,6 +97,43 @@ describe('loadCheckedInSite', () => {
     expect(config.deploy?.strategy).toBe('github-pages-repo-sync')
   })
 
+  it('loads the checked-in serp.ai site config', () => {
+    const config = loadCheckedInSite('serp.ai')
+
+    expect(config.id).toBe('serp.ai')
+    expect(config.content.listingSource).toEqual({
+      category: 'video-downloaders',
+      featuredCount: 0,
+      kind: 'trial-products-json',
+      outputPath: 'data/listings.json',
+      path: 'sites/serp.ai/products.json',
+      publishedAt: '2026-05-16'
+    })
+    expect(config.site).toMatchObject({
+      domain: 'serp.ai',
+      name: 'SERP AI',
+      publicUrl: 'https://serp.ai'
+    })
+    expect(config.build).toMatchObject({
+      appPackageName: 'serp.ai',
+      appOutDir: 'apps/serp.ai/out',
+      artifactDir: 'dist/sites/serp.ai'
+    })
+    expect(config.routes.listingBasePath).toBe('products')
+    expect(config.copy.submitLabel).toBe('Submit to SERP AI')
+    expect(config.features.showBrands).toBe(true)
+    expect(config.networkBrandGroup).toBe('mainGroup')
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('serp.ai')
+    expect(config.social.githubIssuesUrl).toBe('https://github.com/serpcompany/serp.ai/issues')
+    expect(config.deploy).toEqual({
+      branch: 'main',
+      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+      repoUrl: 'https://github.com/serpcompany/serp.ai.git',
+      strategy: 'github-pages-repo-sync'
+    })
+  })
+
   it('loads the checked-in pornvideodownloaders.com site config', () => {
     const config = loadCheckedInSite('pornvideodownloaders.com')
 
