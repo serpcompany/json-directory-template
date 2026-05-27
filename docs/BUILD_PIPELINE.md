@@ -151,8 +151,11 @@ The GitHub Actions path resolves the build run once, then runs
 validate/build/audit/deploy in one job:
 
 - workflow dispatch `site_id` selects the checked-in site config explicitly
-- push events infer one changed checked-in site when possible, with the repo
-  `SITE_ID` variable only as a fallback
+- push events first infer one changed checked-in site from the push payload
+- if the push payload only contains shared paths, the resolver checks the
+  associated merged PR files through the GitHub API
+- shared-only pushes do not deploy; use workflow dispatch with `site_id` when a
+  shared change should intentionally deploy one site
 - the generated artifact stays in the job workspace for deploy; normal deploys do
   not upload/download the large artifact between jobs
 - deploy repo and branch are not workflow inputs during normal deploys; they
