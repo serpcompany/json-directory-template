@@ -1,14 +1,13 @@
 'use client'
+import { getRoute } from '@thedaviddias/web-core/routes'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { Menu, Plus, Search } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useState, type ChangeEvent, type FormEvent, type ReactNode } from 'react'
-import { useAnalyticsEvents } from '../root-shell-client'
+import { type ChangeEvent, type FormEvent, type ReactNode, useEffect, useState } from 'react'
 import { useSearch } from '../hooks/use-search'
-import { GithubStars } from '../stats/github-stars'
+import { useAnalyticsEvents } from '../root-shell-client'
 import type { HeaderAuthState } from './header-auth-state'
-import { getRoute } from '@thedaviddias/web-core/routes'
-import { siteCopy } from '@thedaviddias/web-core/site-copy'
-import { siteConfig } from '@thedaviddias/web-core/site-config'
 import { NavLink } from './header-nav-link'
 import { DesktopSearchForm, MobileSearchOverlay } from './header-search'
 import { MobileDrawer } from './mobile-drawer'
@@ -176,10 +175,6 @@ export function Header({
             >
               <Search className="h-5 w-5" />
             </button>
-
-            <div>
-              <GithubStars mobileCompact={true} />
-            </div>
 
             <Link
               href={getRoute('submit')}
