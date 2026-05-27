@@ -89,9 +89,11 @@ describe('loadCheckedInSite', () => {
     expect(config.features.showBrands).toBe(true)
     expect(config.analytics?.gtmId).toBe('GTM-M82HC3SC')
     expect(config.networkBrandGroup).toBe('mainGroup')
-    expect(config.social.githubIssueOwner).toBeNull()
-    expect(config.social.githubIssueRepo).toBeNull()
-    expect(config.social.githubIssuesUrl).toBeNull()
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('serpdownloaders.com')
+    expect(config.social.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/serpdownloaders.com/issues'
+    )
     expect(config.deploy?.strategy).toBe('github-pages-repo-sync')
   })
 
@@ -237,9 +239,11 @@ describe('loadCheckedInSite', () => {
   it('inherits default values when a site override does not redefine them', () => {
     const config = loadCheckedInSite('serpdownloaders.com')
 
-    expect(config.social.githubIssueOwner).toBeNull()
-    expect(config.social.githubIssueRepo).toBeNull()
-    expect(config.social.githubIssuesUrl).toBeNull()
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('serpdownloaders.com')
+    expect(config.social.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/serpdownloaders.com/issues'
+    )
     expect(config.routes.listingBasePath).toBe('products')
     expect(config.routes.docsBasePath).toBe('docs')
     expect(config.routes.networkBasePath).toBe('network')
@@ -557,9 +561,9 @@ describe('resolveResolvedSiteConfig', () => {
       description: 'A collection of tools to help you download anything from anywhere, anytime.',
       domain: 'serpdownloaders.com',
       gtmId: 'GTM-M82HC3SC',
-      githubIssueOwner: null,
-      githubIssueRepo: null,
-      githubIssuesUrl: null,
+      githubIssueOwner: 'serpcompany',
+      githubIssueRepo: 'serpdownloaders.com',
+      githubIssuesUrl: 'https://github.com/serpcompany/serpdownloaders.com/issues',
       id: 'serpdownloaders.com',
       networkBrandGroup: 'mainGroup',
       docsRouteBasePath: 'docs',

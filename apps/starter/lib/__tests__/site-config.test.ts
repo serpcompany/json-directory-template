@@ -14,9 +14,9 @@ describe('resolveSiteConfig', () => {
     expect(config.description).toBe(
       'A collection of tools to help you download anything from anywhere, anytime.'
     )
-    expect(config.githubIssueOwner).toBeNull()
-    expect(config.githubIssueRepo).toBeNull()
-    expect(config.githubIssuesUrl).toBeNull()
+    expect(config.githubIssueOwner).toBe('serpcompany')
+    expect(config.githubIssueRepo).toBe('serpdownloaders.com')
+    expect(config.githubIssuesUrl).toBe('https://github.com/serpcompany/serpdownloaders.com/issues')
     expect(config.githubRepoUrl).toBe('https://github.com/serpdownloaders')
     expect(config.githubUrl).toBe('https://github.com/serpdownloaders')
     expect(config.publicUrl).toBe('https://serpdownloaders.com')
@@ -64,12 +64,12 @@ describe('resolveSiteConfig', () => {
     }
   })
 
-  it('keeps public socials but disables issue targets for sites without issue repos', () => {
+  it('keeps public socials and resolves configured issue targets for active sites', () => {
     const config = resolveSiteConfig('serpdownloaders.com')
 
-    expect(config.githubIssueOwner).toBeNull()
-    expect(config.githubIssueRepo).toBeNull()
-    expect(config.githubIssuesUrl).toBeNull()
+    expect(config.githubIssueOwner).toBe('serpcompany')
+    expect(config.githubIssueRepo).toBe('serpdownloaders.com')
+    expect(config.githubIssuesUrl).toBe('https://github.com/serpcompany/serpdownloaders.com/issues')
     expect(config.githubRepoUrl).toBe('https://github.com/serpdownloaders')
     expect(config.githubUrl).toBe('https://github.com/serpdownloaders')
     expect(config.listingRouteBasePath).toBe('products')
@@ -130,10 +130,10 @@ describe('resolveSiteConfig', () => {
     )
   })
 
-  it('treats checked-in site socials as configured while issue targets are disabled', () => {
+  it('treats checked-in site socials and issue targets as configured', () => {
     const config = resolveSiteConfig('serpdownloaders.com')
 
-    expect(hasConfiguredGitHubIssueTarget(config)).toBe(false)
+    expect(hasConfiguredGitHubIssueTarget(config)).toBe(true)
     expect(hasConfiguredPublicSocialLinks(config)).toBe(true)
     expect(getConfiguredSocialLinks(config)).toEqual([
       'https://github.com/serpdownloaders',
