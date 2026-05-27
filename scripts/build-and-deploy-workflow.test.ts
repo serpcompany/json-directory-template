@@ -97,14 +97,16 @@ describe('build-and-deploy workflow', () => {
     const workflow = loadWorkflow()
     const paths = workflow.on.push?.paths ?? []
 
-    expect(paths).toEqual(expect.arrayContaining([
-      'apps/browserextensions.io/**',
-      'apps/pornvideodownloaders.com/**',
-      'apps/serp.ai/**',
-      'apps/serp.co/**',
-      'apps/serp.software/**',
-      'apps/serpdownloaders.com/**',
-      'apps/starter/**'
-    ]))
+    expect(paths).toEqual(
+      expect.arrayContaining([
+        'apps/browserextensions.io/**',
+        'apps/pornvideodownloaders.com/**',
+        'apps/serp.ai/**',
+        'apps/serp.co/**',
+        'apps/serp.software/**',
+        'apps/serpdownloaders.com/**',
+        'apps/starter/**'
+      ])
+    )
   })
 })

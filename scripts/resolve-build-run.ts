@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { loadCheckedInSiteFromInput, parseSiteInputArgs } from './site-config.ts'
 
 const changedPathSitePrefixes = [
@@ -73,7 +73,11 @@ function readPushEventChangedPaths(env: NodeJS.ProcessEnv): string[] {
   }
 
   const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8')) as GitHubPushEvent
-  const commits = event.commits?.length ? event.commits : event.head_commit ? [event.head_commit] : []
+  const commits = event.commits?.length
+    ? event.commits
+    : event.head_commit
+      ? [event.head_commit]
+      : []
 
   return commits.flatMap(commit => [
     ...(commit.added ?? []),
@@ -82,7 +86,10 @@ function readPushEventChangedPaths(env: NodeJS.ProcessEnv): string[] {
   ])
 }
 
-export function resolveBuildRun(argv: string[], env: NodeJS.ProcessEnv = process.env): {
+export function resolveBuildRun(
+  argv: string[],
+  env: NodeJS.ProcessEnv = process.env
+): {
   artifactDir: string
   siteId: string
 } {
