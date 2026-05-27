@@ -12,6 +12,7 @@ import { NewsletterSection } from '../sections/newsletter-section'
 import { generateBaseMetadata, SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL } from '../seo-config'
 import { siteConfig } from '../site-config'
 import { siteCopy } from '../site-copy'
+import { resolveCollectionPageSchemaDates } from './schema-dates'
 
 type JsonLdProps = {
   data: Record<string, unknown>
@@ -69,6 +70,7 @@ export function FeaturedCategoryRoutePage({
   const featuredPath = getRoute('category.page', { category: 'featured' })
   const featuredUrl = `${SITE_PUBLIC_URL}${featuredPath}`
   const featuredProjectCards = featuredProjects.map(toWebsiteBrowseCardMetadata)
+  const schemaDates = resolveCollectionPageSchemaDates(featuredProjects)
 
   return (
     <>
@@ -136,8 +138,7 @@ export function FeaturedCategoryRoutePage({
               url: SITE_LOGO_URL
             }
           },
-          datePublished: new Date().toISOString(),
-          dateModified: new Date().toISOString()
+          ...schemaDates
         }}
       />
 

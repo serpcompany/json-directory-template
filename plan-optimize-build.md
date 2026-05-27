@@ -1066,7 +1066,7 @@ QC risks:
 
 ## Phase 4C: Deterministic Artifacts And No-Op Deploy Guard
 
-Status: planned.
+Status: implemented locally; CI/no-op target repo verification pending.
 
 Goal:
 
@@ -1075,7 +1075,7 @@ Goal:
 Why this matters:
 
 - Cached rebuilds and no-op deploys are unsafe if every build embeds fresh timestamps or nondeterministic generated values.
-- Category JSON-LD currently uses `new Date().toISOString()` for `datePublished` and `dateModified`, which can force artifact diffs even when source content is unchanged.
+- Before Phase 4C, category JSON-LD used `new Date().toISOString()` for `datePublished` and `dateModified`, which could force artifact diffs even when source content was unchanged.
 - `scripts/deploy-to-repo.sh` already skips commit/push when `git diff --cached --quiet`, but nondeterministic output prevents that guard from helping.
 
 Suggested owner:
@@ -1098,6 +1098,36 @@ Implementation requirements:
 - Do not run real local deploys.
 - Do not add deploy target overrides.
 
+Implemented result:
+
+- Source checkpoint before Phase 4C: clean branch
+  `build-optimization-phase-3-plus-more` at `80a47a3`.
+- Added deterministic collection schema date resolution for category and
+  featured pages:
+  - `datePublished` is the oldest checked-in listing `publishedAt` in the
+    collection.
+  - `dateModified` is the newest checked-in listing `publishedAt` in the
+    collection.
+  - Empty collections fall back to the checked-in site listing source date
+    when available.
+  - Invalid or rollover date strings are ignored instead of being normalized by
+    JavaScript date parsing.
+- Exposed `listingSourcePublishedAt` from the resolved runtime site config for
+  the empty-collection fallback.
+- Removed the category/featured schema use of the current wall-clock time.
+- Initial same-source checksum evidence exposed a second nondeterministic
+  source: Next generated a different `_next/static/<buildId>` path on each
+  build, and that path was referenced throughout exported HTML/RSC payloads.
+- Added a deterministic shared Next `generateBuildId` in
+  `@thedaviddias/config-next`, derived from site id plus `NEXT_BUILD_ID`,
+  `GITHUB_SHA`, `VERCEL_GIT_COMMIT_SHA`, local `git rev-parse HEAD`, or a
+  final local fallback. The value is hashed to a stable 20-character id.
+  This is intentionally source-revision keyed: it stabilizes reruns of the same
+  source revision, but it does not make different commits reuse a build id even
+  when their rendered output would otherwise match.
+- Added focused tests for category/featured schema dates and deterministic
+  Next build id behavior, and added both to `pnpm test:repo`.
+
 Verification:
 
 - Run two local `pnpm build:site -- --site serp.co` builds from the same source.
@@ -1105,6 +1135,75 @@ Verification:
 - Run sitemap audit.
 - Run `pnpm deploy:site -- --site serp.co --dry-run`.
 - After merge, verify that a same-source workflow dispatch either produces no target repo commit or records any remaining deterministic blockers.
+
+Local verification completed on 2026-05-27 under Node `24.13.1`:
+
+- `pnpm exec vitest run packages/web-core/src/category-routes/schema-dates.test.tsx scripts/next-config-build-id.test.ts`
+  - Passed: `10` tests after QA follow-up coverage for invalid dates,
+    date-time strings, build-id env precedence, base config wiring, and
+    git/local fallback stability.
+- `pnpm typecheck`
+  - Passed.
+- `pnpm test:repo`
+  - Passed: `19` test files, `122` tests.
+- `pnpm exec biome check configs/next/index.ts scripts/next-config-build-id.test.ts packages/web-core/src/category-routes/category-page.tsx packages/web-core/src/category-routes/featured-page.tsx packages/web-core/src/category-routes/schema-dates.ts packages/web-core/src/category-routes/schema-dates.test.tsx packages/web-core/src/site-config.ts`
+  - Passed.
+- `pnpm exec biome check package.json`
+  - Passed.
+- Two same-source local builds:
+  - First `command time -p pnpm build:site -- --site serp.co`: passed,
+    `39.83s` real time, `3,636` final files.
+  - Second `command time -p pnpm build:site -- --site serp.co`: passed,
+    `39.90s` real time, `3,636` final files.
+  - Full artifact manifest hash matched:
+    `17dd0ae4a0e2353bef5af279023f160eee8c41b7ed82d063ba79496a291d61df`.
+  - Representative checksums matched for:
+    - `index.html`:
+      `5478f40e3460123bf3d2498c579740dc743484c13d5a02f63940165bb374e276`
+    - `products/index.html`:
+      `bcbfe18446aefb209c852bb68fd460fb34b32f1ef56ccfb8becf2e7ee5170caa`
+    - `products/best/featured/index.html`:
+      `abd85254472e0b4649098e919f3d1398b0d4e210fff853bc3094c5defda85117`
+    - `products/best/other/index.html`:
+      `134954b3576474fdb749fede48059798cdaa7a84ded4d528ea32a02461523eaf`
+    - `products/youtube-downloader/reviews/index.html`:
+      `8ee0c6b02435359a4599ee9c524390ef9887bebeaa1e8e7fbe71c45e46c6f458`
+    - `sitemap-index.xml`:
+      `37a621ee489954fdd84b51bf92f82ae270c20b12ed43a408cdc433ef7c450e81`
+    - `sitemaps/categories/1.xml`:
+      `22198c16556063f2627b04d2e70e8f37c9744eb4599538978a99a9d3d6e5ee3a`
+  - Result: `FULL_TREE_MANIFEST_MATCH=1` and
+    `REPRESENTATIVE_CHECKSUMS_MATCH=1`.
+- `pnpm exec vitest run scripts/serp-co-artifact-links.test.ts`
+  - Passed: `12` tests.
+- `pnpm audit:sitemaps -- --site serp.co --artifact`
+  - Passed: `3464 urls`, `5 sitemap files`, `0 errors`, `0 warnings`.
+- `command time -p pnpm deploy:site -- --site serp.co --dry-run`
+  - Passed: target repo `https://github.com/serpcompany/serp.co.git`,
+    branch `main`, preserve paths `.github/workflows/deploy.yml` and `CNAME`;
+    `0.61s` real time.
+- `git diff --check`
+  - Passed.
+
+Remaining nondeterminism/risk:
+
+- The deterministic Next build id is revision-keyed, not output-keyed. A new
+  source commit can still change `_next/static/<buildId>` references and force a
+  target repo diff even if the rendered pages are otherwise equivalent. Phase
+  4C only proves same-source rebuild stability.
+- `packages/web-core/src/content-query.ts`,
+  `apps/serp.co/content-collections.ts`, and
+  `packages/web-core/src/sitemaps.ts` still contain current-time fallback
+  paths for missing guide/content/sitemap source dates. They did not affect the
+  current `serp.co` artifact in the two-build full-tree comparison because the
+  relevant checked-in content has dates or sitemap source dates. If future
+  content omits dates, those fallback paths can reintroduce artifact churn and
+  should fail validation or use checked-in source dates instead.
+- Some runtime/operator/test/archive code still records real event times. Those
+  paths are outside the static `serp.co` artifact evidence collected here.
+- Final no-op deploy confirmation still requires post-merge GitHub Actions or a
+  clean target-repo comparison showing that the existing deploy script observes
+  no staged target changes.
 
 Acceptance criteria:
 
