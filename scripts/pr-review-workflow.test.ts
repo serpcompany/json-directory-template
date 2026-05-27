@@ -76,6 +76,16 @@ describe('pr-review workflow', () => {
     expect(stepRuns).not.toContain('pnpm check:frontmatter')
   })
 
+  it('leaves large site-owned product sources to listing validation instead of Biome formatting', () => {
+    const biomeConfig = JSON.parse(readFileSync(resolve(process.cwd(), 'biome.json'), 'utf8')) as {
+      files?: {
+        includes?: string[]
+      }
+    }
+
+    expect(biomeConfig.files?.includes).toContain('!sites/**/products.json')
+  })
+
   it('installs Playwright browsers without sudo-only system dependency escalation', () => {
     const workflow = loadWorkflow()
     const e2eJob = workflow.jobs.e2e

@@ -26,8 +26,12 @@ interface WorkflowDefinition {
     string,
     {
       steps?: Array<{
+        id?: string
+        if?: string
         name?: string
         run?: string
+        uses?: string
+        with?: Record<string, string | number>
       }>
     }
   >
@@ -62,6 +66,10 @@ describe('update-listings-json workflow', () => {
   it('runs the listing-source validation steps for the current active surfaces', () => {
     const workflow = loadWorkflow()
     const validateJob = workflow.jobs['validate-listing-data']
+    const checkoutStep = validateJob.steps?.find(step => step.name === 'Checkout')
+    const detectDataListingsStep = validateJob.steps?.find(
+      step => step.name === 'Detect data/listings.json changes'
+    )
     const jsonValidateStep = validateJob.steps?.find(
       step => step.name === 'Validate data/listings.json'
     )
@@ -69,6 +77,11 @@ describe('update-listings-json workflow', () => {
       step => step.name === 'Validate active checked-in site data'
     )
 
+    expect(checkoutStep?.with?.['fetch-depth']).toBe(0)
+    expect(detectDataListingsStep?.id).toBe('detect-data-listings')
+    expect(detectDataListingsStep?.run).toContain('origin/$' + '{{ github.base_ref }}...HEAD')
+    expect(detectDataListingsStep?.run).toContain('github.event.before')
+    expect(jsonValidateStep?.if).toBe("steps.detect-data-listings.outputs.changed == 'true'")
     expect(jsonValidateStep?.run).toBe('pnpm tsx scripts/validate-data.ts data/listings.json')
     expect(activeSiteValidateStep?.run).toBe('pnpm validate:sites')
   })
