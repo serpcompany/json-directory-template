@@ -52,13 +52,29 @@ social: {
 Use `null` for all three fields when a site does not have a public issue inbox ready yet.
 Validation rejects partial configuration.
 
-For `browserextensions.io`, the public issue inbox and deploy artifact repo is:
+The configured issue repo must be public and have GitHub Issues enabled. The public `/submit`
+page redirects visitors to GitHub, so private repos or disabled Issues make the submit flow unusable
+for visitors.
+
+The issue inbox may be the same public GitHub Pages artifact repo used by `deploy.repoUrl`. That
+repo is an inbox and static artifact host only. It is not canonical listing data.
+
+Active public issue targets:
+
+| Site | Public issue repo | Submit URL |
+|---|---|---|
+| `browserextensions.io` | `serpcompany/browserextensions.io` | `https://browserextensions.io/submit/` |
+| `pornvideodownloaders.com` | `serpcompany/pornvideodownloaders.com` | `https://pornvideodownloaders.com/submit/` |
+| `serp.ai` | `serpcompany/serp.ai` | `https://serp.ai/submit/` |
+| `serp.co` | `serpcompany/serp.co` | `https://serp.co/submit/` |
+| `serp.software` | `serpcompany/serp.software` | `https://serp.software/submit/` |
+| `serpdownloaders.com` | `serpcompany/serpdownloaders.com` | `https://serpdownloaders.com/submit/` |
+
+For example, `browserextensions.io` uses:
 
 ```txt
 https://github.com/serpcompany/browserextensions.io
 ```
-
-That repo is an inbox and static artifact host only. It is not canonical listing data.
 
 ---
 
@@ -78,15 +94,12 @@ The generated issue body must make the review boundary explicit:
 
 The public site must not write submitted data into source files.
 
-For `browserextensions.io`, accepted listings are edited in:
-
-```txt
-sites/browserextensions.io/products.json
-```
+Accepted listings are edited in the active site's checked-in listing source. For most active
+site-specific builds, that is `sites/<site-id>/products.json`. Always follow the active site's
+checked-in `content.listingSource` config.
 
 For starter/default listing-json sites, accepted listings may be edited in the configured
-`data/listings.json` source. Always follow the active site's checked-in `content.listingSource`
-config.
+`data/listings.json` source.
 
 Do not write submissions from public issues into:
 
@@ -104,23 +117,59 @@ Do not write submissions from public issues into:
 | `packages/web-core/src/github-issue.ts` | Prefilled issue title/body URL builder |
 | `sites/site-config.default.ts` | Starter/default issue target config |
 | `sites/<site-id>/site-config.ts` | Site-specific issue target and listing source |
-| `sites/browserextensions.io/products.json` | BrowserExtensions.io canonical accepted listing source |
+| `sites/<site-id>/products.json` | Canonical accepted listing source for active trial-product sites |
+
+---
+
+## Deploy resolution from submissions
+
+Public issue links are also deploy resolver signals for shared-only maintainer PRs.
+
+When a merged PR changes only shared code, `.github/workflows/build-and-deploy.yml` resolves the
+site in this order:
+
+1. explicit `workflow_dispatch` `site_id`
+2. changed checked-in site paths in the push payload
+3. changed checked-in site paths from the associated merged PR
+4. associated PR metadata, linked public issue URLs, linked public issue title/body, and commit messages
+5. skip deploy when no single checked-in site can be inferred
+
+The resolver only uses checked-in site signals:
+
+- `site.id`
+- `site.domain`
+- `site.publicUrl`
+- configured `social.githubIssueOwner` plus `social.githubIssueRepo`
+- configured `social.githubIssuesUrl`
+
+Examples:
+
+- `https://browserextensions.io/products/example` resolves to `browserextensions.io`
+- `https://github.com/serpcompany/browserextensions.io/issues/1` resolves to `browserextensions.io`
+- a linked issue in `serpcompany/browserextensions.io` resolves to `browserextensions.io` even if
+  the submitted product URL in the issue body points to an unrelated domain
+
+Offsite product URLs submitted inside public issues do not define the deploy target. If metadata
+matches two concrete sites, the deploy resolver fails and asks for a manual `workflow_dispatch`
+run per `site_id`.
 
 ---
 
 ## Verification
 
-For BrowserExtensions.io changes:
+For a submit-intake or accepted-listing change:
 
 ```bash
-pnpm validate:site -- --site browserextensions.io
-pnpm build:site -- --site browserextensions.io
+pnpm validate:site -- --site <site-id>
+pnpm build:site -- --site <site-id>
+pnpm audit:sitemaps -- --site <site-id>
+pnpm deploy:site -- --site <site-id> --dry-run
 ```
 
 Then confirm:
 
-- `dist/sites/browserextensions.io/submit/index.html` exists
-- the submit page opens `https://github.com/serpcompany/browserextensions.io/issues/new?...`
+- `dist/sites/<site-id>/submit/index.html` exists
+- the submit page opens `https://github.com/<owner>/<repo>/issues/new?...`
 - the issue title/body include the submitted listing details
 - the artifact does not include source maps, secrets, raw `products.json`, raw `listings.json`, or
   submission JSON
