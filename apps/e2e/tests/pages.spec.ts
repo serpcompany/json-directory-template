@@ -48,7 +48,7 @@ test.describe('Main Pages', () => {
     await page.goto('/submit')
 
     await expect(page.getByRole('heading', { level: 1, name: /submit a listing/i })).toBeVisible()
-    await expect(page.getByText(/github fallback submission is disabled/i)).toBeVisible()
+    await expect(page.getByText(/github issue submission is disabled/i)).toBeVisible()
   })
 
   test('disabled optional routes should not be publicly available by default', async ({ page }) => {

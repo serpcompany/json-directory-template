@@ -1,16 +1,23 @@
 # Submission Flow
 
-Self-service badge verification flow. Submitters place a badge on their site as proof of intent; the directory verifies the backlink and auto-publishes the listing.
+Static-friendly GitHub issue intake flow. The public site gathers listing details, builds a
+prefilled GitHub issue URL, and sends the submitter to GitHub for manual review.
 
 ---
 
 ## How it works
 
-1. Submitter fills out `/submit` → POSTs to `/api/submit` → gets a token
-2. Submitter lands on `/submit/verify?token=...` → copies the badge embed snippet
-3. Submitter places the snippet on their site (any public HTML page)
-4. Submitter clicks **Verify Now** → `/api/verify-badge` crawls their page, checks for a backlink to the directory domain
-5. On success: listing is auto-appended to `data/listings.json`, pages are revalidated, submitter sees a link to their live listing
+1. Submitter fills out `/submit`.
+2. The client validates required fields with `react-hook-form`, Zod, and native required controls.
+3. The primary `Submit` action builds a prefilled GitHub issue URL from checked-in site config.
+4. The browser opens the GitHub issue composer in the configured public issue repo.
+5. Maintainers review the public issue.
+6. Accepted submissions become normal source changes to the configured checked-in listing source.
+7. The source change goes through pull request review, validation, build checks, merge, and the
+   existing static deploy flow.
+
+There is no runtime submission database, hosted queue, badge token, or public issue-to-JSON
+automation in the static path.
 
 ---
 
@@ -18,92 +25,102 @@ Self-service badge verification flow. Submitters place a badge on their site as 
 
 | Field | Required | Notes |
 |---|---|---|
-| Name | ✅ | Listing display name |
-| Website URL | ✅ | Must be a valid URL |
-| Category | ✅ | Single primary category |
-| Short Description | ✅ | One-liner, shown in cards |
-| Full Description | — | Markdown, shown on detail page |
-| Resource Links | — | Up to 5 label+url pairs |
+| Name | Yes | Listing display name |
+| Website URL | Yes | Must be a valid URL |
+| Logo URL | Yes | Public logo asset URL |
+| Video URL | Yes | Public video URL, including YouTube URLs |
+| Category | Yes | Single primary category |
+| Short Description | Yes | One-liner, shown to reviewers |
+| Full Description | Yes | Reviewer notes and richer description |
+| FAQs | Yes | At least one question and answer pair |
+| Resource Links | Yes | At least one label and URL pair |
 
 ---
 
-## Badge embed snippet
+## GitHub issue target
 
-The verify page generates this snippet (domain is resolved at runtime from `window.location.origin`):
+Each static issue-enabled site config must set these fields together:
 
-```html
-<a href="https://yourdomain.com" target="_blank" title="Featured on Directory Name">
-  <img
-    src="https://yourdomain.com/badge/featured-on-default-light.svg"
-    alt="Featured on Directory Name"
-    data-verify-token="<token>"
-    width="200" height="54"
-  />
-</a>
+```ts
+social: {
+  githubIssueOwner: 'OWNER',
+  githubIssueRepo: 'REPO',
+  githubIssuesUrl: 'https://github.com/OWNER/REPO/issues'
+}
 ```
 
-The `data-verify-token` attribute ties the snippet to the submission. Verification checks for a backlink (`<a href>`) pointing to the directory domain — not the token itself — so entity-encoded or JS-rendered pages still pass.
+Use `null` for all three fields when a site does not have a public issue inbox ready yet.
+Validation rejects partial configuration.
 
----
+For `browserextensions.io`, the public issue inbox and deploy artifact repo is:
 
-## Verification logic (two-pass)
-
-**Pass 1 — raw HTML + cheerio**
-- Fetches the submitter's URL with `DirectoryVerifier/1.0` user-agent
-- Decodes HTML entities (`&quot;` → `"`)
-- Parses with cheerio, checks `$('a[href*="yourdomain.com"]').length > 0`
-
-**Pass 2 — Playwright headless fallback**
-- Runs only when pass 1 fails
-- Full browser render (`networkidle`), same link check on the live DOM
-- Handles JS-rendered pages and page builders that rewrite HTML
-
----
-
-## Generating badge SVG assets
-
-Run once after adding a new site config or changing branding:
-
-```bash
-pnpm generate:badges
+```txt
+https://github.com/serpcompany/browserextensions.io
 ```
 
-Writes into each wrapper app's `public/badge/` directory based on the checked-in site config:
-- `featured-on-<site-id>-light.svg`
-- `featured-on-<site-id>-dark.svg`
+That repo is an inbox and static artifact host only. It is not canonical listing data.
 
 ---
 
-## Admin CLI
+## Reviewer safety copy
 
-```bash
-pnpm submissions list-pending     # view incoming queue
-pnpm submissions list-verified    # view verified, see published status
-pnpm submissions publish <token>  # manually publish a verified submission
+The generated issue body must make the review boundary explicit:
+
+- submissions are public GitHub issues
+- submitters should not include secrets, private credentials, or non-public launch details
+- submissions are reviewed manually
+- accepted listings are added through the private source repo's normal PR, validation, build, and
+  deploy process
+
+---
+
+## Data ownership
+
+The public site must not write submitted data into source files.
+
+For `browserextensions.io`, accepted listings are edited in:
+
+```txt
+sites/browserextensions.io/products.json
 ```
 
-`publish` appends a listing record to `data/listings.json` — use this if you want manual review before publish instead of auto-publish.
+For starter/default listing-json sites, accepted listings may be edited in the configured
+`data/listings.json` source. Always follow the active site's checked-in `content.listingSource`
+config.
+
+Do not write submissions from public issues into:
+
+- `data/listings.json` unless it is the active checked-in source for the maintainer PR
+- `sites/browserextensions.io/products.json` outside the normal source PR path
+- `data/submissions-*.json`
 
 ---
 
-## Weekly badge re-check (cron)
-
-A GitHub Actions workflow runs every Monday at 9am UTC and hits `/api/cron/check-badges`.
-
-**Required GitHub secrets:**
-- `SITE_URL` — your production domain (e.g. `https://yourdomain.com`)
-- `CRON_SECRET` — a random secret string (generate with `openssl rand -hex 32`)
-
-The endpoint checks every published listing's website for a backlink. Returns a JSON report of which listings are missing the badge. Manual trigger available from the Actions tab.
-
----
-
-## Data files
+## Files that control the flow
 
 | File | Purpose |
 |---|---|
-| `data/submissions-pending.json` | Submitted, awaiting verification |
-| `data/submissions-verified.json` | Verified, pending or published |
-| `data/listings.json` | Published listings shown on frontend |
+| `packages/web-core/src/forms/github-issue-submit-form.tsx` | Public form and client-side GitHub handoff |
+| `packages/web-core/src/github-issue.ts` | Prefilled issue title/body URL builder |
+| `sites/site-config.default.ts` | Starter/default issue target config |
+| `sites/<site-id>/site-config.ts` | Site-specific issue target and listing source |
+| `sites/browserextensions.io/products.json` | BrowserExtensions.io canonical accepted listing source |
 
-Both submission JSON files are committed as empty starter defaults. Real submission data should live on a private branch or external store.
+---
+
+## Verification
+
+For BrowserExtensions.io changes:
+
+```bash
+pnpm validate:site -- --site browserextensions.io
+pnpm build:site -- --site browserextensions.io
+```
+
+Then confirm:
+
+- `dist/sites/browserextensions.io/submit/index.html` exists
+- the submit page opens `https://github.com/serpcompany/browserextensions.io/issues/new?...`
+- the issue title/body include the submitted listing details
+- the artifact does not include source maps, secrets, raw `products.json`, raw `listings.json`, or
+  submission JSON

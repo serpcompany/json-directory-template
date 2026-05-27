@@ -44,6 +44,11 @@ describe('loadCheckedInSite', () => {
       taxonomies: '/sitemaps/categories/1.xml'
     })
     expect(config.features.showBrands).toBe(true)
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('browserextensions.io')
+    expect(config.social.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/browserextensions.io/issues'
+    )
     expect(config.deploy).toEqual({
       branch: 'main',
       preserve: ['.github/workflows/deploy.yml', 'CNAME'],

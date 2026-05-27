@@ -7,12 +7,22 @@ on:
       - main
     paths:
       - 'data/listings.json'
+      - 'sites/browserextensions.io/products.json'
+      - 'sites/pornvideodownloaders.com/products.json'
+      - 'sites/serp.ai/products.json'
+      - 'sites/serp.co/products.json'
+      - 'sites/serp.software/products.json'
       - 'sites/serpdownloaders.com/products.json'
   push:
     branches:
       - main
     paths:
       - 'data/listings.json'
+      - 'sites/browserextensions.io/products.json'
+      - 'sites/pornvideodownloaders.com/products.json'
+      - 'sites/serp.ai/products.json'
+      - 'sites/serp.co/products.json'
+      - 'sites/serp.software/products.json'
       - 'sites/serpdownloaders.com/products.json'
 
 concurrency:
@@ -36,4 +46,4 @@ jobs:
         run: pnpm tsx scripts/validate-data.ts data/listings.json
 
       - name: Validate active checked-in site data
-        run: pnpm validate:site -- --site serpdownloaders.com
+        run: pnpm validate:sites
