@@ -45,10 +45,6 @@ jest.mock('@thedaviddias/web-core/layout/header-nav-link', () => ({
   )
 }))
 
-jest.mock('@thedaviddias/web-core/stats/github-stars', () => ({
-  GithubStars: () => <div data-testid="github-stars" />
-}))
-
 describe('Header auth actions', () => {
   it('shows a combined sign up and sign in link when signed out', () => {
     render(<Header authState={{ isAuthenticated: false }} />)

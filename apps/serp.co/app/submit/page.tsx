@@ -1,4 +1,4 @@
-import { GitHubIssueSubmitForm } from '@thedaviddias/web-core/forms/github-issue-submit-form'
+import { SubmitPageSurface } from '@thedaviddias/web-core/forms/submit-page-surface'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -7,9 +7,5 @@ export const metadata: Metadata = {
 }
 
 export default function SubmitPage() {
-  return (
-    <main className="container mx-auto max-w-3xl px-6 py-16">
-      <GitHubIssueSubmitForm />
-    </main>
-  )
+  return <SubmitPageSurface />
 }

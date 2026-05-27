@@ -24,6 +24,7 @@
     "./external-resources": "./src/external-resources.ts",
     "./favorites/index-page": "./src/favorites/index-page.tsx",
     "./forms/github-issue-submit-form": "./src/forms/github-issue-submit-form.tsx",
+    "./forms/submit-page-surface": "./src/forms/submit-page-surface.tsx",
     "./forms/submit-form-guidelines": "./src/forms/submit-form-guidelines.tsx",
     "./github-issue": "./src/github-issue.ts",
     "./guides/guide-page": "./src/guides/guide-page.tsx",
