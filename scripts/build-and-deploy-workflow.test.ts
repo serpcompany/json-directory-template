@@ -93,6 +93,9 @@ describe('build-and-deploy workflow', () => {
     expect(resolveStep?.env?.SITE_ID).toBe(
       `\${{ github.event_name == 'workflow_dispatch' && github.event.inputs.site_id || '' }}`
     )
+    expect(resolveStep?.env?.PUSH_FALLBACK_SITE_ID).toBe(
+      `\${{ github.event_name == 'push' && vars.SITE_ID || '' }}`
+    )
     expect(resolveStep?.env?.SITE_ID).not.toContain('vars.SITE_ID')
   })
 

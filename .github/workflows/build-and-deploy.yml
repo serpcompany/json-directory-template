@@ -41,6 +41,7 @@ jobs:
         id: resolve
         env:
           SITE_ID: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.site_id || '' }}
+          PUSH_FALLBACK_SITE_ID: ${{ github.event_name == 'push' && vars.SITE_ID || '' }}
         run: ./node_modules/.bin/tsx scripts/resolve-build-run.ts >> "$GITHUB_OUTPUT"
 
       - name: Validate site data

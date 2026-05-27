@@ -69,14 +69,21 @@ describe('resolveBuildRun', () => {
     )
   })
 
-  it('rejects push builds that cannot infer a site-specific target', () => {
-    expect(() =>
-      resolvePushSiteInputFromChangedPaths([
-        '.github/workflows/build-and-deploy.yml',
-        'scripts/resolve-build-run.ts'
-      ])
-    ).toThrow(
-      'Push changed no site-specific paths. Set SITE_ID explicitly or run workflow_dispatch for one site.'
-    )
+  it('uses a push fallback site id when changed paths are not site-specific', () => {
+    expect(
+      resolvePushSiteInputFromChangedPaths(
+        ['.github/workflows/build-and-deploy.yml', 'scripts/resolve-build-run.ts'],
+        'serpdownloaders.com'
+      )
+    ).toEqual({ siteId: 'serpdownloaders.com' })
+  })
+
+  it('prefers changed-path site inference over a push fallback site id', () => {
+    expect(
+      resolvePushSiteInputFromChangedPaths(
+        ['apps/serp.co/lib/content-loader.ts'],
+        'serpdownloaders.com'
+      )
+    ).toEqual({ siteId: 'serp.co' })
   })
 })
