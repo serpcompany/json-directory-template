@@ -970,7 +970,7 @@ QC risks:
 
 ## Phase 4B: Reduce Listing, Category, And Search Payloads
 
-Status: planned.
+Status: implemented locally; CI verification pending.
 
 Goal:
 
@@ -1009,6 +1009,48 @@ Verification:
   - `dist/sites/serp.co/products/index.html`
   - `dist/sites/serp.co/products/best/other/index.html`
 - Run artifact sitemap audit and focused artifact-link tests.
+
+Local Phase 4B results, 2026-05-27:
+
+- Source checkpoint before Phase 4B: committed branch
+  `build-optimization-phase-3-plus-more` at `0219d67`; worktree was clean
+  before edits.
+- Baseline artifact, before Phase 4B code changes:
+  - final file count: `3,636`
+  - product detail pages: `3,206`
+  - `dist/sites/serp.co/index.html`: `2,724,424` bytes
+  - `dist/sites/serp.co/products/index.html`: `2,723,972` bytes
+  - `dist/sites/serp.co/products/best/other/index.html`: `2,423,145` bytes
+  - `dist/sites/serp.co/search/index.html`: `386,448` bytes
+- After Phase 4B local build:
+  - `command time -p pnpm build:site -- --site serp.co`: passed, `40.13s`
+    real time
+  - final file count: `3,636`
+  - product detail pages: `3,206`
+  - `dist/sites/serp.co/index.html`: `859,667` bytes
+    (`-1,864,757`, `-68.4%`)
+  - `dist/sites/serp.co/products/index.html`: `859,215` bytes
+    (`-1,864,757`, `-68.5%`)
+  - `dist/sites/serp.co/products/best/other/index.html`: `556,331` bytes
+    (`-1,866,814`, `-77.0%`)
+  - `dist/sites/serp.co/search/index.html`: `386,448` bytes (`0`, `0.0%`)
+- Artifact inspection:
+  - Representative listing pages no longer contained serialized
+    `"content"`, `resourceLinks`, `"images"`, or `"video"` payload keys.
+  - Representative listing titles and `/products/<slug>/reviews/` links
+    remained present in exported browse HTML.
+  - `dist/sites/serp.co/search/search-index.json` remained present.
+- Verification:
+  - `pnpm exec vitest run packages/web-core/src/content-query.test.ts`:
+    passed, `6` tests.
+  - `pnpm typecheck`: passed.
+  - `pnpm exec biome check` on touched `web-core` files: passed.
+  - `pnpm exec vitest run scripts/serp-co-artifact-links.test.ts`: passed,
+    `12` tests.
+  - `pnpm audit:sitemaps -- --site serp.co --artifact`: passed,
+    `3464 urls`, `5 sitemap files`, `0 errors`, `0 warnings`.
+  - Local shell still warns that the project wants Node `>=24`; this run used
+    Node `22.22.0`.
 
 Acceptance criteria:
 

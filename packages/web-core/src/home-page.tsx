@@ -1,16 +1,18 @@
 import type { Metadata } from 'next'
 import type { ComponentType, ReactElement } from 'react'
+import { getActiveCategories, getFeaturedListingCount } from './category-navigation'
 import {
-  getActiveCategories,
-  getFeaturedListingCount,
-} from './category-navigation'
-import type { GuideMetadata, WebsiteMetadata } from './content-query'
+  type GuideMetadata,
+  toWebsiteBrowseCardMetadata,
+  type WebsiteBrowseCardMetadata,
+  type WebsiteMetadata
+} from './content-query'
 import { AppSidebar } from './layout/app-sidebar'
-import { generateBaseMetadata, generateWebsiteSchema, KEYWORDS } from './seo-config'
 import { HeroSection } from './sections/hero-section'
 import { NewsletterSection } from './sections/newsletter-section'
-import { siteCopy } from './site-copy'
+import { generateBaseMetadata, generateWebsiteSchema, KEYWORDS } from './seo-config'
 import { siteConfig } from './site-config'
+import { siteCopy } from './site-copy'
 
 export interface HomePageData {
   allProjects: WebsiteMetadata[]
@@ -46,16 +48,13 @@ export function getRecentlyUpdatedProjects(
     .slice(0, limit)
 }
 
-export function buildHomePageData({
-  guides,
-  websites,
-}: BuildHomePageDataInput): HomePageData {
+export function buildHomePageData({ guides, websites }: BuildHomePageDataInput): HomePageData {
   return {
     allProjects: websites,
     featuredGuides: guides,
     featuredProjects: getFeaturedProjects(websites),
     recentlyUpdatedProjects: getRecentlyUpdatedProjects(websites, 8),
-    totalCount: websites.length,
+    totalCount: websites.length
   }
 }
 
@@ -68,17 +67,17 @@ interface FeaturedGuidesSectionProps {
 }
 
 interface FeaturedProjectsSectionProps {
-  projects: WebsiteMetadata[]
+  projects: WebsiteBrowseCardMetadata[]
 }
 
 interface RecentlyAddedSectionProps {
-  websites: WebsiteMetadata[]
+  websites: WebsiteBrowseCardMetadata[]
 }
 
 interface StaticWebsitesListProps {
   displayLimit: number
   totalCount: number
-  websites: WebsiteMetadata[]
+  websites: WebsiteBrowseCardMetadata[]
 }
 
 export interface HomePageSlots {
@@ -93,8 +92,7 @@ export interface HomePageSlots {
 
 export const homePageMetadata: Metadata = generateBaseMetadata({
   title: `${siteConfig.name} Directory of ${siteCopy.listingName.pluralTitle} and Resources`,
-  description:
-    `${siteConfig.tagline}. Browse curated ${siteCopy.listingName.plural}, resources, and documentation links in one searchable directory.`,
+  description: `${siteConfig.tagline}. Browse curated ${siteCopy.listingName.plural}, resources, and documentation links in one searchable directory.`,
   keywords: [
     ...KEYWORDS.homepage,
     ...KEYWORDS.global,
@@ -114,13 +112,8 @@ interface HomePageRouteProps {
 
 export function HomePageRoute({ data, slots }: HomePageRouteProps): ReactElement {
   const HOMEPAGE_SECTION_LIMIT = 200
-  const {
-    allProjects,
-    featuredGuides,
-    featuredProjects,
-    recentlyUpdatedProjects,
-    totalCount,
-  } = data
+  const { allProjects, featuredGuides, featuredProjects, recentlyUpdatedProjects, totalCount } =
+    data
   const {
     CreatorProjectsSection,
     ExternalResourcesSection,
@@ -128,11 +121,15 @@ export function HomePageRoute({ data, slots }: HomePageRouteProps): ReactElement
     FeaturedProjectsSection,
     JsonLd,
     RecentlyAddedSection,
-    StaticWebsitesList,
+    StaticWebsitesList
   } = slots
 
   const sortedProjects = [...allProjects].sort((a, b) => a.name.localeCompare(b.name))
-  const homepageProjects = sortedProjects.slice(0, HOMEPAGE_SECTION_LIMIT)
+  const homepageProjects = sortedProjects
+    .slice(0, HOMEPAGE_SECTION_LIMIT)
+    .map(toWebsiteBrowseCardMetadata)
+  const featuredProjectCards = featuredProjects.map(toWebsiteBrowseCardMetadata)
+  const recentlyUpdatedProjectCards = recentlyUpdatedProjects.map(toWebsiteBrowseCardMetadata)
   const homepageFeaturedGuides = featuredGuides.slice(0, HOMEPAGE_SECTION_LIMIT)
   const activeCategories = getActiveCategories(allProjects)
   const activeCategorySlugs = activeCategories.map(category => category.slug)
@@ -152,11 +149,11 @@ export function HomePageRoute({ data, slots }: HomePageRouteProps): ReactElement
 
           <div className="relative flex h-full w-full flex-col px-6 pt-6 pb-16 space-y-8">
             <section>
-              <FeaturedProjectsSection projects={featuredProjects} />
+              <FeaturedProjectsSection projects={featuredProjectCards} />
             </section>
 
             <section>
-              <RecentlyAddedSection websites={recentlyUpdatedProjects} />
+              <RecentlyAddedSection websites={recentlyUpdatedProjectCards} />
             </section>
 
             <section>

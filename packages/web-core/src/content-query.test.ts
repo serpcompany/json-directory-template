@@ -3,6 +3,7 @@ import {
   buildWebsiteLookupIndex,
   resolveWebsiteBySlug,
   resolveWebsiteBySlugFromIndex,
+  toWebsiteBrowseCardMetadata,
   type WebsiteMetadata
 } from './content-query'
 
@@ -15,6 +16,7 @@ const websites: WebsiteMetadata[] = [
     category: 'alpha',
     categories: ['alpha'],
     publishedAt: '2026-01-03',
+    featured: true,
     isUnofficial: true,
     media: {
       logo: '/logos/newer.png',
@@ -173,6 +175,29 @@ describe('website lookup index', () => {
       expect(navWebsite?.media).not.toHaveProperty('images')
       expect(navWebsite?.media).not.toHaveProperty('video')
     }
+  })
+
+  it('returns slim browse card payloads for client list surfaces', () => {
+    const browseCard = toWebsiteBrowseCardMetadata(websites[0])
+
+    expect(browseCard).toEqual({
+      slug: 'newer-listing',
+      name: 'Newer Listing',
+      description: 'Newer listing.',
+      website: 'https://newer.example.com',
+      category: 'alpha',
+      categories: ['alpha'],
+      publishedAt: '2026-01-03',
+      featured: true,
+      isUnofficial: true,
+      media: {
+        logo: '/logos/newer.png'
+      }
+    })
+    expect(browseCard).not.toHaveProperty('content')
+    expect(browseCard).not.toHaveProperty('resourceLinks')
+    expect(browseCard.media).not.toHaveProperty('images')
+    expect(browseCard.media).not.toHaveProperty('video')
   })
 
   it('preserves first-match slug semantics for duplicate slugs', () => {

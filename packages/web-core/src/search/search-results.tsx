@@ -1,82 +1,74 @@
-'use client';
+'use client'
 
-import { useEffect, useMemo, useState, type ComponentType, type ReactNode } from 'react';
-import { getCategoryDisplayName } from '../category-display';
-import { getRoute } from '../routes';
-import { siteCopy } from '../site-copy';
-import { siteConfig } from '../site-config';
-import type { WebsiteMetadata } from '../content-query';
+import { type ComponentType, useEffect, useMemo, useState } from 'react'
+import { getCategoryDisplayName } from '../category-display'
+import type { WebsiteBrowseCardMetadata } from '../content-query'
+import { getRoute } from '../routes'
+import { siteConfig } from '../site-config'
+import { siteCopy } from '../site-copy'
 
 type EmptyStateProps = {
-  actionHref?: string;
-  actionLabel?: string;
-  description: string;
-  onAction?: () => void;
-  title: string;
-};
-
-type SearchFiltersProps = {
-  availableCategories: string[];
-  onCategoryChange: (categories: string[]) => void;
-  resultCount: number;
-  selectedCategories: string[];
-};
-
-type WebsitesListWithSortProps = {
-  emptyDescription?: string;
-  emptyTitle?: string;
-  initialWebsites: WebsiteMetadata[];
-};
-
-export interface SearchResultsViewProps {
-  error: string | null;
-  loading: boolean;
-  query: string;
-  results: WebsiteMetadata[];
-  slots: {
-    EmptyState: ComponentType<EmptyStateProps>;
-    SearchFilters: ComponentType<SearchFiltersProps>;
-    WebsitesListWithSort: ComponentType<WebsitesListWithSortProps>;
-  };
+  actionHref?: string
+  actionLabel?: string
+  description: string
+  onAction?: () => void
+  title: string
 }
 
-export function SearchResults({
-  error,
-  loading,
-  query,
-  results,
-  slots,
-}: SearchResultsViewProps) {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const { EmptyState, SearchFilters, WebsitesListWithSort } = slots;
+type SearchFiltersProps = {
+  availableCategories: string[]
+  onCategoryChange: (categories: string[]) => void
+  resultCount: number
+  selectedCategories: string[]
+}
+
+type WebsitesListWithSortProps = {
+  emptyDescription?: string
+  emptyTitle?: string
+  initialWebsites: WebsiteBrowseCardMetadata[]
+}
+
+export interface SearchResultsViewProps {
+  error: string | null
+  loading: boolean
+  query: string
+  results: WebsiteBrowseCardMetadata[]
+  slots: {
+    EmptyState: ComponentType<EmptyStateProps>
+    SearchFilters: ComponentType<SearchFiltersProps>
+    WebsitesListWithSort: ComponentType<WebsitesListWithSortProps>
+  }
+}
+
+export function SearchResults({ error, loading, query, results, slots }: SearchResultsViewProps) {
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const { EmptyState, SearchFilters, WebsitesListWithSort } = slots
 
   const filteredResults = useMemo(() => {
     if (selectedCategories.length === 0) {
-      return results;
+      return results
     }
-    return results.filter((result) =>
-      (result.categories || []).some((category) =>
-        selectedCategories.includes(category)
-      )
-    );
-  }, [results, selectedCategories]);
+    return results.filter(result =>
+      (result.categories || []).some(category => selectedCategories.includes(category))
+    )
+  }, [results, selectedCategories])
 
   const availableCategories = useMemo(
-    () => results.flatMap((result) => result.categories || []),
+    () => results.flatMap(result => result.categories || []),
     [results]
-  );
+  )
   const availableCategoryCount = useMemo(
     () => new Set(availableCategories).size,
     [availableCategories]
-  );
+  )
 
   useEffect(() => {
     if (query) {
-      document.title = `Search Results for "${query}" | ${siteConfig.name}`;
+      document.title = `Search Results for "${query}" | ${siteConfig.name}`
     } else {
-      document.title = `Search | ${siteConfig.name}`;
+      document.title = `Search | ${siteConfig.name}`
     }
-  }, [query]);
+  }, [query])
 
   if (error) {
     return (
@@ -93,7 +85,7 @@ export function SearchResults({
           Refresh Page
         </button>
       </div>
-    );
+    )
   }
 
   if (loading) {
@@ -101,7 +93,7 @@ export function SearchResults({
       <div className="flex justify-center py-8">
         <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary-500" />
       </div>
-    );
+    )
   }
 
   if (!query) {
@@ -112,7 +104,7 @@ export function SearchResults({
         actionLabel={siteCopy.exploreAllLabel}
         actionHref={getRoute('home')}
       />
-    );
+    )
   }
 
   if (results.length === 0) {
@@ -121,22 +113,16 @@ export function SearchResults({
         <div className="py-8 text-center">
           <h2 className="mb-2 text-xl font-semibold">Nothing Found</h2>
           <p className="mb-6 text-muted-foreground">
-            We couldn't find any results for "{query}". Try using different
-            keywords or check your spelling.
+            We couldn't find any results for "{query}". Try using different keywords or check your
+            spelling.
           </p>
           <div className="space-y-2 text-sm text-muted-foreground">
             <p>Search suggestions:</p>
             <ul className="mx-auto max-w-md list-inside list-disc space-y-1">
               <li>Check for typos in your search terms</li>
-              <li>
-                Try more general keywords (e.g., "AI" instead of "artificial
-                intelligence")
-              </li>
+              <li>Try more general keywords (e.g., "AI" instead of "artificial intelligence")</li>
               <li>Browse by category using the sidebar</li>
-              <li>
-                Submit a new {siteCopy.listingName.singular} if you do not see it
-                listed
-              </li>
+              <li>Submit a new {siteCopy.listingName.singular} if you do not see it listed</li>
             </ul>
           </div>
         </div>
@@ -147,7 +133,7 @@ export function SearchResults({
           actionHref={getRoute('submit')}
         />
       </div>
-    );
+    )
   }
 
   return (
@@ -193,9 +179,9 @@ export function SearchResults({
             {Object.entries(
               results.reduce<Record<string, number>>((acc, result) => {
                 for (const category of result.categories || []) {
-                  acc[category] = (acc[category] || 0) + 1;
+                  acc[category] = (acc[category] || 0) + 1
                 }
-                return acc;
+                return acc
               }, {})
             ).map(([category, count]) => (
               <button
@@ -233,5 +219,5 @@ export function SearchResults({
         />
       )}
     </div>
-  );
+  )
 }

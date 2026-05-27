@@ -1,10 +1,10 @@
-import type { WebsiteMetadata } from '../content-query'
+import type { WebsiteBrowseCardMetadata } from '../content-query'
 import { Section } from '../layout/section'
 import { WebsitesListWithSearchRoute } from '../websites-list-with-search-route'
 import { StaticWebsitesList as SharedStaticWebsitesList } from './static-websites-list'
 
 interface StaticWebsitesListRouteProps {
-  websites: WebsiteMetadata[]
+  websites: WebsiteBrowseCardMetadata[]
   totalCount?: number
   displayLimit?: number
 }
@@ -12,7 +12,7 @@ interface StaticWebsitesListRouteProps {
 export function StaticWebsitesListRoute({
   websites,
   totalCount,
-  displayLimit,
+  displayLimit
 }: StaticWebsitesListRouteProps) {
   return (
     <SharedStaticWebsitesList
@@ -21,7 +21,7 @@ export function StaticWebsitesListRoute({
       displayLimit={displayLimit}
       slots={{
         Section,
-        WebsitesListWithSearch: WebsitesListWithSearchRoute,
+        WebsitesListWithSearch: WebsitesListWithSearchRoute
       }}
     />
   )

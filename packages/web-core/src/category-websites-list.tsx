@@ -1,25 +1,22 @@
-import type { ComponentType } from 'react';
-import type { WebsiteMetadata } from './content-query';
-import { siteCopy } from './site-copy';
+import type { ComponentType } from 'react'
+import type { WebsiteBrowseCardMetadata } from './content-query'
+import { siteCopy } from './site-copy'
 
 type WebsitesListWithSortProps = {
-  emptyDescription?: string;
-  emptyTitle?: string;
-  initialWebsites: WebsiteMetadata[];
-};
-
-interface CategoryWebsitesListProps {
-  initialWebsites: WebsiteMetadata[];
-  slots: {
-    WebsitesListWithSort: ComponentType<WebsitesListWithSortProps>;
-  };
+  emptyDescription?: string
+  emptyTitle?: string
+  initialWebsites: WebsiteBrowseCardMetadata[]
 }
 
-export function CategoryWebsitesList({
-  initialWebsites,
-  slots,
-}: CategoryWebsitesListProps) {
-  const { WebsitesListWithSort } = slots;
+interface CategoryWebsitesListProps {
+  initialWebsites: WebsiteBrowseCardMetadata[]
+  slots: {
+    WebsitesListWithSort: ComponentType<WebsitesListWithSortProps>
+  }
+}
+
+export function CategoryWebsitesList({ initialWebsites, slots }: CategoryWebsitesListProps) {
+  const { WebsitesListWithSort } = slots
 
   return (
     <WebsitesListWithSort
@@ -27,5 +24,5 @@ export function CategoryWebsitesList({
       emptyTitle={siteCopy.categoryEmptyTitle}
       emptyDescription={siteCopy.categoryEmptyDescription}
     />
-  );
+  )
 }

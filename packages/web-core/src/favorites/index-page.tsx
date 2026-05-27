@@ -1,45 +1,46 @@
-import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb';
-import { Heart } from 'lucide-react';
-import type { Metadata } from 'next';
-import type { ComponentType, ReactNode } from 'react';
-import { getActiveCategories } from '../category-navigation';
-import type { GuideMetadata, WebsiteMetadata } from '../content-query';
-import { AppSidebar } from '../layout/app-sidebar';
+import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
+import { Heart } from 'lucide-react'
+import type { Metadata } from 'next'
+import type { ComponentType, ReactNode } from 'react'
+import { getActiveCategories } from '../category-navigation'
 import {
-  SITE_NAME,
-  SITE_PUBLIC_URL,
-  generateBaseMetadata,
-} from '../seo-config';
-import { NewsletterSection } from '../sections/newsletter-section';
-import { siteCopy } from '../site-copy';
+  type GuideMetadata,
+  toWebsiteBrowseCardMetadata,
+  type WebsiteBrowseCardMetadata,
+  type WebsiteMetadata
+} from '../content-query'
+import { AppSidebar } from '../layout/app-sidebar'
+import { NewsletterSection } from '../sections/newsletter-section'
+import { generateBaseMetadata, SITE_NAME, SITE_PUBLIC_URL } from '../seo-config'
+import { siteCopy } from '../site-copy'
 
 type JsonLdProps = {
-  data: Record<string, unknown>;
-};
+  data: Record<string, unknown>
+}
 
 type FeaturedGuidesSectionProps = {
-  guides: GuideMetadata[];
-};
+  guides: GuideMetadata[]
+}
 
 type WebsitesListWithSearchProps = {
-  initialShowFavoritesOnly?: boolean;
-  initialWebsites: WebsiteMetadata[];
-  totalCount: number;
-};
+  initialShowFavoritesOnly?: boolean
+  initialWebsites: WebsiteBrowseCardMetadata[]
+  totalCount: number
+}
 
 type FavoritesPageSlots = {
-  FeaturedGuidesSection: ComponentType<FeaturedGuidesSectionProps>;
-  JsonLd: (props: JsonLdProps) => ReactNode | Promise<ReactNode>;
-  WebsitesListWithSearch: ComponentType<WebsitesListWithSearchProps>;
-};
+  FeaturedGuidesSection: ComponentType<FeaturedGuidesSectionProps>
+  JsonLd: (props: JsonLdProps) => ReactNode | Promise<ReactNode>
+  WebsitesListWithSearch: ComponentType<WebsitesListWithSearchProps>
+}
 
 type FavoritesPageProps = {
-  allProjects: WebsiteMetadata[];
-  featuredGuides: GuideMetadata[];
-  featuredProjects: WebsiteMetadata[];
-  slots: FavoritesPageSlots;
-  totalCount: number;
-};
+  allProjects: WebsiteMetadata[]
+  featuredGuides: GuideMetadata[]
+  featuredProjects: WebsiteMetadata[]
+  slots: FavoritesPageSlots
+  totalCount: number
+}
 
 export const favoritesPageMetadata: Metadata = generateBaseMetadata({
   title: `Saved Favorites - ${SITE_NAME}`,
@@ -49,21 +50,22 @@ export const favoritesPageMetadata: Metadata = generateBaseMetadata({
     `saved ${siteCopy.listingName.plural}`,
     'bookmarks',
     'directory listings',
-    'resources',
+    'resources'
   ],
-  path: '/favorites',
-});
+  path: '/favorites'
+})
 
 export function FavoritesIndexPage({
   allProjects,
   featuredGuides,
   featuredProjects,
   slots,
-  totalCount,
+  totalCount
 }: FavoritesPageProps) {
-  const activeCategories = getActiveCategories(allProjects);
-  const activeCategorySlugs = activeCategories.map((category) => category.slug);
-  const { FeaturedGuidesSection, JsonLd, WebsitesListWithSearch } = slots;
+  const activeCategories = getActiveCategories(allProjects)
+  const activeCategorySlugs = activeCategories.map(category => category.slug)
+  const { FeaturedGuidesSection, JsonLd, WebsitesListWithSearch } = slots
+  const projectCards = allProjects.map(toWebsiteBrowseCardMetadata)
 
   return (
     <>
@@ -73,7 +75,7 @@ export function FavoritesIndexPage({
           '@type': 'CollectionPage',
           name: `Favorites - ${SITE_NAME}`,
           description: `Your saved ${siteCopy.listingName.plural}`,
-          url: `${SITE_PUBLIC_URL}/favorites`,
+          url: `${SITE_PUBLIC_URL}/favorites`
         }}
       />
 
@@ -96,13 +98,12 @@ export function FavoritesIndexPage({
                 <h1 className="text-3xl font-bold">Saved Favorites</h1>
               </div>
               <p className="text-muted-foreground">
-                Your saved {siteCopy.listingName.plural} and related resources
-                from the directory
+                Your saved {siteCopy.listingName.plural} and related resources from the directory
               </p>
             </div>
 
             <WebsitesListWithSearch
-              initialWebsites={allProjects}
+              initialWebsites={projectCards}
               initialShowFavoritesOnly={true}
               totalCount={totalCount}
             />
@@ -115,5 +116,5 @@ export function FavoritesIndexPage({
         </div>
       </div>
     </>
-  );
+  )
 }

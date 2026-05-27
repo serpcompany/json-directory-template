@@ -1,14 +1,12 @@
-import type { WebsiteMetadata } from './content-query'
 import { CategoryWebsitesList as SharedCategoryWebsitesList } from './category-websites-list'
+import type { WebsiteBrowseCardMetadata } from './content-query'
 import { WebsitesListWithSortRoute } from './websites-list-with-sort-route'
 
 interface CategoryWebsitesListRouteProps {
-  initialWebsites: WebsiteMetadata[]
+  initialWebsites: WebsiteBrowseCardMetadata[]
 }
 
-export function CategoryWebsitesListRoute({
-  initialWebsites,
-}: CategoryWebsitesListRouteProps) {
+export function CategoryWebsitesListRoute({ initialWebsites }: CategoryWebsitesListRouteProps) {
   return (
     <SharedCategoryWebsitesList
       initialWebsites={initialWebsites}

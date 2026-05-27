@@ -1,61 +1,61 @@
-'use client';
+'use client'
 
-import { useEffect, useMemo, useState } from 'react';
-import type { WebsiteMetadata } from './content-query';
-import { getRoute } from './routes';
-import { siteCopy } from './site-copy';
+import { useEffect, useMemo, useState } from 'react'
+import type { WebsiteBrowseCardMetadata, WebsiteRelatedCardMetadata } from './content-query'
+import { getRoute } from './routes'
+import { siteCopy } from './site-copy'
 
-type SortBy = 'name' | 'latest';
+type SortBy = 'name' | 'latest'
 
 type EmptyStateProps = {
-  actionHref?: string;
-  actionLabel?: string;
-  description: string;
-  onAction?: () => void;
-  title: string;
-};
+  actionHref?: string
+  actionLabel?: string
+  description: string
+  onAction?: () => void
+  title: string
+}
 
 type WebsitesSearchControlsProps = {
-  filteredCount: number;
-  hasFavorites: boolean;
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  setShowFavoritesOnly: (show: boolean) => void;
-  setSortBy: (sort: SortBy) => void;
-  showFavoritesOnly: boolean;
-  sortBy: SortBy;
-  trackSearch: (query: string, count: number, source: string) => void;
-  trackSortChange: (from: string, to: string, source: string) => void;
-};
+  filteredCount: number
+  hasFavorites: boolean
+  searchQuery: string
+  setSearchQuery: (query: string) => void
+  setShowFavoritesOnly: (show: boolean) => void
+  setSortBy: (sort: SortBy) => void
+  showFavoritesOnly: boolean
+  sortBy: SortBy
+  trackSearch: (query: string, count: number, source: string) => void
+  trackSortChange: (from: string, to: string, source: string) => void
+}
 
 type LLMGridProps = {
-  animateIn?: boolean;
-  className?: string;
-  items: WebsiteMetadata[];
-  maxItems?: number;
-};
+  animateIn?: boolean
+  className?: string
+  items: WebsiteRelatedCardMetadata[]
+  maxItems?: number
+}
 
 type WebsitesListWithSearchProps = {
   analytics: {
-    trackSearch: (query: string, count: number, source: string) => void;
-    trackSortChange: (from: string, to: string, source: string) => void;
-  };
-  displayLimit?: number;
-  emptyDescription?: string;
-  emptyTitle?: string;
+    trackSearch: (query: string, count: number, source: string) => void
+    trackSortChange: (from: string, to: string, source: string) => void
+  }
+  displayLimit?: number
+  emptyDescription?: string
+  emptyTitle?: string
   favorites: {
-    favoriteWebsites: WebsiteMetadata[];
-    hasFavorites: boolean;
-  };
-  initialShowFavoritesOnly?: boolean;
-  initialWebsites: WebsiteMetadata[];
+    favoriteWebsites: WebsiteBrowseCardMetadata[]
+    hasFavorites: boolean
+  }
+  initialShowFavoritesOnly?: boolean
+  initialWebsites: WebsiteBrowseCardMetadata[]
   slots: {
-    EmptyState: React.ComponentType<EmptyStateProps>;
-    LLMGrid: React.ComponentType<LLMGridProps>;
-    WebsitesSearchControls: React.ComponentType<WebsitesSearchControlsProps>;
-  };
-  totalCount?: number;
-};
+    EmptyState: React.ComponentType<EmptyStateProps>
+    LLMGrid: React.ComponentType<LLMGridProps>
+    WebsitesSearchControls: React.ComponentType<WebsitesSearchControlsProps>
+  }
+  totalCount?: number
+}
 
 export function WebsitesListWithSearch({
   analytics,
@@ -66,65 +66,63 @@ export function WebsitesListWithSearch({
   initialShowFavoritesOnly = false,
   initialWebsites,
   slots,
-  totalCount,
+  totalCount
 }: WebsitesListWithSearchProps) {
-  const [sortBy, setSortBy] = useState<SortBy>('latest');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState(
-    initialShowFavoritesOnly
-  );
-  const [isClient, setIsClient] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [allWebsites] = useState<WebsiteMetadata[]>(initialWebsites);
-  const { trackSearch, trackSortChange } = analytics;
-  const { favoriteWebsites, hasFavorites } = favorites;
-  const { EmptyState, LLMGrid, WebsitesSearchControls } = slots;
+  const [sortBy, setSortBy] = useState<SortBy>('latest')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(initialShowFavoritesOnly)
+  const [isClient, setIsClient] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [allWebsites] = useState<WebsiteBrowseCardMetadata[]>(initialWebsites)
+  const { trackSearch, trackSortChange } = analytics
+  const { favoriteWebsites, hasFavorites } = favorites
+  const { EmptyState, LLMGrid, WebsitesSearchControls } = slots
 
   useEffect(() => {
     requestAnimationFrame(() => {
-      const savedSortBy = localStorage.getItem('websites-sort-by');
+      const savedSortBy = localStorage.getItem('websites-sort-by')
 
       if (savedSortBy !== null) {
-        const parsedSortBy = JSON.parse(savedSortBy);
+        const parsedSortBy = JSON.parse(savedSortBy)
         if (parsedSortBy === 'name' || parsedSortBy === 'latest') {
-          setSortBy(parsedSortBy);
+          setSortBy(parsedSortBy)
         }
       }
 
-      setIsClient(true);
-      setIsLoading(false);
-    });
-  }, []);
+      setIsClient(true)
+      setIsLoading(false)
+    })
+  }, [])
 
   useEffect(() => {
     if (isClient) {
-      localStorage.setItem('websites-sort-by', JSON.stringify(sortBy));
+      localStorage.setItem('websites-sort-by', JSON.stringify(sortBy))
     }
-  }, [sortBy, isClient]);
+  }, [sortBy, isClient])
 
   const filteredAndSortedWebsites = useMemo(() => {
-    let websites = showFavoritesOnly ? [...favoriteWebsites] : [...allWebsites];
-    const normalizedQuery = searchQuery.trim().toLowerCase();
+    let websites = showFavoritesOnly ? [...favoriteWebsites] : [...allWebsites]
+    const normalizedQuery = searchQuery.trim().toLowerCase()
 
     if (normalizedQuery) {
-      websites = websites.filter((website) => {
+      websites = websites.filter(website => {
         const searchableText = `${website.name} ${website.description} ${
           website.category
-        } ${(website.categories || []).join(' ')}`.toLowerCase();
-        return searchableText.includes(normalizedQuery);
-      });
+        } ${(website.categories || []).join(' ')}`.toLowerCase()
+        return searchableText.includes(normalizedQuery)
+      })
     }
 
     if (sortBy === 'latest') {
       return websites.sort((a, b) => {
-        const dateA = new Date(a.publishedAt).getTime();
-        const dateB = new Date(b.publishedAt).getTime();
-        return dateB - dateA;
-      });
+        const dateA = new Date(a.publishedAt).getTime()
+        const dateB = new Date(b.publishedAt).getTime()
+        return dateB - dateA
+      })
     }
 
-    return websites.sort((a, b) => a.name.localeCompare(b.name));
-  }, [allWebsites, favoriteWebsites, searchQuery, showFavoritesOnly, sortBy]);
+    return websites.sort((a, b) => a.name.localeCompare(b.name))
+  }, [allWebsites, favoriteWebsites, searchQuery, showFavoritesOnly, sortBy])
 
   if (!initialWebsites.length) {
     return (
@@ -134,7 +132,7 @@ export function WebsitesListWithSearch({
         actionLabel={siteCopy.submitLabel}
         actionHref={getRoute('submit')}
       />
-    );
+    )
   }
 
   return (
@@ -171,8 +169,7 @@ export function WebsitesListWithSearch({
           {searchQuery ? (
             <p className="mb-4 text-sm text-muted-foreground">
               Showing {filteredAndSortedWebsites.length} result
-              {filteredAndSortedWebsites.length !== 1 ? 's' : ''} for "
-              {searchQuery}"
+              {filteredAndSortedWebsites.length !== 1 ? 's' : ''} for "{searchQuery}"
             </p>
           ) : null}
 
@@ -199,17 +196,15 @@ export function WebsitesListWithSearch({
                   filteredAndSortedWebsites.length,
                   displayLimit ?? filteredAndSortedWebsites.length
                 )}{' '}
-                of {filteredAndSortedWebsites.length} matching{' '}
-                {siteCopy.listingName.plural}.
+                of {filteredAndSortedWebsites.length} matching {siteCopy.listingName.plural}.
               </p>
             </div>
             <p className="mt-3 text-xs text-muted-foreground">
-              Directory size: {totalCount || allWebsites.length}{' '}
-              {siteCopy.listingName.plural}
+              Directory size: {totalCount || allWebsites.length} {siteCopy.listingName.plural}
             </p>
           </div>
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -2,13 +2,13 @@
 
 import { Clock, SortAsc } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useMemo, useState, type ComponentType } from 'react'
-import type { WebsiteMetadata } from './content-query'
+import { type ComponentType, useEffect, useMemo, useState } from 'react'
+import type { WebsiteBrowseCardMetadata } from './content-query'
 import { getRoute } from './routes'
 import { siteCopy } from './site-copy'
 
 export interface WebsitesListWithSortProps {
-  initialWebsites: WebsiteMetadata[]
+  initialWebsites: WebsiteBrowseCardMetadata[]
   emptyTitle?: string
   emptyDescription?: string
   trackSortChange?: (currentSort: string, nextSort: string, source?: string) => void
@@ -64,7 +64,7 @@ export function WebsitesListWithSort({
     return websites.sort((a, b) => a.name.localeCompare(b.name))
   }, [initialWebsites, sortBy])
 
-  const renderWebsite = (website: WebsiteMetadata) => (
+  const renderWebsite = (website: WebsiteBrowseCardMetadata) => (
     <Card
       key={website.slug}
       className="p-4 hover:bg-muted/50 transition-all duration-300 relative h-full hover:shadow-md"

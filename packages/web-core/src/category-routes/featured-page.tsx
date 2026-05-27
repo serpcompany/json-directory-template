@@ -1,38 +1,38 @@
-import type { Metadata } from 'next';
-import type { ComponentType, ReactNode } from 'react';
-import { AppSidebar } from '../layout/app-sidebar';
-import { getRoute } from '../routes';
+import type { Metadata } from 'next'
+import type { ComponentType, ReactNode } from 'react'
 import {
-  SITE_LOGO_URL,
-  SITE_NAME,
-  SITE_PUBLIC_URL,
-  generateBaseMetadata,
-} from '../seo-config';
-import { NewsletterSection } from '../sections/newsletter-section';
-import { siteCopy } from '../site-copy';
-import { siteConfig } from '../site-config';
-import type { GuideMetadata, WebsiteMetadata } from '../content-query';
+  type GuideMetadata,
+  toWebsiteBrowseCardMetadata,
+  type WebsiteBrowseCardMetadata,
+  type WebsiteMetadata
+} from '../content-query'
+import { AppSidebar } from '../layout/app-sidebar'
+import { getRoute } from '../routes'
+import { NewsletterSection } from '../sections/newsletter-section'
+import { generateBaseMetadata, SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL } from '../seo-config'
+import { siteConfig } from '../site-config'
+import { siteCopy } from '../site-copy'
 
 type JsonLdProps = {
-  data: Record<string, unknown>;
-};
+  data: Record<string, unknown>
+}
 
 type CategoryWebsitesListProps = {
-  initialWebsites: WebsiteMetadata[];
-};
+  initialWebsites: WebsiteBrowseCardMetadata[]
+}
 
 type FeaturedGuidesSectionProps = {
-  guides: GuideMetadata[];
-};
+  guides: GuideMetadata[]
+}
 
 type FeaturedCategorySlots = {
-  CategoryWebsitesList: ComponentType<CategoryWebsitesListProps>;
-  ExternalResourcesSection: ComponentType;
-  FeaturedGuidesSection: ComponentType<FeaturedGuidesSectionProps>;
-  JsonLd: (props: JsonLdProps) => ReactNode | Promise<ReactNode>;
-  breadcrumb: ReactNode;
-  headingIcon: ReactNode;
-};
+  CategoryWebsitesList: ComponentType<CategoryWebsitesListProps>
+  ExternalResourcesSection: ComponentType
+  FeaturedGuidesSection: ComponentType<FeaturedGuidesSectionProps>
+  JsonLd: (props: JsonLdProps) => ReactNode | Promise<ReactNode>
+  breadcrumb: ReactNode
+  headingIcon: ReactNode
+}
 
 export const featuredCategoryPageMetadata: Metadata = generateBaseMetadata({
   title: `Featured ${siteCopy.listingName.pluralTitle} - ${SITE_NAME}`,
@@ -42,21 +42,21 @@ export const featuredCategoryPageMetadata: Metadata = generateBaseMetadata({
     'curated',
     `featured ${siteCopy.listingName.plural}`,
     'directory',
-    'resources',
+    'resources'
   ],
-  path: getRoute('category.page', { category: 'featured' }),
-});
+  path: getRoute('category.page', { category: 'featured' })
+})
 
 export function FeaturedCategoryRoutePage({
   activeCategorySlugs,
   featuredGuides,
   featuredProjects,
-  slots,
+  slots
 }: {
-  activeCategorySlugs: string[];
-  featuredGuides: GuideMetadata[];
-  featuredProjects: WebsiteMetadata[];
-  slots: FeaturedCategorySlots;
+  activeCategorySlugs: string[]
+  featuredGuides: GuideMetadata[]
+  featuredProjects: WebsiteMetadata[]
+  slots: FeaturedCategorySlots
 }) {
   const {
     CategoryWebsitesList,
@@ -64,10 +64,11 @@ export function FeaturedCategoryRoutePage({
     FeaturedGuidesSection,
     JsonLd,
     breadcrumb,
-    headingIcon,
-  } = slots;
-  const featuredPath = getRoute('category.page', { category: 'featured' });
-  const featuredUrl = `${SITE_PUBLIC_URL}${featuredPath}`;
+    headingIcon
+  } = slots
+  const featuredPath = getRoute('category.page', { category: 'featured' })
+  const featuredUrl = `${SITE_PUBLIC_URL}${featuredPath}`
+  const featuredProjectCards = featuredProjects.map(toWebsiteBrowseCardMetadata)
 
   return (
     <>
@@ -86,7 +87,7 @@ export function FeaturedCategoryRoutePage({
             '@id': SITE_PUBLIC_URL,
             name: SITE_NAME,
             description: siteConfig.description,
-            url: SITE_PUBLIC_URL,
+            url: SITE_PUBLIC_URL
           },
           breadcrumb: {
             '@type': 'BreadcrumbList',
@@ -95,15 +96,15 @@ export function FeaturedCategoryRoutePage({
                 '@type': 'ListItem',
                 position: 1,
                 name: 'Home',
-                item: SITE_PUBLIC_URL,
+                item: SITE_PUBLIC_URL
               },
               {
                 '@type': 'ListItem',
                 position: 2,
                 name: 'Featured',
-                item: featuredUrl,
-              },
-            ],
+                item: featuredUrl
+              }
+            ]
           },
           numberOfItems: featuredProjects.length,
           itemListElement: featuredProjects.slice(0, 10).map((project, index) => ({
@@ -111,7 +112,7 @@ export function FeaturedCategoryRoutePage({
             position: index + 1,
             url: project.website,
             name: project.name,
-            description: project.description,
+            description: project.description
           })),
           mainEntity: {
             '@type': 'ItemList',
@@ -123,8 +124,8 @@ export function FeaturedCategoryRoutePage({
               '@type': 'Thing',
               position: index + 1,
               url: project.website,
-              name: project.name,
-            })),
+              name: project.name
+            }))
           },
           publisher: {
             '@type': 'Organization',
@@ -132,11 +133,11 @@ export function FeaturedCategoryRoutePage({
             url: SITE_PUBLIC_URL,
             logo: {
               '@type': 'ImageObject',
-              url: SITE_LOGO_URL,
-            },
+              url: SITE_LOGO_URL
+            }
           },
           datePublished: new Date().toISOString(),
-          dateModified: new Date().toISOString(),
+          dateModified: new Date().toISOString()
         }}
       />
 
@@ -162,7 +163,7 @@ export function FeaturedCategoryRoutePage({
                   Curated listings highlighted for quality, usefulness, and relevance
                 </p>
               </div>
-              <CategoryWebsitesList initialWebsites={featuredProjects} />
+              <CategoryWebsitesList initialWebsites={featuredProjectCards} />
             </section>
 
             {siteConfig.features.showExternalResources && <ExternalResourcesSection />}
@@ -174,5 +175,5 @@ export function FeaturedCategoryRoutePage({
         </div>
       </div>
     </>
-  );
+  )
 }

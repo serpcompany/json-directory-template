@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from 'react'
-import type { WebsiteMetadata } from '../content-query'
+import type { WebsiteBrowseCardMetadata, WebsiteRelatedCardMetadata } from '../content-query'
 import { siteConfig } from '../site-config'
 
 type SectionProps = {
@@ -12,7 +12,7 @@ type SectionProps = {
 }
 
 type LLMGridProps = {
-  items: WebsiteMetadata[]
+  items: WebsiteRelatedCardMetadata[]
   variant?: 'default' | 'compact'
   className?: string
   maxItems?: number
@@ -22,7 +22,7 @@ type LLMGridProps = {
 }
 
 interface RecentlyAddedSectionProps {
-  websites: WebsiteMetadata[]
+  websites: WebsiteBrowseCardMetadata[]
   maxItems?: number
   slots: {
     LLMGrid: ComponentType<LLMGridProps>
@@ -33,7 +33,7 @@ interface RecentlyAddedSectionProps {
 export function RecentlyAddedSection({
   websites,
   maxItems = 8,
-  slots: { LLMGrid, Section },
+  slots: { LLMGrid, Section }
 }: RecentlyAddedSectionProps) {
   if (!websites || websites.length === 0) {
     return null
