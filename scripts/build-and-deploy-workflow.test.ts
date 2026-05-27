@@ -16,6 +16,14 @@ interface WorkflowJob {
 }
 
 interface WorkflowDefinition {
+  on: {
+    push?: {
+      paths?: string[]
+    }
+    workflow_dispatch: {
+      inputs: Record<string, { required?: boolean }>
+    }
+  }
   jobs: Record<string, WorkflowJob>
 }
 
@@ -49,11 +57,7 @@ describe('build-and-deploy workflow', () => {
 
   it('requires a checked-in site id instead of an explicit build spec path', () => {
     const workflow = loadWorkflow()
-    const dispatchInputs = (
-      workflow as WorkflowDefinition & {
-        on: { workflow_dispatch: { inputs: Record<string, { required?: boolean }> } }
-      }
-    ).on.workflow_dispatch.inputs
+    const dispatchInputs = workflow.on.workflow_dispatch.inputs
 
     expect(dispatchInputs.site_id).toBeDefined()
     expect(dispatchInputs.site_id?.required).toBe(true)
@@ -79,5 +83,30 @@ describe('build-and-deploy workflow', () => {
     expect(deployStep).toBeDefined()
     expect(deployStep?.env?.DEPLOY_REPO_URL).toBeUndefined()
     expect(deployStep?.env?.DEPLOY_BRANCH).toBeUndefined()
+  })
+
+  it('lets the resolver infer push builds when no site input or repo variable is set', () => {
+    const workflow = loadWorkflow()
+    const validateJob = workflow.jobs.validate
+    const resolveStep = validateJob.steps?.find(step => step.name === 'Resolve build input')
+
+    expect(resolveStep?.env?.SITE_ID).toBe(`\${{ github.event.inputs.site_id || vars.SITE_ID }}`)
+  })
+
+  it('runs for changes to active wrapper apps', () => {
+    const workflow = loadWorkflow()
+    const paths = workflow.on.push?.paths ?? []
+
+    expect(paths).toEqual(
+      expect.arrayContaining([
+        'apps/browserextensions.io/**',
+        'apps/pornvideodownloaders.com/**',
+        'apps/serp.ai/**',
+        'apps/serp.co/**',
+        'apps/serp.software/**',
+        'apps/serpdownloaders.com/**',
+        'apps/starter/**'
+      ])
+    )
   })
 })

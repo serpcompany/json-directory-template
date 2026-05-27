@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { resolveBuildRun } from './resolve-build-run.ts'
+import { inferSiteIdFromChangedPaths, resolveBuildRun } from './resolve-build-run.ts'
 
 describe('resolveBuildRun', () => {
   it('resolves the artifact dir from the checked-in site config id', () => {
@@ -37,6 +37,31 @@ describe('resolveBuildRun', () => {
       })
     ).toThrow(
       'Site "unknown-site" is not an active checked-in site in this repo. Use "default" or a supported checked-in site id instead.'
+    )
+  })
+
+  it('infers a single checked-in site id from changed wrapper app paths', () => {
+    expect(
+      inferSiteIdFromChangedPaths([
+        'apps/serp.co/lib/content-loader.ts',
+        'apps/serp.co/app/products/[slug]/reviews/page.tsx'
+      ])
+    ).toBe('serp.co')
+  })
+
+  it('infers a single checked-in site id from changed site config paths', () => {
+    expect(inferSiteIdFromChangedPaths(['sites/serp.co/site-config.ts'])).toBe('serp.co')
+  })
+
+  it('maps starter app changes to the default checked-in site', () => {
+    expect(inferSiteIdFromChangedPaths(['apps/starter/app/layout.tsx'])).toBe('default')
+  })
+
+  it('requires explicit site selection when push paths touch multiple sites', () => {
+    expect(() =>
+      inferSiteIdFromChangedPaths(['apps/serp.co/app/layout.tsx', 'apps/serp.ai/app/layout.tsx'])
+    ).toThrow(
+      'Push changed multiple site-specific paths (serp.ai, serp.co). Set SITE_ID explicitly or run workflow_dispatch for one site.'
     )
   })
 })

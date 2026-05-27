@@ -9,7 +9,7 @@ describe('build-and-deploy workflow defaults', () => {
       'utf8'
     )
 
-    expect(workflow).not.toContain('serpdownloaders.com')
+    expect(workflow).not.toContain('SITE_ID: serpdownloaders.com')
     expect(workflow).toContain('default')
   })
 })
