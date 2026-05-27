@@ -1,12 +1,96 @@
+import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 import { loadCheckedInSiteFromInput, parseSiteInputArgs } from './site-config.ts'
+
+const changedPathSitePrefixes = [
+  ['apps/browserextensions.io/', 'browserextensions.io'],
+  ['apps/pornvideodownloaders.com/', 'pornvideodownloaders.com'],
+  ['apps/serp.ai/', 'serp.ai'],
+  ['apps/serp.co/', 'serp.co'],
+  ['apps/serp.software/', 'serp.software'],
+  ['apps/serpdownloaders.com/', 'serpdownloaders.com'],
+  ['apps/starter/', 'default'],
+  ['sites/browserextensions.io/', 'browserextensions.io'],
+  ['sites/pornvideodownloaders.com/', 'pornvideodownloaders.com'],
+  ['sites/serp.ai/', 'serp.ai'],
+  ['sites/serp.co/', 'serp.co'],
+  ['sites/serp.software/', 'serp.software'],
+  ['sites/serpdownloaders.com/', 'serpdownloaders.com']
+] as const
+
+type GitHubPushEvent = {
+  commits?: Array<{
+    added?: string[]
+    modified?: string[]
+    removed?: string[]
+  }>
+  head_commit?: {
+    added?: string[]
+    modified?: string[]
+    removed?: string[]
+  } | null
+}
+
+function hasExplicitSiteInput(argv: string[], env: NodeJS.ProcessEnv): boolean {
+  return (
+    argv.includes('--site') ||
+    Boolean(env.SITE_ID?.trim()) ||
+    Boolean(env.NEXT_PUBLIC_SITE_ID?.trim())
+  )
+}
+
+function normalizeChangedPath(path: string): string {
+  return path.replace(/^\.?\//, '')
+}
+
+export function inferSiteIdFromChangedPaths(paths: string[]): string | undefined {
+  const matchedSiteIds = new Set<string>()
+
+  for (const path of paths) {
+    const normalizedPath = normalizeChangedPath(path)
+    const matchedPrefix = changedPathSitePrefixes.find(([prefix]) =>
+      normalizedPath.startsWith(prefix)
+    )
+
+    if (matchedPrefix) {
+      matchedSiteIds.add(matchedPrefix[1])
+    }
+  }
+
+  if (matchedSiteIds.size > 1) {
+    throw new Error(
+      `Push changed multiple site-specific paths (${[...matchedSiteIds].sort().join(', ')}). Set SITE_ID explicitly or run workflow_dispatch for one site.`
+    )
+  }
+
+  return [...matchedSiteIds][0]
+}
+
+function readPushEventChangedPaths(env: NodeJS.ProcessEnv): string[] {
+  if (env.GITHUB_EVENT_NAME !== 'push' || !env.GITHUB_EVENT_PATH) {
+    return []
+  }
+
+  const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8')) as GitHubPushEvent
+  const commits = event.commits?.length ? event.commits : event.head_commit ? [event.head_commit] : []
+
+  return commits.flatMap(commit => [
+    ...(commit.added ?? []),
+    ...(commit.modified ?? []),
+    ...(commit.removed ?? [])
+  ])
+}
 
 export function resolveBuildRun(argv: string[], env: NodeJS.ProcessEnv = process.env): {
   artifactDir: string
   siteId: string
 } {
-  const input = parseSiteInputArgs(argv, env)
+  const input = hasExplicitSiteInput(argv, env)
+    ? parseSiteInputArgs(argv, env)
+    : {
+        siteId: inferSiteIdFromChangedPaths(readPushEventChangedPaths(env))
+      }
   const definition = loadCheckedInSiteFromInput(input)
 
   return {

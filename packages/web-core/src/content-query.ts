@@ -125,6 +125,12 @@ export interface WebsiteDetailMetadata extends WebsiteMetadata {
   nextWebsite: WebsiteMetadata | null;
 }
 
+export interface WebsiteLookupIndex {
+  websites: readonly WebsiteMetadata[];
+  websiteBySlug: ReadonlyMap<string, WebsiteMetadata>;
+  websiteIndexBySlug: ReadonlyMap<string, number>;
+}
+
 export function buildWebsiteMetadata(input: unknown): WebsiteMetadata[] {
   if (!Array.isArray(input) || input.length === 0) {
     return [];
@@ -139,21 +145,50 @@ export function buildWebsiteMetadata(input: unknown): WebsiteMetadata[] {
     });
 }
 
-export function resolveWebsiteBySlug(
-  websites: WebsiteMetadata[],
+export function buildWebsiteLookupIndex(
+  websites: readonly WebsiteMetadata[]
+): WebsiteLookupIndex {
+  const websiteBySlug = new Map<string, WebsiteMetadata>();
+  const websiteIndexBySlug = new Map<string, number>();
+
+  websites.forEach((website, index) => {
+    if (websiteBySlug.has(website.slug)) {
+      return;
+    }
+
+    websiteBySlug.set(website.slug, website);
+    websiteIndexBySlug.set(website.slug, index);
+  });
+
+  return {
+    websites,
+    websiteBySlug,
+    websiteIndexBySlug,
+  };
+}
+
+export function resolveWebsiteBySlugFromIndex(
+  index: WebsiteLookupIndex,
   slug: string
 ): WebsiteDetailMetadata | null {
+  const { websites, websiteBySlug, websiteIndexBySlug } = index;
+
   if (websites.length === 0) {
     return null;
   }
 
-  const website = websites.find((site) => site.slug === slug);
+  const website = websiteBySlug.get(slug);
 
   if (!website) {
     return null;
   }
 
-  const currentIndex = websites.findIndex((site) => site.slug === slug);
+  const currentIndex = websiteIndexBySlug.get(slug);
+
+  if (currentIndex === undefined) {
+    return null;
+  }
+
   const previousWebsite = websites[currentIndex - 1] || null;
   const nextWebsite = websites[currentIndex + 1] || null;
   const websiteCategorySlugs = new Set(getListingCategories(website));
@@ -185,6 +220,13 @@ export function resolveWebsiteBySlug(
     previousWebsite,
     nextWebsite,
   };
+}
+
+export function resolveWebsiteBySlug(
+  websites: readonly WebsiteMetadata[],
+  slug: string
+): WebsiteDetailMetadata | null {
+  return resolveWebsiteBySlugFromIndex(buildWebsiteLookupIndex(websites), slug);
 }
 
 export function buildGuides(guides: GuideEntry[]): GuideMetadata[] {

@@ -6,6 +6,12 @@ on:
     paths:
       - 'data/listings.json'
       - 'sites/**'
+      - 'apps/browserextensions.io/**'
+      - 'apps/pornvideodownloaders.com/**'
+      - 'apps/serp.ai/**'
+      - 'apps/serp.co/**'
+      - 'apps/serp.software/**'
+      - 'apps/serpdownloaders.com/**'
       - 'apps/starter/**'
       - 'scripts/**'
       - '.github/workflows/build-and-deploy.yml'
@@ -34,7 +40,7 @@ jobs:
       - name: Resolve build input
         id: resolve
         env:
-          SITE_ID: ${{ github.event.inputs.site_id || vars.SITE_ID || 'default' }}
+          SITE_ID: ${{ github.event.inputs.site_id || vars.SITE_ID }}
         run: ./node_modules/.bin/tsx scripts/resolve-build-run.ts >> "$GITHUB_OUTPUT"
 
       - name: Validate site data

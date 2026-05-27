@@ -4,11 +4,12 @@ import {
   applyLegalContentBranding,
   buildDocs,
   buildGuides,
+  buildWebsiteLookupIndex,
   buildWebsiteMetadata,
   resolveAboutPage,
   resolveDocBySlug,
   resolveGuideBySlug,
-  resolveWebsiteBySlug,
+  resolveWebsiteBySlugFromIndex,
 } from '@thedaviddias/web-core/content-query';
 import type {
   AboutPageEntry,
@@ -19,6 +20,7 @@ import type {
   GuideEntry,
   GuideMetadata as AppGuideMetadata,
   LegalEntry,
+  WebsiteLookupIndex,
   WebsiteMetadata as AppWebsiteMetadata,
 } from '@thedaviddias/web-core/content-query';
 import { siteConfig } from '@thedaviddias/web-core/site-config';
@@ -49,6 +51,13 @@ let allResources: Resource[] = [];
 let allDocs: DocEntry[] = [];
 let allAboutPages: AboutPageEntry[] = [];
 let allJsonWebsites: unknown = [];
+
+interface WebsiteCache {
+  websites: AppWebsiteMetadata[];
+  lookupIndex: WebsiteLookupIndex;
+}
+
+let websiteCache: WebsiteCache | null = null;
 
 try {
   const collections = require('@/.content-collections/generated');
@@ -82,12 +91,26 @@ function readLegalContentFromFileSystem(key: string): string {
   return fs.readFileSync(legalFilePath, 'utf8');
 }
 
+function getWebsiteCache(): WebsiteCache {
+  if (websiteCache) {
+    return websiteCache;
+  }
+
+  const websites = buildWebsiteMetadata(allJsonWebsites);
+  websiteCache = {
+    websites,
+    lookupIndex: buildWebsiteLookupIndex(websites),
+  };
+
+  return websiteCache;
+}
+
 export function getWebsites(): AppWebsiteMetadata[] {
-  return buildWebsiteMetadata(allJsonWebsites);
+  return [...getWebsiteCache().websites];
 }
 
 export async function getWebsiteBySlug(slug: string) {
-  return resolveWebsiteBySlug(getWebsites(), slug);
+  return resolveWebsiteBySlugFromIndex(getWebsiteCache().lookupIndex, slug);
 }
 
 export function getGuides(): AppGuideMetadata[] {
