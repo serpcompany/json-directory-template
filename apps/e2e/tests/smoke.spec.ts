@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, type Page, type Response, test } from '@playwright/test'
 
 const detailListing = {
   name: '123Movies Video Downloader',
@@ -9,11 +9,23 @@ const searchListing = {
   query: '123movies'
 } as const
 
-async function expectUnavailableRoute(
-  page: Parameters<typeof test>[1] extends never ? never : any,
-  path: string
-) {
-  const response = await page.goto(path, { waitUntil: 'domcontentloaded' })
+async function gotoWithRetry(page: Page, path: string): Promise<Response | null> {
+  let lastError: unknown
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      return await page.goto(path, { waitUntil: 'domcontentloaded' })
+    } catch (error) {
+      lastError = error
+      await page.waitForTimeout(1000)
+    }
+  }
+
+  throw lastError
+}
+
+async function expectUnavailableRoute(page: Page, path: string) {
+  const response = await gotoWithRetry(page, path)
   const status = response?.status()
 
   if (status === 404) {
@@ -59,6 +71,9 @@ test.describe('Static starter smoke tests', () => {
 
     const directoryRegion = page.getByRole('region', { name: /browse the directory/i })
     const searchInput = directoryRegion.getByPlaceholder(/search the directory/i)
+
+    await expect(directoryRegion).toBeVisible({ timeout: 60000 })
+    await expect(searchInput).toBeVisible({ timeout: 60000 })
     await searchInput.fill(searchListing.query)
 
     await expect(searchInput).toHaveValue(searchListing.query)
@@ -71,22 +86,29 @@ test.describe('Static starter smoke tests', () => {
     await expect(page.getByRole('heading', { level: 1, name: detailListing.name })).toBeVisible()
   })
 
-  test('default starter submit flow keeps the GitHub fallback disabled until configured', async ({
+  test('default starter submit flow keeps GitHub issue submission disabled until configured', async ({
     page
   }) => {
     await page.goto('/submit', { waitUntil: 'networkidle' })
 
-    const submitButton = page.getByRole('button', { name: /submit listing/i })
+    const submitButton = page.getByRole('button', { name: /^submit$/i })
 
-    await expect(page.getByText(/github fallback submission is disabled/i)).toBeVisible()
+    await expect(page.getByText(/github issue submission is disabled/i)).toBeVisible()
     await expect(page.getByRole('link', { name: /submit via github/i })).toHaveCount(0)
     await expect(submitButton).toBeDisabled()
 
     await page.getByLabel('Name').fill('Example Project')
     await page.getByLabel('Category').selectOption('developer-tools')
     await page.getByLabel('Website URL').fill('https://example.com')
+    await page.getByLabel('Logo URL').fill('https://example.com/logo.png')
+    await page.getByLabel('Video URL').fill('https://www.youtube.com/watch?v=abc123')
     await page.getByLabel('Short Description').fill('Example project description.')
-    await expect(submitButton).toBeEnabled()
+    await page.getByLabel('Full Description').fill('Detailed example project description.')
+    await page.getByLabel('FAQ question').fill('Does it work in Chrome?')
+    await page.getByLabel('FAQ answer').fill('Yes.')
+    await page.getByLabel('Resource link label').fill('Docs')
+    await page.getByLabel('Resource link URL').fill('https://example.com/docs')
+    await expect(submitButton).toBeDisabled()
   })
 
   test('news alias still redirects to the supported public surface', async ({ page }) => {

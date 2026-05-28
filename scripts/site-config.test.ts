@@ -44,6 +44,11 @@ describe('loadCheckedInSite', () => {
       taxonomies: '/sitemaps/categories/1.xml'
     })
     expect(config.features.showBrands).toBe(true)
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('browserextensions.io')
+    expect(config.social.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/browserextensions.io/issues'
+    )
     expect(config.deploy).toEqual({
       branch: 'main',
       preserve: ['.github/workflows/deploy.yml', 'CNAME'],
@@ -84,10 +89,49 @@ describe('loadCheckedInSite', () => {
     expect(config.features.showBrands).toBe(true)
     expect(config.analytics?.gtmId).toBe('GTM-M82HC3SC')
     expect(config.networkBrandGroup).toBe('mainGroup')
-    expect(config.social.githubIssueOwner).toBeNull()
-    expect(config.social.githubIssueRepo).toBeNull()
-    expect(config.social.githubIssuesUrl).toBeNull()
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('serpdownloaders.com')
+    expect(config.social.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/serpdownloaders.com/issues'
+    )
     expect(config.deploy?.strategy).toBe('github-pages-repo-sync')
+  })
+
+  it('loads the checked-in serp.ai site config', () => {
+    const config = loadCheckedInSite('serp.ai')
+
+    expect(config.id).toBe('serp.ai')
+    expect(config.content.listingSource).toEqual({
+      category: 'video-downloaders',
+      featuredCount: 0,
+      kind: 'trial-products-json',
+      outputPath: 'data/listings.json',
+      path: 'sites/serp.ai/products.json',
+      publishedAt: '2026-05-16'
+    })
+    expect(config.site).toMatchObject({
+      domain: 'serp.ai',
+      name: 'SERP AI',
+      publicUrl: 'https://serp.ai'
+    })
+    expect(config.build).toMatchObject({
+      appPackageName: 'serp.ai',
+      appOutDir: 'apps/serp.ai/out',
+      artifactDir: 'dist/sites/serp.ai'
+    })
+    expect(config.routes.listingBasePath).toBe('products')
+    expect(config.copy.submitLabel).toBe('Submit to SERP AI')
+    expect(config.features.showBrands).toBe(true)
+    expect(config.networkBrandGroup).toBe('mainGroup')
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('serp.ai')
+    expect(config.social.githubIssuesUrl).toBe('https://github.com/serpcompany/serp.ai/issues')
+    expect(config.deploy).toEqual({
+      branch: 'main',
+      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+      repoUrl: 'https://github.com/serpcompany/serp.ai.git',
+      strategy: 'github-pages-repo-sync'
+    })
   })
 
   it('loads the checked-in pornvideodownloaders.com site config', () => {
@@ -121,9 +165,11 @@ describe('loadCheckedInSite', () => {
     expect(config.copy.brandsLabel).toBe('Brands')
     expect(config.features.showBrands).toBe(true)
     expect(config.networkBrandGroup).toBe('serpxxxGroup')
-    expect(config.social.githubIssueOwner).toBeNull()
-    expect(config.social.githubIssueRepo).toBeNull()
-    expect(config.social.githubIssuesUrl).toBeNull()
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('pornvideodownloaders.com')
+    expect(config.social.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/pornvideodownloaders.com/issues'
+    )
     expect(config.deploy).toEqual({
       branch: 'main',
       preserve: ['.github/workflows/deploy.yml', 'CNAME'],
@@ -163,9 +209,11 @@ describe('loadCheckedInSite', () => {
     expect(config.features.showBrands).toBe(true)
     expect(config.networkBrandGroup).toBe('mainGroup')
     expect(config.analytics?.gtmId).toBe('GTM-W59GNHXF')
-    expect(config.social.githubIssueOwner).toBeNull()
-    expect(config.social.githubIssueRepo).toBeNull()
-    expect(config.social.githubIssuesUrl).toBeNull()
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('serp.software')
+    expect(config.social.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/serp.software/issues'
+    )
     expect(config.deploy).toEqual({
       branch: 'main',
       preserve: ['.github/workflows/deploy.yml', 'CNAME'],
@@ -209,9 +257,9 @@ describe('loadCheckedInSite', () => {
     expect(config.features.showBrands).toBe(true)
     expect(config.features.showGuides).toBe(true)
     expect(config.analytics?.gtmId).toBe('GTM-W59GNHXF')
-    expect(config.social.githubIssueOwner).toBeNull()
-    expect(config.social.githubIssueRepo).toBeNull()
-    expect(config.social.githubIssuesUrl).toBeNull()
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('serp.co')
+    expect(config.social.githubIssuesUrl).toBe('https://github.com/serpcompany/serp.co/issues')
     expect(config.deploy).toEqual({
       branch: 'main',
       preserve: ['.github/workflows/deploy.yml', 'CNAME'],
@@ -237,9 +285,11 @@ describe('loadCheckedInSite', () => {
   it('inherits default values when a site override does not redefine them', () => {
     const config = loadCheckedInSite('serpdownloaders.com')
 
-    expect(config.social.githubIssueOwner).toBeNull()
-    expect(config.social.githubIssueRepo).toBeNull()
-    expect(config.social.githubIssuesUrl).toBeNull()
+    expect(config.social.githubIssueOwner).toBe('serpcompany')
+    expect(config.social.githubIssueRepo).toBe('serpdownloaders.com')
+    expect(config.social.githubIssuesUrl).toBe(
+      'https://github.com/serpcompany/serpdownloaders.com/issues'
+    )
     expect(config.routes.listingBasePath).toBe('products')
     expect(config.routes.docsBasePath).toBe('docs')
     expect(config.routes.networkBasePath).toBe('network')
@@ -557,9 +607,9 @@ describe('resolveResolvedSiteConfig', () => {
       description: 'A collection of tools to help you download anything from anywhere, anytime.',
       domain: 'serpdownloaders.com',
       gtmId: 'GTM-M82HC3SC',
-      githubIssueOwner: null,
-      githubIssueRepo: null,
-      githubIssuesUrl: null,
+      githubIssueOwner: 'serpcompany',
+      githubIssueRepo: 'serpdownloaders.com',
+      githubIssuesUrl: 'https://github.com/serpcompany/serpdownloaders.com/issues',
       id: 'serpdownloaders.com',
       networkBrandGroup: 'mainGroup',
       docsRouteBasePath: 'docs',
@@ -583,9 +633,9 @@ describe('resolveResolvedSiteConfig', () => {
       },
       description: 'Downloaders for adult video platforms and creator sites.',
       domain: 'pornvideodownloaders.com',
-      githubIssueOwner: null,
-      githubIssueRepo: null,
-      githubIssuesUrl: null,
+      githubIssueOwner: 'serpcompany',
+      githubIssueRepo: 'pornvideodownloaders.com',
+      githubIssuesUrl: 'https://github.com/serpcompany/pornvideodownloaders.com/issues',
       id: 'pornvideodownloaders.com',
       networkBrandGroup: 'serpxxxGroup',
       docsRouteBasePath: 'docs',

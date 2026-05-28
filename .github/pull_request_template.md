@@ -2,4 +2,4 @@
 
 Describe the change in one or two sentences.
 
-> **Note:** `data/listings.json` is the active listing-entry source for the current starter. Update that file directly for listing data changes, and keep docs/guides/legal content changes in their existing MDX folders.
+> **Note:** Listing source ownership is site-specific. Update the configured checked-in source for the site, not generated artifacts. For BrowserExtensions.io, accepted listings go in `sites/browserextensions.io/products.json`. Keep docs/guides/legal content changes in their existing MDX folders.

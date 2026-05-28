@@ -103,9 +103,9 @@ export const browserextensionsIoSiteConfig: CheckedInSiteConfigOverride = {
     tagline: 'Discover the best browser extensions'
   },
   social: {
-    githubIssueOwner: null,
-    githubIssueRepo: null,
-    githubIssuesUrl: null,
+    githubIssueOwner: 'serpcompany',
+    githubIssueRepo: 'browserextensions.io',
+    githubIssuesUrl: 'https://github.com/serpcompany/browserextensions.io/issues',
     githubRepoUrl: 'https://github.com/serpcompany',
     githubUrl: 'https://github.com/serpcompany',
     redditUrl: 'https://www.reddit.com/r/BrowserExtensionsIO/',

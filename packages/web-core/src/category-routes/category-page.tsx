@@ -1,83 +1,89 @@
-import type { Metadata } from 'next';
-import type { ComponentType, ReactNode } from 'react';
-import type { Category } from '../categories';
+import type { Metadata } from 'next'
+import type { ComponentType, ReactNode } from 'react'
+import type { Category } from '../categories'
+import { getCategoryDisplayName } from '../category-display'
 import {
-  getFeaturedListingCount,
-  listingMatchesCategory,
   type CategoryLike,
-} from '../category-navigation';
-import { getCategoryDisplayName } from '../category-display';
-import { getCategorySEO } from '../category-seo';
-import { AppSidebar } from '../layout/app-sidebar';
-import { getRoute } from '../routes';
+  getFeaturedListingCount,
+  listingMatchesCategory
+} from '../category-navigation'
+import { getCategorySEO } from '../category-seo'
 import {
-  SITE_LOGO_URL,
-  SITE_NAME,
-  SITE_PUBLIC_URL,
+  type GuideMetadata,
+  toWebsiteBrowseCardMetadata,
+  type WebsiteBrowseCardMetadata,
+  type WebsiteMetadata
+} from '../content-query'
+import { AppSidebar } from '../layout/app-sidebar'
+import { getRoute } from '../routes'
+import { NewsletterSection } from '../sections/newsletter-section'
+import {
   generateDynamicMetadata,
   optimizeMetaDescription,
-} from '../seo-config';
-import { NewsletterSection } from '../sections/newsletter-section';
-import { siteCopy } from '../site-copy';
-import { siteConfig } from '../site-config';
-import type { GuideMetadata, WebsiteMetadata } from '../content-query';
+  SITE_LOGO_URL,
+  SITE_NAME,
+  SITE_PUBLIC_URL
+} from '../seo-config'
+import { siteConfig } from '../site-config'
+import { siteCopy } from '../site-copy'
+import { resolveCollectionPageSchemaDates } from './schema-dates'
 
 type JsonLdProps = {
-  data: Record<string, unknown>;
-};
+  data: Record<string, unknown>
+}
 
 type CategoryWebsitesListProps = {
-  initialWebsites: WebsiteMetadata[];
-};
+  initialWebsites: WebsiteBrowseCardMetadata[]
+}
 
 type FeaturedGuidesSectionProps = {
-  guides: GuideMetadata[];
-};
+  guides: GuideMetadata[]
+}
 
 type CategoryRouteSlots = {
-  CategoryWebsitesList: ComponentType<CategoryWebsitesListProps>;
-  ExternalResourcesSection: ComponentType;
-  FeaturedGuidesSection: ComponentType<FeaturedGuidesSectionProps>;
-  JsonLd: (props: JsonLdProps) => ReactNode | Promise<ReactNode>;
-  breadcrumb: ReactNode;
-};
+  CategoryWebsitesList: ComponentType<CategoryWebsitesListProps>
+  ExternalResourcesSection: ComponentType
+  FeaturedGuidesSection: ComponentType<FeaturedGuidesSectionProps>
+  JsonLd: (props: JsonLdProps) => ReactNode | Promise<ReactNode>
+  breadcrumb: ReactNode
+}
 
 export function generateCategoryRouteStaticParams(categories: Category[]) {
-  return categories.map((category) => ({
-    category: category.slug,
-  }));
+  return categories.map(category => ({
+    category: category.slug
+  }))
 }
 
 export async function generateCategoryRouteMetadata({
   allProjects,
-  category,
+  category
 }: {
-  allProjects: Array<WebsiteMetadata & CategoryLike>;
-  category: Category;
+  allProjects: Array<WebsiteMetadata & CategoryLike>
+  category: Category
 }): Promise<Metadata> {
-  const seoContent = getCategorySEO(category.slug, category);
+  const seoContent = getCategorySEO(category.slug, category)
   const categoryProjectsCount =
     category.slug === 'featured'
-      ? allProjects.filter((project) => project.featured === true).length
-      : allProjects.filter((project) => listingMatchesCategory(project, category.slug)).length;
+      ? allProjects.filter(project => project.featured === true).length
+      : allProjects.filter(project => listingMatchesCategory(project, category.slug)).length
 
   const title =
     categoryProjectsCount > 0
       ? `${categoryProjectsCount}+ ${seoContent.metaTitle}`
-      : seoContent.metaTitle;
+      : seoContent.metaTitle
 
   const description =
     categoryProjectsCount > 0
       ? `${categoryProjectsCount}+ ${siteCopy.listingName.plural}. ${seoContent.metaDescription}`
-      : seoContent.metaDescription;
+      : seoContent.metaDescription
 
   return generateDynamicMetadata({
     type: 'category',
     name: title,
     description: optimizeMetaDescription(description),
     slug: category.slug,
-    additionalKeywords: seoContent.keywords,
-  });
+    additionalKeywords: seoContent.keywords
+  })
 }
 
 export function CategoryRoutePage({
@@ -86,40 +92,42 @@ export function CategoryRoutePage({
   category,
   featuredGuides,
   featuredProjects,
-  slots,
+  slots
 }: {
-  activeCategorySlugs: string[];
-  allProjects: Array<WebsiteMetadata & CategoryLike>;
-  category: Category;
-  featuredGuides: GuideMetadata[];
-  featuredProjects: WebsiteMetadata[];
-  slots: CategoryRouteSlots;
+  activeCategorySlugs: string[]
+  allProjects: Array<WebsiteMetadata & CategoryLike>
+  category: Category
+  featuredGuides: GuideMetadata[]
+  featuredProjects: WebsiteMetadata[]
+  slots: CategoryRouteSlots
 }) {
   const {
     CategoryWebsitesList,
     ExternalResourcesSection,
     FeaturedGuidesSection,
     JsonLd,
-    breadcrumb,
-  } = slots;
+    breadcrumb
+  } = slots
 
-  const seoContent = getCategorySEO(category.slug, category);
-  const categoryDisplayName = getCategoryDisplayName(category.slug);
-  const categoryPath = getRoute('category.page', { category: category.slug });
-  const categoryUrl = `${SITE_PUBLIC_URL}${categoryPath}`;
+  const seoContent = getCategorySEO(category.slug, category)
+  const categoryDisplayName = getCategoryDisplayName(category.slug)
+  const categoryPath = getRoute('category.page', { category: category.slug })
+  const categoryUrl = `${SITE_PUBLIC_URL}${categoryPath}`
 
   const categoryProjects =
     category.slug === 'featured'
       ? allProjects
-          .filter((project) => project.featured === true)
+          .filter(project => project.featured === true)
           .sort((a, b) => a.name.localeCompare(b.name))
       : allProjects
-          .filter((project) => listingMatchesCategory(project, category.slug))
-          .sort((a, b) => a.name.localeCompare(b.name));
+          .filter(project => listingMatchesCategory(project, category.slug))
+          .sort((a, b) => a.name.localeCompare(b.name))
   const listedCategoryProjects =
     category.slug === 'other' && categoryProjects.length > 200
       ? categoryProjects.slice(0, 200)
-      : categoryProjects;
+      : categoryProjects
+  const listedCategoryProjectCards = listedCategoryProjects.map(toWebsiteBrowseCardMetadata)
+  const schemaDates = resolveCollectionPageSchemaDates(categoryProjects)
 
   return {
     categoryProjects,
@@ -144,7 +152,7 @@ export function CategoryRoutePage({
               '@id': SITE_PUBLIC_URL,
               name: SITE_NAME,
               description: siteConfig.description,
-              url: SITE_PUBLIC_URL,
+              url: SITE_PUBLIC_URL
             },
             breadcrumb: {
               '@type': 'BreadcrumbList',
@@ -153,15 +161,15 @@ export function CategoryRoutePage({
                   '@type': 'ListItem',
                   position: 1,
                   name: 'Home',
-                  item: SITE_PUBLIC_URL,
+                  item: SITE_PUBLIC_URL
                 },
                 {
                   '@type': 'ListItem',
                   position: 2,
                   name: categoryDisplayName,
-                  item: categoryUrl,
-                },
-              ],
+                  item: categoryUrl
+                }
+              ]
             },
             numberOfItems: categoryProjects.length,
             itemListElement: categoryProjects.slice(0, 10).map((project, index) => ({
@@ -169,7 +177,7 @@ export function CategoryRoutePage({
               position: index + 1,
               url: project.website,
               name: project.name,
-              description: project.description,
+              description: project.description
             })),
             mainEntity: {
               '@type': 'ItemList',
@@ -181,8 +189,8 @@ export function CategoryRoutePage({
                 '@type': 'Thing',
                 position: index + 1,
                 url: project.website,
-                name: project.name,
-              })),
+                name: project.name
+              }))
             },
             publisher: {
               '@type': 'Organization',
@@ -190,11 +198,10 @@ export function CategoryRoutePage({
               url: SITE_PUBLIC_URL,
               logo: {
                 '@type': 'ImageObject',
-                url: SITE_LOGO_URL,
-              },
+                url: SITE_LOGO_URL
+              }
             },
-            datePublished: new Date().toISOString(),
-            dateModified: new Date().toISOString(),
+            ...schemaDates
           }}
         />
         {seoContent.faqQuestions && seoContent.faqQuestions.length > 0 && (
@@ -202,14 +209,14 @@ export function CategoryRoutePage({
             data={{
               '@context': 'https://schema.org',
               '@type': 'FAQPage',
-              mainEntity: seoContent.faqQuestions.map((faq) => ({
+              mainEntity: seoContent.faqQuestions.map(faq => ({
                 '@type': 'Question',
                 name: faq.question,
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: faq.answer,
-                },
-              })),
+                  text: faq.answer
+                }
+              }))
             }}
           />
         )}
@@ -232,7 +239,7 @@ export function CategoryRoutePage({
                   </div>
                   <p className="text-muted-foreground mt-1">{seoContent.introText}</p>
                 </div>
-                <CategoryWebsitesList initialWebsites={listedCategoryProjects} />
+                <CategoryWebsitesList initialWebsites={listedCategoryProjectCards} />
               </section>
 
               {siteConfig.features.showExternalResources && <ExternalResourcesSection />}
@@ -244,6 +251,6 @@ export function CategoryRoutePage({
           </div>
         </div>
       </>
-    ),
-  };
+    )
+  }
 }

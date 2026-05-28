@@ -2,16 +2,16 @@
 
 import { Badge } from '@thedaviddias/design-system/badge'
 import { ToggleGroup, ToggleGroupItem } from '@thedaviddias/design-system/toggle-group'
-import { useAnalyticsEvents } from './root-shell-client'
-import type { WebsiteMetadata } from './content-query'
+import type { WebsiteBrowseCardMetadata } from './content-query'
 import { EmptyState } from './empty-state'
+import { useAnalyticsEvents } from './root-shell-client'
 import { siteCopy } from './site-copy'
 import { Card } from './ui/card'
 import { FaviconWithFallback } from './ui/favicon-with-fallback'
 import { WebsitesListWithSort as SharedWebsitesListWithSort } from './websites-list-with-sort'
 
 interface WebsitesListWithSortRouteProps {
-  initialWebsites: WebsiteMetadata[]
+  initialWebsites: WebsiteBrowseCardMetadata[]
   emptyTitle?: string
   emptyDescription?: string
 }
@@ -19,7 +19,7 @@ interface WebsitesListWithSortRouteProps {
 export function WebsitesListWithSortRoute({
   initialWebsites,
   emptyTitle = siteCopy.categoryEmptyTitle,
-  emptyDescription = siteCopy.categoryEmptyDescription,
+  emptyDescription = siteCopy.categoryEmptyDescription
 }: WebsitesListWithSortRouteProps) {
   const { trackSortChange } = useAnalyticsEvents()
 
@@ -35,7 +35,7 @@ export function WebsitesListWithSortRoute({
         Card,
         FaviconWithFallback,
         ToggleGroup,
-        ToggleGroupItem,
+        ToggleGroupItem
       }}
     />
   )

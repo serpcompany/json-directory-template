@@ -2022,6 +2022,9 @@ importers:
 
   packages/web-core:
     dependencies:
+      '@hookform/resolvers':
+        specifier: ^5.2.2
+        version: 5.2.2(react-hook-form@7.71.1(react@19.2.4))
       '@icons-pack/react-simple-icons':
         specifier: ^12.9.0
         version: 12.9.0(react@19.2.4)
@@ -2067,6 +2070,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.2.4(react@19.2.4)
+      react-hook-form:
+        specifier: ^7.71.1
+        version: 7.71.1(react@19.2.4)
       remark-gfm:
         specifier: ^4.0.1
         version: 4.0.1

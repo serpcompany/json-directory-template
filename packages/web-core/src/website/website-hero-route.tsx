@@ -1,19 +1,18 @@
 import { Badge } from '@thedaviddias/design-system/badge'
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
-import type { WebsiteMetadata } from '../content-query'
-import { FavoriteButton } from '../ui/favorite-button'
 import { FaviconWithFallback } from '../ui/favicon-with-fallback'
-import { WebsiteHero as SharedWebsiteHero } from './website-hero'
+import { FavoriteButton } from '../ui/favorite-button'
+import {
+  WebsiteHero as SharedWebsiteHero,
+  type WebsiteHeroProps as SharedWebsiteHeroProps
+} from './website-hero'
 
 interface WebsiteHeroRouteProps {
-  website: WebsiteMetadata
-  breadcrumbItems: Array<{ name: string; href: string }>
+  website: SharedWebsiteHeroProps['website']
+  breadcrumbItems: SharedWebsiteHeroProps['breadcrumbItems']
 }
 
-export function WebsiteHeroRoute({
-  website,
-  breadcrumbItems,
-}: WebsiteHeroRouteProps) {
+export function WebsiteHeroRoute({ website, breadcrumbItems }: WebsiteHeroRouteProps) {
   return (
     <SharedWebsiteHero
       website={website}

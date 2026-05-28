@@ -65,9 +65,9 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     tagline: 'For the people who just like to get down...loading'
   },
   social: {
-    githubIssueOwner: null,
-    githubIssueRepo: null,
-    githubIssuesUrl: null,
+    githubIssueOwner: 'serpcompany',
+    githubIssueRepo: 'serpdownloaders.com',
+    githubIssuesUrl: 'https://github.com/serpcompany/serpdownloaders.com/issues',
     githubRepoUrl: 'https://github.com/serpdownloaders',
     githubUrl: 'https://github.com/serpdownloaders',
     redditUrl: 'https://www.reddit.com/r/serpdownloaders/',

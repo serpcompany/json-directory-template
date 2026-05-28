@@ -6,6 +6,12 @@ on:
     paths:
       - 'data/listings.json'
       - 'sites/**'
+      - 'apps/browserextensions.io/**'
+      - 'apps/pornvideodownloaders.com/**'
+      - 'apps/serp.ai/**'
+      - 'apps/serp.co/**'
+      - 'apps/serp.software/**'
+      - 'apps/serpdownloaders.com/**'
       - 'apps/starter/**'
       - 'packages/web-core/**'
       - 'scripts/**'
@@ -15,20 +21,20 @@ on:
       site_id:
         description: 'Checked-in site config id'
         required: true
-        default: 'default'
 
 concurrency:
   group: main-ci-${{ github.ref }}
   cancel-in-progress: false
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
-  validate:
-    name: Validate Data
+  deploy:
+    name: Validate, Build & Deploy
     if: github.event_name == 'workflow_dispatch'
     runs-on: self-hosted
-    outputs:
-      artifact_dir: ${{ steps.resolve.outputs.artifact_dir }}
-      site_id: ${{ steps.resolve.outputs.site_id }}
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/install
@@ -36,62 +42,37 @@ jobs:
       - name: Resolve build input
         id: resolve
         env:
-          SITE_ID: ${{ github.event.inputs.site_id || vars.SITE_ID || 'default' }}
+          GITHUB_TOKEN: ${{ github.token }}
+          SITE_ID: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.site_id || '' }}
+          NEXT_PUBLIC_SITE_ID: ''
         run: ./node_modules/.bin/tsx scripts/resolve-build-run.ts >> "$GITHUB_OUTPUT"
 
       - name: Validate site data
+        if: steps.resolve.outputs.should_deploy == 'true'
         env:
           SITE_ID: ${{ steps.resolve.outputs.site_id }}
         run: pnpm validate:site
 
-  build:
-    name: Build
-    if: github.event_name == 'workflow_dispatch'
-    needs: validate
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/install
-
       - name: Build static site
+        if: steps.resolve.outputs.should_deploy == 'true'
         env:
-          SITE_ID: ${{ needs.validate.outputs.site_id }}
+          SITE_ID: ${{ steps.resolve.outputs.site_id }}
         run: pnpm build:site
 
       - name: Audit XML sitemaps
+        if: steps.resolve.outputs.should_deploy == 'true'
         env:
-          SITE_ID: ${{ needs.validate.outputs.site_id }}
+          SITE_ID: ${{ steps.resolve.outputs.site_id }}
         run: pnpm audit:sitemaps -- --site "$SITE_ID"
 
       - name: Audit forbidden listing links
+        if: steps.resolve.outputs.should_deploy == 'true'
         env:
-          SITE_ID: ${{ needs.validate.outputs.site_id }}
+          SITE_ID: ${{ steps.resolve.outputs.site_id }}
         run: pnpm audit:forbidden-links -- --site "$SITE_ID"
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: ${{ needs.validate.outputs.artifact_dir }}/
-          retention-days: 1
-
-  deploy:
-    name: Deploy to Repo
-    if: github.event_name == 'workflow_dispatch'
-    needs: [validate, build]
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: ./.github/actions/install
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output
-          path: ${{ needs.validate.outputs.artifact_dir }}
-
       - name: Verify deploy auth
+        if: steps.resolve.outputs.should_deploy == 'true'
         env:
           DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
         run: |
@@ -101,9 +82,13 @@ jobs:
           fi
 
       - name: Deploy
+        if: steps.resolve.outputs.should_deploy == 'true'
         env:
+          ALLOW_DEPLOY_TARGET_OVERRIDE: ''
           DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
-          SITE_ID: ${{ needs.validate.outputs.site_id }}
+          DEPLOY_BRANCH: ''
+          DEPLOY_REPO_URL: ''
+          SITE_ID: ${{ steps.resolve.outputs.site_id }}
         run: pnpm deploy:site
 
   deploy-active-sites:
@@ -155,6 +140,9 @@ jobs:
 
       - name: Deploy
         env:
+          ALLOW_DEPLOY_TARGET_OVERRIDE: ''
           DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
+          DEPLOY_BRANCH: ''
+          DEPLOY_REPO_URL: ''
           SITE_ID: ${{ matrix.site_id }}
         run: pnpm deploy:site

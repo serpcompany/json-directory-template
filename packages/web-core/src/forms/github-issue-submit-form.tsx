@@ -1,213 +1,214 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
-import { categories } from '../categories'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { categories, normalizeCategorySlug } from '../categories'
 import { getCategoryDisplayName } from '../category-display'
 import { buildSubmissionIssueUrl } from '../github-issue'
 import { hasConfiguredGitHubIssueTarget, siteConfig } from '../site-config'
 import { siteCopy } from '../site-copy'
-import { SubmitFormGuidelines } from './submit-form-guidelines'
 
-interface ResourceLink {
+interface CategoryOption {
+  isCanonical: boolean
   label: string
-  url: string
+  slug: string
 }
 
-interface FaqEntry {
-  answer: string
-  question: string
+const HTTPS_PREFIX = 'https://'
+const MAX_FAQS = 5
+const MAX_RESOURCE_LINKS = 5
+
+function resolveCategoryOptions(): CategoryOption[] {
+  const optionsBySlug = new Map<string, CategoryOption>()
+
+  for (const category of categories) {
+    const slug = normalizeCategorySlug(category.slug)
+    const option = {
+      isCanonical: category.slug === slug,
+      label: getCategoryDisplayName(slug),
+      slug
+    }
+    const existingOption = optionsBySlug.get(slug)
+
+    if (!existingOption || (!existingOption.isCanonical && option.isCanonical)) {
+      optionsBySlug.set(slug, option)
+    }
+  }
+
+  return Array.from(optionsBySlug.values())
 }
 
-interface SubmissionFormState {
-  category: string
-  content: string
-  description: string
-  faqs: FaqEntry[]
-  logoUrl: string
-  name: string
-  resourceLinks: ResourceLink[]
-  videoUrl: string
-  website: string
+const categoryOptions = resolveCategoryOptions()
+const validCategorySlugs = new Set(categoryOptions.map(option => option.slug))
+
+function hasCompleteHttpUrl(value: string): boolean {
+  try {
+    const url = new URL(value)
+    return (url.protocol === 'http:' || url.protocol === 'https:') && Boolean(url.hostname)
+  } catch {
+    return false
+  }
 }
 
-const INITIAL_FORM_STATE: SubmissionFormState = {
+function isEmptyUrlField(value: string): boolean {
+  const trimmedValue = value.trim()
+  return !trimmedValue || trimmedValue === HTTPS_PREFIX
+}
+
+const requiredUrlSchema = z
+  .string()
+  .trim()
+  .refine(value => !isEmptyUrlField(value), {
+    message: 'Enter a full URL, including the domain.'
+  })
+  .refine(hasCompleteHttpUrl, {
+    message: 'Enter a valid URL that starts with http:// or https://.'
+  })
+
+const resourceLinkSchema = z.object({
+  label: z
+    .string()
+    .trim()
+    .min(1, 'Enter a resource label.')
+    .max(80, 'Keep link labels under 80 characters.'),
+  url: requiredUrlSchema
+})
+
+const faqSchema = z.object({
+  answer: z
+    .string()
+    .trim()
+    .min(1, 'Enter an answer.')
+    .max(1200, 'Keep FAQ answers under 1,200 characters.'),
+  question: z
+    .string()
+    .trim()
+    .min(1, 'Enter a question.')
+    .max(160, 'Keep FAQ questions under 160 characters.')
+})
+
+const submissionFormSchema = z.object({
+  category: z.string().refine(value => validCategorySlugs.has(value), {
+    message: 'Choose a category.'
+  }),
+  content: z
+    .string()
+    .trim()
+    .min(10, 'Full description must be at least 10 characters.')
+    .max(5000, 'Keep the full description under 5,000 characters.'),
+  description: z
+    .string()
+    .trim()
+    .min(10, 'Short description must be at least 10 characters.')
+    .max(300, 'Keep the short description under 300 characters.'),
+  name: z
+    .string()
+    .trim()
+    .min(2, 'Name must be at least 2 characters.')
+    .max(120, 'Keep the name under 120 characters.'),
+  faqs: z.array(faqSchema).min(1).max(MAX_FAQS),
+  logoUrl: requiredUrlSchema,
+  resourceLinks: z.array(resourceLinkSchema).min(1).max(MAX_RESOURCE_LINKS),
+  videoUrl: requiredUrlSchema,
+  website: requiredUrlSchema
+})
+
+type SubmissionFormValues = z.infer<typeof submissionFormSchema>
+
+const INITIAL_FORM_STATE: SubmissionFormValues = {
   category: '',
   content: '',
   description: '',
   faqs: [{ answer: '', question: '' }],
-  logoUrl: '',
+  logoUrl: HTTPS_PREFIX,
   name: '',
-  resourceLinks: [{ label: '', url: '' }],
-  videoUrl: '',
-  website: ''
+  resourceLinks: [{ label: '', url: HTTPS_PREFIX }],
+  videoUrl: HTTPS_PREFIX,
+  website: HTTPS_PREFIX
 }
 
-type GitHubIssueSubmitFormProps = {
-  submitEndpoint: string
+function FieldError({ message }: { message?: string }) {
+  if (!message) {
+    return null
+  }
+
+  return <p className="text-xs text-red-600 dark:text-red-400">{message}</p>
 }
 
-export function GitHubIssueSubmitForm({ submitEndpoint }: GitHubIssueSubmitFormProps) {
-  const router = useRouter()
-  const [formState, setFormState] = useState<SubmissionFormState>(INITIAL_FORM_STATE)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+export function GitHubIssueSubmitForm() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const listingLabel = siteCopy.listingName.singularTitle
   const hasConfiguredIssueTarget = hasConfiguredGitHubIssueTarget(siteConfig)
+  const {
+    control,
+    formState: { errors, isSubmitting, isValid },
+    handleSubmit,
+    register,
+    reset
+  } = useForm<SubmissionFormValues>({
+    defaultValues: INITIAL_FORM_STATE,
+    mode: 'onChange',
+    resolver: zodResolver(submissionFormSchema)
+  })
+  const {
+    append: appendResourceLink,
+    fields: resourceLinkFields,
+    remove: removeResourceLink
+  } = useFieldArray({
+    control,
+    name: 'resourceLinks'
+  })
+  const {
+    append: appendFaq,
+    fields: faqFields,
+    remove: removeFaq
+  } = useFieldArray({
+    control,
+    name: 'faqs'
+  })
 
-  function updateField<Key extends keyof Omit<SubmissionFormState, 'faqs' | 'resourceLinks'>>(
-    key: Key,
-    value: SubmissionFormState[Key]
-  ): void {
-    setFormState(currentState => ({
-      ...currentState,
-      [key]: value
-    }))
-  }
+  const isSubmitDisabled = !hasConfiguredIssueTarget || !isValid || isSubmitting
 
-  function updateResourceLink(index: number, field: keyof ResourceLink, value: string): void {
-    setFormState(currentState => {
-      const updated = currentState.resourceLinks.map((link, currentIndex) =>
-        currentIndex === index ? { ...link, [field]: value } : link
-      )
-
-      return { ...currentState, resourceLinks: updated }
-    })
-  }
-
-  function addResourceLink(): void {
-    setFormState(currentState => ({
-      ...currentState,
-      resourceLinks: [...currentState.resourceLinks, { label: '', url: '' }]
-    }))
-  }
-
-  function removeResourceLink(index: number): void {
-    setFormState(currentState => ({
-      ...currentState,
-      resourceLinks: currentState.resourceLinks.filter(
-        (_link, currentIndex) => currentIndex !== index
-      )
-    }))
-  }
-
-  function updateFaq(index: number, field: keyof FaqEntry, value: string): void {
-    setFormState(currentState => {
-      const updated = currentState.faqs.map((faq, currentIndex) =>
-        currentIndex === index ? { ...faq, [field]: value } : faq
-      )
-
-      return { ...currentState, faqs: updated }
-    })
-  }
-
-  function addFaq(): void {
-    setFormState(currentState => ({
-      ...currentState,
-      faqs: [...currentState.faqs, { answer: '', question: '' }]
-    }))
-  }
-
-  function removeFaq(index: number): void {
-    setFormState(currentState => ({
-      ...currentState,
-      faqs: currentState.faqs.filter((_faq, currentIndex) => currentIndex !== index)
-    }))
-  }
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault()
-    setIsSubmitting(true)
+  function handleValidSubmit(values: SubmissionFormValues): void {
     setSubmitError(null)
 
-    const faqs = formState.faqs
-      .filter(faq => faq.question.trim() && faq.answer.trim())
-      .map(faq => ({
-        answer: faq.answer.trim(),
-        question: faq.question.trim()
-      }))
-    const resourceLinks = formState.resourceLinks
-      .filter(link => link.label.trim() && link.url.trim())
-      .map(link => ({
-        label: link.label.trim(),
-        url: link.url.trim()
-      }))
-
-    try {
-      const response = await fetch(submitEndpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          category: formState.category,
-          content: formState.content,
-          description: formState.description,
-          faqs,
-          logoUrl: formState.logoUrl,
-          name: formState.name,
-          resourceLinks,
-          videoUrl: formState.videoUrl,
-          website: formState.website
-        })
-      })
-
-      if (!response.ok) {
-        const data = (await response.json()) as { error?: unknown }
-        setSubmitError('Submission failed. Please check your input and try again.')
-        console.error('Submit error:', data.error)
-        return
-      }
-
-      const data = (await response.json()) as { token: string }
-      router.push(`/submit/verify?token=${data.token}`)
-    } catch {
-      setSubmitError('An unexpected error occurred. Please try again.')
-    } finally {
-      setIsSubmitting(false)
+    if (!hasConfiguredIssueTarget) {
+      setSubmitError('GitHub issue submission is disabled until this site config is complete.')
+      return
     }
+
+    const githubIssueUrl = buildSubmissionIssueUrl({
+      category: values.category,
+      description: values.description,
+      faqs: values.faqs,
+      logoUrl: values.logoUrl,
+      name: values.name,
+      notes: values.content,
+      resourceLinks: values.resourceLinks,
+      videoUrl: values.videoUrl,
+      website: values.website
+    })
+
+    window.open(githubIssueUrl, '_blank', 'noopener,noreferrer')
   }
 
-  const githubIssueUrl = hasConfiguredIssueTarget
-    ? buildSubmissionIssueUrl({
-        category: formState.category,
-        description: formState.description,
-        logoUrl: formState.logoUrl,
-        name: formState.name,
-        notes: formState.content,
-        videoUrl: formState.videoUrl,
-        website: formState.website
-      })
-    : null
-
-  const hasPartiallyFilledFaq = formState.faqs.some(
-    faq => Boolean(faq.question.trim()) !== Boolean(faq.answer.trim())
-  )
-  const isSubmitDisabled =
-    isSubmitting ||
-    !formState.name.trim() ||
-    !formState.website.trim() ||
-    !formState.category.trim() ||
-    !formState.logoUrl.trim() ||
-    !formState.description.trim() ||
-    !formState.content.trim() ||
-    hasPartiallyFilledFaq
+  function handleReset(): void {
+    reset(INITIAL_FORM_STATE)
+    setSubmitError(null)
+  }
 
   return (
     <div className="space-y-8">
       <div className="space-y-4">
         <h1 className="text-3xl font-bold">{siteCopy.submitLabel}</h1>
-        <p className="text-muted-foreground">
-          Share the basics and we&apos;ll review your submission. No account is required.
-        </p>
-      </div>
-
-      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-100">
-        Fill out the form below. You&apos;ll receive a token to track your submission status.
       </div>
 
       {!hasConfiguredIssueTarget ? (
         <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-100">
-          GitHub fallback submission is disabled until you configure the issue target in{' '}
-          <code>sites/site-config.default.ts</code>.
+          GitHub issue submission is disabled until this site config provides a complete public
+          issue target.
         </div>
       ) : null}
 
@@ -217,32 +218,33 @@ export function GitHubIssueSubmitForm({ submitEndpoint }: GitHubIssueSubmitFormP
         </div>
       ) : null}
 
-      <form className="space-y-6" noValidate onSubmit={handleSubmit}>
+      <form className="space-y-6" noValidate onSubmit={handleSubmit(handleValidSubmit)}>
         <div className="grid gap-6 md:grid-cols-2">
           <label className="space-y-2">
-            <FieldLabel required>Name</FieldLabel>
+            <span className="text-sm font-medium">Name</span>
             <input
               required
               type="text"
-              value={formState.name}
-              onChange={event => updateField('name', event.target.value)}
+              aria-invalid={errors.name ? 'true' : 'false'}
+              {...register('name')}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               placeholder={`Example ${listingLabel}`}
             />
+            <FieldError message={errors.name?.message} />
           </label>
 
           <label className="space-y-2">
-            <FieldLabel required>Category</FieldLabel>
+            <span className="text-sm font-medium">Category</span>
             <select
               required
-              value={formState.category}
-              onChange={event => updateField('category', event.target.value)}
+              aria-invalid={errors.category ? 'true' : 'false'}
+              {...register('category')}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <option value="">Choose a category</option>
-              {categories.map(category => (
+              {categoryOptions.map(category => (
                 <option key={category.slug} value={category.slug}>
-                  {getCategoryDisplayName(category.slug)}
+                  {category.label}
                 </option>
               ))}
             </select>
@@ -250,107 +252,120 @@ export function GitHubIssueSubmitForm({ submitEndpoint }: GitHubIssueSubmitFormP
               Choose the best primary category. Reviewers can add secondary categories later if
               needed.
             </p>
+            <FieldError message={errors.category?.message} />
           </label>
 
           <label className="space-y-2 md:col-span-2">
-            <FieldLabel required>Website URL</FieldLabel>
+            <span className="text-sm font-medium">Website URL</span>
             <input
               required
               type="url"
-              value={formState.website}
-              onChange={event => updateField('website', event.target.value)}
+              aria-invalid={errors.website ? 'true' : 'false'}
+              {...register('website')}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               placeholder="https://example.com"
             />
+            <FieldError message={errors.website?.message} />
           </label>
 
           <label className="space-y-2 md:col-span-2">
-            <FieldLabel required>Logo URL</FieldLabel>
+            <span className="text-sm font-medium">Logo URL</span>
             <input
               required
               type="url"
-              value={formState.logoUrl}
-              onChange={event => updateField('logoUrl', event.target.value)}
+              aria-invalid={errors.logoUrl ? 'true' : 'false'}
+              {...register('logoUrl')}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               placeholder="https://example.com/logo.png"
             />
+            <FieldError message={errors.logoUrl?.message} />
           </label>
 
           <label className="space-y-2 md:col-span-2">
-            <FieldLabel>Video URL</FieldLabel>
+            <span className="text-sm font-medium">Video URL</span>
             <input
+              required
               type="url"
-              value={formState.videoUrl}
-              onChange={event => updateField('videoUrl', event.target.value)}
+              aria-invalid={errors.videoUrl ? 'true' : 'false'}
+              {...register('videoUrl')}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               placeholder="https://www.youtube.com/watch?v=..."
             />
+            <FieldError message={errors.videoUrl?.message} />
           </label>
         </div>
 
         <label className="block space-y-2">
-          <FieldLabel required>Short Description</FieldLabel>
+          <span className="text-sm font-medium">Short Description</span>
           <textarea
             required
-            value={formState.description}
-            onChange={event => updateField('description', event.target.value)}
+            aria-invalid={errors.description ? 'true' : 'false'}
+            {...register('description')}
             className="min-h-24 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             placeholder="One sentence describing what this listing covers."
           />
+          <FieldError message={errors.description?.message} />
         </label>
 
         <label className="block space-y-2">
-          <FieldLabel required>Full Description</FieldLabel>
+          <span className="text-sm font-medium">Full Description</span>
           <textarea
             required
-            value={formState.content}
-            onChange={event => updateField('content', event.target.value)}
+            aria-invalid={errors.content ? 'true' : 'false'}
+            {...register('content')}
             className="min-h-48 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             placeholder="Markdown supported. Describe what makes this listing valuable."
           />
+          <FieldError message={errors.content?.message} />
         </label>
 
         <div className="space-y-3">
-          <FieldLabel>FAQs</FieldLabel>
-          {formState.faqs.map((faq, index) => (
-            <div key={index} className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_2fr_auto]">
-              <label className="space-y-1">
-                <span className="sr-only">FAQ question</span>
-                <input
-                  type="text"
-                  value={faq.question}
-                  onChange={event => updateFaq(index, 'question', event.target.value)}
-                  aria-invalid={Boolean(faq.question.trim()) !== Boolean(faq.answer.trim())}
-                  className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  placeholder="Question"
-                />
-              </label>
-              <label className="space-y-1">
-                <span className="sr-only">FAQ answer</span>
-                <input
-                  type="text"
-                  value={faq.answer}
-                  onChange={event => updateFaq(index, 'answer', event.target.value)}
-                  aria-invalid={Boolean(faq.question.trim()) !== Boolean(faq.answer.trim())}
-                  className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  placeholder="Answer"
-                />
-              </label>
-              <button
-                type="button"
-                disabled={formState.faqs.length === 1}
-                onClick={() => removeFaq(index)}
-                className="inline-flex h-10 items-center justify-center rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/50 disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label="Remove FAQ"
-              >
-                ×
-              </button>
-            </div>
-          ))}
-          {formState.faqs.length < 5 ? (
+          <span className="text-sm font-medium">FAQs</span>
+          {faqFields.map((field, index) => {
+            const faqError = errors.faqs?.[index]
+
+            return (
+              <div key={field.id} className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_2fr_auto]">
+                <label className="space-y-1">
+                  <span className="sr-only">FAQ question</span>
+                  <input
+                    required
+                    type="text"
+                    aria-invalid={faqError?.question ? 'true' : 'false'}
+                    {...register(`faqs.${index}.question` as const)}
+                    className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    placeholder="Question"
+                  />
+                  <FieldError message={faqError?.question?.message} />
+                </label>
+                <label className="space-y-1">
+                  <span className="sr-only">FAQ answer</span>
+                  <input
+                    required
+                    type="text"
+                    aria-invalid={faqError?.answer ? 'true' : 'false'}
+                    {...register(`faqs.${index}.answer` as const)}
+                    className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    placeholder="Answer"
+                  />
+                  <FieldError message={faqError?.answer?.message} />
+                </label>
+                <button
+                  type="button"
+                  onClick={() => removeFaq(index)}
+                  disabled={faqFields.length <= 1}
+                  className="inline-flex h-10 items-center justify-center rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/50"
+                  aria-label="Remove FAQ"
+                >
+                  x
+                </button>
+              </div>
+            )
+          })}
+          {faqFields.length < MAX_FAQS ? (
             <button
               type="button"
-              onClick={addFaq}
+              onClick={() => appendFaq({ answer: '', question: '' })}
               className="text-sm text-primary underline-offset-2 hover:underline"
             >
               Add another FAQ
@@ -359,47 +374,52 @@ export function GitHubIssueSubmitForm({ submitEndpoint }: GitHubIssueSubmitFormP
         </div>
 
         <div className="space-y-3">
-          <FieldLabel>Resource Links</FieldLabel>
-          <p className="text-xs text-muted-foreground">
-            Optional links to docs, demos, or related resources (max 5).
-          </p>
-          {formState.resourceLinks.map((link, index) => (
-            <div key={index} className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_2fr_auto]">
-              <label className="space-y-1">
-                <span className="sr-only">Resource link label</span>
-                <input
-                  type="text"
-                  value={link.label}
-                  onChange={event => updateResourceLink(index, 'label', event.target.value)}
-                  className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  placeholder="Label"
-                />
-              </label>
-              <label className="space-y-1">
-                <span className="sr-only">Resource link URL</span>
-                <input
-                  type="url"
-                  value={link.url}
-                  onChange={event => updateResourceLink(index, 'url', event.target.value)}
-                  className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  placeholder="https://example.com/docs"
-                />
-              </label>
-              <button
-                type="button"
-                disabled={formState.resourceLinks.length === 1}
-                onClick={() => removeResourceLink(index)}
-                className="inline-flex h-10 items-center justify-center rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/50 disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label="Remove link"
-              >
-                ×
-              </button>
-            </div>
-          ))}
-          {formState.resourceLinks.length < 5 ? (
+          <span className="text-sm font-medium">Resource Links</span>
+          {resourceLinkFields.map((field, index) => {
+            const resourceLinkError = errors.resourceLinks?.[index]
+
+            return (
+              <div key={field.id} className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_2fr_auto]">
+                <label className="space-y-1">
+                  <span className="sr-only">Resource link label</span>
+                  <input
+                    required
+                    type="text"
+                    aria-invalid={resourceLinkError?.label ? 'true' : 'false'}
+                    {...register(`resourceLinks.${index}.label` as const)}
+                    className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    placeholder="Label"
+                  />
+                  <FieldError message={resourceLinkError?.label?.message} />
+                </label>
+                <label className="space-y-1">
+                  <span className="sr-only">Resource link URL</span>
+                  <input
+                    required
+                    type="url"
+                    aria-invalid={resourceLinkError?.url ? 'true' : 'false'}
+                    {...register(`resourceLinks.${index}.url` as const)}
+                    className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    placeholder="https://example.com/docs"
+                  />
+                  <FieldError message={resourceLinkError?.url?.message} />
+                </label>
+                <button
+                  type="button"
+                  onClick={() => removeResourceLink(index)}
+                  disabled={resourceLinkFields.length <= 1}
+                  className="inline-flex h-10 items-center justify-center rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/50"
+                  aria-label="Remove link"
+                >
+                  x
+                </button>
+              </div>
+            )
+          })}
+          {resourceLinkFields.length < MAX_RESOURCE_LINKS ? (
             <button
               type="button"
-              onClick={addResourceLink}
+              onClick={() => appendResourceLink({ label: '', url: HTTPS_PREFIX })}
               className="text-sm text-primary underline-offset-2 hover:underline"
             >
               Add another link
@@ -413,44 +433,17 @@ export function GitHubIssueSubmitForm({ submitEndpoint }: GitHubIssueSubmitFormP
             disabled={isSubmitDisabled}
             className="inline-flex items-center justify-center rounded-none bg-foreground px-6 py-3 text-sm font-bold text-background transition-colors hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isSubmitting ? 'Submitting…' : 'Submit Listing'}
+            Submit
           </button>
           <button
             type="button"
-            onClick={() => setFormState(INITIAL_FORM_STATE)}
+            onClick={handleReset}
             className="inline-flex items-center justify-center rounded-none border border-border px-6 py-3 text-sm font-bold transition-colors hover:bg-muted/50"
           >
             Reset
           </button>
-          {githubIssueUrl ? (
-            <a
-              href={githubIssueUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-none border border-border px-6 py-3 text-sm font-bold transition-colors hover:bg-muted/50"
-            >
-              Or submit via GitHub →
-            </a>
-          ) : null}
         </div>
       </form>
-
-      <SubmitFormGuidelines />
     </div>
-  )
-}
-
-function FieldLabel({
-  children,
-  required = false
-}: {
-  children: React.ReactNode
-  required?: boolean
-}) {
-  return (
-    <span className="text-sm font-medium">
-      {children}
-      {required ? <span className="text-red-500"> *</span> : null}
-    </span>
   )
 }

@@ -63,14 +63,4 @@ test.describe('visual regression coverage', () => {
       maxDiffPixelRatio: 0.02
     })
   })
-
-  test('submit verification missing-token state remains visually stable', async ({ page }) => {
-    await prepareVisualPage(page, '/submit/verify')
-    await expect(page.getByRole('heading', { name: /submission not found/i })).toBeVisible()
-
-    await expect(page).toHaveScreenshot('submit-verify-not-found-page.png', {
-      fullPage: true,
-      maxDiffPixelRatio: 0.02
-    })
-  })
 })

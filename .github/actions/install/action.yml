@@ -6,7 +6,7 @@ runs:
   using: "composite"
   steps:
     - name: Install pnpm
-      uses: pnpm/action-setup@v4
+      uses: pnpm/action-setup@v6
       id: pnpm-install
       with:
         version: "10.7.1"
@@ -27,6 +27,7 @@ runs:
         path: |
           ~/.pnpm
           ${{ github.workspace }}/.next/cache
+          ${{ github.workspace }}/apps/*/.next/cache
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
         restore-keys: |
           ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-

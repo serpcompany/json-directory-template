@@ -1,75 +1,94 @@
-import type { Metadata } from 'next';
-import type { ComponentType, ReactNode } from 'react';
-import { getCategoryDisplayName } from '../category-display';
-import type { WebsiteDetailMetadata, WebsiteMetadata } from '../content-query';
-import { resolveListingDetailTemplate } from '../listing-detail-template';
-import { getRoute } from '../routes';
-import { generateWebsiteDetailSchema } from '../schema';
-import { SITE_NAME, generateDynamicMetadata } from '../seo-config';
-import { siteCopy } from '../site-copy';
-import { siteConfig } from '../site-config';
+import type { Metadata } from 'next'
+import type { ComponentType, ReactNode } from 'react'
+import { getCategoryDisplayName } from '../category-display'
+import type {
+  WebsiteDetailMetadata,
+  WebsiteMetadata,
+  WebsiteNavigationMetadata,
+  WebsiteRelatedCardMetadata
+} from '../content-query'
+import { resolveListingDetailTemplate } from '../listing-detail-template'
+import { getRoute } from '../routes'
+import { generateWebsiteDetailSchema } from '../schema'
+import { generateDynamicMetadata } from '../seo-config'
+import { siteConfig } from '../site-config'
+import { siteCopy } from '../site-copy'
 
 type JsonLdProps = {
-  data: Record<string, unknown>;
-};
+  data: Record<string, unknown>
+}
 
-type ProjectNavItem = {
+type LogoOnlyMedia = {
   media?: {
-    logo?: string;
-  };
-  slug: string;
-  name: string;
-  website: string;
-};
+    logo?: string
+  }
+}
+
+type WebsiteHeroWebsite = Pick<
+  WebsiteDetailMetadata,
+  'description' | 'isUnofficial' | 'name' | 'slug' | 'website'
+> &
+  LogoOnlyMedia
+
+type WebsiteContentSectionProps = {
+  website: WebsiteDetailMetadata
+}
 
 type WebsiteHeroProps = {
-  breadcrumbItems: Array<{ href: string; name: string }>;
-  website: WebsiteDetailMetadata;
-};
+  breadcrumbItems: Array<{ href: string; name: string }>
+  website: WebsiteHeroWebsite
+}
 
-type WebsiteComponentProps = {
-  website: WebsiteDetailMetadata;
-};
+type WebsiteDetailSidebarWebsite = Pick<
+  WebsiteDetailMetadata,
+  'category' | 'categories' | 'name' | 'publishedAt' | 'slug' | 'website'
+>
+
+type WebsiteDetailSidebarProps = {
+  website: WebsiteDetailSidebarWebsite
+}
+
+type WebsiteResourcesSectionWebsite = Pick<WebsiteDetailMetadata, 'resourceLinks' | 'slug'>
+
+type WebsiteResourcesSectionProps = {
+  website: WebsiteResourcesSectionWebsite
+}
 
 type WebsiteRelatedProjectsProps = {
-  websites: WebsiteMetadata[];
-};
+  websites: WebsiteRelatedCardMetadata[]
+}
 
 type ProjectNavigationProps = {
-  nextWebsite: ProjectNavItem | null;
-  previousWebsite: ProjectNavItem | null;
-};
+  nextWebsite: WebsiteNavigationMetadata | null
+  previousWebsite: WebsiteNavigationMetadata | null
+}
 
 type ExternalResourcesSectionProps = {
-  layout?: 'default' | 'compact';
-  showImages?: boolean;
-};
+  layout?: 'default' | 'compact'
+  showImages?: boolean
+}
 
 type WebsiteDetailRouteSlots = {
-  ExternalResourcesSection: ComponentType<ExternalResourcesSectionProps>;
-  JsonLd: (props: JsonLdProps) => ReactNode | Promise<ReactNode>;
-  ProjectNavigation: ComponentType<ProjectNavigationProps>;
-  WebsiteContentSection: ComponentType<WebsiteComponentProps>;
-  WebsiteDetailSidebar: ComponentType<WebsiteComponentProps>;
-  WebsiteHero: ComponentType<WebsiteHeroProps>;
-  WebsiteRelatedProjects: ComponentType<WebsiteRelatedProjectsProps>;
-  WebsiteResourcesSection: ComponentType<WebsiteComponentProps>;
-};
+  ExternalResourcesSection: ComponentType<ExternalResourcesSectionProps>
+  JsonLd: (props: JsonLdProps) => ReactNode | Promise<ReactNode>
+  ProjectNavigation: ComponentType<ProjectNavigationProps>
+  WebsiteContentSection: ComponentType<WebsiteContentSectionProps>
+  WebsiteDetailSidebar: ComponentType<WebsiteDetailSidebarProps>
+  WebsiteHero: ComponentType<WebsiteHeroProps>
+  WebsiteRelatedProjects: ComponentType<WebsiteRelatedProjectsProps>
+  WebsiteResourcesSection: ComponentType<WebsiteResourcesSectionProps>
+}
 
 export async function generateWebsiteDetailRouteMetadata(
   project: WebsiteDetailMetadata
 ): Promise<Metadata> {
-  const categoryFormatted = project.category
-    ? getCategoryDisplayName(project.category)
-    : null;
+  const categoryFormatted = project.category ? getCategoryDisplayName(project.category) : null
 
-  const seoDescription = `${project.description} Explore ${
-    project.name
-  } in the ${
+  const seoDescription = `${project.description} Explore ${project.name} in the ${
     siteConfig.name
   } directory, with resource links, category details, and related entries.${
     categoryFormatted ? ` Category: ${categoryFormatted}.` : ''
-  }`;
+  }`
 
   const keywords = [
     project.name,
@@ -79,8 +98,8 @@ export async function generateWebsiteDetailRouteMetadata(
     `${siteCopy.listingName.singular} details`,
     'directory listings',
     'resource links',
-    categoryFormatted,
-  ].filter(Boolean) as string[];
+    categoryFormatted
+  ].filter(Boolean) as string[]
 
   return generateDynamicMetadata({
     type: 'listing',
@@ -88,32 +107,30 @@ export async function generateWebsiteDetailRouteMetadata(
     description: seoDescription.length > 160 ? project.description : seoDescription,
     slug: project.slug,
     additionalKeywords: keywords,
-    publishedAt: project.publishedAt,
-  });
+    publishedAt: project.publishedAt
+  })
 }
 
 export function generateWebsiteDetailRouteStaticParams(
   websites: WebsiteMetadata[]
 ): Array<{ slug: string }> {
   if (!websites || websites.length === 0) {
-    return [];
+    return []
   }
 
   return websites
-    .filter(
-      (website) => website.slug && typeof website.slug === 'string'
-    )
-    .map((website) => ({
-      slug: website.slug,
-    }));
+    .filter(website => website.slug && typeof website.slug === 'string')
+    .map(website => ({
+      slug: website.slug
+    }))
 }
 
 export function WebsiteDetailRoutePage({
   project,
-  slots,
+  slots
 }: {
-  project: WebsiteDetailMetadata;
-  slots: WebsiteDetailRouteSlots;
+  project: WebsiteDetailMetadata
+  slots: WebsiteDetailRouteSlots
 }) {
   const {
     ExternalResourcesSection,
@@ -123,20 +140,45 @@ export function WebsiteDetailRoutePage({
     WebsiteDetailSidebar,
     WebsiteHero,
     WebsiteRelatedProjects,
-    WebsiteResourcesSection,
-  } = slots;
+    WebsiteResourcesSection
+  } = slots
 
   const breadcrumbItems = [
     {
       name: siteCopy.listingName.pluralTitle,
-      href: getRoute('listing.list'),
+      href: getRoute('listing.list')
     },
     {
       name: project.name,
-      href: getRoute('listing.detail', { slug: project.slug }),
-    },
-  ];
-  const detailTemplate = resolveListingDetailTemplate(project.entityType);
+      href: getRoute('listing.detail', { slug: project.slug })
+    }
+  ]
+  const detailTemplate = resolveListingDetailTemplate(project.entityType)
+  const logoMedia = project.media?.logo
+    ? {
+        logo: project.media.logo
+      }
+    : undefined
+  const heroWebsite: WebsiteHeroWebsite = {
+    slug: project.slug,
+    name: project.name,
+    description: project.description,
+    website: project.website,
+    ...(project.isUnofficial !== undefined ? { isUnofficial: project.isUnofficial } : {}),
+    ...(logoMedia ? { media: logoMedia } : {})
+  }
+  const sidebarWebsite: WebsiteDetailSidebarWebsite = {
+    slug: project.slug,
+    name: project.name,
+    website: project.website,
+    category: project.category,
+    publishedAt: project.publishedAt,
+    ...(project.categories?.length ? { categories: project.categories } : {})
+  }
+  const resourcesWebsite: WebsiteResourcesSectionWebsite = {
+    slug: project.slug,
+    ...(project.resourceLinks ? { resourceLinks: project.resourceLinks } : {})
+  }
 
   return (
     <div
@@ -146,7 +188,7 @@ export function WebsiteDetailRoutePage({
     >
       <JsonLd data={generateWebsiteDetailSchema(project)} />
 
-      <WebsiteHero website={project} breadcrumbItems={breadcrumbItems} />
+      <WebsiteHero website={heroWebsite} breadcrumbItems={breadcrumbItems} />
 
       <div className="container mx-auto px-6 py-10 md:py-14">
         <div className="max-w-6xl mx-auto">
@@ -160,11 +202,11 @@ export function WebsiteDetailRoutePage({
                 </section>
               )}
 
-              <WebsiteResourcesSection website={project} />
+              <WebsiteResourcesSection website={resourcesWebsite} />
             </div>
 
             <div className="lg:col-span-4">
-              <WebsiteDetailSidebar website={project} />
+              <WebsiteDetailSidebar website={sidebarWebsite} />
             </div>
           </div>
 
@@ -194,5 +236,5 @@ export function WebsiteDetailRoutePage({
         </div>
       </div>
     </div>
-  );
+  )
 }

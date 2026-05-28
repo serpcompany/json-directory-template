@@ -17,6 +17,7 @@ Before deploying, confirm:
 - you are on Node `24`
 - the source repo has a `GH_PAT` secret for cross-repo deploys
 - the target repo is configured for workflow-based GitHub Pages deploys
+- submit-enabled sites use a public GitHub issue repo with Issues enabled
 - source changes have gone through gitflow: branch, commit, push, review/merge
 - the deploy is running from GitHub Actions or from a clean local source branch synced with its upstream
 
@@ -87,13 +88,24 @@ The repo workflow is `.github/workflows/build-and-deploy.yml`.
 
 The workflow:
 
-1. resolves the active site from `site_id`
+1. resolves the active site from workflow dispatch `site_id`, push changed paths, associated merged PR files, or submission-aware PR metadata
 2. runs `pnpm validate:site`
 3. runs `pnpm build:site`
 4. runs `pnpm audit:sitemaps`
-5. uploads the resolved artifact
-6. downloads the artifact into the deploy job
-7. runs `pnpm deploy:site` against the checked-in site config deploy target
+5. verifies the `GH_PAT` deploy secret
+6. runs `pnpm deploy:site` against the checked-in site config deploy target
+
+If neither the push payload nor the associated merged PR files or metadata
+identify exactly one checked-in site, the workflow skips
+validate/build/audit/deploy. Shared-only maintainer PRs may still deploy when
+they mention exactly one checked-in site domain/public URL or link to exactly one
+configured public issue repo. For ambiguous shared changes, run workflow dispatch
+with the intended `site_id`. Do not add fallback deploy sites through repository
+variables.
+
+The generated artifact stays in the same GitHub Actions job workspace between
+build, audit, and deploy. Normal deploys do not upload/download the large
+artifact between jobs.
 
 ## Redeploy after a normal content or brand change
 
@@ -107,6 +119,36 @@ For a normal static-site update, the redeploy path is the same as the first depl
 6. commit, push, review, and merge the source change
 7. let the workflow deploy or, with explicit approval, run a local real deploy from a clean synced source branch
 8. verify the target repo workflow and live site
+
+## Submit-intake rollout
+
+The public `/submit` GitHub issue intake is active for:
+
+- `browserextensions.io`
+- `pornvideodownloaders.com`
+- `serp.ai`
+- `serp.co`
+- `serp.software`
+- `serpdownloaders.com`
+
+Each active site's public issue repo is `serpcompany/<site-id>`. These repos must stay public and
+must keep Issues enabled because the static submit form opens GitHub's public issue composer.
+
+Roll out submit-intake config changes one site per source PR. Multi-site submit-intake PRs create
+multiple concrete site signals, so the push deploy resolver will require a manual
+`workflow_dispatch` per `site_id`.
+
+For each site PR:
+
+1. configure `social.githubIssueOwner`, `social.githubIssueRepo`, and `social.githubIssuesUrl`
+2. make the site's `/submit` route render `GitHubIssueSubmitForm`
+3. run local verification with `pnpm deploy:site -- --site <site-id> --dry-run`
+4. merge only after PR checks pass
+5. let GitHub Actions deploy from `main`
+6. verify the target Pages repo run, `submit/index.html`, and the live `/submit/` page
+
+Do not run a local real deploy for submit-intake changes from a dirty, unpushed, or unreviewed
+source worktree.
 
 ## Verification checklist
 

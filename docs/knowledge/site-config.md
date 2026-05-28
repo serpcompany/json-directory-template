@@ -223,6 +223,11 @@ Important:
   defaults; `null` is the explicit "disabled for now" value.
 - Configure `social.githubIssueOwner`, `social.githubIssueRepo`, and `social.githubIssuesUrl` as a
   set. Validation rejects mixed states where only some issue target fields are configured.
+- For a public `/submit` flow, the configured issue repo must be public and must have Issues
+  enabled. Private issue repos are not usable from a static public site.
+- The configured issue repo may also be the target GitHub Pages artifact repo, but it is still only
+  a public inbox and artifact host. Accepted listing data remains in the private/source repo's
+  checked-in `content.listingSource`.
 - `site-config` does not own the individual listing names.
 - Shell labels like `Listings`, `Docs`, `Network`, and `Submit` come from `copy.*` in `sites/<id>/site-config.ts`.
 - `copy.listingName.singular` and `copy.listingName.plural` are public-facing copy only. They drive headings, search placeholders, CTA text, and helper copy like `All Listings`. They do not change route paths.

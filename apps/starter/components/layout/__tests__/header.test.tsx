@@ -32,10 +32,6 @@ jest.mock('@thedaviddias/web-core/layout/header-nav-link', () => ({
   )
 }))
 
-jest.mock('@thedaviddias/web-core/stats/github-stars', () => ({
-  GithubStars: () => <div data-testid="github-stars" />
-}))
-
 describe('Header', () => {
   it('renders the site name from site config in the logo', () => {
     render(<Header />)
@@ -50,5 +46,11 @@ describe('Header', () => {
       'href',
       '/submit/'
     )
+  })
+
+  it('does not render the GitHub menu bar action', () => {
+    render(<Header />)
+
+    expect(screen.queryByRole('link', { name: /github/i })).not.toBeInTheDocument()
   })
 })

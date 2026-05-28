@@ -1,14 +1,26 @@
-import { expect, test } from '@playwright/test'
+import { expect, type Page, type Response, test } from '@playwright/test'
 
 const detailListing = {
   slug: '123movies-downloader'
 } as const
 
-async function expectUnavailableRoute(
-  page: Parameters<typeof test>[1] extends never ? never : any,
-  path: string
-) {
-  const response = await page.goto(path, { waitUntil: 'domcontentloaded' })
+async function gotoWithRetry(page: Page, path: string): Promise<Response | null> {
+  let lastError: unknown
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      return await page.goto(path, { waitUntil: 'domcontentloaded' })
+    } catch (error) {
+      lastError = error
+      await page.waitForTimeout(1000)
+    }
+  }
+
+  throw lastError
+}
+
+async function expectUnavailableRoute(page: Page, path: string) {
+  const response = await gotoWithRetry(page, path)
   const status = response?.status()
 
   if (status === 404) {
@@ -48,7 +60,7 @@ test.describe('Main Pages', () => {
     await page.goto('/submit')
 
     await expect(page.getByRole('heading', { level: 1, name: /submit a listing/i })).toBeVisible()
-    await expect(page.getByText(/github fallback submission is disabled/i)).toBeVisible()
+    await expect(page.getByText(/github issue submission is disabled/i)).toBeVisible()
   })
 
   test('disabled optional routes should not be publicly available by default', async ({ page }) => {

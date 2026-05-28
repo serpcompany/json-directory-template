@@ -1,9 +1,11 @@
-import type { WebsiteMetadata } from '../content-query'
 import { CopyButton } from '../ui/copy-button'
-import { WebsiteCliSection as SharedWebsiteCliSection } from './website-cli-section'
+import {
+  WebsiteCliSection as SharedWebsiteCliSection,
+  type WebsiteCliSectionProps as SharedWebsiteCliSectionProps
+} from './website-cli-section'
 
 interface WebsiteCliSectionRouteProps {
-  website: WebsiteMetadata
+  website: SharedWebsiteCliSectionProps['website']
 }
 
 export function WebsiteCliSectionRoute({ website }: WebsiteCliSectionRouteProps) {
