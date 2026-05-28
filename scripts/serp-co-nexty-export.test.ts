@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { describe, expect, it } from 'vitest'
 import { resolveSiteContent } from '@thedaviddias/site-contract'
+import { describe, expect, it } from 'vitest'
 import { loadCheckedInSite } from './site-config.ts'
 
 type CategoryEntry = {
@@ -39,10 +39,10 @@ describe('serp.co checked-in migration output', () => {
     )
     const canonicalDownloaderSlugs = new Set([
       ...Object.keys(canonicalDownloaderProducts),
-      ...Object.keys(downloaderProducts),
+      ...Object.keys(downloaderProducts)
     ])
 
-    expect(Object.keys(actualProducts)).toHaveLength(3206)
+    expect(Object.keys(actualProducts)).toHaveLength(3420)
     expect(Object.keys(actualProducts).length).toBeGreaterThan(canonicalDownloaderSlugs.size)
 
     for (const slug of canonicalDownloaderSlugs) {
@@ -65,7 +65,7 @@ describe('serp.co checked-in migration output', () => {
     expect(actualCategories).toContainEqual({
       description: 'Browse other software, tools, companies, and resources.',
       name: 'Other',
-      slug: 'other',
+      slug: 'other'
     })
   })
 
@@ -78,9 +78,7 @@ describe('serp.co checked-in migration output', () => {
     expect(config.site.description).toBe(
       'SERP helps people discover software, AI tools, companies, resources, and projects from the SERP network.'
     )
-    expect(config.site.tagline).toBe(
-      'Software, AI tools, companies, resources, and SERP projects'
-    )
+    expect(config.site.tagline).toBe('Software, AI tools, companies, resources, and SERP projects')
   })
 
   it('maps migrated social links into site-owned network links', () => {
@@ -104,7 +102,7 @@ describe('serp.co checked-in migration output', () => {
       'apps/serp.co/public/badge/featured-on-serp-co-light-badge.svg',
       'sites/serp.co/assets/favicon.ico',
       'sites/serp.co/assets/logo.png',
-      'sites/serp.co/assets/opengraph-image.png',
+      'sites/serp.co/assets/opengraph-image.png'
     ]
 
     for (const relativePath of requiredPaths) {

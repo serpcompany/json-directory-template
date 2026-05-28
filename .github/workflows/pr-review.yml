@@ -31,6 +31,9 @@ jobs:
       - name: Run Biome Check
         run: pnpm exec biome check --changed --since=origin/main --no-errors-on-unmatched
 
+      - name: Run forbidden listing link guard
+        run: pnpm lint:forbidden-links
+
       - name: Run repository policy tests
         run: pnpm test:repo
 
