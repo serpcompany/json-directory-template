@@ -14,8 +14,16 @@ export function isGenericGithubOrganizationLink(link: ResourceLink): boolean {
   }
 }
 
+export function isForbiddenListingResourceLink(link: ResourceLink): boolean {
+  return /\bhttps?:\/\/help\.serp\.co\/en(?:\/|(?=$)|[?#])/i.test(link.url)
+}
+
 export function getListingSpecificResourceLinks<Link extends ResourceLink>(
   resourceLinks: Link[] | undefined
 ): Link[] {
-  return resourceLinks?.filter((link) => !isGenericGithubOrganizationLink(link)) ?? []
+  return (
+    resourceLinks?.filter(
+      link => !isGenericGithubOrganizationLink(link) && !isForbiddenListingResourceLink(link)
+    ) ?? []
+  )
 }

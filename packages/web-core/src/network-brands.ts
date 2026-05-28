@@ -52,15 +52,17 @@ export function parseNetworkBrandGroup(
 
   const seenUrls = new Map<string, string>()
 
-  return group.map(slug => {
-    const brand = data.brands?.[slug]
+  return group
+    .map(slug => {
+      const brand = data.brands?.[slug]
 
-    if (!brand) {
-      throw new Error(`Network brand group "${groupSlug}" references missing brand "${slug}"`)
-    }
+      if (!brand) {
+        throw new Error(`Network brand group "${groupSlug}" references missing brand "${slug}"`)
+      }
 
-    return toNetworkBrandEntry(slug, brand, seenUrls)
-  })
+      return toNetworkBrandEntry(slug, brand, seenUrls)
+    })
+    .sort(compareNetworkBrands)
 }
 
 function toNetworkBrandEntry(

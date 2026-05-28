@@ -116,7 +116,7 @@ describe('serp.ai artifact links', () => {
 
   it('matches live sitemap counts and category URL shape', () => {
     expect(readSitemapLocs('sitemaps/pages/1.xml')).toHaveLength(13)
-    expect(readSitemapLocs('sitemaps/directory/1.xml')).toHaveLength(75)
+    expect(readSitemapLocs('sitemaps/directory/1.xml')).toHaveLength(289)
     expect(
       readSitemapLocs('sitemaps/categories/1.xml')
         .map(url => new URL(url).pathname)

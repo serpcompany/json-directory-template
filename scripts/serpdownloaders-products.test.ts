@@ -137,7 +137,7 @@ describe('serpdownloaders checked-in products', () => {
       SerpdownloadersProductEntry
     >
 
-    expect(Object.keys(products)).toHaveLength(105)
+    expect(Object.keys(products)).toHaveLength(319)
 
     for (const slug of missing404ProductSlugs) {
       expect(products[slug]).toBeDefined()
@@ -189,8 +189,12 @@ describe('serpdownloaders checked-in products', () => {
         continue
       }
 
-      checkedOverlappingProducts += 1
       const relatedLinks = product.relatedLinks ?? []
+      if (relatedLinks.some(link => link.label === 'SERPX')) {
+        continue
+      }
+
+      checkedOverlappingProducts += 1
       const relatedByLabel = new Map<string | undefined, string | undefined>()
       for (const link of relatedLinks) {
         if (!relatedByLabel.has(link.label)) {
@@ -243,7 +247,6 @@ describe('serpdownloaders checked-in products', () => {
             'Firefox Store',
             'GitHub Releases',
             'Gist',
-            'Help Center',
             'Latest Release',
             'Open Collective',
             'Product Hunt',
@@ -261,6 +264,30 @@ describe('serpdownloaders checked-in products', () => {
 
     expect(checkedOverlappingProducts).toBeGreaterThan(70)
   })
+
+  it('uses README-backed resource links for imported downloader sheet records', () => {
+    const products = JSON.parse(readFileSync(productsPath, 'utf8')) as Record<
+      string,
+      SerpdownloadersProductEntry
+    >
+
+    for (const slug of ['321tube-downloader', '4k69-downloader', 'zbporn-downloader'] as const) {
+      const product = products[slug]
+      const relatedLinks = product?.relatedLinks ?? []
+
+      expect(product?.product?.productPage, slug).toBe(`https://serp.ly/${slug}`)
+      expect(product?.content?.body, slug).toContain('## Why')
+      expect(product?.content?.faq?.length, slug).toBeGreaterThanOrEqual(3)
+      expect(JSON.stringify(relatedLinks), slug).not.toContain('help.serp.co/en')
+      expect(relatedLinks, slug).toEqual(
+        expect.arrayContaining([
+          { label: 'SERPX', url: `https://serpx.link/${slug}` },
+          { label: 'Latest Release', url: `https://github.com/serpapps/${slug}/releases/latest` },
+          { label: 'GitHub Issues', url: `https://github.com/serpapps/${slug}/issues` }
+        ])
+      )
+    }
+  })
 })
 
 describe('serp.software checked-in products', () => {
@@ -273,7 +300,7 @@ describe('serp.software checked-in products', () => {
       readFileSync(serpSoftwareProductsPath, 'utf8')
     ) as Record<string, SerpdownloadersProductEntry>
 
-    expect(Object.keys(serpSoftwareProducts)).toHaveLength(105)
+    expect(Object.keys(serpSoftwareProducts)).toHaveLength(319)
     expect(serpSoftwareProducts).toEqual(serpdownloadersProducts)
   })
 

@@ -13,6 +13,7 @@ on:
       - 'apps/serp.software/**'
       - 'apps/serpdownloaders.com/**'
       - 'apps/starter/**'
+      - 'packages/web-core/**'
       - 'scripts/**'
       - '.github/workflows/build-and-deploy.yml'
   workflow_dispatch:
@@ -62,6 +63,12 @@ jobs:
         env:
           SITE_ID: ${{ steps.resolve.outputs.site_id }}
         run: pnpm audit:sitemaps -- --site "$SITE_ID"
+
+      - name: Audit forbidden listing links
+        if: steps.resolve.outputs.should_deploy == 'true'
+        env:
+          SITE_ID: ${{ steps.resolve.outputs.site_id }}
+        run: pnpm audit:forbidden-links -- --site "$SITE_ID"
 
       - name: Verify deploy auth
         if: steps.resolve.outputs.should_deploy == 'true'

@@ -4,6 +4,7 @@ import yaml from 'js-yaml'
 import { describe, expect, it } from 'vitest'
 
 interface WorkflowStep {
+  id?: string
   uses?: string
   name?: string
   run?: string
@@ -112,14 +113,19 @@ describe('pr-review workflow', () => {
       'apps/starter/lib/**',
       'apps/starter/public/**',
       'apps/e2e/**',
-      'packages/ui/**'
+      'data/listings.json',
+      'packages/web-core/**',
+      'packages/ui/**',
+      'sites/**'
     ])
     expect(isE2eRelevant('apps/e2e/tests/home.spec.ts')).toBe(true)
     expect(isE2eRelevant('apps/starter/app/page.tsx')).toBe(true)
     expect(isE2eRelevant('apps/starter/components/site-header.tsx')).toBe(true)
+    expect(isE2eRelevant('data/listings.json')).toBe(true)
+    expect(isE2eRelevant('packages/web-core/src/root-shell.tsx')).toBe(true)
     expect(isE2eRelevant('packages/ui/button.tsx')).toBe(true)
+    expect(isE2eRelevant('sites/serp.co/products.json')).toBe(true)
     expect(isE2eRelevant('docs/BUILD_PIPELINE.md')).toBe(false)
-    expect(isE2eRelevant('packages/web-core/src/home-page.tsx')).toBe(false)
     expect(isE2eRelevant('.github/workflows/pr-review.yml')).toBe(false)
   })
 })

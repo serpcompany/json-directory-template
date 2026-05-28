@@ -39,7 +39,7 @@ describe('serp.co checked-in products', () => {
       ProductEntry
     >
 
-    expect(Object.keys(serpCoProducts)).toHaveLength(3206)
+    expect(Object.keys(serpCoProducts)).toHaveLength(3420)
 
     for (const [slug, downloaderProduct] of Object.entries(downloaderProducts)) {
       expect(serpCoProducts[slug], `serp.co must include ${slug}`).toBeDefined()

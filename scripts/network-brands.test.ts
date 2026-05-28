@@ -1,3 +1,5 @@
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   getNetworkBrands,
@@ -5,6 +7,9 @@ import {
   parseNetworkBrandGroup,
   parseNetworkBrands
 } from '../packages/web-core/src/network-brands.ts'
+
+const serpBrandsJsonPath = '/Users/devin/dev/repos/serp/docs/websites/pages/brands.json'
+const localBrandsJsonPath = resolve(process.cwd(), 'packages/web-core/src/data/network-brands.json')
 
 describe('parseNetworkBrands', () => {
   it('returns sorted brand entries with hostnames', () => {
@@ -15,6 +20,36 @@ describe('parseNetworkBrands', () => {
           alpha: { name: 'Alpha Brand', url: 'https://alpha.example/' }
         }
       })
+    ).toEqual([
+      {
+        hostname: 'alpha.example',
+        name: 'Alpha Brand',
+        slug: 'alpha',
+        url: 'https://alpha.example/'
+      },
+      {
+        hostname: 'zed.example',
+        name: 'Zed Brand',
+        slug: 'zed',
+        url: 'https://zed.example/path'
+      }
+    ])
+  })
+
+  it('returns sorted brand group entries with hostnames', () => {
+    expect(
+      parseNetworkBrandGroup(
+        {
+          brandGroups: {
+            example: ['zed', 'alpha']
+          },
+          brands: {
+            zed: { name: 'Zed Brand', url: 'https://zed.example/path' },
+            alpha: { name: 'Alpha Brand', url: 'https://alpha.example/' }
+          }
+        },
+        'example'
+      )
     ).toEqual([
       {
         hostname: 'alpha.example',
@@ -78,83 +113,55 @@ describe('parseNetworkBrands', () => {
     )
   })
 
+  it.runIf(existsSync(serpBrandsJsonPath))(
+    'keeps committed network brands data in parity with the serp repo source JSON',
+    () => {
+      const sourceBrands = JSON.parse(readFileSync(serpBrandsJsonPath, 'utf8'))
+      const localBrands = JSON.parse(readFileSync(localBrandsJsonPath, 'utf8'))
+
+      expect(localBrands).toEqual(sourceBrands)
+    }
+  )
+
   it('returns the committed SERPXXX brand group from the shared source data', () => {
     const brands = getNetworkBrandsForGroup('serpxxxGroup')
 
-    expect(brands.map(brand => brand.slug)).toEqual([
-      'serp-xxx',
-      'onlyfansvideodownloader-com',
-      'justforfans-downloader',
-      'pornvideodownloaders-com',
-      'porno-downloaders',
-      'thisvidvideodownloader-com',
-      'xhamstervideodownloader-com',
-      'pornhubvideodownloaderapp-com',
-      'boyfriendtvdownloader-com',
-      'spankbangvideodownloader-com',
-      'epornerdownloader-com',
-      'tnaflixvideodownloader-com',
-      'redgifsdownloaderapp-com',
-      'eromevideodownloader-com'
-    ])
-    expect(brands).toEqual([
-      expect.objectContaining({
-        name: 'SERP XXX',
-        url: 'https://serp.xxx'
-      }),
-      expect.objectContaining({
-        name: 'OnlyFans Video Downloader',
-        url: 'https://onlyfansvideodownloader.com'
-      }),
-      expect.objectContaining({
-        name: 'JustForFans Downloader',
-        url: 'https://justforfansdownloader.com'
-      }),
-      expect.objectContaining({
-        name: 'Porn Video Downloaders',
-        url: 'https://pornvideodownloaders.com'
-      }),
-      expect.objectContaining({
-        name: 'Porno Downloaders',
-        url: 'https://pornodownloaders.com'
-      }),
-      expect.objectContaining({
-        name: 'ThisVid Video Downloader',
-        url: 'https://thisvidvideodownloader.com'
-      }),
-      expect.objectContaining({
-        name: 'xHamster Video Downloader',
-        url: 'https://xhamstervideodownloader.com'
-      }),
-      expect.objectContaining({
-        name: 'Pornhub Video Downloader',
-        url: 'https://pornhubvideodownloaderapp.com'
-      }),
-      expect.objectContaining({
-        name: 'BoyfriendTV Downloader',
-        url: 'https://boyfriendtvdownloader.com'
-      }),
-      expect.objectContaining({
-        name: 'SpankBang Video Downloader',
-        url: 'https://spankbangvideodownloader.com'
-      }),
-      expect.objectContaining({
-        name: 'Eporner Video Downloader',
-        url: 'https://epornerdownloader.com'
-      }),
-      expect.objectContaining({
-        name: 'TNAFlix Video Downloader',
-        url: 'https://tnaflixvideodownloader.com'
-      }),
-      expect.objectContaining({
-        name: 'RedGIFs Downloader',
-        url: 'https://redgifsdownloaderapp.com'
-      }),
-      expect.objectContaining({
-        name: 'Erome Video Downloader',
-        url: 'https://eromevideodownloader.com'
-      })
-    ])
+    expect(brands).toHaveLength(43)
+    expect(brands.map(brand => brand.name)).toEqual(
+      brands.map(brand => brand.name).toSorted((first, second) => first.localeCompare(second))
+    )
+    expect(brands).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'SERP XXX',
+          url: 'https://serp.xxx'
+        }),
+        expect.objectContaining({
+          name: 'OnlyFans Video Downloader',
+          url: 'https://onlyfansvideodownloader.com'
+        }),
+        expect.objectContaining({
+          name: 'JustForFans Downloader',
+          url: 'https://justforfansdownloader.com'
+        }),
+        expect.objectContaining({
+          name: 'Porn Video Downloaders',
+          url: 'https://pornvideodownloaders.com'
+        }),
+        expect.objectContaining({
+          name: 'Porno Downloaders',
+          url: 'https://pornodownloaders.com'
+        }),
+        expect.objectContaining({
+          name: 'xHamster Video Downloader',
+          url: 'https://xhamstervideodownloader.com'
+        }),
+        expect.objectContaining({
+          name: 'Erome Video Downloader',
+          url: 'https://eromevideodownloader.com'
+        })
+      ])
+    )
   })
 
   it('rejects brand groups that reference missing brand entries', () => {

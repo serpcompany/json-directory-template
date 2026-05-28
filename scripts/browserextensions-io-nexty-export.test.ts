@@ -112,7 +112,7 @@ describe.runIf(existsSync(nextyExportRoot))('browserextensions.io nexty export p
 })
 
 describe('browserextensions.io checked-in downloader products', () => {
-  it('keeps the 75-record catalog rich without serpdownloaders media or generic links', () => {
+  it('keeps the 289-record catalog rich without serpdownloaders media or generic links', () => {
     const siteProducts = readJson<
       Record<
         string,
@@ -128,7 +128,7 @@ describe('browserextensions.io checked-in downloader products', () => {
       >
     >(resolve(siteRoot, 'products.json'))
 
-    expect(Object.keys(siteProducts)).toHaveLength(75)
+    expect(Object.keys(siteProducts)).toHaveLength(289)
 
     for (const [key, entry] of Object.entries(siteProducts)) {
       const slug = entry.product?.slug ?? key

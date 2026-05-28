@@ -271,6 +271,11 @@ describe('loadCheckedInSite', () => {
   it('loads serp.software checked-in categories instead of default categories', () => {
     expect(resolveCheckedInSiteCategories('serp.software')).toEqual([
       {
+        description: 'Browse adult downloader listings and resources.',
+        name: 'Adult',
+        slug: 'adult'
+      },
+      {
         name: 'Video Downloaders',
         slug: 'video-downloaders'
       }

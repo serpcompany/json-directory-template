@@ -31,6 +31,9 @@ jobs:
       - name: Run Biome Check
         run: pnpm exec biome check --changed --since=origin/main --no-errors-on-unmatched
 
+      - name: Run forbidden listing link guard
+        run: pnpm lint:forbidden-links
+
       - name: Run repository policy tests
         run: pnpm test:repo
 
@@ -73,7 +76,10 @@ jobs:
               - 'apps/starter/lib/**'
               - 'apps/starter/public/**'
               - 'apps/e2e/**'
+              - 'data/listings.json'
+              - 'packages/web-core/**'
               - 'packages/ui/**'
+              - 'sites/**'
 
   e2e:
     name: E2E Tests
