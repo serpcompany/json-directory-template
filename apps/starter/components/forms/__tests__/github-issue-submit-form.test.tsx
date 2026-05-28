@@ -18,21 +18,21 @@ describe('GitHubIssueSubmitForm', () => {
     expect(screen.getByLabelText(/website url/i)).toHaveValue('https://')
     expect(screen.getByLabelText(/logo url/i)).toHaveValue('https://')
     expect(screen.queryByLabelText(/screenshot url/i)).not.toBeInTheDocument()
-    expect(screen.getByLabelText(/video url/i)).toHaveValue('https://')
+    expect(screen.getByLabelText(/video url/i)).toHaveValue('')
     expect(screen.getByLabelText(/faq question/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/faq answer/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/resource link url/i)).toHaveValue('https://')
+    expect(screen.getByLabelText(/resource link url/i)).toHaveValue('')
     expect(screen.getByLabelText(/^name$/i)).toBeRequired()
     expect(screen.getByLabelText(/category/i)).toBeRequired()
     expect(screen.getByLabelText(/website url/i)).toBeRequired()
     expect(screen.getByLabelText(/logo url/i)).toBeRequired()
-    expect(screen.getByLabelText(/video url/i)).toBeRequired()
+    expect(screen.getByLabelText(/video url/i)).not.toBeRequired()
     expect(screen.getByLabelText(/short description/i)).toBeRequired()
     expect(screen.getByLabelText(/full description/i)).toBeRequired()
-    expect(screen.getByLabelText(/faq question/i)).toBeRequired()
-    expect(screen.getByLabelText(/faq answer/i)).toBeRequired()
-    expect(screen.getByLabelText(/resource link label/i)).toBeRequired()
-    expect(screen.getByLabelText(/resource link url/i)).toBeRequired()
+    expect(screen.getByLabelText(/faq question/i)).not.toBeRequired()
+    expect(screen.getByLabelText(/faq answer/i)).not.toBeRequired()
+    expect(screen.getByLabelText(/resource link label/i)).not.toBeRequired()
+    expect(screen.getByLabelText(/resource link url/i)).not.toBeRequired()
     expect(screen.getByRole('button', { name: /remove faq/i })).toBeDisabled()
     expect(screen.getByRole('button', { name: /remove link/i })).toBeDisabled()
     expect(screen.queryByLabelText(/llms/i)).not.toBeInTheDocument()
@@ -40,6 +40,78 @@ describe('GitHubIssueSubmitForm', () => {
     expect(screen.queryByRole('link', { name: /llmstxt\\.org/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /continue on github/i })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^submit$/i })).toBeDisabled()
+  })
+
+  it('marks required labels with red asterisks and leaves optional groups unmarked', () => {
+    render(<GitHubIssueSubmitForm />)
+
+    const expectRequiredMarker = (label: string) => {
+      const labelNode = screen.getByText(label).closest('label')
+
+      expect(labelNode?.querySelector('.text-red-500')).toHaveTextContent('*')
+    }
+
+    expectRequiredMarker('Name')
+    expectRequiredMarker('Category')
+    expectRequiredMarker('Website URL')
+    expectRequiredMarker('Logo URL')
+    expectRequiredMarker('Short Description')
+    expectRequiredMarker('Full Description')
+
+    expect(
+      screen.getByText('Video URL').closest('label')?.querySelector('.text-red-500')
+    ).toBeNull()
+    expect(screen.getByText('FAQs').querySelector('.text-red-500')).toBeNull()
+    expect(screen.getByText('Resource Links').querySelector('.text-red-500')).toBeNull()
+  })
+
+  it('enables submission when only required fields are filled', async () => {
+    render(<GitHubIssueSubmitForm />)
+
+    const submitButton = screen.getByRole('button', { name: /^submit$/i })
+
+    fireEvent.change(screen.getByLabelText(/^name$/i), {
+      target: { value: 'Example Extension' }
+    })
+    fireEvent.change(screen.getByLabelText(/category/i), {
+      target: { value: normalizeCategorySlug(categories[0].slug) }
+    })
+    fireEvent.change(screen.getByLabelText(/website url/i), {
+      target: { value: 'https://example.com' }
+    })
+    fireEvent.change(screen.getByLabelText(/logo url/i), {
+      target: { value: 'https://example.com/logo.png' }
+    })
+    fireEvent.change(screen.getByLabelText(/short description/i), {
+      target: { value: 'A focused browser extension.' }
+    })
+    fireEvent.change(screen.getByLabelText(/full description/i), {
+      target: { value: 'A longer description of the focused browser extension.' }
+    })
+
+    await waitFor(() => {
+      expect(submitButton).not.toBeDisabled()
+    })
+  })
+
+  it('requires both FAQ question and answer only when either field is filled', async () => {
+    render(<GitHubIssueSubmitForm />)
+
+    const faqQuestion = screen.getByLabelText(/faq question/i)
+
+    fireEvent.change(faqQuestion, { target: { value: 'Does it work in Chrome?' } })
+    fireEvent.blur(faqQuestion)
+
+    await waitFor(() => {
+      expect(screen.getByText(/enter an answer/i)).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^submit$/i })).toBeDisabled()
+    })
+
+    fireEvent.change(screen.getByLabelText(/faq answer/i), { target: { value: 'Yes.' } })
+
+    await waitFor(() => {
+      expect(screen.queryByText(/enter an answer/i)).not.toBeInTheDocument()
+    })
   })
 
   it('dedupes category choices by canonical category slug', () => {

@@ -67,27 +67,72 @@ const requiredUrlSchema = z
     message: 'Enter a valid URL that starts with http:// or https://.'
   })
 
-const resourceLinkSchema = z.object({
-  label: z
-    .string()
-    .trim()
-    .min(1, 'Enter a resource label.')
-    .max(80, 'Keep link labels under 80 characters.'),
-  url: requiredUrlSchema
-})
+const optionalUrlSchema = z
+  .string()
+  .trim()
+  .refine(value => isEmptyUrlField(value) || hasCompleteHttpUrl(value), {
+    message: 'Enter a valid URL that starts with http:// or https://.'
+  })
 
-const faqSchema = z.object({
-  answer: z
-    .string()
-    .trim()
-    .min(1, 'Enter an answer.')
-    .max(1200, 'Keep FAQ answers under 1,200 characters.'),
-  question: z
-    .string()
-    .trim()
-    .min(1, 'Enter a question.')
-    .max(160, 'Keep FAQ questions under 160 characters.')
-})
+const optionalResourceLinkSchema = z
+  .object({
+    label: z.string().trim().max(80, 'Keep link labels under 80 characters.'),
+    url: optionalUrlSchema
+  })
+  .superRefine((link, context) => {
+    const hasLabel = Boolean(link.label.trim())
+    const hasUrl = !isEmptyUrlField(link.url)
+
+    if (!hasLabel && !hasUrl) {
+      return
+    }
+
+    if (!hasLabel) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Enter a resource label.',
+        path: ['label']
+      })
+    }
+
+    if (!hasUrl) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Enter a full URL, including the domain.',
+        path: ['url']
+      })
+    }
+  })
+
+const optionalFaqSchema = z
+  .object({
+    answer: z.string().trim().max(1200, 'Keep FAQ answers under 1,200 characters.'),
+    question: z.string().trim().max(160, 'Keep FAQ questions under 160 characters.')
+  })
+  .superRefine((faq, context) => {
+    const hasAnswer = Boolean(faq.answer.trim())
+    const hasQuestion = Boolean(faq.question.trim())
+
+    if (!hasAnswer && !hasQuestion) {
+      return
+    }
+
+    if (!hasQuestion) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Enter a question.',
+        path: ['question']
+      })
+    }
+
+    if (!hasAnswer) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Enter an answer.',
+        path: ['answer']
+      })
+    }
+  })
 
 const submissionFormSchema = z.object({
   category: z.string().refine(value => validCategorySlugs.has(value), {
@@ -108,10 +153,10 @@ const submissionFormSchema = z.object({
     .trim()
     .min(2, 'Name must be at least 2 characters.')
     .max(120, 'Keep the name under 120 characters.'),
-  faqs: z.array(faqSchema).min(1).max(MAX_FAQS),
+  faqs: z.array(optionalFaqSchema).max(MAX_FAQS),
   logoUrl: requiredUrlSchema,
-  resourceLinks: z.array(resourceLinkSchema).min(1).max(MAX_RESOURCE_LINKS),
-  videoUrl: requiredUrlSchema,
+  resourceLinks: z.array(optionalResourceLinkSchema).max(MAX_RESOURCE_LINKS),
+  videoUrl: optionalUrlSchema,
   website: requiredUrlSchema
 })
 
@@ -124,8 +169,8 @@ const INITIAL_FORM_STATE: SubmissionFormValues = {
   faqs: [{ answer: '', question: '' }],
   logoUrl: HTTPS_PREFIX,
   name: '',
-  resourceLinks: [{ label: '', url: HTTPS_PREFIX }],
-  videoUrl: HTTPS_PREFIX,
+  resourceLinks: [{ label: '', url: '' }],
+  videoUrl: '',
   website: HTTPS_PREFIX
 }
 
@@ -137,6 +182,26 @@ function FieldError({ message }: { message?: string }) {
   return <p className="text-xs text-red-600 dark:text-red-400">{message}</p>
 }
 
+function FieldLabel({
+  children,
+  required = false
+}: {
+  children: React.ReactNode
+  required?: boolean
+}) {
+  return (
+    <span className="text-sm font-medium">
+      {children}
+      {required ? (
+        <span aria-hidden="true" className="text-red-500">
+          {' '}
+          *
+        </span>
+      ) : null}
+    </span>
+  )
+}
+
 export function GitHubIssueSubmitForm() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const listingLabel = siteCopy.listingName.singularTitle
@@ -146,7 +211,8 @@ export function GitHubIssueSubmitForm() {
     formState: { errors, isSubmitting, isValid },
     handleSubmit,
     register,
-    reset
+    reset,
+    watch
   } = useForm<SubmissionFormValues>({
     defaultValues: INITIAL_FORM_STATE,
     mode: 'onChange',
@@ -168,8 +234,17 @@ export function GitHubIssueSubmitForm() {
     control,
     name: 'faqs'
   })
+  const watchedFaqs = watch('faqs')
+  const watchedResourceLinks = watch('resourceLinks')
+  const hasPartiallyFilledFaq = watchedFaqs.some(
+    faq => Boolean(faq.question.trim()) !== Boolean(faq.answer.trim())
+  )
+  const hasPartiallyFilledResourceLink = watchedResourceLinks.some(
+    link => Boolean(link.label.trim()) !== !isEmptyUrlField(link.url)
+  )
 
-  const isSubmitDisabled = !hasConfiguredIssueTarget || !isValid || isSubmitting
+  const isSubmitDisabled =
+    !isValid || isSubmitting || hasPartiallyFilledFaq || hasPartiallyFilledResourceLink
 
   function handleValidSubmit(values: SubmissionFormValues): void {
     setSubmitError(null)
@@ -182,11 +257,13 @@ export function GitHubIssueSubmitForm() {
     const githubIssueUrl = buildSubmissionIssueUrl({
       category: values.category,
       description: values.description,
-      faqs: values.faqs,
+      faqs: values.faqs.filter(faq => faq.question.trim() && faq.answer.trim()),
       logoUrl: values.logoUrl,
       name: values.name,
       notes: values.content,
-      resourceLinks: values.resourceLinks,
+      resourceLinks: values.resourceLinks.filter(
+        resourceLink => resourceLink.label.trim() && !isEmptyUrlField(resourceLink.url)
+      ),
       videoUrl: values.videoUrl,
       website: values.website
     })
@@ -221,10 +298,11 @@ export function GitHubIssueSubmitForm() {
       <form className="space-y-6" noValidate onSubmit={handleSubmit(handleValidSubmit)}>
         <div className="grid gap-6 md:grid-cols-2">
           <label className="space-y-2">
-            <span className="text-sm font-medium">Name</span>
+            <FieldLabel required>Name</FieldLabel>
             <input
               required
               type="text"
+              aria-label="Name"
               aria-invalid={errors.name ? 'true' : 'false'}
               {...register('name')}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -234,9 +312,10 @@ export function GitHubIssueSubmitForm() {
           </label>
 
           <label className="space-y-2">
-            <span className="text-sm font-medium">Category</span>
+            <FieldLabel required>Category</FieldLabel>
             <select
               required
+              aria-label="Category"
               aria-invalid={errors.category ? 'true' : 'false'}
               {...register('category')}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -256,10 +335,11 @@ export function GitHubIssueSubmitForm() {
           </label>
 
           <label className="space-y-2 md:col-span-2">
-            <span className="text-sm font-medium">Website URL</span>
+            <FieldLabel required>Website URL</FieldLabel>
             <input
               required
               type="url"
+              aria-label="Website URL"
               aria-invalid={errors.website ? 'true' : 'false'}
               {...register('website')}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -269,10 +349,11 @@ export function GitHubIssueSubmitForm() {
           </label>
 
           <label className="space-y-2 md:col-span-2">
-            <span className="text-sm font-medium">Logo URL</span>
+            <FieldLabel required>Logo URL</FieldLabel>
             <input
               required
               type="url"
+              aria-label="Logo URL"
               aria-invalid={errors.logoUrl ? 'true' : 'false'}
               {...register('logoUrl')}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -282,10 +363,10 @@ export function GitHubIssueSubmitForm() {
           </label>
 
           <label className="space-y-2 md:col-span-2">
-            <span className="text-sm font-medium">Video URL</span>
+            <FieldLabel>Video URL</FieldLabel>
             <input
-              required
               type="url"
+              aria-label="Video URL"
               aria-invalid={errors.videoUrl ? 'true' : 'false'}
               {...register('videoUrl')}
               className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -296,9 +377,10 @@ export function GitHubIssueSubmitForm() {
         </div>
 
         <label className="block space-y-2">
-          <span className="text-sm font-medium">Short Description</span>
+          <FieldLabel required>Short Description</FieldLabel>
           <textarea
             required
+            aria-label="Short Description"
             aria-invalid={errors.description ? 'true' : 'false'}
             {...register('description')}
             className="min-h-24 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -308,9 +390,10 @@ export function GitHubIssueSubmitForm() {
         </label>
 
         <label className="block space-y-2">
-          <span className="text-sm font-medium">Full Description</span>
+          <FieldLabel required>Full Description</FieldLabel>
           <textarea
             required
+            aria-label="Full Description"
             aria-invalid={errors.content ? 'true' : 'false'}
             {...register('content')}
             className="min-h-48 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -323,32 +406,40 @@ export function GitHubIssueSubmitForm() {
           <span className="text-sm font-medium">FAQs</span>
           {faqFields.map((field, index) => {
             const faqError = errors.faqs?.[index]
+            const watchedFaq = watchedFaqs[index]
+            const questionMissing =
+              Boolean(watchedFaq?.answer.trim()) && !watchedFaq?.question.trim()
+            const answerMissing = Boolean(watchedFaq?.question.trim()) && !watchedFaq?.answer.trim()
 
             return (
               <div key={field.id} className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_2fr_auto]">
                 <label className="space-y-1">
                   <span className="sr-only">FAQ question</span>
                   <input
-                    required
                     type="text"
                     aria-invalid={faqError?.question ? 'true' : 'false'}
                     {...register(`faqs.${index}.question` as const)}
                     className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     placeholder="Question"
                   />
-                  <FieldError message={faqError?.question?.message} />
+                  <FieldError
+                    message={
+                      faqError?.question?.message || (questionMissing ? 'Enter a question.' : '')
+                    }
+                  />
                 </label>
                 <label className="space-y-1">
                   <span className="sr-only">FAQ answer</span>
                   <input
-                    required
                     type="text"
                     aria-invalid={faqError?.answer ? 'true' : 'false'}
                     {...register(`faqs.${index}.answer` as const)}
                     className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     placeholder="Answer"
                   />
-                  <FieldError message={faqError?.answer?.message} />
+                  <FieldError
+                    message={faqError?.answer?.message || (answerMissing ? 'Enter an answer.' : '')}
+                  />
                 </label>
                 <button
                   type="button"
@@ -383,7 +474,6 @@ export function GitHubIssueSubmitForm() {
                 <label className="space-y-1">
                   <span className="sr-only">Resource link label</span>
                   <input
-                    required
                     type="text"
                     aria-invalid={resourceLinkError?.label ? 'true' : 'false'}
                     {...register(`resourceLinks.${index}.label` as const)}
@@ -395,7 +485,6 @@ export function GitHubIssueSubmitForm() {
                 <label className="space-y-1">
                   <span className="sr-only">Resource link URL</span>
                   <input
-                    required
                     type="url"
                     aria-invalid={resourceLinkError?.url ? 'true' : 'false'}
                     {...register(`resourceLinks.${index}.url` as const)}
@@ -419,7 +508,7 @@ export function GitHubIssueSubmitForm() {
           {resourceLinkFields.length < MAX_RESOURCE_LINKS ? (
             <button
               type="button"
-              onClick={() => appendResourceLink({ label: '', url: HTTPS_PREFIX })}
+              onClick={() => appendResourceLink({ label: '', url: '' })}
               className="text-sm text-primary underline-offset-2 hover:underline"
             >
               Add another link
