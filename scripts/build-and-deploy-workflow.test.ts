@@ -7,6 +7,11 @@ interface WorkflowJob {
   environment?: Record<string, string>
   env?: Record<string, string>
   needs?: string | string[]
+  strategy?: {
+    matrix?: {
+      site_id?: string[]
+    }
+  }
   steps?: Array<{
     env?: Record<string, string>
     name?: string
@@ -17,6 +22,14 @@ interface WorkflowJob {
 
 interface WorkflowDefinition {
   jobs: Record<string, WorkflowJob>
+  on: {
+    push?: {
+      paths?: string[]
+    }
+    workflow_dispatch: {
+      inputs: Record<string, { required?: boolean }>
+    }
+  }
 }
 
 function loadWorkflow(): WorkflowDefinition {
@@ -27,6 +40,27 @@ function loadWorkflow(): WorkflowDefinition {
 }
 
 describe('build-and-deploy workflow', () => {
+  it('runs when shared web-core brands sources change', () => {
+    const workflow = loadWorkflow()
+
+    expect(workflow.on.push?.paths).toEqual(expect.arrayContaining(['packages/web-core/**']))
+  })
+
+  it('fans out push deploys to every active checked-in directory site', () => {
+    const workflow = loadWorkflow()
+    const pushJob = workflow.jobs['deploy-active-sites']
+
+    expect(pushJob).toBeDefined()
+    expect(pushJob.strategy?.matrix?.site_id).toEqual([
+      'browserextensions.io',
+      'pornvideodownloaders.com',
+      'serp.ai',
+      'serp.co',
+      'serp.software',
+      'serpdownloaders.com'
+    ])
+  })
+
   it('makes deploy depend on validate outputs as well as build completion', () => {
     const workflow = loadWorkflow()
     const deployJob = workflow.jobs.deploy

@@ -1,217 +1,233 @@
-import {
-  canonicalTrialProductSchema,
-  type CanonicalTrialProduct,
-} from './trial-product-schema';
+import { type CanonicalTrialProduct, canonicalTrialProductSchema } from './trial-product-schema'
 
 type TrialFaqEntryInput = {
-  answer?: string;
-  question?: string;
-};
+  answer?: string
+  question?: string
+}
 
 type TrialLinkInput = {
-  label?: string;
-  url?: string;
-};
+  label?: string
+  url?: string
+}
 
 type CanonicalTrialProductInput = {
-  category?: string;
-  categories?: string[];
+  category?: string
+  categories?: string[]
   content?: {
-    body?: string;
-    description?: string;
-    faq?: TrialFaqEntryInput[];
-    overview?: string;
-    useCases?: string[];
-    whyItExists?: string;
-  };
-  featured?: boolean;
+    body?: string
+    description?: string
+    faq?: TrialFaqEntryInput[]
+    overview?: string
+    useCases?: string[]
+    whyItExists?: string
+  }
+  featured?: boolean
   links?: {
-    productPage?: string;
-    related?: TrialLinkInput[];
-  };
+    productPage?: string
+    related?: TrialLinkInput[]
+  }
   media?: {
-    images?: string[];
-    logo?: string;
-    video?: string;
-  };
+    images?: string[]
+    logo?: string
+    video?: string
+  }
   product?: {
-    categories?: string[];
-    name?: string;
-    primaryCategory?: string;
-    productPage?: string;
-    slug?: string;
-    tagline?: string;
-    title?: string;
-  };
-  relatedLinks?: TrialLinkInput[];
-};
+    categories?: string[]
+    name?: string
+    primaryCategory?: string
+    productPage?: string
+    slug?: string
+    tagline?: string
+    title?: string
+  }
+  relatedLinks?: TrialLinkInput[]
+}
 
 type LegacyTrialProduct = {
   contentMarketing?: {
     productPositioning?: {
-      elevatorPitch?: string;
-      useCases?: string[];
-      valueProposition?: string;
-    };
+      elevatorPitch?: string
+      useCases?: string[]
+      valueProposition?: string
+    }
     storeListingCopy?: {
-      faq?: TrialFaqEntryInput[];
-      shortDescription?: string;
-    };
-  };
+      faq?: TrialFaqEntryInput[]
+      shortDescription?: string
+    }
+  }
   technicalInfo?: {
     coreIdentity?: {
-      extensionName?: string;
-      slug?: string;
-    };
+      extensionName?: string
+      slug?: string
+    }
     storeAndDistribution?: {
-      helpCenter?: string;
-      productPage?: string;
-    };
-  };
-};
+      helpCenter?: string
+      productPage?: string
+    }
+  }
+}
 
-type TrialProduct = CanonicalTrialProductInput | LegacyTrialProduct;
+type TrialProduct = CanonicalTrialProductInput | LegacyTrialProduct
 
-export type TrialProducts = Record<string, TrialProduct>;
+export type TrialProducts = Record<string, TrialProduct>
 
 type CanonicalizeTrialProductsOptions = {
-  defaultCategory?: string;
-};
+  defaultCategory?: string
+}
+
+const FORBIDDEN_HELP_CENTER_LINK_PATTERN = /\bhttps?:\/\/help\.serp\.co\/en(?:\/|(?=$)|[?#])/i
 
 export type NormalizedTrialProduct = {
-  category: string;
-  categories: string[];
+  category: string
+  categories: string[]
   content?: {
-    body?: string;
+    body?: string
     faq?: Array<{
-      answer: string;
-      question: string;
-    }>;
-  };
-  description: string;
-  featured?: boolean;
+      answer: string
+      question: string
+    }>
+  }
+  description: string
+  featured?: boolean
   media?: {
-    images?: string[];
-    logo?: string;
-    video?: string;
-  };
-  name: string;
+    images?: string[]
+    logo?: string
+    video?: string
+  }
+  name: string
   resourceLinks?: Array<{
-    label: string;
-    url: string;
-  }>;
-  slug: string;
-  website: string;
-};
+    label: string
+    url: string
+  }>
+  slug: string
+  website: string
+}
 
 function cleanString(value?: string): string | undefined {
-  const trimmedValue = value?.trim();
-  return trimmedValue ? trimmedValue : undefined;
+  const trimmedValue = value?.trim()
+  return trimmedValue ? trimmedValue : undefined
+}
+
+function hasForbiddenHelpCenterLink(value: string): boolean {
+  return FORBIDDEN_HELP_CENTER_LINK_PATTERN.test(value)
 }
 
 function escapeMdxText(value: string): string {
-  return value.replaceAll('{', '\\{').replaceAll('}', '\\}');
+  return value.replaceAll('{', '\\{').replaceAll('}', '\\}')
 }
 
 function cleanStringArray(values?: string[]): string[] | undefined {
-  const cleanedValues = values?.map((value) => value.trim()).filter(Boolean);
-  return cleanedValues && cleanedValues.length > 0 ? cleanedValues : undefined;
+  const cleanedValues = values?.map(value => value.trim()).filter(Boolean)
+  return cleanedValues && cleanedValues.length > 0 ? cleanedValues : undefined
 }
 
 function cleanCategoryArray(values?: string[]): string[] | undefined {
-  return cleanStringArray(values);
+  return cleanStringArray(values)
 }
 
 function cleanMedia(value?: CanonicalTrialProduct['media']):
   | {
-      images?: string[];
-      logo?: string;
-      video?: string;
+      images?: string[]
+      logo?: string
+      video?: string
     }
   | undefined {
   if (!value) {
-    return undefined;
+    return undefined
   }
 
-  const images = cleanStringArray(value.images);
-  const logo = cleanString(value.logo);
-  const video = cleanString(value.video);
+  const images = cleanStringArray(value.images)
+  const logo = cleanString(value.logo)
+  const video = cleanString(value.video)
 
   if (!images && !logo && !video) {
-    return undefined;
+    return undefined
   }
 
   return {
     images,
     logo,
-    video,
-  };
+    video
+  }
 }
 
 function cleanFaqEntries(entries?: TrialFaqEntryInput[]):
   | Array<{
-      answer: string;
-      question: string;
+      answer: string
+      question: string
     }>
   | undefined {
   const cleanedEntries = entries
-    ?.map((entry) => {
-      const answer = cleanString(entry.answer);
-      const question = cleanString(entry.question);
+    ?.map(entry => {
+      const answer = cleanString(entry.answer)
+      const question = cleanString(entry.question)
 
-      if (!answer || !question) {
-        return undefined;
+      if (!answer || !question || hasForbiddenHelpCenterLink(`${question}\n${answer}`)) {
+        return undefined
       }
 
       return {
         answer,
-        question,
-      };
+        question
+      }
     })
     .filter(
       (
         entry
       ): entry is {
-        answer: string;
-        question: string;
+        answer: string
+        question: string
       } => Boolean(entry)
-    );
+    )
 
-  return cleanedEntries && cleanedEntries.length > 0
-    ? cleanedEntries
-    : undefined;
+  return cleanedEntries && cleanedEntries.length > 0 ? cleanedEntries : undefined
 }
 
 function cleanResourceLinks(links?: TrialLinkInput[]):
   | Array<{
-      label: string;
-      url: string;
+      label: string
+      url: string
     }>
   | undefined {
   const cleanedLinks = links
-    ?.map((link) => {
-      const label = cleanString(link.label);
-      const url = cleanString(link.url);
+    ?.map(link => {
+      const label = cleanString(link.label)
+      const url = cleanString(link.url)
 
-      if (!label || !url) {
-        return undefined;
+      if (!label || !url || hasForbiddenHelpCenterLink(url)) {
+        return undefined
       }
 
       return {
         label,
-        url,
-      };
+        url
+      }
     })
     .filter(
       (
         link
       ): link is {
-        label: string;
-        url: string;
+        label: string
+        url: string
       } => Boolean(link)
-    );
+    )
 
-  return cleanedLinks && cleanedLinks.length > 0 ? cleanedLinks : undefined;
+  return cleanedLinks && cleanedLinks.length > 0 ? cleanedLinks : undefined
+}
+
+function cleanLegacyHelpCenterLink(url?: string): NormalizedTrialProduct['resourceLinks'] {
+  const cleanedUrl = cleanString(url)
+
+  if (!cleanedUrl || hasForbiddenHelpCenterLink(cleanedUrl)) {
+    return undefined
+  }
+
+  return [
+    {
+      label: 'Help Center',
+      url: cleanedUrl
+    }
+  ]
 }
 
 function hasCanonicalTrialProductShape(
@@ -225,57 +241,51 @@ function hasCanonicalTrialProductShape(
       'media' in product ||
       'product' in product ||
       'relatedLinks' in product)
-  );
+  )
 }
 
-function buildLegacyBodySections(
-  legacyProduct: LegacyTrialProduct
-): string | undefined {
-  const overview = cleanString(
-    legacyProduct.contentMarketing?.productPositioning?.elevatorPitch
-  );
-  const useCases = cleanStringArray(
-    legacyProduct.contentMarketing?.productPositioning?.useCases
-  );
+function buildLegacyBodySections(legacyProduct: LegacyTrialProduct): string | undefined {
+  const overview = cleanString(legacyProduct.contentMarketing?.productPositioning?.elevatorPitch)
+  const useCases = cleanStringArray(legacyProduct.contentMarketing?.productPositioning?.useCases)
   const whyItExists = cleanString(
     legacyProduct.contentMarketing?.productPositioning?.valueProposition
-  );
+  )
 
   const sections = [
     overview ? `## Overview\n\n${escapeMdxText(overview)}` : '',
     whyItExists ? `## Why It Exists\n\n${escapeMdxText(whyItExists)}` : '',
     useCases && useCases.length > 0
       ? `## Offline use cases\n\n${useCases
-          .map((useCase) => `- ${escapeMdxText(useCase)}`)
+          .map(useCase => `- ${escapeMdxText(useCase)}`)
           .join('\n')}`
-      : '',
-  ].filter(Boolean);
+      : ''
+  ].filter(Boolean)
 
-  return sections.length > 0 ? sections.join('\n\n') : undefined;
+  return sections.length > 0 ? sections.join('\n\n') : undefined
 }
 
 function buildTransitionBodySections(
   content?: CanonicalTrialProductInput['content']
 ): string | undefined {
   if (!content) {
-    return undefined;
+    return undefined
   }
 
-  const overview = cleanString(content.overview);
-  const useCases = cleanStringArray(content.useCases);
-  const whyItExists = cleanString(content.whyItExists);
+  const overview = cleanString(content.overview)
+  const useCases = cleanStringArray(content.useCases)
+  const whyItExists = cleanString(content.whyItExists)
 
   const sections = [
     overview ? `## Overview\n\n${escapeMdxText(overview)}` : '',
     whyItExists ? `## Why It Exists\n\n${escapeMdxText(whyItExists)}` : '',
     useCases && useCases.length > 0
       ? `## Offline use cases\n\n${useCases
-          .map((useCase) => `- ${escapeMdxText(useCase)}`)
+          .map(useCase => `- ${escapeMdxText(useCase)}`)
           .join('\n')}`
-      : '',
-  ].filter(Boolean);
+      : ''
+  ].filter(Boolean)
 
-  return sections.length > 0 ? sections.join('\n\n') : undefined;
+  return sections.length > 0 ? sections.join('\n\n') : undefined
 }
 
 function normalizeCanonicalTrialProduct(
@@ -284,60 +294,51 @@ function normalizeCanonicalTrialProduct(
   defaultCategory: string
 ): NormalizedTrialProduct {
   const explicitCategories =
-    cleanCategoryArray(product.product?.categories) ||
-    cleanCategoryArray(product.categories);
+    cleanCategoryArray(product.product?.categories) || cleanCategoryArray(product.categories)
   const legacyPrimaryCategory =
-    cleanString(product.product?.primaryCategory) ||
-    cleanString(product.category);
-  const category =
-    explicitCategories?.[0] || legacyPrimaryCategory || defaultCategory;
+    cleanString(product.product?.primaryCategory) || cleanString(product.category)
+  const category = explicitCategories?.[0] || legacyPrimaryCategory || defaultCategory
   const description =
-    cleanString(product.product?.tagline) ||
-    cleanString(product.content?.description);
-  const name =
-    cleanString(product.product?.title) || cleanString(product.product?.name);
-  const slug = cleanString(product.product?.slug) || fallbackSlug;
+    cleanString(product.product?.tagline) || cleanString(product.content?.description)
+  const name = cleanString(product.product?.title) || cleanString(product.product?.name)
+  const slug = cleanString(product.product?.slug) || fallbackSlug
   const website =
-    cleanString(product.product?.productPage) ||
-    cleanString(product.links?.productPage);
+    cleanString(product.product?.productPage) || cleanString(product.links?.productPage)
 
   if (!category) {
-    throw new Error(`Missing category for ${slug}`);
+    throw new Error(`Missing category for ${slug}`)
   }
 
-  const categories = [...new Set([category, ...(explicitCategories || [])])];
+  const categories = [...new Set([category, ...(explicitCategories || [])])]
 
   if (!website) {
-    throw new Error(`Missing product page for ${slug}`);
+    throw new Error(`Missing product page for ${slug}`)
   }
 
   if (!name) {
-    throw new Error(`Missing extension name for ${slug}`);
+    throw new Error(`Missing extension name for ${slug}`)
   }
 
   if (!description) {
-    throw new Error(`Missing description for ${slug}`);
+    throw new Error(`Missing description for ${slug}`)
   }
 
   return {
     category,
     categories,
     content: {
-      body:
-        cleanString(product.content?.body) ||
-        buildTransitionBodySections(product.content),
-      faq: cleanFaqEntries(product.content?.faq),
+      body: cleanString(product.content?.body) || buildTransitionBodySections(product.content),
+      faq: cleanFaqEntries(product.content?.faq)
     },
     description,
     featured: product.featured,
     media: cleanMedia(product.media),
     name,
     resourceLinks:
-      cleanResourceLinks(product.relatedLinks) ||
-      cleanResourceLinks(product.links?.related),
+      cleanResourceLinks(product.relatedLinks) || cleanResourceLinks(product.links?.related),
     slug,
-    website,
-  };
+    website
+  }
 }
 
 function normalizeLegacyTrialProduct(
@@ -345,55 +346,43 @@ function normalizeLegacyTrialProduct(
   fallbackSlug: string,
   defaultCategory: string
 ): NormalizedTrialProduct {
-  const slug =
-    cleanString(product.technicalInfo?.coreIdentity?.slug) || fallbackSlug;
-  const website = cleanString(
-    product.technicalInfo?.storeAndDistribution?.productPage
-  );
+  const slug = cleanString(product.technicalInfo?.coreIdentity?.slug) || fallbackSlug
+  const website = cleanString(product.technicalInfo?.storeAndDistribution?.productPage)
 
   if (!website) {
-    throw new Error(`Missing product page for ${slug}`);
+    throw new Error(`Missing product page for ${slug}`)
   }
 
-  const name = cleanString(product.technicalInfo?.coreIdentity?.extensionName);
+  const name = cleanString(product.technicalInfo?.coreIdentity?.extensionName)
 
   if (!name) {
-    throw new Error(`Missing extension name for ${slug}`);
+    throw new Error(`Missing extension name for ${slug}`)
   }
 
   const description =
     cleanString(product.contentMarketing?.storeListingCopy?.shortDescription) ||
-    cleanString(product.contentMarketing?.productPositioning?.elevatorPitch);
+    cleanString(product.contentMarketing?.productPositioning?.elevatorPitch)
 
   if (!description) {
-    throw new Error(`Missing description for ${slug}`);
+    throw new Error(`Missing description for ${slug}`)
   }
-
-  const helpCenter = cleanString(
-    product.technicalInfo?.storeAndDistribution?.helpCenter
-  );
 
   return {
     category: defaultCategory,
     categories: [defaultCategory],
     content: {
       body: buildLegacyBodySections(product),
-      faq: cleanFaqEntries(product.contentMarketing?.storeListingCopy?.faq),
+      faq: cleanFaqEntries(product.contentMarketing?.storeListingCopy?.faq)
     },
     description,
     media: undefined,
     name,
-    resourceLinks: helpCenter
-      ? [
-          {
-            label: 'Help Center',
-            url: helpCenter,
-          },
-        ]
-      : undefined,
+    resourceLinks: cleanLegacyHelpCenterLink(
+      product.technicalInfo?.storeAndDistribution?.helpCenter
+    ),
     slug,
-    website,
-  };
+    website
+  }
 }
 
 export function normalizeTrialProduct(
@@ -402,14 +391,10 @@ export function normalizeTrialProduct(
   defaultCategory: string
 ): NormalizedTrialProduct {
   if (hasCanonicalTrialProductShape(product)) {
-    return normalizeCanonicalTrialProduct(
-      product,
-      fallbackSlug,
-      defaultCategory
-    );
+    return normalizeCanonicalTrialProduct(product, fallbackSlug, defaultCategory)
   }
 
-  return normalizeLegacyTrialProduct(product, fallbackSlug, defaultCategory);
+  return normalizeLegacyTrialProduct(product, fallbackSlug, defaultCategory)
 }
 
 function buildCanonicalTrialProduct(
@@ -421,37 +406,37 @@ function buildCanonicalTrialProduct(
       productPage: product.website,
       slug: product.slug,
       tagline: product.description,
-      title: product.name,
-    },
-  };
+      title: product.name
+    }
+  }
 
   if (product.content?.body || product.content?.faq?.length) {
     canonicalProduct.content = {
       body: product.content?.body,
-      faq: product.content?.faq,
-    };
+      faq: product.content?.faq
+    }
   }
 
   if (product.featured !== undefined) {
-    canonicalProduct.featured = product.featured;
+    canonicalProduct.featured = product.featured
   }
 
   if (product.media) {
-    canonicalProduct.media = product.media;
+    canonicalProduct.media = product.media
   }
 
   if (product.resourceLinks?.length) {
-    canonicalProduct.relatedLinks = product.resourceLinks;
+    canonicalProduct.relatedLinks = product.resourceLinks
   }
 
   if (product.category !== defaultCategory || product.categories.length > 1) {
     canonicalProduct.product = {
       ...canonicalProduct.product,
-      categories: product.categories,
-    };
+      categories: product.categories
+    }
   }
 
-  return canonicalTrialProductSchema.parse(canonicalProduct);
+  return canonicalTrialProductSchema.parse(canonicalProduct)
 }
 
 export function canonicalizeTrialProducts(
@@ -464,12 +449,9 @@ export function canonicalizeTrialProducts(
         product,
         fallbackSlug,
         options.defaultCategory || ''
-      );
+      )
 
-      return [
-        fallbackSlug,
-        buildCanonicalTrialProduct(normalizedProduct, options.defaultCategory),
-      ];
+      return [fallbackSlug, buildCanonicalTrialProduct(normalizedProduct, options.defaultCategory)]
     })
-  );
+  )
 }

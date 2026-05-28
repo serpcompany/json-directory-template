@@ -1,8 +1,8 @@
 import { ExternalLink } from 'lucide-react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getNetworkBrandsForGroup } from '../network-brands'
 import type { NetworkBrandEntry } from '../network-brands'
+import { getNetworkBrandsForGroup } from '../network-brands'
 import { generateDisabledRouteMetadata } from '../route-feature-gates'
 import { getRoute } from '../routes'
 import { generateBaseMetadata, SITE_PUBLIC_URL } from '../seo-config'
@@ -36,7 +36,7 @@ function BrandsJsonLd({ brands }: { brands: NetworkBrandEntry[] }) {
     isPartOf: {
       '@type': 'WebSite',
       name: siteConfig.name,
-      url: SITE_PUBLIC_URL,
+      url: SITE_PUBLIC_URL
     },
     mainEntity: {
       '@type': 'ItemList',
@@ -47,17 +47,18 @@ function BrandsJsonLd({ brands }: { brands: NetworkBrandEntry[] }) {
         item: {
           '@type': 'Organization',
           name: brand.name,
-          url: brand.url,
-        },
-      })),
-    },
+          url: brand.url
+        }
+      }))
+    }
   }
 
   return (
     <script
       type="application/ld+json"
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD requires unescaped JSON; content is sanitized above by escaping < to \u003c
       dangerouslySetInnerHTML={{
-        __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+        __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c')
       }}
     />
   )
@@ -95,18 +96,16 @@ export default function BrandsPage() {
             >
               <CardContent className="flex h-full flex-col justify-between gap-6 p-6">
                 <div className="space-y-2">
-                  <h2 className="text-lg font-semibold tracking-tight">
-                    <a
-                      className="inline-flex items-center gap-2 text-primary hover:underline"
-                      href={brand.url}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      {brand.name}
-                      <ExternalLink className="size-4" aria-hidden="true" />
-                    </a>
-                  </h2>
-                  <p className="break-words text-sm text-muted-foreground">{brand.hostname}</p>
+                  <h2 className="text-lg font-semibold tracking-tight">{brand.name}</h2>
+                  <a
+                    className="inline-flex items-center gap-2 break-all text-sm text-primary hover:underline"
+                    href={brand.url}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {brand.url}
+                    <ExternalLink className="size-4 shrink-0" aria-hidden="true" />
+                  </a>
                 </div>
               </CardContent>
             </Card>

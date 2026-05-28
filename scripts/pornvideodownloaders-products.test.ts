@@ -72,11 +72,12 @@ const excludedGeneralProductSlugs = [
 ] as const
 
 describe('pornvideodownloaders checked-in products', () => {
-  it('contains only the explicit adult product subset copied from serpdownloaders', () => {
+  it('contains the existing adult subset plus the imported adult downloader sheet rows', () => {
     const products = JSON.parse(readFileSync(productsPath, 'utf8')) as Record<
       string,
       {
         product?: {
+          categories?: string[]
           productPage?: string
           slug?: string
           tagline?: string
@@ -98,16 +99,28 @@ describe('pornvideodownloaders checked-in products', () => {
         }>
       }
     >
+    const importedAdultSlugs = Object.entries(products)
+      .filter(([, product]) => product.product?.categories?.includes('adult'))
+      .map(([slug]) => slug)
 
-    expect(Object.keys(products).sort()).toEqual([...expectedAdultProductSlugs].sort())
+    expect(Object.keys(products)).toHaveLength(266)
+    expect(importedAdultSlugs).toHaveLength(214)
 
-    for (const slug of expectedAdultProductSlugs) {
+    for (const slug of [
+      ...expectedAdultProductSlugs,
+      '321tube-downloader',
+      '4k69-downloader',
+      'zbporn-downloader'
+    ] as const) {
       expect(products[slug]?.product).toMatchObject({
         productPage: expect.stringMatching(/^https:\/\/serp\.ly\/.+/),
         slug,
         tagline: expect.any(String),
         title: expect.any(String)
       })
+      if (importedAdultSlugs.includes(slug)) {
+        expect(products[slug]?.product?.categories, slug).toEqual(['adult', 'video-downloaders'])
+      }
       expect(products[slug]?.content?.body).toContain('## Overview')
       expect(products[slug]?.content?.faq?.length).toBeGreaterThanOrEqual(3)
 

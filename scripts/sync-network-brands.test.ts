@@ -69,6 +69,61 @@ describe('syncNetworkBrands', () => {
     expect(existsSync(targetPath)).toBe(false)
   })
 
+  it('rejects non-https brand URLs and leaves target untouched', () => {
+    const tempDir = makeTempDir()
+    const sourcePath = resolve(tempDir, 'source/network-brands.json')
+    const targetPath = resolve(tempDir, 'target/network-brands.json')
+
+    writeJsonFile(sourcePath, {
+      brands: {
+        alpha: { name: 'Alpha', url: 'http://alpha.example' }
+      }
+    })
+
+    expect(() => syncNetworkBrands({ sourcePath, targetPath })).toThrow(
+      'Brand url must use https: http://alpha.example'
+    )
+    expect(existsSync(targetPath)).toBe(false)
+  })
+
+  it('rejects duplicate normalized brand URLs and leaves target untouched', () => {
+    const tempDir = makeTempDir()
+    const sourcePath = resolve(tempDir, 'source/network-brands.json')
+    const targetPath = resolve(tempDir, 'target/network-brands.json')
+
+    writeJsonFile(sourcePath, {
+      brands: {
+        alpha: { name: 'Alpha', url: 'https://alpha.example' },
+        alphaDuplicate: { name: 'Alpha Duplicate', url: 'https://ALPHA.example/' }
+      }
+    })
+
+    expect(() => syncNetworkBrands({ sourcePath, targetPath })).toThrow(
+      'Duplicate brand url detected for alphaDuplicate and alpha: https://alpha.example'
+    )
+    expect(existsSync(targetPath)).toBe(false)
+  })
+
+  it('rejects brand groups that reference missing brand slugs and leaves target untouched', () => {
+    const tempDir = makeTempDir()
+    const sourcePath = resolve(tempDir, 'source/network-brands.json')
+    const targetPath = resolve(tempDir, 'target/network-brands.json')
+
+    writeJsonFile(sourcePath, {
+      brandGroups: {
+        example: ['alpha', 'missing']
+      },
+      brands: {
+        alpha: { name: 'Alpha', url: 'https://alpha.example' }
+      }
+    })
+
+    expect(() => syncNetworkBrands({ sourcePath, targetPath })).toThrow(
+      'Brand group example references unknown brand slug: missing'
+    )
+    expect(existsSync(targetPath)).toBe(false)
+  })
+
   it('defaults to the SERP docs source and web-core runtime target', () => {
     const paths = getDefaultNetworkBrandsPaths({
       homeDir: '/Users/example',

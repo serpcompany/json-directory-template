@@ -115,7 +115,7 @@ describe.runIf(existsSync(nextyExportRoot))('serp.ai nexty export parity', () =>
 })
 
 describe('serp.ai checked-in downloader products', () => {
-  it('keeps the 75-record catalog on product-specific CTAs with clean source links', () => {
+  it('keeps the 289-record catalog on product-specific CTAs with clean source links', () => {
     const siteProducts = readJson<
       Record<
         string,
@@ -130,7 +130,7 @@ describe('serp.ai checked-in downloader products', () => {
       >
     >(resolve(siteRoot, 'products.json'))
 
-    expect(Object.keys(siteProducts)).toHaveLength(75)
+    expect(Object.keys(siteProducts)).toHaveLength(289)
 
     for (const [key, entry] of Object.entries(siteProducts)) {
       const slug = entry.product?.slug ?? key

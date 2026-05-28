@@ -77,6 +77,16 @@ pre-commit:
       exclude: "apps/**/node_modules/**"
       run: pnpm tsx scripts/check-relative-imports.ts {staged_files}
 
+    # Product and listing page forbidden links
+    forbidden-listing-links:
+      glob: "**/*.{html,js,jsx,json,jsonc,md,mdx,mjs,ts,tsx,txt,xml}"
+      exclude:
+        - "**/.devin/**"
+        - "**/node_modules/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+      run: node scripts/lint-forbidden-links.mjs {staged_files}
+
     # Test modified test files
     test-modified:
       glob: "apps/**/*.{test,spec}.{js,ts,tsx}"

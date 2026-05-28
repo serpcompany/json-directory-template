@@ -7,6 +7,7 @@ on:
       - 'data/listings.json'
       - 'sites/**'
       - 'apps/starter/**'
+      - 'packages/web-core/**'
       - 'scripts/**'
       - '.github/workflows/build-and-deploy.yml'
   workflow_dispatch:
@@ -23,6 +24,7 @@ concurrency:
 jobs:
   validate:
     name: Validate Data
+    if: github.event_name == 'workflow_dispatch'
     runs-on: self-hosted
     outputs:
       artifact_dir: ${{ steps.resolve.outputs.artifact_dir }}
@@ -44,6 +46,7 @@ jobs:
 
   build:
     name: Build
+    if: github.event_name == 'workflow_dispatch'
     needs: validate
     runs-on: self-hosted
     steps:
@@ -60,6 +63,11 @@ jobs:
           SITE_ID: ${{ needs.validate.outputs.site_id }}
         run: pnpm audit:sitemaps -- --site "$SITE_ID"
 
+      - name: Audit forbidden listing links
+        env:
+          SITE_ID: ${{ needs.validate.outputs.site_id }}
+        run: pnpm audit:forbidden-links -- --site "$SITE_ID"
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -69,6 +77,7 @@ jobs:
 
   deploy:
     name: Deploy to Repo
+    if: github.event_name == 'workflow_dispatch'
     needs: [validate, build]
     runs-on: self-hosted
     steps:
@@ -95,4 +104,57 @@ jobs:
         env:
           DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
           SITE_ID: ${{ needs.validate.outputs.site_id }}
+        run: pnpm deploy:site
+
+  deploy-active-sites:
+    name: Deploy Active Site (${{ matrix.site_id }})
+    if: github.event_name == 'push'
+    runs-on: self-hosted
+    strategy:
+      fail-fast: false
+      matrix:
+        site_id:
+          - browserextensions.io
+          - pornvideodownloaders.com
+          - serp.ai
+          - serp.co
+          - serp.software
+          - serpdownloaders.com
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/install
+
+      - name: Validate site data
+        env:
+          SITE_ID: ${{ matrix.site_id }}
+        run: pnpm validate:site
+
+      - name: Build static site
+        env:
+          SITE_ID: ${{ matrix.site_id }}
+        run: pnpm build:site
+
+      - name: Audit XML sitemaps
+        env:
+          SITE_ID: ${{ matrix.site_id }}
+        run: pnpm audit:sitemaps -- --site "$SITE_ID"
+
+      - name: Audit forbidden listing links
+        env:
+          SITE_ID: ${{ matrix.site_id }}
+        run: pnpm audit:forbidden-links -- --site "$SITE_ID"
+
+      - name: Verify deploy auth
+        env:
+          DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          if [ -z "$DEPLOY_TOKEN" ]; then
+            echo "Missing GH_PAT secret required for cross-repo deploy."
+            exit 1
+          fi
+
+      - name: Deploy
+        env:
+          DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
+          SITE_ID: ${{ matrix.site_id }}
         run: pnpm deploy:site
