@@ -88,6 +88,10 @@ type PushSiteResolution = {
   siteId?: string
 }
 
+type ChangedPathSiteResolution = PushSiteResolution & {
+  ambiguousConcreteSitePaths: boolean
+}
+
 type BuildRunResolution = {
   artifactDir?: string
   shouldDeploy: boolean
@@ -127,9 +131,7 @@ export function inferSiteIdFromChangedPaths(paths: string[]): string | undefined
   const concreteSiteIds = [...matchedSiteIds].filter(siteId => siteId !== defaultSiteId).sort()
 
   if (concreteSiteIds.length > 1) {
-    throw new Error(
-      `Push changed multiple concrete site paths (${concreteSiteIds.join(', ')}); manual site_id required via workflow_dispatch for each site.`
-    )
+    return undefined
   }
 
   if (concreteSiteIds.length === 1) {
@@ -139,16 +141,43 @@ export function inferSiteIdFromChangedPaths(paths: string[]): string | undefined
   return matchedSiteIds.has(defaultSiteId) ? defaultSiteId : undefined
 }
 
-export function resolvePushSiteInputFromChangedPaths(paths: string[]): PushSiteResolution {
+function resolveChangedPathSiteInput(paths: string[]): ChangedPathSiteResolution {
+  const concreteSiteIds = new Set<string>()
   const siteId = inferSiteIdFromChangedPaths(paths)
 
   if (siteId) {
-    return { shouldDeploy: true, siteId }
+    return {
+      ambiguousConcreteSitePaths: false,
+      shouldDeploy: true,
+      siteId
+    }
+  }
+
+  for (const path of paths) {
+    const normalizedPath = normalizeChangedPath(path)
+    const matchedPrefix = changedPathSitePrefixes.find(([prefix]) =>
+      normalizedPath.startsWith(prefix)
+    )
+
+    if (matchedPrefix && matchedPrefix[1] !== defaultSiteId) {
+      concreteSiteIds.add(matchedPrefix[1])
+    }
   }
 
   return {
+    ambiguousConcreteSitePaths: concreteSiteIds.size > 1,
     shouldDeploy: false
   }
+}
+
+export function resolvePushSiteInputFromChangedPaths(paths: string[]): PushSiteResolution {
+  const { shouldDeploy, siteId } = resolveChangedPathSiteInput(paths)
+
+  if (shouldDeploy) {
+    return { shouldDeploy, siteId }
+  }
+
+  return { shouldDeploy }
 }
 
 function readPushEvent(env: NodeJS.ProcessEnv): GitHubPushEvent | undefined {
@@ -700,23 +729,38 @@ export async function resolvePushSiteInput(
   env: NodeJS.ProcessEnv,
   fetchImpl: typeof fetch = fetch
 ): Promise<PushSiteResolution> {
-  const pushChangedPathResolution = resolvePushSiteInputFromChangedPaths(
-    readPushEventChangedPaths(event)
-  )
+  const pushChangedPathResolution = resolveChangedPathSiteInput(readPushEventChangedPaths(event))
 
   if (pushChangedPathResolution.shouldDeploy) {
-    return pushChangedPathResolution
+    return {
+      shouldDeploy: true,
+      siteId: pushChangedPathResolution.siteId
+    }
+  }
+
+  if (pushChangedPathResolution.ambiguousConcreteSitePaths) {
+    return {
+      shouldDeploy: false
+    }
   }
 
   const associatedPullRequests = await readAssociatedMergedPullRequests(event, env, fetchImpl)
   const pullRequestChangedPaths = associatedPullRequests.flatMap(
     pullRequest => pullRequest.changedPaths
   )
-  const pullRequestChangedPathResolution =
-    resolvePushSiteInputFromChangedPaths(pullRequestChangedPaths)
+  const pullRequestChangedPathResolution = resolveChangedPathSiteInput(pullRequestChangedPaths)
 
   if (pullRequestChangedPathResolution.shouldDeploy) {
-    return pullRequestChangedPathResolution
+    return {
+      shouldDeploy: true,
+      siteId: pullRequestChangedPathResolution.siteId
+    }
+  }
+
+  if (pullRequestChangedPathResolution.ambiguousConcreteSitePaths) {
+    return {
+      shouldDeploy: false
+    }
   }
 
   return resolvePushSiteInputFromAssociatedPullRequestMetadata(
