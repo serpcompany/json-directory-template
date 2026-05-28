@@ -33,7 +33,6 @@ permissions:
 jobs:
   deploy:
     name: Validate, Build & Deploy
-    if: github.event_name == 'workflow_dispatch'
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v6
@@ -89,60 +88,4 @@ jobs:
           DEPLOY_BRANCH: ''
           DEPLOY_REPO_URL: ''
           SITE_ID: ${{ steps.resolve.outputs.site_id }}
-        run: pnpm deploy:site
-
-  deploy-active-sites:
-    name: Deploy Active Site (${{ matrix.site_id }})
-    if: github.event_name == 'push'
-    runs-on: self-hosted
-    strategy:
-      fail-fast: false
-      matrix:
-        site_id:
-          - browserextensions.io
-          - pornvideodownloaders.com
-          - serp.ai
-          - serp.co
-          - serp.software
-          - serpdownloaders.com
-    steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/install
-
-      - name: Validate site data
-        env:
-          SITE_ID: ${{ matrix.site_id }}
-        run: pnpm validate:site
-
-      - name: Build static site
-        env:
-          SITE_ID: ${{ matrix.site_id }}
-        run: pnpm build:site
-
-      - name: Audit XML sitemaps
-        env:
-          SITE_ID: ${{ matrix.site_id }}
-        run: pnpm audit:sitemaps -- --site "$SITE_ID"
-
-      - name: Audit forbidden listing links
-        env:
-          SITE_ID: ${{ matrix.site_id }}
-        run: pnpm audit:forbidden-links -- --site "$SITE_ID"
-
-      - name: Verify deploy auth
-        env:
-          DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
-        run: |
-          if [ -z "$DEPLOY_TOKEN" ]; then
-            echo "Missing GH_PAT secret required for cross-repo deploy."
-            exit 1
-          fi
-
-      - name: Deploy
-        env:
-          ALLOW_DEPLOY_TARGET_OVERRIDE: ''
-          DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
-          DEPLOY_BRANCH: ''
-          DEPLOY_REPO_URL: ''
-          SITE_ID: ${{ matrix.site_id }}
         run: pnpm deploy:site

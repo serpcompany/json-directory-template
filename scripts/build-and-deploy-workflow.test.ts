@@ -8,11 +8,6 @@ interface WorkflowJob {
   env?: Record<string, string>
   if?: string
   needs?: string | string[]
-  strategy?: {
-    matrix?: {
-      site_id?: string[]
-    }
-  }
   steps?: Array<{
     env?: Record<string, string>
     if?: string
@@ -50,31 +45,15 @@ describe('build-and-deploy workflow', () => {
     expect(workflow.on.push?.paths).toEqual(expect.arrayContaining(['packages/web-core/**']))
   })
 
-  it('fans out push deploys to every active checked-in directory site', () => {
-    const workflow = loadWorkflow()
-    const pushJob = workflow.jobs['deploy-active-sites']
-
-    expect(pushJob).toBeDefined()
-    expect(pushJob.if).toBe(`github.event_name == 'push'`)
-    expect(pushJob.strategy?.matrix?.site_id).toEqual([
-      'browserextensions.io',
-      'pornvideodownloaders.com',
-      'serp.ai',
-      'serp.co',
-      'serp.software',
-      'serpdownloaders.com'
-    ])
-  })
-
-  it('runs workflow dispatch validate, build, audit, and deploy in one job', () => {
+  it('runs push and workflow dispatch validate, build, audit, and deploy through one resolver job', () => {
     const workflow = loadWorkflow()
     const jobNames = Object.keys(workflow.jobs)
     const deployJob = workflow.jobs.deploy
     const namedSteps = deployJob.steps?.filter(step => step.name).map(step => step.name)
 
-    expect(jobNames).toEqual(['deploy', 'deploy-active-sites'])
+    expect(jobNames).toEqual(['deploy'])
     expect(deployJob).toBeDefined()
-    expect(deployJob.if).toBe(`github.event_name == 'workflow_dispatch'`)
+    expect(deployJob.if).toBeUndefined()
     expect(deployJob.needs).toBeUndefined()
     expect(namedSteps).toEqual([
       'Resolve build input',
@@ -178,15 +157,16 @@ describe('build-and-deploy workflow', () => {
     expect(deployStep?.env?.DEPLOY_BRANCH).toBe('')
   })
 
-  it('clears inherited deploy target overrides in active-site push deploys', () => {
+  it('does not bypass the resolver with active-site push deploys', () => {
     const workflow = loadWorkflow()
-    const pushDeployJob = workflow.jobs['deploy-active-sites']
-    const deployStep = pushDeployJob.steps?.find(step => step.name === 'Deploy')
+    const workflowRaw = readFileSync(
+      resolve(process.cwd(), '.github/workflows/build-and-deploy.yml'),
+      'utf8'
+    )
 
-    expect(deployStep).toBeDefined()
-    expect(deployStep?.env?.ALLOW_DEPLOY_TARGET_OVERRIDE).toBe('')
-    expect(deployStep?.env?.DEPLOY_REPO_URL).toBe('')
-    expect(deployStep?.env?.DEPLOY_BRANCH).toBe('')
+    expect(workflow.jobs['deploy-active-sites']).toBeUndefined()
+    expect(workflowRaw).not.toContain('matrix:')
+    expect(workflowRaw).not.toContain('pnpm deploy:site -- --site')
   })
 
   it('does not use repo variables as a push fallback site id', () => {

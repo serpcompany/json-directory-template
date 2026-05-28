@@ -1,13 +1,6 @@
 import { expect, type Page, type Response, test } from '@playwright/test'
 
-const detailListing = {
-  name: '123Movies Video Downloader',
-  slug: '123movies-downloader'
-} as const
-
-const searchListing = {
-  query: '123movies'
-} as const
+import { detailListing } from './listing-fixture'
 
 async function gotoWithRetry(page: Page, path: string): Promise<Response | null> {
   let lastError: unknown
@@ -74,9 +67,9 @@ test.describe('Static starter smoke tests', () => {
 
     await expect(directoryRegion).toBeVisible({ timeout: 60000 })
     await expect(searchInput).toBeVisible({ timeout: 60000 })
-    await searchInput.fill(searchListing.query)
+    await searchInput.fill(detailListing.searchQuery)
 
-    await expect(searchInput).toHaveValue(searchListing.query)
+    await expect(searchInput).toHaveValue(detailListing.searchQuery)
     await expect(directoryRegion.getByRole('link').first()).toBeVisible()
   })
 

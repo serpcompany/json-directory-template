@@ -76,7 +76,10 @@ jobs:
               - 'apps/starter/lib/**'
               - 'apps/starter/public/**'
               - 'apps/e2e/**'
+              - 'data/listings.json'
+              - 'packages/web-core/**'
               - 'packages/ui/**'
+              - 'sites/**'
 
   e2e:
     name: E2E Tests

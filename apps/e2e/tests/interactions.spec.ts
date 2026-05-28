@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 
+import { detailListing } from './listing-fixture'
+
 test.describe('User Interactions', () => {
   test('search functionality should work from the homepage', async ({ page }, testInfo) => {
     await page.goto('/')
@@ -28,7 +30,7 @@ test.describe('User Interactions', () => {
   })
 
   test('listing detail pages should allow local favorite toggles', async ({ page }) => {
-    await page.goto('/listing/123movies-downloader')
+    await page.goto(`/listing/${detailListing.slug}`)
 
     const favoriteButton = page.getByRole('button', { name: /add to favorites/i }).first()
     if (await favoriteButton.isVisible()) {

@@ -1,8 +1,6 @@
 import { expect, type Page, type Response, test } from '@playwright/test'
 
-const detailListing = {
-  slug: '123movies-downloader'
-} as const
+import { detailListing } from './listing-fixture'
 
 async function gotoWithRetry(page: Page, path: string): Promise<Response | null> {
   let lastError: unknown
