@@ -97,12 +97,13 @@ describe('resolveBuildRun', () => {
     ).toBe('browserextensions.io')
   })
 
-  it('requires manual workflow dispatch when push paths touch multiple concrete sites', () => {
-    expect(() =>
-      inferSiteIdFromChangedPaths(['apps/serp.co/app/layout.tsx', 'apps/serp.ai/app/layout.tsx'])
-    ).toThrow(
-      'Push changed multiple concrete site paths (serp.ai, serp.co); manual site_id required via workflow_dispatch for each site.'
-    )
+  it('does not infer a deploy target when changed paths touch multiple concrete sites', () => {
+    const paths = ['apps/serp.co/app/layout.tsx', 'apps/serp.ai/app/layout.tsx']
+
+    expect(inferSiteIdFromChangedPaths(paths)).toBeUndefined()
+    expect(resolvePushSiteInputFromChangedPaths(paths)).toEqual({
+      shouldDeploy: false
+    })
   })
 
   it('does not deploy when changed paths are not site-specific', () => {
@@ -240,6 +241,82 @@ describe('resolveBuildRun', () => {
             {
               id: 'abc123',
               modified: ['scripts/resolve-build-run.ts']
+            }
+          ],
+          repository: {
+            full_name: 'owner/repo'
+          }
+        },
+        {
+          GITHUB_API_URL: 'https://api.github.test',
+          GITHUB_EVENT_NAME: 'push',
+          GITHUB_TOKEN: 'token'
+        },
+        fetch
+      )
+    ).resolves.toEqual({
+      shouldDeploy: false
+    })
+  })
+
+  it('returns no-deploy when the push payload touches multiple concrete sites', async () => {
+    const fetch = vi.fn() as unknown as typeof globalThis.fetch
+
+    await expect(
+      resolvePushSiteInput(
+        {
+          after: 'abc123',
+          commits: [
+            {
+              id: 'abc123',
+              modified: ['sites/serp.co/products.json', 'sites/serp.ai/products.json']
+            }
+          ],
+          repository: {
+            full_name: 'owner/repo'
+          }
+        },
+        {
+          GITHUB_API_URL: 'https://api.github.test',
+          GITHUB_EVENT_NAME: 'push',
+          GITHUB_TOKEN: 'token'
+        },
+        fetch
+      )
+    ).resolves.toEqual({
+      shouldDeploy: false
+    })
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it('does not use PR metadata when associated PR files touch multiple concrete sites', async () => {
+    const fetch = createMockFetch({
+      'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
+        {
+          body: 'Shared import for serp.co.',
+          merged_at: '2026-05-26T12:00:00Z',
+          number: 42,
+          title: 'Refresh serp.co data'
+        }
+      ],
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
+        {
+          filename: 'sites/serp.co/products.json'
+        },
+        {
+          filename: 'sites/serp.ai/products.json'
+        }
+      ]
+    })
+
+    await expect(
+      resolvePushSiteInput(
+        {
+          after: 'abc123',
+          commits: [
+            {
+              id: 'abc123',
+              modified: ['scripts/import-downloaders-from-sheet.ts']
             }
           ],
           repository: {
@@ -586,7 +663,7 @@ describe('resolveBuildRun', () => {
     )
   })
 
-  it('requires manual workflow dispatch when associated PR files touch multiple concrete sites', async () => {
+  it('returns no-deploy when associated PR files touch multiple concrete sites', async () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
@@ -625,9 +702,9 @@ describe('resolveBuildRun', () => {
         },
         fetch
       )
-    ).rejects.toThrow(
-      'Push changed multiple concrete site paths (browserextensions.io, serp.co); manual site_id required via workflow_dispatch for each site.'
-    )
+    ).resolves.toEqual({
+      shouldDeploy: false
+    })
   })
 
   it('reads paginated associated PR files for site inference', async () => {
