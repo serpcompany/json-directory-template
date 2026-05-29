@@ -4,6 +4,7 @@ import yaml from 'js-yaml'
 import { describe, expect, it } from 'vitest'
 
 interface WorkflowStep {
+  id?: string
   uses?: string
   name?: string
   run?: string
@@ -11,6 +12,8 @@ interface WorkflowStep {
 }
 
 interface WorkflowJob {
+  needs?: string | string[]
+  'runs-on'?: string
   steps?: WorkflowStep[]
 }
 
@@ -65,6 +68,7 @@ describe('pr-review workflow', () => {
     const stepRuns = validateJob.steps?.map(step => step.run).filter(Boolean)
     const checkoutStep = validateJob.steps?.find(step => step.uses === 'actions/checkout@v6')
 
+    expect(validateJob['runs-on']).toBe('ubuntu-latest')
     expect(checkoutStep?.with?.['fetch-depth']).toBe(0)
     expect(stepRuns).toContain('pnpm validate:sites')
     expect(stepRuns).toContain(
@@ -74,6 +78,32 @@ describe('pr-review workflow', () => {
     expect(stepRuns).not.toContain('pnpm validate:site -- --site serpdownloaders.com')
     expect(stepRuns).not.toContain('pnpm validate:site -- --site serp.software')
     expect(stepRuns).not.toContain('pnpm check:frontmatter')
+    expect(stepRuns).not.toContain('pnpm typecheck')
+    expect(stepRuns).not.toContain('pnpm test')
+  })
+
+  it('runs PR typecheck and unit tests as separate GitHub-hosted jobs', () => {
+    const workflow = loadWorkflow()
+    const typecheckJob = workflow.jobs.typecheck
+    const testJob = workflow.jobs.test
+
+    expect(typecheckJob['runs-on']).toBe('ubuntu-latest')
+    expect(testJob['runs-on']).toBe('ubuntu-latest')
+    expect(typecheckJob.steps?.map(step => step.run)).toContain('pnpm typecheck')
+    expect(testJob.steps?.map(step => step.run)).toContain('pnpm test')
+    expect(typecheckJob.needs).toBeUndefined()
+    expect(testJob.needs).toBeUndefined()
+  })
+
+  it('uses GitHub-hosted runners for PR review jobs so checks can run concurrently', () => {
+    const workflow = loadWorkflow()
+
+    expect(workflow.jobs.validate['runs-on']).toBe('ubuntu-latest')
+    expect(workflow.jobs.typecheck['runs-on']).toBe('ubuntu-latest')
+    expect(workflow.jobs.test['runs-on']).toBe('ubuntu-latest')
+    expect(workflow.jobs.changes['runs-on']).toBe('ubuntu-latest')
+    expect(workflow.jobs.e2e['runs-on']).toBe('ubuntu-latest')
+    expect(workflow.jobs.e2e.needs).toEqual(['changes'])
   })
 
   it('leaves large site-owned product sources to listing validation instead of Biome formatting', () => {
@@ -112,14 +142,19 @@ describe('pr-review workflow', () => {
       'apps/starter/lib/**',
       'apps/starter/public/**',
       'apps/e2e/**',
-      'packages/ui/**'
+      'data/listings.json',
+      'packages/web-core/**',
+      'packages/ui/**',
+      'sites/**'
     ])
     expect(isE2eRelevant('apps/e2e/tests/home.spec.ts')).toBe(true)
     expect(isE2eRelevant('apps/starter/app/page.tsx')).toBe(true)
     expect(isE2eRelevant('apps/starter/components/site-header.tsx')).toBe(true)
+    expect(isE2eRelevant('data/listings.json')).toBe(true)
+    expect(isE2eRelevant('packages/web-core/src/root-shell.tsx')).toBe(true)
     expect(isE2eRelevant('packages/ui/button.tsx')).toBe(true)
+    expect(isE2eRelevant('sites/serp.co/products.json')).toBe(true)
     expect(isE2eRelevant('docs/BUILD_PIPELINE.md')).toBe(false)
-    expect(isE2eRelevant('packages/web-core/src/home-page.tsx')).toBe(false)
     expect(isE2eRelevant('.github/workflows/pr-review.yml')).toBe(false)
   })
 })
