@@ -12,6 +12,8 @@ interface WorkflowStep {
 }
 
 interface WorkflowJob {
+  needs?: string | string[]
+  'runs-on'?: string
   steps?: WorkflowStep[]
 }
 
@@ -66,6 +68,7 @@ describe('pr-review workflow', () => {
     const stepRuns = validateJob.steps?.map(step => step.run).filter(Boolean)
     const checkoutStep = validateJob.steps?.find(step => step.uses === 'actions/checkout@v6')
 
+    expect(validateJob['runs-on']).toBe('ubuntu-latest')
     expect(checkoutStep?.with?.['fetch-depth']).toBe(0)
     expect(stepRuns).toContain('pnpm validate:sites')
     expect(stepRuns).toContain(
@@ -75,6 +78,32 @@ describe('pr-review workflow', () => {
     expect(stepRuns).not.toContain('pnpm validate:site -- --site serpdownloaders.com')
     expect(stepRuns).not.toContain('pnpm validate:site -- --site serp.software')
     expect(stepRuns).not.toContain('pnpm check:frontmatter')
+    expect(stepRuns).not.toContain('pnpm typecheck')
+    expect(stepRuns).not.toContain('pnpm test')
+  })
+
+  it('runs PR typecheck and unit tests as separate GitHub-hosted jobs', () => {
+    const workflow = loadWorkflow()
+    const typecheckJob = workflow.jobs.typecheck
+    const testJob = workflow.jobs.test
+
+    expect(typecheckJob['runs-on']).toBe('ubuntu-latest')
+    expect(testJob['runs-on']).toBe('ubuntu-latest')
+    expect(typecheckJob.steps?.map(step => step.run)).toContain('pnpm typecheck')
+    expect(testJob.steps?.map(step => step.run)).toContain('pnpm test')
+    expect(typecheckJob.needs).toBeUndefined()
+    expect(testJob.needs).toBeUndefined()
+  })
+
+  it('uses GitHub-hosted runners for PR review jobs so checks can run concurrently', () => {
+    const workflow = loadWorkflow()
+
+    expect(workflow.jobs.validate['runs-on']).toBe('ubuntu-latest')
+    expect(workflow.jobs.typecheck['runs-on']).toBe('ubuntu-latest')
+    expect(workflow.jobs.test['runs-on']).toBe('ubuntu-latest')
+    expect(workflow.jobs.changes['runs-on']).toBe('ubuntu-latest')
+    expect(workflow.jobs.e2e['runs-on']).toBe('ubuntu-latest')
+    expect(workflow.jobs.e2e.needs).toEqual(['changes'])
   })
 
   it('leaves large site-owned product sources to listing validation instead of Biome formatting', () => {
