@@ -244,7 +244,11 @@ export function GitHubIssueSubmitForm() {
   )
 
   const isSubmitDisabled =
-    !isValid || isSubmitting || hasPartiallyFilledFaq || hasPartiallyFilledResourceLink
+    !hasConfiguredIssueTarget ||
+    !isValid ||
+    isSubmitting ||
+    hasPartiallyFilledFaq ||
+    hasPartiallyFilledResourceLink
 
   function handleValidSubmit(values: SubmissionFormValues): void {
     setSubmitError(null)

@@ -65,7 +65,7 @@ describe('GitHubIssueSubmitForm', () => {
     expect(screen.getByText('Resource Links').querySelector('.text-red-500')).toBeNull()
   })
 
-  it('enables submission when only required fields are filled', async () => {
+  it('does not add validation errors when optional fields are left blank', async () => {
     render(<GitHubIssueSubmitForm />)
 
     const submitButton = screen.getByRole('button', { name: /^submit$/i })
@@ -90,7 +90,10 @@ describe('GitHubIssueSubmitForm', () => {
     })
 
     await waitFor(() => {
-      expect(submitButton).not.toBeDisabled()
+      expect(screen.queryByText(/enter an answer/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/enter a resource label/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/enter a valid url/i)).not.toBeInTheDocument()
+      expect(submitButton).toBeDisabled()
     })
   })
 
