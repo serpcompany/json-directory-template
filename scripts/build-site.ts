@@ -478,10 +478,7 @@ export function prepareDisabledRoutePathsForStaticExport({
   const stages: StagedPath[] = []
 
   const maybeStage = (activePath: string, backupName: string): void => {
-    const stage = stagePath(
-      activePath,
-      resolve(restoreDir.path, backupName)
-    )
+    const stage = stagePath(activePath, resolve(restoreDir.path, backupName))
 
     if (stage) {
       stages.push(stage)
