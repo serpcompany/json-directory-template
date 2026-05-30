@@ -1,0 +1,65 @@
+{
+  "sourceRepo": "/Users/devin/dev/repos/zz-archive/nexty-monorepo",
+  "sourceType": "nexty-exported-public-badge-assets",
+  "r2": {
+    "bucket": "serp-embeds",
+    "publicBaseUrl": "https://embeds.serp.co"
+  },
+  "sites": {
+    "browserextensions.io": {
+      "sourceDir": "tmp/browserextensions-io/public/badge",
+      "targetDir": "apps/browserextensions.io/public/badge",
+      "primary": {
+        "dark": "featured-on-browserextensions-io-dark-badge.svg",
+        "light": "featured-on-browserextensions-io-light-badge.svg"
+      },
+      "assets": [
+        "badge_dark.svg",
+        "badge_light.svg",
+        "featured-on-browserextensions-io-dark-badge.svg",
+        "featured-on-browserextensions-io-light-badge.svg",
+        "featured-on-directory-dark-badge.svg",
+        "featured-on-directory-light-badge.svg",
+        "featured-on-serp-ai-light-badge.svg",
+        "featured-on-serp-co-light-badge.svg"
+      ]
+    },
+    "serp.ai": {
+      "sourceDir": "tmp/serp-ai/public/badge",
+      "targetDir": "apps/serp.ai/public/badge",
+      "primary": {
+        "dark": "featured-on-serp-ai-dark-badge.svg",
+        "light": "featured-on-serp-ai-light-badge.svg"
+      },
+      "assets": [
+        "badge_dark.svg",
+        "badge_light.svg",
+        "featured-on-browserextensions-io-dark-badge.svg",
+        "featured-on-serp-ai-dark-badge.svg",
+        "featured-on-serp-ai-light-badge.svg",
+        "featured-on-serp-co-dark-badge.svg",
+        "featured-on-serp-co-light-badge.svg"
+      ]
+    },
+    "serp.co": {
+      "sourceDir": "tmp/serp-co/public/badge",
+      "targetDir": "apps/serp.co/public/badge",
+      "primary": {
+        "dark": "featured-on-serp-co-dark-badge.svg",
+        "light": "featured-on-serp-co-light-badge.svg"
+      },
+      "assets": [
+        "badge_dark.svg",
+        "badge_light.svg",
+        "featured-on-browserextensions-io-dark-badge.svg",
+        "featured-on-directory-dark-badge.svg",
+        "featured-on-directory-light-badge.svg",
+        "featured-on-directory-starter-dark-badge.svg",
+        "featured-on-directory-starter-light-badge.svg",
+        "featured-on-serp-ai-light-badge.svg",
+        "featured-on-serp-co-dark-badge.svg",
+        "featured-on-serp-co-light-badge.svg"
+      ]
+    }
+  }
+}

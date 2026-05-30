@@ -2,15 +2,21 @@
 
 import { Check, Copy } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import {
+  getFeaturedOnBadgePublicUrl,
+  getFeaturedOnBadgePublicUrlFromKey
+} from '../website/featured-on-badge-url'
 
 interface CopySnippetProps {
   token: string
+  badgeKey?: string
   siteId: string
   siteName: string
   theme?: 'light' | 'dark'
 }
 
 export function CopySnippet({
+  badgeKey,
   token,
   siteId,
   siteName,
@@ -24,8 +30,11 @@ export function CopySnippet({
   }, [])
 
   const baseUrl = origin || 'https://your-site.com'
+  const badgeUrl = badgeKey
+    ? getFeaturedOnBadgePublicUrlFromKey(badgeKey)
+    : getFeaturedOnBadgePublicUrl(siteId, theme)
   const snippet = `<a href="${baseUrl}" target="_blank" title="Featured on ${siteName}">
-  <img src="${baseUrl}/badge/featured-on-${siteId}-${theme}.svg" alt="Featured on ${siteName}" data-verify-token="${token}" width="200" height="54" />
+  <img src="${badgeUrl}" alt="Featured on ${siteName}" data-verify-token="${token}" width="153" height="44" />
 </a>`
 
   function handleCopy() {

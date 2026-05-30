@@ -46,6 +46,23 @@ const siteAnalyticsSchema = z
   })
   .optional()
 
+const badgeObjectKeySchema = z
+  .string()
+  .min(1)
+  .regex(/^(?!\/)(?!.*\.\.)(?:[a-z0-9._-]+\/)*[a-z0-9._-]+\.svg$/)
+
+const siteBadgesSchema = z
+  .object({
+    featuredOn: z
+      .object({
+        dark: badgeObjectKeySchema.optional(),
+        displayName: z.string().min(1).optional(),
+        light: badgeObjectKeySchema.optional()
+      })
+      .optional()
+  })
+  .optional()
+
 const listingJsonSourceSchema = z.object({
   kind: z.literal('listing-json'),
   outputPath: z.string().min(1).default('data/listings.json'),
@@ -216,6 +233,7 @@ const socialConfigSchema = z
 
 const checkedInSiteConfigSchema = z.object({
   analytics: siteAnalyticsSchema,
+  badges: siteBadgesSchema,
   branding: z.object({
     favicon: assetSourceSchema.optional(),
     logo: assetSourceSchema.optional(),

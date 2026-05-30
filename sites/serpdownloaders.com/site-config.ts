@@ -4,6 +4,12 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   analytics: {
     gtmId: 'GTM-M82HC3SC'
   },
+  badges: {
+    featuredOn: {
+      dark: 'badge/featured-on-serpdownloaders.com-dark.svg',
+      light: 'badge/featured-on-serpdownloaders.com-light.svg'
+    }
+  },
   branding: {
     favicon: {
       path: 'sites/serpdownloaders.com/assets/favicon.ico',

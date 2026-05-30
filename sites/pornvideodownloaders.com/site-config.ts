@@ -4,6 +4,13 @@ export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   analytics: {
     gtmId: 'GTM-PWB7MRW9'
   },
+  badges: {
+    featuredOn: {
+      dark: 'badge/featured-on-pornvideodownloaders.com-dark.svg',
+      displayName: 'PV Downloaders',
+      light: 'badge/featured-on-pornvideodownloaders.com-light.svg'
+    }
+  },
   branding: {
     favicon: {
       path: 'sites/pornvideodownloaders.com/assets/favicon.ico',

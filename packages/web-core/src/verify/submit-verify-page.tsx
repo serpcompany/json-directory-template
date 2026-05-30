@@ -153,6 +153,7 @@ export function SubmitVerifyPageRoute({
           </div>
 
           <CopySnippet
+            badgeKey={siteConfig.badges.featuredOn[theme]}
             token={token}
             siteId={siteId}
             siteName={siteName}

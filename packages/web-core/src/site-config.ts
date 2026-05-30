@@ -1,6 +1,7 @@
 import { defaultSiteConfig, resolveCheckedInSiteConfig } from '@thedaviddias/site-contract'
 import type {
   AssetSource,
+  SiteBadgesConfig,
   SiteCopyConfig,
   SiteFeatureFlags,
   SiteSitemapConfig
@@ -13,7 +14,15 @@ type SiteBrandingConfig = {
   opengraphImageUrl?: string
 }
 
+type ResolvedSiteBadgesConfig = {
+  featuredOn: {
+    dark: string
+    light: string
+  }
+}
+
 export type SiteConfig = {
+  badges: ResolvedSiteBadgesConfig
   brandsRouteBasePath: string
   branding: SiteBrandingConfig
   copy: SiteCopyConfig
@@ -54,6 +63,17 @@ const DEFAULT_STARTER_PLACEHOLDER = {
   redditUrl: 'https://www.reddit.com/r/directorystarter/',
   twitterUrl: 'https://x.com/directorystarter'
 } as const
+
+function getDefaultFeaturedOnBadgeKey(siteId: string, theme: 'light' | 'dark'): string {
+  return `badge/featured-on-${siteId}-${theme}.svg`
+}
+
+function resolveFeaturedOnBadges(siteId: string, badges: SiteBadgesConfig | undefined) {
+  return {
+    dark: badges?.featuredOn?.dark ?? getDefaultFeaturedOnBadgeKey(siteId, 'dark'),
+    light: badges?.featuredOn?.light ?? getDefaultFeaturedOnBadgeKey(siteId, 'light')
+  }
+}
 
 export function getTwitterHandleFromUrl(url: string): string | null {
   try {
@@ -123,6 +143,9 @@ export function resolveSiteConfig(
   const { listingSource } = configuredSite.content
 
   return {
+    badges: {
+      featuredOn: resolveFeaturedOnBadges(configuredSite.id, configuredSite.badges)
+    },
     branding: {
       appleTouchIconUrl: resolveRuntimeBrandAssetUrl(configuredSite.branding.logo, 'logo')
         ? '/apple-touch-icon.png'

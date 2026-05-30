@@ -1,6 +1,12 @@
 import type { CheckedInSiteConfigOverride } from '../types'
 
 export const browserextensionsIoSiteConfig: CheckedInSiteConfigOverride = {
+  badges: {
+    featuredOn: {
+      dark: 'badge/featured-on-browserextensions.io-dark.svg',
+      light: 'badge/featured-on-browserextensions.io-light.svg'
+    }
+  },
   branding: {
     favicon: {
       path: 'sites/browserextensions.io/assets/favicon.ico',
