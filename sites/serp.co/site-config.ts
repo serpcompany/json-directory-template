@@ -4,6 +4,12 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
   analytics: {
     gtmId: 'GTM-W59GNHXF'
   },
+  badges: {
+    featuredOn: {
+      dark: 'badge/featured-on-serp-co-dark-badge.svg',
+      light: 'badge/featured-on-serp-co-light-badge.svg'
+    }
+  },
   branding: {
     favicon: {
       path: 'sites/serp.co/assets/favicon.ico',

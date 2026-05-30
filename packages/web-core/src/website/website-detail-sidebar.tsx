@@ -1,34 +1,47 @@
-import { Calendar, Download, ExternalLink, Hash } from 'lucide-react';
-import Link from 'next/link';
-import { getCategoryDisplayName } from '../category-display';
-import { getRoute } from '../routes';
-import { siteContent } from '../site-content';
+import { Download, ExternalLink, Hash } from 'lucide-react'
+import Link from 'next/link'
+import { getCategoryDisplayName } from '../category-display'
+import { getRoute } from '../routes'
+import { siteConfig } from '../site-config'
+import { siteContent } from '../site-content'
+import { FeaturedOnBadgeEmbedPanel } from './featured-on-badge-embed-panel'
+import {
+  getFeaturedOnBadgePreviewPathFromKey,
+  getFeaturedOnBadgePublicUrlFromKey
+} from './featured-on-badge-url'
 
 type WebsiteSidebarMetadata = {
-  category?: string;
-  categories?: string[];
-  name: string;
-  publishedAt?: string;
-  slug: string;
-  website: string;
-};
+  category?: string
+  categories?: string[]
+  name: string
+  publishedAt?: string
+  slug: string
+  website: string
+}
 
 export type WebsiteDetailSidebarProps = {
-  website: WebsiteSidebarMetadata;
-};
+  website: WebsiteSidebarMetadata
+}
 
-export function WebsiteDetailSidebar({
-  website,
-}: WebsiteDetailSidebarProps) {
-  const cliSlug = siteContent.listingCliInstall?.installTargetByListingSlug?.[
-    website.slug
-  ];
+export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
+  const listingUrl = new URL(
+    getRoute('listing.detail', { slug: website.slug }),
+    siteConfig.publicUrl
+  ).toString()
+  const badgeKeys = siteConfig.badges.featuredOn
+  const badgeUrls = {
+    dark: getFeaturedOnBadgePublicUrlFromKey(badgeKeys.dark),
+    light: getFeaturedOnBadgePublicUrlFromKey(badgeKeys.light)
+  }
+  const badgePreviewUrls = {
+    dark: getFeaturedOnBadgePreviewPathFromKey(badgeKeys.dark),
+    light: getFeaturedOnBadgePreviewPathFromKey(badgeKeys.light)
+  }
+  const cliSlug = siteContent.listingCliInstall?.installTargetByListingSlug?.[website.slug]
   const categorySlugs = [
     ...(website.category ? [website.category] : []),
-    ...(website.categories || []),
-  ].filter(
-    (value, index, values) => Boolean(value) && values.indexOf(value) === index
-  );
+    ...(website.categories || [])
+  ].filter((value, index, values) => Boolean(value) && values.indexOf(value) === index)
 
   return (
     <aside className="space-y-6 lg:sticky lg:top-20 lg:self-start">
@@ -60,7 +73,7 @@ export function WebsiteDetailSidebar({
               {categorySlugs.length > 1 ? 'Categories' : 'Category'}
             </span>
             <div className="mt-1 flex flex-wrap gap-2">
-              {categorySlugs.map((categorySlug) => (
+              {categorySlugs.map(categorySlug => (
                 <Link
                   key={categorySlug}
                   href={getRoute('category.page', { category: categorySlug })}
@@ -72,23 +85,16 @@ export function WebsiteDetailSidebar({
             </div>
           </div>
         )}
-
-        {website.publishedAt && (
-          <div>
-            <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Calendar className="size-3" aria-hidden />
-              Added
-            </span>
-            <p className="text-sm text-foreground mt-1">
-              {new Date(website.publishedAt).toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-              })}
-            </p>
-          </div>
-        )}
       </div>
+
+      <FeaturedOnBadgeEmbedPanel
+        badgePreviewUrls={badgePreviewUrls}
+        badgeUrls={badgeUrls}
+        listingName={website.name}
+        listingUrl={listingUrl}
+        siteId={siteConfig.id}
+        siteName={siteConfig.name}
+      />
     </aside>
-  );
+  )
 }

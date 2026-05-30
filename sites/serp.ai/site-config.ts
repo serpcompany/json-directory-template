@@ -1,6 +1,12 @@
 import type { CheckedInSiteConfigOverride } from '../types'
 
 export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
+  badges: {
+    featuredOn: {
+      dark: 'badge/featured-on-serp-ai-dark-badge.svg',
+      light: 'badge/featured-on-serp-ai-light-badge.svg'
+    }
+  },
   branding: {
     favicon: {
       path: 'sites/serp.ai/assets/favicon.ico',

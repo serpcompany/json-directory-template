@@ -78,6 +78,14 @@ export type SiteAnalyticsConfig = {
   gtmId?: string
 }
 
+export type SiteBadgesConfig = {
+  featuredOn?: {
+    dark?: string
+    displayName?: string
+    light?: string
+  }
+}
+
 export type DeployConfig = {
   branch: string
   preserve: string[]
@@ -113,6 +121,7 @@ export type SiteSitemapConfig = {
 
 export type CheckedInSiteConfig = {
   analytics?: SiteAnalyticsConfig
+  badges?: SiteBadgesConfig
   branding: {
     favicon?: AssetSource
     logo?: AssetSource

@@ -5,6 +5,12 @@ import {
 import type { CheckedInSiteConfig } from './types'
 
 export const defaultSiteConfig: CheckedInSiteConfig = {
+  badges: {
+    featuredOn: {
+      dark: 'badge/featured-on-default-dark.svg',
+      light: 'badge/featured-on-default-light.svg'
+    }
+  },
   branding: {},
   build: {
     appPackageName: DEFAULT_STARTER_APP_PACKAGE_NAME,

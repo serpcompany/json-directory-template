@@ -1,6 +1,6 @@
 import { WebsiteDetailSidebar } from '@thedaviddias/web-core/website/website-detail-sidebar'
 import type { WebsiteMetadata } from '@/lib/content-loader'
-import { render, screen } from '@/test/test-utils'
+import { render, screen, userEvent, waitFor } from '@/test/test-utils'
 
 const website: WebsiteMetadata = {
   category: 'video-downloaders',
@@ -39,5 +39,42 @@ describe('WebsiteDetailSidebar', () => {
       'href',
       '/categories/developer-tools/'
     )
+  })
+
+  it('renders local badge previews but copies R2-hosted embed URLs', async () => {
+    const user = userEvent.setup()
+    const writeText = jest.spyOn(navigator.clipboard, 'writeText').mockResolvedValue(undefined)
+    const { container } = render(<WebsiteDetailSidebar website={website} />)
+
+    expect(
+      screen.getByRole('heading', { name: 'Embed your badge on your website' })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('img', { name: 'Light Featured on Directory Starter badge' })
+    ).toHaveAttribute('src', '/badge/featured-on-default-light.svg')
+    expect(
+      screen.getByRole('img', { name: 'Dark Featured on Directory Starter badge' })
+    ).toHaveAttribute('src', '/badge/featured-on-default-dark.svg')
+
+    expect(screen.queryByLabelText('Light badge embed HTML')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Dark badge embed HTML')).not.toBeInTheDocument()
+    expect(container.innerHTML).not.toContain('data-verify-token')
+
+    await user.click(screen.getByRole('button', { name: 'Copy light badge embed code' }))
+
+    await waitFor(() => {
+      expect(writeText).toHaveBeenCalledWith(
+        `<a href="https://example.com/listing/example-product/" target="_blank" rel="noopener noreferrer" title="Example Product featured on Directory Starter">
+  <img src="https://embeds.serp.co/badge/featured-on-default-light.svg" alt="Featured on Directory Starter" width="200" height="50" />
+</a>`
+      )
+    })
+  })
+
+  it('does not render the added date metadata', () => {
+    render(<WebsiteDetailSidebar website={website} />)
+
+    expect(screen.queryByText('Added')).not.toBeInTheDocument()
+    expect(screen.queryByText('March 24, 2026')).not.toBeInTheDocument()
   })
 })
