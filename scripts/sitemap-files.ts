@@ -302,6 +302,11 @@ function listArtifactRoutePaths(
       continue
     }
 
+    const html = readFileSync(entryPath, 'utf8')
+    if (html.includes('NEXT_REDIRECT') || html.includes('__next_error__')) {
+      continue
+    }
+
     routePaths.push(publicPath)
   }
 

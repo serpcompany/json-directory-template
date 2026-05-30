@@ -168,6 +168,35 @@ describe('writeSplitSitemaps', () => {
     expect(listingsSitemap).toContain('<loc>https://example.com/products/example-tool/</loc>')
   })
 
+  it('skips redirect and error shell route indexes from sitemap output', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    writeFile(resolve(artifactDir, 'index.html'))
+    writeFile(resolve(artifactDir, 'products/index.html'), 'NEXT_REDIRECT')
+    writeFile(resolve(artifactDir, 'products/example-tool/index.html'))
+    writeFile(resolve(artifactDir, 'submit/verify/index.html'), '__next_error__')
+
+    writeSplitSitemaps(artifactDir, {
+      baseUrl: 'https://example.com',
+      listingBasePath: 'products'
+    })
+
+    const listingsSitemap = readFileSync(resolve(artifactDir, 'listings-sitemap.xml'), 'utf8')
+    expect(listingsSitemap).toContain('<loc>https://example.com/products/example-tool/</loc>')
+
+    const pagesSitemap = readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')
+    expect(pagesSitemap).not.toContain('https://example.com/submit/verify/')
+
+    const sitemapIndex = readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')
+    expect(sitemapIndex).not.toContain('taxonomies-sitemap.xml')
+    expect(readFileSync(resolve(artifactDir, 'listings-sitemap.xml'), 'utf8')).not.toContain(
+      '<loc>https://example.com/products/</loc>'
+    )
+    expect(readFileSync(resolve(artifactDir, 'listings-sitemap.xml'), 'utf8')).not.toContain(
+      'https://example.com/submit/verify/'
+    )
+  })
+
   it('can emit configured sitemap paths and public URL shapes', () => {
     const artifactDir = makeTempArtifactDir()
 
