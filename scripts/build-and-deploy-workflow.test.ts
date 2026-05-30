@@ -8,6 +8,10 @@ interface WorkflowJob {
   env?: Record<string, string>
   if?: string
   needs?: string | string[]
+  strategy?: {
+    'fail-fast'?: boolean
+    matrix?: Record<string, unknown>
+  }
   steps?: Array<{
     env?: Record<string, string>
     if?: string
@@ -45,18 +49,23 @@ describe('build-and-deploy workflow', () => {
     expect(workflow.on.push?.paths).toEqual(expect.arrayContaining(['packages/web-core/**']))
   })
 
-  it('runs push and workflow dispatch validate, build, audit, and deploy through one resolver job', () => {
+  it('runs push and workflow dispatch through a resolver plus deploy matrix', () => {
     const workflow = loadWorkflow()
     const jobNames = Object.keys(workflow.jobs)
+    const resolveJob = workflow.jobs.resolve
     const deployJob = workflow.jobs.deploy
     const namedSteps = deployJob.steps?.filter(step => step.name).map(step => step.name)
 
-    expect(jobNames).toEqual(['deploy'])
+    expect(jobNames).toEqual(['resolve', 'deploy'])
+    expect(resolveJob).toBeDefined()
     expect(deployJob).toBeDefined()
-    expect(deployJob.if).toBeUndefined()
-    expect(deployJob.needs).toBeUndefined()
+    expect(deployJob.if).toBe(`needs.resolve.outputs.should_deploy == 'true'`)
+    expect(deployJob.needs).toBe('resolve')
+    expect(deployJob.strategy?.['fail-fast']).toBe(false)
+    expect(deployJob.strategy?.matrix).toEqual({
+      target: `\${{ fromJson(needs.resolve.outputs.deploy_targets) }}`
+    })
     expect(namedSteps).toEqual([
-      'Resolve build input',
       'Validate site data',
       'Build static site',
       'Audit XML sitemaps',
@@ -101,23 +110,22 @@ describe('build-and-deploy workflow', () => {
     )
     const deployStep = steps.find(step => step.name === 'Deploy')
     const stepNames = steps.map(step => step.name)
-    const deployGuard = `steps.resolve.outputs.should_deploy == 'true'`
 
-    expect(validateStep?.if).toBe(deployGuard)
+    expect(validateStep?.if).toBeUndefined()
     expect(validateStep?.run).toBe('pnpm validate:site')
-    expect(validateStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
-    expect(buildStep?.if).toBe(deployGuard)
+    expect(validateStep?.env?.SITE_ID).toBe(`\${{ matrix.target.siteId }}`)
+    expect(buildStep?.if).toBeUndefined()
     expect(buildStep?.run).toBe('pnpm build:site')
-    expect(buildStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
-    expect(sitemapAuditStep?.if).toBe(deployGuard)
+    expect(buildStep?.env?.SITE_ID).toBe(`\${{ matrix.target.siteId }}`)
+    expect(sitemapAuditStep?.if).toBeUndefined()
     expect(sitemapAuditStep?.run).toBe('pnpm audit:sitemaps -- --site "$SITE_ID"')
-    expect(sitemapAuditStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
-    expect(forbiddenLinksAuditStep?.if).toBe(deployGuard)
+    expect(sitemapAuditStep?.env?.SITE_ID).toBe(`\${{ matrix.target.siteId }}`)
+    expect(forbiddenLinksAuditStep?.if).toBeUndefined()
     expect(forbiddenLinksAuditStep?.run).toBe('pnpm audit:forbidden-links -- --site "$SITE_ID"')
-    expect(forbiddenLinksAuditStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
-    expect(deployStep?.if).toBe(deployGuard)
+    expect(forbiddenLinksAuditStep?.env?.SITE_ID).toBe(`\${{ matrix.target.siteId }}`)
+    expect(deployStep?.if).toBeUndefined()
     expect(deployStep?.run).toBe('pnpm deploy:site')
-    expect(deployStep?.env?.SITE_ID).toBe(`\${{ steps.resolve.outputs.site_id }}`)
+    expect(deployStep?.env?.SITE_ID).toBe(`\${{ matrix.target.siteId }}`)
     expect(stepNames.indexOf('Validate site data')).toBeLessThan(
       stepNames.indexOf('Build static site')
     )
@@ -137,11 +145,10 @@ describe('build-and-deploy workflow', () => {
     const deployJob = workflow.jobs.deploy
     const deployStep = deployJob.steps?.find(step => step.name === 'Deploy')
     const authStep = deployJob.steps?.find(step => step.name === 'Verify deploy auth')
-    const deployGuard = `steps.resolve.outputs.should_deploy == 'true'`
 
     expect(deployStep).toBeDefined()
     expect(deployStep?.env?.DEPLOY_TOKEN).toBe(`\${{ secrets.GH_PAT }}`)
-    expect(authStep?.if).toBe(deployGuard)
+    expect(authStep?.if).toBeUndefined()
     expect(authStep?.env?.DEPLOY_TOKEN).toBe(`\${{ secrets.GH_PAT }}`)
     expect(authStep?.run).toContain('Missing GH_PAT secret required for cross-repo deploy.')
   })
@@ -157,7 +164,7 @@ describe('build-and-deploy workflow', () => {
     expect(deployStep?.env?.DEPLOY_BRANCH).toBe('')
   })
 
-  it('does not bypass the resolver with active-site push deploys', () => {
+  it('does not bypass the resolver with hardcoded active-site push deploys', () => {
     const workflow = loadWorkflow()
     const workflowRaw = readFileSync(
       resolve(process.cwd(), '.github/workflows/build-and-deploy.yml'),
@@ -165,14 +172,16 @@ describe('build-and-deploy workflow', () => {
     )
 
     expect(workflow.jobs['deploy-active-sites']).toBeUndefined()
-    expect(workflowRaw).not.toContain('matrix:')
+    expect(workflow.jobs.deploy.strategy?.matrix).toEqual({
+      target: `\${{ fromJson(needs.resolve.outputs.deploy_targets) }}`
+    })
     expect(workflowRaw).not.toContain('pnpm deploy:site -- --site')
   })
 
   it('does not use repo variables as a push fallback site id', () => {
     const workflow = loadWorkflow()
-    const deployJob = workflow.jobs.deploy
-    const resolveStep = deployJob.steps?.find(step => step.name === 'Resolve build input')
+    const resolveJob = workflow.jobs.resolve
+    const resolveStep = resolveJob.steps?.find(step => step.name === 'Resolve build input')
     const workflowRaw = readFileSync(
       resolve(process.cwd(), '.github/workflows/build-and-deploy.yml'),
       'utf8'
@@ -192,8 +201,8 @@ describe('build-and-deploy workflow', () => {
 
   it('passes the GitHub token to the resolver with PR read permissions', () => {
     const workflow = loadWorkflow()
-    const deployJob = workflow.jobs.deploy
-    const resolveStep = deployJob.steps?.find(step => step.name === 'Resolve build input')
+    const resolveJob = workflow.jobs.resolve
+    const resolveStep = resolveJob.steps?.find(step => step.name === 'Resolve build input')
 
     expect(resolveStep?.env?.GITHUB_TOKEN).toBe(`\${{ github.token }}`)
     expect(workflow.permissions).toMatchObject({
@@ -202,23 +211,11 @@ describe('build-and-deploy workflow', () => {
     })
   })
 
-  it('guards workflow dispatch deploy work when the resolver returns no deploy target', () => {
+  it('guards the deploy matrix job when the resolver returns no deploy target', () => {
     const workflow = loadWorkflow()
     const deployJob = workflow.jobs.deploy
-    const guardedStepNames = [
-      'Validate site data',
-      'Build static site',
-      'Audit XML sitemaps',
-      'Audit forbidden listing links',
-      'Verify deploy auth',
-      'Deploy'
-    ]
 
-    for (const stepName of guardedStepNames) {
-      const step = deployJob.steps?.find(candidate => candidate.name === stepName)
-
-      expect(step?.if).toBe(`steps.resolve.outputs.should_deploy == 'true'`)
-    }
+    expect(deployJob.if).toBe(`needs.resolve.outputs.should_deploy == 'true'`)
   })
 
   it('runs for changes to active wrapper apps', () => {

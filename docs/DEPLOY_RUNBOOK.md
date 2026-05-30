@@ -2,7 +2,8 @@
 
 The active supported deploy path is `github-pages-repo-sync`.
 
-That means this repo builds a static artifact for one checked-in site and syncs that artifact into a target GitHub Pages repo.
+That means this repo builds static artifacts for resolved checked-in site targets
+and syncs each artifact into its target GitHub Pages repo.
 
 Current active checked-in deployable sites include `browserextensions.io`,
 `pornvideodownloaders.com`, `serp.ai`, `serp.co`, `serp.software`, and
@@ -88,19 +89,27 @@ The repo workflow is `.github/workflows/build-and-deploy.yml`.
 
 The workflow:
 
-1. resolves the active site from workflow dispatch `site_id`, push changed paths, associated merged PR files, or submission-aware PR metadata
-2. runs `pnpm validate:site`
-3. runs `pnpm build:site`
-4. runs `pnpm audit:sitemaps`
-5. verifies the `GH_PAT` deploy secret
-6. runs `pnpm deploy:site` against the checked-in site config deploy target
+1. resolves deploy targets from workflow dispatch `site_id`, push changed paths,
+   associated merged PR files, or submission-aware PR metadata
+2. runs a matrix over the resolved site targets
+3. runs `pnpm validate:site`
+4. runs `pnpm build:site`
+5. runs `pnpm audit:sitemaps`
+6. runs `pnpm audit:forbidden-links`
+7. verifies the `GH_PAT` deploy secret
+8. runs `pnpm deploy:site` against the checked-in site config deploy target
 
-If neither the push payload nor the associated merged PR files or metadata
-identify exactly one checked-in site, the workflow skips
-validate/build/audit/deploy. Shared-only maintainer PRs may still deploy when
-they mention exactly one checked-in site domain/public URL or link to exactly one
-configured public issue repo. For ambiguous shared changes, run workflow dispatch
-with the intended `site_id`. Do not add fallback deploy sites through repository
+Workflow dispatch with a concrete `site_id` deploys that site. Workflow dispatch
+with `site_id=all` deploys every active checked-in site.
+
+Push changed paths that identify one site deploy that site. Push changed paths
+that identify multiple concrete sites deploy those exact sites. Shared-only
+pushes with no concrete site signal deploy every active checked-in site. Shared
+maintainer PRs may still deploy one site when metadata mentions exactly one
+checked-in site domain/public URL or links to exactly one configured public issue
+repo. Metadata that matches multiple concrete sites fails and requires manual
+workflow dispatch per `site_id`, unless concrete changed paths already identify
+the exact deploy targets. Do not add fallback deploy sites through repository
 variables.
 
 The generated artifact stays in the same GitHub Actions job workspace between
@@ -134,9 +143,10 @@ The public `/submit` GitHub issue intake is active for:
 Each active site's public issue repo is `serpcompany/<site-id>`. These repos must stay public and
 must keep Issues enabled because the static submit form opens GitHub's public issue composer.
 
-Roll out submit-intake config changes one site per source PR. Multi-site submit-intake PRs create
-multiple concrete site signals, so the push deploy resolver will require a manual
-`workflow_dispatch` per `site_id`.
+Prefer rolling out submit-intake config changes one site per source PR so review
+and live verification stay simple. If a PR changes multiple concrete site paths,
+the push deploy resolver deploys those exact sites. Metadata-only multi-site
+signals still fail and require manual `workflow_dispatch` per `site_id`.
 
 For each site PR:
 
@@ -155,10 +165,14 @@ source worktree.
 After deploy, check:
 
 - `dist/sites/<site-id>` contains the expected static artifact
+- `dist/sites/<site-id>/build-info.json` contains the source `siteId`, `sourceSha`,
+  `sourceBranch`, and `sourceRepository`
 - the target repo contains plain static files, not `.next`
 - the target repo still contains `.github/workflows/deploy.yml`
 - the target repo Pages workflow completes successfully
 - the live domain returns the updated site instead of GitHub's 404 page
+- `https://<site-id>/build-info.json` returns HTTP `200`, has the expected `siteId`,
+  and has a `sourceSha` matching the deployed source commit
 
 ## Related references
 
