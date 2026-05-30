@@ -40,6 +40,7 @@ type StagedPath = {
 
 type BuildSourceAppPaths = {
   accountRoutePath: string
+  apiRoutePath: string
   appDir: string
   appleTouchIconPath: string
   authRouteBackupPath: string
@@ -58,6 +59,27 @@ type BuildSourceAppPaths = {
   searchIndexPath: string
 }
 
+type StaticExportRouteFeatureFlags = {
+  showAuth: boolean
+  showBrands: boolean
+  showDocs: boolean
+  showFavorites: boolean
+  showGuides: boolean
+  showProjects: boolean
+}
+
+type StaticExportRoutePaths = Pick<
+  BuildSourceAppPaths,
+  | 'accountRoutePath'
+  | 'apiRoutePath'
+  | 'brandsRoutePath'
+  | 'docsRoutePath'
+  | 'favoritesRoutePath'
+  | 'guidesRoutePath'
+  | 'loginRoutePath'
+  | 'projectsRoutePath'
+>
+
 export function resolveBuildSourceAppPaths({
   appOutDir,
   workspaceRoot = process.cwd()
@@ -70,6 +92,7 @@ export function resolveBuildSourceAppPaths({
 
   return {
     accountRoutePath: resolve(appDir, 'app/account'),
+    apiRoutePath: resolve(appDir, 'app/api'),
     appDir,
     appleTouchIconPath: resolve(appDir, 'public/apple-touch-icon.png'),
     authRouteBackupPath: resolve(appDir, 'app/api/auth/[...nextauth]/route.static-export-disabled'),
@@ -442,18 +465,21 @@ async function prepareBrandAssets(input: SiteInputTarget): Promise<{ restore: ()
   }
 }
 
-function prepareDisabledRoutesForStaticExport(input: SiteInputTarget): { restore: () => void } {
-  const definition = loadCheckedInSiteFromInput(input)
-  const sourceAppPaths = resolveBuildSourceAppPaths({
-    appOutDir: resolveSiteAppOutDir(definition),
-    workspaceRoot
-  })
-  const restoreDir = createRunTempDir('build-site-routes', definition.id)
+export function prepareDisabledRoutePathsForStaticExport({
+  featureFlags,
+  siteId,
+  sourceAppPaths
+}: {
+  featureFlags: StaticExportRouteFeatureFlags
+  siteId: string
+  sourceAppPaths: StaticExportRoutePaths
+}): { restore: () => void } {
+  const restoreDir = createRunTempDir('build-site-routes', siteId)
   const stages: StagedPath[] = []
 
-  const maybeStage = (relativePath: string, backupName: string): void => {
+  const maybeStage = (activePath: string, backupName: string): void => {
     const stage = stagePath(
-      resolve(workspaceRoot, relativePath),
+      activePath,
       resolve(restoreDir.path, backupName)
     )
 
@@ -462,28 +488,30 @@ function prepareDisabledRoutesForStaticExport(input: SiteInputTarget): { restore
     }
   }
 
-  if (!definition.features.showAuth) {
+  maybeStage(sourceAppPaths.apiRoutePath, 'api')
+
+  if (!featureFlags.showAuth) {
     maybeStage(sourceAppPaths.accountRoutePath, 'account')
     maybeStage(sourceAppPaths.loginRoutePath, 'login')
   }
 
-  if (!definition.features.showFavorites) {
+  if (!featureFlags.showFavorites) {
     maybeStage(sourceAppPaths.favoritesRoutePath, 'favorites')
   }
 
-  if (!definition.features.showProjects) {
+  if (!featureFlags.showProjects) {
     maybeStage(sourceAppPaths.projectsRoutePath, 'projects')
   }
 
-  if (!definition.features.showBrands) {
+  if (!featureFlags.showBrands) {
     maybeStage(sourceAppPaths.brandsRoutePath, 'brands')
   }
 
-  if (!definition.features.showDocs) {
+  if (!featureFlags.showDocs) {
     maybeStage(sourceAppPaths.docsRoutePath, 'docs')
   }
 
-  if (!definition.features.showGuides) {
+  if (!featureFlags.showGuides) {
     maybeStage(sourceAppPaths.guidesRoutePath, 'guides')
   }
 
@@ -493,6 +521,20 @@ function prepareDisabledRoutesForStaticExport(input: SiteInputTarget): { restore
       restoreDir.cleanup()
     }
   }
+}
+
+function prepareDisabledRoutesForStaticExport(input: SiteInputTarget): { restore: () => void } {
+  const definition = loadCheckedInSiteFromInput(input)
+  const sourceAppPaths = resolveBuildSourceAppPaths({
+    appOutDir: resolveSiteAppOutDir(definition),
+    workspaceRoot
+  })
+
+  return prepareDisabledRoutePathsForStaticExport({
+    featureFlags: definition.features,
+    siteId: definition.id,
+    sourceAppPaths
+  })
 }
 
 type ArtifactSurfaceFlags = {
