@@ -7,7 +7,8 @@ import {
   applyListingRouteBasePath,
   copyDeployableStaticArtifactFiles,
   pruneStaticArtifactDir,
-  removeExcludedStaticArtifactPaths
+  removeExcludedStaticArtifactPaths,
+  writeBuildInfoFile
 } from './build-site.ts'
 
 const tempDirs: string[] = []
@@ -342,5 +343,25 @@ describe('applyLegacyRootListingRedirects', () => {
     expect(existsSync(redirectPagePath)).toBe(true)
     expect(readFileSync(redirectPagePath, 'utf8')).toContain('/products/instagram-downloader/')
     expect(existsSync(resolve(artifactDir, 'getty-images-downloader/index.html'))).toBe(true)
+  })
+})
+
+describe('writeBuildInfoFile', () => {
+  it('writes public build provenance from source metadata', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    writeBuildInfoFile(artifactDir, {
+      siteId: 'browserextensions.io',
+      sourceBranch: 'main',
+      sourceRepository: 'serpcompany/json-directory',
+      sourceSha: 'abc123'
+    })
+
+    expect(JSON.parse(readFileSync(resolve(artifactDir, 'build-info.json'), 'utf8'))).toEqual({
+      siteId: 'browserextensions.io',
+      sourceBranch: 'main',
+      sourceRepository: 'serpcompany/json-directory',
+      sourceSha: 'abc123'
+    })
   })
 })

@@ -10,8 +10,8 @@ In scope now:
 
 - checked-in site config via `sites/site-config.default.ts` and `sites/<site-id>/site-config.ts`
 - checked-in canonical site assets in `sites/<site-id>/assets/*`
-- validate -> build -> audit -> deploy for one site per run
-- static export output for GitHub Pages
+- validate -> build -> audit -> deploy for each resolved site target
+- static export output for GitHub Pages, including public build provenance at `/build-info.json`
 - repo-to-repo deploy sync with preserve rules
 
 Out of scope for the active pipeline:
@@ -32,7 +32,7 @@ The pipeline works from one canonical checked-in config model:
 1. the repo defines the full starter config in `sites/site-config.default.ts`
 2. each site defines its own sparse checked-in override in `sites/<site-id>/site-config.ts`
 3. the pipeline validates the resolved site config and source data
-4. the pipeline builds one static artifact
+4. the pipeline builds one static artifact per resolved site
 5. the pipeline audits the generated sitemap surface against the artifact
 6. the pipeline deploys that artifact to the checked-in target only after source changes are reviewable
 
@@ -95,6 +95,8 @@ Build behavior:
 - if that staged local file already exists and is non-empty, the pipeline reuses it intentionally instead of redownloading the remote asset
 - runs the static export build
 - writes the final artifact to `dist/sites/<site-id>`
+- writes `dist/sites/<site-id>/build-info.json` with the source `siteId`, `sourceSha`,
+  `sourceBranch`, and `sourceRepository`
 
 Promotion rule:
 
@@ -147,18 +149,20 @@ Deploy behavior:
 
 ## Workflow behavior
 
-The GitHub Actions path resolves the build run once, then runs
-validate/build/audit/deploy in one job:
+The GitHub Actions path resolves the build run once, then runs a deploy matrix
+over every resolved checked-in site target:
 
 - workflow dispatch `site_id` selects the checked-in site config explicitly
-- push events first infer one changed checked-in site from the push payload
+- workflow dispatch `site_id=all` deploys every active checked-in site
+- push events first infer changed checked-in sites from the push payload
+- a push that touches one site-specific target deploys that site
+- a push that touches multiple site-specific targets deploys those exact sites
 - if the push payload only contains shared paths, the resolver checks the
   associated merged PR files through the GitHub API
 - if the associated merged PR also only contains shared paths, the resolver checks
   PR title/body text, linked configured public issue URLs, linked public issue
-  body/title text, and push commit messages for exactly one checked-in site signal
-- shared-only pushes with no concrete site signal do not deploy; use workflow
-  dispatch with `site_id` when a shared change should intentionally deploy one site
+  body/title text, and push commit messages for checked-in site signals
+- shared-only pushes with no concrete site signal deploy every active checked-in site
 - the generated artifact stays in the job workspace for deploy; normal deploys do
   not upload/download the large artifact between jobs
 - deploy repo and branch are not workflow inputs during normal deploys; they
@@ -178,10 +182,10 @@ are reviewer context only; an unrelated submitted product domain must not become
 
 Guardrails:
 
-- shared-only changes with no site signal skip deploy
+- shared-only changes with no site signal deploy all active checked-in sites
 - starter/default deploys only when it is the only matched site
 - metadata that matches multiple concrete sites fails and asks for manual `workflow_dispatch`
-  per `site_id`
+  per `site_id`, unless concrete changed paths already identify the exact site targets
 - normal deploys do not use repository variables as fallback site IDs
 
 ## Design rules

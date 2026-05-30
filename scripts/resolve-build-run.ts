@@ -83,9 +83,15 @@ type MetadataMatch = {
   siteIds: Set<string>
 }
 
+type DeployTarget = {
+  artifactDir: string
+  siteId: string
+}
+
 type PushSiteResolution = {
   shouldDeploy: boolean
   siteId?: string
+  siteIds?: string[]
 }
 
 type ChangedPathSiteResolution = PushSiteResolution & {
@@ -94,6 +100,7 @@ type ChangedPathSiteResolution = PushSiteResolution & {
 
 type BuildRunResolution = {
   artifactDir?: string
+  deployTargets?: DeployTarget[]
   shouldDeploy: boolean
   siteId?: string
 }
@@ -141,17 +148,8 @@ export function inferSiteIdFromChangedPaths(paths: string[]): string | undefined
   return matchedSiteIds.has(defaultSiteId) ? defaultSiteId : undefined
 }
 
-function resolveChangedPathSiteInput(paths: string[]): ChangedPathSiteResolution {
-  const concreteSiteIds = new Set<string>()
-  const siteId = inferSiteIdFromChangedPaths(paths)
-
-  if (siteId) {
-    return {
-      ambiguousConcreteSitePaths: false,
-      shouldDeploy: true,
-      siteId
-    }
-  }
+function inferSiteIdsFromChangedPaths(paths: string[]): string[] {
+  const matchedSiteIds = new Set<string>()
 
   for (const path of paths) {
     const normalizedPath = normalizeChangedPath(path)
@@ -159,25 +157,50 @@ function resolveChangedPathSiteInput(paths: string[]): ChangedPathSiteResolution
       normalizedPath.startsWith(prefix)
     )
 
-    if (matchedPrefix && matchedPrefix[1] !== defaultSiteId) {
-      concreteSiteIds.add(matchedPrefix[1])
+    if (matchedPrefix) {
+      matchedSiteIds.add(matchedPrefix[1])
+    }
+  }
+
+  const concreteSiteIds = [...matchedSiteIds].filter(siteId => siteId !== defaultSiteId).sort()
+
+  if (concreteSiteIds.length > 0) {
+    return concreteSiteIds
+  }
+
+  return matchedSiteIds.has(defaultSiteId) ? [defaultSiteId] : []
+}
+
+function resolveChangedPathSiteInput(paths: string[]): ChangedPathSiteResolution {
+  const siteIds = inferSiteIdsFromChangedPaths(paths)
+  const siteId = inferSiteIdFromChangedPaths(paths)
+
+  if (siteIds.length > 0) {
+    return {
+      ambiguousConcreteSitePaths: false,
+      shouldDeploy: true,
+      siteId,
+      siteIds
     }
   }
 
   return {
-    ambiguousConcreteSitePaths: concreteSiteIds.size > 1,
+    ambiguousConcreteSitePaths: false,
     shouldDeploy: false
   }
 }
 
 export function resolvePushSiteInputFromChangedPaths(paths: string[]): PushSiteResolution {
-  const { shouldDeploy, siteId } = resolveChangedPathSiteInput(paths)
+  const { shouldDeploy, siteId, siteIds } = resolveChangedPathSiteInput(paths)
 
   if (shouldDeploy) {
-    return { shouldDeploy, siteId }
+    return { shouldDeploy, siteId, siteIds }
   }
 
-  return { shouldDeploy }
+  return {
+    shouldDeploy: true,
+    siteIds: [...activeCheckedInSiteIds]
+  }
 }
 
 function readPushEvent(env: NodeJS.ProcessEnv): GitHubPushEvent | undefined {
@@ -508,14 +531,16 @@ function resolvePushSiteInputFromMatchedSiteIds(
   if (concreteSiteIds.length === 1) {
     return {
       shouldDeploy: true,
-      siteId: concreteSiteIds[0]
+      siteId: concreteSiteIds[0],
+      siteIds: [concreteSiteIds[0]]
     }
   }
 
   if (siteIds.has(defaultSiteId)) {
     return {
       shouldDeploy: true,
-      siteId: defaultSiteId
+      siteId: defaultSiteId,
+      siteIds: [defaultSiteId]
     }
   }
 
@@ -734,7 +759,8 @@ export async function resolvePushSiteInput(
   if (pushChangedPathResolution.shouldDeploy) {
     return {
       shouldDeploy: true,
-      siteId: pushChangedPathResolution.siteId
+      siteId: pushChangedPathResolution.siteId,
+      siteIds: pushChangedPathResolution.siteIds
     }
   }
 
@@ -753,7 +779,8 @@ export async function resolvePushSiteInput(
   if (pullRequestChangedPathResolution.shouldDeploy) {
     return {
       shouldDeploy: true,
-      siteId: pullRequestChangedPathResolution.siteId
+      siteId: pullRequestChangedPathResolution.siteId,
+      siteIds: pullRequestChangedPathResolution.siteIds
     }
   }
 
@@ -763,12 +790,36 @@ export async function resolvePushSiteInput(
     }
   }
 
-  return resolvePushSiteInputFromAssociatedPullRequestMetadata(
+  const metadataResolution = await resolvePushSiteInputFromAssociatedPullRequestMetadata(
     associatedPullRequests,
     event,
     env,
     fetchImpl
   )
+
+  if (metadataResolution.shouldDeploy) {
+    return metadataResolution
+  }
+
+  return {
+    shouldDeploy: true,
+    siteIds: [...activeCheckedInSiteIds]
+  }
+}
+
+function createDeployTargets(siteIds: readonly string[]): DeployTarget[] {
+  return siteIds.map(siteId => {
+    const definition = loadCheckedInSite(siteId)
+
+    return {
+      artifactDir: definition.build.artifactDir,
+      siteId: definition.id
+    }
+  })
+}
+
+function isWorkflowDispatchAllSites(env: NodeJS.ProcessEnv): boolean {
+  return env.GITHUB_EVENT_NAME === 'workflow_dispatch' && env.SITE_ID?.trim() === 'all'
 }
 
 export async function resolveBuildRun(
@@ -776,6 +827,13 @@ export async function resolveBuildRun(
   env: NodeJS.ProcessEnv = process.env,
   options: ResolveBuildRunOptions = {}
 ): Promise<BuildRunResolution> {
+  if (isWorkflowDispatchAllSites(env)) {
+    return {
+      deployTargets: createDeployTargets(activeCheckedInSiteIds),
+      shouldDeploy: true
+    }
+  }
+
   const input = hasExplicitSiteInput(argv, env)
     ? parseSiteInputArgs(argv, env)
     : env.GITHUB_EVENT_NAME === 'push'
@@ -784,14 +842,33 @@ export async function resolveBuildRun(
 
   if ('shouldDeploy' in input && !input.shouldDeploy) {
     return {
+      deployTargets: [],
       shouldDeploy: false
     }
   }
 
+  if ('siteIds' in input && input.siteIds?.length) {
+    const deployTargets = createDeployTargets(input.siteIds)
+
+    return {
+      artifactDir: deployTargets.length === 1 ? deployTargets[0]?.artifactDir : undefined,
+      deployTargets,
+      shouldDeploy: true,
+      siteId: deployTargets.length === 1 ? deployTargets[0]?.siteId : undefined
+    }
+  }
+
   const definition = loadCheckedInSiteFromInput(input)
+  const deployTargets = [
+    {
+      artifactDir: definition.build.artifactDir,
+      siteId: definition.id
+    }
+  ]
 
   return {
     artifactDir: definition.build.artifactDir,
+    deployTargets,
     shouldDeploy: true,
     siteId: definition.id
   }
@@ -803,6 +880,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1
       console.log(`should_deploy=${run.shouldDeploy ? 'true' : 'false'}`)
       console.log(`artifact_dir=${run.artifactDir ?? ''}`)
       console.log(`site_id=${run.siteId ?? ''}`)
+      console.log(`deploy_targets=${JSON.stringify(run.deployTargets ?? [])}`)
 
       if (!run.shouldDeploy) {
         console.error('No checked-in site could be inferred for this push; skipping deploy.')
