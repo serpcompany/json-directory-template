@@ -9,6 +9,7 @@ import {
   getFeaturedOnBadgePreviewPathFromKey,
   getFeaturedOnBadgePublicUrlFromKey
 } from './featured-on-badge-url'
+import { getOutboundUrlWithRef } from './outbound-url'
 
 type WebsiteSidebarMetadata = {
   category?: string
@@ -24,6 +25,7 @@ export type WebsiteDetailSidebarProps = {
 }
 
 export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
+  const outboundWebsiteUrl = getOutboundUrlWithRef(website.website, siteConfig)
   const listingUrl = new URL(
     getRoute('listing.detail', { slug: website.slug }),
     siteConfig.publicUrl
@@ -46,7 +48,7 @@ export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
   return (
     <aside className="space-y-6 lg:sticky lg:top-20 lg:self-start">
       <Link
-        href={website.website}
+        href={outboundWebsiteUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="sticky top-20 z-20 flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-4 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"

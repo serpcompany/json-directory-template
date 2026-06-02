@@ -53,7 +53,7 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
     strategy: 'github-pages-repo-sync'
   },
   id: 'serp.co',
-  networkBrandGroup: 'mainGroup',
+  networkBrandGroup: 'all',
   features: {
     showBrands: true,
     showGuides: true

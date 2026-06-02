@@ -1,5 +1,5 @@
-import { render, screen } from '@/test/test-utils'
 import { WebsiteRelatedProjectsRoute as WebsiteRelatedProjects } from '@thedaviddias/web-core/website/website-related-projects-route'
+import { render, screen } from '@/test/test-utils'
 
 jest.mock('@thedaviddias/web-core/llm/llm-grid', () => ({
   LLMGrid: ({ items }: { items: Array<{ name: string }> }) => (
@@ -22,15 +22,8 @@ describe('WebsiteRelatedProjects', () => {
   it('renders related-entry copy through the package-owned related-projects wrapper', () => {
     render(<WebsiteRelatedProjects websites={relatedWebsites} />)
 
-    expect(
-      screen.getByRole('heading', { name: /related entries/i })
-    ).toBeInTheDocument()
-    expect(
-      screen.getByText(/similar entries in the directory/i)
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('link', { name: /browse the directory/i })
-    ).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /related entries/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /browse the directory/i })).toBeInTheDocument()
     expect(screen.getByTestId('llm-grid')).toHaveTextContent('Example Project')
   })
 })

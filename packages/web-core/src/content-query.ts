@@ -97,19 +97,19 @@ export interface AboutPageMetadata {
   missionTitle: string
   missionIntro: string
   missionItems: string[]
-  stepsTitle: string
-  steps: Array<{
+  stepsTitle?: string
+  steps?: Array<{
     icon: 'file-text' | 'code' | 'zap'
     title: string
     body: string
   }>
-  communityTitle: string
-  communityBody: string
+  communityTitle?: string
+  communityBody?: string
   primaryCtaLabel: string
   secondaryCtaLabel: string
-  contactTitle: string
-  contactBody: string
-  contactEmail: string
+  contactTitle?: string
+  contactBody?: string
+  contactEmail?: string
   published: boolean
   content?: string
 }

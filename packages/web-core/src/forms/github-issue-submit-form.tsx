@@ -331,10 +331,6 @@ export function GitHubIssueSubmitForm() {
                 </option>
               ))}
             </select>
-            <p className="text-xs text-muted-foreground">
-              Choose the best primary category. Reviewers can add secondary categories later if
-              needed.
-            </p>
             <FieldError message={errors.category?.message} />
           </label>
 

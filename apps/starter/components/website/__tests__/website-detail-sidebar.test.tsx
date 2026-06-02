@@ -18,7 +18,7 @@ describe('WebsiteDetailSidebar', () => {
 
     const cta = screen.getByRole('link', { name: /visit site/i })
 
-    expect(cta).toHaveAttribute('href', 'https://example.com')
+    expect(cta).toHaveAttribute('href', 'https://example.com/?ref=example.com')
     expect(cta).toHaveAttribute('target', '_blank')
     expect(cta).toHaveAttribute('rel', 'noopener noreferrer')
     expect(cta).toHaveClass('sticky')

@@ -61,7 +61,7 @@ export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
     strategy: 'github-pages-repo-sync'
   },
   id: 'serp.ai',
-  networkBrandGroup: 'mainGroup',
+  networkBrandGroup: 'all',
   features: {
     showBrands: true
   },
