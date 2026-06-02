@@ -45,7 +45,7 @@ export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
       plural: 'products',
       singular: 'product'
     },
-    submitLabel: 'Submit a Product'
+    submitLabel: 'Submit Yours'
   },
   deploy: {
     branch: 'main',

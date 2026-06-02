@@ -81,7 +81,7 @@ describe('loadCheckedInSite', () => {
         singular: 'product'
       },
       networkLabel: 'Network',
-      submitLabel: 'Submit a Product'
+      submitLabel: 'Submit Yours'
     })
     expect(config.features.showAuth).toBe(false)
     expect(config.features.showDocs).toBe(false)
@@ -209,7 +209,7 @@ describe('loadCheckedInSite', () => {
       plural: 'products',
       singular: 'product'
     })
-    expect(config.copy.submitLabel).toBe('Submit a Product')
+    expect(config.copy.submitLabel).toBe('Submit Yours')
     expect(config.features.showBrands).toBe(true)
     expect(config.networkBrandGroup).toBe('mainGroup')
     expect(config.analytics?.gtmId).toBe('GTM-W59GNHXF')
@@ -298,7 +298,7 @@ describe('loadCheckedInSite', () => {
     expect(config.routes.docsBasePath).toBe('docs')
     expect(config.routes.networkBasePath).toBe('network')
     expect(config.routes.brandsBasePath).toBe('brands')
-    expect(config.copy.submitLabel).toBe('Submit a Product')
+    expect(config.copy.submitLabel).toBe('Submit Yours')
     expect(config.copy.brandsLabel).toBe('Brands')
     expect(config.copy.docsLabel).toBe('Docs')
     expect(config.copy.networkLabel).toBe('Network')
@@ -606,7 +606,7 @@ describe('resolveResolvedSiteConfig', () => {
           plural: 'products',
           singular: 'product'
         },
-        submitLabel: 'Submit a Product'
+        submitLabel: 'Submit Yours'
       },
       description: 'A collection of tools to help you download anything from anywhere, anytime.',
       domain: 'serpdownloaders.com',
@@ -633,7 +633,7 @@ describe('resolveResolvedSiteConfig', () => {
           plural: 'products',
           singular: 'product'
         },
-        submitLabel: 'Submit a Product'
+        submitLabel: 'Submit Yours'
       },
       description: 'Downloaders for adult video platforms and creator sites.',
       domain: 'pornvideodownloaders.com',

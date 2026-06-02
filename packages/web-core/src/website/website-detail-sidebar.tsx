@@ -51,7 +51,7 @@ export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
         rel="noopener noreferrer"
         className="sticky top-20 z-20 flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-4 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
-        <span>Open {website.name}</span>
+        <span>Visit Site</span>
         <ExternalLink className="size-4" aria-hidden />
       </Link>
 
