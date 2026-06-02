@@ -6,6 +6,28 @@ import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-
 import { describe, expect, it } from 'vitest'
 
 const siteIds = [defaultSiteConfig.id, ...activeCheckedInSiteIds] as const
+const badgeVariants = ['light', 'dark'] as const
+const manuallySelectedBadgeSites = [
+  'browserextensions.io',
+  'pornvideodownloaders.com',
+  'serp.ai',
+  'serp.co',
+  'serp.software',
+  'serpdownloaders.com'
+] as const
+const officialBadgeGeometrySites = [
+  'pornvideodownloaders.com',
+  'serp.ai',
+  'serp.co',
+  'serp.software',
+  'serpdownloaders.com'
+] as const
+const serpBadgeGeometrySites = [
+  'serp.ai',
+  'serp.co',
+  'serp.software',
+  'serpdownloaders.com'
+] as const
 const PNG_SIGNATURE = '89504e470d0a1a0a'
 const BADGE_TEXT_X = 42
 const BADGE_RIGHT_MARGIN = 10
@@ -15,38 +37,37 @@ const BADGE_TEXT_MAX_WIDTH = BADGE_WIDTH - BADGE_TEXT_X - BADGE_RIGHT_MARGIN
 const BADGE_ICON_SIZE = 20
 const BADGE_LABEL_FONT_SIZE = 8
 const BADGE_NAME_MAX_FONT_SIZE = 13
-const siteConfigLogoBadgeSites = ['browserextensions.io'] as const
+const siteConfigLogoBadgeSites = [] as const
 const siteConfigFaviconFallbackBadgeSites = [
   'pornvideodownloaders.com',
   'serpdownloaders.com'
 ] as const
 
-const siteTypographyOverrides = {
-  'browserextensions.io': {
-    labelFontSize: 7,
-    nameMaxFontSize: 12
-  },
-  'pornvideodownloaders.com': {
-    labelFontSize: 7,
-    letterSpacing: '0',
-    nameMaxFontSize: 13
+const siteTypographyOverrides = {} as const
+
+function isManuallySelectedBadgeSite(siteId: string): boolean {
+  return manuallySelectedBadgeSites.includes(siteId as (typeof manuallySelectedBadgeSites)[number])
+}
+
+function isSerpBadgeGeometrySite(siteId: string): boolean {
+  return serpBadgeGeometrySites.includes(siteId as (typeof serpBadgeGeometrySites)[number])
+}
+
+function getBadgeAssetPath(siteId: string, variant: (typeof badgeVariants)[number]): string {
+  const config = resolveCheckedInSiteConfig(siteId)
+  const configuredKey = isManuallySelectedBadgeSite(siteId)
+    ? config.badges?.featuredOn?.[variant]
+    : `badge/featured-on-${siteId}-${variant}.svg`
+
+  if (!configuredKey) {
+    throw new Error(`${siteId}: missing ${variant} featuredOn badge config`)
   }
-} as const
+
+  return resolve('apps', config.build.appPackageName, 'public', configuredKey)
+}
 
 function getBadgeAssetPaths(): string[] {
-  return siteIds.flatMap(siteId => {
-    const config = resolveCheckedInSiteConfig(siteId)
-
-    return (['light', 'dark'] as const).map(variant =>
-      resolve(
-        'apps',
-        config.build.appPackageName,
-        'public',
-        'badge',
-        `featured-on-${siteId}-${variant}.svg`
-      )
-    )
-  })
+  return siteIds.flatMap(siteId => badgeVariants.map(variant => getBadgeAssetPath(siteId, variant)))
 }
 
 function getPngImageDataUris(svg: string): string[] {
@@ -210,7 +231,7 @@ describe('featured badge assets', () => {
 
       return (
         !/<image\b[^>]*\bhref="data:image\/(?:png|svg\+xml);base64,/.test(svg) &&
-        !/<svg\b[^>]*\bdata-badge-logo="true"/.test(svg)
+        !/<(?:svg|g)\b[^>]*\bdata-badge-logo="true"/.test(svg)
       )
     })
 
@@ -226,15 +247,8 @@ describe('featured badge assets', () => {
         return [`${siteId}: missing local PNG logo config`]
       }
 
-      return (['light', 'dark'] as const).flatMap(variant => {
-        const assetPath = resolve(
-          'apps',
-          config.build.appPackageName,
-          'public',
-          'badge',
-          `featured-on-${siteId}-${variant}.svg`
-        )
-
+      return badgeVariants.flatMap(variant => {
+        const assetPath = getBadgeAssetPath(siteId, variant)
         if (!existsSync(assetPath)) {
           return [`${siteId} ${variant}: missing badge`]
         }
@@ -261,15 +275,8 @@ describe('featured badge assets', () => {
         return [`${siteId}: missing local favicon config`]
       }
 
-      return (['light', 'dark'] as const).flatMap(variant => {
-        const assetPath = resolve(
-          'apps',
-          config.build.appPackageName,
-          'public',
-          'badge',
-          `featured-on-${siteId}-${variant}.svg`
-        )
-
+      return badgeVariants.flatMap(variant => {
+        const assetPath = getBadgeAssetPath(siteId, variant)
         if (!existsSync(assetPath)) {
           return [`${siteId} ${variant}: missing badge`]
         }
@@ -303,19 +310,14 @@ describe('featured badge assets', () => {
 
   it('uses the compact fixed-width badge layout', () => {
     const badgesWithLooseLayout = siteIds.flatMap(siteId => {
-      const config = resolveCheckedInSiteConfig(siteId)
+      if (isManuallySelectedBadgeSite(siteId)) {
+        return []
+      }
+
       const labelFontSize =
         siteTypographyOverrides[siteId as keyof typeof siteTypographyOverrides]?.labelFontSize ??
         BADGE_LABEL_FONT_SIZE
-      const assetPaths = (['light', 'dark'] as const).map(variant =>
-        resolve(
-          'apps',
-          config.build.appPackageName,
-          'public',
-          'badge',
-          `featured-on-${siteId}-${variant}.svg`
-        )
-      )
+      const assetPaths = badgeVariants.map(variant => getBadgeAssetPath(siteId, variant))
 
       return assetPaths.filter(assetPath => {
         if (!existsSync(assetPath)) {
@@ -342,20 +344,68 @@ describe('featured badge assets', () => {
     expect(badgesWithLooseLayout).toEqual([])
   })
 
+  it('uses the official BrowserExtensions badge geometry for selected manual badges', () => {
+    const badgesWithDifferentGeometry = officialBadgeGeometrySites.flatMap(siteId =>
+      badgeVariants.flatMap(variant => {
+        const assetPath = getBadgeAssetPath(siteId, variant)
+
+        if (!existsSync(assetPath)) {
+          return [`${siteId} ${variant}: missing badge`]
+        }
+
+        const svg = readFileSync(assetPath, 'utf-8')
+        const expectedRect =
+          variant === 'dark'
+            ? '<rect x="1" y="1" width="198" height="48" rx="5" fill="#000000" stroke="#ffffff" stroke-width="2"/>'
+            : '<rect x="1" y="1" width="198" height="48" rx="5" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>'
+
+        const problems: string[] = []
+
+        if (!svg.includes(expectedRect)) {
+          problems.push(`${siteId} ${variant}: rect`)
+        }
+
+        const expectedIconPattern = isSerpBadgeGeometrySite(siteId)
+          ? /(?:<image|<svg)\b[^>]*x="14" y="13" width="24" height="24"|<g\b[^>]*transform="translate\(14 13\) scale\(0\.08\)"/
+          : /(?:<image|<svg)\b[^>]*x="12" y="15" width="20" height="20"|<g\b[^>]*transform="translate\(12 15\) scale\(0\.0666667\)"/
+        const expectedTextX = isSerpBadgeGeometrySite(siteId) ? '56' : '40'
+
+        if (!expectedIconPattern.test(svg)) {
+          problems.push(`${siteId} ${variant}: icon`)
+        }
+
+        if (
+          !new RegExp(
+            `<text x="${expectedTextX}" y="21"[^>]*font-size="10"[^>]*font-weight="500"[^>]*text-transform="uppercase"`
+          ).test(svg)
+        ) {
+          problems.push(`${siteId} ${variant}: label`)
+        }
+
+        if (
+          !new RegExp(
+            `<text x="${expectedTextX}" y="38"[^>]*font-size="14"[^>]*font-weight="700"`
+          ).test(svg)
+        ) {
+          problems.push(`${siteId} ${variant}: name`)
+        }
+
+        if (svg.includes('letter-spacing=')) {
+          problems.push(`${siteId} ${variant}: letter spacing`)
+        }
+
+        return problems
+      })
+    )
+
+    expect(badgesWithDifferentGeometry).toEqual([])
+  })
+
   it('applies requested site-specific typography overrides', () => {
     const badgesWithoutTypographyOverrides = Object.entries(siteTypographyOverrides).flatMap(
       ([siteId, expected]) => {
-        const config = resolveCheckedInSiteConfig(siteId)
-
-        return (['light', 'dark'] as const).flatMap(variant => {
-          const assetPath = resolve(
-            'apps',
-            config.build.appPackageName,
-            'public',
-            'badge',
-            `featured-on-${siteId}-${variant}.svg`
-          )
-
+        return badgeVariants.flatMap(variant => {
+          const assetPath = getBadgeAssetPath(siteId, variant)
           if (!existsSync(assetPath)) {
             return [`${siteId} ${variant}: missing badge`]
           }
@@ -418,14 +468,8 @@ describe('featured badge assets', () => {
 
     expect(badgeDisplayName).toBe('PV Downloaders')
 
-    const badgesWithLongName = (['light', 'dark'] as const).filter(variant => {
-      const assetPath = resolve(
-        'apps',
-        config.build.appPackageName,
-        'public',
-        'badge',
-        `featured-on-${siteId}-${variant}.svg`
-      )
+    const badgesWithLongName = badgeVariants.filter(variant => {
+      const assetPath = getBadgeAssetPath(siteId, variant)
       const svg = readFileSync(assetPath, 'utf-8')
 
       return (
@@ -453,19 +497,15 @@ describe('featured badge assets', () => {
 
   it('renders full site names within the badge right margin', () => {
     const badgesWithCroppedNames = siteIds.flatMap(siteId => {
+      if (isManuallySelectedBadgeSite(siteId)) {
+        return []
+      }
+
       const config = resolveCheckedInSiteConfig(siteId)
       const expectedRenderedName = config.badges?.featuredOn?.displayName ?? config.site.name
 
-      return (['light', 'dark'] as const)
-        .map(variant =>
-          resolve(
-            'apps',
-            config.build.appPackageName,
-            'public',
-            'badge',
-            `featured-on-${siteId}-${variant}.svg`
-          )
-        )
+      return badgeVariants
+        .map(variant => getBadgeAssetPath(siteId, variant))
         .filter(assetPath => {
           if (!existsSync(assetPath)) {
             return false

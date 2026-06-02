@@ -1,7 +1,5 @@
 export type FeaturedOnBadgeTheme = 'light' | 'dark'
 
-const DEFAULT_FEATURED_BADGE_PUBLIC_BASE_URL = 'https://embeds.serp.co'
-
 function trimTrailingSlash(value: string): string {
   return value.replace(/\/+$/, '')
 }
@@ -22,19 +20,19 @@ export function getFeaturedOnBadgePreviewPath(siteId: string, theme: FeaturedOnB
   return getFeaturedOnBadgePreviewPathFromKey(getDefaultFeaturedOnBadgeKey(siteId, theme))
 }
 
-export function getFeaturedOnBadgePublicUrlFromKey(
-  badgeKey: string,
-  publicBaseUrl = process.env.NEXT_PUBLIC_FEATURED_BADGE_BASE_URL ||
-    DEFAULT_FEATURED_BADGE_PUBLIC_BASE_URL
-): string {
-  return `${trimTrailingSlash(publicBaseUrl)}/${normalizeBadgeKey(badgeKey)}`
+export function getFeaturedOnBadgePublicUrlFromKey(badgeKey: string, publicBaseUrl = ''): string {
+  const normalizedBadgeKey = normalizeBadgeKey(badgeKey)
+  const normalizedPublicBaseUrl = trimTrailingSlash(publicBaseUrl)
+
+  return normalizedPublicBaseUrl
+    ? `${normalizedPublicBaseUrl}/${normalizedBadgeKey}`
+    : `/${normalizedBadgeKey}`
 }
 
 export function getFeaturedOnBadgePublicUrl(
   siteId: string,
   theme: FeaturedOnBadgeTheme,
-  publicBaseUrl = process.env.NEXT_PUBLIC_FEATURED_BADGE_BASE_URL ||
-    DEFAULT_FEATURED_BADGE_PUBLIC_BASE_URL
+  publicBaseUrl = ''
 ): string {
   return getFeaturedOnBadgePublicUrlFromKey(
     getDefaultFeaturedOnBadgeKey(siteId, theme),

@@ -41,13 +41,15 @@ describe('WebsiteDetailSidebar', () => {
     )
   })
 
-  it('renders local badge previews but copies R2-hosted embed URLs', async () => {
+  it('renders local badge previews and copies site-hosted embed URLs', async () => {
     const user = userEvent.setup()
     const writeText = jest.spyOn(navigator.clipboard, 'writeText').mockResolvedValue(undefined)
     const { container } = render(<WebsiteDetailSidebar website={website} />)
 
     expect(
-      screen.getByRole('heading', { name: 'Embed your badge on your website' })
+      screen.getByRole('heading', {
+        name: 'Add a badge to your website. Click the badge below to copy the code.'
+      })
     ).toBeInTheDocument()
     expect(
       screen.getByRole('img', { name: 'Light Featured on Directory Starter badge' })
@@ -65,7 +67,7 @@ describe('WebsiteDetailSidebar', () => {
     await waitFor(() => {
       expect(writeText).toHaveBeenCalledWith(
         `<a href="https://example.com/listing/example-product/" target="_blank" rel="noopener noreferrer" title="Example Product featured on Directory Starter">
-  <img src="https://embeds.serp.co/badge/featured-on-default-light.svg" alt="Featured on Directory Starter" width="200" height="50" />
+  <img src="https://example.com/badge/featured-on-default-light.svg" alt="Featured on Directory Starter" width="200" height="50" />
 </a>`
       )
     })
