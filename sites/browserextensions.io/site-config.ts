@@ -53,7 +53,7 @@ export const browserextensionsIoSiteConfig: CheckedInSiteConfigOverride = {
     strategy: 'github-pages-repo-sync'
   },
   id: 'browserextensions.io',
-  networkBrandGroup: 'mainGroup',
+  networkBrandGroup: 'all',
   features: {
     showBrands: true
   },

@@ -19,7 +19,7 @@ const guides = defineCollection({
     authors: z.array(
       z.object({
         name: z.string(),
-        url: z.string().url().optional(),
+        url: z.string().url().optional()
       })
     ),
     tags: z.array(z.string()).optional(),
@@ -29,12 +29,12 @@ const guides = defineCollection({
       .default('getting-started'),
     published: z.boolean().default(true),
     publishedAt: z.string().optional(),
-    readingTime: z.number().optional(),
+    readingTime: z.number().optional()
   }),
   transform: document => ({
     ...document,
-    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, ''),
-  }),
+    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, '')
+  })
 })
 
 const resources = defineCollection({
@@ -47,12 +47,12 @@ const resources = defineCollection({
     url: z.string().url().optional(),
     category: z.string(),
     icon: z.string().optional(),
-    featured: z.boolean().optional().default(false),
+    featured: z.boolean().optional().default(false)
   }),
   transform: document => ({
     ...document,
-    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, ''),
-  }),
+    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, '')
+  })
 })
 
 const legal = defineCollection({
@@ -62,12 +62,12 @@ const legal = defineCollection({
   schema: z => ({
     title: z.string().optional(),
     lastUpdated: z.string().optional(),
-    summary: z.string().optional(),
+    summary: z.string().optional()
   }),
   transform: document => ({
     ...document,
-    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, ''),
-  }),
+    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, '')
+  })
 })
 
 const docs = defineCollection({
@@ -78,12 +78,12 @@ const docs = defineCollection({
     title: z.string(),
     description: z.string(),
     order: z.number(),
-    published: z.boolean().default(true),
+    published: z.boolean().default(true)
   }),
   transform: document => ({
     ...document,
-    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, ''),
-  }),
+    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, '')
+  })
 })
 
 const aboutPages = defineCollection({
@@ -109,7 +109,7 @@ const aboutPages = defineCollection({
         z.object({
           icon: z.enum(['file-text', 'code', 'zap']),
           title: z.string(),
-          body: z.string(),
+          body: z.string()
         })
       )
       .default([]),
@@ -120,12 +120,12 @@ const aboutPages = defineCollection({
     contactTitle: z.string().optional(),
     contactBody: z.string().optional(),
     contactEmail: z.string().email().optional(),
-    published: z.boolean().default(true),
+    published: z.boolean().default(true)
   }),
   transform: document => ({
     ...document,
-    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, ''),
-  }),
+    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, '')
+  })
 })
 
 const extensionUpdates = defineCollection({
@@ -138,14 +138,14 @@ const extensionUpdates = defineCollection({
     description: z.string(),
     date: z.string(),
     published: z.boolean().default(true),
-    highlights: z.array(z.string()).max(5).default([]),
+    highlights: z.array(z.string()).max(5).default([])
   }),
   transform: document => ({
     ...document,
-    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, ''),
-  }),
+    slug: document._meta.path || document._meta.fileName.replace(/\.mdx$/, '')
+  })
 })
 
 export default defineConfig({
-  collections: [guides, resources, legal, docs, aboutPages, extensionUpdates],
+  collections: [guides, resources, legal, docs, aboutPages, extensionUpdates]
 })

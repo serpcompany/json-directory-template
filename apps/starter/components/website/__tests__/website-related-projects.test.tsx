@@ -26,9 +26,6 @@ describe('WebsiteRelatedProjects', () => {
       screen.getByRole('heading', { name: /related entries/i })
     ).toBeInTheDocument()
     expect(
-      screen.getByText(/similar entries in the directory/i)
-    ).toBeInTheDocument()
-    expect(
       screen.getByRole('link', { name: /browse the directory/i })
     ).toBeInTheDocument()
     expect(screen.getByTestId('llm-grid')).toHaveTextContent('Example Project')

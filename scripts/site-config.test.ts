@@ -92,7 +92,7 @@ describe('loadCheckedInSite', () => {
     expect(config.features.showProjects).toBe(false)
     expect(config.features.showBrands).toBe(true)
     expect(config.analytics?.gtmId).toBe('GTM-M82HC3SC')
-    expect(config.networkBrandGroup).toBe('mainGroup')
+    expect(config.networkBrandGroup).toBe('all')
     expect(config.social.githubIssueOwner).toBe('serpcompany')
     expect(config.social.githubIssueRepo).toBe('serpdownloaders.com')
     expect(config.social.githubIssuesUrl).toBe(
@@ -126,7 +126,7 @@ describe('loadCheckedInSite', () => {
     expect(config.routes.listingBasePath).toBe('products')
     expect(config.copy.submitLabel).toBe('Submit to SERP AI')
     expect(config.features.showBrands).toBe(true)
-    expect(config.networkBrandGroup).toBe('mainGroup')
+    expect(config.networkBrandGroup).toBe('all')
     expect(config.social.githubIssueOwner).toBe('serpcompany')
     expect(config.social.githubIssueRepo).toBe('serp.ai')
     expect(config.social.githubIssuesUrl).toBe('https://github.com/serpcompany/serp.ai/issues')
@@ -168,7 +168,7 @@ describe('loadCheckedInSite', () => {
     })
     expect(config.copy.brandsLabel).toBe('Brands')
     expect(config.features.showBrands).toBe(true)
-    expect(config.networkBrandGroup).toBe('serpxxxGroup')
+    expect(config.networkBrandGroup).toBe('adultsOnly')
     expect(config.social.githubIssueOwner).toBe('serpcompany')
     expect(config.social.githubIssueRepo).toBe('pornvideodownloaders.com')
     expect(config.social.githubIssuesUrl).toBe(
@@ -211,7 +211,7 @@ describe('loadCheckedInSite', () => {
     })
     expect(config.copy.submitLabel).toBe('Submit Yours')
     expect(config.features.showBrands).toBe(true)
-    expect(config.networkBrandGroup).toBe('mainGroup')
+    expect(config.networkBrandGroup).toBe('all')
     expect(config.analytics?.gtmId).toBe('GTM-W59GNHXF')
     expect(config.social.githubIssueOwner).toBe('serpcompany')
     expect(config.social.githubIssueRepo).toBe('serp.software')
@@ -615,7 +615,7 @@ describe('resolveResolvedSiteConfig', () => {
       githubIssueRepo: 'serpdownloaders.com',
       githubIssuesUrl: 'https://github.com/serpcompany/serpdownloaders.com/issues',
       id: 'serpdownloaders.com',
-      networkBrandGroup: 'mainGroup',
+      networkBrandGroup: 'all',
       docsRouteBasePath: 'docs',
       brandsRouteBasePath: 'brands',
       listingRouteBasePath: 'products',
@@ -641,7 +641,7 @@ describe('resolveResolvedSiteConfig', () => {
       githubIssueRepo: 'pornvideodownloaders.com',
       githubIssuesUrl: 'https://github.com/serpcompany/pornvideodownloaders.com/issues',
       id: 'pornvideodownloaders.com',
-      networkBrandGroup: 'serpxxxGroup',
+      networkBrandGroup: 'adultsOnly',
       docsRouteBasePath: 'docs',
       brandsRouteBasePath: 'brands',
       listingRouteBasePath: 'products',

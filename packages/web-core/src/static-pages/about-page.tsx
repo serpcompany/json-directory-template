@@ -30,9 +30,7 @@ interface AboutStaticPageProps {
   slots: AboutCardSlots
 }
 
-export function generateAboutPageMetadata(
-  aboutPage: AboutPageMetadata | null
-): Metadata {
+export function generateAboutPageMetadata(aboutPage: AboutPageMetadata | null): Metadata {
   if (!aboutPage) {
     return generateBaseMetadata({
       title: 'About',
@@ -54,12 +52,8 @@ export function AboutStaticPage({ aboutPage, slots }: AboutStaticPageProps) {
   const hasContactSection = Boolean(
     aboutPage.contactTitle && aboutPage.contactBody && aboutPage.contactEmail
   )
-  const hasStepsSection = Boolean(
-    aboutPage.stepsTitle && aboutPage.steps?.length
-  )
-  const hasCommunitySection = Boolean(
-    aboutPage.communityTitle && aboutPage.communityBody
-  )
+  const hasStepsSection = Boolean(aboutPage.stepsTitle && aboutPage.steps?.length)
+  const hasCommunitySection = Boolean(aboutPage.communityTitle && aboutPage.communityBody)
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -112,9 +106,7 @@ export function AboutStaticPage({ aboutPage, slots }: AboutStaticPageProps) {
         <section className="space-y-4">
           {hasCommunitySection && (
             <>
-              <h2 className="text-2xl font-semibold">
-                {aboutPage.communityTitle}
-              </h2>
+              <h2 className="text-2xl font-semibold">{aboutPage.communityTitle}</h2>
               <p>{aboutPage.communityBody}</p>
             </>
           )}
@@ -135,10 +127,7 @@ export function AboutStaticPage({ aboutPage, slots }: AboutStaticPageProps) {
             <h2 className="text-2xl font-semibold">{aboutPage.contactTitle}</h2>
             <p>
               {aboutPage.contactBody}{' '}
-              <a
-                href={`mailto:${aboutPage.contactEmail}`}
-                className="text-primary hover:underline"
-              >
+              <a href={`mailto:${aboutPage.contactEmail}`} className="text-primary hover:underline">
                 {aboutPage.contactEmail}
               </a>
             </p>

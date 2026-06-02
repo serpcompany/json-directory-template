@@ -54,7 +54,7 @@ export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     strategy: 'github-pages-repo-sync'
   },
   id: 'pornvideodownloaders.com',
-  networkBrandGroup: 'serpxxxGroup',
+  networkBrandGroup: 'adultsOnly',
   routes: {
     listingBasePath: 'products'
   },

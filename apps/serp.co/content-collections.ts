@@ -46,11 +46,7 @@ const guides = defineCollection({
     published: document.published !== false && document.status !== 'draft',
     publishedAt: document.publishedAt || document.date || new Date().toISOString(),
     slug: document.slug || document._meta.path || document._meta.fileName.replace(/\.mdx$/, ''),
-    tags: Array.isArray(document.tags)
-      ? document.tags
-      : document.tags
-        ? [document.tags]
-        : undefined
+    tags: Array.isArray(document.tags) ? document.tags : document.tags ? [document.tags] : undefined
   })
 })
 

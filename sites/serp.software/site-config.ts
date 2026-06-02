@@ -39,7 +39,7 @@ export const serpSoftwareSiteConfig: CheckedInSiteConfigOverride = {
     strategy: 'github-pages-repo-sync'
   },
   id: 'serp.software',
-  networkBrandGroup: 'mainGroup',
+  networkBrandGroup: 'all',
   routes: {
     listingBasePath: 'products'
   },

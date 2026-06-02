@@ -91,10 +91,9 @@ describe('active site About page brand content', () => {
       )
 
       for (const phrase of bannedActiveDomainPhrases) {
-        expect(
-          lowerAboutMdx,
-          `${siteId} About copy should not contain "${phrase}"`
-        ).not.toContain(phrase.toLowerCase())
+        expect(lowerAboutMdx, `${siteId} About copy should not contain "${phrase}"`).not.toContain(
+          phrase.toLowerCase()
+        )
       }
 
       expect(aboutMdx).not.toContain('contactTitle:')
@@ -163,7 +162,7 @@ describe('active site About page brand content', () => {
     expect(source).toContain('generateAboutPageMetadata')
     expect(source).not.toContain('BrowserExtensions.io is a curated directory')
     expect(source).not.toContain('great products')
-    expect(source).not.toContain("export const metadata")
+    expect(source).not.toContain('export const metadata')
   })
 
   it('records an audit row for every active domain-level About page', () => {
@@ -181,7 +180,7 @@ describe('active site About page brand content', () => {
     }
   })
 
-  it.runIf(activeSiteIds.every((siteId) => existsSync(aboutArtifactPath(siteId))))(
+  it.runIf(activeSiteIds.every(siteId => existsSync(aboutArtifactPath(siteId))))(
     'renders active About artifacts without starter or contact copy',
     () => {
       for (const siteId of activeSiteIds) {

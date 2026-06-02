@@ -187,7 +187,9 @@ describe('browserextensions.io artifact links', () => {
   it('renders BrowserExtensions.io about copy from the site-owned content source', () => {
     const html = readArtifactHtml('about/index.html')
 
-    expect(html).toContain('BrowserExtensions.io is for people who know they need a browser extension')
+    expect(html).toContain(
+      'BrowserExtensions.io is for people who know they need a browser extension'
+    )
     expect(html).toContain('Browser stores are good for installation')
     expect(html).not.toContain('contact@example.com')
     expect(html).not.toContain('marketing@serp.co')
