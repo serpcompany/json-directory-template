@@ -37,6 +37,10 @@ describe('loadCheckedInSite', () => {
       appOutDir: 'apps/browserextensions.io/out',
       artifactDir: 'dist/sites/browserextensions.io'
     })
+    expect(config.badges?.featuredOn).toEqual({
+      dark: 'badge/browserextensions.io-featured-on-dark.svg',
+      light: 'badge/browserextensions.io-featured-on-light.svg'
+    })
     expect(config.routes.listingBasePath).toBe('products')
     expect(config.sitemap.pathByGroup).toEqual({
       listings: '/sitemaps/directory/1.xml',

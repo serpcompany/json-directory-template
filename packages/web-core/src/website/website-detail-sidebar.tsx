@@ -30,8 +30,8 @@ export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
   ).toString()
   const badgeKeys = siteConfig.badges.featuredOn
   const badgeUrls = {
-    dark: getFeaturedOnBadgePublicUrlFromKey(badgeKeys.dark),
-    light: getFeaturedOnBadgePublicUrlFromKey(badgeKeys.light)
+    dark: getFeaturedOnBadgePublicUrlFromKey(badgeKeys.dark, siteConfig.publicUrl),
+    light: getFeaturedOnBadgePublicUrlFromKey(badgeKeys.light, siteConfig.publicUrl)
   }
   const badgePreviewUrls = {
     dark: getFeaturedOnBadgePreviewPathFromKey(badgeKeys.dark),

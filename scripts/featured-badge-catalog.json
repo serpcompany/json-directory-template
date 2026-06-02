@@ -10,18 +10,12 @@
       "sourceDir": "tmp/browserextensions-io/public/badge",
       "targetDir": "apps/browserextensions.io/public/badge",
       "primary": {
-        "dark": "featured-on-browserextensions-io-dark-badge.svg",
-        "light": "featured-on-browserextensions-io-light-badge.svg"
+        "dark": "browserextensions.io-featured-on-dark.svg",
+        "light": "browserextensions.io-featured-on-light.svg"
       },
       "assets": [
-        "badge_dark.svg",
-        "badge_light.svg",
-        "featured-on-browserextensions-io-dark-badge.svg",
-        "featured-on-browserextensions-io-light-badge.svg",
-        "featured-on-directory-dark-badge.svg",
-        "featured-on-directory-light-badge.svg",
-        "featured-on-serp-ai-light-badge.svg",
-        "featured-on-serp-co-light-badge.svg"
+        "browserextensions.io-featured-on-dark.svg",
+        "browserextensions.io-featured-on-light.svg"
       ]
     },
     "serp.ai": {

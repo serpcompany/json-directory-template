@@ -149,7 +149,11 @@ export function SubmitVerifyPageRoute({
           </div>
 
           <div className="flex items-center justify-center rounded-md border border-border bg-muted/50 p-6">
-            <BadgePreview siteId={siteId} theme={theme} />
+            <BadgePreview
+              badgeKey={siteConfig.badges.featuredOn[theme]}
+              siteId={siteId}
+              theme={theme}
+            />
           </div>
 
           <CopySnippet

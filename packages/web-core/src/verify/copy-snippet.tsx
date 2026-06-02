@@ -31,10 +31,10 @@ export function CopySnippet({
 
   const baseUrl = origin || 'https://your-site.com'
   const badgeUrl = badgeKey
-    ? getFeaturedOnBadgePublicUrlFromKey(badgeKey)
-    : getFeaturedOnBadgePublicUrl(siteId, theme)
+    ? getFeaturedOnBadgePublicUrlFromKey(badgeKey, baseUrl)
+    : getFeaturedOnBadgePublicUrl(siteId, theme, baseUrl)
   const snippet = `<a href="${baseUrl}" target="_blank" title="Featured on ${siteName}">
-  <img src="${badgeUrl}" alt="Featured on ${siteName}" data-verify-token="${token}" width="153" height="44" />
+  <img src="${badgeUrl}" alt="Featured on ${siteName}" data-verify-token="${token}" width="200" height="50" />
 </a>`
 
   function handleCopy() {

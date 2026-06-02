@@ -33,26 +33,46 @@ function loadUploadAssetMaps(): R2FeaturedBadgeAsset[] {
   return [...loadAssetMap(), ...loadApprovedAssetMap()]
 }
 
+function getExpectedAsset(siteId: (typeof siteIds)[number], variant: (typeof variants)[number]) {
+  const config = resolveCheckedInSiteConfig(siteId)
+
+  if (siteId === 'browserextensions.io') {
+    const configuredKey = config.badges?.featuredOn?.[variant]
+
+    if (!configuredKey) {
+      throw new Error(`${siteId}: missing ${variant} featuredOn badge config`)
+    }
+
+    return {
+      contentType: 'image/svg+xml',
+      height: 50,
+      key: configuredKey,
+      siteId,
+      source: `apps/${config.build.appPackageName}/public/${configuredKey}`,
+      variant,
+      width: 200
+    }
+  }
+
+  const filename = `featured-on-${siteId}-${variant}.svg`
+
+  return {
+    contentType: 'image/svg+xml',
+    height: 50,
+    key: `badge/${filename}`,
+    siteId,
+    source: `apps/${config.build.appPackageName}/public/badge/${filename}`,
+    variant,
+    width: 200
+  }
+}
+
 describe('featured badge R2 asset map', () => {
-  it('maps every generated badge to the stable R2 badge key prefix', () => {
+  it('maps every featured badge to its R2 upload key', () => {
     const assetMap = loadAssetMap()
-    const expectedAssets = siteIds.flatMap(siteId => {
-      const config = resolveCheckedInSiteConfig(siteId)
-
-      return variants.map(variant => {
-        const filename = `featured-on-${siteId}-${variant}.svg`
-
-        return {
-          contentType: 'image/svg+xml',
-          height: 50,
-          key: `badge/${filename}`,
-          siteId,
-          source: `apps/${config.build.appPackageName}/public/badge/${filename}`,
-          variant,
-          width: 200
-        }
-      })
-    })
+    const expectedAssets = siteIds.flatMap(siteId =>
+      variants.map(variant => getExpectedAsset(siteId, variant))
+    )
 
     expect(assetMap).toEqual(expectedAssets)
   })
@@ -65,7 +85,14 @@ describe('featured badge R2 asset map', () => {
     expect(missingSources).toEqual([])
   })
 
-  it('has 200x50 local SVGs for every badge key referenced by site config', () => {
+  it('has 200x50 local SVG sources for every badge referenced by site config', () => {
+    const uploadAssetsByKey = new Map(
+      loadUploadAssetMaps()
+        .filter((asset): asset is R2FeaturedBadgeAsset & { key: string; source: string } =>
+          Boolean(asset.key && asset.source)
+        )
+        .map(asset => [asset.key, asset])
+    )
     const brokenConfiguredBadges = siteIds.flatMap(siteId => {
       const config = resolveCheckedInSiteConfig(siteId)
       const configuredBadges = config.badges?.featuredOn
@@ -80,7 +107,10 @@ describe('featured badge R2 asset map', () => {
           return []
         }
 
-        const source = resolve('apps', config.build.appPackageName, 'public', key)
+        const sourcePath =
+          uploadAssetsByKey.get(key)?.source ??
+          resolve('apps', config.build.appPackageName, 'public', key)
+        const source = resolve(sourcePath)
 
         if (!existsSync(source)) {
           return [`${siteId}: missing ${key}`]

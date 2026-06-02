@@ -20,18 +20,18 @@
   {
     "contentType": "image/svg+xml",
     "height": 50,
-    "key": "badge/featured-on-browserextensions.io-light.svg",
+    "key": "badge/browserextensions.io-featured-on-light.svg",
     "siteId": "browserextensions.io",
-    "source": "apps/browserextensions.io/public/badge/featured-on-browserextensions.io-light.svg",
+    "source": "apps/browserextensions.io/public/badge/browserextensions.io-featured-on-light.svg",
     "variant": "light",
     "width": 200
   },
   {
     "contentType": "image/svg+xml",
     "height": 50,
-    "key": "badge/featured-on-browserextensions.io-dark.svg",
+    "key": "badge/browserextensions.io-featured-on-dark.svg",
     "siteId": "browserextensions.io",
-    "source": "apps/browserextensions.io/public/badge/featured-on-browserextensions.io-dark.svg",
+    "source": "apps/browserextensions.io/public/badge/browserextensions.io-featured-on-dark.svg",
     "variant": "dark",
     "width": 200
   },
