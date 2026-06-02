@@ -71,6 +71,50 @@ const excludedGeneralProductSlugs = [
   'unsplash-downloader'
 ] as const
 
+const pagesDevWebsiteSubmissionSlugs = [
+  'coomervideodownloader.pages.dev',
+  'doodstreamvideodownloader.pages.dev',
+  'hdzogvideodownloader.pages.dev',
+  'hotmovsvideodownloader.pages.dev',
+  'javvideodownloader.pages.dev',
+  'luxuretvvideodownloader.pages.dev',
+  'manyvidsvideodownloader.pages.dev',
+  'onlyfansvideodownloader.pages.dev',
+  'pornhatvideodownloader.pages.dev',
+  'pornhubvideodownloader.pages.dev',
+  'pornonevideodownloader.pages.dev',
+  'stripchatvideodownloader.pages.dev',
+  'txxxvideodownloader.pages.dev',
+  'uporniavideodownloader.pages.dev',
+  'whopvideodownloader.pages.dev',
+  'xfantazyvideodownloader.pages.dev',
+  'xfreehdvideodownloader.pages.dev',
+  'xgroovyvideodownloader.pages.dev',
+  'youpornvideodownloader.pages.dev'
+] as const
+
+const pagesDevExpectedTitles: Record<(typeof pagesDevWebsiteSubmissionSlugs)[number], string> = {
+  'coomervideodownloader.pages.dev': 'Coomer Video Downloader',
+  'doodstreamvideodownloader.pages.dev': 'DoodStream Video Downloader',
+  'hdzogvideodownloader.pages.dev': 'HDZog Video Downloader',
+  'hotmovsvideodownloader.pages.dev': 'HotMovs Video Downloader',
+  'javvideodownloader.pages.dev': 'JAV Video Downloader',
+  'luxuretvvideodownloader.pages.dev': 'LuxureTV Video Downloader',
+  'manyvidsvideodownloader.pages.dev': 'ManyVids Video Downloader',
+  'onlyfansvideodownloader.pages.dev': 'OnlyFans Video Downloader',
+  'pornhatvideodownloader.pages.dev': 'PornHat Video Downloader',
+  'pornhubvideodownloader.pages.dev': 'Pornhub Video Downloader',
+  'pornonevideodownloader.pages.dev': 'PornOne Video Downloader',
+  'stripchatvideodownloader.pages.dev': 'Stripchat Video Downloader',
+  'txxxvideodownloader.pages.dev': 'TXXX Video Downloader',
+  'uporniavideodownloader.pages.dev': 'Upornia Video Downloader',
+  'whopvideodownloader.pages.dev': 'Whop Video Downloader',
+  'xfantazyvideodownloader.pages.dev': 'XFantazy Video Downloader',
+  'xfreehdvideodownloader.pages.dev': 'XFreeHD Video Downloader',
+  'xgroovyvideodownloader.pages.dev': 'XGroovy Video Downloader',
+  'youpornvideodownloader.pages.dev': 'YouPorn Video Downloader'
+}
+
 describe('pornvideodownloaders checked-in products', () => {
   it('contains the existing adult subset plus the imported adult downloader sheet rows', () => {
     const products = JSON.parse(readFileSync(productsPath, 'utf8')) as Record<
@@ -91,6 +135,7 @@ describe('pornvideodownloaders checked-in products', () => {
           }>
         }
         media?: {
+          images?: string[]
           logo?: string
         }
         relatedLinks?: Array<{
@@ -103,8 +148,8 @@ describe('pornvideodownloaders checked-in products', () => {
       .filter(([, product]) => product.product?.categories?.includes('adult'))
       .map(([slug]) => slug)
 
-    expect(Object.keys(products)).toHaveLength(266)
-    expect(importedAdultSlugs).toHaveLength(214)
+    expect(Object.keys(products)).toHaveLength(266 + pagesDevWebsiteSubmissionSlugs.length)
+    expect(importedAdultSlugs).toHaveLength(214 + pagesDevWebsiteSubmissionSlugs.length)
 
     for (const slug of [
       ...expectedAdultProductSlugs,
@@ -169,6 +214,58 @@ describe('pornvideodownloaders checked-in products', () => {
 
     for (const slug of excludedGeneralProductSlugs) {
       expect(products[slug]).toBeUndefined()
+    }
+  })
+
+  it('contains submitted pages.dev adult downloader website listings', () => {
+    const products = JSON.parse(readFileSync(productsPath, 'utf8')) as Record<
+      string,
+      {
+        product?: {
+          categories?: string[]
+          productPage?: string
+          slug?: string
+          tagline?: string
+          title?: string
+        }
+        content?: {
+          body?: string
+          faq?: Array<{
+            answer?: string
+            question?: string
+          }>
+        }
+        media?: {
+          images?: string[]
+          logo?: string
+        }
+      }
+    >
+
+    for (const slug of pagesDevWebsiteSubmissionSlugs) {
+      const expectedImagePath = `/media/products/${slug}/homepage.png`
+      const product = products[slug]
+
+      expect(product, `${slug} product`).toBeDefined()
+      expect(product?.product).toMatchObject({
+        categories: ['adult', 'video-downloaders'],
+        productPage: `https://${slug}`,
+        slug,
+        tagline: expect.any(String),
+        title: pagesDevExpectedTitles[slug]
+      })
+      expect(product?.media?.logo, `${slug} logo`).toBe(`https://${slug}/logo.png`)
+      expect(product?.media?.images?.[0], `${slug} main image`).toBe(expectedImagePath)
+      expect(product?.content?.body ?? '', `${slug} body`).toContain('## Overview')
+      expect(product?.content?.body ?? '', `${slug} body`).toContain('## How It Works')
+      expect(product?.content?.body ?? '', `${slug} body`).toContain('## What It Does')
+      expect(product?.content?.faq?.length ?? 0, `${slug} faq length`).toBeGreaterThanOrEqual(5)
+      expect(
+        existsSync(
+          resolve(process.cwd(), 'apps/pornvideodownloaders.com/public', expectedImagePath.slice(1))
+        ),
+        `${slug} homepage screenshot must exist in the pornvideodownloaders.com wrapper`
+      ).toBe(true)
     }
   })
 })

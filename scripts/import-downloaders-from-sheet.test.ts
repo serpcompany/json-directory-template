@@ -251,7 +251,7 @@ describe('mergeDownloaderProducts', () => {
 })
 
 describe('validateDownloaderImport', () => {
-  it('requires serp.software to match serpdownloaders.com after import', () => {
+  it('allows serp.software to keep site-specific rewritten product copy after import', () => {
     expect(ACTIVE_DOWNLOADER_SITE_IDS).toEqual([
       'browserextensions.io',
       'serp.co',
@@ -261,24 +261,39 @@ describe('validateDownloaderImport', () => {
       'pornvideodownloaders.com'
     ])
 
-    expect(() =>
+    expect(() => {
       validateDownloaderImport({
         'browserextensions.io': {},
         'pornvideodownloaders.com': {},
         'serp.ai': {},
         'serp.co': {},
-        'serp.software': {},
-        'serpdownloaders.com': {
+        'serp.software': {
           'example-downloader': {
+            content: {
+              body: '## Overview\n\nNeutral software-directory copy.'
+            },
             product: {
               productPage: 'https://serp.ly/example-downloader',
               slug: 'example-downloader',
-              tagline: 'Example',
+              tagline: 'Software-directory tagline',
+              title: 'Example'
+            }
+          }
+        },
+        'serpdownloaders.com': {
+          'example-downloader': {
+            content: {
+              body: '## Overview\n\nDownloader-specific copy.'
+            },
+            product: {
+              productPage: 'https://serp.ly/example-downloader',
+              slug: 'example-downloader',
+              tagline: 'Downloader-directory tagline',
               title: 'Example'
             }
           }
         }
       })
-    ).toThrow(/serp\.software products must match serpdownloaders\.com/)
+    }).not.toThrow()
   })
 })
