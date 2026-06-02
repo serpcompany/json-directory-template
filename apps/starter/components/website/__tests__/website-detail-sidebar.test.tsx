@@ -47,7 +47,7 @@ describe('WebsiteDetailSidebar', () => {
     const { container } = render(<WebsiteDetailSidebar website={website} />)
 
     expect(
-      screen.getByRole('heading', { name: 'Embed your badge on your website' })
+      screen.getByRole('heading', { name: 'Add a badge to your website. Click the badge below to copy the code.' })
     ).toBeInTheDocument()
     expect(
       screen.getByRole('img', { name: 'Light Featured on Directory Starter badge' })

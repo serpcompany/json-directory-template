@@ -7,8 +7,27 @@ import { describe, expect, it } from 'vitest'
 
 const siteIds = [defaultSiteConfig.id, ...activeCheckedInSiteIds] as const
 const badgeVariants = ['light', 'dark'] as const
-const manuallySelectedBadgeSites = ['browserextensions.io', 'pornvideodownloaders.com'] as const
-const officialBadgeGeometrySites = ['pornvideodownloaders.com'] as const
+const manuallySelectedBadgeSites = [
+  'browserextensions.io',
+  'pornvideodownloaders.com',
+  'serp.ai',
+  'serp.co',
+  'serp.software',
+  'serpdownloaders.com'
+] as const
+const officialBadgeGeometrySites = [
+  'pornvideodownloaders.com',
+  'serp.ai',
+  'serp.co',
+  'serp.software',
+  'serpdownloaders.com'
+] as const
+const serpBadgeGeometrySites = [
+  'serp.ai',
+  'serp.co',
+  'serp.software',
+  'serpdownloaders.com'
+] as const
 const PNG_SIGNATURE = '89504e470d0a1a0a'
 const BADGE_TEXT_X = 42
 const BADGE_RIGHT_MARGIN = 10
@@ -28,6 +47,10 @@ const siteTypographyOverrides = {} as const
 
 function isManuallySelectedBadgeSite(siteId: string): boolean {
   return manuallySelectedBadgeSites.includes(siteId as (typeof manuallySelectedBadgeSites)[number])
+}
+
+function isSerpBadgeGeometrySite(siteId: string): boolean {
+  return serpBadgeGeometrySites.includes(siteId as (typeof serpBadgeGeometrySites)[number])
 }
 
 function getBadgeAssetPath(siteId: string, variant: (typeof badgeVariants)[number]): string {
@@ -208,7 +231,7 @@ describe('featured badge assets', () => {
 
       return (
         !/<image\b[^>]*\bhref="data:image\/(?:png|svg\+xml);base64,/.test(svg) &&
-        !/<svg\b[^>]*\bdata-badge-logo="true"/.test(svg)
+        !/<(?:svg|g)\b[^>]*\bdata-badge-logo="true"/.test(svg)
       )
     })
 
@@ -342,19 +365,28 @@ describe('featured badge assets', () => {
           problems.push(`${siteId} ${variant}: rect`)
         }
 
-        if (!/<image\b[^>]*x="12" y="15" width="20" height="20"/.test(svg)) {
+        const expectedIconPattern = isSerpBadgeGeometrySite(siteId)
+          ? /(?:<image|<svg)\b[^>]*x="14" y="13" width="24" height="24"|<g\b[^>]*transform="translate\(14 13\) scale\(0\.08\)"/
+          : /(?:<image|<svg)\b[^>]*x="12" y="15" width="20" height="20"|<g\b[^>]*transform="translate\(12 15\) scale\(0\.0666667\)"/
+        const expectedTextX = isSerpBadgeGeometrySite(siteId) ? '56' : '40'
+
+        if (!expectedIconPattern.test(svg)) {
           problems.push(`${siteId} ${variant}: icon`)
         }
 
         if (
-          !/<text x="40" y="21"[^>]*font-size="10"[^>]*font-weight="500"[^>]*text-transform="uppercase"/.test(
-            svg
-          )
+          !new RegExp(
+            `<text x="${expectedTextX}" y="21"[^>]*font-size="10"[^>]*font-weight="500"[^>]*text-transform="uppercase"`
+          ).test(svg)
         ) {
           problems.push(`${siteId} ${variant}: label`)
         }
 
-        if (!/<text x="40" y="38"[^>]*font-size="14"[^>]*font-weight="700"/.test(svg)) {
+        if (
+          !new RegExp(
+            `<text x="${expectedTextX}" y="38"[^>]*font-size="14"[^>]*font-weight="700"`
+          ).test(svg)
+        ) {
           problems.push(`${siteId} ${variant}: name`)
         }
 
