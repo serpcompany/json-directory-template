@@ -35,33 +35,14 @@ function loadUploadAssetMaps(): R2FeaturedBadgeAsset[] {
 
 function getExpectedAsset(siteId: (typeof siteIds)[number], variant: (typeof variants)[number]) {
   const config = resolveCheckedInSiteConfig(siteId)
-
-  if (siteId === 'browserextensions.io') {
-    const configuredKey = config.badges?.featuredOn?.[variant]
-
-    if (!configuredKey) {
-      throw new Error(`${siteId}: missing ${variant} featuredOn badge config`)
-    }
-
-    return {
-      contentType: 'image/svg+xml',
-      height: 50,
-      key: configuredKey,
-      siteId,
-      source: `apps/${config.build.appPackageName}/public/${configuredKey}`,
-      variant,
-      width: 200
-    }
-  }
-
-  const filename = `featured-on-${siteId}-${variant}.svg`
+  const key = config.badges?.featuredOn?.[variant] ?? `badge/featured-on-${siteId}-${variant}.svg`
 
   return {
     contentType: 'image/svg+xml',
     height: 50,
-    key: `badge/${filename}`,
+    key,
     siteId,
-    source: `apps/${config.build.appPackageName}/public/badge/${filename}`,
+    source: `apps/${config.build.appPackageName}/public/${key}`,
     variant,
     width: 200
   }
