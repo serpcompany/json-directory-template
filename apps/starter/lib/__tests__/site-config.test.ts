@@ -34,7 +34,7 @@ describe('resolveSiteConfig', () => {
         singular: 'product'
       },
       networkLabel: 'Network',
-      submitLabel: 'Submit a Product'
+      submitLabel: 'Submit Yours'
     })
     expect(config.features).toEqual({
       showAuth: false,
@@ -79,7 +79,7 @@ describe('resolveSiteConfig', () => {
     expect(config.copy.brandsLabel).toBe('Brands')
     expect(config.copy.docsLabel).toBe('Docs')
     expect(config.copy.networkLabel).toBe('Network')
-    expect(config.copy.submitLabel).toBe('Submit a Product')
+    expect(config.copy.submitLabel).toBe('Submit Yours')
   })
 
   it('falls back to the checked-in default site config only when no site id is provided', () => {

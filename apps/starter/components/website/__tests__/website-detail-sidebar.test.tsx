@@ -16,7 +16,7 @@ describe('WebsiteDetailSidebar', () => {
   it('renders a prominent sticky primary CTA to the listing website', () => {
     const { container } = render(<WebsiteDetailSidebar website={website} />)
 
-    const cta = screen.getByRole('link', { name: /open example product/i })
+    const cta = screen.getByRole('link', { name: /visit site/i })
 
     expect(cta).toHaveAttribute('href', 'https://example.com')
     expect(cta).toHaveAttribute('target', '_blank')
