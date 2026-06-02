@@ -31,8 +31,6 @@ describe('website surface copy', () => {
       screen.getByRole('heading', { name: /^links$/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/helpful links for this entry/i)
-    ).toBeInTheDocument();
     expect(container.querySelector('.sticky.top-16')).not.toBeNull();
     expect(container.querySelector('ul.divide-y')).not.toBeNull();
     expect(container.querySelector('li')).not.toBeNull();

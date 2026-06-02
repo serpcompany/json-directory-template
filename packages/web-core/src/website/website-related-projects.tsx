@@ -39,7 +39,6 @@ export function WebsiteRelatedProjects({
     <section className="animate-fade-in-up opacity-0 stagger-7">
       <Section
         title="Related Entries"
-        description="Discover similar entries in the directory"
         viewAllHref={getRoute('listing.list')}
         viewAllText="Browse the directory"
         titleId="related-projects"
