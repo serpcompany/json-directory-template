@@ -28,7 +28,7 @@ type SubmitVerifyPageRouteProps = {
 
 export function SubmitVerifyPageRoute({
   submissionEndpoint,
-  verifyEndpoint,
+  verifyEndpoint
 }: SubmitVerifyPageRouteProps) {
   const searchParams = useSearchParams()
   const token = searchParams.get('token') ?? ''
@@ -71,13 +71,8 @@ export function SubmitVerifyPageRoute({
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <h1 className="mb-2 text-2xl font-bold">Submission not found</h1>
-        <p className="text-muted-foreground">
-          The token in your URL is invalid or expired.
-        </p>
-        <Link
-          href="/submit"
-          className="mt-4 inline-block text-sm text-primary underline"
-        >
+        <p className="text-muted-foreground">The token in your URL is invalid or expired.</p>
+        <Link href="/submit" className="mt-4 inline-block text-sm text-primary underline">
           Start a new submission
         </Link>
       </div>
@@ -88,9 +83,7 @@ export function SubmitVerifyPageRoute({
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <h1 className="mb-2 text-2xl font-bold">Something went wrong</h1>
-        <p className="text-muted-foreground">
-          Please try refreshing the page.
-        </p>
+        <p className="text-muted-foreground">Please try refreshing the page.</p>
       </div>
     )
   }
@@ -102,10 +95,7 @@ export function SubmitVerifyPageRoute({
     <div className="container mx-auto px-4 py-8">
       <div className="mx-auto max-w-2xl space-y-8">
         <div className="flex items-center gap-3">
-          <Link
-            href="/submit"
-            className="text-sm text-muted-foreground hover:text-foreground"
-          >
+          <Link href="/submit" className="text-sm text-muted-foreground hover:text-foreground">
             ← Back
           </Link>
           <h1 className="text-xl font-semibold">Verify &amp; Publish</h1>
@@ -173,8 +163,8 @@ export function SubmitVerifyPageRoute({
             Click verify when badge is live
           </h2>
           <p className="text-sm text-muted-foreground">
-            Once the badge is published on your site, click below. We&apos;ll
-            scan your page for the embed code and confirm your listing.
+            Once the badge is published on your site, click below. We&apos;ll scan your page for the
+            embed code and confirm your listing.
           </p>
           <VerifyButton token={token} verifyEndpoint={verifyEndpoint} />
         </section>
@@ -184,24 +174,16 @@ export function SubmitVerifyPageRoute({
             Troubleshooting
           </summary>
           <ul className="mt-2 list-disc space-y-1 pl-5">
-            <li>
-              Paste the snippet in the HTML of your homepage, not inside an
-              iframe.
-            </li>
+            <li>Paste the snippet in the HTML of your homepage, not inside an iframe.</li>
             <li>
               Make sure the{' '}
-              <code className="rounded bg-muted px-1 font-mono">
-                data-verify-token
-              </code>{' '}
-              attribute is present and unchanged.
+              <code className="rounded bg-muted px-1 font-mono">data-verify-token</code> attribute
+              is present and unchanged.
             </li>
+            <li>Your site must be publicly accessible, not behind a login or challenge page.</li>
             <li>
-              Your site must be publicly accessible, not behind a login or
-              challenge page.
-            </li>
-            <li>
-              DNS changes can take up to 48 hours to propagate, so wait before
-              retrying if you just published the page.
+              DNS changes can take up to 48 hours to propagate, so wait before retrying if you just
+              published the page.
             </li>
           </ul>
         </details>

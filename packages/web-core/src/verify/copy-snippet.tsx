@@ -20,7 +20,7 @@ export function CopySnippet({
   token,
   siteId,
   siteName,
-  theme = 'light',
+  theme = 'light'
 }: CopySnippetProps) {
   const [copied, setCopied] = useState(false)
   const [origin, setOrigin] = useState('')

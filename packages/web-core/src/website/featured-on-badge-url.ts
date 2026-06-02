@@ -20,10 +20,7 @@ export function getFeaturedOnBadgePreviewPath(siteId: string, theme: FeaturedOnB
   return getFeaturedOnBadgePreviewPathFromKey(getDefaultFeaturedOnBadgeKey(siteId, theme))
 }
 
-export function getFeaturedOnBadgePublicUrlFromKey(
-  badgeKey: string,
-  publicBaseUrl = ''
-): string {
+export function getFeaturedOnBadgePublicUrlFromKey(badgeKey: string, publicBaseUrl = ''): string {
   const normalizedBadgeKey = normalizeBadgeKey(badgeKey)
   const normalizedPublicBaseUrl = trimTrailingSlash(publicBaseUrl)
 
