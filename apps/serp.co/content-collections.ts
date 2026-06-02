@@ -5,7 +5,7 @@ const guidesPath = '../../sites/serp.co/content/blogs'
 const resourcesPath = '../../packages/content/data/resources'
 const legalPath = '../../packages/content/data/legal'
 const docsPath = '../../packages/content/data/docs'
-const aboutPath = '../../packages/content/data/about'
+const aboutPath = '../../sites/serp.co/content/about'
 const extensionUpdatesPath = '../../packages/content/data/extension-updates'
 
 const guides = defineCollection({
@@ -120,7 +120,7 @@ const aboutPages = defineCollection({
     missionTitle: z.string(),
     missionIntro: z.string(),
     missionItems: z.array(z.string()).default([]),
-    stepsTitle: z.string(),
+    stepsTitle: z.string().optional(),
     steps: z
       .array(
         z.object({
@@ -130,13 +130,13 @@ const aboutPages = defineCollection({
         })
       )
       .default([]),
-    communityTitle: z.string(),
-    communityBody: z.string(),
+    communityTitle: z.string().optional(),
+    communityBody: z.string().optional(),
     primaryCtaLabel: z.string(),
     secondaryCtaLabel: z.string(),
-    contactTitle: z.string(),
-    contactBody: z.string(),
-    contactEmail: z.string().email(),
+    contactTitle: z.string().optional(),
+    contactBody: z.string().optional(),
+    contactEmail: z.string().email().optional(),
     published: z.boolean().default(true)
   }),
   transform: document => ({

@@ -184,13 +184,15 @@ describe('browserextensions.io artifact links', () => {
     expect(badSearchIndexEntries).toEqual([])
   })
 
-  it('renders browserextensions.io about copy from the source export', () => {
+  it('renders BrowserExtensions.io about copy from the site-owned content source', () => {
     const html = readArtifactHtml('about/index.html')
 
-    expect(html).toContain('BrowserExtensions.io is a curated directory')
-    expect(html).toContain('marketing@serp.co')
+    expect(html).toContain('BrowserExtensions.io is for people who know they need a browser extension')
+    expect(html).toContain('Browser stores are good for installation')
     expect(html).not.toContain('contact@example.com')
+    expect(html).not.toContain('marketing@serp.co')
     expect(html).not.toContain('directory starter')
+    expect(html).not.toContain('great products')
   })
 
   it.runIf(existsSync(nextyExportRoot))(

@@ -51,6 +51,15 @@ export function generateAboutPageMetadata(
 
 export function AboutStaticPage({ aboutPage, slots }: AboutStaticPageProps) {
   const { Button, Card, CardContent, CardHeader, CardTitle } = slots
+  const hasContactSection = Boolean(
+    aboutPage.contactTitle && aboutPage.contactBody && aboutPage.contactEmail
+  )
+  const hasStepsSection = Boolean(
+    aboutPage.stepsTitle && aboutPage.steps?.length
+  )
+  const hasCommunitySection = Boolean(
+    aboutPage.communityTitle && aboutPage.communityBody
+  )
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -75,32 +84,40 @@ export function AboutStaticPage({ aboutPage, slots }: AboutStaticPageProps) {
           </ul>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">{aboutPage.stepsTitle}</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {aboutPage.steps.map(step => {
-              const StepIcon = ABOUT_STEP_ICONS[step.icon]
+        {hasStepsSection && (
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold">{aboutPage.stepsTitle}</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {aboutPage.steps?.map(step => {
+                const StepIcon = ABOUT_STEP_ICONS[step.icon]
 
-              return (
-                <Card key={step.title}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <StepIcon className="h-5 w-5" />
-                      {step.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p>{step.body}</p>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
-        </section>
+                return (
+                  <Card key={step.title}>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <StepIcon className="h-5 w-5" />
+                        {step.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p>{step.body}</p>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
+          </section>
+        )}
 
         <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">{aboutPage.communityTitle}</h2>
-          <p>{aboutPage.communityBody}</p>
+          {hasCommunitySection && (
+            <>
+              <h2 className="text-2xl font-semibold">
+                {aboutPage.communityTitle}
+              </h2>
+              <p>{aboutPage.communityBody}</p>
+            </>
+          )}
           <div className="flex flex-col sm:flex-row gap-4">
             <Button asChild>
               <Link href={getRoute('submit')}>{aboutPage.primaryCtaLabel}</Link>
@@ -113,18 +130,20 @@ export function AboutStaticPage({ aboutPage, slots }: AboutStaticPageProps) {
           </div>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">{aboutPage.contactTitle}</h2>
-          <p>
-            {aboutPage.contactBody}{' '}
-            <a
-              href={`mailto:${aboutPage.contactEmail}`}
-              className="text-primary hover:underline"
-            >
-              {aboutPage.contactEmail}
-            </a>
-          </p>
-        </section>
+        {hasContactSection && (
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold">{aboutPage.contactTitle}</h2>
+            <p>
+              {aboutPage.contactBody}{' '}
+              <a
+                href={`mailto:${aboutPage.contactEmail}`}
+                className="text-primary hover:underline"
+              >
+                {aboutPage.contactEmail}
+              </a>
+            </p>
+          </section>
+        )}
       </div>
     </div>
   )
