@@ -19508,5 +19508,898 @@
         "url": "https://github.com/serpapps/zbporn-downloader/issues"
       }
     ]
+  },
+  "coomervideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nCoomer Video Downloader gives adult downloader users a direct way to save Coomer media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open Coomer Video Downloader and install the supported desktop browser build.\n- Open Coomer: Navigate to a Coomer page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported Coomer media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from Coomer?",
+          "answer": "Install Coomer Video Downloader, open a Coomer page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://coomervideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/coomervideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://coomervideodownloader.pages.dev",
+      "slug": "coomervideodownloader.pages.dev",
+      "tagline": "Save accessible Coomer media locally with a browser downloader built for adult video pages.",
+      "title": "Coomer Video Downloader"
+    }
+  },
+  "doodstreamvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nDoodStream Video Downloader gives adult downloader users a direct way to save DoodStream media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open DoodStream Video Downloader and install the supported desktop browser build.\n- Open DoodStream: Navigate to a DoodStream page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported DoodStream media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from DoodStream?",
+          "answer": "Install DoodStream Video Downloader, open a DoodStream page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://doodstreamvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/doodstreamvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://doodstreamvideodownloader.pages.dev",
+      "slug": "doodstreamvideodownloader.pages.dev",
+      "tagline": "Save accessible DoodStream media locally with a browser downloader built for adult video pages.",
+      "title": "DoodStream Video Downloader"
+    }
+  },
+  "hdzogvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nHDZog Video Downloader gives adult downloader users a direct way to save HDZog media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open HDZog Video Downloader and install the supported desktop browser build.\n- Open HDZog: Navigate to a HDZog page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported HDZog media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from HDZog?",
+          "answer": "Install HDZog Video Downloader, open a HDZog page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://hdzogvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/hdzogvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://hdzogvideodownloader.pages.dev",
+      "slug": "hdzogvideodownloader.pages.dev",
+      "tagline": "Save accessible HDZog media locally with a browser downloader built for adult video pages.",
+      "title": "HDZog Video Downloader"
+    }
+  },
+  "hotmovsvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nHotMovs Video Downloader gives adult downloader users a direct way to save HotMovs media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open HotMovs Video Downloader and install the supported desktop browser build.\n- Open HotMovs: Navigate to a HotMovs page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported HotMovs media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from HotMovs?",
+          "answer": "Install HotMovs Video Downloader, open a HotMovs page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://hotmovsvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/hotmovsvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://hotmovsvideodownloader.pages.dev",
+      "slug": "hotmovsvideodownloader.pages.dev",
+      "tagline": "Save accessible HotMovs media locally with a browser downloader built for adult video pages.",
+      "title": "HotMovs Video Downloader"
+    }
+  },
+  "javvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nJAV Video Downloader gives adult downloader users a direct way to save JAVHD media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open JAV Video Downloader and install the supported desktop browser build.\n- Open JAVHD: Navigate to a JAVHD page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported JAVHD media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from JAVHD?",
+          "answer": "Install JAV Video Downloader, open a JAVHD page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://javvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/javvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://javvideodownloader.pages.dev",
+      "slug": "javvideodownloader.pages.dev",
+      "tagline": "Save accessible JAVHD media locally with a browser downloader built for adult video pages.",
+      "title": "JAV Video Downloader"
+    }
+  },
+  "luxuretvvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nLuxureTV Video Downloader gives adult downloader users a direct way to save LuxureTV media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open LuxureTV Video Downloader and install the supported desktop browser build.\n- Open LuxureTV: Navigate to a LuxureTV page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported LuxureTV media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from LuxureTV?",
+          "answer": "Install LuxureTV Video Downloader, open a LuxureTV page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://luxuretvvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/luxuretvvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://luxuretvvideodownloader.pages.dev",
+      "slug": "luxuretvvideodownloader.pages.dev",
+      "tagline": "Save accessible LuxureTV media locally with a browser downloader built for adult video pages.",
+      "title": "LuxureTV Video Downloader"
+    }
+  },
+  "manyvidsvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nManyVids Video Downloader gives adult downloader users a direct way to save ManyVids media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open ManyVids Video Downloader and install the supported desktop browser build.\n- Open ManyVids: Navigate to a ManyVids page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported ManyVids media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from ManyVids?",
+          "answer": "Install ManyVids Video Downloader, open a ManyVids page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://manyvidsvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/manyvidsvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://manyvidsvideodownloader.pages.dev",
+      "slug": "manyvidsvideodownloader.pages.dev",
+      "tagline": "Save accessible ManyVids media locally with a browser downloader built for adult video pages.",
+      "title": "ManyVids Video Downloader"
+    }
+  },
+  "onlyfansvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nOnlyFans Video Downloader gives adult downloader users a direct way to save OnlyFans media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open OnlyFans Video Downloader and install the supported desktop browser build.\n- Open OnlyFans: Navigate to a OnlyFans page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported OnlyFans media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from OnlyFans?",
+          "answer": "Install OnlyFans Video Downloader, open a OnlyFans page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://onlyfansvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/onlyfansvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://onlyfansvideodownloader.pages.dev",
+      "slug": "onlyfansvideodownloader.pages.dev",
+      "tagline": "Save accessible OnlyFans media locally with a browser downloader built for adult video pages.",
+      "title": "OnlyFans Video Downloader"
+    }
+  },
+  "pornhatvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nPornHat Video Downloader gives adult downloader users a direct way to save PornHat media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open PornHat Video Downloader and install the supported desktop browser build.\n- Open PornHat: Navigate to a PornHat page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported PornHat media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from PornHat?",
+          "answer": "Install PornHat Video Downloader, open a PornHat page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://pornhatvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/pornhatvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://pornhatvideodownloader.pages.dev",
+      "slug": "pornhatvideodownloader.pages.dev",
+      "tagline": "Save accessible PornHat media locally with a browser downloader built for adult video pages.",
+      "title": "PornHat Video Downloader"
+    }
+  },
+  "pornhubvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nPornhub Video Downloader gives adult downloader users a direct way to save Pornhub media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open Pornhub Video Downloader and install the supported desktop browser build.\n- Open Pornhub: Navigate to a Pornhub page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported Pornhub media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from Pornhub?",
+          "answer": "Install Pornhub Video Downloader, open a Pornhub page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://pornhubvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/pornhubvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://pornhubvideodownloader.pages.dev",
+      "slug": "pornhubvideodownloader.pages.dev",
+      "tagline": "Save accessible Pornhub media locally with a browser downloader built for adult video pages.",
+      "title": "Pornhub Video Downloader"
+    }
+  },
+  "pornonevideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nPornOne Video Downloader gives adult downloader users a direct way to save PornOne media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open PornOne Video Downloader and install the supported desktop browser build.\n- Open PornOne: Navigate to a PornOne page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported PornOne media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from PornOne?",
+          "answer": "Install PornOne Video Downloader, open a PornOne page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://pornonevideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/pornonevideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://pornonevideodownloader.pages.dev",
+      "slug": "pornonevideodownloader.pages.dev",
+      "tagline": "Save accessible PornOne media locally with a browser downloader built for adult video pages.",
+      "title": "PornOne Video Downloader"
+    }
+  },
+  "stripchatvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nStripchat Video Downloader gives adult downloader users a direct way to save Stripchat media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open Stripchat Video Downloader and install the supported desktop browser build.\n- Open Stripchat: Navigate to a Stripchat page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported Stripchat media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from Stripchat?",
+          "answer": "Install Stripchat Video Downloader, open a Stripchat page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://stripchatvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/stripchatvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://stripchatvideodownloader.pages.dev",
+      "slug": "stripchatvideodownloader.pages.dev",
+      "tagline": "Save accessible Stripchat media locally with a browser downloader built for adult video pages.",
+      "title": "Stripchat Video Downloader"
+    }
+  },
+  "txxxvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nTXXX Video Downloader gives adult downloader users a direct way to save TXXX media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open TXXX Video Downloader and install the supported desktop browser build.\n- Open TXXX: Navigate to a TXXX page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported TXXX media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from TXXX?",
+          "answer": "Install TXXX Video Downloader, open a TXXX page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://txxxvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/txxxvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://txxxvideodownloader.pages.dev",
+      "slug": "txxxvideodownloader.pages.dev",
+      "tagline": "Save accessible TXXX media locally with a browser downloader built for adult video pages.",
+      "title": "TXXX Video Downloader"
+    }
+  },
+  "uporniavideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nUpornia Video Downloader gives adult downloader users a direct way to save Upornia media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open Upornia Video Downloader and install the supported desktop browser build.\n- Open Upornia: Navigate to a Upornia page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported Upornia media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from Upornia?",
+          "answer": "Install Upornia Video Downloader, open a Upornia page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://uporniavideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/uporniavideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://uporniavideodownloader.pages.dev",
+      "slug": "uporniavideodownloader.pages.dev",
+      "tagline": "Save accessible Upornia media locally with a browser downloader built for adult video pages.",
+      "title": "Upornia Video Downloader"
+    }
+  },
+  "whopvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nWhop Video Downloader gives adult downloader users a direct way to save Whop media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open Whop Video Downloader and install the supported desktop browser build.\n- Open Whop: Navigate to a Whop page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported Whop media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from Whop?",
+          "answer": "Install Whop Video Downloader, open a Whop page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://whopvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/whopvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://whopvideodownloader.pages.dev",
+      "slug": "whopvideodownloader.pages.dev",
+      "tagline": "Save accessible Whop media locally with a browser downloader built for adult video pages.",
+      "title": "Whop Video Downloader"
+    }
+  },
+  "xfantazyvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nXFantazy Video Downloader gives adult downloader users a direct way to save XFantazy media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open XFantazy Video Downloader and install the supported desktop browser build.\n- Open XFantazy: Navigate to a XFantazy page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported XFantazy media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from XFantazy?",
+          "answer": "Install XFantazy Video Downloader, open a XFantazy page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://xfantazyvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/xfantazyvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://xfantazyvideodownloader.pages.dev",
+      "slug": "xfantazyvideodownloader.pages.dev",
+      "tagline": "Save accessible XFantazy media locally with a browser downloader built for adult video pages.",
+      "title": "XFantazy Video Downloader"
+    }
+  },
+  "xfreehdvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nXFreeHD Video Downloader gives adult downloader users a direct way to save XFreeHD media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open XFreeHD Video Downloader and install the supported desktop browser build.\n- Open XFreeHD: Navigate to a XFreeHD page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported XFreeHD media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from XFreeHD?",
+          "answer": "Install XFreeHD Video Downloader, open a XFreeHD page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://xfreehdvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/xfreehdvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://xfreehdvideodownloader.pages.dev",
+      "slug": "xfreehdvideodownloader.pages.dev",
+      "tagline": "Save accessible XFreeHD media locally with a browser downloader built for adult video pages.",
+      "title": "XFreeHD Video Downloader"
+    }
+  },
+  "xgroovyvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nXGroovy Video Downloader gives adult downloader users a direct way to save XGroovy media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open XGroovy Video Downloader and install the supported desktop browser build.\n- Open XGroovy: Navigate to a XGroovy page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported XGroovy media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from XGroovy?",
+          "answer": "Install XGroovy Video Downloader, open a XGroovy page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://xgroovyvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/xgroovyvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://xgroovyvideodownloader.pages.dev",
+      "slug": "xgroovyvideodownloader.pages.dev",
+      "tagline": "Save accessible XGroovy media locally with a browser downloader built for adult video pages.",
+      "title": "XGroovy Video Downloader"
+    }
+  },
+  "youpornvideodownloader.pages.dev": {
+    "content": {
+      "body": "## Overview\n\nYouPorn Video Downloader gives adult downloader users a direct way to save YouPorn media they can already access. It is built for local browser-based downloads: open the source page, let the extension detect the media, choose an available quality, and keep the final file on your computer.\n\nThe listing is included here for viewers who want a clear adult video download workflow without paste-in converter sites, screen recording, or digging through page source. It does not bypass paywalls, private accounts, DRM, or site permissions; it works with content your current browser session can already view.\n\n## How It Works\n\n- Install the extension: Open YouPorn Video Downloader and install the supported desktop browser build.\n- Open YouPorn: Navigate to a YouPorn page with media you are allowed to view and save.\n- Start playback when needed: Some pages expose the final stream only after the player starts.\n- Review detected media: Use the extension action, overlay, or popup to see available download candidates and quality labels.\n- Save locally: Download the selected file through the browser and keep it for offline playback.\n\n## What It Does\n\n- Detects supported YouPorn media from pages your browser can access.\n- Saves videos as offline files, with MP4-style output when the source exposes a compatible stream.\n- Keeps the workflow inside the browser instead of sending media through paste-in converter sites.\n- Shows available quality options when the source page provides more than one stream.\n- Helps organize a local adult video download workflow for personal offline viewing.\n- Keeps permission boundaries clear: it is for content you can already access and have the right to save.",
+      "faq": [
+        {
+          "question": "How do I download from YouPorn?",
+          "answer": "Install YouPorn Video Downloader, open a YouPorn page with media your browser can already access, then use the extension control to detect available files and start the download."
+        },
+        {
+          "question": "Do I need to press play before downloading?",
+          "answer": "On some pages, yes. Starting playback can expose the active media stream so the extension can detect the file or playlist behind the player."
+        },
+        {
+          "question": "Does it upload videos to an online converter?",
+          "answer": "No. The intended workflow keeps detection and saving inside the desktop browser instead of sending source media to a third-party converter page."
+        },
+        {
+          "question": "Can it bypass private content, paywalls, or DRM?",
+          "answer": "No. Use it only with media you can already access and have permission to save. It is not designed to bypass account controls, paywalls, DRM, or private content restrictions."
+        },
+        {
+          "question": "What format and quality can it save?",
+          "answer": "Available formats and quality levels depend on what the source page exposes. When a compatible stream is available, the downloader focuses on browser-friendly offline video files such as MP4."
+        },
+        {
+          "question": "Which devices are supported?",
+          "answer": "These listings are intended for supported desktop browser builds. Mobile browsers and Safari are not part of the supported workflow unless a specific product page says otherwise."
+        }
+      ]
+    },
+    "media": {
+      "logo": "https://youpornvideodownloader.pages.dev/logo.png",
+      "images": [
+        "/media/products/youpornvideodownloader.pages.dev/homepage.png"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://youpornvideodownloader.pages.dev",
+      "slug": "youpornvideodownloader.pages.dev",
+      "tagline": "Save accessible YouPorn media locally with a browser downloader built for adult video pages.",
+      "title": "YouPorn Video Downloader"
+    }
   }
 }

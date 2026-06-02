@@ -20,6 +20,9 @@ type SerpdownloadersProductEntry = {
     tagline?: string
     title?: string
   }
+  media?: {
+    images?: string[]
+  }
 }
 
 type ToolsProductEntry = {
@@ -38,6 +41,8 @@ type ToolsProductEntry = {
 
 const productsPath = resolve(process.cwd(), 'sites/serpdownloaders.com/products.json')
 const serpSoftwareProductsPath = resolve(process.cwd(), 'sites/serp.software/products.json')
+const serpdownloadersPublicPath = resolve(process.cwd(), 'apps/serpdownloaders.com/public')
+const serpSoftwarePublicPath = resolve(process.cwd(), 'apps/serp.software/public')
 const toolsProductsPath = resolve(
   '/Users/devin/dev/repos/tools.serp.co/packages/app-core/src/data/tools.json'
 )
@@ -71,6 +76,56 @@ const missing404ProductSlugs = [
   'snapchat-video-downloader',
   'teachable-video-downloader'
 ] as const
+
+const pagesDevWebsiteSubmissionSlugs = [
+  'coomervideodownloader.pages.dev',
+  'doodstreamvideodownloader.pages.dev',
+  'hdzogvideodownloader.pages.dev',
+  'hotmovsvideodownloader.pages.dev',
+  'javvideodownloader.pages.dev',
+  'luxuretvvideodownloader.pages.dev',
+  'manyvidsvideodownloader.pages.dev',
+  'onlyfansvideodownloader.pages.dev',
+  'pornhatvideodownloader.pages.dev',
+  'pornhubvideodownloader.pages.dev',
+  'pornonevideodownloader.pages.dev',
+  'stripchatvideodownloader.pages.dev',
+  'txxxvideodownloader.pages.dev',
+  'uporniavideodownloader.pages.dev',
+  'whopvideodownloader.pages.dev',
+  'xfantazyvideodownloader.pages.dev',
+  'xfreehdvideodownloader.pages.dev',
+  'xgroovyvideodownloader.pages.dev',
+  'youpornvideodownloader.pages.dev'
+] as const
+
+const expectedSerpdownloadersProductCount = 319 + pagesDevWebsiteSubmissionSlugs.length
+
+const pagesDevExpectedTitles: Record<(typeof pagesDevWebsiteSubmissionSlugs)[number], string> = {
+  'coomervideodownloader.pages.dev': 'Coomer Video Downloader',
+  'doodstreamvideodownloader.pages.dev': 'DoodStream Video Downloader',
+  'hdzogvideodownloader.pages.dev': 'HDZog Video Downloader',
+  'hotmovsvideodownloader.pages.dev': 'HotMovs Video Downloader',
+  'javvideodownloader.pages.dev': 'JAV Video Downloader',
+  'luxuretvvideodownloader.pages.dev': 'LuxureTV Video Downloader',
+  'manyvidsvideodownloader.pages.dev': 'ManyVids Video Downloader',
+  'onlyfansvideodownloader.pages.dev': 'OnlyFans Video Downloader',
+  'pornhatvideodownloader.pages.dev': 'PornHat Video Downloader',
+  'pornhubvideodownloader.pages.dev': 'Pornhub Video Downloader',
+  'pornonevideodownloader.pages.dev': 'PornOne Video Downloader',
+  'stripchatvideodownloader.pages.dev': 'Stripchat Video Downloader',
+  'txxxvideodownloader.pages.dev': 'TXXX Video Downloader',
+  'uporniavideodownloader.pages.dev': 'Upornia Video Downloader',
+  'whopvideodownloader.pages.dev': 'Whop Video Downloader',
+  'xfantazyvideodownloader.pages.dev': 'XFantazy Video Downloader',
+  'xfreehdvideodownloader.pages.dev': 'XFreeHD Video Downloader',
+  'xgroovyvideodownloader.pages.dev': 'XGroovy Video Downloader',
+  'youpornvideodownloader.pages.dev': 'YouPorn Video Downloader'
+}
+
+function isPagesDevWebsiteSubmission(slug: string): boolean {
+  return (pagesDevWebsiteSubmissionSlugs as readonly string[]).includes(slug)
+}
 
 function cleanLabel(label?: string): string | undefined {
   if (label === 'Install extension') {
@@ -137,7 +192,7 @@ describe('serpdownloaders checked-in products', () => {
       SerpdownloadersProductEntry
     >
 
-    expect(Object.keys(products)).toHaveLength(319)
+    expect(Object.keys(products)).toHaveLength(expectedSerpdownloadersProductCount)
 
     for (const slug of missing404ProductSlugs) {
       expect(products[slug]).toBeDefined()
@@ -168,10 +223,52 @@ describe('serpdownloaders checked-in products', () => {
     >
 
     for (const [slug, product] of Object.entries(products)) {
-      expect(product.product?.productPage, slug).toMatch(/^https:\/\/serp\.ly\/.+/)
+      if (isPagesDevWebsiteSubmission(slug)) {
+        expect(product.product?.productPage, slug).toBe(`https://${slug}`)
+        expect(product.content?.body ?? '', slug).toContain('## How It Works')
+        expect(product.content?.body ?? '', slug).toContain('## What It Does')
+        expect(product.content?.faq?.length ?? 0, slug).toBeGreaterThanOrEqual(5)
+      } else {
+        expect(product.product?.productPage, slug).toMatch(/^https:\/\/serp\.ly\/.+/)
+      }
       expect(product.content?.body ?? '', slug).not.toContain('https://apps.serp.co/')
 
       expectCleanRelatedLinks(slug, product.relatedLinks)
+    }
+  })
+
+  it('uses homepage screenshots as main images for submitted pages.dev websites', () => {
+    const products = JSON.parse(readFileSync(productsPath, 'utf8')) as Record<
+      string,
+      SerpdownloadersProductEntry
+    >
+
+    for (const slug of pagesDevWebsiteSubmissionSlugs) {
+      const expectedImagePath = `/media/products/${slug}/homepage.png`
+      const product = products[slug]
+
+      expect(product?.media?.images?.[0], `${slug} main image`).toBe(expectedImagePath)
+      expect(
+        existsSync(resolve(serpdownloadersPublicPath, expectedImagePath.slice(1))),
+        `${slug} homepage screenshot must exist in serpdownloaders.com public files`
+      ).toBe(true)
+      expect(
+        existsSync(resolve(serpSoftwarePublicPath, expectedImagePath.slice(1))),
+        `${slug} homepage screenshot must exist in serp.software public files`
+      ).toBe(true)
+    }
+  })
+
+  it('uses concise product names for submitted pages.dev website H1s', () => {
+    const products = JSON.parse(readFileSync(productsPath, 'utf8')) as Record<
+      string,
+      SerpdownloadersProductEntry
+    >
+
+    for (const slug of pagesDevWebsiteSubmissionSlugs) {
+      expect(products[slug]?.product?.title, `${slug} product title`).toBe(
+        pagesDevExpectedTitles[slug]
+      )
     }
   })
 
@@ -291,7 +388,7 @@ describe('serpdownloaders checked-in products', () => {
 })
 
 describe('serp.software checked-in products', () => {
-  it('copies the full live downloader catalog from serpdownloaders.com', () => {
+  it('keeps the full downloader catalog while rewriting submitted pages.dev copy', () => {
     const serpdownloadersProducts = JSON.parse(readFileSync(productsPath, 'utf8')) as Record<
       string,
       SerpdownloadersProductEntry
@@ -300,8 +397,42 @@ describe('serp.software checked-in products', () => {
       readFileSync(serpSoftwareProductsPath, 'utf8')
     ) as Record<string, SerpdownloadersProductEntry>
 
-    expect(Object.keys(serpSoftwareProducts)).toHaveLength(319)
-    expect(serpSoftwareProducts).toEqual(serpdownloadersProducts)
+    expect(Object.keys(serpSoftwareProducts)).toHaveLength(expectedSerpdownloadersProductCount)
+    expect(Object.keys(serpSoftwareProducts).sort()).toEqual(
+      Object.keys(serpdownloadersProducts).sort()
+    )
+
+    for (const [slug, product] of Object.entries(serpdownloadersProducts)) {
+      if (!isPagesDevWebsiteSubmission(slug)) {
+        expect(serpSoftwareProducts[slug], `${slug} non-pages.dev product`).toEqual(product)
+      }
+    }
+
+    for (const slug of pagesDevWebsiteSubmissionSlugs) {
+      const expectedImagePath = `/media/products/${slug}/homepage.png`
+      const serpdownloadersProduct = serpdownloadersProducts[slug]
+      const serpSoftwareProduct = serpSoftwareProducts[slug]
+
+      expect(serpSoftwareProduct?.product).toMatchObject({
+        productPage: `https://${slug}`,
+        slug,
+        title: pagesDevExpectedTitles[slug]
+      })
+      expect(serpSoftwareProduct?.media?.images?.[0], `${slug} main image`).toBe(expectedImagePath)
+      expect(
+        existsSync(resolve(serpSoftwarePublicPath, expectedImagePath.slice(1))),
+        `${slug} homepage screenshot must exist in the serp.software wrapper`
+      ).toBe(true)
+      expect(serpSoftwareProduct?.product?.tagline, `${slug} tagline`).not.toBe(
+        serpdownloadersProduct?.product?.tagline
+      )
+      expect(serpSoftwareProduct?.content?.body, `${slug} body`).not.toBe(
+        serpdownloadersProduct?.content?.body
+      )
+      expect(JSON.stringify(serpSoftwareProduct?.content?.faq ?? []), `${slug} faq`).not.toBe(
+        JSON.stringify(serpdownloadersProduct?.content?.faq ?? [])
+      )
+    }
   })
 
   it('has wrapper-public files for copied root-relative listing logos', () => {
