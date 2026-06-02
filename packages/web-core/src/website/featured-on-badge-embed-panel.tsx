@@ -64,7 +64,9 @@ export function FeaturedOnBadgeEmbedPanel({
 
   return (
     <div className="rounded-2xl border border-border/50 bg-card/50 p-6 backdrop-blur-sm">
-      <h2 className="text-sm font-semibold text-foreground">Add a badge to your website. Click the badge below to copy the code.</h2>
+      <h2 className="text-sm font-semibold text-foreground">
+        Add a badge to your website. Click the badge below to copy the code.
+      </h2>
       {(['light', 'dark'] as const).map(theme => {
         const embedHtml = buildFeaturedOnBadgeEmbedHtml({
           badgeUrl: badgeUrls[theme],

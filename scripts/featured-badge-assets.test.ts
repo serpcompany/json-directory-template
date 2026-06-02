@@ -404,8 +404,6 @@ describe('featured badge assets', () => {
   it('applies requested site-specific typography overrides', () => {
     const badgesWithoutTypographyOverrides = Object.entries(siteTypographyOverrides).flatMap(
       ([siteId, expected]) => {
-        const config = resolveCheckedInSiteConfig(siteId)
-
         return badgeVariants.flatMap(variant => {
           const assetPath = getBadgeAssetPath(siteId, variant)
           if (!existsSync(assetPath)) {
