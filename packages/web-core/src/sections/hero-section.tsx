@@ -48,12 +48,6 @@ export function HeroSection({ websiteCount }: HeroSectionProps) {
             {siteCopy.submitLabel}
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
-          <Link
-            href={getRoute('about')}
-            className="inline-flex items-center justify-center rounded-none border-2 border-foreground/20 px-6 py-3 text-sm font-bold text-foreground transition-all duration-300 hover:border-foreground/40 hover:bg-foreground/5 press-effect md:px-8 md:py-4 md:text-base"
-          >
-            Learn More
-          </Link>
         </div>
       </div>
     </section>
