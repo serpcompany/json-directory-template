@@ -1,7 +1,10 @@
 import {
   SiFacebook,
   SiGithub,
+  SiGoogle,
   SiInstagram,
+  SiMedium,
+  SiPeerlist,
   SiReddit,
   SiX,
   SiYoutube
@@ -48,6 +51,18 @@ function getSiteContentSocialIcon(href: string): SocialLink['icon'] | null {
 
   if (normalizedHref.includes('instagram.com') || normalizedHref.includes('/instagram')) {
     return SiInstagram
+  }
+
+  if (normalizedHref.includes('medium.com') || normalizedHref.includes('/medium')) {
+    return SiMedium
+  }
+
+  if (normalizedHref.includes('sites.google.com') || normalizedHref.includes('/google-sites')) {
+    return SiGoogle
+  }
+
+  if (normalizedHref.includes('peerlist.io') || normalizedHref.includes('/peerlist')) {
+    return SiPeerlist
   }
 
   return null
@@ -149,6 +164,7 @@ export function Footer() {
                     <Link
                       key={href}
                       href={href}
+                      aria-label={label}
                       className="inline-flex items-center justify-center size-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"

@@ -1,4 +1,5 @@
 import { resolveCheckedInSiteCategories } from '@thedaviddias/site-contract/categories'
+import { resolveSiteContent } from '@thedaviddias/site-contract/site-content'
 import { describe, expect, it } from 'vitest'
 import { ZodError } from 'zod'
 import { defaultSiteConfig } from '../sites/site-config.default.ts'
@@ -98,6 +99,18 @@ describe('loadCheckedInSite', () => {
     expect(config.social.githubIssuesUrl).toBe(
       'https://github.com/serpcompany/serpdownloaders.com/issues'
     )
+    expect(config.social.twitterUrl).toBe('https://x.com/serpdownloaders')
+    const siteContent = resolveSiteContent('serpdownloaders.com')
+    const networkLinksByLabel = new Map(
+      siteContent.networkLinks.map(link => [link.label.toLowerCase(), link.href])
+    )
+
+    expect(networkLinksByLabel.get('medium')).toBe('https://medium.com/howtodownloadvideosimages')
+    expect(networkLinksByLabel.get('google sites')).toBe(
+      'https://sites.google.com/serp.co/serpdownloaders/'
+    )
+    expect(networkLinksByLabel.get('peerlist')).toBe('https://peerlist.io/company/serpdownloaders')
+    expect(networkLinksByLabel.get('youtube')).toBe('https://youtube.com/@serp-downloaders')
     expect(config.deploy?.strategy).toBe('github-pages-repo-sync')
   })
 

@@ -138,7 +138,7 @@ describe('resolveSiteConfig', () => {
     expect(getConfiguredSocialLinks(config)).toEqual([
       'https://github.com/serpdownloaders',
       'https://www.reddit.com/r/serpdownloaders/',
-      'https://x.com/serpapps'
+      'https://x.com/serpdownloaders'
     ])
   })
 })
