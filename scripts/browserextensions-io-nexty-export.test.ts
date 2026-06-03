@@ -167,9 +167,7 @@ describe('browserextensions.io checked-in downloader products', () => {
       })
     }
 
-    expect(siteProducts['patreon-downloader']?.product?.title).toBe(
-      'Patreon Video Downloader'
-    )
+    expect(siteProducts['patreon-downloader']?.product?.title).toBe('Patreon Video Downloader')
     expect(siteProducts['soundgasm-downloader']?.product?.title).toBe('Soundgasm Downloader')
   })
 
