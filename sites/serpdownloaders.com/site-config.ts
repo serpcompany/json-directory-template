@@ -77,6 +77,6 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     githubRepoUrl: 'https://github.com/serpdownloaders',
     githubUrl: 'https://github.com/serpdownloaders',
     redditUrl: 'https://www.reddit.com/r/serpdownloaders/',
-    twitterUrl: 'https://x.com/serpapps'
+    twitterUrl: 'https://x.com/serpdownloaders'
   }
 }
