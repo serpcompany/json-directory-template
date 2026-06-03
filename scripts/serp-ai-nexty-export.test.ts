@@ -115,7 +115,66 @@ describe.runIf(existsSync(nextyExportRoot))('serp.ai nexty export parity', () =>
 })
 
 describe('serp.ai checked-in downloader products', () => {
-  it('keeps the 289-record catalog on product-specific CTAs with clean source links', () => {
+  it('includes Patreon and Soundgasm with target review links', () => {
+    const siteProducts = readJson<
+      Record<
+        string,
+        {
+          featured?: boolean
+          product?: {
+            categories?: string[]
+            productPage?: string
+            slug?: string
+            title?: string
+          }
+          relatedLinks?: Array<{ label?: string; url?: string }>
+        }
+      >
+    >(resolve(siteRoot, 'products.json'))
+
+    for (const slug of ['patreon-downloader', 'soundgasm-downloader'] as const) {
+      expect(siteProducts[slug], slug).toBeDefined()
+      expect(siteProducts[slug]).toMatchObject({
+        featured: true,
+        product: {
+          categories: ['video-downloaders'],
+          productPage: `https://serp.ly/${slug}`,
+          slug
+        },
+        relatedLinks: [
+          {
+            label: 'Install browser extension',
+            url: `https://serp.ly/${slug}`
+          },
+          {
+            label: 'SERP Apps',
+            url: `https://apps.serp.co/${slug}`
+          },
+          {
+            label: 'GitHub repository',
+            url: `https://github.com/serpapps/${slug}`
+          },
+          {
+            label: 'SERP',
+            url: `https://serp.co/products/${slug}/reviews/`
+          },
+          {
+            label: 'SERP AI',
+            url: `https://serp.ai/products/${slug}/reviews/`
+          },
+          {
+            label: 'Browser Extensions',
+            url: `https://browserextensions.io/products/${slug}/`
+          }
+        ]
+      })
+    }
+
+    expect(siteProducts['patreon-downloader']?.product?.title).toBe('Patreon Video Downloader')
+    expect(siteProducts['soundgasm-downloader']?.product?.title).toBe('Soundgasm Downloader')
+  })
+
+  it('keeps the 291-record catalog on product-specific CTAs with clean source links', () => {
     const siteProducts = readJson<
       Record<
         string,
@@ -130,7 +189,7 @@ describe('serp.ai checked-in downloader products', () => {
       >
     >(resolve(siteRoot, 'products.json'))
 
-    expect(Object.keys(siteProducts)).toHaveLength(289)
+    expect(Object.keys(siteProducts)).toHaveLength(291)
 
     for (const [key, entry] of Object.entries(siteProducts)) {
       const slug = entry.product?.slug ?? key

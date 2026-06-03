@@ -7766,6 +7766,156 @@
       }
     ]
   },
+  "soundgasm-downloader": {
+    "content": {
+      "body": "## Overview\n\nSoundgasm has no download button on any track page. The only options are streaming online every time or manually extracting the audio source. Neither is practical.\n\nSoundgasm Downloader fixes this instantly. Visit any Soundgasm track page, click the download button that appears, and the audio saves straight to your computer at original quality. The batch download pulls every track from a creator's profile page in one go, sorted into folders by creator name.\n\nNo copying URLs into sketchy third-party sites, no digging through page source code. Clean, simple downloads with track titles and creator info kept intact. Everything runs privately in your browser.\n\n## Why It Exists\n\n- Save Soundgasm audio tracks for offline listening without copy-pasting URLs or inspecting page source.\n- Batch download entire creator libraries in one operation instead of saving tracks individually.\n- Preserve original audio quality and metadata so tracks stay organized and identifiable.\n- Keep all downloads private with local-only processing and no external uploads.\n\n## Key Features\n\n- One-click audio downloads from any Soundgasm track page\n- Batch downloading from creator profile pages and playlists\n- Automatic metadata preservation including title, creator, and description\n- Creator-based folder organization for downloaded audio files\n- Download queue for managing multiple tracks without connection overload\n- Original audio quality preservation without re-encoding or compression\n- Automatic Soundgasm player detection on supported pages\n- Cross-browser support for Chrome, Edge, Firefox, Brave, and Opera\n- Progress tracking with download status indicators\n- Duplicate detection to skip previously downloaded tracks\n\n## Reviews\n\n- Perfect for offline ASMR listening (5/5): I listen to a lot of ASMR content on Soundgasm and this extension makes saving tracks dead simple. One click and it's on my phone for offline listening. The metadata preservation is a nice touch too. - Rachel Kim\n- Batch downloads are a lifesaver (4.9/5): The batch download feature saved me hours. I had dozens of tracks to archive from a creator who was leaving the platform and got everything in one go with proper folder organization. - Connor Walsh\n- Simple and gets the job done (4.8/5): Clean, simple, and reliable. No ads, no weird redirects, just downloads the audio file exactly as it was uploaded. The creator-based folders keep my library tidy. - Sofia Reyes\n\n## Privacy and Permissions\n\nSupported regions: Worldwide.\n\nPermissions:\n- downloads: Saves audio files to your device and manages the download queue for batch and single-track operations.\n- activeTab: Detects Soundgasm audio players and injects download controls only on the tab you are actively viewing.\n- storage: Stores download history, duplicate detection data, and user preferences locally in your browser.\n- notifications: Notifies you when batch downloads complete or if a download encounters an error.",
+      "faq": [
+        {
+          "answer": "Install the extension, navigate to any Soundgasm audio page, and click the download button that appears near the player. The audio file is saved directly to your computer with its original quality and metadata intact.",
+          "question": "How do I download audio from Soundgasm?"
+        },
+        {
+          "answer": "Yes. When you visit a Soundgasm creator profile page, the extension offers a batch download option that queues all available tracks and saves them into a folder named after the creator.",
+          "question": "Can I download all tracks from a creator's profile at once?"
+        },
+        {
+          "answer": "Files are saved in the original format hosted on Soundgasm, typically MP3. The extension does not re-encode or compress the audio, so you get the same quality the creator uploaded.",
+          "question": "What audio format are files saved in?"
+        },
+        {
+          "answer": "Yes. The extension extracts available metadata including track title, creator name, and description, and uses this information for file naming and folder organization.",
+          "question": "Does this preserve track titles and creator information?"
+        },
+        {
+          "answer": "There are no artificial limits imposed by the extension. You can download as many tracks as your storage allows. The built-in queue manages multiple downloads so they complete reliably.",
+          "question": "Is there a limit on how many tracks I can download?"
+        },
+        {
+          "answer": "The extension works on Chrome, Edge, Firefox, Brave, and Opera on Windows, macOS, and Linux. Safari and mobile browsers are not currently supported.",
+          "question": "Which browsers are supported?"
+        },
+        {
+          "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
+          "question": "Is this legal?"
+        }
+      ]
+    },
+    "featured": true,
+    "media": {
+      "images": [
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/soundgasm-downloader.jpg",
+        "https://raw.githubusercontent.com/serpapps/soundgasm-downloader/main/images/soundgasm-downloader.gif"
+      ]
+    },
+    "product": {
+      "categories": [
+        "video-downloaders"
+      ],
+      "productPage": "https://serp.ly/soundgasm-downloader",
+      "slug": "soundgasm-downloader",
+      "tagline": "Soundgasm has no download button. This extension adds one. Save audio tracks for offline listening with a single click.",
+      "title": "Soundgasm Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Install browser extension",
+        "url": "https://serp.ly/soundgasm-downloader"
+      },
+      {
+        "label": "SERP Apps",
+        "url": "https://apps.serp.co/soundgasm-downloader"
+      },
+      {
+        "label": "GitHub repository",
+        "url": "https://github.com/serpapps/soundgasm-downloader"
+      },
+      {
+        "label": "SERP",
+        "url": "https://serp.co/products/soundgasm-downloader/reviews/"
+      },
+      {
+        "label": "SERP AI",
+        "url": "https://serp.ai/products/soundgasm-downloader/reviews/"
+      },
+      {
+        "label": "Browser Extensions",
+        "url": "https://browserextensions.io/products/soundgasm-downloader/"
+      }
+    ]
+  },
+  "patreon-downloader": {
+    "content": {
+      "body": "## Overview\n\nYou have been supporting a creator for months, maybe years. Then one day they delete their account, move posts behind a higher tier, or quietly remove older content. Everything you paid for is gone. There is no \"download my purchases\" button on Patreon.\n\nPatreon Downloader backs up the content you are paying for while you still have access. Images, videos, audio, PDFs, file attachments, all of it. Pick a single post or queue an entire creator's timeline and the extension saves everything organized by creator name and date.\n\nYour subscription gives you access to this content. This tool makes sure you can keep it.\n\n## Why It Exists\n\n- Archive content from creators you support before posts get edited or deleted\n- Build an offline library of exclusive art, music, or tutorials you have paid for\n- Organize Patreon media by creator and date without manual downloading\n- Access your supported content when traveling or without internet connectivity\n\n## Key Features\n\n- Downloads images, videos, audio, and file attachments from Patreon posts\n- Uses your authenticated Patreon session to access subscription-tier content\n- Queue entire creator timelines or select specific posts\n- Organizes downloads by creator name, post date, and media type\n- Preserves original filenames, resolutions, and post metadata\n- Handles Patreon's pagination to reach older posts automatically\n- Supports Chrome, Firefox, Edge, Brave, and Opera on desktop\n\n## How It Works\n\n- Log In to Patreon: Navigate to Patreon in your browser and log in with your account. The extension uses your authenticated session to access your subscription feed.\n- Select a Creator or Posts: Choose a specific creator's page and select individual posts or queue their entire timeline for batch download with automatic pagination.\n- Download All Media Types: The extension captures images, videos, audio files, PDFs, and file attachments from each post at their original quality and resolution.\n- Organize by Creator and Date: Files save locally organized by creator name and post date with original filenames and metadata intact. Credentials are never stored.\n\n## Reviews\n\n- Perfect for archiving supported artists (5/5): I support several artists on Patreon and wanted to archive the high-res illustrations I paid for. This tool grabbed months of posts with all images at full resolution, organized by creator. - Rachel Holbrook\n- Learned the hard way to back up Patreon content (4.9/5): A creator I supported deleted their account without warning. I now use this to regularly back up content from the people I support so I never lose what I paid for again. - Damien Restrepo\n- Great for downloading exclusive music releases (4.8/5): I follow music producers who release exclusive stems and samples on Patreon. The batch download feature queues everything and organizes by post date, which is exactly how I want it. - Ayumi Nakagawa\n\n## Platform Support\n\n### Supported Browsers\n\n- Google Chrome\n- Mozilla Firefox\n- Microsoft Edge\n- Opera\n- Brave\n\n### Supported Operating Systems\n\n- Windows 10/11\n- macOS 11+\n- Ubuntu / Debian / Fedora Linux\n\n### Supported Content\n\n- Images at full resolution\n- Video files\n- Audio tracks and music\n- PDF and document attachments\n- ZIP archives\n- Creator timeline batch downloads\n\n### Not Supported\n\n- Content from tiers you are not subscribed to\n- Patreon live streams\n- Patreon mobile app content\n- Community/discussion posts\n\n## Privacy and Permissions\n\nSupported regions: Worldwide.\n\nLimitations:\n- Requires an active Patreon subscription to access content; does not bypass paywalls or tier restrictions\n- Only downloads content your current subscription tier grants access to\n- Cannot recover content from creators who have already deleted their posts or accounts\n- Patreon API or page structure changes may temporarily affect functionality until an update\n- Very large creator archives may take significant time to paginate through older posts\n- Live stream content is not capturable through the extension\n\nPermissions:\n- activeTab: Detects Patreon creator pages on the current tab and displays download controls for posts in your subscription feed.\n- downloads: Saves images, videos, audio, and file attachments from Patreon posts to your local downloads folder.\n- storage: Stores download queue progress, creator preferences, and session state locally between browsing sessions.\n- scripting: Reads post content, media URLs, and attachment links from Patreon pages to build the download queue.\n- tabs: Tracks navigation between creator pages and posts so queued downloads stay aligned with the correct content.\n- host_permissions: Grants access to patreon.com and its CDN endpoints to fetch media files and post data using your authenticated session.",
+      "faq": [
+        {
+          "answer": "Yes. The downloader uses your active Patreon session, so you can only download content your subscription tier grants access to. It does not bypass paywalls or access content from tiers you have not paid for.",
+          "question": "Do I need to be subscribed to a creator to download their content?"
+        },
+        {
+          "answer": "Yes. The extension handles Patreon's pagination automatically and can queue all posts from a creator's page. You can also select specific date ranges or individual posts.",
+          "question": "Can I download an entire creator's post history?"
+        },
+        {
+          "answer": "It downloads images (including high-res versions), video files, audio tracks, PDFs, ZIP archives, and any other file attachments the creator includes in their posts.",
+          "question": "What types of media does it save?"
+        },
+        {
+          "answer": "Files are organized into folders by creator name, then by post date. Each post's media and attachments are grouped together with the post title as a reference.",
+          "question": "How are downloads organized?"
+        },
+        {
+          "answer": "The extension uses your existing browser session cookies. Credentials are never stored or transmitted. All downloads happen locally on your device.",
+          "question": "Is my Patreon account information safe?"
+        },
+        {
+          "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
+          "question": "Is this legal?"
+        }
+      ]
+    },
+    "featured": true,
+    "media": {
+      "images": [
+        "https://raw.githubusercontent.com/serpapps/patreon-downloader/main/images/patreon-downloader.jpg",
+        "https://raw.githubusercontent.com/serpapps/patreon-downloader/main/images/patreon-downloader.gif"
+      ]
+    },
+    "product": {
+      "categories": [
+        "video-downloaders"
+      ],
+      "productPage": "https://serp.ly/patreon-downloader",
+      "slug": "patreon-downloader",
+      "tagline": "You paid for it. Keep it. Save Patreon posts, art, videos, and files before they disappear.",
+      "title": "Patreon Video Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Install browser extension",
+        "url": "https://serp.ly/patreon-downloader"
+      },
+      {
+        "label": "SERP Apps",
+        "url": "https://apps.serp.co/patreon-downloader"
+      },
+      {
+        "label": "GitHub repository",
+        "url": "https://github.com/serpapps/patreon-downloader"
+      },
+      {
+        "label": "SERP",
+        "url": "https://serp.co/products/patreon-downloader/reviews/"
+      },
+      {
+        "label": "SERP AI",
+        "url": "https://serp.ai/products/patreon-downloader/reviews/"
+      },
+      {
+        "label": "Browser Extensions",
+        "url": "https://browserextensions.io/products/patreon-downloader/"
+      }
+    ]
+  },
   "321tube-downloader": {
     "content": {
       "body": "## Overview\n\nDownloader for 321Tube is a browser extension for saving videos from 321Tube.com as standard video files. Open a supported 321Tube video page, press play if needed, use the in-page download button or extension popup, choose an available format, and save through your browser. No desktop app or command-line workflow required.\n\n- Purpose-built around the 321Tube playback surface and TurboVid-related hosts\n- In-browser media detection with a player-level download button and context-menu access\n- Quality selection where source variants are available\n- Shared offscreen stream processing for direct MP4 and HLS candidates\n- Organized download folder and progress management\n\n## Why 321tube Downloader\n\nVideos on 321Tube are often embedded behind player wrappers and TurboVid playback hosts. A standard browser right-click save rarely exposes the final video stream, and generic web downloaders can confuse ad previews, thumbnails, and timeline data with actual video content. This makes saving a video for offline viewing unnecessarily complicated.\n\n321tube Downloader solves this by working directly inside the page you are viewing. It checks video and source tags, metadata, script content, and observed media requests to find playable candidates. The extension filters out obvious ad and preview URLs, presents the detected formats in a clean interface, and lets you save through your browser with one click.\n\n## Features\n\n- 321Tube-specific app identity, product URL, entitlement, and update-check configuration\n- Host permissions for 321tube.com, subdomains, turboviplay.com, and turbovidhls.com\n- In-page player button targeting the 321Tube player wrapper\n- Generic static-media extraction for direct MP4 and HLS candidates\n- Filters common ad, banner, VAST, thumbnail, sprite, preview, and timeline URLs\n- Right-click context menu for page and video contexts\n- Shared download manager with progress UI\n- Shared offscreen processing for stream and file download work\n- OTP activation through auth.serp.co\n- 3 free downloads included before paid license flow\n\n## How It Works\n\n1. Install the extension from the latest release.\n2. Open 321Tube and go to a supported video page.\n3. Start playback so the extension can detect the media.\n4. Open the popup or use the on-page controls.\n5. Choose the quality option you want.\n6. Start the download and wait for the MP4 export to finish.\n7. Save the final file locally.\n\n## Step-by-Step Tutorial: How to Download Videos from 321tube\n\n1. Install the 321tube Downloader extension from the latest GitHub release.\n2. Open your browser and navigate to a supported 321Tube video page.\n3. Press the play button on the video player so the page exposes the media stream.\n4. Look for the download button that appears on the video player, or click the extension icon in your toolbar.\n5. The extension popup will show the detected media candidates from the page.\n6. Select the format or quality option you want to download.\n7. Click the download button and wait for the processing to complete.\n8. Save the final MP4 file to your preferred location.\n\n## Supported Formats\n\n- Input: Direct MP4 URLs and HLS/M3U8 streams exposed by the 321Tube page or related TurboVid playback hosts\n- Output: MP4\n\nSaved files use MP4 so they are easier to replay on standard media players, move between devices, or archive locally.\n\n## Who It's For\n\n- 321Tube viewers who want a simple browser workflow for saving videos for offline viewing\n- Non-technical users who prefer a button-based extension over copy-and-paste downloader sites\n- Users who want to avoid command-line tools or desktop applications\n- Anyone who needs to choose from detected formats where the source exposes multiple quality options\n\n## Common Use Cases\n\n- Save a 321Tube video for offline viewing on a commute or trip\n- Capture videos exposed through 321Tube and TurboVid playback URLs\n- Choose from detected direct MP4 or HLS candidates where available\n- Use the in-page player button instead of searching through page source code\n- Use the right-click context menu for quick access while browsing\n\n## Troubleshooting\n\n**No download options appear on the page**\nRefresh the page, press play on the video, and wait a few seconds for the stream to load. Then open the extension popup again.\n\n**The player button does not show**\nMake sure you are on a supported 321Tube video page and the video player has loaded. Try refreshing the page.\n\n**The download fails or stops mid-way**\nCheck your internet connection and try again. Some longer videos may take a moment to process through the offscreen pipeline.\n\n**Only one format is available**\nThe quality options depend on what the source exposes. Some pages may only provide a single stream.\n\n**The extension asks me to sign in**\nYou need to activate the extension with your email address. The trial includes 3 free downloads after activation.\n\n## Trial & Access\n\n- Includes **3 free downloads** so you can test the workflow first\n- Email sign-in uses secure one-time password verification\n- No credit card required for the trial\n- Unlimited downloads are available with a paid license\n\nStart here: [321tube Downloader](https://serp.ly/321tube-downloader)\n\n## Installation Instructions\n\n1. Open the latest release page: [GitHub Releases](https://github.com/serpapps/321tube-downloader/releases/latest)\n2. Download the correct build for your browser.\n3. Install the extension.\n4. Open a supported 321Tube page.\n5. Use the popup to detect and download the media.\n\n## Notes\n\n- Only download content you own or have explicit permission to save\n- An internet connection is required for downloads\n- Press play on the video first so the extension can detect the media stream\n- Available quality options depend on what the source provides\n\n## About 321tube\n\n321Tube is an adult video platform that hosts content from a variety of creators and studios. This extension helps viewers save videos from 321Tube for offline access through a simple browser-based workflow.",
