@@ -56,36 +56,36 @@
   {
     "contentType": "image/svg+xml",
     "height": 50,
-    "key": "badge/featured-on-serp-ai-light.svg",
+    "key": "badge/featured-on-serp.ai-light.svg",
     "siteId": "serp.ai",
-    "source": "apps/serp.ai/public/badge/featured-on-serp-ai-light.svg",
+    "source": "apps/serp.ai/public/badge/featured-on-serp.ai-light.svg",
     "variant": "light",
     "width": 200
   },
   {
     "contentType": "image/svg+xml",
     "height": 50,
-    "key": "badge/featured-on-serp-ai-dark.svg",
+    "key": "badge/featured-on-serp.ai-dark.svg",
     "siteId": "serp.ai",
-    "source": "apps/serp.ai/public/badge/featured-on-serp-ai-dark.svg",
+    "source": "apps/serp.ai/public/badge/featured-on-serp.ai-dark.svg",
     "variant": "dark",
     "width": 200
   },
   {
     "contentType": "image/svg+xml",
     "height": 50,
-    "key": "badge/featured-on-serp-co-light.svg",
+    "key": "badge/featured-on-serp.co-light.svg",
     "siteId": "serp.co",
-    "source": "apps/serp.co/public/badge/featured-on-serp-co-light.svg",
+    "source": "apps/serp.co/public/badge/featured-on-serp.co-light.svg",
     "variant": "light",
     "width": 200
   },
   {
     "contentType": "image/svg+xml",
     "height": 50,
-    "key": "badge/featured-on-serp-co-dark.svg",
+    "key": "badge/featured-on-serp.co-dark.svg",
     "siteId": "serp.co",
-    "source": "apps/serp.co/public/badge/featured-on-serp-co-dark.svg",
+    "source": "apps/serp.co/public/badge/featured-on-serp.co-dark.svg",
     "variant": "dark",
     "width": 200
   },

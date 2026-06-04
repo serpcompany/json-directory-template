@@ -112,8 +112,8 @@ describe('WebsiteDetailSidebar', () => {
       'https://serp.co/products/launchbuzz.io/reviews/'
     )
     expect(collectRecordProp<Record<string, string>>(sidebar, 'badgeUrls')).toContainEqual({
-      dark: 'https://serp.co/badge/featured-on-serp-co-dark.svg',
-      light: 'https://serp.co/badge/featured-on-serp-co-light.svg'
+      dark: 'https://serp.co/badge/featured-on-serp.co-dark.svg',
+      light: 'https://serp.co/badge/featured-on-serp.co-light.svg'
     })
   })
 

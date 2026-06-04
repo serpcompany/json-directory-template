@@ -22,25 +22,25 @@
       "sourceDir": "tmp/serp-ai/public/badge",
       "targetDir": "apps/serp.ai/public/badge",
       "primary": {
-        "dark": "featured-on-serp-ai-dark.svg",
-        "light": "featured-on-serp-ai-light.svg"
+        "dark": "featured-on-serp.ai-dark.svg",
+        "light": "featured-on-serp.ai-light.svg"
       },
       "assets": [
         "badge_dark.svg",
         "badge_light.svg",
         "featured-on-browserextensions-io-dark-badge.svg",
-        "featured-on-serp-ai-dark.svg",
-        "featured-on-serp-ai-light.svg",
-        "featured-on-serp-co-dark.svg",
-        "featured-on-serp-co-light.svg"
+        "featured-on-serp.ai-dark.svg",
+        "featured-on-serp.ai-light.svg",
+        "featured-on-serp.co-dark.svg",
+        "featured-on-serp.co-light.svg"
       ]
     },
     "serp.co": {
       "sourceDir": "tmp/serp-co/public/badge",
       "targetDir": "apps/serp.co/public/badge",
       "primary": {
-        "dark": "featured-on-serp-co-dark.svg",
-        "light": "featured-on-serp-co-light.svg"
+        "dark": "featured-on-serp.co-dark.svg",
+        "light": "featured-on-serp.co-light.svg"
       },
       "assets": [
         "badge_dark.svg",
@@ -50,9 +50,9 @@
         "featured-on-directory-light-badge.svg",
         "featured-on-directory-starter-dark-badge.svg",
         "featured-on-directory-starter-light-badge.svg",
-        "featured-on-serp-ai-light.svg",
-        "featured-on-serp-co-dark.svg",
-        "featured-on-serp-co-light.svg"
+        "featured-on-serp.ai-light.svg",
+        "featured-on-serp.co-dark.svg",
+        "featured-on-serp.co-light.svg"
       ]
     }
   }

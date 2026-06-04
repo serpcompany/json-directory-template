@@ -6,8 +6,8 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
   },
   badges: {
     featuredOn: {
-      dark: 'badge/featured-on-serp-co-dark.svg',
-      light: 'badge/featured-on-serp-co-light.svg'
+      dark: 'badge/featured-on-serp.co-dark.svg',
+      light: 'badge/featured-on-serp.co-light.svg'
     }
   },
   branding: {

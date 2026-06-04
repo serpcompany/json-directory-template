@@ -56,12 +56,12 @@ describe('featured-on badge URL helpers', () => {
 
     expect(
       buildFeaturedOnBadgeEmbedHtml({
-        badgeUrl: 'https://serp.ai/badge/featured-on-serp-ai-light.svg',
+        badgeUrl: 'https://serp.ai/badge/featured-on-serp.ai-light.svg',
         listingUrl,
         siteName: 'SERP AI'
       })
     ).toBe(`<a href="https://serp.ai/products/launchbuzz.io/reviews/" target="_blank" rel="noopener noreferrer" title="Featured on SERP AI">
-  <img src="https://serp.ai/badge/featured-on-serp-ai-light.svg" alt="Featured on SERP AI" width="200" height="50" />
+  <img src="https://serp.ai/badge/featured-on-serp.ai-light.svg" alt="Featured on SERP AI" width="200" height="50" />
 </a>`)
   })
 })

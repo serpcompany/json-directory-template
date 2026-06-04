@@ -131,8 +131,8 @@ describe('serp.co checked-in migration output', () => {
       'apps/serp.co/public/favicon.ico',
       'apps/serp.co/public/logo.png',
       'apps/serp.co/public/og.png',
-      'apps/serp.co/public/badge/featured-on-serp-co-dark.svg',
-      'apps/serp.co/public/badge/featured-on-serp-co-light.svg',
+      'apps/serp.co/public/badge/featured-on-serp.co-dark.svg',
+      'apps/serp.co/public/badge/featured-on-serp.co-light.svg',
       'sites/serp.co/assets/favicon.ico',
       'sites/serp.co/assets/logo.png',
       'sites/serp.co/assets/opengraph-image.png'
