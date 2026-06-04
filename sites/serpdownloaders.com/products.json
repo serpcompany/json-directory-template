@@ -9304,6 +9304,41 @@
       }
     ]
   },
+  "launchbuzz.io": {
+    "featured": false,
+    "media": {
+      "images": [
+        "/media/products/launchbuzz.io/og.png"
+      ],
+      "logo": "/media/products/launchbuzz.io/og.png"
+    },
+    "product": {
+      "categories": [
+        "product-launch-websites"
+      ],
+      "productPage": "https://launchbuzz.io",
+      "slug": "launchbuzz.io",
+      "tagline": "Discover and upvote products launching daily.",
+      "title": "LaunchBuzz"
+    },
+    "content": {
+      "body": "## Overview\n\nLaunchBuzz is a product launch and discovery website for tech products. It helps visitors discover and upvote products launching daily, while makers can submit projects, use a LaunchBuzz badge, and get a backlink.\n\n## What It Offers\n\n- Daily discovery for new tech product launches\n- Project submission for makers\n- Launch promotion surfaces including badges, backlinks, pricing, and sponsorship pages"
+    },
+    "relatedLinks": [
+      {
+        "label": "LaunchBuzz",
+        "url": "https://launchbuzz.io"
+      },
+      {
+        "label": "Submit Project",
+        "url": "https://launchbuzz.io/projects/submit"
+      },
+      {
+        "label": "Pricing",
+        "url": "https://launchbuzz.io/pricing"
+      }
+    ]
+  },
   "letmejerk-downloader": {
     "content": {
       "body": "## Overview\n\nThis extension is built around the short-code route pattern found on LetMeJerk and LetMeJizz video pages. Instead of generic downloader copy, it follows the actual page structure — a compact route code before the content slug, an iframe embed handoff, and media references that may surface as m3u8 playlists or direct mp4 files. The goal is straightforward: open a supported page, let the embed settle, and check what media becomes available.\n\n- Built for LetMeJerk and LetMeJizz pages that use a short-code route segment before the slug\n- Follows the iframe embed handoff to detect media references\n- Checks for m3u8 playlists or direct mp4 files after the embed resolves\n- Covers both LetMeJerk and LetMeJizz domains as a paired footprint\n- Verified target status with cautious readiness language\n\n## Why Letmejerk Downloader\n\nLetMeJerk and LetMeJizz video pages use a distinctive route structure where a compact short code appears between the domain and the content slug. Generic downloader extensions often miss this pattern, treating the page like any other site and failing to recognize the embed handoff that delivers the actual media. That handoff — an iframe that loads a player from a separate source — is where the useful media reference becomes visible.\n\nThis extension was built with that short-code route in mind. It waits for the iframe embed to resolve, then checks whether the page exposes an m3u8 playlist or a direct mp4 file. The approach is focused and honest: it follows the actual page behavior rather than promising broad coverage. Verified target status supports cautious availability, while stale config notes remind everyone that this is a focused candidate rather than a final all-clear adapter.\n\n## Features\n\n- Short-code route awareness for pages shaped like /&lt;code&gt;/&lt;slug&gt;\n- LetMeJerk and LetMeJizz cross-domain pairing kept explicit\n- Waits for iframe embed handoff before checking media references\n- Checks for m3u8 playlists or direct mp4 files after embed resolves\n- Verified target status with target_ready: yes\n- Conservative rollout tone with stale config and stub notes visible\n- No generic downloader phrasing — copy matches actual page structure\n- In-page popup controls for simple capture workflow\n\n## How It Works\n\n1. Install the extension from the latest release.\n2. Open LetMeJerk and go to a supported video page.\n3. Start playback so the extension can detect the media.\n4. Open the popup or use the on-page controls.\n5. Choose the quality option you want.\n6. Start the download and wait for the MP4 export to finish.\n7. Save the final file locally.\n\n## Step-by-Step Tutorial: How to Download Videos from Letmejerk\n\n1. Open a LetMeJerk video page whose URL includes a short code before the slug.\n2. Let the page fully load so the iframe embed handoff completes.\n3. Wait for the embedded player to settle and expose media references.\n4. Click the extension icon in your browser toolbar to open the popup.\n5. Review the detected media options — m3u8 or mp4 — as they appear.\n6. Select the quality or format you want to download.\n7. Click the download button to start the capture.\n8. Save the resulting MP4 file to your local device.\n\n## Supported Formats\n\n- Input: m3u8 playlists or direct mp4 files exposed after the iframe embed handoff on supported LetMeJerk and LetMeJizz pages\n- Output: MP4\n\nSaved files use MP4 so they are easier to replay on standard media players, move between devices, or archive locally.\n\n## Who It's For\n\n- People who visit LetMeJerk or LetMeJizz pages and want a route-aware capture tool\n- Users who understand that media may appear after an embed handoff\n- Anyone looking for a focused extension built around short-code page patterns\n- Viewers who prefer cautious, verified messaging over overpromising generic copy\n\n## Common Use Cases\n\n- Downloading a video from a LetMeJerk page that uses a short code like AFHfUw before the slug\n- Capturing media from LetMeJizz pages using the same paired-domain approach\n- Checking whether a page exposes m3u8 or mp4 after the iframe embed resolves\n- Saving a local copy of content you have permission to keep\n- Testing short-code route recognition across both LetMeJerk and LetMeJizz hosts\n\n## Troubleshooting\n\n**The extension does not detect any media on the page.**\nMake sure the page has fully loaded and the iframe embed handoff has completed. Try refreshing the page and waiting for the player to appear.\n\n**The popup shows no available formats.**\nThe page may not expose m3u8 or mp4 after the embed resolves. Not all pages use the same media delivery method.\n\n**Download fails or produces a broken file.**\nCheck your internet connection and try again. Some media references may be temporary or require the embed to finish loading.\n\n**The extension does not work on a specific LetMeJerk page.**\nThe page may use a different route structure or embed source. This extension is focused on short-code route patterns.\n\n**I see an error about stale configuration.**\nThe extension is in candidate stage and may need updates. Check the latest release for any fixes.\n\n## Trial & Access\n\n- Includes **3 free downloads** so you can test the workflow first\n- Email sign-in uses secure one-time password verification\n- No credit card required for the trial\n- Unlimited downloads are available with a paid license\n\nStart here: [https://serp.ly/letmejerk-downloader](https://serp.ly/letmejerk-downloader)\n\n## Installation Instructions\n\n1. Open the latest release page: [GitHub Releases](https://github.com/serpapps/letmejerk-downloader/releases/latest)\n2. Download the correct build for your browser.\n3. Install the extension.\n4. Open a supported LetMeJerk page.\n5. Use the popup to detect and download the media.\n\n## Notes\n\n- Only download content you own or have explicit permission to save\n- An internet connection is required for downloads\n- This extension is focused on short-code route pages and may not work on all LetMeJerk or LetMeJizz layouts\n- Verified target status coexists with stale config and generated stub caveats\n\n## About Letmejerk\n\nLetMeJerk is a video platform that uses short-code route segments in its page URLs. This extension was built to recognize that pattern and follow the iframe embed handoff that delivers the playable media, making it easier to capture content from both LetMeJerk and LetMeJizz pages.",

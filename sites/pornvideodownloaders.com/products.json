@@ -2018,6 +2018,41 @@
       }
     ]
   },
+  "launchbuzz.io": {
+    "featured": false,
+    "media": {
+      "images": [
+        "/media/products/launchbuzz.io/og.png"
+      ],
+      "logo": "/media/products/launchbuzz.io/og.png"
+    },
+    "product": {
+      "categories": [
+        "product-launch-websites"
+      ],
+      "productPage": "https://launchbuzz.io",
+      "slug": "launchbuzz.io",
+      "tagline": "Discover and upvote products launching daily.",
+      "title": "LaunchBuzz"
+    },
+    "content": {
+      "body": "## Overview\n\nLaunchBuzz is a product launch and discovery website for tech products. It helps visitors discover and upvote products launching daily, while makers can submit projects, use a LaunchBuzz badge, and get a backlink.\n\n## What It Offers\n\n- Daily discovery for new tech product launches\n- Project submission for makers\n- Launch promotion surfaces including badges, backlinks, pricing, and sponsorship pages"
+    },
+    "relatedLinks": [
+      {
+        "label": "LaunchBuzz",
+        "url": "https://launchbuzz.io"
+      },
+      {
+        "label": "Submit Project",
+        "url": "https://launchbuzz.io/projects/submit"
+      },
+      {
+        "label": "Pricing",
+        "url": "https://launchbuzz.io/pricing"
+      }
+    ]
+  },
   "livejasmin-downloader": {
     "content": {
       "body": "## Overview\n\nLiveJasmin shows happen in the moment. Once they end, recordings are either temporary or locked behind additional payments. Revisiting a show you already paid for may not be possible, and screen-recording software always results in lower quality than the original stream.\n\nLiveJasmin Downloader makes saving effortless. Open any live show or recorded replay you have access to, pick your preferred quality, and hit record. The extension captures the stream directly and saves it as a ready-to-watch file, organized by performer name and date. No separate recording apps, no complicated setup, and no quality loss.\n\nAll processing happens privately on your device. Recordings are never uploaded anywhere, and the extension keeps everything neatly organized in a dedicated folder so you can find any show instantly.\n\n## Why It Exists\n\n- Record live LiveJasmin cam sessions without configuring screen-capture software or external recorders.\n- Save recorded show replays and VODs as MP4 files for offline playback on any device.\n- Automatically organize captures by performer and session date for easy library management.\n- Keep all video processing local in your browser with no uploads to third-party servers.\n\n## Key Features\n\n- Live cam session recording with real-time HLS stream capture\n- Saved show and VOD replay downloads with quality selection\n- Model profile and bio information extraction\n- Multi-quality variant selection from available stream resolutions\n- In-browser MP4 conversion without external software\n- Download manager with elapsed time tracking and progress monitoring\n- Automatic file organization by performer name and date\n- Resume interrupted recordings with session recovery\n- Cross-browser support for Chrome, Edge, Firefox, Brave, and Opera\n- Bandwidth throttling controls for stable recording on slower connections\n\n## Reviews\n\n- Finally a simple way to record cam sessions (5/5): The live capture is seamless — just pick quality and hit record. No more messing with OBS or screen recorders. Files come out clean and organized by performer. - Derek Sullivan\n- Reliable recordings every time (4.9/5): I use this to archive shows I've purchased access to. The download manager makes it easy to track progress and the MP4 quality matches what I see on screen. - Marissa Chen\n- Great for building an organized archive (4.8/5): Being able to save recorded show replays is a huge plus. The auto-naming by performer and date keeps my library easy to browse without manual renaming. - Tyler Brooks\n\n## Privacy and Permissions\n\nSupported regions: Worldwide.\n\nPermissions:\n- downloads: Saves completed MP4 recordings to your device and manages download progress for live captures and VOD saves.\n- activeTab: Detects supported LiveJasmin pages and injects recording controls only on the tab you are actively using.\n- storage: Stores activation state, recording preferences, and session history locally in your browser between sessions.\n- notifications: Alerts you when a recording completes or encounters an issue, especially useful for long captures running in the background.",

@@ -3074,6 +3074,41 @@
       }
     ]
   },
+  "launchbuzz.io": {
+    "featured": false,
+    "media": {
+      "images": [
+        "/media/products/launchbuzz.io/og.png"
+      ],
+      "logo": "/media/products/launchbuzz.io/og.png"
+    },
+    "product": {
+      "categories": [
+        "product-launch-websites"
+      ],
+      "productPage": "https://launchbuzz.io",
+      "slug": "launchbuzz.io",
+      "tagline": "Discover and upvote products launching daily.",
+      "title": "LaunchBuzz"
+    },
+    "content": {
+      "body": "## Overview\n\nLaunchBuzz is a product launch and discovery website for tech products. It helps visitors discover and upvote products launching daily, while makers can submit projects, use a LaunchBuzz badge, and get a backlink.\n\n## What It Offers\n\n- Daily discovery for new tech product launches\n- Project submission for makers\n- Launch promotion surfaces including badges, backlinks, pricing, and sponsorship pages"
+    },
+    "relatedLinks": [
+      {
+        "label": "LaunchBuzz",
+        "url": "https://launchbuzz.io"
+      },
+      {
+        "label": "Submit Project",
+        "url": "https://launchbuzz.io/projects/submit"
+      },
+      {
+        "label": "Pricing",
+        "url": "https://launchbuzz.io/pricing"
+      }
+    ]
+  },
   "linkedin-downloader": {
     "content": {
       "body": "## Overview\n\nYou bookmark a LinkedIn post with a brilliant framework, a carousel that nails your industry problem, or a video from a conference keynote. Two days later you scroll back to find it and it is gone — reshuffled by the algorithm, deleted by the author, or lost in a sea of engagement bait. LinkedIn does not offer any native way to export posts, carousels, or videos to your device.\n\nLinkedIn Downloader fixes that gap. Navigate to any public or connection-visible post on LinkedIn, click the extension icon, and save the content directly to your computer. Videos download as MP4 files at the highest available resolution. Image carousels and document posts save as individual files so you can reference them offline during meetings, presentations, or research sessions.\n\nThe extension reads LinkedIn's player and post metadata from the page you are viewing, identifies available media, and lists your download options with estimated file sizes. Everything runs locally in your browser using your active LinkedIn session — no credentials are stored, no data is sent to external servers, and no third-party APIs are involved.\n\nWhether you are building a swipe file of competitor content, archiving keynote recordings for your team, or saving instructional carousels for offline study, LinkedIn Downloader gives you a permanent local copy. Start with 3 free downloads to see how it works, no credit card required.\n\n## Why It Exists\n\n- Build an offline swipe file of high-performing LinkedIn content for inspiration and research\n- Archive conference keynotes and thought-leadership videos before authors remove them\n- Reference carousels and frameworks during meetings without relying on an internet connection\n- Keep all processing on your device so your LinkedIn activity stays private\n\n## Key Features\n\n- Detects video posts, carousel documents, and image posts on LinkedIn feed and profile pages\n- Downloads LinkedIn native videos as MP4 at the highest available resolution\n- Saves multi-image carousels and document slides as individual files\n- Right-click 'Download with LinkedIn Downloader' for quick capture without opening the popup\n- Progress overlay shows download speed, ETA, and pause/cancel controls\n- Stores licence key and quality preferences locally with zero analytics or tracking\n- Works with your existing LinkedIn session — no manual cookie export or login required\n- Desktop notifications alert you when downloads complete\n- Supports Chrome, Edge, Firefox, Brave, and Opera on Windows, macOS, and Linux\n\n## How It Works\n\n- Navigate to a LinkedIn post: Open any LinkedIn post containing a video, carousel, document, or image in your browser and let it fully load.\n- Click the extension icon: The extension scans the post for downloadable media and lists every available file with format and size details.\n- Choose your download: Select the video quality or individual carousel slides you want. Videos save as MP4; images save in their original format.\n- Save to your device: The file downloads locally through your browser. A desktop notification confirms when it is complete and ready to use.\n\n## Reviews\n\n- Game-changer for content research (5/5): I save carousels from industry leaders every week for my content planning. This extension grabs them cleanly and I can review them offline during flights. - Marcus Herrera\n- Saved our team hours of searching (4.9/5): Conference keynotes on LinkedIn vanish fast. I downloaded twelve videos from a summit and now have a permanent training library for my team. - Priya Nair\n- Privacy-first LinkedIn saving (4.8/5): Simple and private. I was worried about third-party tools scraping my LinkedIn data but this runs entirely in the browser. Exactly what I needed. - Dylan Watts\n\n## Platform Support\n\n### Browsers\n\n- Chrome\n- Edge\n- Firefox\n- Brave\n- Opera\n\n### Operating Systems\n\n- Windows\n- macOS\n- Linux\n\n### Supported Content\n\n- LinkedIn native video posts\n- Carousel and document slide posts\n- Single and multi-image posts\n- Posts visible in your current LinkedIn session\n\n### Not Supported\n\n- LinkedIn Learning course videos\n- LinkedIn Live streams in progress\n- Safari and mobile browsers\n- Batch downloading of entire profiles or feeds\n\n## Privacy and Permissions\n\nSupported regions: Worldwide.\n\nLimitations:\n- Downloads are initiated one post at a time — no batch export of feeds or profiles\n- LinkedIn Learning videos are not supported and require a separate tool\n- LinkedIn Live streams cannot be captured while still broadcasting\n- Available video quality depends on what LinkedIn exposes for each post\n- Safari and mobile browsers are not supported\n- The browser tab must remain open while the download completes\n\nPermissions:\n- downloads: Saves finished video and image files to your downloads folder and keeps the progress interface in sync.\n- storage: Stores the licence key and preferred quality settings so the extension stays activated between sessions.\n- activeTab: Detects LinkedIn post media on the tab you are viewing and enables inline download controls.\n- scripting: Reads LinkedIn's post structure and video player metadata to extract downloadable media URLs.\n- notifications: Sends desktop alerts when downloads finish so you can continue browsing without watching the tab.\n- contextMenus: Adds a right-click 'Download with LinkedIn Downloader' option for faster access on any post.",
