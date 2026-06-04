@@ -66,7 +66,7 @@ describe('WebsiteDetailSidebar', () => {
 
     await waitFor(() => {
       expect(writeText).toHaveBeenCalledWith(
-        `<a href="https://example.com/listing/example-product/" target="_blank" rel="noopener noreferrer" title="Example Product featured on Directory Starter">
+        `<a href="https://example.com/listing/example-product/" target="_blank" rel="noopener noreferrer" title="Featured on Directory Starter">
   <img src="https://example.com/badge/featured-on-default-light.svg" alt="Featured on Directory Starter" width="200" height="50" />
 </a>`
       )

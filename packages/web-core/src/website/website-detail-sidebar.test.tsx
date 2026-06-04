@@ -116,4 +116,23 @@ describe('WebsiteDetailSidebar', () => {
       light: 'https://serp.co/badge/featured-on-serp-co-light.svg'
     })
   })
+
+  it('passes the configured badge display name into copied badge embeds', async () => {
+    vi.stubEnv('NEXT_PUBLIC_SITE_ID', 'pornvideodownloaders.com')
+    vi.stubEnv('SITE_ID', 'pornvideodownloaders.com')
+    vi.resetModules()
+
+    const { WebsiteDetailSidebar: PvdWebsiteDetailSidebar } = await import(
+      './website-detail-sidebar'
+    )
+    const sidebar = PvdWebsiteDetailSidebar({
+      website: {
+        name: 'LaunchBuzz',
+        slug: 'launchbuzz.io',
+        website: 'https://launchbuzz.io'
+      }
+    })
+
+    expect(collectStringProp(sidebar, 'siteName')).toContain('PV Downloaders')
+  })
 })
