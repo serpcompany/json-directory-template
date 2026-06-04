@@ -6,7 +6,6 @@ const props = {
     dark: 'https://directory.example/badge/featured-on-example-dark.svg',
     light: 'https://directory.example/badge/featured-on-example-light.svg'
   },
-  listingName: 'Example Product',
   listingUrl: 'https://directory.example/listing/example-product/',
   siteId: 'example',
   siteName: 'Example Directory'
@@ -23,7 +22,7 @@ describe('FeaturedOnBadgeEmbedPanel', () => {
 
     await waitFor(() => {
       expect(writeText).toHaveBeenCalledWith(
-        `<a href="https://directory.example/listing/example-product/" target="_blank" rel="noopener noreferrer" title="Example Product featured on Example Directory">
+        `<a href="https://directory.example/listing/example-product/" target="_blank" rel="noopener noreferrer" title="Featured on Example Directory">
   <img src="https://directory.example/badge/featured-on-example-light.svg" alt="Featured on Example Directory" width="200" height="50" />
 </a>`
       )
@@ -40,7 +39,7 @@ describe('FeaturedOnBadgeEmbedPanel', () => {
 
     await waitFor(() => {
       expect(writeText).toHaveBeenCalledWith(
-        `<a href="https://directory.example/listing/example-product/" target="_blank" rel="noopener noreferrer" title="Example Product featured on Example Directory">
+        `<a href="https://directory.example/listing/example-product/" target="_blank" rel="noopener noreferrer" title="Featured on Example Directory">
   <img src="https://directory.example/badge/featured-on-example-dark.svg" alt="Featured on Example Directory" width="200" height="50" />
 </a>`
       )
@@ -72,7 +71,7 @@ describe('FeaturedOnBadgeEmbedPanel', () => {
 
     await waitFor(() => {
       expect(writeText).toHaveBeenCalledWith(
-        `<a href="https://directory.example/listing/example-product/" target="_blank" rel="noopener noreferrer" title="Example Product featured on Example Directory">
+        `<a href="https://directory.example/listing/example-product/" target="_blank" rel="noopener noreferrer" title="Featured on Example Directory">
   <img src="https://directory.example/badge/featured-on-example-light.svg" alt="Featured on Example Directory" width="200" height="50" />
 </a>`
       )

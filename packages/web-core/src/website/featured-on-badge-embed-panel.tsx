@@ -10,7 +10,6 @@ const FEATURED_ON_BADGE_HEIGHT = 50
 export type FeaturedOnBadgeEmbedPanelProps = {
   badgePreviewUrls?: Record<BadgeTheme, string>
   badgeUrls: Record<BadgeTheme, string>
-  listingName: string
   listingUrl: string
   siteId: string
   siteName: string
@@ -26,21 +25,18 @@ function escapeHtmlAttribute(value: string): string {
 
 export function buildFeaturedOnBadgeEmbedHtml({
   badgeUrl,
-  listingName,
   listingUrl,
   siteName
 }: {
   badgeUrl: string
-  listingName: string
   listingUrl: string
   siteName: string
 }): string {
-  const safeListingName = escapeHtmlAttribute(listingName)
   const safeListingUrl = escapeHtmlAttribute(listingUrl)
   const safeBadgeUrl = escapeHtmlAttribute(badgeUrl)
   const safeSiteName = escapeHtmlAttribute(siteName)
 
-  return `<a href="${safeListingUrl}" target="_blank" rel="noopener noreferrer" title="${safeListingName} featured on ${safeSiteName}">
+  return `<a href="${safeListingUrl}" target="_blank" rel="noopener noreferrer" title="Featured on ${safeSiteName}">
   <img src="${safeBadgeUrl}" alt="Featured on ${safeSiteName}" width="${FEATURED_ON_BADGE_WIDTH}" height="${FEATURED_ON_BADGE_HEIGHT}" />
 </a>`
 }
@@ -48,7 +44,6 @@ export function buildFeaturedOnBadgeEmbedHtml({
 export function FeaturedOnBadgeEmbedPanel({
   badgePreviewUrls,
   badgeUrls,
-  listingName,
   listingUrl,
   siteId,
   siteName
@@ -70,7 +65,6 @@ export function FeaturedOnBadgeEmbedPanel({
       {(['light', 'dark'] as const).map(theme => {
         const embedHtml = buildFeaturedOnBadgeEmbedHtml({
           badgeUrl: badgeUrls[theme],
-          listingName,
           listingUrl,
           siteName
         })
