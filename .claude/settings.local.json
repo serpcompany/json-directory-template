@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs cat:*)",
+      "Bash(xargs ls:*)",
+      "Bash(ls -1d /Users/devin/dev/repos/json-directory/sites/*/)",
+      "Bash(xargs -n1 basename)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "next-devtools"
+  ]
+}
