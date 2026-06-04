@@ -95,10 +95,9 @@ export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
       <FeaturedOnBadgeEmbedPanel
         badgePreviewUrls={badgePreviewUrls}
         badgeUrls={badgeUrls}
-        listingName={website.name}
         listingUrl={listingUrl}
         siteId={siteConfig.id}
-        siteName={siteConfig.name}
+        siteName={siteConfig.badges.featuredOn.displayName}
       />
     </aside>
   )

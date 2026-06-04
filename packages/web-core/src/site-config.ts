@@ -17,6 +17,7 @@ type SiteBrandingConfig = {
 type ResolvedSiteBadgesConfig = {
   featuredOn: {
     dark: string
+    displayName: string
     light: string
   }
 }
@@ -68,9 +69,14 @@ function getDefaultFeaturedOnBadgeKey(siteId: string, theme: 'light' | 'dark'): 
   return `badge/featured-on-${siteId}-${theme}.svg`
 }
 
-function resolveFeaturedOnBadges(siteId: string, badges: SiteBadgesConfig | undefined) {
+function resolveFeaturedOnBadges(
+  siteId: string,
+  siteName: string,
+  badges: SiteBadgesConfig | undefined
+) {
   return {
     dark: badges?.featuredOn?.dark ?? getDefaultFeaturedOnBadgeKey(siteId, 'dark'),
+    displayName: badges?.featuredOn?.displayName ?? siteName,
     light: badges?.featuredOn?.light ?? getDefaultFeaturedOnBadgeKey(siteId, 'light')
   }
 }
@@ -144,7 +150,11 @@ export function resolveSiteConfig(
 
   return {
     badges: {
-      featuredOn: resolveFeaturedOnBadges(configuredSite.id, configuredSite.badges)
+      featuredOn: resolveFeaturedOnBadges(
+        configuredSite.id,
+        configuredSite.site.name,
+        configuredSite.badges
+      )
     },
     branding: {
       appleTouchIconUrl: resolveRuntimeBrandAssetUrl(configuredSite.branding.logo, 'logo')
