@@ -20,6 +20,53 @@ function collectHrefProps(node: ReactNode): string[] {
   return [...(props.href ? [props.href] : []), ...collectHrefProps(props.children)]
 }
 
+function collectStringProp(node: ReactNode, propName: string): string[] {
+  if (Array.isArray(node)) {
+    return node.flatMap(child => collectStringProp(child, propName))
+  }
+
+  if (!isValidElement(node)) {
+    return []
+  }
+
+  const props = node.props as {
+    children?: ReactNode
+    [key: string]: unknown
+  }
+  const propValue = props[propName]
+
+  return [
+    ...(typeof propValue === 'string' ? [propValue] : []),
+    ...collectStringProp(props.children, propName)
+  ]
+}
+
+function collectRecordProp<T extends Record<string, unknown>>(
+  node: ReactNode,
+  propName: string
+): T[] {
+  if (Array.isArray(node)) {
+    return node.flatMap(child => collectRecordProp<T>(child, propName))
+  }
+
+  if (!isValidElement(node)) {
+    return []
+  }
+
+  const props = node.props as {
+    children?: ReactNode
+    [key: string]: unknown
+  }
+  const propValue = props[propName]
+
+  return [
+    ...(propValue && typeof propValue === 'object' && !Array.isArray(propValue)
+      ? [propValue as T]
+      : []),
+    ...collectRecordProp<T>(props.children, propName)
+  ]
+}
+
 describe('WebsiteDetailSidebar', () => {
   beforeEach(() => {
     vi.stubGlobal('React', React)
@@ -27,6 +74,8 @@ describe('WebsiteDetailSidebar', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals()
+    vi.unstubAllEnvs()
+    vi.resetModules()
   })
 
   it('decorates the primary Visit Site URL with the current site ref domain', () => {
@@ -41,5 +90,30 @@ describe('WebsiteDetailSidebar', () => {
     expect(collectHrefProps(sidebar)).toContain(
       `https://vendor.example.com/pricing?plan=pro&ref=${siteConfig.domain}#buy`
     )
+  })
+
+  it('passes suffix-aware listing URLs into copied badge embeds for suffix-based sites', async () => {
+    vi.stubEnv('NEXT_PUBLIC_SITE_ID', 'serp.co')
+    vi.stubEnv('SITE_ID', 'serp.co')
+    vi.resetModules()
+
+    const { WebsiteDetailSidebar: SerpCoWebsiteDetailSidebar } = await import(
+      './website-detail-sidebar'
+    )
+    const sidebar = SerpCoWebsiteDetailSidebar({
+      website: {
+        name: 'LaunchBuzz',
+        slug: 'launchbuzz.io',
+        website: 'https://launchbuzz.io'
+      }
+    })
+
+    expect(collectStringProp(sidebar, 'listingUrl')).toContain(
+      'https://serp.co/products/launchbuzz.io/reviews/'
+    )
+    expect(collectRecordProp<Record<string, string>>(sidebar, 'badgeUrls')).toContainEqual({
+      dark: 'https://serp.co/badge/featured-on-serp-co-dark.svg',
+      light: 'https://serp.co/badge/featured-on-serp-co-light.svg'
+    })
   })
 })

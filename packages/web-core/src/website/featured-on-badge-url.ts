@@ -1,7 +1,18 @@
 export type FeaturedOnBadgeTheme = 'light' | 'dark'
 
+type FeaturedOnBadgeListingUrlInput = {
+  listingBasePath: string
+  listingDetailSuffix?: string
+  publicUrl: string
+  slug: string
+}
+
 function trimTrailingSlash(value: string): string {
   return value.replace(/\/+$/, '')
+}
+
+function normalizePathSegment(value: string | undefined): string {
+  return (value ?? '').replace(/^\/+|\/+$/g, '')
 }
 
 function normalizeBadgeKey(value: string): string {
@@ -38,4 +49,20 @@ export function getFeaturedOnBadgePublicUrl(
     getDefaultFeaturedOnBadgeKey(siteId, theme),
     publicBaseUrl
   )
+}
+
+export function getFeaturedOnBadgeListingUrl({
+  listingBasePath,
+  listingDetailSuffix,
+  publicUrl,
+  slug
+}: FeaturedOnBadgeListingUrlInput): string {
+  const normalizedPublicUrl = trimTrailingSlash(publicUrl)
+  const pathSegments = [
+    normalizePathSegment(listingBasePath),
+    normalizePathSegment(slug),
+    normalizePathSegment(listingDetailSuffix)
+  ].filter(Boolean)
+
+  return `${normalizedPublicUrl}/${pathSegments.join('/')}/`
 }

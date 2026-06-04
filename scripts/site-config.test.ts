@@ -293,6 +293,11 @@ describe('loadCheckedInSite', () => {
         slug: 'adult'
       },
       {
+        description: 'Browse product launch website listings and resources.',
+        name: 'Product Launch Websites',
+        slug: 'product-launch-websites'
+      },
+      {
         name: 'Video Downloaders',
         slug: 'video-downloaders'
       }

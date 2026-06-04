@@ -6,6 +6,7 @@ import { siteConfig } from '../site-config'
 import { siteContent } from '../site-content'
 import { FeaturedOnBadgeEmbedPanel } from './featured-on-badge-embed-panel'
 import {
+  getFeaturedOnBadgeListingUrl,
   getFeaturedOnBadgePreviewPathFromKey,
   getFeaturedOnBadgePublicUrlFromKey
 } from './featured-on-badge-url'
@@ -26,10 +27,12 @@ export type WebsiteDetailSidebarProps = {
 
 export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
   const outboundWebsiteUrl = getOutboundUrlWithRef(website.website, siteConfig)
-  const listingUrl = new URL(
-    getRoute('listing.detail', { slug: website.slug }),
-    siteConfig.publicUrl
-  ).toString()
+  const listingUrl = getFeaturedOnBadgeListingUrl({
+    listingBasePath: siteConfig.listingRouteBasePath,
+    listingDetailSuffix: siteConfig.sitemap.listingDetailSuffix,
+    publicUrl: siteConfig.publicUrl,
+    slug: website.slug
+  })
   const badgeKeys = siteConfig.badges.featuredOn
   const badgeUrls = {
     dark: getFeaturedOnBadgePublicUrlFromKey(badgeKeys.dark, siteConfig.publicUrl),

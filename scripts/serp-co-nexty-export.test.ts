@@ -31,26 +31,54 @@ describe('serp.co checked-in migration output', () => {
     const downloaderProducts = readJson<Record<string, ProductEntry>>(
       resolve(process.cwd(), 'sites/serpdownloaders.com/products.json')
     )
-    const canonicalDownloaderProducts = readJson<Record<string, ProductEntry>>(
-      resolve(process.cwd(), 'sites/browserextensions.io/products.json')
-    )
     const actualProducts = readJson<Record<string, ProductEntry>>(
       resolve(process.cwd(), 'sites/serp.co/products.json')
     )
-    const canonicalDownloaderSlugs = new Set([
-      ...Object.keys(canonicalDownloaderProducts),
-      ...Object.keys(downloaderProducts)
-    ])
+    const knownNonMirroredDownloaderSlugs = [
+      'coomervideodownloader.pages.dev',
+      'doodstreamvideodownloader.pages.dev',
+      'hdzogvideodownloader.pages.dev',
+      'hotmovsvideodownloader.pages.dev',
+      'javvideodownloader.pages.dev',
+      'luxuretvvideodownloader.pages.dev',
+      'manyvidsvideodownloader.pages.dev',
+      'onlyfansvideodownloader.pages.dev',
+      'pornhatvideodownloader.pages.dev',
+      'pornhubvideodownloader.pages.dev',
+      'pornonevideodownloader.pages.dev',
+      'stripchatvideodownloader.pages.dev',
+      'txxxvideodownloader.pages.dev',
+      'uporniavideodownloader.pages.dev',
+      'whopvideodownloader.pages.dev',
+      'xfantazyvideodownloader.pages.dev',
+      'xfreehdvideodownloader.pages.dev',
+      'xgroovyvideodownloader.pages.dev',
+      'youpornvideodownloader.pages.dev'
+    ]
+    const knownNonMirroredDownloaderSlugSet = new Set(knownNonMirroredDownloaderSlugs)
+    const canonicalDownloaderSlugs = Object.keys(downloaderProducts).filter(
+      slug => !knownNonMirroredDownloaderSlugSet.has(slug)
+    )
+    const missingDownloaderSlugs = Object.keys(downloaderProducts).filter(
+      slug => !actualProducts[slug]
+    )
 
-    expect(Object.keys(actualProducts)).toHaveLength(3420)
-    expect(Object.keys(actualProducts).length).toBeGreaterThan(canonicalDownloaderSlugs.size)
+    expect(Object.keys(actualProducts)).toHaveLength(3421)
+    expect(missingDownloaderSlugs).toEqual(knownNonMirroredDownloaderSlugs)
+    expect(Object.keys(actualProducts).length).toBeGreaterThan(canonicalDownloaderSlugs.length)
+    expect(actualProducts['launchbuzz.io']?.product?.title).toBe('LaunchBuzz')
+    expect(actualProducts['launchbuzz.io']?.product?.categories).toContain(
+      'product-launch-websites'
+    )
 
     for (const slug of canonicalDownloaderSlugs) {
-      const expectedProduct = downloaderProducts[slug] ?? canonicalDownloaderProducts[slug]
+      const expectedProduct = downloaderProducts[slug]
 
       expect(actualProducts[slug], `serp.co must include ${slug}`).toBeDefined()
       expect(actualProducts[slug]?.product?.title).toBe(expectedProduct?.product?.title)
-      expect(actualProducts[slug]?.product?.categories).toContain('video-downloaders')
+      for (const category of expectedProduct?.product?.categories ?? []) {
+        expect(actualProducts[slug]?.product?.categories).toContain(category)
+      }
     }
   })
 
@@ -60,8 +88,13 @@ describe('serp.co checked-in migration output', () => {
     )
     const categorySlugs = actualCategories.map(category => category.slug)
 
-    expect(actualCategories).toHaveLength(139)
+    expect(actualCategories).toHaveLength(140)
     expect(new Set(categorySlugs).size).toBe(categorySlugs.length)
+    expect(actualCategories).toContainEqual({
+      description: 'Browse product launch website listings and resources.',
+      name: 'Product Launch Websites',
+      slug: 'product-launch-websites'
+    })
     expect(actualCategories).toContainEqual({
       description: 'Browse other software, tools, companies, and resources.',
       name: 'Other',
@@ -98,8 +131,8 @@ describe('serp.co checked-in migration output', () => {
       'apps/serp.co/public/favicon.ico',
       'apps/serp.co/public/logo.png',
       'apps/serp.co/public/og.png',
-      'apps/serp.co/public/badge/featured-on-serp-co-dark-badge.svg',
-      'apps/serp.co/public/badge/featured-on-serp-co-light-badge.svg',
+      'apps/serp.co/public/badge/featured-on-serp-co-dark.svg',
+      'apps/serp.co/public/badge/featured-on-serp-co-light.svg',
       'sites/serp.co/assets/favicon.ico',
       'sites/serp.co/assets/logo.png',
       'sites/serp.co/assets/opengraph-image.png'
