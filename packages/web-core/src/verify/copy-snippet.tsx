@@ -10,6 +10,7 @@ import {
 interface CopySnippetProps {
   token: string
   badgeKey?: string
+  listingUrl?: string
   siteId: string
   siteName: string
   theme?: 'light' | 'dark'
@@ -17,6 +18,7 @@ interface CopySnippetProps {
 
 export function CopySnippet({
   badgeKey,
+  listingUrl,
   token,
   siteId,
   siteName,
@@ -30,10 +32,11 @@ export function CopySnippet({
   }, [])
 
   const baseUrl = origin || 'https://your-site.com'
+  const linkUrl = listingUrl || baseUrl
   const badgeUrl = badgeKey
     ? getFeaturedOnBadgePublicUrlFromKey(badgeKey, baseUrl)
     : getFeaturedOnBadgePublicUrl(siteId, theme, baseUrl)
-  const snippet = `<a href="${baseUrl}" target="_blank" title="Featured on ${siteName}">
+  const snippet = `<a href="${linkUrl}" target="_blank" title="Featured on ${siteName}">
   <img src="${badgeUrl}" alt="Featured on ${siteName}" data-verify-token="${token}" width="200" height="50" />
 </a>`
 
