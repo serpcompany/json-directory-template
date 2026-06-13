@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { siteConfig } from '../site-config'
+import { getFeaturedOnBadgeListingUrl } from '../website/featured-on-badge-url'
 import { BadgePreview } from './badge-preview'
 import { CopySnippet } from './copy-snippet'
 import { VerifyButton } from './verify-button'
@@ -12,6 +13,7 @@ type Theme = 'light' | 'dark'
 
 type SubmissionInfo = {
   name: string
+  slug: string
   website: string
 }
 
@@ -90,6 +92,12 @@ export function SubmitVerifyPageRoute({
 
   const { data } = loadState
   const { id: siteId, name: siteName } = siteConfig
+  const listingUrl = getFeaturedOnBadgeListingUrl({
+    listingBasePath: siteConfig.listingRouteBasePath,
+    listingDetailSuffix: siteConfig.sitemap.listingDetailSuffix,
+    publicUrl: siteConfig.publicUrl,
+    slug: data.slug
+  })
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -148,6 +156,7 @@ export function SubmitVerifyPageRoute({
 
           <CopySnippet
             badgeKey={siteConfig.badges.featuredOn[theme]}
+            listingUrl={listingUrl}
             token={token}
             siteId={siteId}
             siteName={siteName}
