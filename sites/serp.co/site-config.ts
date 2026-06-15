@@ -48,7 +48,7 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
   },
   deploy: {
     branch: 'main',
-    preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+    preserve: ['.github/workflows/deploy.yml', '.github/workflows/verify-badge.yml', '.github/workflows/approve-listing.yml', 'CNAME'],
     repoUrl: 'https://github.com/serpcompany/serp.co.git',
     strategy: 'github-pages-repo-sync'
   },
