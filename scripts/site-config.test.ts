@@ -279,7 +279,12 @@ describe('loadCheckedInSite', () => {
     expect(config.social.githubIssuesUrl).toBe('https://github.com/serpcompany/serp.co/issues')
     expect(config.deploy).toEqual({
       branch: 'main',
-      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+      preserve: [
+        '.github/workflows/deploy.yml',
+        '.github/workflows/verify-badge.yml',
+        '.github/workflows/approve-listing.yml',
+        'CNAME'
+      ],
       repoUrl: 'https://github.com/serpcompany/serp.co.git',
       strategy: 'github-pages-repo-sync'
     })
