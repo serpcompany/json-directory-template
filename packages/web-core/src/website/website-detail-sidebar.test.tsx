@@ -101,9 +101,7 @@ describe('WebsiteDetailSidebar', () => {
       }
     })
 
-    expect(collectHrefProps(sidebar)).toContain(
-      'https://vendor.example.com/pricing?plan=pro#buy'
-    )
+    expect(collectHrefProps(sidebar)).toContain('https://vendor.example.com/pricing?plan=pro#buy')
   })
 
   it('passes suffix-aware listing URLs into copied badge embeds for suffix-based sites', async () => {
