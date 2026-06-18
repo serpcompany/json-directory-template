@@ -580,6 +580,11 @@
     "description": "Browse local seo listings and resources."
   },
   {
+    "slug": "seo",
+    "name": "SEO",
+    "description": "Browse seo listings and resources."
+  },
+  {
     "slug": "lyric-video-maker",
     "name": "Lyric Video Makers",
     "description": "Browse lyric video makers listings and resources."
