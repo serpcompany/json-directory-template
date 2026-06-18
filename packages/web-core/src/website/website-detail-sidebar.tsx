@@ -1,39 +1,86 @@
-import { Calendar, Download, ExternalLink, Hash } from 'lucide-react';
-import Link from 'next/link';
-import { getCategoryDisplayName } from '../category-display';
-import { getRoute } from '../routes';
-import { siteContent } from '../site-content';
+import { Calendar, Download, ExternalLink, Hash } from 'lucide-react'
+import Link from 'next/link'
+import { getCategoryDisplayName } from '../category-display'
+import { getRoute } from '../routes'
+import { siteConfig } from '../site-config'
+import { siteContent } from '../site-content'
 
 type WebsiteSidebarMetadata = {
-  category?: string;
-  categories?: string[];
-  name: string;
-  publishedAt?: string;
-  slug: string;
-  website: string;
-};
+  category?: string
+  categories?: string[]
+  name: string
+  publishedAt?: string
+  slug: string
+  website: string
+}
+
+type OutboundViaConfig = {
+  domain?: string | null
+  publicUrl?: string | null
+}
 
 export type WebsiteDetailSidebarProps = {
-  website: WebsiteSidebarMetadata;
-};
+  website: WebsiteSidebarMetadata
+}
 
-export function WebsiteDetailSidebar({
-  website,
-}: WebsiteDetailSidebarProps) {
-  const cliSlug = siteContent.listingCliInstall?.installTargetByListingSlug?.[
-    website.slug
-  ];
+function resolveViaDomain(config: OutboundViaConfig): string | null {
+  const configuredDomain = config.domain?.trim()
+
+  if (configuredDomain) {
+    return configuredDomain
+  }
+
+  const publicUrl = config.publicUrl?.trim()
+
+  if (!publicUrl) {
+    return null
+  }
+
+  try {
+    return new URL(publicUrl).hostname || null
+  } catch {
+    return null
+  }
+}
+
+function getOutboundUrlWithVia(url: string, config: OutboundViaConfig): string {
+  const viaDomain = resolveViaDomain(config)
+
+  if (!viaDomain) {
+    return url
+  }
+
+  try {
+    const parsedUrl = new URL(url)
+
+    if (
+      parsedUrl.protocol !== 'https:' ||
+      parsedUrl.hostname !== 'serp.ly' ||
+      parsedUrl.searchParams.has('via')
+    ) {
+      return url
+    }
+
+    parsedUrl.searchParams.set('via', viaDomain)
+
+    return parsedUrl.toString()
+  } catch {
+    return url
+  }
+}
+
+export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
+  const outboundWebsiteUrl = getOutboundUrlWithVia(website.website, siteConfig)
+  const cliSlug = siteContent.listingCliInstall?.installTargetByListingSlug?.[website.slug]
   const categorySlugs = [
     ...(website.category ? [website.category] : []),
-    ...(website.categories || []),
-  ].filter(
-    (value, index, values) => Boolean(value) && values.indexOf(value) === index
-  );
+    ...(website.categories || [])
+  ].filter((value, index, values) => Boolean(value) && values.indexOf(value) === index)
 
   return (
     <aside className="space-y-6 lg:sticky lg:top-20 lg:self-start">
       <Link
-        href={website.website}
+        href={outboundWebsiteUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="sticky top-20 z-20 flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-4 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -60,7 +107,7 @@ export function WebsiteDetailSidebar({
               {categorySlugs.length > 1 ? 'Categories' : 'Category'}
             </span>
             <div className="mt-1 flex flex-wrap gap-2">
-              {categorySlugs.map((categorySlug) => (
+              {categorySlugs.map(categorySlug => (
                 <Link
                   key={categorySlug}
                   href={getRoute('category.page', { category: categorySlug })}
@@ -83,12 +130,12 @@ export function WebsiteDetailSidebar({
               {new Date(website.publishedAt).toLocaleDateString('en-US', {
                 month: 'long',
                 day: 'numeric',
-                year: 'numeric',
+                year: 'numeric'
               })}
             </p>
           </div>
         )}
       </div>
     </aside>
-  );
+  )
 }
