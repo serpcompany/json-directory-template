@@ -1,9 +1,15 @@
-import { Calendar, Download, ExternalLink, Hash } from 'lucide-react'
+import { Download, ExternalLink, Hash } from 'lucide-react'
 import Link from 'next/link'
 import { getCategoryDisplayName } from '../category-display'
 import { getRoute } from '../routes'
 import { siteConfig } from '../site-config'
 import { siteContent } from '../site-content'
+import { FeaturedOnBadgeEmbedPanel } from './featured-on-badge-embed-panel'
+import {
+  getFeaturedOnBadgeListingUrl,
+  getFeaturedOnBadgePreviewPathFromKey,
+  getFeaturedOnBadgePublicUrlFromKey
+} from './featured-on-badge-url'
 
 type WebsiteSidebarMetadata = {
   category?: string
@@ -71,6 +77,21 @@ function getOutboundUrlWithVia(url: string, config: OutboundViaConfig): string {
 
 export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
   const outboundWebsiteUrl = getOutboundUrlWithVia(website.website, siteConfig)
+  const listingUrl = getFeaturedOnBadgeListingUrl({
+    listingBasePath: siteConfig.listingRouteBasePath,
+    listingDetailSuffix: siteConfig.sitemap.listingDetailSuffix,
+    publicUrl: siteConfig.publicUrl,
+    slug: website.slug
+  })
+  const badgeKeys = siteConfig.badges.featuredOn
+  const badgeUrls = {
+    dark: getFeaturedOnBadgePublicUrlFromKey(badgeKeys.dark, siteConfig.publicUrl),
+    light: getFeaturedOnBadgePublicUrlFromKey(badgeKeys.light, siteConfig.publicUrl)
+  }
+  const badgePreviewUrls = {
+    dark: getFeaturedOnBadgePreviewPathFromKey(badgeKeys.dark),
+    light: getFeaturedOnBadgePreviewPathFromKey(badgeKeys.light)
+  }
   const cliSlug = siteContent.listingCliInstall?.installTargetByListingSlug?.[website.slug]
   const categorySlugs = [
     ...(website.category ? [website.category] : []),
@@ -85,7 +106,7 @@ export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
         rel="noopener noreferrer"
         className="sticky top-20 z-20 flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-4 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
-        <span>Open {website.name}</span>
+        <span>Visit Site</span>
         <ExternalLink className="size-4" aria-hidden />
       </Link>
 
@@ -119,23 +140,15 @@ export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
             </div>
           </div>
         )}
-
-        {website.publishedAt && (
-          <div>
-            <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Calendar className="size-3" aria-hidden />
-              Added
-            </span>
-            <p className="text-sm text-foreground mt-1">
-              {new Date(website.publishedAt).toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric'
-              })}
-            </p>
-          </div>
-        )}
       </div>
+
+      <FeaturedOnBadgeEmbedPanel
+        badgePreviewUrls={badgePreviewUrls}
+        badgeUrls={badgeUrls}
+        listingUrl={listingUrl}
+        siteId={siteConfig.id}
+        siteName={siteConfig.badges.featuredOn.displayName}
+      />
     </aside>
   )
 }

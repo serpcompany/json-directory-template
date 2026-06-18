@@ -1,6 +1,12 @@
 import type { CheckedInSiteConfigOverride } from '../types'
 
 export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
+  badges: {
+    featuredOn: {
+      dark: 'badge/featured-on-serp.ai-dark.svg',
+      light: 'badge/featured-on-serp.ai-light.svg'
+    }
+  },
   branding: {
     favicon: {
       path: 'sites/serp.ai/assets/favicon.ico',
@@ -55,7 +61,7 @@ export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
     strategy: 'github-pages-repo-sync'
   },
   id: 'serp.ai',
-  networkBrandGroup: 'mainGroup',
+  networkBrandGroup: 'all',
   features: {
     showBrands: true
   },

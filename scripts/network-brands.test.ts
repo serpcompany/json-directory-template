@@ -123,10 +123,10 @@ describe('parseNetworkBrands', () => {
     }
   )
 
-  it('returns the committed SERPXXX brand group from the shared source data', () => {
-    const brands = getNetworkBrandsForGroup('serpxxxGroup')
+  it('returns the committed adult-only brand group from the shared source data', () => {
+    const brands = getNetworkBrandsForGroup('adultsOnly')
 
-    expect(brands).toHaveLength(43)
+    expect(brands).toHaveLength(62)
     expect(brands.map(brand => brand.name)).toEqual(
       brands.map(brand => brand.name).toSorted((first, second) => first.localeCompare(second))
     )

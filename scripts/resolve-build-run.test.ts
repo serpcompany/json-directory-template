@@ -1,3 +1,4 @@
+import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
 import { describe, expect, it, vi } from 'vitest'
 import {
   inferSiteIdFromChangedPaths,
@@ -30,6 +31,13 @@ function createMockFetch(routes: Record<string, Response | unknown>): typeof fet
   }) as unknown as typeof fetch
 }
 
+function expectedDeployTargets(siteIds: readonly string[]) {
+  return siteIds.map(siteId => ({
+    artifactDir: `dist/sites/${siteId}`,
+    siteId
+  }))
+}
+
 describe('resolveBuildRun', () => {
   it('resolves the artifact dir from the checked-in site config id', async () => {
     await expect(
@@ -38,14 +46,28 @@ describe('resolveBuildRun', () => {
       })
     ).resolves.toEqual({
       artifactDir: 'dist/sites/serpdownloaders.com',
+      deployTargets: expectedDeployTargets(['serpdownloaders.com']),
       shouldDeploy: true,
       siteId: 'serpdownloaders.com'
+    })
+  })
+
+  it('resolves workflow dispatch site_id=all to every active checked-in site', async () => {
+    await expect(
+      resolveBuildRun([], {
+        GITHUB_EVENT_NAME: 'workflow_dispatch',
+        SITE_ID: 'all'
+      })
+    ).resolves.toEqual({
+      deployTargets: expectedDeployTargets(activeCheckedInSiteIds),
+      shouldDeploy: true
     })
   })
 
   it('falls back to the default checked-in site config outside push events', async () => {
     await expect(resolveBuildRun([], {})).resolves.toEqual({
       artifactDir: 'dist/sites/default',
+      deployTargets: expectedDeployTargets(['default']),
       shouldDeploy: true,
       siteId: 'default'
     })
@@ -97,28 +119,33 @@ describe('resolveBuildRun', () => {
     ).toBe('browserextensions.io')
   })
 
-  it('does not infer a deploy target when changed paths touch multiple concrete sites', () => {
+  it('infers exact deploy targets when changed paths touch multiple concrete sites', () => {
     const paths = ['apps/serp.co/app/layout.tsx', 'apps/serp.ai/app/layout.tsx']
 
     expect(inferSiteIdFromChangedPaths(paths)).toBeUndefined()
     expect(resolvePushSiteInputFromChangedPaths(paths)).toEqual({
-      shouldDeploy: false
+      shouldDeploy: true,
+      siteIds: ['serp.ai', 'serp.co']
     })
   })
 
-  it('does not deploy when changed paths are not site-specific', () => {
+  it('deploys all active checked-in sites when changed paths are shared-only', () => {
     expect(
       resolvePushSiteInputFromChangedPaths([
         '.github/workflows/build-and-deploy.yml',
         'scripts/resolve-build-run.ts'
       ])
-    ).toEqual({ shouldDeploy: false })
+    ).toEqual({
+      shouldDeploy: true,
+      siteIds: activeCheckedInSiteIds
+    })
   })
 
   it('deploys the site inferred from push changed paths', () => {
     expect(resolvePushSiteInputFromChangedPaths(['apps/serp.co/lib/content-loader.ts'])).toEqual({
       shouldDeploy: true,
-      siteId: 'serp.co'
+      siteId: 'serp.co',
+      siteIds: ['serp.co']
     })
   })
 
@@ -161,7 +188,8 @@ describe('resolveBuildRun', () => {
       )
     ).resolves.toEqual({
       shouldDeploy: true,
-      siteId: 'browserextensions.io'
+      siteId: 'browserextensions.io',
+      siteIds: ['browserextensions.io']
     })
   })
 
@@ -209,11 +237,12 @@ describe('resolveBuildRun', () => {
       )
     ).resolves.toEqual({
       shouldDeploy: true,
-      siteId: 'browserextensions.io'
+      siteId: 'browserextensions.io',
+      siteIds: ['browserextensions.io']
     })
   })
 
-  it('returns no-deploy when current push and associated PR files are shared-only', async () => {
+  it('deploys all active sites when current push and associated PR files are shared-only', async () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
@@ -255,11 +284,12 @@ describe('resolveBuildRun', () => {
         fetch
       )
     ).resolves.toEqual({
-      shouldDeploy: false
+      shouldDeploy: true,
+      siteIds: activeCheckedInSiteIds
     })
   })
 
-  it('returns no-deploy when the push payload touches multiple concrete sites', async () => {
+  it('deploys exact sites when the push payload touches multiple concrete sites', async () => {
     const fetch = vi.fn() as unknown as typeof globalThis.fetch
 
     await expect(
@@ -284,12 +314,13 @@ describe('resolveBuildRun', () => {
         fetch
       )
     ).resolves.toEqual({
-      shouldDeploy: false
+      shouldDeploy: true,
+      siteIds: ['serp.ai', 'serp.co']
     })
     expect(fetch).not.toHaveBeenCalled()
   })
 
-  it('does not use PR metadata when associated PR files touch multiple concrete sites', async () => {
+  it('deploys exact sites from associated PR files instead of fuzzy PR metadata', async () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
@@ -331,7 +362,8 @@ describe('resolveBuildRun', () => {
         fetch
       )
     ).resolves.toEqual({
-      shouldDeploy: false
+      shouldDeploy: true,
+      siteIds: ['serp.ai', 'serp.co']
     })
   })
 
@@ -375,11 +407,12 @@ describe('resolveBuildRun', () => {
       )
     ).resolves.toEqual({
       shouldDeploy: true,
-      siteId: 'browserextensions.io'
+      siteId: 'browserextensions.io',
+      siteIds: ['browserextensions.io']
     })
   })
 
-  it('does not infer a site from a near-match PR body domain', async () => {
+  it('deploys all active sites when a shared-only PR body has no exact site match', async () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
@@ -418,7 +451,8 @@ describe('resolveBuildRun', () => {
         fetch
       )
     ).resolves.toEqual({
-      shouldDeploy: false
+      shouldDeploy: true,
+      siteIds: activeCheckedInSiteIds
     })
   })
 
@@ -466,7 +500,8 @@ describe('resolveBuildRun', () => {
       )
     ).resolves.toEqual({
       shouldDeploy: true,
-      siteId: 'browserextensions.io'
+      siteId: 'browserextensions.io',
+      siteIds: ['browserextensions.io']
     })
     expect(fetch).toHaveBeenCalledWith(
       new URL('https://api.github.test/repos/serpcompany/browserextensions.io/issues/1'),
@@ -521,7 +556,8 @@ describe('resolveBuildRun', () => {
       )
     ).resolves.toEqual({
       shouldDeploy: true,
-      siteId: 'browserextensions.io'
+      siteId: 'browserextensions.io',
+      siteIds: ['browserextensions.io']
     })
   })
 
@@ -566,7 +602,8 @@ describe('resolveBuildRun', () => {
       )
     ).resolves.toEqual({
       shouldDeploy: true,
-      siteId: 'browserextensions.io'
+      siteId: 'browserextensions.io',
+      siteIds: ['browserextensions.io']
     })
   })
 
@@ -663,7 +700,7 @@ describe('resolveBuildRun', () => {
     )
   })
 
-  it('returns no-deploy when associated PR files touch multiple concrete sites', async () => {
+  it('deploys exact targets when associated PR files touch multiple concrete sites', async () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
@@ -703,7 +740,8 @@ describe('resolveBuildRun', () => {
         fetch
       )
     ).resolves.toEqual({
-      shouldDeploy: false
+      shouldDeploy: true,
+      siteIds: ['browserextensions.io', 'serp.co']
     })
   })
 
@@ -749,7 +787,8 @@ describe('resolveBuildRun', () => {
       )
     ).resolves.toEqual({
       shouldDeploy: true,
-      siteId: 'browserextensions.io'
+      siteId: 'browserextensions.io',
+      siteIds: ['browserextensions.io']
     })
   })
 
@@ -805,6 +844,7 @@ describe('resolveBuildRun', () => {
       )
     ).resolves.toEqual({
       artifactDir: 'dist/sites/serpdownloaders.com',
+      deployTargets: expectedDeployTargets(['serpdownloaders.com']),
       shouldDeploy: true,
       siteId: 'serpdownloaders.com'
     })
@@ -832,7 +872,7 @@ describe('resolveBuildRun', () => {
     )
   })
 
-  it('returns no-deploy when no associated merged PR is found', async () => {
+  it('deploys all active sites for a shared-only push even when no associated merged PR is found', async () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': []
     })
@@ -854,7 +894,8 @@ describe('resolveBuildRun', () => {
         fetch
       )
     ).resolves.toEqual({
-      shouldDeploy: false
+      shouldDeploy: true,
+      siteIds: activeCheckedInSiteIds
     })
   })
 

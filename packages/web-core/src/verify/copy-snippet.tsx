@@ -2,19 +2,27 @@
 
 import { Check, Copy } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import {
+  getFeaturedOnBadgePublicUrl,
+  getFeaturedOnBadgePublicUrlFromKey
+} from '../website/featured-on-badge-url'
 
 interface CopySnippetProps {
   token: string
+  badgeKey?: string
+  listingUrl?: string
   siteId: string
   siteName: string
   theme?: 'light' | 'dark'
 }
 
 export function CopySnippet({
+  badgeKey,
+  listingUrl,
   token,
   siteId,
   siteName,
-  theme = 'light',
+  theme = 'light'
 }: CopySnippetProps) {
   const [copied, setCopied] = useState(false)
   const [origin, setOrigin] = useState('')
@@ -24,8 +32,12 @@ export function CopySnippet({
   }, [])
 
   const baseUrl = origin || 'https://your-site.com'
-  const snippet = `<a href="${baseUrl}" target="_blank" title="Featured on ${siteName}">
-  <img src="${baseUrl}/badge/featured-on-${siteId}-${theme}.svg" alt="Featured on ${siteName}" data-verify-token="${token}" width="200" height="54" />
+  const linkUrl = listingUrl || baseUrl
+  const badgeUrl = badgeKey
+    ? getFeaturedOnBadgePublicUrlFromKey(badgeKey, baseUrl)
+    : getFeaturedOnBadgePublicUrl(siteId, theme, baseUrl)
+  const snippet = `<a href="${linkUrl}" target="_blank" title="Featured on ${siteName}">
+  <img src="${badgeUrl}" alt="Featured on ${siteName}" data-verify-token="${token}" width="200" height="50" />
 </a>`
 
   function handleCopy() {

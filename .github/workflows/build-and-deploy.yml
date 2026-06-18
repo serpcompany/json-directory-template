@@ -31,9 +31,12 @@ permissions:
   pull-requests: read
 
 jobs:
-  deploy:
-    name: Validate, Build & Deploy
+  resolve:
+    name: Resolve Deploy Targets
     runs-on: self-hosted
+    outputs:
+      deploy_targets: ${{ steps.resolve.outputs.deploy_targets }}
+      should_deploy: ${{ steps.resolve.outputs.should_deploy }}
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/install
@@ -46,32 +49,40 @@ jobs:
           NEXT_PUBLIC_SITE_ID: ''
         run: ./node_modules/.bin/tsx scripts/resolve-build-run.ts >> "$GITHUB_OUTPUT"
 
+  deploy:
+    name: Validate, Build & Deploy (${{ matrix.target.siteId }})
+    needs: resolve
+    if: needs.resolve.outputs.should_deploy == 'true'
+    runs-on: self-hosted
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJson(needs.resolve.outputs.deploy_targets) }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/install
+
       - name: Validate site data
-        if: steps.resolve.outputs.should_deploy == 'true'
         env:
-          SITE_ID: ${{ steps.resolve.outputs.site_id }}
+          SITE_ID: ${{ matrix.target.siteId }}
         run: pnpm validate:site
 
       - name: Build static site
-        if: steps.resolve.outputs.should_deploy == 'true'
         env:
-          SITE_ID: ${{ steps.resolve.outputs.site_id }}
+          SITE_ID: ${{ matrix.target.siteId }}
         run: pnpm build:site
 
       - name: Audit XML sitemaps
-        if: steps.resolve.outputs.should_deploy == 'true'
         env:
-          SITE_ID: ${{ steps.resolve.outputs.site_id }}
+          SITE_ID: ${{ matrix.target.siteId }}
         run: pnpm audit:sitemaps -- --site "$SITE_ID"
 
       - name: Audit forbidden listing links
-        if: steps.resolve.outputs.should_deploy == 'true'
         env:
-          SITE_ID: ${{ steps.resolve.outputs.site_id }}
+          SITE_ID: ${{ matrix.target.siteId }}
         run: pnpm audit:forbidden-links -- --site "$SITE_ID"
 
       - name: Verify deploy auth
-        if: steps.resolve.outputs.should_deploy == 'true'
         env:
           DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
         run: |
@@ -81,11 +92,10 @@ jobs:
           fi
 
       - name: Deploy
-        if: steps.resolve.outputs.should_deploy == 'true'
         env:
           ALLOW_DEPLOY_TARGET_OVERRIDE: ''
           DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
           DEPLOY_BRANCH: ''
           DEPLOY_REPO_URL: ''
-          SITE_ID: ${{ steps.resolve.outputs.site_id }}
+          SITE_ID: ${{ matrix.target.siteId }}
         run: pnpm deploy:site

@@ -108,6 +108,10 @@
       "name": "OnlyFans Video Downloader",
       "url": "https://onlyfansvideodownloader.com"
     },
+    "onlyfansvideodownloader-pages-dev": {
+      "name": "OnlyFans Video Downloader",
+      "url": "https://onlyfansvideodownloader.pages.dev"
+    },
     "wistiadownloader-com": {
       "name": "Wistia Downloader",
       "url": "https://wistiadownloader.com"
@@ -128,6 +132,10 @@
       "name": "Whop Video Downloader",
       "url": "https://whopvideodownloader.com"
     },
+    "whopvideodownloader-pages-dev": {
+      "name": "Whop Video Downloader",
+      "url": "https://whopvideodownloader.pages.dev"
+    },
     "getlooma-com": {
       "name": "Get Looma",
       "url": "https://getlooma.com"
@@ -136,7 +144,7 @@
       "name": "Porn Video Downloaders",
       "url": "https://pornvideodownloaders.com"
     },
-    "porno-downloaders": {
+    "pornodownloaders-com": {
       "name": "Porno Downloaders",
       "url": "https://pornodownloaders.com"
     },
@@ -147,6 +155,10 @@
     "skoolvideodownloader-app": {
       "name": "Skool Video Downloader App",
       "url": "https://skoolvideodownloader.app"
+    },
+    "skoolvideodownloader-pages-dev": {
+      "name": "Skool Video Downloader",
+      "url": "https://skoolvideodownloader.pages.dev"
     },
     "thisvidvideodownloader-com": {
       "name": "ThisVid Video Downloader",
@@ -159,6 +171,10 @@
     "pornhubvideodownloaderapp-com": {
       "name": "Pornhub Video Downloader",
       "url": "https://pornhubvideodownloaderapp.com"
+    },
+    "pornhubvideodownloader-pages-dev": {
+      "name": "Pornhub Video Downloader",
+      "url": "https://pornhubvideodownloader.pages.dev"
     },
     "boyfriendtvdownloader-com": {
       "name": "BoyfriendTV Downloader",
@@ -315,10 +331,78 @@
     "youpornvideodownloader-com": {
       "name": "YouPorn Video Downloader",
       "url": "https://youpornvideodownloader.com"
+    },
+    "coomervideodownloader-pages-dev": {
+      "name": "Coomer Video Downloader",
+      "url": "https://coomervideodownloader.pages.dev"
+    },
+    "doodstreamvideodownloader-pages-dev": {
+      "name": "DoodStream Video Downloader",
+      "url": "https://doodstreamvideodownloader.pages.dev"
+    },
+    "hdzogvideodownloader-pages-dev": {
+      "name": "HDZog Video Downloader",
+      "url": "https://hdzogvideodownloader.pages.dev"
+    },
+    "hotmovsvideodownloader-pages-dev": {
+      "name": "HotMovs Video Downloader",
+      "url": "https://hotmovsvideodownloader.pages.dev"
+    },
+    "javvideodownloader-pages-dev": {
+      "name": "JAV Video Downloader",
+      "url": "https://javvideodownloader.pages.dev"
+    },
+    "luxuretvvideodownloader-pages-dev": {
+      "name": "LuxureTV Video Downloader",
+      "url": "https://luxuretvvideodownloader.pages.dev"
+    },
+    "manyvidsvideodownloader-pages-dev": {
+      "name": "ManyVids Video Downloader",
+      "url": "https://manyvidsvideodownloader.pages.dev"
+    },
+    "motherlessvideodownloader-pages-dev": {
+      "name": "Motherless Video Downloader",
+      "url": "https://motherlessvideodownloader.pages.dev"
+    },
+    "pornhatvideodownloader-pages-dev": {
+      "name": "PornHat Video Downloader",
+      "url": "https://pornhatvideodownloader.pages.dev"
+    },
+    "pornonevideodownloader-pages-dev": {
+      "name": "PornOne Video Downloader",
+      "url": "https://pornonevideodownloader.pages.dev"
+    },
+    "stripchatvideodownloader-pages-dev": {
+      "name": "Stripchat Video Downloader",
+      "url": "https://stripchatvideodownloader.pages.dev"
+    },
+    "txxxvideodownloader-pages-dev": {
+      "name": "TXXX Video Downloader",
+      "url": "https://txxxvideodownloader.pages.dev"
+    },
+    "uporniavideodownloader-pages-dev": {
+      "name": "Upornia Video Downloader",
+      "url": "https://uporniavideodownloader.pages.dev"
+    },
+    "xfantazyvideodownloader-pages-dev": {
+      "name": "XFantazy Video Downloader",
+      "url": "https://xfantazyvideodownloader.pages.dev"
+    },
+    "xfreehdvideodownloader-pages-dev": {
+      "name": "XFreeHD Video Downloader",
+      "url": "https://xfreehdvideodownloader.pages.dev"
+    },
+    "xgroovyvideodownloader-pages-dev": {
+      "name": "XGroovy Video Downloader",
+      "url": "https://xgroovyvideodownloader.pages.dev"
+    },
+    "youpornvideodownloader-pages-dev": {
+      "name": "YouPorn Video Downloader",
+      "url": "https://youpornvideodownloader.pages.dev"
     }
   },
   "brandGroups": {
-    "mainGroup": [
+    "all": [
       "apps-serp-co",
       "awesome-shadcn-ui-com",
       "best-serp-co",
@@ -338,8 +422,10 @@
       "justforfans-downloader",
       "kajabivideodownloader-com",
       "onlyfansvideodownloader-com",
+      "onlyfansvideodownloader-pages-dev",
       "pornhubvideodownloaderapp-com",
-      "porno-downloaders",
+      "pornhubvideodownloader-pages-dev",
+      "pornodownloaders-com",
       "pornvideodownloaders-com",
       "redgifsdownloaderapp-com",
       "serp-ai",
@@ -355,6 +441,7 @@
       "serplists-com",
       "skooldownloader-com",
       "skoolvideodownloader-app",
+      "skoolvideodownloader-pages-dev",
       "spankbangvideodownloader-com",
       "subsmarine-com",
       "themecobra-com",
@@ -362,6 +449,7 @@
       "tnaflixvideodownloader-com",
       "tools-serp-co",
       "whopvideodownloader-com",
+      "whopvideodownloader-pages-dev",
       "wistiadownloader-com",
       "xhamstervideodownloader-com",
       "missavdownloader-com",
@@ -396,9 +484,65 @@
       "xfantazyvideodownloader-com",
       "xfreehdvideodownloader-com",
       "xgroovyvideodownloader-com",
-      "youpornvideodownloader-com"
+      "youpornvideodownloader-com",
+      "coomervideodownloader-pages-dev",
+      "doodstreamvideodownloader-pages-dev",
+      "hdzogvideodownloader-pages-dev",
+      "hotmovsvideodownloader-pages-dev",
+      "javvideodownloader-pages-dev",
+      "luxuretvvideodownloader-pages-dev",
+      "manyvidsvideodownloader-pages-dev",
+      "motherlessvideodownloader-pages-dev",
+      "pornhatvideodownloader-pages-dev",
+      "pornonevideodownloader-pages-dev",
+      "stripchatvideodownloader-pages-dev",
+      "txxxvideodownloader-pages-dev",
+      "uporniavideodownloader-pages-dev",
+      "xfantazyvideodownloader-pages-dev",
+      "xfreehdvideodownloader-pages-dev",
+      "xgroovyvideodownloader-pages-dev",
+      "youpornvideodownloader-pages-dev"
     ],
-    "serpxxxGroup": [
+    "noAdult": [
+      "apps-serp-co",
+      "awesome-shadcn-ui-com",
+      "best-serp-co",
+      "blocks-serp-co",
+      "boxingundefeated-com",
+      "browserextensions-io",
+      "devinschumacher-com",
+      "downloadvimeo-com",
+      "dr-serp-co",
+      "extensions-serp-co",
+      "games-serp-co",
+      "getlooma-com",
+      "howtodownloadvideos-com",
+      "serp-ai",
+      "serp-best",
+      "serp-co",
+      "serp-download",
+      "serp-games",
+      "serp-media",
+      "serp-software",
+      "serp-video",
+      "serp-wiki",
+      "serpdownloaders-com",
+      "serplists-com",
+      "skooldownloader-com",
+      "skoolvideodownloader-app",
+      "skoolvideodownloader-pages-dev",
+      "subsmarine-com",
+      "themecobra-com",
+      "tools-serp-co",
+      "whopvideodownloader-com",
+      "whopvideodownloader-pages-dev",
+      "wistiadownloader-com",
+      "mindvalleyvideodownloader-com",
+      "loomvideodownloaderapp-com",
+      "sproutvideodownloader-com",
+      "skoolvideosdownloader-com"
+    ],
+    "adultsOnly": [
       "ashemaletubevideodownloader-com",
       "beegvideodownloader-com",
       "boyfriendtvdownloader-com",
@@ -410,9 +554,11 @@
       "missavdownloader-com",
       "noodlemagazinedownloader-com",
       "onlyfansvideodownloader-com",
+      "onlyfansvideodownloader-pages-dev",
       "peekvidsdownloader-com",
       "pornhubvideodownloaderapp-com",
-      "porno-downloaders",
+      "pornhubvideodownloader-pages-dev",
+      "pornodownloaders-com",
       "porntrexvideodownloader-com",
       "pornvideodownloaders-com",
       "pornzogvideodownloader-com",
@@ -441,7 +587,24 @@
       "xfantazyvideodownloader-com",
       "xfreehdvideodownloader-com",
       "xgroovyvideodownloader-com",
-      "youpornvideodownloader-com"
+      "youpornvideodownloader-com",
+      "coomervideodownloader-pages-dev",
+      "doodstreamvideodownloader-pages-dev",
+      "hdzogvideodownloader-pages-dev",
+      "hotmovsvideodownloader-pages-dev",
+      "javvideodownloader-pages-dev",
+      "luxuretvvideodownloader-pages-dev",
+      "manyvidsvideodownloader-pages-dev",
+      "motherlessvideodownloader-pages-dev",
+      "pornhatvideodownloader-pages-dev",
+      "pornonevideodownloader-pages-dev",
+      "stripchatvideodownloader-pages-dev",
+      "txxxvideodownloader-pages-dev",
+      "uporniavideodownloader-pages-dev",
+      "xfantazyvideodownloader-pages-dev",
+      "xfreehdvideodownloader-pages-dev",
+      "xgroovyvideodownloader-pages-dev",
+      "youpornvideodownloader-pages-dev"
     ]
   }
 }
