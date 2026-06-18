@@ -9,22 +9,38 @@ const website: WebsiteMetadata = {
   name: 'Example Product',
   publishedAt: '2026-03-24',
   slug: 'example-product',
-  website: 'https://example.com'
+  website: 'https://serp.ly/example-product'
 }
 
 describe('WebsiteDetailSidebar', () => {
-  it('renders a prominent sticky primary CTA to the listing website', () => {
+  it('renders a prominent sticky primary CTA to the SERP listing website with via attribution', () => {
     const { container } = render(<WebsiteDetailSidebar website={website} />)
 
     const cta = screen.getByRole('link', { name: /visit site/i })
 
-    expect(cta).toHaveAttribute('href', 'https://example.com/?ref=example.com')
+    expect(cta).toHaveAttribute('href', 'https://serp.ly/example-product?via=example.com')
     expect(cta).toHaveAttribute('target', '_blank')
     expect(cta).toHaveAttribute('rel', 'noopener noreferrer')
     expect(cta).toHaveClass('sticky')
     expect(cta).toHaveClass('top-20')
     expect(cta).toHaveClass('bg-primary')
     expect(container.querySelector('aside.lg\\:sticky')).not.toBeNull()
+  })
+
+  it('leaves non-SERP listing URLs unchanged', () => {
+    render(
+      <WebsiteDetailSidebar
+        website={{
+          ...website,
+          website: 'https://example.com'
+        }}
+      />
+    )
+
+    expect(screen.getByRole('link', { name: /visit site/i })).toHaveAttribute(
+      'href',
+      'https://example.com'
+    )
   })
 
   it('renders links for the primary and secondary categories', () => {

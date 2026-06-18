@@ -10,7 +10,6 @@ import {
   getFeaturedOnBadgePreviewPathFromKey,
   getFeaturedOnBadgePublicUrlFromKey
 } from './featured-on-badge-url'
-import { getOutboundUrlWithRef } from './outbound-url'
 
 type WebsiteSidebarMetadata = {
   category?: string
@@ -21,12 +20,63 @@ type WebsiteSidebarMetadata = {
   website: string
 }
 
+type OutboundViaConfig = {
+  domain?: string | null
+  publicUrl?: string | null
+}
+
 export type WebsiteDetailSidebarProps = {
   website: WebsiteSidebarMetadata
 }
 
+function resolveViaDomain(config: OutboundViaConfig): string | null {
+  const configuredDomain = config.domain?.trim()
+
+  if (configuredDomain) {
+    return configuredDomain
+  }
+
+  const publicUrl = config.publicUrl?.trim()
+
+  if (!publicUrl) {
+    return null
+  }
+
+  try {
+    return new URL(publicUrl).hostname || null
+  } catch {
+    return null
+  }
+}
+
+function getOutboundUrlWithVia(url: string, config: OutboundViaConfig): string {
+  const viaDomain = resolveViaDomain(config)
+
+  if (!viaDomain) {
+    return url
+  }
+
+  try {
+    const parsedUrl = new URL(url)
+
+    if (
+      parsedUrl.protocol !== 'https:' ||
+      parsedUrl.hostname !== 'serp.ly' ||
+      parsedUrl.searchParams.has('via')
+    ) {
+      return url
+    }
+
+    parsedUrl.searchParams.set('via', viaDomain)
+
+    return parsedUrl.toString()
+  } catch {
+    return url
+  }
+}
+
 export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
-  const outboundWebsiteUrl = getOutboundUrlWithRef(website.website, siteConfig)
+  const outboundWebsiteUrl = getOutboundUrlWithVia(website.website, siteConfig)
   const listingUrl = getFeaturedOnBadgeListingUrl({
     listingBasePath: siteConfig.listingRouteBasePath,
     listingDetailSuffix: siteConfig.sitemap.listingDetailSuffix,
