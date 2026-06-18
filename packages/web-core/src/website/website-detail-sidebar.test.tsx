@@ -78,7 +78,21 @@ describe('WebsiteDetailSidebar', () => {
     vi.resetModules()
   })
 
-  it('decorates the primary Visit Site URL with the current site ref domain', () => {
+  it('decorates SERP listing URLs with the current site via domain', () => {
+    const sidebar = WebsiteDetailSidebar({
+      website: {
+        name: 'Example Product',
+        slug: 'example-product',
+        website: 'https://serp.ly/example-product'
+      }
+    })
+
+    expect(collectHrefProps(sidebar)).toContain(
+      `https://serp.ly/example-product?via=${siteConfig.domain}`
+    )
+  })
+
+  it('leaves non-SERP listing URLs unchanged', () => {
     const sidebar = WebsiteDetailSidebar({
       website: {
         name: 'Example Product',
@@ -88,7 +102,7 @@ describe('WebsiteDetailSidebar', () => {
     })
 
     expect(collectHrefProps(sidebar)).toContain(
-      `https://vendor.example.com/pricing?plan=pro&ref=${siteConfig.domain}#buy`
+      'https://vendor.example.com/pricing?plan=pro#buy'
     )
   })
 
