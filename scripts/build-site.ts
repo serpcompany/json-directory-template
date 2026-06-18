@@ -949,6 +949,13 @@ type ArtifactPublicRoutePaths = {
   networkBasePath: string
 }
 
+type BuildInfo = {
+  siteId: string
+  sourceBranch: string
+  sourceRepository: string
+  sourceSha: string
+}
+
 type LegacyRootListingRedirectInput = {
   listingBasePath: string
   siteId: string
@@ -1040,6 +1047,51 @@ export function removeUnsuffixedListingDetailArtifacts(
 
     removeArtifactRouteIndex(resolve(listingRoot, entry.name))
   }
+}
+
+function readGitValue(args: string[]): string | undefined {
+  const result = spawnSync('git', args, {
+    cwd: workspaceRoot,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore']
+  })
+
+  if (result.status !== 0) {
+    return undefined
+  }
+
+  return result.stdout.trim() || undefined
+}
+
+function normalizeRepositoryName(value: string | undefined): string {
+  if (!value) {
+    return ''
+  }
+
+  const trimmedValue = value.trim().replace(/\.git$/, '')
+  const githubHttpsMatch = trimmedValue.match(/^https:\/\/github\.com\/([^/]+\/[^/]+)$/i)
+  const githubSshMatch = trimmedValue.match(/^git@github\.com:([^/]+\/[^/]+)$/i)
+
+  return githubHttpsMatch?.[1] ?? githubSshMatch?.[1] ?? trimmedValue
+}
+
+function resolveBuildInfo(siteId: string, env: NodeJS.ProcessEnv = process.env): BuildInfo {
+  return {
+    siteId,
+    sourceBranch:
+      env.GITHUB_REF_NAME?.trim() || readGitValue(['rev-parse', '--abbrev-ref', 'HEAD']) || '',
+    sourceRepository:
+      env.GITHUB_REPOSITORY?.trim() ||
+      normalizeRepositoryName(readGitValue(['remote', 'get-url', 'origin'])),
+    sourceSha: env.GITHUB_SHA?.trim() || readGitValue(['rev-parse', 'HEAD']) || ''
+  }
+}
+
+export function writeBuildInfoFile(artifactDir: string, buildInfo: BuildInfo): void {
+  const buildInfoPath = resolve(artifactDir, 'build-info.json')
+
+  mkdirSync(dirname(buildInfoPath), { recursive: true })
+  writeFileSync(buildInfoPath, `${JSON.stringify(buildInfo, null, 2)}\n`)
 }
 
 function pruneArtifactTree(path: string): void {
@@ -1182,6 +1234,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
 
   closeSync(openSync(noJekyllPath, 'w'))
   writeFileSync(cnamePath, `${definition.site.domain}\n`)
+  writeBuildInfoFile(artifactDir, resolveBuildInfo(definition.id))
 }
 
 export async function runBuildSite(input: SiteInputTarget): Promise<void> {

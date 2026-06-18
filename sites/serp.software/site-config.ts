@@ -4,6 +4,12 @@ export const serpSoftwareSiteConfig: CheckedInSiteConfigOverride = {
   analytics: {
     gtmId: 'GTM-W59GNHXF'
   },
+  badges: {
+    featuredOn: {
+      dark: 'badge/featured-on-serp.software-dark.svg',
+      light: 'badge/featured-on-serp.software-light.svg'
+    }
+  },
   build: {
     appPackageName: 'serp.software',
     appOutDir: 'apps/serp.software/out',
@@ -24,7 +30,7 @@ export const serpSoftwareSiteConfig: CheckedInSiteConfigOverride = {
       plural: 'products',
       singular: 'product'
     },
-    submitLabel: 'Submit a Product'
+    submitLabel: 'Submit Yours'
   },
   deploy: {
     branch: 'main',
@@ -33,7 +39,7 @@ export const serpSoftwareSiteConfig: CheckedInSiteConfigOverride = {
     strategy: 'github-pages-repo-sync'
   },
   id: 'serp.software',
-  networkBrandGroup: 'mainGroup',
+  networkBrandGroup: 'all',
   routes: {
     listingBasePath: 'products'
   },

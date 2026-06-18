@@ -1,0 +1,59 @@
+{
+  "sourceRepo": "/Users/devin/dev/repos/zz-archive/nexty-monorepo",
+  "sourceType": "nexty-exported-public-badge-assets",
+  "r2": {
+    "bucket": "serp-embeds",
+    "publicBaseUrl": "https://embeds.serp.co"
+  },
+  "sites": {
+    "browserextensions.io": {
+      "sourceDir": "tmp/browserextensions-io/public/badge",
+      "targetDir": "apps/browserextensions.io/public/badge",
+      "primary": {
+        "dark": "browserextensions.io-featured-on-dark.svg",
+        "light": "browserextensions.io-featured-on-light.svg"
+      },
+      "assets": [
+        "browserextensions.io-featured-on-dark.svg",
+        "browserextensions.io-featured-on-light.svg"
+      ]
+    },
+    "serp.ai": {
+      "sourceDir": "tmp/serp-ai/public/badge",
+      "targetDir": "apps/serp.ai/public/badge",
+      "primary": {
+        "dark": "featured-on-serp.ai-dark.svg",
+        "light": "featured-on-serp.ai-light.svg"
+      },
+      "assets": [
+        "badge_dark.svg",
+        "badge_light.svg",
+        "featured-on-browserextensions-io-dark-badge.svg",
+        "featured-on-serp.ai-dark.svg",
+        "featured-on-serp.ai-light.svg",
+        "featured-on-serp.co-dark.svg",
+        "featured-on-serp.co-light.svg"
+      ]
+    },
+    "serp.co": {
+      "sourceDir": "tmp/serp-co/public/badge",
+      "targetDir": "apps/serp.co/public/badge",
+      "primary": {
+        "dark": "featured-on-serp.co-dark.svg",
+        "light": "featured-on-serp.co-light.svg"
+      },
+      "assets": [
+        "badge_dark.svg",
+        "badge_light.svg",
+        "featured-on-browserextensions-io-dark-badge.svg",
+        "featured-on-directory-dark-badge.svg",
+        "featured-on-directory-light-badge.svg",
+        "featured-on-directory-starter-dark-badge.svg",
+        "featured-on-directory-starter-light-badge.svg",
+        "featured-on-serp.ai-light.svg",
+        "featured-on-serp.co-dark.svg",
+        "featured-on-serp.co-light.svg"
+      ]
+    }
+  }
+}

@@ -4,6 +4,9 @@
 - do things properly
 - deploy a subagent whose sole responsibility it is to police your decisions and make sure you are not cutting corners, or being lazy
 - treat `pnpm deploy`, `pnpm deploy:site`, target GitHub Pages repo syncs, and any command that pushes a generated site artifact as git push operations
+- before opening, merging, or deploying a PR, inspect `git status --short` and account for every modified or untracked file. Do not call a change "unrelated" unless its diff proves it is outside the current request; if unsure, ask the user
+- do not merge or deploy while known task-related files remain uncommitted, unstaged, untracked, or left for a vague follow-up. Put all related source, generated, media, docs, and test changes through the same gitflow, or explicitly confirm a separate follow-up PR with the user before deployment
 - do not run a real deploy unless the user explicitly asks for that deploy and the source repo changes have already gone through gitflow: branch, commit, push, review/merge, then deploy from a clean branch synced with upstream or from GitHub Actions
 - when the source worktree has uncommitted, untracked, unpushed, behind, or diverged changes, only build, audit, report, or `--dry-run` deploy commands are allowed
+- if a merge or post-merge fast-forward is blocked by a dirty worktree, stop and resolve the dirty state through evidence-based categorization before claiming gitflow is complete or anything is live
 - do not use deploy target overrides such as `DEPLOY_REPO_URL` or `DEPLOY_BRANCH` in normal deploys; deploy targets must come from checked-in site config unless the user gives explicit same-turn emergency bypass approval

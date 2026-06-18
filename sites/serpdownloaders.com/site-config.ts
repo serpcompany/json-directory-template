@@ -4,6 +4,12 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   analytics: {
     gtmId: 'GTM-M82HC3SC'
   },
+  badges: {
+    featuredOn: {
+      dark: 'badge/featured-on-serpdownloaders.com-dark.svg',
+      light: 'badge/featured-on-serpdownloaders.com-light.svg'
+    }
+  },
   branding: {
     favicon: {
       path: 'sites/serpdownloaders.com/assets/favicon.ico',
@@ -38,7 +44,7 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
       plural: 'products',
       singular: 'product'
     },
-    submitLabel: 'Submit a Product'
+    submitLabel: 'Submit Yours'
   },
   deploy: {
     branch: 'main',
@@ -47,7 +53,7 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     strategy: 'github-pages-repo-sync'
   },
   id: 'serpdownloaders.com',
-  networkBrandGroup: 'mainGroup',
+  networkBrandGroup: 'all',
   features: {
     showBrands: true
   },
@@ -71,6 +77,6 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     githubRepoUrl: 'https://github.com/serpdownloaders',
     githubUrl: 'https://github.com/serpdownloaders',
     redditUrl: 'https://www.reddit.com/r/serpdownloaders/',
-    twitterUrl: 'https://x.com/serpapps'
+    twitterUrl: 'https://x.com/serpdownloaders'
   }
 }

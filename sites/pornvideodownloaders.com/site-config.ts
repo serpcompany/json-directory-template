@@ -4,6 +4,13 @@ export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   analytics: {
     gtmId: 'GTM-PWB7MRW9'
   },
+  badges: {
+    featuredOn: {
+      dark: 'badge/featured-on-pornvideodownloaders.com-dark.svg',
+      displayName: 'PV Downloaders',
+      light: 'badge/featured-on-pornvideodownloaders.com-light.svg'
+    }
+  },
   branding: {
     favicon: {
       path: 'sites/pornvideodownloaders.com/assets/favicon.ico',
@@ -38,7 +45,7 @@ export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
       plural: 'products',
       singular: 'product'
     },
-    submitLabel: 'Submit a Product'
+    submitLabel: 'Submit Yours'
   },
   deploy: {
     branch: 'main',
@@ -47,7 +54,7 @@ export const pornvideodownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     strategy: 'github-pages-repo-sync'
   },
   id: 'pornvideodownloaders.com',
-  networkBrandGroup: 'serpxxxGroup',
+  networkBrandGroup: 'adultsOnly',
   routes: {
     listingBasePath: 'products'
   },

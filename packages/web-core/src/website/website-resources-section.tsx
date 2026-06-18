@@ -42,7 +42,7 @@ export function WebsiteResourcesSection({
 
       {resourceLinks.length > 0 ? (
         <section className="animate-fade-in-up opacity-0 stagger-3">
-          <Section title="Links" description="Helpful links for this entry" titleId="links">
+          <Section title="Links" titleId="links">
             <div className="rounded-2xl border bg-card/50 backdrop-blur-sm overflow-hidden">
               <ul className="divide-y divide-border/80">
                 {resourceLinks.map(link => (

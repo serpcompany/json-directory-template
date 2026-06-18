@@ -723,10 +723,6 @@ export function mergeDownloaderProducts(
   return canonicalTrialProductsSchema.parse(mergedProducts) as DownloaderProducts
 }
 
-function stableJson(value: unknown): string {
-  return JSON.stringify(value, null, 2)
-}
-
 export function validateDownloaderImport(
   siteProducts: Record<ActiveDownloaderSiteId, DownloaderProducts>
 ): void {
@@ -734,12 +730,6 @@ export function validateDownloaderImport(
     if (!siteProducts[siteId]) {
       throw new Error(`Missing imported products for ${siteId}`)
     }
-  }
-
-  if (
-    stableJson(siteProducts['serp.software']) !== stableJson(siteProducts['serpdownloaders.com'])
-  ) {
-    throw new Error('serp.software products must match serpdownloaders.com')
   }
 }
 
@@ -830,10 +820,6 @@ async function buildImportedProducts(
     const readme = readmes[index] as ProductReadme
 
     for (const siteId of ACTIVE_DOWNLOADER_SITE_IDS) {
-      if (siteId === 'serp.software') {
-        continue
-      }
-
       productsBySite[siteId][row.slug] = buildDownloaderProduct(row, readme, {
         ...DEFAULT_IMPORT_PRODUCT_OPTIONS,
         ...SITE_PRODUCT_OPTIONS[siteId]
@@ -878,10 +864,6 @@ export async function importDownloadersFromSheet({
   const importedProducts = await buildImportedProducts(rows)
   const mergedProducts = Object.fromEntries(
     ACTIVE_DOWNLOADER_SITE_IDS.map(siteId => {
-      if (siteId === 'serp.software') {
-        return [siteId, {}]
-      }
-
       return [
         siteId,
         mergeDownloaderProducts(readProducts(SITE_PRODUCT_PATHS[siteId]), importedProducts[siteId])
@@ -889,7 +871,6 @@ export async function importDownloadersFromSheet({
     })
   ) as Record<ActiveDownloaderSiteId, DownloaderProducts>
 
-  mergedProducts['serp.software'] = structuredClone(mergedProducts['serpdownloaders.com'])
   validateDownloaderImport(mergedProducts)
 
   for (const siteId of ACTIVE_DOWNLOADER_SITE_IDS) {

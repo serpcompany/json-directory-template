@@ -4,6 +4,12 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
   analytics: {
     gtmId: 'GTM-W59GNHXF'
   },
+  badges: {
+    featuredOn: {
+      dark: 'badge/featured-on-serp.co-dark.svg',
+      light: 'badge/featured-on-serp.co-light.svg'
+    }
+  },
   branding: {
     favicon: {
       path: 'sites/serp.co/assets/favicon.ico',
@@ -42,12 +48,12 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
   },
   deploy: {
     branch: 'main',
-    preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+    preserve: ['.github/workflows/deploy.yml', '.github/workflows/verify-badge.yml', '.github/workflows/approve-listing.yml', 'CNAME'],
     repoUrl: 'https://github.com/serpcompany/serp.co.git',
     strategy: 'github-pages-repo-sync'
   },
   id: 'serp.co',
-  networkBrandGroup: 'mainGroup',
+  networkBrandGroup: 'all',
   features: {
     showBrands: true,
     showGuides: true

@@ -1,11 +1,11 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
 import { getRoute } from '@thedaviddias/web-core/routes'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
+import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: `${siteConfig.name} Pricing`,
-  description: 'Choose a plan to list, feature, and promote a product or resource on SERP.',
+  description: 'Choose a plan to list, feature, and promote a product or resource on SERP.'
 }
 
 export default function PricingPage() {
@@ -22,7 +22,7 @@ export default function PricingPage() {
           <section className="rounded-lg border p-6">
             <h2 className="text-xl font-semibold">Directory listing</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Submit a product or resource for review by the SERP team.
+              Submit Yours or resource for review by the SERP team.
             </p>
             <Link className="mt-4 inline-flex font-medium text-primary" href={getRoute('submit')}>
               Submit a listing
