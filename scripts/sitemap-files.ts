@@ -9,12 +9,19 @@ type SitemapGroup = {
   paths: string[]
 }
 
+type SitemapLastmodOptions = {
+  defaultLastmod?: string
+  lastmodByPath?: Record<string, string>
+}
+
 type WriteSplitSitemapsOptions = {
   additionalPathsByGroup?: Partial<Record<SitemapGroup['key'], string[]>>
   baseUrl: string
   categoryBasePath?: string
+  defaultLastmod?: string
   excludedPaths?: string[]
   indexGroupOrder?: SitemapGroup['key'][]
+  lastmodByPath?: Record<string, string>
   listingDetailSuffix?: string
   listingBasePath: string
   pageSize?: number
@@ -243,24 +250,64 @@ function chunkPaths(paths: string[], pageSize: number): string[][] {
   return chunks
 }
 
-function buildUrlSetXml(baseUrl: string, paths: string[]): string {
+function normalizeLastmod(value: string | undefined): string | undefined {
+  const trimmedValue = value?.trim()
+
+  if (!trimmedValue) {
+    return undefined
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmedValue)) {
+    return trimmedValue
+  }
+
+  const date = new Date(trimmedValue)
+
+  if (Number.isNaN(date.getTime())) {
+    return undefined
+  }
+
+  return date.toISOString()
+}
+
+function lastmodForPath(path: string, options: SitemapLastmodOptions = {}): string | undefined {
+  const normalizedPath = normalizeArtifactPath(path)
+  return normalizeLastmod(options.lastmodByPath?.[normalizedPath] ?? options.defaultLastmod)
+}
+
+function buildUrlSetXml(
+  baseUrl: string,
+  paths: string[],
+  lastmodOptions: SitemapLastmodOptions = {}
+): string {
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...paths.map(
-      path => `<url><loc>${escapeXml(buildUrl(baseUrl, path, { trailingSlash: true }))}</loc></url>`
-    ),
+    ...paths.map(path => {
+      const lastmod = lastmodForPath(path, lastmodOptions)
+      const lastmodXml = lastmod ? `<lastmod>${escapeXml(lastmod)}</lastmod>` : ''
+      return `<url><loc>${escapeXml(buildUrl(baseUrl, path, { trailingSlash: true }))}</loc>${lastmodXml}</url>`
+    }),
     '</urlset>'
   ].join('')
 }
 
-function buildSitemapIndexXml(baseUrl: string, sitemapPaths: string[]): string {
+function buildSitemapIndexXml(
+  baseUrl: string,
+  sitemapPaths: string[],
+  defaultLastmod?: string
+): string {
+  const normalizedLastmod = normalizeLastmod(defaultLastmod)
+
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...sitemapPaths.map(
-      path => `<sitemap><loc>${escapeXml(buildUrl(baseUrl, path))}</loc></sitemap>`
-    ),
+    ...sitemapPaths.map(path => {
+      const lastmodXml = normalizedLastmod
+        ? `<lastmod>${escapeXml(normalizedLastmod)}</lastmod>`
+        : ''
+      return `<sitemap><loc>${escapeXml(buildUrl(baseUrl, path))}</loc>${lastmodXml}</sitemap>`
+    }),
     '</sitemapindex>'
   ].join('')
 }
@@ -461,44 +508,53 @@ function writeGroupSitemaps(
   baseUrl: string,
   group: SitemapGroup,
   pageSize: number,
+  lastmodOptions: SitemapLastmodOptions,
   outputPath?: string
-): string | null {
+): string[] {
   if (group.paths.length === 0) {
-    return null
-  }
-
-  if (outputPath) {
-    const normalizedOutputPath = normalizeArtifactPath(outputPath)
-    const outputFilePath = resolve(artifactDir, normalizedOutputPath.slice(1))
-    mkdirSync(dirname(outputFilePath), { recursive: true })
-    writeFileSync(outputFilePath, buildUrlSetXml(baseUrl, group.paths))
-    return normalizedOutputPath
+    return []
   }
 
   const pagePaths = chunkPaths(group.paths, pageSize)
-  const sitemapIndexEntries: string[] = []
-
-  pagePaths.forEach((paths, index) => {
-    const fileName = pagePaths.length === 1 ? `${group.name}.xml` : `${group.name}-${index}.xml`
-    writeFileSync(resolve(artifactDir, fileName), buildUrlSetXml(baseUrl, paths))
-    sitemapIndexEntries.push(`/${fileName}`)
-  })
-
-  if (pagePaths.length === 1) {
-    return sitemapIndexEntries[0] ?? null
-  }
-
-  const indexFileName = `${group.name}.xml`
-  writeFileSync(
-    resolve(artifactDir, indexFileName),
-    buildSitemapIndexXml(baseUrl, sitemapIndexEntries)
+  const sitemapEntries = pagePaths.map((_, index) =>
+    outputPath
+      ? paginatedOutputPath(outputPath, index + 1)
+      : pagePaths.length === 1
+        ? `/${group.name}.xml`
+        : `/${group.name}-${index + 1}.xml`
   )
 
-  return `/${indexFileName}`
+  pagePaths.forEach((paths, index) => {
+    const sitemapPath = sitemapEntries[index] ?? `/${group.name}-${index + 1}.xml`
+    const outputFilePath = resolve(artifactDir, normalizeArtifactPath(sitemapPath).slice(1))
+    mkdirSync(dirname(outputFilePath), { recursive: true })
+    writeFileSync(outputFilePath, buildUrlSetXml(baseUrl, paths, lastmodOptions))
+  })
+
+  return sitemapEntries
+}
+
+function paginatedOutputPath(outputPath: string, pageNumber: number): string {
+  const normalizedOutputPath = normalizeArtifactPath(outputPath)
+
+  if (pageNumber === 1) {
+    return normalizedOutputPath
+  }
+
+  if (/\/\d+\.xml$/.test(normalizedOutputPath)) {
+    return normalizedOutputPath.replace(/\/\d+\.xml$/, `/${pageNumber}.xml`)
+  }
+
+  if (normalizedOutputPath.endsWith('.xml')) {
+    return normalizedOutputPath.replace(/\.xml$/, `-${pageNumber}.xml`)
+  }
+
+  return `${normalizedOutputPath.replace(/\/+$/g, '')}/${pageNumber}.xml`
 }
 
 export function writeSplitSitemaps(artifactDir: string, options: WriteSplitSitemapsOptions): void {
   const pageSize = options.pageSize ?? SITEMAP_PAGE_SIZE
+  const defaultLastmod = normalizeLastmod(options.defaultLastmod) ?? new Date().toISOString()
   const excludedPaths = new Set(
     (options.excludedPaths ?? []).map(path => normalizeArtifactPath(path))
   )
@@ -541,18 +597,21 @@ export function writeSplitSitemaps(artifactDir: string, options: WriteSplitSitem
         (indexOrder.get(right.key) ?? Number.MAX_SAFE_INTEGER)
       )
     })
-    .map(group =>
+    .flatMap(group =>
       writeGroupSitemaps(
         artifactDir,
         options.baseUrl,
         group,
         pageSize,
+        {
+          defaultLastmod,
+          lastmodByPath: options.lastmodByPath
+        },
         options.sitemapPathByGroup?.[group.key]
       )
     )
-    .filter((entry): entry is string => entry !== null)
 
-  const sitemapIndexXml = buildSitemapIndexXml(options.baseUrl, sitemapIndexEntries)
+  const sitemapIndexXml = buildSitemapIndexXml(options.baseUrl, sitemapIndexEntries, defaultLastmod)
 
   writeFileSync(resolve(artifactDir, SITEMAP_INDEX_PATH.slice(1)), sitemapIndexXml)
   writeFileSync(resolve(artifactDir, SITEMAP_COMPATIBILITY_PATH.slice(1)), sitemapIndexXml)

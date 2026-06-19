@@ -22,6 +22,11 @@ export type SitemapFileAudit = {
   type: 'sitemapindex' | 'urlset' | 'unknown'
 }
 
+type ParsedSitemapEntry = {
+  lastmod?: string
+  loc: string
+}
+
 type RobotsAudit = {
   sitemapTarget?: string
   status?: number | string
@@ -73,9 +78,20 @@ function decodeXmlEntity(value: string): string {
 }
 
 export function parseSitemapLocs(xml: string): string[] {
-  return [...xml.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)].map(match =>
-    decodeXmlEntity(match[1] ?? '')
-  )
+  return parseSitemapEntries(xml).map(entry => entry.loc)
+}
+
+export function parseSitemapEntries(xml: string): ParsedSitemapEntry[] {
+  return [...xml.matchAll(/<(url|sitemap)>\s*([\s\S]*?)\s*<\/\1>/g)].map(match => {
+    const body = match[2] ?? ''
+    const loc = body.match(/<loc>\s*([^<]+?)\s*<\/loc>/)?.[1] ?? ''
+    const lastmod = body.match(/<lastmod>\s*([^<]+?)\s*<\/lastmod>/)?.[1]
+
+    return {
+      lastmod: lastmod ? decodeXmlEntity(lastmod) : undefined,
+      loc: decodeXmlEntity(loc)
+    }
+  })
 }
 
 function sitemapXmlType(xml: string): SitemapFileAudit['type'] {
@@ -105,6 +121,10 @@ function hasFileExtension(path: string): boolean {
 
 function hasFinalTrailingSlash(path: string): boolean {
   return path === '/' || path.endsWith('/') || hasFileExtension(path)
+}
+
+function isValidW3CDateTime(value: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2}))?$/.test(value)
 }
 
 function toAbsoluteUrl(baseUrl: string, path: string): string {
@@ -278,12 +298,36 @@ function validateArtifactPageUrl(
   }
 }
 
+function validateSitemapLastmods(
+  audit: SitemapSiteAudit,
+  sitemapUrl: string,
+  entries: ParsedSitemapEntry[]
+): void {
+  for (const entry of entries) {
+    if (!entry.lastmod) {
+      addIssue(audit, 'error', 'Sitemap entry is missing lastmod.', {
+        sitemapUrl,
+        url: entry.loc
+      })
+      continue
+    }
+
+    if (!isValidW3CDateTime(entry.lastmod)) {
+      addIssue(audit, 'error', 'Sitemap entry lastmod is not W3C Datetime format.', {
+        sitemapUrl,
+        url: entry.loc
+      })
+    }
+  }
+}
+
 function auditArtifactSitemapFile(
   audit: SitemapSiteAudit,
   siteConfig: CheckedInSiteConfig,
   sitemapUrl: string,
   seenSitemaps: Set<string>,
-  seenPageUrls: Set<string>
+  seenPageUrls: Set<string>,
+  allowSitemapIndex = false
 ): void {
   if (seenSitemaps.has(sitemapUrl)) {
     addIssue(audit, 'warning', 'Duplicate sitemap file reference.', { sitemapUrl })
@@ -306,7 +350,8 @@ function auditArtifactSitemapFile(
 
   const xml = readFileSync(artifactPath, 'utf8')
   const type = sitemapXmlType(xml)
-  const locs = parseSitemapLocs(xml)
+  const entries = parseSitemapEntries(xml)
+  const locs = entries.map(entry => entry.loc)
 
   audit.childSitemaps.push({
     locCount: locs.length,
@@ -323,6 +368,15 @@ function auditArtifactSitemapFile(
 
   if (locs.length === 0) {
     addIssue(audit, 'error', 'Sitemap file contains no loc entries.', { sitemapUrl })
+    return
+  }
+
+  validateSitemapLastmods(audit, sitemapUrl, entries)
+
+  if (type === 'sitemapindex' && !allowSitemapIndex) {
+    addIssue(audit, 'error', 'Sitemap index must point directly to URL-set sitemap files.', {
+      sitemapUrl
+    })
     return
   }
 
@@ -461,7 +515,8 @@ export function auditArtifactSitemaps(siteConfig: CheckedInSiteConfig): SitemapS
     siteConfig,
     audit.sitemapIndexUrl,
     referencedSitemaps,
-    new Set<string>()
+    new Set<string>(),
+    true
   )
   validateArtifactUnreferencedSitemapFiles(audit, siteConfig, referencedSitemaps)
 
@@ -557,7 +612,8 @@ async function auditLiveSitemapFile(
   sitemapUrl: string,
   timeoutMs: number,
   seenSitemaps: Set<string>,
-  seenPageUrls: Set<string>
+  seenPageUrls: Set<string>,
+  allowSitemapIndex = false
 ): Promise<void> {
   if (seenSitemaps.has(sitemapUrl)) {
     addIssue(audit, 'warning', 'Duplicate sitemap file reference.', { sitemapUrl })
@@ -595,7 +651,8 @@ async function auditLiveSitemapFile(
   }
 
   const type = sitemapXmlType(response.body)
-  const locs = parseSitemapLocs(response.body)
+  const entries = parseSitemapEntries(response.body)
+  const locs = entries.map(entry => entry.loc)
 
   audit.childSitemaps.push({
     locCount: locs.length,
@@ -613,6 +670,15 @@ async function auditLiveSitemapFile(
 
   if (locs.length === 0) {
     addIssue(audit, 'error', 'Sitemap file contains no loc entries.', { sitemapUrl })
+    return
+  }
+
+  validateSitemapLastmods(audit, sitemapUrl, entries)
+
+  if (type === 'sitemapindex' && !allowSitemapIndex) {
+    addIssue(audit, 'error', 'Sitemap index must point directly to URL-set sitemap files.', {
+      sitemapUrl
+    })
     return
   }
 
@@ -774,7 +840,8 @@ export async function auditLiveSitemaps(
     audit.sitemapIndexUrl,
     timeoutMs,
     referencedSitemaps,
-    new Set<string>()
+    new Set<string>(),
+    true
   )
   await validateLiveKnownUnreferencedSitemapFiles(audit, siteConfig, timeoutMs, referencedSitemaps)
 

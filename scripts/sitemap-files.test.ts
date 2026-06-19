@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { writeSplitSitemaps } from './sitemap-files.ts'
 
 const tempDirs: string[] = []
+const DEFAULT_LASTMOD = '2026-06-19T08:00:00.000Z'
 
 function makeTempArtifactDir(): string {
   mkdirSync(resolve(process.cwd(), 'tmp'), { recursive: true })
@@ -45,6 +46,7 @@ describe('writeSplitSitemaps', () => {
 
     writeSplitSitemaps(artifactDir, {
       baseUrl: 'https://example.com',
+      defaultLastmod: DEFAULT_LASTMOD,
       listingBasePath: 'products'
     })
 
@@ -57,6 +59,9 @@ describe('writeSplitSitemaps', () => {
 
     expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).toContain(
       '<loc>https://example.com/pages-sitemap.xml</loc>'
+    )
+    expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).toContain(
+      `<lastmod>${DEFAULT_LASTMOD}</lastmod>`
     )
     expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).toContain(
       '<loc>https://example.com/listings-sitemap.xml</loc>'
@@ -76,6 +81,7 @@ describe('writeSplitSitemaps', () => {
 
     const pagesSitemap = readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')
     expect(pagesSitemap).toContain('<loc>https://example.com/</loc>')
+    expect(pagesSitemap).toContain(`<lastmod>${DEFAULT_LASTMOD}</lastmod>`)
     expect(pagesSitemap).toContain('<loc>https://example.com/about/</loc>')
     expect(pagesSitemap).toContain('<loc>https://example.com/legal/privacy/</loc>')
     expect(pagesSitemap).not.toContain('https://example.com/cookies')
@@ -87,6 +93,7 @@ describe('writeSplitSitemaps', () => {
 
     const listingSitemap = readFileSync(resolve(artifactDir, 'listings-sitemap.xml'), 'utf8')
     expect(listingSitemap).toContain('<loc>https://example.com/products/example-tool/</loc>')
+    expect(listingSitemap).toContain(`<lastmod>${DEFAULT_LASTMOD}</lastmod>`)
 
     const taxonomiesSitemap = readFileSync(resolve(artifactDir, 'taxonomies-sitemap.xml'), 'utf8')
     expect(taxonomiesSitemap).toContain('<loc>https://example.com/products/</loc>')
@@ -108,6 +115,7 @@ describe('writeSplitSitemaps', () => {
 
     writeSplitSitemaps(artifactDir, {
       baseUrl: 'https://example.com',
+      defaultLastmod: DEFAULT_LASTMOD,
       listingBasePath: 'products'
     })
 
@@ -132,17 +140,22 @@ describe('writeSplitSitemaps', () => {
 
     writeSplitSitemaps(artifactDir, {
       baseUrl: 'https://example.com',
+      defaultLastmod: DEFAULT_LASTMOD,
       listingBasePath: 'products',
       pageSize: 2
     })
 
-    expect(existsSync(resolve(artifactDir, 'pages-sitemap-0.xml'))).toBe(true)
     expect(existsSync(resolve(artifactDir, 'pages-sitemap-1.xml'))).toBe(true)
-    expect(readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')).toContain(
-      '<loc>https://example.com/pages-sitemap-0.xml</loc>'
-    )
-    expect(readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')).toContain(
+    expect(existsSync(resolve(artifactDir, 'pages-sitemap-2.xml'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'pages-sitemap.xml'))).toBe(false)
+    expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).toContain(
       '<loc>https://example.com/pages-sitemap-1.xml</loc>'
+    )
+    expect(readFileSync(resolve(artifactDir, 'sitemap-index.xml'), 'utf8')).toContain(
+      '<loc>https://example.com/pages-sitemap-2.xml</loc>'
+    )
+    expect(readFileSync(resolve(artifactDir, 'pages-sitemap-1.xml'), 'utf8')).toContain(
+      `<lastmod>${DEFAULT_LASTMOD}</lastmod>`
     )
   })
 
@@ -156,6 +169,7 @@ describe('writeSplitSitemaps', () => {
 
     writeSplitSitemaps(artifactDir, {
       baseUrl: 'https://example.com',
+      defaultLastmod: DEFAULT_LASTMOD,
       excludedPaths: ['/example-tool'],
       listingBasePath: 'products'
     })
@@ -178,6 +192,7 @@ describe('writeSplitSitemaps', () => {
 
     writeSplitSitemaps(artifactDir, {
       baseUrl: 'https://example.com',
+      defaultLastmod: DEFAULT_LASTMOD,
       listingBasePath: 'products'
     })
 
@@ -223,9 +238,13 @@ describe('writeSplitSitemaps', () => {
       },
       baseUrl: 'https://example.com',
       categoryBasePath: 'products/best',
+      defaultLastmod: DEFAULT_LASTMOD,
       excludedPaths: ['/products/best/featured'],
       listingBasePath: 'products',
       listingDetailSuffix: 'reviews',
+      lastmodByPath: {
+        '/products/example-tool/reviews': '2026-05-16'
+      },
       sitemapPathByGroup: {
         listings: '/sitemaps/directory/1.xml',
         pages: '/sitemaps/pages/1.xml',
@@ -243,6 +262,7 @@ describe('writeSplitSitemaps', () => {
     expect(listingsSitemap).toContain(
       '<loc>https://example.com/products/example-tool/reviews/</loc>'
     )
+    expect(listingsSitemap).toContain('<lastmod>2026-05-16</lastmod>')
     expect(listingsSitemap).not.toContain('<loc>https://example.com/products/example-tool</loc>')
     expect(listingsSitemap).not.toContain(
       '<loc>https://example.com/products/best/video-downloaders/reviews/</loc>'
@@ -268,6 +288,7 @@ describe('writeSplitSitemaps', () => {
 
     const pagesSitemap = readFileSync(resolve(artifactDir, 'sitemaps/pages/1.xml'), 'utf8')
     expect(pagesSitemap).toContain('<loc>https://example.com/</loc>')
+    expect(pagesSitemap).toContain(`<lastmod>${DEFAULT_LASTMOD}</lastmod>`)
     expect(pagesSitemap).toContain('<loc>https://example.com/contact/</loc>')
     expect(pagesSitemap).toContain('<loc>https://example.com/posts/</loc>')
     expect(pagesSitemap).not.toContain('<loc>https://example.com/products</loc>')

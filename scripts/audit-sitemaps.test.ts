@@ -38,7 +38,7 @@ function makeSiteConfig(artifactDir: string) {
 function writeSitemapShellFiles(artifactDir: string): void {
   const sitemapIndex = [
     '<sitemapindex>',
-    '<sitemap><loc>https://example.com/sitemaps/pages/1.xml</loc></sitemap>',
+    '<sitemap><loc>https://example.com/sitemaps/pages/1.xml</loc><lastmod>2026-06-19</lastmod></sitemap>',
     '</sitemapindex>'
   ].join('')
 
@@ -75,8 +75,8 @@ describe('auditArtifactSitemaps', () => {
       resolve(artifactDir, 'sitemaps/pages/1.xml'),
       [
         '<urlset>',
-        '<url><loc>https://example.com/</loc></url>',
-        '<url><loc>https://example.com/about/</loc></url>',
+        '<url><loc>https://example.com/</loc><lastmod>2026-06-19</lastmod></url>',
+        '<url><loc>https://example.com/about/</loc><lastmod>2026-06-19T08:00:00.000Z</lastmod></url>',
         '</urlset>'
       ].join('')
     )
@@ -95,11 +95,11 @@ describe('auditArtifactSitemaps', () => {
     writeSitemapShellFiles(artifactDir)
     writeFile(
       resolve(artifactDir, 'sitemaps/pages/1.xml'),
-      '<urlset><url><loc>https://example.com/</loc></url></urlset>'
+      '<urlset><url><loc>https://example.com/</loc><lastmod>2026-06-19</lastmod></url></urlset>'
     )
     writeFile(
       resolve(artifactDir, 'pages-sitemap.xml'),
-      '<urlset><url><loc>https://example.com/</loc></url></urlset>'
+      '<urlset><url><loc>https://example.com/</loc><lastmod>2026-06-19</lastmod></url></urlset>'
     )
     writeFile(resolve(artifactDir, 'index.html'))
 
@@ -118,7 +118,7 @@ describe('auditArtifactSitemaps', () => {
     const artifactDir = makeTempArtifactDir()
 
     const sitemapIndex =
-      '<sitemapindex><sitemap><loc>https://example.com/sitemaps/missing.xml</loc></sitemap></sitemapindex>'
+      '<sitemapindex><sitemap><loc>https://example.com/sitemaps/missing.xml</loc><lastmod>2026-06-19</lastmod></sitemap></sitemapindex>'
     writeFile(
       resolve(artifactDir, 'robots.txt'),
       'Sitemap: https://example.com/sitemap-index.xml\n'
@@ -137,11 +137,11 @@ describe('auditArtifactSitemaps', () => {
     )
   })
 
-  it('reports sitemap URLs without generated route artifacts', () => {
+  it('reports nested sitemap indexes referenced by the canonical sitemap index', () => {
     const artifactDir = makeTempArtifactDir()
 
     const sitemapIndex =
-      '<sitemapindex><sitemap><loc>https://example.com/pages-sitemap.xml</loc></sitemap></sitemapindex>'
+      '<sitemapindex><sitemap><loc>https://example.com/pages-sitemap.xml</loc><lastmod>2026-06-19</lastmod></sitemap></sitemapindex>'
     writeFile(
       resolve(artifactDir, 'robots.txt'),
       'Sitemap: https://example.com/sitemap-index.xml\n'
@@ -150,7 +150,39 @@ describe('auditArtifactSitemaps', () => {
     writeFile(resolve(artifactDir, 'sitemap.xml'), sitemapIndex)
     writeFile(
       resolve(artifactDir, 'pages-sitemap.xml'),
-      '<urlset><url><loc>https://example.com/missing-page/</loc></url></urlset>'
+      '<sitemapindex><sitemap><loc>https://example.com/sitemaps/pages/1.xml</loc><lastmod>2026-06-19</lastmod></sitemap></sitemapindex>'
+    )
+    writeFile(
+      resolve(artifactDir, 'sitemaps/pages/1.xml'),
+      '<urlset><url><loc>https://example.com/</loc><lastmod>2026-06-19</lastmod></url></urlset>'
+    )
+    writeFile(resolve(artifactDir, 'index.html'))
+
+    const audit = auditArtifactSitemaps(makeSiteConfig(artifactDir))
+
+    expect(audit.issues).toContainEqual(
+      expect.objectContaining({
+        message: 'Sitemap index must point directly to URL-set sitemap files.',
+        severity: 'error',
+        sitemapUrl: 'https://example.com/pages-sitemap.xml'
+      })
+    )
+  })
+
+  it('reports sitemap URLs without generated route artifacts', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    const sitemapIndex =
+      '<sitemapindex><sitemap><loc>https://example.com/pages-sitemap.xml</loc><lastmod>2026-06-19</lastmod></sitemap></sitemapindex>'
+    writeFile(
+      resolve(artifactDir, 'robots.txt'),
+      'Sitemap: https://example.com/sitemap-index.xml\n'
+    )
+    writeFile(resolve(artifactDir, 'sitemap-index.xml'), sitemapIndex)
+    writeFile(resolve(artifactDir, 'sitemap.xml'), sitemapIndex)
+    writeFile(
+      resolve(artifactDir, 'pages-sitemap.xml'),
+      '<urlset><url><loc>https://example.com/missing-page/</loc><lastmod>2026-06-19</lastmod></url></urlset>'
     )
 
     const audit = auditArtifactSitemaps(makeSiteConfig(artifactDir))
@@ -169,7 +201,7 @@ describe('auditArtifactSitemaps', () => {
     const siteConfig = makeSiteConfig(artifactDir)
 
     const sitemapIndex =
-      '<sitemapindex><sitemap><loc>https://example.com/pages-sitemap.xml</loc></sitemap></sitemapindex>'
+      '<sitemapindex><sitemap><loc>https://example.com/pages-sitemap.xml</loc><lastmod>2026-06-19</lastmod></sitemap></sitemapindex>'
     writeFile(
       resolve(artifactDir, 'robots.txt'),
       'Sitemap: https://example.com/sitemap-index.xml\n'
@@ -178,7 +210,7 @@ describe('auditArtifactSitemaps', () => {
     writeFile(resolve(artifactDir, 'sitemap.xml'), sitemapIndex)
     writeFile(
       resolve(artifactDir, 'pages-sitemap.xml'),
-      '<urlset><url><loc>https://example.com/search/</loc></url></urlset>'
+      '<urlset><url><loc>https://example.com/search/</loc><lastmod>2026-06-19</lastmod></url></urlset>'
     )
     writeFile(resolve(artifactDir, 'search/index.html'))
 
@@ -195,6 +227,43 @@ describe('auditArtifactSitemaps', () => {
         message: 'Excluded path leaked into sitemap output.',
         severity: 'error',
         url: 'https://example.com/search/'
+      })
+    )
+  })
+
+  it('reports sitemap entries that are missing lastmod', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    const sitemapIndex =
+      '<sitemapindex><sitemap><loc>https://example.com/pages-sitemap.xml</loc></sitemap></sitemapindex>'
+    writeFile(
+      resolve(artifactDir, 'robots.txt'),
+      'Sitemap: https://example.com/sitemap-index.xml\n'
+    )
+    writeFile(resolve(artifactDir, 'sitemap-index.xml'), sitemapIndex)
+    writeFile(resolve(artifactDir, 'sitemap.xml'), sitemapIndex)
+    writeFile(
+      resolve(artifactDir, 'pages-sitemap.xml'),
+      '<urlset><url><loc>https://example.com/</loc></url></urlset>'
+    )
+    writeFile(resolve(artifactDir, 'index.html'))
+
+    const audit = auditArtifactSitemaps(makeSiteConfig(artifactDir))
+
+    expect(audit.issues).toContainEqual(
+      expect.objectContaining({
+        message: 'Sitemap entry is missing lastmod.',
+        severity: 'error',
+        sitemapUrl: 'https://example.com/sitemap-index.xml',
+        url: 'https://example.com/pages-sitemap.xml'
+      })
+    )
+    expect(audit.issues).toContainEqual(
+      expect.objectContaining({
+        message: 'Sitemap entry is missing lastmod.',
+        severity: 'error',
+        sitemapUrl: 'https://example.com/pages-sitemap.xml',
+        url: 'https://example.com/'
       })
     )
   })
