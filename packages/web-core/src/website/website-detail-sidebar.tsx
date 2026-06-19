@@ -132,7 +132,7 @@ export function WebsiteDetailSidebar({ website }: WebsiteDetailSidebarProps) {
                 <Link
                   key={categorySlug}
                   href={getRoute('category.page', { category: categorySlug })}
-                  className="inline-block text-sm text-foreground hover:text-primary transition-colors capitalize"
+                  className="inline-flex rounded-full border border-border/60 bg-muted/40 px-2.5 py-1 text-xs font-medium text-foreground transition-colors hover:border-primary/50 hover:bg-primary/10 hover:text-primary"
                 >
                   {getCategoryDisplayName(categorySlug)}
                 </Link>

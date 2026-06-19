@@ -1,11 +1,11 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { getRoute } from '@thedaviddias/web-core/routes';
+import { getRoute } from '@thedaviddias/web-core/routes'
+import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'SERP AI Pricing',
-  description: 'Choose a plan to list, feature, and promote an AI downloader on SERP AI.',
-};
+  description: 'Choose a plan to list, feature, and promote an AI downloader on SERP AI.'
+}
 
 export default function PricingPage() {
   return (
@@ -24,7 +24,7 @@ export default function PricingPage() {
               Submit a downloader product for directory review.
             </p>
             <Link className="mt-4 inline-flex font-medium text-primary" href={getRoute('submit')}>
-              Submit to SERP AI
+              Submit Yours
             </Link>
           </section>
           <section className="rounded-lg border p-6">
@@ -39,5 +39,5 @@ export default function PricingPage() {
         </div>
       </div>
     </main>
-  );
+  )
 }

@@ -136,18 +136,19 @@ describe('loadCheckedInSite', () => {
       appOutDir: 'apps/serp.ai/out',
       artifactDir: 'dist/sites/serp.ai'
     })
+    expect(config.analytics?.gtmId).toBe('GTM-M4ZSK3X')
     expect(config.routes.listingBasePath).toBe('products')
-    expect(config.copy.submitLabel).toBe('Submit to SERP AI')
+    expect(config.copy.submitLabel).toBe('Submit Yours')
     expect(config.features.showBrands).toBe(true)
     expect(config.networkBrandGroup).toBe('all')
     expect(config.social.githubIssueOwner).toBe('serpcompany')
     expect(config.social.githubIssueRepo).toBe('serp.ai')
     expect(config.social.githubIssuesUrl).toBe('https://github.com/serpcompany/serp.ai/issues')
     expect(config.deploy).toEqual({
+      accountId: 'cec5f04e1d18bcc65f2be0aefb04f059',
       branch: 'main',
-      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
-      repoUrl: 'https://github.com/serpcompany/serp.ai.git',
-      strategy: 'github-pages-repo-sync'
+      projectName: 'serp-ai',
+      strategy: 'cloudflare-pages-direct-upload'
     })
   })
 

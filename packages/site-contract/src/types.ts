@@ -86,12 +86,21 @@ export type SiteBadgesConfig = {
   }
 }
 
-export type DeployConfig = {
+export type GitHubPagesRepoSyncDeployConfig = {
   branch: string
   preserve: string[]
   repoUrl: string
   strategy: 'github-pages-repo-sync'
 }
+
+export type CloudflarePagesDirectUploadDeployConfig = {
+  accountId: string
+  branch: string
+  projectName: string
+  strategy: 'cloudflare-pages-direct-upload'
+}
+
+export type DeployConfig = GitHubPagesRepoSyncDeployConfig | CloudflarePagesDirectUploadDeployConfig
 
 export type SiteFeatureFlags = {
   showAuth: boolean

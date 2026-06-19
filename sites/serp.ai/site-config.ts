@@ -1,6 +1,9 @@
 import type { CheckedInSiteConfigOverride } from '../types'
 
 export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
+  analytics: {
+    gtmId: 'GTM-M4ZSK3X'
+  },
   badges: {
     featuredOn: {
       dark: 'badge/featured-on-serp.ai-dark.svg',
@@ -52,13 +55,13 @@ export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
       plural: 'products',
       singular: 'product'
     },
-    submitLabel: 'Submit to SERP AI'
+    submitLabel: 'Submit Yours'
   },
   deploy: {
+    accountId: 'cec5f04e1d18bcc65f2be0aefb04f059',
     branch: 'main',
-    preserve: ['.github/workflows/deploy.yml', 'CNAME'],
-    repoUrl: 'https://github.com/serpcompany/serp.ai.git',
-    strategy: 'github-pages-repo-sync'
+    projectName: 'serp-ai',
+    strategy: 'cloudflare-pages-direct-upload'
   },
   id: 'serp.ai',
   networkBrandGroup: 'all',
@@ -92,6 +95,7 @@ export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
       '/legal/privacy',
       '/legal/terms',
       '/products',
+      '/products/best/featured',
       '/search'
     ],
     indexGroupOrder: ['pages', 'taxonomies', 'listings'],

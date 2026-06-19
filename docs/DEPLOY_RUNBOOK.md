@@ -1,9 +1,11 @@
 # Deploy Runbook
 
-The active supported deploy path is `github-pages-repo-sync`.
+The active supported deploy paths are `github-pages-repo-sync` and
+`cloudflare-pages-direct-upload`.
 
-That means this repo builds static artifacts for resolved checked-in site targets
-and syncs each artifact into its target GitHub Pages repo.
+That means this repo builds static artifacts for resolved checked-in site
+targets, then deploys each artifact through the target strategy in
+`sites/<site-id>/site-config.ts`.
 
 Current active checked-in deployable sites include `browserextensions.io`,
 `pornvideodownloaders.com`, `serp.ai`, `serp.co`, `serp.software`, and
@@ -14,10 +16,11 @@ Current active checked-in deployable sites include `browserextensions.io`,
 Before deploying, confirm:
 
 - the site has checked-in config in `sites/<site-id>/site-config.ts`
-- the site defines `deploy.repoUrl`, `deploy.branch`, and `deploy.preserve`
+- the site defines a checked-in `deploy.strategy` and its required target fields
 - you are on Node `24`
-- the source repo has a `GH_PAT` secret for cross-repo deploys
-- the target repo is configured for workflow-based GitHub Pages deploys
+- GitHub Pages repo-sync sites have a `GH_PAT` secret and target repo workflow
+- Cloudflare Pages sites have a `CLOUDFLARE_API_TOKEN` secret with Pages edit
+  permission
 - submit-enabled sites use a public GitHub issue repo with Issues enabled
 - source changes have gone through gitflow: branch, commit, push, review/merge
 - the deploy is running from GitHub Actions or from a clean local source branch synced with its upstream
@@ -38,7 +41,7 @@ What each step does:
 - `validate:site` fails early on bad checked-in config or invalid listing inputs
 - `build:site` creates the final static artifact in `dist/sites/<site-id>`
 - `audit:sitemaps` checks generated XML sitemap files against generated route artifacts
-- `deploy:site --dry-run` confirms the target repo, branch, preserve paths, and artifact directory without pushing anything
+- `deploy:site --dry-run` confirms the target strategy, branch, and artifact directory without pushing anything
 
 Do not run a real local deploy while source changes are uncommitted, untracked, unpushed, behind upstream, or diverged from upstream.
 
@@ -51,13 +54,17 @@ The normal production path is:
 3. commit and push the source branch
 4. open and merge the PR
 5. let `.github/workflows/build-and-deploy.yml` deploy the checked-out source commit
-6. verify the target repo workflow and live site
+6. verify the target hosting provider and live site
 
-`pnpm deploy`, `pnpm deploy:site`, and target GitHub Pages repo syncs are git push operations. They require explicit user approval and must not be used to push artifacts built from unreviewed local source changes.
+`pnpm deploy`, `pnpm deploy:site`, target GitHub Pages repo syncs, and
+Cloudflare Pages uploads of generated artifacts are push operations. They
+require explicit user approval and must not be used to push artifacts built from
+unreviewed local source changes.
 
 ## Dry-run before deploy
 
-Use this to confirm the target repo, branch, preserve paths, and artifact directory without pushing anything:
+Use this to confirm the target strategy, branch, and artifact directory without
+pushing anything:
 
 ```bash
 pnpm deploy:site -- --site <site-id> --dry-run
@@ -70,6 +77,55 @@ Promotion requirement:
 - docs and runbooks must be updated before the registry change is considered complete
 - use [SITE_PROMOTION_CHECKLIST.md](./SITE_PROMOTION_CHECKLIST.md) as the source-of-truth gate
 
+## Cloudflare Pages deploy path
+
+`serp.ai` deploys through Cloudflare Pages Direct Upload:
+
+- Cloudflare account: `cec5f04e1d18bcc65f2be0aefb04f059`
+- Cloudflare Pages project: `serp-ai`
+- production branch: `main`
+- build artifact: `dist/sites/serp.ai`
+
+The normal command is still:
+
+```bash
+pnpm deploy:site -- --site serp.ai
+```
+
+The deploy script resolves the checked-in site config and runs:
+
+```bash
+npx wrangler pages deploy dist/sites/serp.ai \
+  --project-name serp-ai \
+  --branch main
+```
+
+Before any Cloudflare Pages upload for `serp.ai`, confirm:
+
+- `git status --short` is clean or every changed file has been accounted for
+- `pnpm validate:site -- --site serp.ai`
+- `pnpm build:site -- --site serp.ai`
+- `pnpm audit:sitemaps -- --site serp.ai`
+- `pnpm deploy:site -- --site serp.ai --dry-run`
+- a `CLOUDFLARE_API_TOKEN` with Account > Cloudflare Pages > Edit permission is
+  available to the deploy environment
+- explicit same-turn approval to run the upload command
+
+Do not use this command for production cutover while source work is uncommitted,
+untracked, unpushed, behind, or diverged. A production cutover still requires
+reviewed gitflow first: branch, commit, push, PR review, merge, then deploy from
+a clean branch synced with upstream or from GitHub Actions.
+
+After the Cloudflare Pages upload, verify:
+
+- `/sitemap-index.xml` recursively reports the expected URL count
+- `/`, `/about/`, `/brands/`, `/submit/`, `/robots.txt`, `/sitemap-index.xml`,
+  `/products/best/product-launch-websites/`, sampled new product review URLs,
+  sampled current product review URLs, and a missing route's 404 behavior
+- `/build-info.json` returns the expected `siteId` and source provenance
+- `https://serp.ai/` no longer returns Worker/OpenNext headers
+- `https://www.serp.ai/` redirects to `https://serp.ai/`
+
 ## Local real deploy guard
 
 Local real deploys are blocked unless the source repo is reviewable:
@@ -81,7 +137,10 @@ Local real deploys are blocked unless the source repo is reviewable:
 
 GitHub Actions is allowed because it deploys a checked-out commit produced by the repository workflow.
 
-Normal deploys must use the target repo and branch from checked-in site config. `DEPLOY_REPO_URL` and `DEPLOY_BRANCH` are refused unless `ALLOW_DEPLOY_TARGET_OVERRIDE=true` is set for an explicitly approved audited emergency bypass.
+Normal deploys must use the target strategy and branch from checked-in site
+config. `DEPLOY_REPO_URL` and `DEPLOY_BRANCH` are refused unless
+`ALLOW_DEPLOY_TARGET_OVERRIDE=true` is set for an explicitly approved audited
+emergency bypass.
 
 ## GitHub Actions path
 
@@ -96,7 +155,7 @@ The workflow:
 4. runs `pnpm build:site`
 5. runs `pnpm audit:sitemaps`
 6. runs `pnpm audit:forbidden-links`
-7. verifies the `GH_PAT` deploy secret
+7. verifies the deploy secret required by the checked-in site strategy
 8. runs `pnpm deploy:site` against the checked-in site config deploy target
 
 Workflow dispatch with a concrete `site_id` deploys that site. Workflow dispatch
@@ -127,7 +186,7 @@ For a normal static-site update, the redeploy path is the same as the first depl
 5. run `pnpm deploy:site -- --site <site-id> --dry-run`
 6. commit, push, review, and merge the source change
 7. let the workflow deploy or, with explicit approval, run a local real deploy from a clean synced source branch
-8. verify the target repo workflow and live site
+8. verify the target provider and live site
 
 ## Submit-intake rollout
 
@@ -167,10 +226,10 @@ After deploy, check:
 - `dist/sites/<site-id>` contains the expected static artifact
 - `dist/sites/<site-id>/build-info.json` contains the source `siteId`, `sourceSha`,
   `sourceBranch`, and `sourceRepository`
-- the target repo contains plain static files, not `.next`
-- the target repo still contains `.github/workflows/deploy.yml`
-- the target repo Pages workflow completes successfully
-- the live domain returns the updated site instead of GitHub's 404 page
+- the target provider contains plain static files, not `.next`
+- GitHub Pages repo-sync targets still contain `.github/workflows/deploy.yml`
+- the target provider publish completes successfully
+- the live domain returns the updated site from the intended provider
 - `https://<site-id>/build-info.json` returns HTTP `200`, has the expected `siteId`,
   and has a `sourceSha` matching the deployed source commit
 

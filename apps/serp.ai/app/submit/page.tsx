@@ -2,7 +2,7 @@ import { SubmitPageSurface } from '@thedaviddias/web-core/forms/submit-page-surf
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Submit to SERP AI',
+  title: 'Submit Yours',
   description: 'Submit your AI product, company, model, dataset, or resource to SERP AI.'
 }
 

@@ -27,6 +27,10 @@ function isVideoDownloader(product: TrialProductFixture): boolean {
   return product.product?.categories?.includes('video-downloaders') ?? false
 }
 
+function isAdultDownloader(product: TrialProductFixture): boolean {
+  return product.product?.categories?.includes('adult') ?? false
+}
+
 describe('video downloader featured listings', () => {
   for (const siteId of siteIds) {
     it(`marks every ${siteId} video downloader source product as featured`, () => {
@@ -65,6 +69,19 @@ describe('video downloader featured listings', () => {
       expect(builtFeaturedSlugs).toEqual(sourceVideoSlugs)
     })
   }
+
+  it('keeps every serp.ai adult downloader source product in Video Downloaders', () => {
+    const products = readProducts('serp.ai')
+    const adultDownloaders = Object.entries(products).filter(([, product]) =>
+      isAdultDownloader(product)
+    )
+    const adultDownloadersMissingVideo = adultDownloaders
+      .filter(([, product]) => !isVideoDownloader(product))
+      .map(([fallbackSlug, product]) => productSlug(fallbackSlug, product))
+
+    expect(adultDownloaders).toHaveLength(262)
+    expect(adultDownloadersMissingVideo).toEqual([])
+  })
 
   it('does not feed featured category pages from the homepage-capped featured list', () => {
     const featuredRoutePaths = [

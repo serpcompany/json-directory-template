@@ -1,9 +1,9 @@
 'use client'
 
 import { logger } from '@thedaviddias/logging'
+import { useSearch } from '@thedaviddias/web-core/hooks/use-search'
 import { Loader2, Search } from 'lucide-react'
 import { useState } from 'react'
-import { useSearch } from '@thedaviddias/web-core/hooks/use-search'
 
 /**
  * Renders the hero search form on the homepage
@@ -36,7 +36,7 @@ export function HeroSearch() {
       <div className="relative">
         <input
           type="text"
-          placeholder="Find listings, resources, and docs..."
+          placeholder="Search"
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           className="w-full rounded-lg border border-input bg-background px-4 py-3 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 shadow-sm"
