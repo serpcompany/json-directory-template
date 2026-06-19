@@ -7,6 +7,7 @@ import {
   mkdirSync,
   openSync,
   readdirSync,
+  readFileSync,
   renameSync,
   rmSync,
   statSync,
@@ -15,7 +16,7 @@ import {
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases'
-import type { AssetSource } from '@thedaviddias/site-contract/types'
+import type { AssetSource, CheckedInSiteConfig } from '@thedaviddias/site-contract/types'
 import { categories } from '@thedaviddias/web-core/categories'
 import { createRunTempDir } from './run-context.ts'
 import {
@@ -972,6 +973,11 @@ type BuildInfo = {
   sourceSha: string
 }
 
+type ListingLastmodEntry = {
+  publishedAt?: string
+  slug?: string
+}
+
 type LegacyRootListingRedirectInput = {
   listingBasePath: string
   siteId: string
@@ -1103,6 +1109,58 @@ function resolveBuildInfo(siteId: string, env: NodeJS.ProcessEnv = process.env):
   }
 }
 
+function resolveSourceLastmod(buildInfo: BuildInfo): string {
+  const sourceSha = buildInfo.sourceSha.trim()
+  const commitDate = sourceSha ? readGitValue(['show', '-s', '--format=%cI', sourceSha]) : undefined
+
+  return commitDate || new Date().toISOString()
+}
+
+function normalizeSitemapPath(path: string): string {
+  const normalizedPath = path.replace(/^\/+|\/+$/g, '')
+  return normalizedPath ? `/${normalizedPath}` : '/'
+}
+
+function appendSitemapPathSegment(path: string, segment: string | undefined): string {
+  const normalizedSegment = segment?.replace(/^\/+|\/+$/g, '')
+
+  if (!normalizedSegment) {
+    return path
+  }
+
+  if (path.replace(/\/+$/g, '').endsWith(`/${normalizedSegment}`)) {
+    return path
+  }
+
+  return `${path.replace(/\/+$/g, '')}/${normalizedSegment}`
+}
+
+function buildSitemapLastmodByPath(definition: CheckedInSiteConfig): Record<string, string> {
+  const listingDataPath = resolve(workspaceRoot, definition.content.listingSource.outputPath)
+
+  if (!existsSync(listingDataPath)) {
+    return {}
+  }
+
+  const listings = JSON.parse(readFileSync(listingDataPath, 'utf8')) as ListingLastmodEntry[]
+  const listingBasePath = definition.routes.listingBasePath.replace(/^\/+|\/+$/g, '')
+
+  return Object.fromEntries(
+    listings
+      .filter((listing): listing is Required<Pick<ListingLastmodEntry, 'publishedAt' | 'slug'>> =>
+        Boolean(listing.publishedAt?.trim() && listing.slug?.trim())
+      )
+      .map(listing => {
+        const listingPath = appendSitemapPathSegment(
+          `/${listingBasePath}/${listing.slug}`,
+          definition.sitemap.listingDetailSuffix
+        )
+
+        return [normalizeSitemapPath(listingPath), listing.publishedAt]
+      })
+  )
+}
+
 export function writeBuildInfoFile(artifactDir: string, buildInfo: BuildInfo): void {
   const buildInfoPath = resolve(artifactDir, 'build-info.json')
 
@@ -1178,6 +1236,7 @@ export function pruneStaticArtifactDir(artifactDir: string, flags: ArtifactSurfa
 
 function finalizeArtifactDir(input: SiteInputTarget): void {
   const definition = loadCheckedInSiteFromInput(input)
+  const buildInfo = resolveBuildInfo(definition.id)
   const appOutDir = resolveSiteAppOutDir(definition)
   const artifactDir = resolveSiteArtifactDir(definition)
   const legacySlugs = getSiteRootListingAliases(definition.id)
@@ -1237,11 +1296,13 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     additionalPathsByGroup: definition.sitemap.additionalPathsByGroup,
     baseUrl: definition.site.publicUrl,
     categoryBasePath: definition.sitemap.categoryBasePath,
+    defaultLastmod: resolveSourceLastmod(buildInfo),
     excludedPaths: [
       ...legacySlugs.map(slug => `/${slug}`),
       ...(definition.sitemap.excludedPaths ?? [])
     ],
     indexGroupOrder: definition.sitemap.indexGroupOrder,
+    lastmodByPath: buildSitemapLastmodByPath(definition),
     listingDetailSuffix: definition.sitemap.listingDetailSuffix,
     listingBasePath: definition.routes.listingBasePath,
     sitemapPathByGroup: definition.sitemap.pathByGroup,
@@ -1250,7 +1311,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
 
   closeSync(openSync(noJekyllPath, 'w'))
   writeFileSync(cnamePath, `${definition.site.domain}\n`)
-  writeBuildInfoFile(artifactDir, resolveBuildInfo(definition.id))
+  writeBuildInfoFile(artifactDir, buildInfo)
 }
 
 export async function runBuildSite(input: SiteInputTarget): Promise<void> {
