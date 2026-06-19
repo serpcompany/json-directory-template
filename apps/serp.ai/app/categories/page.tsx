@@ -1,35 +1,31 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
 import { Breadcrumb } from '@thedaviddias/design-system/breadcrumb'
-import { getHomePageData } from '@/actions/get-home-page-data'
 import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display'
 import {
   getActiveCategories,
   getFeaturedListingCount,
-  listingMatchesCategory,
+  listingMatchesCategory
 } from '@thedaviddias/web-core/category-navigation'
 import { JsonLd } from '@thedaviddias/web-core/json-ld'
 import { AppSidebar } from '@thedaviddias/web-core/layout/app-sidebar'
 import { getRoute } from '@thedaviddias/web-core/routes'
-import {
-  generateBaseMetadata,
-  SITE_NAME,
-  SITE_PUBLIC_URL,
-} from '@thedaviddias/web-core/seo-config'
+import { generateBaseMetadata, SITE_NAME, SITE_PUBLIC_URL } from '@thedaviddias/web-core/seo-config'
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { getHomePageData } from '@/actions/get-home-page-data'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: `Categories | ${SITE_NAME}`,
   description: `Browse ${SITE_NAME} categories.`,
-  path: '/categories/',
+  path: '/categories/'
 })
 
 export default async function CategoriesPage() {
   const { allProjects, featuredProjects } = await getHomePageData()
   const activeCategories = getActiveCategories(allProjects)
-  const activeCategorySlugs = activeCategories.map((category) => category.slug)
+  const activeCategorySlugs = activeCategories.map(category => category.slug)
 
-  const categoryItems = activeCategories.map((category) => {
-    const count = allProjects.filter((project) =>
+  const categoryItems = activeCategories.map(category => {
+    const count = allProjects.filter(project =>
       listingMatchesCategory(project, category.slug)
     ).length
 
@@ -37,7 +33,7 @@ export default async function CategoriesPage() {
       category,
       count,
       href: getRoute('category.page', { category: category.slug }),
-      name: getCategoryDisplayName(category.slug),
+      name: getCategoryDisplayName(category.slug)
     }
   })
 
@@ -54,7 +50,7 @@ export default async function CategoriesPage() {
             '@type': 'WebSite',
             '@id': SITE_PUBLIC_URL,
             name: SITE_NAME,
-            url: SITE_PUBLIC_URL,
+            url: SITE_PUBLIC_URL
           },
           mainEntity: {
             '@type': 'ItemList',
@@ -63,9 +59,9 @@ export default async function CategoriesPage() {
               '@type': 'ListItem',
               position: index + 1,
               name: item.name,
-              url: `${SITE_PUBLIC_URL}${item.href}`,
-            })),
-          },
+              url: `${SITE_PUBLIC_URL}${item.href}`
+            }))
+          }
         }}
       />
       <div className="border-t">

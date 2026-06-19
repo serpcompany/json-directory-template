@@ -1,41 +1,44 @@
-import { siteConfig, type SiteConfig } from './site-config';
+import { type SiteConfig, siteConfig } from './site-config'
 
 export type ResolvedSiteCopy = {
-  allLabel: string;
-  allAnchorId: string;
-  brandsLabel: string;
-  categoryEmptyDescription: string;
-  categoryEmptyTitle: string;
-  docsLabel: string;
-  exploreAllLabel: string;
-  listingCountLabel: string;
+  allLabel: string
+  allAnchorId: string
+  brandsLabel: string
+  categoryEmptyDescription: string
+  categoryEmptyTitle: string
+  docsLabel: string
+  exploreAllLabel: string
+  listingCountLabel: string
   listingName: SiteConfig['copy']['listingName'] & {
-    pluralTitle: string;
-    singularTitle: string;
-  };
-  listingSearchPlaceholder: string;
-  networkLabel: string;
-  submitLabelSentence: string;
-  submitLabel: string;
-};
+    pluralTitle: string
+    singularTitle: string
+  }
+  listingSearchPlaceholder: string
+  networkLabel: string
+  submitLabelSentence: string
+  submitLabel: string
+}
 
 function toTitleCase(value: string): string {
-  return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
+  return `${value.charAt(0).toUpperCase()}${value.slice(1)}`
 }
 
 function toAnchorId(value: string): string {
-  return value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
 }
 
 function toSentenceCase(value: string): string {
-  return value.trim().toLowerCase();
+  return value.trim().toLowerCase()
 }
 
 export function resolveSiteCopy(config: SiteConfig = siteConfig): ResolvedSiteCopy {
-  const { plural, singular } = config.copy.listingName;
-  const pluralTitle = toTitleCase(plural);
-  const singularTitle = toTitleCase(singular);
-  const submitLabelSentence = toSentenceCase(config.copy.submitLabel);
+  const { plural, singular } = config.copy.listingName
+  const pluralTitle = toTitleCase(plural)
+  const singularTitle = toTitleCase(singular)
+  const submitLabelSentence = toSentenceCase(config.copy.submitLabel)
 
   return {
     allLabel: `All ${pluralTitle}`,
@@ -50,13 +53,13 @@ export function resolveSiteCopy(config: SiteConfig = siteConfig): ResolvedSiteCo
       plural,
       pluralTitle,
       singular,
-      singularTitle,
+      singularTitle
     },
-    listingSearchPlaceholder: `Search`,
+    listingSearchPlaceholder: `Search ${plural}, categories, and descriptions...`,
     networkLabel: config.copy.networkLabel,
     submitLabelSentence,
-    submitLabel: config.copy.submitLabel,
-  };
+    submitLabel: config.copy.submitLabel
+  }
 }
 
-export const siteCopy: ResolvedSiteCopy = resolveSiteCopy();
+export const siteCopy: ResolvedSiteCopy = resolveSiteCopy()

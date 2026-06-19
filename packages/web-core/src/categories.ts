@@ -97,6 +97,11 @@ const categoryPresentationBySlug: Record<string, CategoryPresentation> = {
     icon: User,
     priority: 'low'
   },
+  'product-launch-websites': {
+    description: 'Product launch directories, launch platforms, and discovery websites',
+    icon: Globe,
+    priority: 'medium'
+  },
   'security-identity': {
     description: 'Security tools, authentication, encryption, and compliance',
     icon: Lock,

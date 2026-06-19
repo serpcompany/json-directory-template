@@ -1,9 +1,9 @@
 'use client'
 
 import { logger } from '@thedaviddias/logging'
+import { useSearch } from '@thedaviddias/web-core/hooks/use-search'
 import { Loader2, Search } from 'lucide-react'
 import { useState } from 'react'
-import { useSearch } from '@thedaviddias/web-core/hooks/use-search'
 
 /**
  * Renders the hero search form on the homepage

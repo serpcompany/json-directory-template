@@ -100,9 +100,7 @@ export type CloudflarePagesDirectUploadDeployConfig = {
   strategy: 'cloudflare-pages-direct-upload'
 }
 
-export type DeployConfig =
-  | GitHubPagesRepoSyncDeployConfig
-  | CloudflarePagesDirectUploadDeployConfig
+export type DeployConfig = GitHubPagesRepoSyncDeployConfig | CloudflarePagesDirectUploadDeployConfig
 
 export type SiteFeatureFlags = {
   showAuth: boolean
