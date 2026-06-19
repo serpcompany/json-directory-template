@@ -93,14 +93,7 @@ export type GitHubPagesRepoSyncDeployConfig = {
   strategy: 'github-pages-repo-sync'
 }
 
-export type CloudflarePagesDirectUploadDeployConfig = {
-  accountId: string
-  branch: string
-  projectName: string
-  strategy: 'cloudflare-pages-direct-upload'
-}
-
-export type DeployConfig = GitHubPagesRepoSyncDeployConfig | CloudflarePagesDirectUploadDeployConfig
+export type DeployConfig = GitHubPagesRepoSyncDeployConfig
 
 export type SiteFeatureFlags = {
   showAuth: boolean

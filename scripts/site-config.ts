@@ -238,13 +238,6 @@ const githubPagesRepoSyncDeploySchema = z.object({
   strategy: z.literal('github-pages-repo-sync')
 })
 
-const cloudflarePagesDirectUploadDeploySchema = z.object({
-  accountId: z.string().regex(/^[a-f0-9]{32}$/),
-  branch: z.string().min(1).default('main'),
-  projectName: z.string().regex(/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/),
-  strategy: z.literal('cloudflare-pages-direct-upload')
-})
-
 const checkedInSiteConfigSchema = z.object({
   analytics: siteAnalyticsSchema,
   badges: siteBadgesSchema,
@@ -263,9 +256,7 @@ const checkedInSiteConfigSchema = z.object({
   content: z.object({
     listingSource: z.union([listingJsonSourceSchema, trialProductsSourceSchema])
   }),
-  deploy: z
-    .union([githubPagesRepoSyncDeploySchema, cloudflarePagesDirectUploadDeploySchema])
-    .optional(),
+  deploy: githubPagesRepoSyncDeploySchema.optional(),
   features: featureFlagsSchema.default({}),
   id: z.string().min(1),
   networkBrandGroup: z.string().min(1).nullable().default(null),

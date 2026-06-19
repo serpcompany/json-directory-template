@@ -1,7 +1,6 @@
 # Deploy Runbook
 
-The active supported deploy paths are `github-pages-repo-sync` and
-`cloudflare-pages-direct-upload`.
+The active supported deploy path is `github-pages-repo-sync`.
 
 That means this repo builds static artifacts for resolved checked-in site
 targets, then deploys each artifact through the target strategy in
@@ -19,8 +18,6 @@ Before deploying, confirm:
 - the site defines a checked-in `deploy.strategy` and its required target fields
 - you are on Node `24`
 - GitHub Pages repo-sync sites have a `GH_PAT` secret and target repo workflow
-- Cloudflare Pages sites have a `CLOUDFLARE_API_TOKEN` secret with Pages edit
-  permission
 - submit-enabled sites use a public GitHub issue repo with Issues enabled
 - source changes have gone through gitflow: branch, commit, push, review/merge
 - the deploy is running from GitHub Actions or from a clean local source branch synced with its upstream
@@ -56,10 +53,9 @@ The normal production path is:
 5. let `.github/workflows/build-and-deploy.yml` deploy the checked-out source commit
 6. verify the target hosting provider and live site
 
-`pnpm deploy`, `pnpm deploy:site`, target GitHub Pages repo syncs, and
-Cloudflare Pages uploads of generated artifacts are push operations. They
-require explicit user approval and must not be used to push artifacts built from
-unreviewed local source changes.
+`pnpm deploy`, `pnpm deploy:site`, and target GitHub Pages repo syncs are push
+operations. They require explicit user approval and must not be used to push
+artifacts built from unreviewed local source changes.
 
 ## Dry-run before deploy
 
@@ -76,55 +72,6 @@ Promotion requirement:
 - promotion review must include a successful `pnpm deploy:site -- --site <site-id> --dry-run`
 - docs and runbooks must be updated before the registry change is considered complete
 - use [SITE_PROMOTION_CHECKLIST.md](./SITE_PROMOTION_CHECKLIST.md) as the source-of-truth gate
-
-## Cloudflare Pages deploy path
-
-`serp.ai` deploys through Cloudflare Pages Direct Upload:
-
-- Cloudflare account: `cec5f04e1d18bcc65f2be0aefb04f059`
-- Cloudflare Pages project: `serp-ai`
-- production branch: `main`
-- build artifact: `dist/sites/serp.ai`
-
-The normal command is still:
-
-```bash
-pnpm deploy:site -- --site serp.ai
-```
-
-The deploy script resolves the checked-in site config and runs:
-
-```bash
-npx wrangler pages deploy dist/sites/serp.ai \
-  --project-name serp-ai \
-  --branch main
-```
-
-Before any Cloudflare Pages upload for `serp.ai`, confirm:
-
-- `git status --short` is clean or every changed file has been accounted for
-- `pnpm validate:site -- --site serp.ai`
-- `pnpm build:site -- --site serp.ai`
-- `pnpm audit:sitemaps -- --site serp.ai`
-- `pnpm deploy:site -- --site serp.ai --dry-run`
-- a `CLOUDFLARE_API_TOKEN` with Account > Cloudflare Pages > Edit permission is
-  available to the deploy environment
-- explicit same-turn approval to run the upload command
-
-Do not use this command for production cutover while source work is uncommitted,
-untracked, unpushed, behind, or diverged. A production cutover still requires
-reviewed gitflow first: branch, commit, push, PR review, merge, then deploy from
-a clean branch synced with upstream or from GitHub Actions.
-
-After the Cloudflare Pages upload, verify:
-
-- `/sitemap-index.xml` recursively reports the expected URL count
-- `/`, `/about/`, `/brands/`, `/submit/`, `/robots.txt`, `/sitemap-index.xml`,
-  `/products/best/product-launch-websites/`, sampled new product review URLs,
-  sampled current product review URLs, and a missing route's 404 behavior
-- `/build-info.json` returns the expected `siteId` and source provenance
-- `https://serp.ai/` no longer returns Worker/OpenNext headers
-- `https://www.serp.ai/` redirects to `https://serp.ai/`
 
 ## Local real deploy guard
 

@@ -84,26 +84,16 @@ jobs:
 
       - name: Verify deploy auth
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
-          SITE_ID: ${{ matrix.target.siteId }}
         run: |
-          if [ "$SITE_ID" = "serp.ai" ]; then
-            if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-              echo "Missing CLOUDFLARE_API_TOKEN secret required for Cloudflare Pages deploy."
-              exit 1
-            fi
-          else
-            if [ -z "$DEPLOY_TOKEN" ]; then
-              echo "Missing GH_PAT secret required for cross-repo deploy."
-              exit 1
-            fi
+          if [ -z "$DEPLOY_TOKEN" ]; then
+            echo "Missing GH_PAT secret required for cross-repo deploy."
+            exit 1
           fi
 
       - name: Deploy
         env:
           ALLOW_DEPLOY_TARGET_OVERRIDE: ''
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           DEPLOY_TOKEN: ${{ secrets.GH_PAT }}
           DEPLOY_BRANCH: ''
           DEPLOY_REPO_URL: ''

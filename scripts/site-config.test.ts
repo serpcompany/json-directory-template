@@ -145,10 +145,10 @@ describe('loadCheckedInSite', () => {
     expect(config.social.githubIssueRepo).toBe('serp.ai')
     expect(config.social.githubIssuesUrl).toBe('https://github.com/serpcompany/serp.ai/issues')
     expect(config.deploy).toEqual({
-      accountId: 'cec5f04e1d18bcc65f2be0aefb04f059',
       branch: 'main',
-      projectName: 'serp-ai',
-      strategy: 'cloudflare-pages-direct-upload'
+      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+      repoUrl: 'https://github.com/serpcompany/serp.ai.git',
+      strategy: 'github-pages-repo-sync'
     })
   })
 
