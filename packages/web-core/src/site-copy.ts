@@ -52,7 +52,7 @@ export function resolveSiteCopy(config: SiteConfig = siteConfig): ResolvedSiteCo
       singular,
       singularTitle,
     },
-    listingSearchPlaceholder: `Search ${plural}, categories, and descriptions...`,
+    listingSearchPlaceholder: `Search`,
     networkLabel: config.copy.networkLabel,
     submitLabelSentence,
     submitLabel: config.copy.submitLabel,

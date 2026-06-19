@@ -231,6 +231,20 @@ const socialConfigSchema = z
     }
   })
 
+const githubPagesRepoSyncDeploySchema = z.object({
+  branch: z.string().min(1).default('main'),
+  preserve: z.array(z.string().min(1)).default(['.github/workflows/deploy.yml', 'CNAME']),
+  repoUrl: z.string().url(),
+  strategy: z.literal('github-pages-repo-sync')
+})
+
+const cloudflarePagesDirectUploadDeploySchema = z.object({
+  accountId: z.string().regex(/^[a-f0-9]{32}$/),
+  branch: z.string().min(1).default('main'),
+  projectName: z.string().regex(/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/),
+  strategy: z.literal('cloudflare-pages-direct-upload')
+})
+
 const checkedInSiteConfigSchema = z.object({
   analytics: siteAnalyticsSchema,
   badges: siteBadgesSchema,
@@ -250,12 +264,7 @@ const checkedInSiteConfigSchema = z.object({
     listingSource: z.union([listingJsonSourceSchema, trialProductsSourceSchema])
   }),
   deploy: z
-    .object({
-      branch: z.string().min(1).default('main'),
-      preserve: z.array(z.string().min(1)).default(['.github/workflows/deploy.yml', 'CNAME']),
-      repoUrl: z.string().url(),
-      strategy: z.literal('github-pages-repo-sync')
-    })
+    .union([githubPagesRepoSyncDeploySchema, cloudflarePagesDirectUploadDeploySchema])
     .optional(),
   features: featureFlagsSchema.default({}),
   id: z.string().min(1),

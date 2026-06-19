@@ -12,7 +12,7 @@ export const serpAiSiteContent: SiteOwnedContent = {
     },
     {
       description: 'Watch SERP AI updates on YouTube.',
-      href: 'https://www.youtube.com/@serpdotai',
+      href: 'https://serp.ly/@serpai/youtube',
       label: 'YouTube',
       title: 'YouTube',
     },

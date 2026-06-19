@@ -569,6 +569,20 @@ function removeArtifactRouteIndex(path: string): void {
   }
 }
 
+export function removeCategoryAliasArtifacts(categoryRootPath: string): void {
+  if (!existsSync(categoryRootPath) || !statSync(categoryRootPath).isDirectory()) {
+    return
+  }
+
+  for (const entry of readdirSync(categoryRootPath, { withFileTypes: true })) {
+    if (entry.name === 'index.html') {
+      continue
+    }
+
+    removeArtifactPath(resolve(categoryRootPath, entry.name))
+  }
+}
+
 function normalizePublicArtifactPath(path: string): string | null {
   const normalizedPath = path
     .trim()
@@ -715,7 +729,9 @@ function createSkippedArtifactSourceRoots(input: {
   }
 
   if (input.categoryBasePath) {
-    skippedRoots.push(['categories'])
+    for (const slug of categoryArtifactSlugs) {
+      skippedRoots.push(['categories', slug])
+    }
     for (const slug of categoryArtifactSlugs) {
       skippedRoots.push([slug])
     }
@@ -1210,7 +1226,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     listingDetailSuffix: definition.sitemap.listingDetailSuffix
   })
   if (definition.sitemap.categoryBasePath) {
-    removeArtifactPath(resolve(artifactDir, 'categories'))
+    removeCategoryAliasArtifacts(resolve(artifactDir, 'categories'))
   }
   applyLegacyRootListingRedirects(artifactDir, {
     listingBasePath: definition.routes.listingBasePath,

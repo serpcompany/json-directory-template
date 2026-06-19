@@ -48,7 +48,7 @@ export function DesktopSearchForm({
       >
         <input
           ref={searchInputRef}
-          aria-label="Search listings"
+          aria-label="Search"
           type="text"
           placeholder={siteCopy.listingSearchPlaceholder}
           value={searchQuery}

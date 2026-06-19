@@ -7,6 +7,7 @@ import {
   applyListingRouteBasePath,
   copyDeployableStaticArtifactFiles,
   pruneStaticArtifactDir,
+  removeCategoryAliasArtifacts,
   removeExcludedStaticArtifactPaths,
   writeBuildInfoFile
 } from './build-site.ts'
@@ -186,9 +187,14 @@ describe('copyDeployableStaticArtifactFiles', () => {
     const sourceDir = makeTempArtifactDir()
     const artifactDir = makeTempArtifactDir()
 
+    writeFile(resolve(sourceDir, 'categories/index.html'), 'category index')
     writeFile(resolve(sourceDir, 'categories/featured/index.html'))
+    writeFile(resolve(sourceDir, 'categories/adult/index.html'))
+    writeFile(resolve(sourceDir, 'categories/site-specific/index.html'))
     writeFile(resolve(sourceDir, 'featured/index.html'))
+    writeFile(resolve(sourceDir, 'adult/index.html'))
     writeFile(resolve(sourceDir, 'products/best/featured/index.html'))
+    writeFile(resolve(sourceDir, 'products/best/adult/index.html'))
 
     copyDeployableStaticArtifactFiles(sourceDir, artifactDir, {
       artifactExcludedPaths: [],
@@ -208,9 +214,18 @@ describe('copyDeployableStaticArtifactFiles', () => {
       networkBasePath: 'network'
     })
 
-    expect(existsSync(resolve(artifactDir, 'categories'))).toBe(false)
+    expect(readFileSync(resolve(artifactDir, 'categories/index.html'), 'utf8')).toBe(
+      'category index'
+    )
+    expect(existsSync(resolve(artifactDir, 'categories/featured'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'categories/adult'))).toBe(false)
+    expect(readFileSync(resolve(artifactDir, 'categories/site-specific/index.html'), 'utf8')).toBe(
+      'test'
+    )
     expect(existsSync(resolve(artifactDir, 'featured'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'adult'))).toBe(false)
     expect(existsSync(resolve(artifactDir, 'products/best/featured/index.html'))).toBe(true)
+    expect(existsSync(resolve(artifactDir, 'products/best/adult/index.html'))).toBe(true)
   })
 })
 
@@ -251,6 +266,23 @@ describe('removeExcludedStaticArtifactPaths', () => {
     removeExcludedStaticArtifactPaths(artifactDir, ['/', '', '  '])
 
     expect(existsSync(resolve(artifactDir, 'index.html'))).toBe(true)
+  })
+})
+
+describe('removeCategoryAliasArtifacts', () => {
+  it('keeps the category index while removing category child aliases', () => {
+    const artifactDir = makeTempArtifactDir()
+    const categoriesDir = resolve(artifactDir, 'categories')
+
+    writeFile(resolve(categoriesDir, 'index.html'), 'category index')
+    writeFile(resolve(categoriesDir, 'adult/index.html'), 'adult alias')
+    writeFile(resolve(categoriesDir, 'site-specific/index.html'), 'site alias')
+
+    removeCategoryAliasArtifacts(categoriesDir)
+
+    expect(readFileSync(resolve(categoriesDir, 'index.html'), 'utf8')).toBe('category index')
+    expect(existsSync(resolve(categoriesDir, 'adult'))).toBe(false)
+    expect(existsSync(resolve(categoriesDir, 'site-specific'))).toBe(false)
   })
 })
 

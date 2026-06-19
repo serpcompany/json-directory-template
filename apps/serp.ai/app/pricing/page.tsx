@@ -24,7 +24,7 @@ export default function PricingPage() {
               Submit a downloader product for directory review.
             </p>
             <Link className="mt-4 inline-flex font-medium text-primary" href={getRoute('submit')}>
-              Submit to SERP AI
+              Submit Yours
             </Link>
           </section>
           <section className="rounded-lg border p-6">

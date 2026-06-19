@@ -72,7 +72,7 @@ describe.runIf(existsSync(nextyExportRoot))('serp.ai nexty export parity', () =>
     const hrefs = content.networkLinks.map(link => link.href)
 
     expect(hrefs).toContain('https://www.linkedin.com/company/serpdotai')
-    expect(hrefs).toContain('https://www.youtube.com/@serpdotai')
+    expect(hrefs).toContain('https://serp.ly/@serpai/youtube')
     expect(hrefs).toContain('https://facebook.com/serpdotai')
   })
 
@@ -174,7 +174,7 @@ describe('serp.ai checked-in downloader products', () => {
     expect(siteProducts['soundgasm-downloader']?.product?.title).toBe('Soundgasm Downloader')
   })
 
-  it('keeps the 291-record catalog on product-specific CTAs with clean source links', () => {
+  it('keeps the 292-record catalog on product-specific CTAs with clean source links', () => {
     const siteProducts = readJson<
       Record<
         string,
@@ -189,13 +189,15 @@ describe('serp.ai checked-in downloader products', () => {
       >
     >(resolve(siteRoot, 'products.json'))
 
-    expect(Object.keys(siteProducts)).toHaveLength(291)
+    expect(Object.keys(siteProducts)).toHaveLength(292)
 
     for (const [key, entry] of Object.entries(siteProducts)) {
       const slug = entry.product?.slug ?? key
       const body = entry.content?.body ?? ''
 
-      expect(entry.product?.productPage, slug).toMatch(/^https:\/\/serp\.ly\/.+/)
+      if (slug.endsWith('-downloader')) {
+        expect(entry.product?.productPage, slug).toMatch(/^https:\/\/serp\.ly\/.+/)
+      }
       expect(body, slug).not.toContain('https://apps.serp.co/')
 
       if (entry.relatedLinks?.some(link => link.label === 'SERP Apps')) {

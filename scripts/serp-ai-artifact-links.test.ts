@@ -19,6 +19,7 @@ const liveCategoryPaths = [
   '/products/best/livestream-downloaders/',
   '/products/best/movies-and-tv-downloaders/',
   '/products/best/movies-tv/',
+  '/products/best/product-launch-websites/',
   '/products/best/social-media/',
   '/products/best/social-media-downloaders/',
   '/products/best/video-downloaders/'
@@ -69,6 +70,7 @@ describe('serp.ai artifact links', () => {
   it('emits route indexes for live product, category, and brands pages', () => {
     expect(routeIndexExists('/products/tiktok-downloader/reviews')).toBe(true)
     expect(routeIndexExists('/products/best/video-downloaders')).toBe(true)
+    expect(routeIndexExists('/categories')).toBe(true)
     expect(routeIndexExists('/brands')).toBe(true)
   })
 
@@ -114,9 +116,9 @@ describe('serp.ai artifact links', () => {
     ])
   })
 
-  it('matches live sitemap counts and category URL shape', () => {
+  it('matches accepted sitemap counts and category URL shape', () => {
     expect(readSitemapLocs('sitemaps/pages/1.xml')).toHaveLength(13)
-    expect(readSitemapLocs('sitemaps/directory/1.xml')).toHaveLength(291)
+    expect(readSitemapLocs('sitemaps/directory/1.xml')).toHaveLength(292)
     expect(
       readSitemapLocs('sitemaps/categories/1.xml')
         .map(url => new URL(url).pathname)
@@ -149,7 +151,7 @@ describe('serp.ai artifact links', () => {
     expect(html).toContain('https://www.reddit.com/r/serpdotai/')
     expect(html).toContain('https://x.com/serpdotai')
     expect(html).toContain('https://www.linkedin.com/company/serpdotai')
-    expect(html).toContain('https://www.youtube.com/@serpdotai')
+    expect(html).toContain('https://serp.ly/@serpai/youtube')
     expect(html).toContain('https://facebook.com/serpdotai')
   })
 

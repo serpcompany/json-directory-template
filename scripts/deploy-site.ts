@@ -14,11 +14,22 @@ const workspaceRoot = resolve(process.cwd())
 export interface DeployPlan {
   branch: string
   buildDir: string
+  siteId: string
+}
+
+export interface GitHubPagesRepoSyncDeployPlan extends DeployPlan {
   preserve: string[]
   repoUrl: string
-  siteId: string
   strategy: 'github-pages-repo-sync'
 }
+
+export interface CloudflarePagesDirectUploadDeployPlan extends DeployPlan {
+  accountId: string
+  projectName: string
+  strategy: 'cloudflare-pages-direct-upload'
+}
+
+export type SiteDeployPlan = GitHubPagesRepoSyncDeployPlan | CloudflarePagesDirectUploadDeployPlan
 
 export interface DeploySourceState {
   ahead: number
@@ -70,7 +81,7 @@ export function assertDeployTargetOverrideAllowed(env: NodeJS.ProcessEnv = proce
 export function buildDeployPlan(
   input: SiteInputTarget,
   options: DeployPlanOptions = {}
-): DeployPlan {
+): SiteDeployPlan {
   const definition = loadCheckedInSiteFromInput(input)
   const env = options.env ?? process.env
 
@@ -80,9 +91,27 @@ export function buildDeployPlan(
     throw new Error(`Site ${definition.id} does not define a deploy target`)
   }
 
+  const branch = env.DEPLOY_BRANCH || definition.deploy.branch
+  const buildDir = resolveSiteArtifactDir(definition)
+
+  if (definition.deploy.strategy === 'cloudflare-pages-direct-upload') {
+    if (env.DEPLOY_REPO_URL) {
+      throw new Error('DEPLOY_REPO_URL is not supported for Cloudflare Pages deploy targets.')
+    }
+
+    return {
+      accountId: definition.deploy.accountId,
+      branch,
+      buildDir,
+      projectName: definition.deploy.projectName,
+      siteId: definition.id,
+      strategy: definition.deploy.strategy
+    }
+  }
+
   return {
-    branch: env.DEPLOY_BRANCH || definition.deploy.branch,
-    buildDir: resolveSiteArtifactDir(definition),
+    branch,
+    buildDir,
     preserve: definition.deploy.preserve,
     repoUrl: env.DEPLOY_REPO_URL || definition.deploy.repoUrl,
     siteId: definition.id,
@@ -213,15 +242,39 @@ export function runDeploySite(input: SiteInputTarget, dryRun = false): void {
     throw new Error(`Build artifact not found at ${plan.buildDir}. Run ${targetHint} first.`)
   }
 
-  const result = spawnSync('bash', ['scripts/deploy-to-repo.sh', plan.repoUrl, plan.branch], {
-    cwd: workspaceRoot,
-    env: {
-      ...process.env,
-      DEPLOY_BUILD_DIR: plan.buildDir,
-      DEPLOY_PRESERVE_PATHS: plan.preserve.join('\n')
-    },
-    stdio: 'inherit'
-  })
+  const result =
+    plan.strategy === 'cloudflare-pages-direct-upload'
+      ? spawnSync(
+          'npx',
+          [
+            '-y',
+            'wrangler',
+            'pages',
+            'deploy',
+            plan.buildDir,
+            '--project-name',
+            plan.projectName,
+            '--branch',
+            plan.branch
+          ],
+          {
+            cwd: workspaceRoot,
+            env: {
+              ...process.env,
+              CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID || plan.accountId
+            },
+            stdio: 'inherit'
+          }
+        )
+      : spawnSync('bash', ['scripts/deploy-to-repo.sh', plan.repoUrl, plan.branch], {
+          cwd: workspaceRoot,
+          env: {
+            ...process.env,
+            DEPLOY_BUILD_DIR: plan.buildDir,
+            DEPLOY_PRESERVE_PATHS: plan.preserve.join('\n')
+          },
+          stdio: 'inherit'
+        })
 
   if (result.status !== 0) {
     throw new Error(`Deploy failed with exit code ${result.status ?? 1}`)

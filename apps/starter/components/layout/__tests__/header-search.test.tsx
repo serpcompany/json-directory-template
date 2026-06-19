@@ -20,7 +20,7 @@ describe('header search copy', () => {
     render(<DesktopSearchForm {...baseProps} />)
 
     expect(
-      screen.getByPlaceholderText(/search listings, categories, and descriptions\.\.\./i)
+      screen.getByPlaceholderText(/Search/i)
     ).toBeInTheDocument()
   })
 
@@ -39,7 +39,7 @@ describe('header search copy', () => {
     )
 
     expect(
-      screen.getByPlaceholderText(/search listings, categories, and descriptions\.\.\./i)
+      screen.getByPlaceholderText(/Search/i)
     ).toBeInTheDocument()
   })
 })
