@@ -140,20 +140,16 @@ describe('build-and-deploy workflow', () => {
     )
   })
 
-  it('uses the configured deploy secrets for each deploy strategy', () => {
+  it('uses the GitHub Pages deploy secret for target repo syncs', () => {
     const workflow = loadWorkflow()
     const deployJob = workflow.jobs.deploy
     const deployStep = deployJob.steps?.find(step => step.name === 'Deploy')
     const authStep = deployJob.steps?.find(step => step.name === 'Verify deploy auth')
 
     expect(deployStep).toBeDefined()
-    expect(deployStep?.env?.CLOUDFLARE_API_TOKEN).toBe(`\${{ secrets.CLOUDFLARE_API_TOKEN }}`)
     expect(deployStep?.env?.DEPLOY_TOKEN).toBe(`\${{ secrets.GH_PAT }}`)
     expect(authStep?.if).toBeUndefined()
-    expect(authStep?.env?.CLOUDFLARE_API_TOKEN).toBe(`\${{ secrets.CLOUDFLARE_API_TOKEN }}`)
     expect(authStep?.env?.DEPLOY_TOKEN).toBe(`\${{ secrets.GH_PAT }}`)
-    expect(authStep?.env?.SITE_ID).toBe(`\${{ matrix.target.siteId }}`)
-    expect(authStep?.run).toContain('Missing CLOUDFLARE_API_TOKEN secret required')
     expect(authStep?.run).toContain('Missing GH_PAT secret required for cross-repo deploy.')
   })
 

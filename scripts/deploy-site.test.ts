@@ -70,12 +70,12 @@ describe('buildDeployPlan', () => {
 
   it('builds a deterministic deploy plan for serp.ai', () => {
     expect(buildDeployPlan({ siteId: 'serp.ai' })).toEqual({
-      accountId: 'cec5f04e1d18bcc65f2be0aefb04f059',
       branch: 'main',
       buildDir: expect.stringMatching(/dist\/sites\/serp.ai$/),
-      projectName: 'serp-ai',
+      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
+      repoUrl: 'https://github.com/serpcompany/serp.ai.git',
       siteId: 'serp.ai',
-      strategy: 'cloudflare-pages-direct-upload'
+      strategy: 'github-pages-repo-sync'
     })
   })
 
@@ -112,20 +112,6 @@ describe('buildDeployPlan', () => {
       branch: 'emergency',
       repoUrl: 'https://github.com/example/other.git'
     })
-  })
-
-  it('rejects GitHub repo overrides for Cloudflare Pages deploy targets', () => {
-    expect(() =>
-      buildDeployPlan(
-        { siteId: 'serp.ai' },
-        {
-          env: {
-            ALLOW_DEPLOY_TARGET_OVERRIDE: 'true',
-            DEPLOY_REPO_URL: 'https://github.com/example/other.git'
-          }
-        }
-      )
-    ).toThrow(/DEPLOY_REPO_URL is not supported/)
   })
 
   it('enables GitHub Pages in the target deploy workflow', () => {
