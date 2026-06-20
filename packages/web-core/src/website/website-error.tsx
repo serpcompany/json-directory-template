@@ -22,7 +22,7 @@ export interface WebsiteErrorProps {
 }
 
 export function WebsiteError({
-  slots: { Alert, AlertDescription, AlertTitle },
+  slots: { Alert, AlertDescription, AlertTitle }
 }: WebsiteErrorProps) {
   return (
     <div className="container mx-auto px-6 py-8">

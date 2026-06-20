@@ -237,9 +237,7 @@ function isRedirectOrErrorShell(path: string): boolean {
 }
 
 function getHtmlAttribute(tag: string, attributeName: string): string | undefined {
-  const match = tag.match(
-    new RegExp(`\\s${attributeName}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, 'i')
-  )
+  const match = tag.match(new RegExp(`\\s${attributeName}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, 'i'))
 
   return match?.[1] ?? match?.[2]
 }
