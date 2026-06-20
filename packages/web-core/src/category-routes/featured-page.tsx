@@ -7,7 +7,7 @@ import {
   type WebsiteMetadata
 } from '../content-query'
 import { AppSidebar } from '../layout/app-sidebar'
-import { getRoute } from '../routes'
+import { getFeaturedCategoryRoute } from '../routes'
 import { NewsletterSection } from '../sections/newsletter-section'
 import { generateBaseMetadata, SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL } from '../seo-config'
 import { siteConfig } from '../site-config'
@@ -45,7 +45,7 @@ export const featuredCategoryPageMetadata: Metadata = generateBaseMetadata({
     'directory',
     'resources'
   ],
-  path: getRoute('category.page', { category: 'featured' })
+  path: getFeaturedCategoryRoute()
 })
 
 export function FeaturedCategoryRoutePage({
@@ -67,7 +67,7 @@ export function FeaturedCategoryRoutePage({
     breadcrumb,
     headingIcon
   } = slots
-  const featuredPath = getRoute('category.page', { category: 'featured' })
+  const featuredPath = getFeaturedCategoryRoute()
   const featuredUrl = `${SITE_PUBLIC_URL}${featuredPath}`
   const featuredProjectCards = featuredProjects.map(toWebsiteBrowseCardMetadata)
   const schemaDates = resolveCollectionPageSchemaDates(featuredProjects)

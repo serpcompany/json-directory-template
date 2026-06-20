@@ -1,11 +1,8 @@
 import type { MetadataRoute } from 'next'
 import { NextResponse } from 'next/server'
 import { categories } from './categories'
-import {
-  getActiveCategories,
-  hasFeaturedListings,
-} from './category-navigation'
-import { getRoute } from './routes'
+import { getActiveCategories, hasFeaturedListings } from './category-navigation'
+import { getFeaturedCategoryRoute, getRoute } from './routes'
 import { SITE_PUBLIC_URL } from './seo-config'
 import { siteConfig } from './site-config'
 
@@ -99,7 +96,7 @@ function renderSitemap(entries: SitemapEntry[]): string {
       const lastmod = entry.lastmod ? `<lastmod>${escapeXml(entry.lastmod)}</lastmod>` : ''
       return `<url><loc>${escapeXml(entry.loc)}</loc>${lastmod}</url>`
     }),
-    '</urlset>',
+    '</urlset>'
   ].join('')
 }
 
@@ -111,15 +108,15 @@ function renderSitemapIndex(entries: SitemapEntry[]): string {
       const lastmod = entry.lastmod ? `<lastmod>${escapeXml(entry.lastmod)}</lastmod>` : ''
       return `<sitemap><loc>${escapeXml(entry.loc)}</loc>${lastmod}</sitemap>`
     }),
-    '</sitemapindex>',
+    '</sitemapindex>'
   ].join('')
 }
 
 function toXmlResponse(xml: string): Response {
   return new Response(xml, {
     headers: {
-      'content-type': 'application/xml; charset=utf-8',
-    },
+      'content-type': 'application/xml; charset=utf-8'
+    }
   })
 }
 
@@ -199,7 +196,7 @@ function buildUrlEntries(paths: string[], baseUrl = SITE_PUBLIC_URL): SitemapEnt
 
   return sortUniquePaths(paths).map(path => ({
     lastmod: buildDate,
-    loc: toAbsoluteUrl(path, baseUrl, { trailingSlash: true }),
+    loc: toAbsoluteUrl(path, baseUrl, { trailingSlash: true })
   }))
 }
 
@@ -207,7 +204,7 @@ function getStaticPagePaths(): string[] {
   if (siteConfig.sitemap.staticPagePaths?.length) {
     return withoutConfiguredExcludedPaths([
       ...siteConfig.sitemap.staticPagePaths,
-      ...(siteConfig.sitemap.additionalPathsByGroup?.pages ?? []),
+      ...(siteConfig.sitemap.additionalPathsByGroup?.pages ?? [])
     ])
   }
 
@@ -221,7 +218,7 @@ function getStaticPagePaths(): string[] {
     getRoute('terms'),
     ...(siteConfig.features.showBrands ? [getRoute('brands')] : []),
     ...(siteConfig.features.showProjects ? [getRoute('projects')] : []),
-    ...(siteConfig.sitemap.additionalPathsByGroup?.pages ?? []),
+    ...(siteConfig.sitemap.additionalPathsByGroup?.pages ?? [])
   ])
 }
 
@@ -230,10 +227,7 @@ function getDocsPaths(getDocs: (() => DocSitemapEntry[]) | undefined): string[] 
     return []
   }
 
-  return [
-    getRoute('docs.list'),
-    ...getDocs().map(doc => getRoute('docs.doc', { slug: doc.slug })),
-  ]
+  return [getRoute('docs.list'), ...getDocs().map(doc => getRoute('docs.doc', { slug: doc.slug }))]
 }
 
 function getPostsPaths(getGuides: (() => GuideSitemapEntry[]) | undefined): string[] {
@@ -243,23 +237,23 @@ function getPostsPaths(getGuides: (() => GuideSitemapEntry[]) | undefined): stri
 
   return [
     getRoute('guides.list'),
-    ...getGuides().map(guide => getRoute('guides.guide', { slug: guide.slug })),
+    ...getGuides().map(guide => getRoute('guides.guide', { slug: guide.slug }))
   ]
 }
 
 function getListingPaths(getWebsites: () => WebsiteSitemapEntry[]): SitemapEntry[] {
   return getWebsites()
     .map(website => ({
-    lastmod: new Date(website.publishedAt).toISOString(),
-    loc: toAbsoluteUrl(
-      appendPathSegment(
-        getRoute('listing.detail', { slug: website.slug }),
-        siteConfig.sitemap.listingDetailSuffix
-      ),
-      SITE_PUBLIC_URL,
-      { trailingSlash: true }
-    ),
-  }))
+      lastmod: new Date(website.publishedAt).toISOString(),
+      loc: toAbsoluteUrl(
+        appendPathSegment(
+          getRoute('listing.detail', { slug: website.slug }),
+          siteConfig.sitemap.listingDetailSuffix
+        ),
+        SITE_PUBLIC_URL,
+        { trailingSlash: true }
+      )
+    }))
     .filter(entry => {
       const excludedPaths = new Set(
         (siteConfig.sitemap.excludedPaths ?? []).map(path => normalizeComparablePath(path))
@@ -283,16 +277,12 @@ function getTaxonomyPaths(getWebsites: () => WebsiteSitemapEntry[]): string[] {
   }
 
   if (hasFeaturedListings(websites)) {
-    if (siteConfig.sitemap.categoryBasePath) {
-      paths.push(`/${siteConfig.sitemap.categoryBasePath}/featured`)
-    } else {
-      paths.push(getRoute('category.page', { category: 'featured' }))
-    }
+    paths.push(getFeaturedCategoryRoute())
   }
 
   return withoutConfiguredExcludedPaths([
     ...paths,
-    ...(siteConfig.sitemap.additionalPathsByGroup?.taxonomies ?? []),
+    ...(siteConfig.sitemap.additionalPathsByGroup?.taxonomies ?? [])
   ])
 }
 
@@ -301,31 +291,29 @@ function getIndexEntries(loaders: SitemapContentLoaders): SitemapEntry[] {
   const entries: SitemapEntry[] = [
     {
       lastmod: buildDate,
-      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.pages || '/pages-sitemap.xml'),
+      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.pages || '/pages-sitemap.xml')
     },
     {
       lastmod: buildDate,
-      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.listings || '/listings-sitemap.xml'),
+      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.listings || '/listings-sitemap.xml')
     },
     {
       lastmod: buildDate,
-      loc: toAbsoluteUrl(
-        siteConfig.sitemap.pathByGroup?.taxonomies || '/taxonomies-sitemap.xml'
-      ),
-    },
+      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.taxonomies || '/taxonomies-sitemap.xml')
+    }
   ]
 
   if (getDocsPaths(loaders.getDocs).length > 0) {
     entries.push({
       lastmod: buildDate,
-      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.docs || '/docs-sitemap.xml'),
+      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.docs || '/docs-sitemap.xml')
     })
   }
 
   if (getPostsPaths(loaders.getGuides).length > 0) {
     entries.push({
       lastmod: buildDate,
-      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.posts || '/posts-sitemap.xml'),
+      loc: toAbsoluteUrl(siteConfig.sitemap.pathByGroup?.posts || '/posts-sitemap.xml')
     })
   }
 
@@ -337,15 +325,15 @@ export function createCanonicalRobots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: ['/'],
-      disallow: ['/404', '/500', '/submit', '/search'],
+      disallow: ['/404', '/500', '/submit', '/search']
     },
-    sitemap: toAbsoluteUrl(CANONICAL_SITEMAP_INDEX_PATH),
+    sitemap: toAbsoluteUrl(CANONICAL_SITEMAP_INDEX_PATH)
   }
 }
 
 export function createSitemapCompatibilityRedirect(): Response {
   return NextResponse.redirect(toAbsoluteUrl(CANONICAL_SITEMAP_INDEX_PATH), {
-    status: 307,
+    status: 307
   })
 }
 
@@ -362,9 +350,7 @@ export function createListingsSitemapResponse(loaders: SitemapContentLoaders): R
 }
 
 export function createTaxonomiesSitemapResponse(loaders: SitemapContentLoaders): Response {
-  return toXmlResponse(
-    renderSitemap(buildUrlEntries(getTaxonomyPaths(loaders.getWebsites)))
-  )
+  return toXmlResponse(renderSitemap(buildUrlEntries(getTaxonomyPaths(loaders.getWebsites))))
 }
 
 export function createDocsSitemapResponse(loaders: SitemapContentLoaders): Response {
@@ -372,7 +358,5 @@ export function createDocsSitemapResponse(loaders: SitemapContentLoaders): Respo
 }
 
 export function createPostsSitemapResponse(loaders: SitemapContentLoaders): Response {
-  return toXmlResponse(
-    renderSitemap(buildUrlEntries(getPostsPaths(loaders.getGuides)))
-  )
+  return toXmlResponse(renderSitemap(buildUrlEntries(getPostsPaths(loaders.getGuides))))
 }

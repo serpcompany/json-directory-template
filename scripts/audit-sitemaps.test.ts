@@ -231,6 +231,68 @@ describe('auditArtifactSitemaps', () => {
     )
   })
 
+  it('reports sitemap entries with non-matching canonical URLs', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    const sitemapIndex =
+      '<sitemapindex><sitemap><loc>https://example.com/pages-sitemap.xml</loc><lastmod>2026-06-19</lastmod></sitemap></sitemapindex>'
+    writeFile(
+      resolve(artifactDir, 'robots.txt'),
+      'Sitemap: https://example.com/sitemap-index.xml\n'
+    )
+    writeFile(resolve(artifactDir, 'sitemap-index.xml'), sitemapIndex)
+    writeFile(resolve(artifactDir, 'sitemap.xml'), sitemapIndex)
+    writeFile(
+      resolve(artifactDir, 'pages-sitemap.xml'),
+      '<urlset><url><loc>https://example.com/alias/</loc><lastmod>2026-06-19</lastmod></url></urlset>'
+    )
+    writeFile(
+      resolve(artifactDir, 'alias/index.html'),
+      '<html><head><link rel="canonical" href="https://example.com/canonical/"></head></html>'
+    )
+
+    const audit = auditArtifactSitemaps(makeSiteConfig(artifactDir))
+
+    expect(audit.issues).toContainEqual(
+      expect.objectContaining({
+        message: 'Sitemap entry canonical URL does not match the sitemap URL.',
+        severity: 'error',
+        url: 'https://example.com/alias/'
+      })
+    )
+  })
+
+  it('reports sitemap entries with noindex or nofollow robots metadata', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    const sitemapIndex =
+      '<sitemapindex><sitemap><loc>https://example.com/pages-sitemap.xml</loc><lastmod>2026-06-19</lastmod></sitemap></sitemapindex>'
+    writeFile(
+      resolve(artifactDir, 'robots.txt'),
+      'Sitemap: https://example.com/sitemap-index.xml\n'
+    )
+    writeFile(resolve(artifactDir, 'sitemap-index.xml'), sitemapIndex)
+    writeFile(resolve(artifactDir, 'sitemap.xml'), sitemapIndex)
+    writeFile(
+      resolve(artifactDir, 'pages-sitemap.xml'),
+      '<urlset><url><loc>https://example.com/private/</loc><lastmod>2026-06-19</lastmod></url></urlset>'
+    )
+    writeFile(
+      resolve(artifactDir, 'private/index.html'),
+      '<html><head><meta name="robots" content="noindex, nofollow"></head></html>'
+    )
+
+    const audit = auditArtifactSitemaps(makeSiteConfig(artifactDir))
+
+    expect(audit.issues).toContainEqual(
+      expect.objectContaining({
+        message: 'Sitemap entry has noindex or nofollow robots metadata.',
+        severity: 'error',
+        url: 'https://example.com/private/'
+      })
+    )
+  })
+
   it('reports sitemap entries that are missing lastmod', () => {
     const artifactDir = makeTempArtifactDir()
 

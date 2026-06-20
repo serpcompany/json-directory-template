@@ -236,6 +236,94 @@ function isRedirectOrErrorShell(path: string): boolean {
   return html.includes('NEXT_REDIRECT') || html.includes('__next_error__')
 }
 
+function getHtmlAttribute(tag: string, attributeName: string): string | undefined {
+  const match = tag.match(
+    new RegExp(`\\s${attributeName}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, 'i')
+  )
+
+  return match?.[1] ?? match?.[2]
+}
+
+function getCanonicalHref(html: string): string | undefined {
+  for (const tag of html.matchAll(/<link\b[^>]*>/gi)) {
+    const linkTag = tag[0]
+    const rel = getHtmlAttribute(linkTag, 'rel')
+
+    if (!rel?.split(/\s+/).some(value => value.toLowerCase() === 'canonical')) {
+      continue
+    }
+
+    return getHtmlAttribute(linkTag, 'href')
+  }
+
+  return undefined
+}
+
+function getRobotsMetaContents(html: string): string[] {
+  return [...html.matchAll(/<meta\b[^>]*>/gi)]
+    .map(match => match[0])
+    .filter(tag => {
+      const name = getHtmlAttribute(tag, 'name')?.toLowerCase()
+      return name === 'robots' || name === 'googlebot'
+    })
+    .map(tag => getHtmlAttribute(tag, 'content') ?? '')
+    .filter(Boolean)
+}
+
+function normalizeCanonicalUrl(value: string, baseUrl: string): string | null {
+  try {
+    return new URL(value, baseUrl).toString()
+  } catch {
+    return null
+  }
+}
+
+function validatePageMetadata(
+  audit: SitemapSiteAudit,
+  siteConfig: CheckedInSiteConfig,
+  sitemapUrl: string,
+  url: string,
+  html: string
+): void {
+  const canonicalHref = getCanonicalHref(html)
+
+  if (canonicalHref) {
+    const canonicalUrl = normalizeCanonicalUrl(canonicalHref, siteConfig.site.publicUrl)
+    const sitemapEntryUrl = normalizeCanonicalUrl(url, siteConfig.site.publicUrl)
+
+    if (canonicalUrl && sitemapEntryUrl && canonicalUrl !== sitemapEntryUrl) {
+      addIssue(audit, 'error', 'Sitemap entry canonical URL does not match the sitemap URL.', {
+        sitemapUrl,
+        url
+      })
+    }
+  }
+
+  if (
+    getRobotsMetaContents(html).some(content =>
+      content
+        .toLowerCase()
+        .split(/[,\s]+/)
+        .some(value => value === 'noindex' || value === 'nofollow')
+    )
+  ) {
+    addIssue(audit, 'error', 'Sitemap entry has noindex or nofollow robots metadata.', {
+      sitemapUrl,
+      url
+    })
+  }
+}
+
+function validateArtifactPageMetadata(
+  audit: SitemapSiteAudit,
+  siteConfig: CheckedInSiteConfig,
+  sitemapUrl: string,
+  url: string,
+  routeIndexPath: string
+): void {
+  validatePageMetadata(audit, siteConfig, sitemapUrl, url, readFileSync(routeIndexPath, 'utf8'))
+}
+
 function validateArtifactPageUrl(
   audit: SitemapSiteAudit,
   siteConfig: CheckedInSiteConfig,
@@ -295,7 +383,10 @@ function validateArtifactPageUrl(
       sitemapUrl,
       url
     })
+    return
   }
+
+  validateArtifactPageMetadata(audit, siteConfig, sitemapUrl, url, routeIndexPath)
 }
 
 function validateSitemapLastmods(
@@ -597,13 +688,31 @@ async function auditLivePageUrl(
     })
   }
 
-  const status = await fetchStatus(url, timeoutMs)
-  if (status !== 200) {
-    addIssue(audit, 'error', `Live sitemap entry returned ${status}.`, {
+  let response: Awaited<ReturnType<typeof fetchText>>
+  try {
+    response = await fetchText(url, timeoutMs)
+  } catch (error) {
+    addIssue(
+      audit,
+      'error',
+      `Failed to fetch live sitemap entry: ${error instanceof Error ? error.message : String(error)}`,
+      {
+        sitemapUrl,
+        url
+      }
+    )
+    return
+  }
+
+  if (response.status !== 200) {
+    addIssue(audit, 'error', `Live sitemap entry returned ${response.status}.`, {
       sitemapUrl,
       url
     })
+    return
   }
+
+  validatePageMetadata(audit, siteConfig, sitemapUrl, url, response.body)
 }
 
 async function auditLiveSitemapFile(

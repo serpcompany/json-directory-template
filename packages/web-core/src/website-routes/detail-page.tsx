@@ -8,7 +8,7 @@ import type {
   WebsiteRelatedCardMetadata
 } from '../content-query'
 import { resolveListingDetailTemplate } from '../listing-detail-template'
-import { getRoute } from '../routes'
+import { getCanonicalListingListRoute, getRoute } from '../routes'
 import { generateWebsiteDetailSchema } from '../schema'
 import { generateDynamicMetadata } from '../seo-config'
 import { siteConfig } from '../site-config'
@@ -146,7 +146,7 @@ export function WebsiteDetailRoutePage({
   const breadcrumbItems = [
     {
       name: siteCopy.listingName.pluralTitle,
-      href: getRoute('listing.list')
+      href: getCanonicalListingListRoute()
     },
     {
       name: project.name,

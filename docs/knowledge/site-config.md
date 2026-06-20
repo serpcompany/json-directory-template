@@ -153,6 +153,13 @@ export type CheckedInSiteConfig = {
     listingBasePath: string;
     networkBasePath: string;
   };
+  sitemap: {
+    artifactExcludedPaths?: string[];
+    categoryBasePath?: string;
+    excludedPaths?: string[];
+    featuredCategoryPath?: string;
+    staticPagePaths?: string[];
+  };
   features: {
     showAuth: boolean;
     showDocs: boolean;
@@ -183,6 +190,7 @@ export type CheckedInSiteConfig = {
 | `content.listingSource`                | Yes      | Declares where the site's listing data comes from.                                                                                  |
 | `copy.*`                               | Yes      | Small site-facing wording contract for listing terminology, optional category display labels, and configurable docs/network labels. |
 | `routes.*`                             | Yes      | Controls the public base paths for listings, docs, and the site-owned network page.                                                 |
+| `sitemap.*`                            | No       | Controls sitemap output, static artifact exclusions, and optional featured-category canonical path overrides.                       |
 | `features.*`                           | Yes      | Controls starter-owned optional surfaces.                                                                                           |
 | `deploy.*`                             | No       | Required for deploy runs; omitted only for non-deploy examples.                                                                     |
 

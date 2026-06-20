@@ -106,6 +106,14 @@ function getFooterSocialLinks(): SocialLink[] {
   return Array.from(socialLinks.values())
 }
 
+function hasStaticPagePath(path: string): boolean {
+  const normalizedPath = `/${path.replace(/^\/+|\/+$/g, '')}`
+
+  return (siteConfig.sitemap.staticPagePaths ?? []).some(
+    staticPath => `/${staticPath.replace(/^\/+|\/+$/g, '')}` === normalizedPath
+  )
+}
+
 /**
  * Footer component with site navigation and external links
  * Features: Bold typography, refined spacing, clean layout
@@ -120,6 +128,21 @@ export function Footer() {
     }
   ]
   const resourceLinks: FooterLink[] = []
+  const legalLinks: FooterLink[] = []
+
+  if (hasStaticPagePath('/pricing')) {
+    directoryLinks.push({
+      href: getRoute('pricing'),
+      label: 'Pricing'
+    })
+  }
+
+  if (hasStaticPagePath('/contact')) {
+    directoryLinks.push({
+      href: getRoute('contact'),
+      label: 'Contact'
+    })
+  }
 
   if (siteConfig.features.showProjects) {
     resourceLinks.push({
@@ -148,6 +171,50 @@ export function Footer() {
       label: 'Posts'
     })
   }
+
+  if (!siteConfig.features.showGuides && hasStaticPagePath('/posts')) {
+    resourceLinks.push({
+      href: getRoute('guides.list'),
+      label: 'Posts'
+    })
+  }
+
+  if (hasStaticPagePath('/sponsor')) {
+    resourceLinks.push({
+      href: getRoute('sponsor'),
+      label: 'Sponsor'
+    })
+  }
+
+  if (hasStaticPagePath('/legal')) {
+    legalLinks.push({
+      href: '/legal/',
+      label: 'Legal'
+    })
+  }
+
+  legalLinks.push(
+    {
+      href: getRoute('about'),
+      label: 'About'
+    },
+    {
+      href: getRoute('privacy'),
+      label: 'Privacy Policy'
+    },
+    {
+      href: getRoute('terms'),
+      label: 'Terms of Service'
+    },
+    {
+      href: getRoute('affiliateDisclosure'),
+      label: 'Affiliate Disclosure'
+    },
+    {
+      href: getRoute('dmca'),
+      label: 'DMCA'
+    }
+  )
 
   return (
     <footer className="border-t border-border/50 py-12 md:py-16 bg-muted/30">
@@ -212,31 +279,13 @@ export function Footer() {
                 Legal
               </h4>
               <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href={getRoute('about')} className="hover:text-foreground">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link href={getRoute('privacy')} className="hover:text-foreground">
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href={getRoute('terms')} className="hover:text-foreground">
-                    Terms of Service
-                  </Link>
-                </li>
-                <li>
-                  <Link href={getRoute('affiliateDisclosure')} className="hover:text-foreground">
-                    Affiliate Disclosure
-                  </Link>
-                </li>
-                <li>
-                  <Link href={getRoute('dmca')} className="hover:text-foreground">
-                    DMCA
-                  </Link>
-                </li>
+                {legalLinks.map(link => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="hover:text-foreground">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

@@ -540,10 +540,25 @@ describe('validateCheckedInSiteConfig', () => {
     )
   })
 
-  it('rejects static sitemap page paths that are also excluded', () => {
+  it('allows static sitemap page paths to be omitted from sitemap output', () => {
+    const validConfig = cloneDefaultSiteConfig()
+    validConfig.sitemap.staticPagePaths = ['/', '/search']
+    validConfig.sitemap.excludedPaths = ['/search']
+
+    expect(() => validateCheckedInSiteConfig(validConfig)).not.toThrow()
+  })
+
+  it('accepts a configured featured category route path', () => {
+    const validConfig = cloneDefaultSiteConfig()
+    validConfig.sitemap.featuredCategoryPath = '/categories/featured'
+
+    expect(() => validateCheckedInSiteConfig(validConfig)).not.toThrow()
+  })
+
+  it('rejects static sitemap page paths that are also artifact-excluded', () => {
     const invalidConfig = cloneDefaultSiteConfig()
     invalidConfig.sitemap.staticPagePaths = ['/', '/search']
-    invalidConfig.sitemap.excludedPaths = ['/search']
+    invalidConfig.sitemap.artifactExcludedPaths = ['/search']
 
     let error: unknown
 
@@ -557,7 +572,7 @@ describe('validateCheckedInSiteConfig', () => {
     expect((error as ZodError).issues).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          message: 'sitemap.staticPagePaths cannot also be excluded: /search.',
+          message: 'sitemap.staticPagePaths cannot also be artifact-excluded: /search.',
           path: ['sitemap', 'staticPagePaths']
         })
       ])

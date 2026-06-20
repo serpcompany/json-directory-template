@@ -1,6 +1,6 @@
 import type { ComponentType, ReactNode } from 'react'
 import type { WebsiteBrowseCardMetadata, WebsiteRelatedCardMetadata } from '../content-query'
-import { getRoute } from '../routes'
+import { getFeaturedCategoryRoute } from '../routes'
 
 type SectionProps = {
   title: string
@@ -33,9 +33,7 @@ export function FeaturedProjectsSection({
     <Section
       title="Featured Listings"
       description="Discover standout listings from this directory"
-      viewAllHref={
-        hasFeaturedListings ? getRoute('category.page', { category: 'featured' }) : undefined
-      }
+      viewAllHref={hasFeaturedListings ? getFeaturedCategoryRoute() : undefined}
       viewAllText={hasFeaturedListings ? 'All featured' : undefined}
     >
       {projects.length > 0 && <LLMGrid items={projects} />}

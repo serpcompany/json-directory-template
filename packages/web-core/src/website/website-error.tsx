@@ -1,7 +1,7 @@
 import { AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 import type { ComponentType, ReactNode } from 'react'
-import { getRoute } from '../routes'
+import { getCanonicalListingListRoute } from '../routes'
 
 type AlertProps = {
   children: ReactNode
@@ -31,7 +31,7 @@ export function WebsiteError({
         <AlertTitle>Error loading website</AlertTitle>
         <AlertDescription>
           There was a problem loading this website. Please try again later or{' '}
-          <Link href={getRoute('listing.list')} className="underline font-medium">
+          <Link href={getCanonicalListingListRoute()} className="underline font-medium">
             return to the websites list
           </Link>
           .

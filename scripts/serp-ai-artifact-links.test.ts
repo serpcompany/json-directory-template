@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { extname, join, resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 const artifactRoot = resolve(process.cwd(), 'dist/sites/serp.ai')
@@ -9,18 +9,12 @@ const localBrandsJsonPath = resolve(process.cwd(), 'packages/web-core/src/data/n
 const liveCategoryPaths = [
   '/products/best/adult/',
   '/products/best/course-platform-downloaders/',
-  '/products/best/course-platforms/',
   '/products/best/fansite-downloaders/',
   '/products/best/gif-downloaders/',
-  '/products/best/image-downloader/',
   '/products/best/image-downloaders/',
-  '/products/best/image-hosting/',
-  '/products/best/livestream/',
   '/products/best/livestream-downloaders/',
   '/products/best/movies-and-tv-downloaders/',
-  '/products/best/movies-tv/',
   '/products/best/product-launch-websites/',
-  '/products/best/social-media/',
   '/products/best/social-media-downloaders/',
   '/products/best/video-downloaders/'
 ]
@@ -32,6 +26,35 @@ function readArtifactHtml(relativePath: string): string {
 function routeIndexExists(publicPath: string): boolean {
   const normalizedPath = publicPath.replace(/^\/+|\/+$/g, '')
   return existsSync(join(artifactRoot, normalizedPath, 'index.html'))
+}
+
+function normalizePublicPath(publicPath: string): string {
+  const normalizedPath = publicPath.replace(/^\/+|\/+$/g, '')
+  return normalizedPath ? `/${normalizedPath}` : '/'
+}
+
+function artifactPathExists(publicPath: string): boolean {
+  const normalizedPath = normalizePublicPath(publicPath)
+
+  if (normalizedPath === '/') {
+    return existsSync(join(artifactRoot, 'index.html'))
+  }
+
+  if (extname(normalizedPath)) {
+    return existsSync(join(artifactRoot, normalizedPath.slice(1)))
+  }
+
+  return routeIndexExists(normalizedPath)
+}
+
+function readRouteHtml(publicPath: string): string | null {
+  const normalizedPath = normalizePublicPath(publicPath)
+  const routePath =
+    normalizedPath === '/'
+      ? join(artifactRoot, 'index.html')
+      : join(artifactRoot, normalizedPath.slice(1), 'index.html')
+
+  return existsSync(routePath) ? readFileSync(routePath, 'utf8') : null
 }
 
 function listArtifactFiles(root: string, suffix: string): string[] {
@@ -59,12 +82,31 @@ function readSitemapLocs(relativePath: string): string[] {
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1] ?? '')
 }
 
+function shouldCheckInternalHref(href: string): boolean {
+  return (
+    href.startsWith('/') &&
+    !href.startsWith('//') &&
+    !href.startsWith('/_next/') &&
+    !href.startsWith('/badge/') &&
+    !href.startsWith('/fonts/') &&
+    !href.startsWith('/media/')
+  )
+}
+
 describe.runIf(existsSync(artifactRoot))('serp.ai artifact links', () => {
   it('emits route indexes for live product, category, and brands pages', () => {
     expect(routeIndexExists('/products/tiktok-downloader/reviews')).toBe(true)
     expect(routeIndexExists('/products/best/video-downloaders')).toBe(true)
+    expect(routeIndexExists('/categories/featured')).toBe(true)
     expect(routeIndexExists('/categories')).toBe(true)
     expect(routeIndexExists('/brands')).toBe(true)
+  })
+
+  it('redirects the legacy featured product category to the canonical featured page', () => {
+    const html = readRouteHtml('/products/best/featured')
+
+    expect(html).toContain('NEXT_REDIRECT')
+    expect(html).toContain('/categories/featured/')
   })
 
   it('does not keep unsuffixed product detail artifact pages', () => {
@@ -91,6 +133,47 @@ describe.runIf(existsSync(artifactRoot))('serp.ai artifact links', () => {
     expect(badLinks).toEqual([])
   })
 
+  it('emits internal links to generated non-redirect artifact pages', () => {
+    const badLinks: string[] = []
+
+    for (const filePath of listArtifactFiles(artifactRoot, '.html')) {
+      if (filePath.endsWith('/404.html')) {
+        continue
+      }
+
+      const html = readFileSync(filePath, 'utf8')
+      const hrefMatches = html.matchAll(/href="([^"]+)"/g)
+
+      for (const match of hrefMatches) {
+        const href = match[1] ?? ''
+
+        if (!shouldCheckInternalHref(href)) {
+          continue
+        }
+
+        const url = new URL(href, 'https://serp.ai')
+        const publicPath = normalizePublicPath(url.pathname)
+        const source = filePath.replace(`${artifactRoot}/`, '')
+
+        if (!artifactPathExists(publicPath)) {
+          badLinks.push(`${source}: missing ${publicPath}`)
+          continue
+        }
+
+        const targetHtml = readRouteHtml(publicPath)
+        if (
+          targetHtml?.includes('NEXT_REDIRECT') ||
+          targetHtml?.includes('__next_error__') ||
+          targetHtml?.includes('<meta http-equiv="refresh"')
+        ) {
+          badLinks.push(`${source}: redirect/error ${publicPath}`)
+        }
+      }
+    }
+
+    expect(badLinks).toEqual([])
+  })
+
   it('emits trailing-slash final page URLs in every XML sitemap', () => {
     const sitemapPaths = [
       'sitemaps/pages/1.xml',
@@ -110,13 +193,19 @@ describe.runIf(existsSync(artifactRoot))('serp.ai artifact links', () => {
   })
 
   it('matches accepted sitemap counts and category URL shape', () => {
-    expect(readSitemapLocs('sitemaps/pages/1.xml')).toHaveLength(13)
+    expect(readSitemapLocs('sitemaps/pages/1.xml')).toHaveLength(8)
     expect(readSitemapLocs('sitemaps/directory/1.xml')).toHaveLength(292)
     expect(
       readSitemapLocs('sitemaps/categories/1.xml')
         .map(url => new URL(url).pathname)
         .sort()
     ).toEqual(liveCategoryPaths.sort())
+    expect(readSitemapLocs('sitemaps/categories/1.xml').join('\n')).not.toContain(
+      '/categories/featured/'
+    )
+    expect(readSitemapLocs('sitemaps/categories/1.xml').join('\n')).not.toContain(
+      '/products/best/featured/'
+    )
   })
 
   it('does not emit duplicate legacy root sitemap files', () => {

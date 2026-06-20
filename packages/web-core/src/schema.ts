@@ -7,7 +7,7 @@ import {
 } from './seo-config';
 import { siteCopy } from './site-copy';
 import { getCategoryDisplayName } from './category-display';
-import { getRoute } from './routes';
+import { getCanonicalListingListRoute, getRoute } from './routes';
 
 export interface SchemaOrg {
   '@context': 'https://schema.org';
@@ -161,7 +161,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadataLike) {
             '@type': 'ListItem',
             position: 2,
             name: siteCopy.allLabel,
-            item: `${SITE_URL}${getRoute('listing.list')}`,
+            item: `${SITE_URL}${getCanonicalListingListRoute()}`,
           },
           {
             '@type': 'ListItem',
