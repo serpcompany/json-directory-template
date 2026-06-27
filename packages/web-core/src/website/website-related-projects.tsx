@@ -1,6 +1,6 @@
 import type { ComponentType, ReactNode } from 'react'
 import type { WebsiteRelatedCardMetadata } from '../content-query'
-import { getRoute } from '../routes'
+import { getCanonicalListingListRoute } from '../routes'
 
 type SectionProps = {
   children: ReactNode
@@ -39,7 +39,7 @@ export function WebsiteRelatedProjects({
     <section className="animate-fade-in-up opacity-0 stagger-7">
       <Section
         title="Related Entries"
-        viewAllHref={getRoute('listing.list')}
+        viewAllHref={getCanonicalListingListRoute()}
         viewAllText="Browse the directory"
         titleId="related-projects"
       >

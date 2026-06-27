@@ -521,7 +521,9 @@ export function prepareDisabledRoutePathsForStaticExport({
   }
 }
 
-function prepareDisabledRoutesForStaticExport(input: SiteInputTarget): { restore: () => void } {
+function prepareDisabledRoutesForStaticExport(input: SiteInputTarget): {
+  restore: () => void
+} {
   const definition = loadCheckedInSiteFromInput(input)
   const sourceAppPaths = resolveBuildSourceAppPaths({
     appOutDir: resolveSiteAppOutDir(definition),
@@ -570,13 +572,24 @@ function removeArtifactRouteIndex(path: string): void {
   }
 }
 
-export function removeCategoryAliasArtifacts(categoryRootPath: string): void {
+function getPreservedCategoryAliasSlugs(featuredCategoryPath: string | undefined): string[] {
+  return normalizePublicArtifactPath(featuredCategoryPath ?? '') === 'categories/featured'
+    ? ['featured']
+    : []
+}
+
+export function removeCategoryAliasArtifacts(
+  categoryRootPath: string,
+  options: { preservedSlugs?: string[] } = {}
+): void {
   if (!existsSync(categoryRootPath) || !statSync(categoryRootPath).isDirectory()) {
     return
   }
 
+  const preservedSlugs = new Set(options.preservedSlugs ?? [])
+
   for (const entry of readdirSync(categoryRootPath, { withFileTypes: true })) {
-    if (entry.name === 'index.html') {
+    if (entry.name === 'index.html' || preservedSlugs.has(entry.name)) {
       continue
     }
 
@@ -698,6 +711,7 @@ function createSkippedArtifactSourceRoots(input: {
   appOutDir: string
   artifactFlags: ArtifactSurfaceFlags
   categoryBasePath?: string
+  featuredCategoryPath?: string
   routeMappings: ArtifactCopyRouteMapping[]
 }): string[][] {
   const skippedRoots: string[][] = [['_not-found'], ['404'], ['operator']]
@@ -730,7 +744,15 @@ function createSkippedArtifactSourceRoots(input: {
   }
 
   if (input.categoryBasePath) {
+    const preservedCategoryAliasSlugs = new Set(
+      getPreservedCategoryAliasSlugs(input.featuredCategoryPath)
+    )
+
     for (const slug of categoryArtifactSlugs) {
+      if (preservedCategoryAliasSlugs.has(slug)) {
+        continue
+      }
+
       skippedRoots.push(['categories', slug])
     }
     for (const slug of categoryArtifactSlugs) {
@@ -822,6 +844,7 @@ export function copyDeployableStaticArtifactFiles(
     brandsBasePath: string
     categoryBasePath?: string
     docsBasePath: string
+    featuredCategoryPath?: string
     listingBasePath: string
     listingDetailSuffix?: string
     networkBasePath: string
@@ -840,6 +863,7 @@ export function copyDeployableStaticArtifactFiles(
     appOutDir,
     artifactFlags: input.artifactFlags,
     categoryBasePath: input.categoryBasePath,
+    featuredCategoryPath: input.featuredCategoryPath,
     routeMappings
   })
   const excludedRouteSegments = input.artifactExcludedPaths
@@ -1264,6 +1288,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     brandsBasePath: definition.routes.brandsBasePath,
     categoryBasePath: definition.sitemap.categoryBasePath,
     docsBasePath: definition.routes.docsBasePath,
+    featuredCategoryPath: definition.sitemap.featuredCategoryPath,
     listingBasePath: definition.routes.listingBasePath,
     listingDetailSuffix: definition.sitemap.listingDetailSuffix,
     networkBasePath: definition.routes.networkBasePath
@@ -1285,7 +1310,9 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     listingDetailSuffix: definition.sitemap.listingDetailSuffix
   })
   if (definition.sitemap.categoryBasePath) {
-    removeCategoryAliasArtifacts(resolve(artifactDir, 'categories'))
+    removeCategoryAliasArtifacts(resolve(artifactDir, 'categories'), {
+      preservedSlugs: getPreservedCategoryAliasSlugs(definition.sitemap.featuredCategoryPath)
+    })
   }
   applyLegacyRootListingRedirects(artifactDir, {
     listingBasePath: definition.routes.listingBasePath,

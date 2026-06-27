@@ -1,34 +1,32 @@
-'use client';
+'use client'
 
-import { ExternalLink, Trophy } from 'lucide-react';
-import Link from 'next/link';
-import { FavoritesLink } from '../ui/favorites-link';
-import { getCategoryDisplayName } from '../category-display';
-import { categories } from '../categories';
-import { externalResources } from '../external-resources';
-import { getRoute } from '../routes';
-import { siteConfig } from '../site-config';
+import { ExternalLink, Trophy } from 'lucide-react'
+import Link from 'next/link'
+import { categories } from '../categories'
+import { getCategoryDisplayName } from '../category-display'
+import { externalResources } from '../external-resources'
+import { getFeaturedCategoryRoute, getRoute } from '../routes'
+import { siteConfig } from '../site-config'
+import { FavoritesLink } from '../ui/favorites-link'
 
 export interface AppSidebarProps {
-  availableCategorySlugs?: string[];
-  currentCategory?: string;
-  featuredCount?: number;
-  showFeaturedCategory?: boolean;
+  availableCategorySlugs?: string[]
+  currentCategory?: string
+  featuredCount?: number
+  showFeaturedCategory?: boolean
 }
 
 export function AppSidebar({
   availableCategorySlugs,
   currentCategory,
   featuredCount = 0,
-  showFeaturedCategory = featuredCount > 0,
+  showFeaturedCategory = featuredCount > 0
 }: AppSidebarProps) {
   const showExternalResources =
-    siteConfig.features.showExternalResources && externalResources.length > 0;
+    siteConfig.features.showExternalResources && externalResources.length > 0
   const availableCategories = availableCategorySlugs
-    ? categories.filter((category) =>
-        availableCategorySlugs.includes(category.slug)
-      )
-    : categories;
+    ? categories.filter(category => availableCategorySlugs.includes(category.slug))
+    : categories
 
   return (
     <div className="sticky top-16 hidden h-[calc(100vh-4rem)] w-[240px] max-w-[240px] min-w-[240px] overflow-y-auto border-r sm:block">
@@ -37,9 +35,7 @@ export function AppSidebar({
 
         {siteConfig.features.showFavorites ? (
           <div>
-            <h3 className="font-semibold text-sm mb-4 text-muted-foreground">
-              My Collection
-            </h3>
+            <h3 className="font-semibold text-sm mb-4 text-muted-foreground">My Collection</h3>
             <nav className="space-y-1">
               <FavoritesLink />
             </nav>
@@ -47,13 +43,11 @@ export function AppSidebar({
         ) : null}
 
         <div>
-          <h3 className="font-semibold text-sm mb-4 text-muted-foreground">
-            Categories
-          </h3>
+          <h3 className="font-semibold text-sm mb-4 text-muted-foreground">Categories</h3>
           <nav className="space-y-1">
             {showFeaturedCategory ? (
               <Link
-                href={getRoute('category.page', { category: 'featured' })}
+                href={getFeaturedCategoryRoute()}
                 className="flex items-center justify-between gap-2 px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors cursor-pointer"
               >
                 <div className="flex items-center gap-2">
@@ -67,7 +61,7 @@ export function AppSidebar({
                 )}
               </Link>
             ) : null}
-            {availableCategories.map((category) => (
+            {availableCategories.map(category => (
               <Link
                 key={category.slug}
                 href={getRoute('category.page', { category: category.slug })}
@@ -86,11 +80,9 @@ export function AppSidebar({
 
         {showExternalResources ? (
           <div>
-            <h3 className="font-semibold text-sm mb-4 text-muted-foreground">
-              Resources
-            </h3>
+            <h3 className="font-semibold text-sm mb-4 text-muted-foreground">Resources</h3>
             <nav className="space-y-1">
-              {externalResources.map((resource) => (
+              {externalResources.map(resource => (
                 <Link
                   key={resource.slug}
                   href={resource.url}
@@ -110,5 +102,5 @@ export function AppSidebar({
         ) : null}
       </div>
     </div>
-  );
+  )
 }

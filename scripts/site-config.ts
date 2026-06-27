@@ -130,6 +130,10 @@ const sitemapConfigSchema = z
       .regex(/^[a-z0-9-]+(?:\/[a-z0-9-]+)*$/)
       .optional(),
     excludedPaths: z.array(z.string().regex(/^\/(?:[a-z0-9-]+\/?)*$/)).optional(),
+    featuredCategoryPath: z
+      .string()
+      .regex(/^\/(?:[a-z0-9-]+\/?)*$/)
+      .optional(),
     indexGroupOrder: z
       .array(z.enum(['docs', 'listings', 'pages', 'posts', 'taxonomies']))
       .optional(),
@@ -179,19 +183,19 @@ const sitemapConfigSchema = z
       seenOutputPaths.set(normalizedPath, group)
     }
 
-    const excludedPaths = new Set(
-      [...(sitemap.excludedPaths ?? []), ...(sitemap.artifactExcludedPaths ?? [])].map(path =>
-        normalizeSitemapPath(path)
-      )
+    const artifactExcludedPaths = new Set(
+      (sitemap.artifactExcludedPaths ?? []).map(path => normalizeSitemapPath(path))
     )
     const excludedStaticPagePaths = (sitemap.staticPagePaths ?? [])
       .map(path => normalizeSitemapPath(path))
-      .filter(path => excludedPaths.has(path))
+      .filter(path => artifactExcludedPaths.has(path))
 
     if (excludedStaticPagePaths.length > 0) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `sitemap.staticPagePaths cannot also be excluded: ${excludedStaticPagePaths.join(', ')}.`,
+        message: `sitemap.staticPagePaths cannot also be artifact-excluded: ${excludedStaticPagePaths.join(
+          ', '
+        )}.`,
         path: ['staticPagePaths']
       })
     }

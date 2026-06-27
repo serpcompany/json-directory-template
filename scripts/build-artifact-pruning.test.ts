@@ -227,6 +227,52 @@ describe('copyDeployableStaticArtifactFiles', () => {
     expect(existsSync(resolve(artifactDir, 'products/best/featured/index.html'))).toBe(true)
     expect(existsSync(resolve(artifactDir, 'products/best/adult/index.html'))).toBe(true)
   })
+
+  it('preserves a configured featured category route when a category base path is configured', () => {
+    const sourceDir = makeTempArtifactDir()
+    const artifactDir = makeTempArtifactDir()
+
+    writeFile(resolve(sourceDir, 'categories/index.html'), 'category index')
+    writeFile(resolve(sourceDir, 'categories/featured/index.html'), 'canonical featured')
+    writeFile(resolve(sourceDir, 'categories/adult/index.html'), 'adult alias')
+    writeFile(resolve(sourceDir, 'featured/index.html'), 'root featured')
+    writeFile(resolve(sourceDir, 'adult/index.html'), 'root adult')
+    writeFile(resolve(sourceDir, 'products/best/featured/index.html'), 'legacy featured redirect')
+    writeFile(resolve(sourceDir, 'products/best/adult/index.html'), 'adult category')
+
+    copyDeployableStaticArtifactFiles(sourceDir, artifactDir, {
+      artifactExcludedPaths: [],
+      artifactFlags: {
+        preservePostsRoute: false,
+        showAuth: false,
+        showBrands: false,
+        showDocs: false,
+        showFavorites: false,
+        showGuides: false,
+        showProjects: false
+      },
+      brandsBasePath: 'brands',
+      categoryBasePath: 'products/best',
+      docsBasePath: 'docs',
+      featuredCategoryPath: '/categories/featured',
+      listingBasePath: 'products',
+      networkBasePath: 'network'
+    })
+
+    expect(readFileSync(resolve(artifactDir, 'categories/index.html'), 'utf8')).toBe(
+      'category index'
+    )
+    expect(readFileSync(resolve(artifactDir, 'categories/featured/index.html'), 'utf8')).toBe(
+      'canonical featured'
+    )
+    expect(existsSync(resolve(artifactDir, 'categories/adult'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'featured'))).toBe(false)
+    expect(existsSync(resolve(artifactDir, 'adult'))).toBe(false)
+    expect(readFileSync(resolve(artifactDir, 'products/best/featured/index.html'), 'utf8')).toBe(
+      'legacy featured redirect'
+    )
+    expect(existsSync(resolve(artifactDir, 'products/best/adult/index.html'))).toBe(true)
+  })
 })
 
 describe('removeExcludedStaticArtifactPaths', () => {
@@ -283,6 +329,25 @@ describe('removeCategoryAliasArtifacts', () => {
     expect(readFileSync(resolve(categoriesDir, 'index.html'), 'utf8')).toBe('category index')
     expect(existsSync(resolve(categoriesDir, 'adult'))).toBe(false)
     expect(existsSync(resolve(categoriesDir, 'site-specific'))).toBe(false)
+  })
+
+  it('keeps configured category child aliases', () => {
+    const artifactDir = makeTempArtifactDir()
+    const categoriesDir = resolve(artifactDir, 'categories')
+
+    writeFile(resolve(categoriesDir, 'index.html'), 'category index')
+    writeFile(resolve(categoriesDir, 'featured/index.html'), 'featured page')
+    writeFile(resolve(categoriesDir, 'adult/index.html'), 'adult alias')
+
+    removeCategoryAliasArtifacts(categoriesDir, {
+      preservedSlugs: ['featured']
+    })
+
+    expect(readFileSync(resolve(categoriesDir, 'index.html'), 'utf8')).toBe('category index')
+    expect(readFileSync(resolve(categoriesDir, 'featured/index.html'), 'utf8')).toBe(
+      'featured page'
+    )
+    expect(existsSync(resolve(categoriesDir, 'adult'))).toBe(false)
   })
 })
 

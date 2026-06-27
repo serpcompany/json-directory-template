@@ -182,6 +182,28 @@ describe('writeSplitSitemaps', () => {
     expect(listingsSitemap).toContain('<loc>https://example.com/products/example-tool/</loc>')
   })
 
+  it('allows live static routes to be explicitly excluded from sitemap output', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    writeFile(resolve(artifactDir, 'index.html'))
+    writeFile(resolve(artifactDir, 'legal/privacy/index.html'))
+    writeFile(resolve(artifactDir, 'submit/index.html'))
+
+    writeSplitSitemaps(artifactDir, {
+      baseUrl: 'https://example.com',
+      defaultLastmod: DEFAULT_LASTMOD,
+      excludedPaths: ['/legal/privacy', '/submit'],
+      listingBasePath: 'products',
+      staticPagePaths: ['/', '/legal/privacy', '/submit']
+    })
+
+    const pagesSitemap = readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')
+
+    expect(pagesSitemap).toContain('<loc>https://example.com/</loc>')
+    expect(pagesSitemap).not.toContain('https://example.com/legal/privacy')
+    expect(pagesSitemap).not.toContain('https://example.com/submit')
+  })
+
   it('skips redirect and error shell route indexes from sitemap output', () => {
     const artifactDir = makeTempArtifactDir()
 

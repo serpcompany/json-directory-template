@@ -72,32 +72,29 @@ export const serpAiSiteConfig: CheckedInSiteConfigOverride = {
     listingBasePath: 'products'
   },
   sitemap: {
-    additionalPathsByGroup: {
-      taxonomies: [
-        '/products/best/course-platforms',
-        '/products/best/image-downloader',
-        '/products/best/image-hosting',
-        '/products/best/livestream',
-        '/products/best/movies-tv',
-        '/products/best/social-media'
-      ]
-    },
-    artifactExcludedPaths: [
-      '/categories/featured',
-      '/legal/cookies',
-      '/legal/privacy',
-      '/legal/terms'
-    ],
+    artifactExcludedPaths: ['/legal/cookies', '/legal/privacy', '/legal/terms'],
     categoryBasePath: 'products/best',
     excludedPaths: [
       '/categories/featured',
+      '/legal/affiliate-disclosure',
       '/legal/cookies',
+      '/legal/dmca',
       '/legal/privacy',
+      '/legal/privacy-policy',
       '/legal/terms',
+      '/legal/terms-conditions',
       '/products',
+      '/products/best/course-platforms',
       '/products/best/featured',
-      '/search'
+      '/products/best/image-downloader',
+      '/products/best/image-hosting',
+      '/products/best/livestream',
+      '/products/best/movies-tv',
+      '/products/best/social-media',
+      '/search',
+      '/submit'
     ],
+    featuredCategoryPath: '/categories/featured',
     indexGroupOrder: ['pages', 'taxonomies', 'listings'],
     listingDetailSuffix: 'reviews',
     pathByGroup: {
