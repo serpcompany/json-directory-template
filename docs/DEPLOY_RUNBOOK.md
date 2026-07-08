@@ -149,8 +149,10 @@ The public `/submit` GitHub issue intake is active for:
 
 Each active site's public issue repo is `serpcompany/<site-id>`. These repos must stay public and
 must keep Issues enabled because the static submit form opens GitHub's public issue composer.
-The target repo badge workflow is source-managed in `scripts/templates/target-verify-badge.yml`.
-For workflow-only maintenance, manually copy that template into the public issue repo as
+The target repo badge workflow is a thin caller source-managed in
+`scripts/templates/target-verify-badge.yml`; the implementation lives in
+`.github/workflows/reusable-verify-badge.yml` and is called at `@main` so badge logic fixes land in
+one place. For workflow-only maintenance, install that thin caller into the public issue repo as
 `.github/workflows/verify-badge.yml` without rebuilding or deploying static sites. Normal site
 deploys also install `.github/workflows/deploy.yml` and `.github/workflows/verify-badge.yml` from
 `scripts/templates/` as a safety net. Do not hand-edit divergent target workflow logic as the
@@ -170,7 +172,8 @@ For each site PR:
 5. merge only after PR checks pass
 6. let GitHub Actions deploy from `main`
 7. verify the target Pages repo run, `submit/index.html`, the live `/submit/` page, and
-   `.github/workflows/verify-badge.yml` in the target repo
+   `.github/workflows/verify-badge.yml` in the target repo. The workflow should be the thin caller,
+   not a copy of the full badge verification logic.
 
 Do not run a local real deploy for submit-intake changes from a dirty, unpushed, or unreviewed
 source worktree.
