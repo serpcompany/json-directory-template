@@ -7,7 +7,8 @@ That means the active path is:
 1. a visitor submits through `/submit`
 2. the client builds a prefilled GitHub issue URL from checked-in site config
 3. the browser opens the configured public GitHub issue composer
-4. the public issue repo checks for a dofollow Featured on badge through `verify-badge.yml`
+4. the public issue repo runs its thin `verify-badge.yml` caller, which invokes the central
+   `.github/workflows/reusable-verify-badge.yml` workflow to check for a dofollow Featured on badge
 5. verified submissions create a source PR that edits the active checked-in listing source
 6. maintainers review the generated PR
 7. the source edit goes through PR validation, build checks, merge, and deploy
@@ -27,6 +28,7 @@ The repo now uses two layers:
 This keeps the current strategy explicit:
 
 - GitHub issue intake is the primary public submission handoff for static sites
+- public issue repos keep only the event wrapper for badge verification; badge logic lives centrally
 - PRs are still the reviewable write path for listing-data changes
 - the default starter still uses `data/listings.json`
 - active checked-in sites can use their own `sites/<site-id>/products.json` sources
@@ -65,6 +67,7 @@ to make the issue itself the source of truth.
 ## Related files
 
 - `.github/workflows/pr-review.yml`
+- `.github/workflows/reusable-verify-badge.yml`
 - `.github/workflows/update-listings-json.yml`
 - `docs/SUBMISSION_FLOW.md`
 - `scripts/validate-data.ts`

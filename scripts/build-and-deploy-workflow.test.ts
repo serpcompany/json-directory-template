@@ -62,6 +62,7 @@ describe('build-and-deploy workflow', () => {
       ])
     )
     expect(workflow.on.push?.paths).not.toContain('.github/workflows/build-and-deploy.yml')
+    expect(workflow.on.push?.paths).not.toContain('.github/workflows/reusable-verify-badge.yml')
   })
 
   it('runs push and workflow dispatch through a resolver plus deploy matrix', () => {
