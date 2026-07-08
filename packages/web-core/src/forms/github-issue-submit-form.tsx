@@ -1,6 +1,15 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@thedaviddias/design-system/dialog'
+import { Check, Copy, ExternalLink } from 'lucide-react'
 import { useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -9,6 +18,12 @@ import { getCategoryDisplayName } from '../category-display'
 import { buildSubmissionIssueUrl } from '../github-issue'
 import { hasConfiguredGitHubIssueTarget, siteConfig } from '../site-config'
 import { siteCopy } from '../site-copy'
+import { buildFeaturedOnBadgeEmbedHtml } from '../website/featured-on-badge-embed-panel'
+import {
+  getFeaturedOnBadgeListingUrl,
+  getFeaturedOnBadgePreviewPathFromKey,
+  getFeaturedOnBadgePublicUrlFromKey
+} from '../website/featured-on-badge-url'
 
 interface CategoryOption {
   isCanonical: boolean
@@ -19,6 +34,16 @@ interface CategoryOption {
 const HTTPS_PREFIX = 'https://'
 const MAX_FAQS = 5
 const MAX_RESOURCE_LINKS = 5
+type BadgeTheme = 'light' | 'dark'
+
+type BadgeSubmissionInstructions = {
+  badgeEmbeds: Record<BadgeTheme, string>
+  badgePreviewPaths: Record<BadgeTheme, string>
+  githubIssueUrl: string
+  listingUrl: string
+  name: string
+  siteName: string
+}
 
 function resolveCategoryOptions(): CategoryOption[] {
   const optionsBySlug = new Map<string, CategoryOption>()
@@ -55,6 +80,61 @@ function hasCompleteHttpUrl(value: string): boolean {
 function isEmptyUrlField(value: string): boolean {
   const trimmedValue = value.trim()
   return !trimmedValue || trimmedValue === HTTPS_PREFIX
+}
+
+function getSubmissionSlug(website: string): string {
+  try {
+    return new URL(website).hostname.replace(/^www\./, '').toLowerCase()
+  } catch {
+    return ''
+  }
+}
+
+export function buildBadgeSubmissionInstructions({
+  githubIssueUrl,
+  name,
+  website
+}: {
+  githubIssueUrl: string
+  name: string
+  website: string
+}): BadgeSubmissionInstructions {
+  const siteName = siteConfig.badges.featuredOn.displayName
+  const slug = getSubmissionSlug(website)
+  const listingUrl = getFeaturedOnBadgeListingUrl({
+    listingBasePath: siteConfig.listingRouteBasePath,
+    listingDetailSuffix: siteConfig.sitemap.listingDetailSuffix,
+    publicUrl: siteConfig.publicUrl,
+    slug
+  })
+  const badgeKeys = siteConfig.badges.featuredOn
+  const badgeUrls = {
+    dark: getFeaturedOnBadgePublicUrlFromKey(badgeKeys.dark, siteConfig.publicUrl),
+    light: getFeaturedOnBadgePublicUrlFromKey(badgeKeys.light, siteConfig.publicUrl)
+  }
+
+  return {
+    badgeEmbeds: {
+      dark: buildFeaturedOnBadgeEmbedHtml({
+        badgeUrl: badgeUrls.dark,
+        listingUrl,
+        siteName
+      }),
+      light: buildFeaturedOnBadgeEmbedHtml({
+        badgeUrl: badgeUrls.light,
+        listingUrl,
+        siteName
+      })
+    },
+    badgePreviewPaths: {
+      dark: getFeaturedOnBadgePreviewPathFromKey(badgeKeys.dark),
+      light: getFeaturedOnBadgePreviewPathFromKey(badgeKeys.light)
+    },
+    githubIssueUrl,
+    listingUrl,
+    name,
+    siteName
+  }
 }
 
 const requiredUrlSchema = z
@@ -204,6 +284,10 @@ function FieldLabel({
 
 export function GitHubIssueSubmitForm() {
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [copiedTheme, setCopiedTheme] = useState<BadgeTheme | null>(null)
+  const [badgeInstructions, setBadgeInstructions] = useState<BadgeSubmissionInstructions | null>(
+    null
+  )
   const listingLabel = siteCopy.listingName.singularTitle
   const hasConfiguredIssueTarget = hasConfiguredGitHubIssueTarget(siteConfig)
   const {
@@ -272,12 +356,38 @@ export function GitHubIssueSubmitForm() {
       website: values.website
     })
 
-    window.open(githubIssueUrl, '_blank', 'noopener,noreferrer')
+    setBadgeInstructions(
+      buildBadgeSubmissionInstructions({
+        githubIssueUrl,
+        name: values.name,
+        website: values.website
+      })
+    )
   }
 
   function handleReset(): void {
     reset(INITIAL_FORM_STATE)
     setSubmitError(null)
+    setBadgeInstructions(null)
+    setCopiedTheme(null)
+  }
+
+  function handleOpenGitHubIssue(): void {
+    if (!badgeInstructions) {
+      return
+    }
+
+    window.open(badgeInstructions.githubIssueUrl, '_blank', 'noopener,noreferrer')
+  }
+
+  async function handleCopyBadge(theme: BadgeTheme): Promise<void> {
+    if (!badgeInstructions) {
+      return
+    }
+
+    await navigator.clipboard.writeText(badgeInstructions.badgeEmbeds[theme])
+    setCopiedTheme(theme)
+    setTimeout(() => setCopiedTheme(null), 2000)
   }
 
   return (
@@ -533,6 +643,99 @@ export function GitHubIssueSubmitForm() {
           </button>
         </div>
       </form>
+      <Dialog
+        open={Boolean(badgeInstructions)}
+        onOpenChange={open => {
+          if (!open) {
+            setBadgeInstructions(null)
+            setCopiedTheme(null)
+          }
+        }}
+      >
+        <DialogContent className="max-h-[min(760px,calc(100dvh-2rem))] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Add the badge before opening GitHub</DialogTitle>
+            <DialogDescription>
+              Copy one badge snippet, publish it on your site, then open the GitHub issue. The issue
+              workflow checks for this badge automatically and on each `/check-badge` comment.
+            </DialogDescription>
+          </DialogHeader>
+
+          {badgeInstructions ? (
+            <div className="space-y-5">
+              <div className="rounded-md border border-border bg-muted/40 p-4">
+                <ol className="list-decimal space-y-2 pl-5 text-sm text-muted-foreground">
+                  <li>Copy either badge snippet below.</li>
+                  <li>Paste it into a public page on your submitted website.</li>
+                  <li>Make sure the badge link is not marked `nofollow`.</li>
+                  <li>Open the GitHub issue and finish creating the submission.</li>
+                </ol>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                {(['light', 'dark'] as const).map(theme => (
+                  <div key={theme} className="space-y-3 rounded-md border border-border p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-sm font-semibold capitalize">{theme} badge</span>
+                      <button
+                        type="button"
+                        onClick={() => void handleCopyBadge(theme)}
+                        className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-xs font-medium transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        {copiedTheme === theme ? (
+                          <Check className="size-4 text-emerald-500" />
+                        ) : (
+                          <Copy className="size-4" />
+                        )}
+                        {copiedTheme === theme ? 'Copied' : 'Copy'}
+                      </button>
+                    </div>
+                    <img
+                      src={badgeInstructions.badgePreviewPaths[theme]}
+                      alt={`${theme === 'light' ? 'Light' : 'Dark'} Featured on ${
+                        badgeInstructions.siteName
+                      } badge`}
+                      width={200}
+                      height={50}
+                      className="h-auto max-w-full"
+                    />
+                    <textarea
+                      readOnly
+                      value={badgeInstructions.badgeEmbeds[theme]}
+                      rows={5}
+                      className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 font-mono text-xs text-foreground focus:outline-none"
+                      aria-label={`${theme} badge embed code`}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <p className="text-xs text-muted-foreground">
+                The badge links to the future listing URL for {badgeInstructions.name}:{' '}
+                <span className="break-all font-mono">{badgeInstructions.listingUrl}</span>
+              </p>
+            </div>
+          ) : null}
+
+          <DialogFooter>
+            <button
+              type="button"
+              onClick={() => setBadgeInstructions(null)}
+              className="inline-flex items-center justify-center rounded-none border border-border px-4 py-2 text-sm font-bold transition-colors hover:bg-muted/50"
+            >
+              Back to form
+            </button>
+            <button
+              type="button"
+              onClick={handleOpenGitHubIssue}
+              className="inline-flex items-center justify-center gap-2 rounded-none bg-foreground px-4 py-2 text-sm font-bold text-background transition-colors hover:bg-foreground/90"
+            >
+              Open GitHub issue
+              <ExternalLink className="size-4" />
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
