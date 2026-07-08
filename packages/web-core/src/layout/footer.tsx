@@ -17,7 +17,7 @@ import { Linkedin } from 'lucide-react'
 import Link from 'next/link'
 import type { ComponentType } from 'react'
 import { ModeToggle } from '../mode-toggle'
-import { resolveDrBadgeConfig } from './dr-badge'
+import { resolveFooterBadgeConfigs } from './footer-badges'
 
 type FooterLink = {
   href: string
@@ -119,7 +119,7 @@ function hasStaticPagePath(path: string): boolean {
  * Features: Bold typography, refined spacing, clean layout
  */
 export function Footer() {
-  const drBadge = resolveDrBadgeConfig(siteConfig.domain)
+  const footerBadges = resolveFooterBadgeConfigs(siteConfig.domain)
   const socialLinks = getFooterSocialLinks()
   const directoryLinks: FooterLink[] = [
     {
@@ -290,25 +290,31 @@ export function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-12 pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          {drBadge ? (
-            <Link
-              href={drBadge.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex"
-            >
-              <img
-                src={drBadge.src}
-                alt={drBadge.alt}
-                width="200"
-                height="50"
-                loading="lazy"
-                decoding="async"
-              />
-            </Link>
-          ) : null}
-        </div>
+        {footerBadges.length > 0 ? (
+          <div className="mt-12 pt-8 border-t border-border/50">
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              {footerBadges.map(badge => (
+                <Link
+                  key={badge.href}
+                  href={badge.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={badge.title}
+                  className="inline-flex"
+                >
+                  <img
+                    src={badge.src}
+                    alt={badge.alt}
+                    width="200"
+                    height="50"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </Link>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </div>
     </footer>
   )

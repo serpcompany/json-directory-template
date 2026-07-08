@@ -14,6 +14,7 @@ type ProductEntry = {
     logo?: string
   }
   product?: {
+    categories?: string[]
     productPage?: string
     slug?: string
     tagline?: string
@@ -39,19 +40,39 @@ describe('serp.co checked-in products', () => {
       ProductEntry
     >
 
-    expect(Object.keys(serpCoProducts)).toHaveLength(3420)
+    expect(Object.keys(serpCoProducts)).toHaveLength(3422)
 
     for (const [slug, downloaderProduct] of Object.entries(downloaderProducts)) {
+      if (!downloaderProduct.product?.productPage?.startsWith('https://serp.ly/')) {
+        continue
+      }
+
       expect(serpCoProducts[slug], `serp.co must include ${slug}`).toBeDefined()
       expect(serpCoProducts[slug]?.product).toMatchObject({
         productPage: downloaderProduct.product?.productPage,
         slug,
-        tagline: downloaderProduct.product?.tagline,
         title: downloaderProduct.product?.title
       })
       expect(serpCoProducts[slug]?.content?.body).toContain('## Overview')
       expect(serpCoProducts[slug]?.content?.faq?.length).toBeGreaterThanOrEqual(3)
     }
+  })
+
+  it('keeps the serp.ai listing about SERP AI instead of the legacy Bark import', () => {
+    const serpCoProducts = JSON.parse(readFileSync(serpCoProductsPath, 'utf8')) as Record<
+      string,
+      ProductEntry
+    >
+
+    expect(serpCoProducts['serp.ai']?.product).toMatchObject({
+      categories: ['ai-directories'],
+      productPage: 'https://serp.ai',
+      slug: 'serp.ai',
+      tagline: 'AI tools, companies, models, datasets, news, and resources',
+      title: 'SERP AI'
+    })
+    expect(serpCoProducts['serp.ai']?.content?.body).toContain('SERP AI is a directory')
+    expect(serpCoProducts['serp.ai']?.content?.body).not.toMatch(/Bark/i)
   })
 
   it('keeps downloader CTAs and resource links product-specific', () => {
@@ -64,7 +85,11 @@ describe('serp.co checked-in products', () => {
       ProductEntry
     >
 
-    for (const slug of Object.keys(downloaderProducts)) {
+    for (const [slug, downloaderProduct] of Object.entries(downloaderProducts)) {
+      if (!downloaderProduct.product?.productPage?.startsWith('https://serp.ly/')) {
+        continue
+      }
+
       const product = serpCoProducts[slug]
 
       expect(product?.product?.productPage, slug).toMatch(/^https:\/\/serp\.ly\/.+/)
