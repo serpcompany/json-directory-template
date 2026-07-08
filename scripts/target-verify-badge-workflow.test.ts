@@ -63,6 +63,16 @@ function getBadgeCheckScript(): string {
   return checkStep?.with?.script ?? ''
 }
 
+function getCreateListingPrScript(): string {
+  const workflow = loadReusableWorkflow()
+  const createPrStep = workflow.jobs.verify.steps?.find(
+    step => step.name === 'Create listing PR after badge verification'
+  )
+
+  expect(createPrStep?.with?.script).toBeDefined()
+  return createPrStep?.with?.script ?? ''
+}
+
 function submissionIssueBody(url = 'https://serplists.com'): string {
   return `## Submission visibility
 
@@ -194,6 +204,125 @@ async function runBadgeCheck({
   return { comments, fetch, github, labelsAdded, labelsRemoved, notices, outputs }
 }
 
+async function runCreateListingPr({
+  ghPat = 'test-token',
+  issueBody = submissionIssueBody(),
+  mainProducts = {}
+}: {
+  ghPat?: null | string
+  issueBody?: string
+  mainProducts?: Record<string, unknown>
+} = {}) {
+  const comments: string[] = []
+  const failures: string[] = []
+  const outputs: Record<string, string> = {}
+  const requests: Array<{ body?: unknown; method: string; path: string }> = []
+  const github = {
+    rest: {
+      issues: {
+        createComment: vi.fn(async ({ body }: { body: string }) => {
+          comments.push(body)
+        })
+      }
+    }
+  }
+  const context = {
+    payload: {
+      issue: {
+        body: issueBody,
+        number: 17
+      }
+    },
+    repo: {
+      owner: 'serpcompany',
+      repo: 'serp.co'
+    }
+  }
+  const core = {
+    setFailed: vi.fn((message: string) => {
+      failures.push(message)
+    }),
+    setOutput: vi.fn((name: string, value: string) => {
+      outputs[name] = value
+    })
+  }
+  const fetch = vi.fn(async (url: string, init?: { body?: unknown; method?: string }) => {
+    const parsed = new URL(url)
+    const method = init?.method ?? 'GET'
+    const body = init?.body ? JSON.parse(String(init.body)) : undefined
+    const path = `${parsed.pathname}${parsed.search}`
+    const decodedPath = decodeURIComponent(path)
+    requests.push({ body, method, path })
+
+    let data: unknown
+    if (
+      method === 'GET' &&
+      decodedPath ===
+        '/repos/serpcompany/json-directory-template/pulls?state=open&head=serpcompany:listing/serp.co/serplists.com&base=main'
+    ) {
+      data = []
+    } else if (
+      method === 'GET' &&
+      decodedPath === '/repos/serpcompany/json-directory-template/git/ref/heads/main'
+    ) {
+      data = { object: { sha: 'main-sha' } }
+    } else if (
+      method === 'GET' &&
+      decodedPath === '/repos/serpcompany/json-directory-template/git/trees/main-sha:sites/serp.co'
+    ) {
+      data = { tree: [{ path: 'products.json', sha: 'main-products-sha' }] }
+    } else if (
+      method === 'GET' &&
+      decodedPath === '/repos/serpcompany/json-directory-template/git/blobs/main-products-sha'
+    ) {
+      data = {
+        content: Buffer.from(JSON.stringify(mainProducts), 'utf8').toString('base64')
+      }
+    } else {
+      return {
+        ok: false,
+        status: 404,
+        statusText: 'Not Found',
+        text: async () => JSON.stringify({ message: 'Not Found' })
+      }
+    }
+
+    return {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => JSON.stringify(data)
+    }
+  })
+  const previousGhPat = process.env.GH_PAT
+
+  if (ghPat === null) {
+    delete process.env.GH_PAT
+  } else {
+    process.env.GH_PAT = ghPat
+  }
+
+  try {
+    await new AsyncFunction(
+      'github',
+      'context',
+      'core',
+      'fetch',
+      'Buffer',
+      'process',
+      getCreateListingPrScript()
+    )(github, context, core, fetch, Buffer, process)
+  } finally {
+    if (previousGhPat === undefined) {
+      delete process.env.GH_PAT
+    } else {
+      process.env.GH_PAT = previousGhPat
+    }
+  }
+
+  return { comments, failures, fetch, outputs, requests }
+}
+
 describe('reusable verify badge workflow', () => {
   it('is callable by target repos and accepts an optional GH_PAT secret', () => {
     const workflow = loadReusableWorkflow()
@@ -257,6 +386,69 @@ describe('reusable verify badge workflow', () => {
     expect(source).not.toContain(`/media/products/$${'{'}submission.slug}/logo.png`)
     expect(source).toContain(`/repos/$${'{'}sourceOwner}/$${'{'}sourceRepo}/pulls`)
     expect(source).toContain('/assignees')
+  })
+
+  it('reports a verified badge without creating a PR when GH_PAT is missing', async () => {
+    const { comments, failures, fetch } = await runCreateListingPr({ ghPat: null })
+
+    expect(fetch).not.toHaveBeenCalled()
+    expect(failures).toEqual(['Missing GH_PAT secret for source repo PR creation.'])
+    expect(comments).toEqual([
+      ':warning: **Badge verified, PR not created**\n\nThe badge is verified, but this repo is missing the `GH_PAT` secret required to create a PR in `serpcompany/json-directory-template`. @devinschumacher, please add the secret and rerun `/check-badge`.'
+    ])
+  })
+
+  it('comments without creating a duplicate PR when the listing slug already exists', async () => {
+    const { comments, failures, outputs, requests } = await runCreateListingPr({
+      mainProducts: {
+        'serplists.com': {
+          product: {
+            slug: 'serplists.com',
+            title: 'SERP Lists'
+          }
+        }
+      }
+    })
+
+    expect(failures).toEqual([])
+    expect(outputs.pr_url).toBeUndefined()
+    expect(comments).toEqual([
+      ':white_check_mark: **Badge verified**\n\nA listing with slug `serplists.com` already exists in `sites/serp.co/products.json`. @devinschumacher, please review whether this issue should be closed.'
+    ])
+    expect(requests).toEqual([
+      {
+        body: undefined,
+        method: 'GET',
+        path: '/repos/serpcompany/json-directory-template/pulls?state=open&head=serpcompany:listing%2Fserp.co%2Fserplists.com&base=main'
+      },
+      {
+        body: undefined,
+        method: 'GET',
+        path: '/repos/serpcompany/json-directory-template/git/ref/heads/main'
+      },
+      {
+        body: undefined,
+        method: 'GET',
+        path: '/repos/serpcompany/json-directory-template/git/trees/main-sha%3Asites%2Fserp.co'
+      },
+      {
+        body: undefined,
+        method: 'GET',
+        path: '/repos/serpcompany/json-directory-template/git/blobs/main-products-sha'
+      }
+    ])
+    expect(requests).not.toContainEqual(
+      expect.objectContaining({
+        method: 'POST',
+        path: '/repos/serpcompany/json-directory-template/pulls'
+      })
+    )
+    expect(requests).not.toContainEqual(
+      expect.objectContaining({
+        method: 'POST',
+        path: '/repos/serpcompany/json-directory-template/git/refs'
+      })
+    )
   })
 
   it('parses the details section so media URLs are not mistaken for the submitted website', () => {

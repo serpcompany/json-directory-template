@@ -83,10 +83,14 @@ When the badge check succeeds on a new issue or a `/check-badge` rerun:
 1. The central reusable badge workflow parses the issue body for: name, URL, category, description,
    logo URL, resource links, and notes.
 2. It derives the slug from the product URL hostname (e.g. `https://www.example.com` → `example.com`).
-3. It creates a branch `listing/<site-repo>/<slug>` in `serpcompany/json-directory-template`.
-4. It adds the listing entry to `sites/<site-repo>/products.json`.
-5. It opens a PR targeting `main`.
-6. It assigns the PR to `@devinschumacher`, mentions `@devinschumacher` in the PR body, and
+3. It checks `sites/<site-repo>/products.json` on `main`.
+4. If that slug already exists, it comments on the issue that the listing already exists and stops
+   without creating a branch, changing content, or opening a duplicate PR.
+5. If the slug is absent, it creates a branch `listing/<site-repo>/<slug>` in
+   `serpcompany/json-directory-template`.
+6. It adds the listing entry to `sites/<site-repo>/products.json`.
+7. It opens a PR targeting `main`.
+8. It assigns the PR to `@devinschumacher`, mentions `@devinschumacher` in the PR body, and
    comments on the source issue with the PR link.
 
 The maintainer reviews and merges the PR. The existing deploy pipeline handles the rest.
@@ -143,6 +147,17 @@ Active public issue targets:
 | `serp.software` | `serpcompany/serp.software` | `https://serp.software/submit/` |
 | `serpdownloaders.com` | `serpcompany/serpdownloaders.com` | `https://serpdownloaders.com/submit/` |
 
+Active target workflow rollout matrix:
+
+| Public issue repo | Required workflow | Required secret | Badge assets |
+|---|---|---|---|
+| `serpcompany/browserextensions.io` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-browserextensions.io-{light,dark}.svg` |
+| `serpcompany/pornvideodownloaders.com` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-pornvideodownloaders.com-{light,dark}.svg` |
+| `serpcompany/serp.ai` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serp.ai-{light,dark}.svg` |
+| `serpcompany/serp.co` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serp.co-{light,dark}.svg` |
+| `serpcompany/serp.software` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serp.software-{light,dark}.svg` |
+| `serpcompany/serpdownloaders.com` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serpdownloaders.com-{light,dark}.svg` |
+
 ---
 
 ## Workflows
@@ -160,14 +175,16 @@ To enable the submission + badge flow on a new site repo:
 
 1. Ensure the site's `social.githubIssueOwner`, `social.githubIssueRepo`, and `social.githubIssuesUrl`
    are configured.
-2. Set a `GH_PAT` secret on the public issue repo with access to `json-directory-template`.
-3. Run `scripts/generate-badges.ts` when badge assets need to change.
-4. Install the thin reusable workflow caller from `scripts/templates/target-verify-badge.yml` in
+2. Ensure the public issue repo has Issues enabled.
+3. Set a `GH_PAT` secret on the public issue repo with access to `json-directory-template`.
+4. Confirm the site's light and dark badge SVG assets are available under `/badge/`.
+5. Run `scripts/generate-badges.ts` when badge assets need to change.
+6. Install the thin reusable workflow caller from `scripts/templates/target-verify-badge.yml` in
    the public issue repo as `.github/workflows/verify-badge.yml`. This is workflow-only
    maintenance; it does not require rebuilding or deploying the static site. The caller intentionally
    references `serpcompany/json-directory-template/.github/workflows/reusable-verify-badge.yml@main`
    so future badge logic fixes centralize in this repo.
-5. Confirm the public issue repo has Issues enabled and that `badge-not-verified` /
+7. Confirm that `badge-not-verified` /
    `badge-verified` labels are created by the first workflow run.
 
 ---
