@@ -8,4 +8,13 @@ describe('deploy-to-repo.sh', () => {
 
     expect(script).toContain('git add -A -f')
   })
+
+  it('installs the target badge verification workflow instead of only preserving it', () => {
+    const script = readFileSync(resolve(process.cwd(), 'scripts/deploy-to-repo.sh'), 'utf8')
+
+    expect(script).toContain('TARGET_BADGE_WORKFLOW_TEMPLATE')
+    expect(script).toContain('target-verify-badge.yml')
+    expect(script).toContain('.github/workflows/verify-badge.yml')
+    expect(script).toContain('Installing target badge verification workflow')
+  })
 })

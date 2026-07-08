@@ -1,8 +1,9 @@
 # Submission Flow
 
 Static-friendly GitHub issue intake flow with badge verification. The public site gathers listing
-details, builds a prefilled GitHub issue URL, and sends the submitter to GitHub. Badge verification
-and listing approval are handled via GitHub issue commands.
+details, builds a prefilled GitHub issue URL, and sends the submitter to GitHub. Badge verification,
+badge-state labels, and verified listing PR creation are handled by the public issue repo's
+`verify-badge.yml` workflow.
 
 ---
 
@@ -13,14 +14,14 @@ and listing approval are handled via GitHub issue commands.
 3. The primary `Submit` action builds a prefilled GitHub issue URL from checked-in site config.
 4. The browser opens the GitHub issue composer in the configured public issue repo.
 5. On issue creation, the `verify-badge.yml` workflow auto-runs and checks the submitter's site
-   for a backlink. If no badge is found, the bot @mentions the submitter with badge embed code
-   and placement instructions.
+   for a dofollow backlink and adds the `badge-not-verified` label while the check is pending or
+   failing.
 6. The submitter places the "Featured on [site]" badge on their website.
 7. A maintainer (or the submitter) comments `/check-badge` to re-verify.
-8. On successful verification, the issue gets the `verified` label.
-9. A maintainer comments `/approve` to auto-generate a PR in the source repo that adds the
-   listing to `sites/<site-id>/products.json`.
-10. The maintainer merges the PR. The existing `build-and-deploy.yml` workflow builds and deploys
+8. On successful verification, the workflow removes `badge-not-verified`, adds `badge-verified`,
+   and creates a PR in the source repo that adds the listing to `sites/<site-id>/products.json`.
+9. The generated PR mentions and assigns `@devinschumacher`.
+10. The maintainer reviews and merges the PR. The existing `build-and-deploy.yml` workflow builds and deploys
     the site with the new listing.
 
 ---
@@ -29,14 +30,16 @@ and listing approval are handled via GitHub issue commands.
 
 | Command | Who runs it | What it does |
 |---|---|---|
-| `/check-badge` | Maintainer or submitter | Fetches the submitter's URL, checks for a backlink to the directory domain. Posts result as a comment. Adds `verified` label on success. On failure, @mentions submitter with badge embed code and instructions. |
-| `/approve` | Maintainer only | Parses listing data from the issue body, creates a branch and PR in `serpcompany/json-directory-template` that adds the entry to `sites/<site-id>/products.json`. Posts PR link as a comment. Adds `approved` label. |
+| `/check-badge` | Maintainer or submitter | Fetches the submitter's URL, checks for a dofollow backlink to the directory domain, posts the result, updates `badge-not-verified` / `badge-verified`, and creates or reuses the source PR on success. |
+
+`/approve` is no longer required for the normal path. Badge verification is the approval gate for
+creating the listing PR.
 
 ### Auto-check on new issues
 
 The `verify-badge.yml` workflow also triggers on `issues: opened`, so every new submission
 automatically gets a badge check. If the submitter already has a badge, it's verified immediately.
-If not, they get instructions.
+If not, they get instructions and the issue remains labeled `badge-not-verified`.
 
 ---
 
@@ -45,10 +48,11 @@ If not, they get instructions.
 ### How verification works
 
 1. The workflow fetches the submitter's website URL (server-side, 10s timeout).
-2. It searches the HTML for any link containing the directory domain (e.g. `serp.co`).
-3. It also checks for a `data-verify-token` attribute (used by the `/submit/verify` page flow).
-4. If a backlink is found, the issue gets the `verified` label.
-5. If not found, the bot replies with badge embed code the submitter can copy-paste.
+2. It searches the HTML for a dofollow `<a href>` link to the exact directory domain
+   (e.g. `serp.co`, with optional `www.`).
+3. If a backlink is found, the issue gets `badge-verified` and the source PR step runs.
+4. If the link is missing, unreachable, or marked `nofollow`, the bot replies with badge embed code
+   the submitter can copy-paste and leaves `badge-not-verified` on the issue.
 
 ### Badge embed code
 
@@ -70,24 +74,27 @@ listings for backlinks. Listings that remove their badge are reported in the cro
 
 ---
 
-## Approve flow
+## Verified PR flow
 
-When a maintainer comments `/approve` on a verified issue:
+When the badge check succeeds on a new issue or a `/check-badge` rerun:
 
-1. The `approve-listing.yml` workflow parses the issue body for: name, URL, category,
-   description, logo URL, resource links, and FAQs.
+1. The `verify-badge.yml` workflow parses the issue body for: name, URL, category, description,
+   logo URL, resource links, and notes.
 2. It derives the slug from the product URL hostname (e.g. `https://www.example.com` → `example.com`).
 3. It creates a branch `listing/<site-repo>/<slug>` in `serpcompany/json-directory-template`.
 4. It adds the listing entry to `sites/<site-repo>/products.json`.
 5. It opens a PR targeting `main`.
-6. It comments on the issue with the PR link and adds the `approved` label.
+6. It assigns the PR to `@devinschumacher`, mentions `@devinschumacher` in the PR body, and
+   comments on the source issue with the PR link.
 
 The maintainer reviews and merges the PR. The existing deploy pipeline handles the rest.
 
 ### Required secret
 
-The `/approve` workflow requires a `GH_PAT` secret on each site's public issue repo (e.g.
-`serpcompany/serp.co`) with `repo` scope to `serpcompany/json-directory-template`.
+The verified PR step requires a `GH_PAT` secret on each site's public issue repo
+(e.g. `serpcompany/serp.co`) with access to create branches and PRs in
+`serpcompany/json-directory-template`. Without this secret, badge labels and comments still work,
+but the workflow fails the PR step and comments that the secret is missing.
 
 ---
 
@@ -139,8 +146,7 @@ Active public issue targets:
 
 | Workflow | Repo | Trigger | Purpose |
 |---|---|---|---|
-| `verify-badge.yml` | Each site's public repo | `issues: opened`, `issue_comment: /check-badge` | Badge/backlink verification |
-| `approve-listing.yml` | Each site's public repo | `issue_comment: /approve` | Auto-generate listing PR in source repo |
+| `verify-badge.yml` | Each site's public repo | `issues: opened`, `issue_comment: /check-badge` | Badge/backlink verification, badge labels, verified listing PR creation |
 | `check-badges.yml` | `json-directory-template` | Weekly cron (Monday 9am UTC) | Re-check all published listings for badge presence |
 | `build-and-deploy.yml` | `json-directory-template` | Push to main, workflow_dispatch | Build and deploy sites |
 
@@ -148,10 +154,15 @@ Active public issue targets:
 
 To enable the submission + badge flow on a new site repo:
 
-1. Copy `verify-badge.yml` and `approve-listing.yml` to the site's `.github/workflows/`.
-2. Set a `GH_PAT` secret on the site repo with `repo` scope to `json-directory-template`.
-3. Ensure the site's `social.githubIssueOwner` and `social.githubIssueRepo` are configured.
-4. Run `scripts/generate-badges.ts` and deploy to generate the badge SVGs.
+1. Ensure the site's `social.githubIssueOwner`, `social.githubIssueRepo`, and `social.githubIssuesUrl`
+   are configured.
+2. Set a `GH_PAT` secret on the public issue repo with access to `json-directory-template`.
+3. Run `scripts/generate-badges.ts` when badge assets need to change.
+4. Manually copy `scripts/templates/target-verify-badge.yml` to the public issue repo as
+   `.github/workflows/verify-badge.yml`. This is workflow-only maintenance; it does not require
+   rebuilding or deploying the static site.
+5. Confirm the public issue repo has Issues enabled and that `badge-not-verified` /
+   `badge-verified` labels are created by the first workflow run.
 
 ---
 
@@ -167,6 +178,8 @@ To enable the submission + badge flow on a new site repo:
 | `packages/web-core/src/website/featured-on-badge-embed-panel.tsx` | Badge embed panel on listing detail pages |
 | `packages/web-core/src/website/featured-on-badge-url.ts` | Badge URL and listing URL utilities |
 | `scripts/generate-badges.ts` | Build-time badge SVG generation |
+| `scripts/templates/target-verify-badge.yml` | Target repo issue workflow installed as `.github/workflows/verify-badge.yml` |
+| `scripts/deploy-to-repo.sh` | Target repo sync script that installs target workflows |
 | `apps/starter/app/api/cron/check-badges/route.ts` | Weekly badge presence cron endpoint |
 | `sites/<site-id>/site-config.ts` | Site-specific config including badge paths and listing routes |
 | `sites/<site-id>/products.json` | Canonical accepted listing source |
@@ -178,8 +191,8 @@ To enable the submission + badge flow on a new site repo:
 ## Data ownership
 
 Accepted listings are added to the active site's checked-in listing source via PR. For most
-active sites, that is `sites/<site-id>/products.json`. The `/approve` workflow creates these
-PRs automatically.
+active sites, that is `sites/<site-id>/products.json`. The `verify-badge.yml` workflow creates
+these PRs automatically after badge verification.
 
 Do not write submissions directly into:
 

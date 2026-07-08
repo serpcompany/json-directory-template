@@ -17,7 +17,8 @@ Before deploying, confirm:
 - the site has checked-in config in `sites/<site-id>/site-config.ts`
 - the site defines a checked-in `deploy.strategy` and its required target fields
 - you are on Node `24`
-- GitHub Pages repo-sync sites have a `GH_PAT` secret and target repo workflow
+- GitHub Pages repo-sync sites have the deploy secret required by the source deploy workflow
+- submit-enabled target repos have a `GH_PAT` secret that can create PRs in `json-directory-template`
 - submit-enabled sites use a public GitHub issue repo with Issues enabled
 - source changes have gone through gitflow: branch, commit, push, review/merge
 - the deploy is running from GitHub Actions or from a clean local source branch synced with its upstream
@@ -148,6 +149,12 @@ The public `/submit` GitHub issue intake is active for:
 
 Each active site's public issue repo is `serpcompany/<site-id>`. These repos must stay public and
 must keep Issues enabled because the static submit form opens GitHub's public issue composer.
+The target repo badge workflow is source-managed in `scripts/templates/target-verify-badge.yml`.
+For workflow-only maintenance, manually copy that template into the public issue repo as
+`.github/workflows/verify-badge.yml` without rebuilding or deploying static sites. Normal site
+deploys also install `.github/workflows/deploy.yml` and `.github/workflows/verify-badge.yml` from
+`scripts/templates/` as a safety net. Do not hand-edit divergent target workflow logic as the
+long-term fix.
 
 Prefer rolling out submit-intake config changes one site per source PR so review
 and live verification stay simple. If a PR changes multiple concrete site paths,
@@ -158,10 +165,12 @@ For each site PR:
 
 1. configure `social.githubIssueOwner`, `social.githubIssueRepo`, and `social.githubIssuesUrl`
 2. make the site's `/submit` route render `GitHubIssueSubmitForm`
-3. run local verification with `pnpm deploy:site -- --site <site-id> --dry-run`
-4. merge only after PR checks pass
-5. let GitHub Actions deploy from `main`
-6. verify the target Pages repo run, `submit/index.html`, and the live `/submit/` page
+3. configure the target repo `GH_PAT` secret needed for verified-submission PR creation
+4. run local verification with `pnpm deploy:site -- --site <site-id> --dry-run`
+5. merge only after PR checks pass
+6. let GitHub Actions deploy from `main`
+7. verify the target Pages repo run, `submit/index.html`, the live `/submit/` page, and
+   `.github/workflows/verify-badge.yml` in the target repo
 
 Do not run a local real deploy for submit-intake changes from a dirty, unpushed, or unreviewed
 source worktree.
@@ -175,6 +184,7 @@ After deploy, check:
   `sourceBranch`, and `sourceRepository`
 - the target provider contains plain static files, not `.next`
 - GitHub Pages repo-sync targets still contain `.github/workflows/deploy.yml`
+- submit-enabled targets still contain `.github/workflows/verify-badge.yml`
 - the target provider publish completes successfully
 - the live domain returns the updated site from the intended provider
 - `https://<site-id>/build-info.json` returns HTTP `200`, has the expected `siteId`,

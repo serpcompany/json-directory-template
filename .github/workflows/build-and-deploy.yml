@@ -15,7 +15,11 @@ on:
       - 'apps/starter/**'
       - 'packages/web-core/**'
       - 'scripts/**'
-      - '.github/workflows/build-and-deploy.yml'
+      - '!scripts/build-and-deploy-workflow.test.ts'
+      - '!scripts/deploy-to-repo.sh'
+      - '!scripts/deploy-to-repo-script.test.ts'
+      - '!scripts/target-verify-badge-workflow.test.ts'
+      - '!scripts/templates/target-verify-badge.yml'
   workflow_dispatch:
     inputs:
       site_id:
