@@ -1,0 +1,480 @@
+name: Verify badge on issue
+
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  verify:
+    if: >-
+      (github.event_name == 'issues') ||
+      (!github.event.issue.pull_request &&
+      contains(github.event.comment.body, '/check-badge'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check badge and update issue labels
+        id: badge
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issueNumber = issue.number;
+            const badgePendingLabel = 'badge-not-verified';
+            const badgeVerifiedLabel = 'badge-verified';
+
+            function getSection(body, headingPattern) {
+              const match = body.match(new RegExp(`^## ${headingPattern}\\s*\\n+([\\s\\S]*?)(?=\\n## |\\n*$)`, 'im'));
+              return match?.[1]?.trim() || '';
+            }
+
+            function trimUrl(value) {
+              return value?.trim().replace(/[\s,]+$/, '') || '';
+            }
+
+            function parseSubmission(body) {
+              const details = getSection(body, '.*details');
+              const name = details.match(/^Name:\s*(.+)$/im)?.[1]?.trim();
+              const url = trimUrl(details.match(/^(?!Logo URL:|Video URL:)(?:.+?\s+)?URL:\s*(https?:\/\/\S+)/im)?.[1]);
+              const category = details.match(/^Category:\s*(.+)$/im)?.[1]?.trim() || 'other';
+              const description = getSection(body, 'Description');
+              const media = getSection(body, 'Media');
+              const logoUrl = trimUrl(media.match(/^Logo URL:\s*(https?:\/\/\S+)$/im)?.[1]);
+              const videoUrl = trimUrl(media.match(/^Video URL:\s*(https?:\/\/\S+)$/im)?.[1]);
+              const notes = getSection(body, 'Additional notes');
+              const resourceLinks = [];
+              const resourceLinksSection = getSection(body, 'Resource links');
+
+              for (const match of resourceLinksSection.matchAll(/^-\s*(.+?):\s*(https?:\/\/\S+)$/gm)) {
+                resourceLinks.push({ label: match[1].trim(), url: trimUrl(match[2]) });
+              }
+
+              let slug = '';
+              if (url) {
+                try {
+                  slug = new URL(url).hostname.replace(/^www\./, '').toLowerCase();
+                } catch {
+                  slug = '';
+                }
+              }
+
+              if (!slug && name) {
+                slug = name.toLowerCase().replace(/[^a-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '');
+              }
+
+              return {
+                category,
+                description,
+                logoUrl,
+                name,
+                notes,
+                resourceLinks,
+                slug,
+                url,
+                videoUrl
+              };
+            }
+
+            async function ensureLabel(name, color, description) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name });
+              } catch (error) {
+                if (error.status !== 404) throw error;
+                try {
+                  await github.rest.issues.createLabel({ owner, repo, name, color, description });
+                } catch (createError) {
+                  if (createError.status !== 422) throw createError;
+                }
+              }
+            }
+
+            async function addLabel(name) {
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number: issueNumber,
+                labels: [name]
+              });
+            }
+
+            async function removeLabel(name) {
+              try {
+                await github.rest.issues.removeLabel({
+                  owner,
+                  repo,
+                  issue_number: issueNumber,
+                  name
+                });
+              } catch (error) {
+                if (error.status !== 404) throw error;
+              }
+            }
+
+            async function comment(body) {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: issueNumber,
+                body
+              });
+            }
+
+            const submission = parseSubmission(issue.body || '');
+            core.setOutput('slug', submission.slug);
+            core.setOutput('found', 'false');
+
+            if (!submission.name || !submission.url || !submission.slug) {
+              if (github.eventName === 'issue_comment') {
+                await comment(`:x: **Badge Check**\n\nCould not parse the required submission fields from this issue. @devinschumacher, this submission needs manual review before badge verification can continue.`);
+              }
+              return;
+            }
+
+            await ensureLabel(badgePendingLabel, 'f9d0c4', 'Submission needs a verified Featured on badge.');
+            await ensureLabel(badgeVerifiedLabel, '0e8a16', 'Submission has a verified Featured on badge.');
+            await addLabel(badgePendingLabel);
+            await removeLabel(badgeVerifiedLabel);
+
+            const domain = repo;
+            const listingDetailSuffixBySite = {
+              'serp.ai': 'reviews',
+              'serp.co': 'reviews'
+            };
+            const listingDetailSuffix = listingDetailSuffixBySite[domain];
+            const listingPathParts = ['products', submission.slug, listingDetailSuffix].filter(Boolean);
+            const listingUrl = `https://${domain}/${listingPathParts.join('/')}/`;
+            const badgeImageUrl = `https://${domain}/badge/featured-on-${domain}-light.svg`;
+            const badgeSnippet = `<a href="${listingUrl}" target="_blank" title="Featured on ${domain}">\n  <img src="${badgeImageUrl}" alt="Featured on ${domain}" width="200" height="50" />\n</a>`;
+
+            let html = '';
+            try {
+              const controller = new AbortController();
+              const timeout = setTimeout(() => controller.abort(), 10000);
+              const response = await fetch(submission.url, {
+                headers: { 'User-Agent': 'DirectoryVerifier/1.0' },
+                redirect: 'follow',
+                signal: controller.signal
+              });
+              clearTimeout(timeout);
+              if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+              }
+              html = await response.text();
+            } catch (error) {
+              await comment(`:x: **Badge Check**\n\nCould not reach ${submission.url} — ${error.message}\n\n---\n\n@${issue.user.login} — To get your listing approved, please add a **"Featured on ${domain}"** badge to your website, make sure the page is publicly reachable, then comment \`/check-badge\`.\n\n**Badge code:**\n\`\`\`html\n${badgeSnippet}\n\`\`\`\n\n**Badge preview:**\n\n![Featured on ${domain}](https://${domain}/badge/featured-on-${domain}-light.svg)`);
+              return;
+            }
+
+            const escapedDomain = domain.replace(/\\./g, '\\\\.');
+            const domainRegex = new RegExp(`^https?://(www\\\\.)?${escapedDomain}(/|$)`, 'i');
+            const anchorRegex = /<a\\s[^>]*>/gi;
+            let foundDofollow = false;
+            let foundNofollow = false;
+            let foundBadgeImage = false;
+            let match;
+
+            while ((match = anchorRegex.exec(html)) !== null) {
+              const tag = match[0];
+              const href = tag.match(/href=["']([^"']+)["']/i)?.[1];
+              if (!href || !domainRegex.test(href)) continue;
+
+              const relValues = (tag.match(/rel=["']([^"']+)["']/i)?.[1] || '')
+                .toLowerCase()
+                .split(/\\s+/)
+                .filter(Boolean);
+
+              if (relValues.includes('nofollow')) {
+                foundNofollow = true;
+                continue;
+              }
+
+              foundDofollow = true;
+              const afterTag = html.substring(match.index + tag.length, match.index + tag.length + 500);
+              const closingAnchor = afterTag.indexOf('</a>');
+              const innerHtml = closingAnchor === -1 ? '' : afterTag.substring(0, closingAnchor);
+
+              if (/<img\\s/i.test(innerHtml) && innerHtml.includes(badgeImageUrl)) {
+                foundBadgeImage = true;
+              }
+            }
+
+            if (foundDofollow && foundBadgeImage) {
+              await removeLabel(badgePendingLabel);
+              await addLabel(badgeVerifiedLabel);
+              await comment(`:white_check_mark: **Badge Check**\n\nBadge verified on ${submission.url} — found a dofollow badge link.`);
+              core.setOutput('found', 'true');
+              return;
+            }
+
+            const message = foundNofollow
+              ? `Found a link to ${domain} on ${submission.url}, but it is marked as **nofollow**. The badge link must be a **dofollow** link.`
+              : foundDofollow
+                ? `Found a dofollow link to ${domain} on ${submission.url}, but it does not wrap the expected Featured on badge image.`
+                : `No badge link to ${domain} found on ${submission.url}. We look for the expected Featured on badge image wrapped in a dofollow \`<a href>\` link pointing to ${domain}.`;
+
+            await comment(`:x: **Badge Check**\n\n${message}\n\n---\n\n@${issue.user.login} — To get your listing approved, please add a **"Featured on ${domain}"** badge to your website.\n\n**Steps:**\n1. Copy the badge code below\n2. Paste it into your website's HTML (footer, sidebar, or homepage)\n3. Make sure it's on a publicly accessible page and the link is not \`nofollow\`\n4. Come back here and comment \`/check-badge\` to re-verify\n\n**Badge code:**\n\`\`\`html\n${badgeSnippet}\n\`\`\`\n\n**Badge preview:**\n\n![Featured on ${domain}](https://${domain}/badge/featured-on-${domain}-light.svg)`);
+
+      - name: Create listing PR after badge verification
+        if: steps.badge.outputs.found == 'true'
+        uses: actions/github-script@v7
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const targetOwner = context.repo.owner;
+            const siteRepo = context.repo.repo;
+            const sourceOwner = 'serpcompany';
+            const sourceRepo = 'json-directory-template';
+            const assignee = 'devinschumacher';
+            const token = process.env.GH_PAT;
+
+            async function targetComment(body) {
+              await github.rest.issues.createComment({
+                owner: targetOwner,
+                repo: siteRepo,
+                issue_number: issue.number,
+                body
+              });
+            }
+
+            if (!token) {
+              await targetComment(`:warning: **Badge verified, PR not created**\n\nThe badge is verified, but this repo is missing the \`GH_PAT\` secret required to create a PR in \`${sourceOwner}/${sourceRepo}\`. @${assignee}, please add the secret and rerun \`/check-badge\`.`);
+              core.setFailed('Missing GH_PAT secret for source repo PR creation.');
+              return;
+            }
+
+            function getSection(body, headingPattern) {
+              const match = body.match(new RegExp(`^## ${headingPattern}\\s*\\n+([\\s\\S]*?)(?=\\n## |\\n*$)`, 'im'));
+              return match?.[1]?.trim() || '';
+            }
+
+            function trimUrl(value) {
+              return value?.trim().replace(/[\s,]+$/, '') || '';
+            }
+
+            function parseSubmission(body) {
+              const details = getSection(body, '.*details');
+              const name = details.match(/^Name:\s*(.+)$/im)?.[1]?.trim();
+              const url = trimUrl(details.match(/^(?!Logo URL:|Video URL:)(?:.+?\s+)?URL:\s*(https?:\/\/\S+)/im)?.[1]);
+              const category = details.match(/^Category:\s*(.+)$/im)?.[1]?.trim() || 'other';
+              const description = getSection(body, 'Description');
+              const media = getSection(body, 'Media');
+              const logoUrl = trimUrl(media.match(/^Logo URL:\s*(https?:\/\/\S+)$/im)?.[1]);
+              const videoUrl = trimUrl(media.match(/^Video URL:\s*(https?:\/\/\S+)$/im)?.[1]);
+              const notes = getSection(body, 'Additional notes');
+              const resourceLinks = [];
+              const resourceLinksSection = getSection(body, 'Resource links');
+
+              for (const match of resourceLinksSection.matchAll(/^-\s*(.+?):\s*(https?:\/\/\S+)$/gm)) {
+                resourceLinks.push({ label: match[1].trim(), url: trimUrl(match[2]) });
+              }
+
+              let slug = '';
+              if (url) {
+                try {
+                  slug = new URL(url).hostname.replace(/^www\./, '').toLowerCase();
+                } catch {
+                  slug = '';
+                }
+              }
+
+              if (!slug && name) {
+                slug = name.toLowerCase().replace(/[^a-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '');
+              }
+
+              return { category, description, logoUrl, name, notes, resourceLinks, slug, url, videoUrl };
+            }
+
+            async function sourceRequest(method, path, body) {
+              const response = await fetch(`https://api.github.com${path}`, {
+                body: body ? JSON.stringify(body) : undefined,
+                headers: {
+                  Accept: 'application/vnd.github+json',
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'application/json',
+                  'X-GitHub-Api-Version': '2022-11-28'
+                },
+                method
+              });
+              const text = await response.text();
+              const data = text ? JSON.parse(text) : null;
+
+              if (!response.ok) {
+                const message = data?.message || response.statusText;
+                const error = new Error(`${method} ${path} failed: ${response.status} ${message}`);
+                error.status = response.status;
+                error.data = data;
+                throw error;
+              }
+
+              return data;
+            }
+
+            async function sourceRequestOrNull(method, path, body) {
+              try {
+                return await sourceRequest(method, path, body);
+              } catch (error) {
+                if (error.status === 404) return null;
+                throw error;
+              }
+            }
+
+            const submission = parseSubmission(issue.body || '');
+            if (!submission.name || !submission.url || !submission.slug) {
+              await targetComment(`:warning: **Badge verified, PR not created**\n\nThe badge is verified, but the submission fields could not be parsed. @${assignee}, please review this issue manually.`);
+              core.setFailed('Could not parse required submission fields.');
+              return;
+            }
+
+            const safeBranchSlug = submission.slug.replace(/[^a-z0-9._-]+/gi, '-').replace(/^-+|-+$/g, '');
+            const branch = `listing/${siteRepo}/${safeBranchSlug}`;
+            const productsPath = `sites/${siteRepo}/products.json`;
+            const prTitle = `feat(listing): add ${submission.name} to ${siteRepo}`;
+            const existingPrs = await sourceRequest(
+              'GET',
+              `/repos/${sourceOwner}/${sourceRepo}/pulls?state=open&head=${sourceOwner}:${encodeURIComponent(branch)}&base=main`
+            );
+
+            if (existingPrs.length > 0) {
+              await targetComment(`:rocket: **Listing PR already exists**\n\n@${assignee}, this verified submission already has an open PR: ${existingPrs[0].html_url}`);
+              core.setOutput('pr_url', existingPrs[0].html_url);
+              return;
+            }
+
+            const mainRef = await sourceRequest(
+              'GET',
+              `/repos/${sourceOwner}/${sourceRepo}/git/ref/heads/main`
+            );
+            let branchRef = await sourceRequestOrNull(
+              'GET',
+              `/repos/${sourceOwner}/${sourceRepo}/git/ref/heads/${encodeURIComponent(branch)}`
+            );
+
+            if (!branchRef) {
+              try {
+                await sourceRequest('POST', `/repos/${sourceOwner}/${sourceRepo}/git/refs`, {
+                  ref: `refs/heads/${branch}`,
+                  sha: mainRef.object.sha
+                });
+              } catch (error) {
+                if (error.status !== 422) throw error;
+              }
+              branchRef = await sourceRequest(
+                'GET',
+                `/repos/${sourceOwner}/${sourceRepo}/git/ref/heads/${encodeURIComponent(branch)}`
+              );
+            }
+
+            async function readProductsAt(refSha) {
+              const tree = await sourceRequest(
+                'GET',
+                `/repos/${sourceOwner}/${sourceRepo}/git/trees/${encodeURIComponent(`${refSha}:sites/${siteRepo}`)}`
+              );
+              const productsBlob = tree.tree.find(item => item.path === 'products.json');
+              if (!productsBlob) return null;
+
+              const blob = await sourceRequest(
+                'GET',
+                `/repos/${sourceOwner}/${sourceRepo}/git/blobs/${productsBlob.sha}`
+              );
+              const content = Buffer.from(blob.content, 'base64').toString('utf8');
+              return {
+                blobSha: productsBlob.sha,
+                products: JSON.parse(content)
+              };
+            }
+
+            const mainProducts = await readProductsAt(mainRef.object.sha);
+            if (!mainProducts) {
+              await targetComment(`:warning: **Badge verified, PR not created**\n\nCould not find \`${productsPath}\` in \`${sourceOwner}/${sourceRepo}\`. @${assignee}, please review manually.`);
+              core.setFailed(`${productsPath} not found on main.`);
+              return;
+            }
+
+            if (mainProducts.products[submission.slug]) {
+              await targetComment(`:white_check_mark: **Badge verified**\n\nA listing with slug \`${submission.slug}\` already exists in \`${productsPath}\`. @${assignee}, please review whether this issue should be closed.`);
+              return;
+            }
+
+            const branchProducts = await readProductsAt(branchRef.object.sha);
+            if (!branchProducts) {
+              await targetComment(`:warning: **Badge verified, PR not created**\n\nCould not find \`${productsPath}\` on branch \`${branch}\`. @${assignee}, please review manually.`);
+              core.setFailed(`${productsPath} not found on branch ${branch}.`);
+              return;
+            }
+
+            const products = branchProducts.products;
+            const productsBlobSha = branchProducts.blobSha;
+
+            if (!products[submission.slug]) {
+              let contentBody = `## Overview\n\n${submission.description || submission.name}`;
+              if (submission.notes) contentBody += `\n\n${submission.notes}`;
+
+              const entry = {
+                content: { body: contentBody },
+                featured: false,
+                product: {
+                  categories: [submission.category],
+                  productPage: submission.url,
+                  slug: submission.slug,
+                  tagline: (submission.description || submission.name).split('\n')[0].slice(0, 150),
+                  title: submission.name
+                },
+                relatedLinks:
+                  submission.resourceLinks.length > 0
+                    ? submission.resourceLinks
+                    : [{ label: submission.name, url: submission.url }]
+              };
+
+              const media = {};
+              if (submission.logoUrl) {
+                media.logo = submission.logoUrl;
+              }
+              if (submission.videoUrl) {
+                media.video = submission.videoUrl;
+              }
+              if (Object.keys(media).length > 0) {
+                entry.media = media;
+              }
+
+              products[submission.slug] = entry;
+              const updatedContent = `${JSON.stringify(products, null, 2)}\n`;
+
+              await sourceRequest('PUT', `/repos/${sourceOwner}/${sourceRepo}/contents/${productsPath}`, {
+                branch,
+                content: Buffer.from(updatedContent).toString('base64'),
+                message: `feat(listing): add ${submission.name} to ${siteRepo}`,
+                sha: productsBlobSha
+              });
+            }
+
+            const openPrsAfterUpdate = await sourceRequest(
+              'GET',
+              `/repos/${sourceOwner}/${sourceRepo}/pulls?state=open&head=${sourceOwner}:${encodeURIComponent(branch)}&base=main`
+            );
+            if (openPrsAfterUpdate.length > 0) {
+              await targetComment(`:rocket: **Listing PR already exists**\n\n@${assignee}, this verified submission already has an open PR: ${openPrsAfterUpdate[0].html_url}`);
+              core.setOutput('pr_url', openPrsAfterUpdate[0].html_url);
+              return;
+            }
+
+            const pr = await sourceRequest('POST', `/repos/${sourceOwner}/${sourceRepo}/pulls`, {
+              base: 'main',
+              body: `## Summary\n- Add **${submission.name}** (\`${submission.slug}\`) to \`${siteRepo}\` listings\n- Source issue: ${targetOwner}/${siteRepo}#${issue.number}\n- Badge status: verified\n\n@${assignee}, this PR was auto-generated after badge verification.`,
+              head: branch,
+              title: prTitle
+            });
+
+            await sourceRequest('POST', `/repos/${sourceOwner}/${sourceRepo}/issues/${pr.number}/assignees`, {
+              assignees: [assignee]
+            });
+
+            await targetComment(`:rocket: **Listing PR created**\n\n@${assignee}, this verified badge submission is ready for review: ${pr.html_url}`);
+            core.setOutput('pr_url', pr.html_url);

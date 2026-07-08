@@ -7,9 +7,10 @@ That means the active path is:
 1. a visitor submits through `/submit`
 2. the client builds a prefilled GitHub issue URL from checked-in site config
 3. the browser opens the configured public GitHub issue composer
-4. maintainers review the public issue manually
-5. accepted submissions become normal source edits to the active checked-in listing source
-6. the source edit goes through PR review, validation, build checks, merge, and deploy
+4. the public issue repo checks for a dofollow Featured on badge through `verify-badge.yml`
+5. verified submissions create a source PR that edits the active checked-in listing source
+6. maintainers review the generated PR
+7. the source edit goes through PR validation, build checks, merge, and deploy
 
 ## Active validation strategy
 
@@ -26,14 +27,15 @@ The repo now uses two layers:
 This keeps the current strategy explicit:
 
 - GitHub issue intake is the primary public submission handoff for static sites
-- PRs are still the reviewable write path for broader listing-data changes
+- PRs are still the reviewable write path for listing-data changes
 - the default starter still uses `data/listings.json`
 - active checked-in sites can use their own `sites/<site-id>/products.json` sources
 - `browserextensions.io` keeps accepted listings in `sites/browserextensions.io/products.json`
 - this is the current static-starter bridge flow, not the long-term hosted auth/submission architecture
 
-The public issue repo is never canonical listing data. Do not add automation that writes source JSON
-from public issues, and do not reintroduce badge-token runtime verification for the static flow.
+The public issue repo is never canonical listing data. Verified-submission automation may open a
+source PR from public issue data, but it must not write directly to `main` or bypass maintainer PR
+review. Do not reintroduce badge-token runtime verification for the static flow.
 Offsite product URLs in public issue bodies are submission data only; they must not be used to infer
 which site should deploy. The deploy resolver only trusts checked-in site domains, public URLs, and
 configured issue repo links as site signals.
@@ -57,8 +59,8 @@ If validation fails on a PR:
 3. push the correction to the same PR
 4. wait for `Validate Listing Data` to pass
 
-If the problem came from a GitHub issue submission, fix the checked-in JSON in the maintainer PR
-rather than trying to make the issue itself the source of truth.
+If the problem came from a GitHub issue submission, fix the generated source PR rather than trying
+to make the issue itself the source of truth.
 
 ## Related files
 

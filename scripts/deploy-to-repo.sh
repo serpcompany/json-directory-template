@@ -27,6 +27,7 @@ WORKSPACE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BUILD_DIR="${DEPLOY_BUILD_DIR:-$WORKSPACE_ROOT/dist/sites/${SITE_ID:-default}}"
 DEPLOY_TMP="$WORKSPACE_ROOT/tmp/deploy/$(date -u '+%Y%m%d-%H%M%S')"
 TARGET_PAGES_WORKFLOW_TEMPLATE="$WORKSPACE_ROOT/scripts/templates/target-pages-deploy.yml"
+TARGET_BADGE_WORKFLOW_TEMPLATE="$WORKSPACE_ROOT/scripts/templates/target-verify-badge.yml"
 PRESERVE_TMP="$DEPLOY_TMP/.preserve"
 
 mkdir -p "$DEPLOY_TMP"
@@ -84,6 +85,12 @@ if [[ -f "$TARGET_PAGES_WORKFLOW_TEMPLATE" ]]; then
   echo "==> Installing target GitHub Pages workflow..."
   mkdir -p "$DEPLOY_TMP/.github/workflows"
   cp "$TARGET_PAGES_WORKFLOW_TEMPLATE" "$DEPLOY_TMP/.github/workflows/deploy.yml"
+fi
+
+if [[ -f "$TARGET_BADGE_WORKFLOW_TEMPLATE" ]]; then
+  echo "==> Installing target badge verification workflow..."
+  mkdir -p "$DEPLOY_TMP/.github/workflows"
+  cp "$TARGET_BADGE_WORKFLOW_TEMPLATE" "$DEPLOY_TMP/.github/workflows/verify-badge.yml"
 fi
 
 echo "==> Committing and pushing..."

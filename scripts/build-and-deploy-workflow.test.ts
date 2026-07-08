@@ -49,6 +49,21 @@ describe('build-and-deploy workflow', () => {
     expect(workflow.on.push?.paths).toEqual(expect.arrayContaining(['packages/web-core/**']))
   })
 
+  it('does not rebuild sites for target workflow-only maintenance changes', () => {
+    const workflow = loadWorkflow()
+
+    expect(workflow.on.push?.paths).toEqual(
+      expect.arrayContaining([
+        '!scripts/deploy-to-repo.sh',
+        '!scripts/build-and-deploy-workflow.test.ts',
+        '!scripts/deploy-to-repo-script.test.ts',
+        '!scripts/target-verify-badge-workflow.test.ts',
+        '!scripts/templates/target-verify-badge.yml'
+      ])
+    )
+    expect(workflow.on.push?.paths).not.toContain('.github/workflows/build-and-deploy.yml')
+  })
+
   it('runs push and workflow dispatch through a resolver plus deploy matrix', () => {
     const workflow = loadWorkflow()
     const jobNames = Object.keys(workflow.jobs)
