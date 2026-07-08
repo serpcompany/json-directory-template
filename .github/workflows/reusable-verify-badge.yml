@@ -148,71 +148,192 @@ jobs:
             const listingPathParts = ['products', submission.slug, listingDetailSuffix].filter(Boolean);
             const listingUrl = `https://${domain}/${listingPathParts.join('/')}/`;
             const badgeImageUrl = `https://${domain}/badge/featured-on-${domain}-light.svg`;
+            const expectedBadgeImageUrls = [
+              badgeImageUrl,
+              `https://${domain}/badge/featured-on-${domain}-dark.svg`
+            ];
+            if (domain === 'serp.co') {
+              expectedBadgeImageUrls.push(
+                'https://serp.co/badge/featured-on-serp-co-light.svg',
+                'https://serp.co/badge/featured-on-serp-co-dark.svg'
+              );
+            }
             const badgeSnippet = `<a href="${listingUrl}" target="_blank" title="Featured on ${domain}">\n  <img src="${badgeImageUrl}" alt="Featured on ${domain}" width="200" height="50" />\n</a>`;
 
-            let html = '';
-            try {
+            function parseAttributes(tag) {
+              const attributes = {};
+              const attributePattern = /([^\s"'<>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+              let attribute;
+
+              while ((attribute = attributePattern.exec(tag)) !== null) {
+                attributes[attribute[1].toLowerCase()] = attribute[2] ?? attribute[3] ?? attribute[4] ?? '';
+              }
+
+              return attributes;
+            }
+
+            function resolveUrl(value, baseUrl) {
+              try {
+                return new URL(value, baseUrl).href;
+              } catch {
+                return '';
+              }
+            }
+
+            function isExpectedDomainUrl(value) {
+              try {
+                const url = new URL(value);
+                const hostname = url.hostname.toLowerCase();
+                return ['http:', 'https:'].includes(url.protocol) && (hostname === domain || hostname === `www.${domain}`);
+              } catch {
+                return false;
+              }
+            }
+
+            function hasNofollow(rel) {
+              return rel
+                .toLowerCase()
+                .split(/\s+/)
+                .filter(Boolean)
+                .includes('nofollow');
+            }
+
+            function scanBadge(html, baseUrl) {
+              const anchorPattern = /<a\b[^>]*>[\s\S]*?<\/a>/gi;
+              const imagePattern = /<img\b[^>]*>/gi;
+              let foundDofollow = false;
+              let foundNofollow = false;
+              let foundBadgeImage = false;
+              let anchor;
+
+              while ((anchor = anchorPattern.exec(html)) !== null) {
+                const anchorHtml = anchor[0];
+                const openingTag = anchorHtml.match(/^<a\b[^>]*>/i)?.[0] || '';
+                const anchorAttributes = parseAttributes(openingTag);
+                const href = resolveUrl(anchorAttributes.href || '', baseUrl);
+                if (!href || !isExpectedDomainUrl(href)) continue;
+
+                if (hasNofollow(anchorAttributes.rel || '')) {
+                  foundNofollow = true;
+                  continue;
+                }
+
+                foundDofollow = true;
+                let image;
+
+                while ((image = imagePattern.exec(anchorHtml)) !== null) {
+                  const imageAttributes = parseAttributes(image[0]);
+                  const src = resolveUrl(imageAttributes.src || '', baseUrl);
+                  if (expectedBadgeImageUrls.includes(src)) {
+                    foundBadgeImage = true;
+                  }
+                }
+              }
+
+              return { foundBadgeImage, foundDofollow, foundNofollow };
+            }
+
+            async function sleep(seconds) {
+              if (seconds <= 0 || process.env.VITEST) return;
+              await new Promise(resolve => setTimeout(resolve, seconds * 1000));
+            }
+
+            async function fetchHtml(url) {
               const controller = new AbortController();
               const timeout = setTimeout(() => controller.abort(), 10000);
-              const response = await fetch(submission.url, {
-                headers: { 'User-Agent': 'DirectoryVerifier/1.0' },
-                redirect: 'follow',
-                signal: controller.signal
-              });
-              clearTimeout(timeout);
-              if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
+
+              try {
+                const response = await fetch(url, {
+                  headers: { 'User-Agent': 'DirectoryVerifier/1.0' },
+                  redirect: 'follow',
+                  signal: controller.signal
+                });
+                const finalUrl = response.url || url;
+
+                if (!response.ok) {
+                  return {
+                    error: `HTTP ${response.status}`,
+                    finalUrl,
+                    html: '',
+                    status: response.status
+                  };
+                }
+
+                return {
+                  finalUrl,
+                  html: await response.text(),
+                  status: response.status
+                };
+              } catch (error) {
+                return {
+                  error: error.message,
+                  finalUrl: url,
+                  html: '',
+                  status: null
+                };
+              } finally {
+                clearTimeout(timeout);
               }
-              html = await response.text();
-            } catch (error) {
-              await comment(`:x: **Badge Check**\n\nCould not reach ${submission.url} — ${error.message}\n\n---\n\n@${issue.user.login} — To get your listing approved, please add a **"Featured on ${domain}"** badge to your website, make sure the page is publicly reachable, then comment \`/check-badge\`.\n\n**Badge code:**\n\`\`\`html\n${badgeSnippet}\n\`\`\`\n\n**Badge preview:**\n\n![Featured on ${domain}](https://${domain}/badge/featured-on-${domain}-light.svg)`);
+            }
+
+            const retryDelays = context.eventName === 'issues'
+              ? [0, 30, 60, 120, 180, 300]
+              : [0, 15, 45];
+            let lastAttempt = {
+              error: 'Badge was not checked.',
+              finalUrl: submission.url,
+              foundBadgeImage: false,
+              foundDofollow: false,
+              foundNofollow: false,
+              htmlLength: 0,
+              status: null
+            };
+
+            for (const [index, delay] of retryDelays.entries()) {
+              await sleep(delay);
+
+              const fetched = await fetchHtml(submission.url);
+              const scan = fetched.error ? { foundBadgeImage: false, foundDofollow: false, foundNofollow: false } : scanBadge(fetched.html, submission.url);
+              lastAttempt = {
+                error: fetched.error,
+                finalUrl: fetched.finalUrl,
+                foundBadgeImage: scan.foundBadgeImage,
+                foundDofollow: scan.foundDofollow,
+                foundNofollow: scan.foundNofollow,
+                htmlLength: fetched.html.length,
+                status: fetched.status
+              };
+
+              core.notice(
+                [
+                  `Badge check attempt ${index + 1}/${retryDelays.length}`,
+                  `attemptedUrl=${submission.url}`,
+                  `finalUrl=${lastAttempt.finalUrl}`,
+                  lastAttempt.error ? `error=${lastAttempt.error}` : `status=${lastAttempt.status}`,
+                  `htmlLength=${lastAttempt.htmlLength}`,
+                  `foundDofollow=${lastAttempt.foundDofollow}`,
+                  `foundNofollow=${lastAttempt.foundNofollow}`,
+                  `foundBadgeImage=${lastAttempt.foundBadgeImage}`
+                ].join(' ')
+              );
+
+              if (lastAttempt.foundDofollow && lastAttempt.foundBadgeImage) {
+                await removeLabel(badgePendingLabel);
+                await addLabel(badgeVerifiedLabel);
+                await comment(`:white_check_mark: **Badge Check**\n\nBadge verified on ${submission.url} — found a dofollow badge link.`);
+                core.setOutput('found', 'true');
+                return;
+              }
+            }
+
+            if (lastAttempt.error) {
+              await comment(`:x: **Badge Check**\n\nCould not reach ${submission.url} — ${lastAttempt.error}\n\n---\n\n@${issue.user.login} — To get your listing approved, please add a **"Featured on ${domain}"** badge to your website, make sure the page is publicly reachable, then comment \`/check-badge\`.\n\n**Badge code:**\n\`\`\`html\n${badgeSnippet}\n\`\`\`\n\n**Badge preview:**\n\n![Featured on ${domain}](https://${domain}/badge/featured-on-${domain}-light.svg)`);
               return;
             }
 
-            const escapedDomain = domain.replace(/\\./g, '\\\\.');
-            const domainRegex = new RegExp(`^https?://(www\\\\.)?${escapedDomain}(/|$)`, 'i');
-            const anchorRegex = /<a\\s[^>]*>/gi;
-            let foundDofollow = false;
-            let foundNofollow = false;
-            let foundBadgeImage = false;
-            let match;
-
-            while ((match = anchorRegex.exec(html)) !== null) {
-              const tag = match[0];
-              const href = tag.match(/href=["']([^"']+)["']/i)?.[1];
-              if (!href || !domainRegex.test(href)) continue;
-
-              const relValues = (tag.match(/rel=["']([^"']+)["']/i)?.[1] || '')
-                .toLowerCase()
-                .split(/\\s+/)
-                .filter(Boolean);
-
-              if (relValues.includes('nofollow')) {
-                foundNofollow = true;
-                continue;
-              }
-
-              foundDofollow = true;
-              const afterTag = html.substring(match.index + tag.length, match.index + tag.length + 500);
-              const closingAnchor = afterTag.indexOf('</a>');
-              const innerHtml = closingAnchor === -1 ? '' : afterTag.substring(0, closingAnchor);
-
-              if (/<img\\s/i.test(innerHtml) && innerHtml.includes(badgeImageUrl)) {
-                foundBadgeImage = true;
-              }
-            }
-
-            if (foundDofollow && foundBadgeImage) {
-              await removeLabel(badgePendingLabel);
-              await addLabel(badgeVerifiedLabel);
-              await comment(`:white_check_mark: **Badge Check**\n\nBadge verified on ${submission.url} — found a dofollow badge link.`);
-              core.setOutput('found', 'true');
-              return;
-            }
-
-            const message = foundNofollow
+            const message = lastAttempt.foundNofollow
               ? `Found a link to ${domain} on ${submission.url}, but it is marked as **nofollow**. The badge link must be a **dofollow** link.`
-              : foundDofollow
+              : lastAttempt.foundDofollow
                 ? `Found a dofollow link to ${domain} on ${submission.url}, but it does not wrap the expected Featured on badge image.`
                 : `No badge link to ${domain} found on ${submission.url}. We look for the expected Featured on badge image wrapped in a dofollow \`<a href>\` link pointing to ${domain}.`;
 

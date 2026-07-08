@@ -53,6 +53,147 @@ function loadWorkflowSource(path: string): string {
   return readFileSync(resolve(process.cwd(), path), 'utf8')
 }
 
+function getBadgeCheckScript(): string {
+  const workflow = loadReusableWorkflow()
+  const checkStep = workflow.jobs.verify.steps?.find(
+    step => step.name === 'Check badge and update issue labels'
+  )
+
+  expect(checkStep?.with?.script).toBeDefined()
+  return checkStep?.with?.script ?? ''
+}
+
+function submissionIssueBody(url = 'https://serplists.com'): string {
+  return `## Submission visibility
+
+This submission will be filed as a public GitHub issue for SERP.
+
+## Product details
+
+Name: SERP Lists
+Product URL: ${url}
+Category: ai-project-management
+
+## Description
+
+Create and Run Checklists for Your Processes
+
+## Media
+
+Logo URL: https://example.com/logo.png
+Video URL: https://example.com/video
+
+## Resource links
+
+- serplists.com: ${url}
+
+## Additional notes
+
+SERP Lists helps teams and solo operators.`
+}
+
+function badgeAnchor(
+  attributes = 'href="https://serp.co/products/dr.serp.co/reviews/" target="_blank" rel="noopener noreferrer"',
+  imageSrc = 'https://serp.co/badge/featured-on-serp.co-light.svg'
+): string {
+  return `<a ${attributes} title="Featured on SERP"><img src="${imageSrc}" alt="Featured on SERP" width="200" height="50"/></a>`
+}
+
+async function runBadgeCheck({
+  eventName = 'issue_comment',
+  html = '<html><body>No badge yet</body></html>',
+  issueBody = submissionIssueBody(),
+  repo = 'serp.co',
+  responses
+}: {
+  eventName?: 'issue_comment' | 'issues'
+  html?: string
+  issueBody?: string
+  repo?: string
+  responses?: Array<{ html: string; ok?: boolean; status?: number; url?: string }>
+} = {}) {
+  const comments: string[] = []
+  const labelsAdded: string[][] = []
+  const labelsRemoved: string[] = []
+  const notices: string[] = []
+  const outputs: Record<string, string> = {}
+  const responseQueue = responses ? [...responses] : undefined
+  const fetch = vi.fn(async (url: string) => {
+    const response = responseQueue?.shift() ?? { html, ok: true, status: 200, url }
+
+    return {
+      ok: response.ok ?? true,
+      status: response.status ?? 200,
+      text: async () => response.html,
+      url: response.url ?? url
+    }
+  })
+  const github = {
+    rest: {
+      issues: {
+        addLabels: vi.fn(async ({ labels }: { labels: string[] }) => {
+          labelsAdded.push(labels)
+        }),
+        createComment: vi.fn(async ({ body }: { body: string }) => {
+          comments.push(body)
+        }),
+        createLabel: vi.fn(async () => undefined),
+        getLabel: vi.fn(async () => undefined),
+        removeLabel: vi.fn(async ({ name }: { name: string }) => {
+          labelsRemoved.push(name)
+        })
+      }
+    }
+  }
+  const context = {
+    eventName,
+    payload: {
+      comment: {
+        body: '/check-badge'
+      },
+      issue: {
+        body: issueBody,
+        number: 1,
+        user: { login: 'devinschumacher' }
+      }
+    },
+    repo: {
+      owner: 'serpcompany',
+      repo
+    }
+  }
+  const core = {
+    notice: vi.fn((message: string) => {
+      notices.push(message)
+    }),
+    setOutput: vi.fn((name: string, value: string) => {
+      outputs[name] = value
+    })
+  }
+  const previousVitest = process.env.VITEST
+  process.env.VITEST = 'true'
+
+  try {
+    await new AsyncFunction(
+      'github',
+      'context',
+      'core',
+      'fetch',
+      'Buffer',
+      'process',
+      getBadgeCheckScript()
+    )(github, context, core, fetch, Buffer, process)
+  } finally {
+    if (previousVitest === undefined) {
+      delete process.env.VITEST
+    } else {
+      process.env.VITEST = previousVitest
+    }
+  }
+
+  return { comments, fetch, github, labelsAdded, labelsRemoved, notices, outputs }
+}
+
 describe('reusable verify badge workflow', () => {
   it('is callable by target repos and accepts an optional GH_PAT secret', () => {
     const workflow = loadReusableWorkflow()
@@ -134,102 +275,20 @@ describe('reusable verify badge workflow', () => {
     expect(source).toContain('const badgeImageUrl = `https://')
     expect(source).toContain('/badge/featured-on-')
     expect(source).toContain('-light.svg`')
-    expect(source).toContain('innerHtml.includes(badgeImageUrl)')
-    expect(source).toContain('if (foundDofollow && foundBadgeImage)')
+    expect(source).toContain('const expectedBadgeImageUrls = [')
+    expect(source).toContain('expectedBadgeImageUrls.includes(src)')
+    expect(source).toContain('if (lastAttempt.foundDofollow && lastAttempt.foundBadgeImage)')
     expect(source).not.toContain('if (foundDofollow) {')
     expect(source).toContain(
       "const listingPathParts = ['products', submission.slug, listingDetailSuffix].filter(Boolean)"
     )
-    expect(source).toContain('if (!response.ok)')
+    expect(source).toContain('[0, 30, 60, 120, 180, 300]')
+    expect(source).toContain('[0, 15, 45]')
+    expect(source).toContain('core.notice(')
   })
 
   it('parses submitted product URLs from multi-line details sections before checking the badge', async () => {
-    const workflow = loadReusableWorkflow()
-    const checkStep = workflow.jobs.verify.steps?.find(
-      step => step.name === 'Check badge and update issue labels'
-    )
-    const script = checkStep?.with?.script
-
-    expect(script).toBeDefined()
-
-    const labelsAdded: string[][] = []
-    const comments: string[] = []
-    const outputs: Record<string, string> = {}
-    const fetch = vi.fn(async () => ({
-      ok: true,
-      text: async () => '<html><body>No badge yet</body></html>'
-    }))
-    const github = {
-      rest: {
-        issues: {
-          addLabels: vi.fn(async ({ labels }: { labels: string[] }) => {
-            labelsAdded.push(labels)
-          }),
-          createComment: vi.fn(async ({ body }: { body: string }) => {
-            comments.push(body)
-          }),
-          createLabel: vi.fn(async () => undefined),
-          getLabel: vi.fn(async () => undefined),
-          removeLabel: vi.fn(async () => undefined)
-        }
-      }
-    }
-    const context = {
-      eventName: 'issue_comment',
-      payload: {
-        comment: {
-          body: '/check-badge'
-        },
-        issue: {
-          body: `## Submission visibility
-
-This submission will be filed as a public GitHub issue for SERP.
-
-## Product details
-
-Name: SERP Lists
-Product URL: https://serplists.com
-Category: ai-project-management
-
-## Description
-
-Create and Run Checklists for Your Processes
-
-## Media
-
-Logo URL: https://example.com/logo.png
-Video URL: https://example.com/video
-
-## Resource links
-
-- serplists.com: https://serplists.com
-
-## Additional notes
-
-SERP Lists helps teams and solo operators.`,
-          number: 1,
-          user: { login: 'devinschumacher' }
-        }
-      },
-      repo: {
-        owner: 'serpcompany',
-        repo: 'serp.co'
-      }
-    }
-    const core = {
-      setOutput: vi.fn((name: string, value: string) => {
-        outputs[name] = value
-      })
-    }
-
-    await new AsyncFunction('github', 'context', 'core', 'fetch', 'Buffer', 'process', script!)(
-      github,
-      context,
-      core,
-      fetch,
-      Buffer,
-      process
-    )
+    const { comments, fetch, github, labelsAdded, outputs } = await runBadgeCheck()
 
     expect(fetch).toHaveBeenCalledWith('https://serplists.com', expect.any(Object))
     expect(outputs).toMatchObject({ found: 'false', slug: 'serplists.com' })
@@ -247,6 +306,124 @@ SERP Lists helps teams and solo operators.`,
       })
     )
     expect(labelsAdded).toContainEqual(['badge-not-verified'])
+    expect(comments[0]).toContain('No badge link to serp.co found on https://serplists.com')
+  })
+
+  it('accepts the current dr.serp.co footer badge markup', async () => {
+    const footerBadge =
+      '<footer><a href="https://serp.co/products/dr.serp.co/reviews/" target="_blank" rel="noopener noreferrer" title="Featured on SERP"><img src="https://serp.co/badge/featured-on-serp.co-light.svg" alt="Featured on SERP" width="200" height="50"/></a></footer>'
+    const { comments, labelsAdded, labelsRemoved, outputs } = await runBadgeCheck({
+      html: footerBadge,
+      issueBody: submissionIssueBody('https://dr.serp.co')
+    })
+
+    expect(outputs.found).toBe('true')
+    expect(comments).toEqual([
+      ':white_check_mark: **Badge Check**\n\nBadge verified on https://dr.serp.co — found a dofollow badge link.'
+    ])
+    expect(labelsRemoved).toContain('badge-not-verified')
+    expect(labelsAdded).toContainEqual(['badge-verified'])
+  })
+
+  it('treats noopener noreferrer as dofollow', async () => {
+    const { outputs } = await runBadgeCheck({
+      html: badgeAnchor(
+        'href="https://serp.co/products/serplists.com/reviews/" rel="noopener noreferrer"'
+      )
+    })
+
+    expect(outputs.found).toBe('true')
+  })
+
+  it('accepts protocol-relative unquoted attributes case-insensitively', async () => {
+    const { outputs } = await runBadgeCheck({
+      html: '<A HREF=//www.serp.co/products/serplists.com/reviews/ REL=noopener><IMG SRC=//serp.co/badge/featured-on-serp.co-light.svg></A>'
+    })
+
+    expect(outputs.found).toBe('true')
+  })
+
+  it('rejects tokenized nofollow links even when other rel tokens are present', async () => {
+    const { comments, outputs } = await runBadgeCheck({
+      html: badgeAnchor(
+        'href="https://serp.co/products/serplists.com/reviews/" rel="nofollow noopener"'
+      )
+    })
+
+    expect(outputs.found).toBe('false')
+    expect(comments).toHaveLength(1)
+    expect(comments[0]).toContain('it is marked as **nofollow**')
+  })
+
+  it('rejects a dofollow link when the badge image is outside the anchor', async () => {
+    const { comments, outputs } = await runBadgeCheck({
+      html: '<a href="https://serp.co/products/serplists.com/reviews/">SERP</a><img src="https://serp.co/badge/featured-on-serp.co-light.svg">'
+    })
+
+    expect(outputs.found).toBe('false')
+    expect(comments).toHaveLength(1)
+    expect(comments[0]).toContain('does not wrap the expected Featured on badge image')
+  })
+
+  it('rejects a preloaded badge image without a linked image anchor', async () => {
+    const { comments, outputs } = await runBadgeCheck({
+      html: '<link rel="preload" as="image" href="https://serp.co/badge/featured-on-serp.co-light.svg"><a href="https://serp.co/products/serplists.com/reviews/">SERP</a>'
+    })
+
+    expect(outputs.found).toBe('false')
+    expect(comments).toHaveLength(1)
+    expect(comments[0]).toContain('does not wrap the expected Featured on badge image')
+  })
+
+  it('accepts dark and legacy serp.co badge image variants', async () => {
+    for (const imageSrc of [
+      'https://serp.co/badge/featured-on-serp.co-dark.svg',
+      'https://serp.co/badge/featured-on-serp-co-light.svg',
+      'https://serp.co/badge/featured-on-serp-co-dark.svg'
+    ]) {
+      const { outputs } = await runBadgeCheck({
+        html: badgeAnchor(
+          'HREF=https://www.serp.co/products/serplists.com/reviews/ REL="noopener noreferrer"',
+          imageSrc
+        )
+      })
+
+      expect(outputs.found).toBe('true')
+    }
+  })
+
+  it('retries new issue badge checks until a later fetch contains the badge', async () => {
+    const { comments, fetch, notices, outputs } = await runBadgeCheck({
+      eventName: 'issues',
+      responses: [
+        { html: '<html><body>No badge yet</body></html>' },
+        { html: '<html><body>No badge yet</body></html>' },
+        { html: badgeAnchor("href='https://serp.co/products/serplists.com/reviews/'") }
+      ]
+    })
+
+    expect(fetch).toHaveBeenCalledTimes(3)
+    expect(notices).toHaveLength(3)
+    expect(notices[0]).toContain('foundDofollow=false')
+    expect(notices[2]).toContain('foundBadgeImage=true')
+    expect(outputs.found).toBe('true')
+    expect(comments).toHaveLength(1)
+    expect(comments[0]).toContain('Badge verified on https://serplists.com')
+  })
+
+  it('posts exactly one failure comment after retries are exhausted', async () => {
+    const { comments, fetch, notices, outputs } = await runBadgeCheck({
+      responses: [
+        { html: '<html><body>No badge yet</body></html>' },
+        { html: '<html><body>No badge yet</body></html>' },
+        { html: '<html><body>No badge yet</body></html>' }
+      ]
+    })
+
+    expect(fetch).toHaveBeenCalledTimes(3)
+    expect(notices).toHaveLength(3)
+    expect(outputs.found).toBe('false')
+    expect(comments).toHaveLength(1)
     expect(comments[0]).toContain('No badge link to serp.co found on https://serplists.com')
   })
 })
