@@ -654,7 +654,9 @@ export function GitHubIssueSubmitForm() {
       >
         <DialogContent className="max-h-[min(760px,calc(100dvh-2rem))] overflow-y-auto sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Add the badge before opening GitHub</DialogTitle>
+            <DialogTitle>
+              Add the badge to your website to verify ownership & get listed
+            </DialogTitle>
             <DialogDescription>
               Copy one badge snippet, publish it on your site, then open the GitHub issue. The issue
               workflow checks for this badge automatically and on each `/check-badge` comment.
@@ -730,7 +732,7 @@ export function GitHubIssueSubmitForm() {
               onClick={handleOpenGitHubIssue}
               className="inline-flex items-center justify-center gap-2 rounded-none bg-foreground px-4 py-2 text-sm font-bold text-background transition-colors hover:bg-foreground/90"
             >
-              Open GitHub issue
+              Submit Form
               <ExternalLink className="size-4" />
             </button>
           </DialogFooter>
