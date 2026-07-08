@@ -241,14 +241,20 @@ jobs:
             async function fetchHtml(url) {
               const controller = new AbortController();
               const timeout = setTimeout(() => controller.abort(), 10000);
+              const fetchUrl = new URL(url);
+              fetchUrl.searchParams.set('badge-check', `${Date.now()}`);
 
               try {
-                const response = await fetch(url, {
-                  headers: { 'User-Agent': 'DirectoryVerifier/1.0' },
+                const response = await fetch(fetchUrl.href, {
+                  headers: {
+                    'Cache-Control': 'no-cache',
+                    Pragma: 'no-cache',
+                    'User-Agent': 'DirectoryVerifier/1.0'
+                  },
                   redirect: 'follow',
                   signal: controller.signal
                 });
-                const finalUrl = response.url || url;
+                const finalUrl = response.url || fetchUrl.href;
 
                 if (!response.ok) {
                   return {
@@ -267,7 +273,7 @@ jobs:
               } catch (error) {
                 return {
                   error: error.message,
-                  finalUrl: url,
+                  finalUrl: fetchUrl.href,
                   html: '',
                   status: null
                 };
