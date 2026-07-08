@@ -477,12 +477,22 @@ describe('reusable verify badge workflow', () => {
     expect(source).toContain('[0, 30, 60, 120, 180, 300]')
     expect(source).toContain('[0, 15, 45]')
     expect(source).toContain('core.notice(')
+    expect(source).toContain("fetchUrl.searchParams.set('badge-check'")
+    expect(source).toContain("'Cache-Control': 'no-cache'")
   })
 
   it('parses submitted product URLs from multi-line details sections before checking the badge', async () => {
     const { comments, fetch, github, labelsAdded, outputs } = await runBadgeCheck()
 
-    expect(fetch).toHaveBeenCalledWith('https://serplists.com', expect.any(Object))
+    const [fetchUrl, fetchInit] = fetch.mock.calls[0] ?? []
+    expect(String(fetchUrl)).toMatch(/^https:\/\/serplists\.com\/\?badge-check=\d+$/)
+    expect(fetchInit).toMatchObject({
+      headers: expect.objectContaining({
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        'User-Agent': 'DirectoryVerifier/1.0'
+      })
+    })
     expect(outputs).toMatchObject({ found: 'false', slug: 'serplists.com' })
     expect(github.rest.issues.addLabels).toHaveBeenCalledWith({
       owner: 'serpcompany',
