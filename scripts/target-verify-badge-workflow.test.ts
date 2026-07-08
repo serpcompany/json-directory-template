@@ -38,9 +38,7 @@ interface WorkflowDefinition {
 }
 
 function loadYamlWorkflow(path: string): WorkflowDefinition {
-  return yaml.load(
-    readFileSync(resolve(process.cwd(), path), 'utf8')
-  ) as WorkflowDefinition
+  return yaml.load(readFileSync(resolve(process.cwd(), path), 'utf8')) as WorkflowDefinition
 }
 
 function loadReusableWorkflow(): WorkflowDefinition {
@@ -261,7 +259,7 @@ describe('target verify badge workflow template', () => {
     expect(workflow.on.issues.types).toEqual(['opened'])
     expect(workflow.on.issue_comment.types).toEqual(['created'])
     expect(verifyJob.if).toContain("github.event_name == 'issues'")
-    expect(verifyJob.if).toContain("!github.event.issue.pull_request")
+    expect(verifyJob.if).toContain('!github.event.issue.pull_request')
     expect(verifyJob.if).toContain('/check-badge')
     expect(workflow.permissions).toMatchObject({ issues: 'write' })
     expect(verifyJob.permissions).toMatchObject({ issues: 'write' })
