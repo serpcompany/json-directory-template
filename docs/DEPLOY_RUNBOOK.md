@@ -158,6 +158,21 @@ deploys also install `.github/workflows/deploy.yml` and `.github/workflows/verif
 `scripts/templates/` as a safety net. Do not hand-edit divergent target workflow logic as the
 long-term fix.
 
+When a verified submission's slug already exists in `sites/<site-id>/products.json` on `main`, the
+central workflow comments on the issue and stops without creating a branch, changing content, or
+opening a duplicate PR.
+
+Required setup for every active public issue repo:
+
+| Public issue repo | Issues | Workflow | Secret | Badge assets |
+|---|---|---|---|---|
+| `serpcompany/browserextensions.io` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
+| `serpcompany/pornvideodownloaders.com` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
+| `serpcompany/serp.ai` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
+| `serpcompany/serp.co` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
+| `serpcompany/serp.software` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
+| `serpcompany/serpdownloaders.com` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
+
 Prefer rolling out submit-intake config changes one site per source PR so review
 and live verification stay simple. If a PR changes multiple concrete site paths,
 the push deploy resolver deploys those exact sites. Metadata-only multi-site

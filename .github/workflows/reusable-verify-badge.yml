@@ -471,25 +471,6 @@ jobs:
               'GET',
               `/repos/${sourceOwner}/${sourceRepo}/git/ref/heads/main`
             );
-            let branchRef = await sourceRequestOrNull(
-              'GET',
-              `/repos/${sourceOwner}/${sourceRepo}/git/ref/heads/${encodeURIComponent(branch)}`
-            );
-
-            if (!branchRef) {
-              try {
-                await sourceRequest('POST', `/repos/${sourceOwner}/${sourceRepo}/git/refs`, {
-                  ref: `refs/heads/${branch}`,
-                  sha: mainRef.object.sha
-                });
-              } catch (error) {
-                if (error.status !== 422) throw error;
-              }
-              branchRef = await sourceRequest(
-                'GET',
-                `/repos/${sourceOwner}/${sourceRepo}/git/ref/heads/${encodeURIComponent(branch)}`
-              );
-            }
 
             async function readProductsAt(refSha) {
               const tree = await sourceRequest(
@@ -520,6 +501,26 @@ jobs:
             if (mainProducts.products[submission.slug]) {
               await targetComment(`:white_check_mark: **Badge verified**\n\nA listing with slug \`${submission.slug}\` already exists in \`${productsPath}\`. @${assignee}, please review whether this issue should be closed.`);
               return;
+            }
+
+            let branchRef = await sourceRequestOrNull(
+              'GET',
+              `/repos/${sourceOwner}/${sourceRepo}/git/ref/heads/${encodeURIComponent(branch)}`
+            );
+
+            if (!branchRef) {
+              try {
+                await sourceRequest('POST', `/repos/${sourceOwner}/${sourceRepo}/git/refs`, {
+                  ref: `refs/heads/${branch}`,
+                  sha: mainRef.object.sha
+                });
+              } catch (error) {
+                if (error.status !== 422) throw error;
+              }
+              branchRef = await sourceRequest(
+                'GET',
+                `/repos/${sourceOwner}/${sourceRepo}/git/ref/heads/${encodeURIComponent(branch)}`
+              );
             }
 
             const branchProducts = await readProductsAt(branchRef.object.sha);
