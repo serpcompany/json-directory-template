@@ -5,7 +5,7 @@
 
 import { jest } from '@jest/globals'
 import { FavoritesProvider } from '@thedaviddias/web-core/root-shell-client'
-import { render } from '@/__tests__/utils/test-utils.helper'
+import { render, screen } from '@/__tests__/utils/test-utils.helper'
 import NotFound from '@/app/not-found'
 
 // Mock next/navigation
@@ -59,10 +59,33 @@ describe('Basic Component Rendering', () => {
 
     it('should render EmptyState component', async () => {
       const { EmptyState } = await import('@thedaviddias/web-core/empty-state')
-      const { container } = render(
-        <EmptyState title="Test Title" description="Test Description" actionLabel="Action" />
+      const onAction = jest.fn()
+      const { container, rerender, user } = render(
+        <EmptyState
+          title="Test Title"
+          description="Test Description"
+          actionLabel="Action"
+          onAction={onAction}
+        />
       )
+
       expect(container).toBeInTheDocument()
+      expect(screen.getByRole('heading', { level: 2, name: 'Test Title' })).toBeVisible()
+      expect(screen.getByText('Test Description')).toBeVisible()
+      await user.click(screen.getByRole('button', { name: 'Action' }))
+      expect(onAction).toHaveBeenCalledTimes(1)
+
+      rerender(
+        <EmptyState
+          title="Linked Title"
+          description="Linked Description"
+          actionLabel="Open submit"
+          actionHref="/submit"
+        />
+      )
+
+      expect(screen.getByRole('heading', { level: 2, name: 'Linked Title' })).toBeVisible()
+      expect(screen.getByRole('link', { name: 'Open submit' })).toHaveAttribute('href', '/submit')
     })
 
     it('should render FavoriteButton component with provider', async () => {
