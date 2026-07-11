@@ -49,10 +49,9 @@ describe('Header auth actions', () => {
   it('shows a combined sign up and sign in link when signed out', () => {
     render(<Header authState={{ isAuthenticated: false }} />)
 
-    expect(screen.getByRole('link', { name: /sign up \/ sign in/i })).toHaveAttribute(
-      'href',
-      '/login/'
-    )
+    const loginLink = screen.getByRole('link', { name: /sign up \/ sign in/i })
+    expect(loginLink).toHaveAttribute('href', '/login/')
+    expect(loginLink).toHaveAttribute('data-slot', 'button')
   })
 
   it('shows account and sign out actions when signed in', () => {
@@ -69,7 +68,9 @@ describe('Header auth actions', () => {
       />
     )
 
-    expect(screen.getByRole('link', { name: /account/i })).toHaveAttribute('href', '/account/')
+    const accountLink = screen.getByRole('link', { name: /account/i })
+    expect(accountLink).toHaveAttribute('href', '/account/')
+    expect(accountLink).toHaveAttribute('data-slot', 'button')
     expect(screen.getByRole('button', { name: /sign out/i })).toBeInTheDocument()
   })
 })
