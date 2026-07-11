@@ -184,6 +184,15 @@ describe('browserextensions.io artifact links', () => {
     expect(badSearchIndexEntries).toEqual([])
   })
 
+  it('does not render direct LaunchBuzz outbound links for the migrated product entry', () => {
+    const html = readArtifactHtml('products/launchbuzz.io/index.html')
+
+    expect(html).toContain('href="https://serp.ly/launchbuzz.io?via=browserextensions.io"')
+    expect(html).not.toContain('href="https://launchbuzz.io"')
+    expect(html).not.toContain('href="https://launchbuzz.io/projects/submit"')
+    expect(html).not.toContain('href="https://launchbuzz.io/pricing"')
+  })
+
   it('renders BrowserExtensions.io about copy from the site-owned content source', () => {
     const html = readArtifactHtml('about/index.html')
 
