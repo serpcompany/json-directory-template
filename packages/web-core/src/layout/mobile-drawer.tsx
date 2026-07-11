@@ -1,27 +1,27 @@
-'use client';
+'use client'
 
-import { cn } from '@thedaviddias/design-system/lib/utils';
-import { ExternalLink, Trophy, X } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect, type ReactNode } from 'react';
-import { FavoritesLink } from '../ui/favorites-link';
-import type { HeaderAuthState } from './header-auth-state';
-import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
-import { categories } from '@thedaviddias/web-core/categories';
-import { externalResources } from '@thedaviddias/web-core/external-resources';
-import { getRoute } from '@thedaviddias/web-core/routes';
-import { siteCopy } from '@thedaviddias/web-core/site-copy';
-import { siteConfig } from '@thedaviddias/web-core/site-config';
+import { cn } from '@thedaviddias/design-system/lib/utils'
+import { categories } from '@thedaviddias/web-core/categories'
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display'
+import { externalResources } from '@thedaviddias/web-core/external-resources'
+import { getRoute } from '@thedaviddias/web-core/routes'
+import { siteConfig } from '@thedaviddias/web-core/site-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { ExternalLink, Trophy, X } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { type ReactNode, useEffect } from 'react'
+import { FavoritesLink } from '../ui/favorites-link'
+import type { HeaderAuthState } from './header-auth-state'
 
 interface MobileDrawerProps {
-  availableCategorySlugs?: string[];
-  authState?: HeaderAuthState;
-  isOpen: boolean;
-  onClose: () => void;
-  featuredCount?: number;
-  signOutButton?: ReactNode;
-  showFeaturedCategory?: boolean;
+  availableCategorySlugs?: string[]
+  authState?: HeaderAuthState
+  isOpen: boolean
+  onClose: () => void
+  featuredCount?: number
+  signOutButton?: ReactNode
+  showFeaturedCategory?: boolean
 }
 
 /**
@@ -34,38 +34,36 @@ export function MobileDrawer({
   onClose,
   featuredCount,
   signOutButton,
-  showFeaturedCategory = Boolean(featuredCount),
+  showFeaturedCategory = Boolean(featuredCount)
 }: MobileDrawerProps) {
-  const pathname = usePathname();
-  const isAuthenticated = authState?.isAuthenticated ?? false;
-  const isAuthConfigured = authState?.isConfigured ?? true;
+  const pathname = usePathname()
+  const isAuthenticated = authState?.isAuthenticated ?? false
+  const isAuthConfigured = authState?.isConfigured ?? true
   const showExternalResources =
-    siteConfig.features.showExternalResources && externalResources.length > 0;
+    siteConfig.features.showExternalResources && externalResources.length > 0
   const availableCategories = availableCategorySlugs
-    ? categories.filter((category) =>
-        availableCategorySlugs.includes(category.slug)
-      )
-    : categories;
+    ? categories.filter(category => availableCategorySlugs.includes(category.slug))
+    : categories
 
   // Close drawer when route changes
   useEffect(() => {
     if (isOpen) {
-      onClose();
+      onClose()
     }
-  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pathname]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Prevent body scroll when drawer is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = ''
     }
 
     return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
 
   // Handle escape key
   useEffect(() => {
@@ -74,19 +72,19 @@ export function MobileDrawer({
      */
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
-        onClose();
+        onClose()
       }
-    };
+    }
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen, onClose]);
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isOpen, onClose])
 
   /**
    * Checks if current page is a category page
    */
   const isCategoryPage = (slug: string) =>
-    pathname === getRoute('category.page', { category: slug });
+    pathname === getRoute('category.page', { category: slug })
 
   return (
     <>
@@ -95,14 +93,12 @@ export function MobileDrawer({
         type="button"
         className={cn(
           'fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] transition-opacity sm:hidden border-none p-0',
-          isOpen
-            ? 'opacity-100 pointer-events-auto'
-            : 'opacity-0 pointer-events-none'
+          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         )}
         onClick={onClose}
-        onKeyDown={(e) => {
+        onKeyDown={e => {
           if (e.key === 'Escape') {
-            onClose();
+            onClose()
           }
         }}
         tabIndex={isOpen ? 0 : -1}
@@ -134,9 +130,7 @@ export function MobileDrawer({
         <div className="overflow-y-auto h-[calc(100%-64px)] p-4 space-y-6">
           {/* Main Navigation */}
           <div>
-            <h3 className="font-semibold text-sm mb-3 text-muted-foreground">
-              Navigation
-            </h3>
+            <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Navigation</h3>
             <nav className="space-y-1">
               {siteConfig.features.showAuth && isAuthenticated ? (
                 <Link
@@ -189,18 +183,14 @@ export function MobileDrawer({
               >
                 News
               </Link> */}
-              {siteConfig.features.showAuth && isAuthenticated ? (
-                signOutButton
-              ) : null}
+              {siteConfig.features.showAuth && isAuthenticated ? signOutButton : null}
             </nav>
           </div>
 
           {/* My Collection Section */}
           {siteConfig.features.showFavorites ? (
             <div>
-              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">
-                My Collection
-              </h3>
+              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">My Collection</h3>
               <nav className="space-y-1">
                 <FavoritesLink isMobile />
               </nav>
@@ -209,21 +199,19 @@ export function MobileDrawer({
 
           {/* Categories */}
           <div>
-            <h3 className="font-semibold text-sm mb-3 text-muted-foreground">
-              Categories
-            </h3>
+            <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Categories</h3>
             <nav className="space-y-1">
               {showFeaturedCategory ? (
                 <button
                   type="button"
                   onClick={() => {
                     if (pathname === '/') {
-                      onClose();
+                      onClose()
                       setTimeout(() => {
-                        document.getElementById('featured')?.scrollIntoView();
-                      }, 100);
+                        document.getElementById('featured')?.scrollIntoView()
+                      }, 100)
                     } else {
-                      window.location.href = '/#featured';
+                      window.location.href = '/#featured'
                     }
                   }}
                   className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors w-full text-left"
@@ -239,7 +227,7 @@ export function MobileDrawer({
                   )}
                 </button>
               ) : null}
-              {availableCategories.map((category) => (
+              {availableCategories.map(category => (
                 <Link
                   key={category.slug}
                   href={getRoute('category.page', { category: category.slug })}
@@ -259,11 +247,9 @@ export function MobileDrawer({
 
           {showExternalResources ? (
             <div>
-              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">
-                Resources
-              </h3>
+              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Resources</h3>
               <nav className="space-y-1">
-                {externalResources.map((resource) => (
+                {externalResources.map(resource => (
                   <Link
                     key={resource.slug}
                     href={resource.url}
@@ -284,5 +270,5 @@ export function MobileDrawer({
         </div>
       </div>
     </>
-  );
+  )
 }

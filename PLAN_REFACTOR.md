@@ -23,13 +23,112 @@ strategy changes. The current project is intentionally static-first:
 Payload CMS and D1 are architecture changes. They should happen only after the UI
 foundation is stable and the data-source boundary has been made explicit.
 
+## Current Refactor Status: 2026-07-11
+
+Latest local evidence:
+
+- Current branch is `july11`, tracking `origin/july11`.
+- Before the first plan-status edit in this session, `git status --short --branch`
+  was clean for tracked and untracked files:
+  `## july11...origin/july11`.
+- PR #137 exists for this branch:
+  - URL: `https://github.com/serpcompany/json-directory-template/pull/137`
+  - State: open draft PR.
+  - Head/base: `serpcompany:july11` into `main`.
+  - Title: `asdfsadf`.
+  - Created: `2026-07-11T06:01:24Z`.
+  - Last observed update: `2026-07-11T06:02:45Z`.
+  - Mergeability from GitHub: `MERGEABLE`; merge state: `UNSTABLE`.
+- The branch has two commits over `origin/main`:
+  - `5078f56 asdfsadf`: ShadcnBlocks/design-system foundation work plus Phase 1A-style
+    pilot visual and functional parity coverage.
+  - `f807300 asdfsadf`: cleanup outside the public UI refactor completion path
+    (`.gitignore`, `.codex/config.toml`, deleted reference/old plan files).
+- PR #137 check status at inspection time:
+  - `Detect changes`: success.
+  - `CodeQL / Analyze (actions)`: success.
+  - `CodeQL / Analyze (javascript-typescript)`: success in the latest `gh pr checks`
+    read, though it was still in progress in one earlier read.
+  - `PR Review / Validate Site & Policy`: failed.
+  - `PR Review / Type Check`: pending.
+  - `PR Review / Unit Tests`: pending.
+  - `PR Review / E2E Tests`: pending.
+  - `Label PRs / triage`: pending or queued.
+  - `CodeRabbit`: pending/in progress.
+- `Validate Site & Policy` failure root cause and local fix:
+  - `pnpm validate:sites` passed inside the job.
+  - The job failed on
+    `pnpm exec biome check --changed --since=origin/main --no-errors-on-unmatched`.
+  - Biome reported 6 fixable import-order/formatting errors in:
+    `packages/web-core/src/auth/sign-out-button.tsx`,
+    `packages/web-core/src/layout/header-nav-link.tsx`,
+    `packages/web-core/src/layout/mobile-drawer.tsx`, and
+    `packages/web-core/src/ui/favorites-link.tsx`.
+  - Local closeout applied Biome's safe formatting/import-order fixes to those four
+    files. PR #137 still needs the closeout commit pushed before GitHub can re-run the
+    failed job.
+
+Phase status:
+
+- Phase 0 is closed locally after the 2026-07-11 closeout pass:
+  - the registry is configured,
+  - design-system exports resolve to real files,
+  - web-core import-boundary cleanup is in place,
+  - `@shadcnblocks/hero125` dry-run proves the authenticated registry works from
+    `packages/design-system`,
+  - and the local Biome fix addresses PR #137's `Validate Site & Policy` failure.
+- Phase 1 is not implemented. The branch contains baseline/parity preparation for
+  Phase 1A, but there is no evidence of ShadcnBlocks-owned public directory UI source
+  installed under `packages/design-system` and no Phase 1B/1C public UI refactor slice.
+- PR #137 is the active PR to continue from. It is already open as a draft, so future
+  gitflow work should update that PR rather than creating a duplicate.
+- Ignored repo-local temp paths exist under `./tmp` and `./.wrangler/tmp`. They were
+  not modified for this status update and should be accounted for before any future
+  PR, deploy, or cleanup claim.
+
+Verification run during this status update:
+
+```bash
+pnpm --filter @thedaviddias/design-system typecheck
+pnpm typecheck
+pnpm test:repo
+```
+
+All three passed.
+
+Registry smoke-test status:
+
+```bash
+set -a
+source /Users/devin/dev/repos/shadcnblocks/.env
+set +a
+cd packages/design-system
+pnpm dlx shadcn@latest add @shadcnblocks/hero125 --dry-run
+```
+
+The command reached the configured `https://www.shadcnblocks.com/r/{name}` registry
+without printing or committing the API key and exited successfully. It was a dry-run
+only; no `components/hero125.tsx` file or ShadcnBlocks source was installed.
+
+Earlier failed candidates remain recorded for context:
+
+- `@shadcnblocks/empty-standard-1` returned
+  `[Block, component, example, or page not found]`.
+- `@shadcnblocks/hero-1` also returned not found with `shadcn@latest` and
+  `shadcn@4.12.0`.
+
+Use `@shadcnblocks/hero125` or another catalog-verified block-name pattern such as
+`<category><number>` for future smoke tests. Do not use the hyphenated `hero-1`
+example as a registry smoke candidate unless the registry or docs are rechecked and
+prove it exists.
+
 ## Current Facts
 
 - The repo uses a pnpm monorepo with thin site wrappers under `apps/<site>`.
 - Shared route rendering and reusable UI live in `packages/web-core`.
 - Shadcn primitives live in `packages/design-system`.
-- `packages/design-system/components.json` exists, but it is not currently configured
-  for the ShadcnBlocks registry.
+- `packages/design-system/components.json` is configured for the authenticated
+  ShadcnBlocks registry on branch `july11`.
 - Official ShadcnBlocks docs checked on 2026-07-11 require:
   - installing blocks through the shadcn CLI, for example
     `pnpm dlx shadcn add @shadcnblocks/hero-1`
@@ -52,8 +151,13 @@ foundation is stable and the data-source boundary has been made explicit.
   - The current shell process does not export `SHADCNBLOCKS_API_KEY`.
   - The API key value must not be printed, copied into this plan, committed, or added
     to any tracked file.
-- The design-system package has stale exports that point to missing files.
-- `packages/web-core` still has some relative imports into design-system internals.
+- The original baseline had stale design-system exports that pointed to missing files.
+  Branch `july11` removes the known missing exports and adds exports for real shadcn
+  component files used by the repo.
+- The original baseline had some `packages/web-core` relative imports into
+  design-system internals. Branch `july11` moves the touched runtime imports to
+  package exports, and the latest search did not find remaining relative imports from
+  `packages/web-core` or `apps` into `packages/design-system` internals.
 - Runtime app loaders read normalized `data/listings.json`.
 - Site data preparation currently supports only:
   - `listing-json`
@@ -80,6 +184,31 @@ foundation is stable and the data-source boundary has been made explicit.
 ## Phase 0: Foundation PR
 
 Goal: make the design system safe for ShadcnBlocks before changing public pages.
+
+Current status on `july11`:
+
+- Implemented in code:
+  - `packages/design-system/components.json` has the authenticated `@shadcnblocks`
+    registry entry.
+  - `packages/design-system/components.json` aliases now resolve `utils` through the
+    design-system package boundary.
+  - `packages/design-system/package.json` no longer exports missing `accordion` or
+    `stats-card` files.
+  - Missing exports for real shadcn component files used by this repo were added,
+    including `alert-dialog`, `aspect-ratio`, `command`, `drawer`, `pagination`, and
+    `sheet`.
+  - `packages/web-core` imports touched in the branch were moved from relative
+    design-system internals to `@thedaviddias/design-system/*` package exports.
+- Verified:
+  - `pnpm --filter @thedaviddias/design-system typecheck` passed.
+  - `pnpm typecheck` passed.
+  - `pnpm test:repo` passed.
+- Closed by the 2026-07-11 closeout pass:
+  - `@shadcnblocks/hero125` dry-run succeeds from `packages/design-system` with
+    `SHADCNBLOCKS_API_KEY` sourced from `/Users/devin/dev/repos/shadcnblocks/.env`.
+  - The successful dry-run proves the authenticated registry is reachable from this
+    repo context without committing or printing the API key.
+  - No ShadcnBlocks source files were installed during Phase 0.
 
 Scope:
 
@@ -120,12 +249,14 @@ set -a
 source /Users/devin/dev/repos/shadcnblocks/.env
 set +a
 cd packages/design-system
-pnpm dlx shadcn@latest add @shadcnblocks/empty-standard-1 --dry-run
+pnpm dlx shadcn@latest add @shadcnblocks/hero125 --dry-run
 ```
 
 Use `--view` instead of `--dry-run` when the implementer needs to inspect the resolved
-registry payload without writing files. If the CLI needs an actual install smoke test,
-use a low-risk component candidate, confirm generated files land under
+registry payload without writing files. Do not use `@shadcnblocks/empty-standard-1`
+or `@shadcnblocks/hero-1` as the smoke-test candidate unless the registry is rechecked
+and proves either name exists. If the CLI needs an actual install smoke test, use a
+catalog-verified low-risk block candidate, confirm generated files land under
 `packages/design-system`, then remove any unused evaluation files before the PR is
 considered ready. Do not commit API key material.
 
@@ -156,6 +287,25 @@ pnpm test:repo
 
 Goal: refactor shared public directory surfaces so their owned source comes from
 ShadcnBlocks/shadcn patterns and primitives while preserving the current UI contract.
+
+Current status on `july11`:
+
+- Phase 1A is partially started:
+  - `apps/e2e/tests/visual.spec.ts` now includes pilot desktop/tablet/mobile visual
+    coverage for homepage, search, category, listing detail, empty search,
+    autocomplete, favorites-only, sort/result-count, mobile drawer, and mobile search
+    overlay states.
+  - `apps/e2e/tests/public-parity.spec.ts` now covers pilot functional parity for
+    homepage search submit, autocomplete keyboard navigation, mobile search overlay,
+    mobile drawer behavior, favorites-only filtering, sort persistence, empty-state
+    action behavior, and public link href/target/rel semantics.
+  - New pilot snapshots are present under
+    `apps/e2e/tests/visual.spec.ts-snapshots/`.
+- Phase 1B and Phase 1C have not started:
+  - No ShadcnBlocks block source is installed under `packages/design-system`.
+  - No public directory surfaces have been refactored to ShadcnBlocks-owned source.
+  - The branch contains import-boundary cleanup and parity coverage, not the public UI
+    component mapping/refactor.
 
 The intended result is no user-visible redesign. Spacing, layout breakpoints, colors,
 border radii, typography scale, copy, ordering, routes, metadata, analytics attributes,
