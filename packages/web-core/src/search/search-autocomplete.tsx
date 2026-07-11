@@ -92,6 +92,7 @@ export function SearchAutocomplete({
         if (!cancelled) {
           setSuggestions([...recentSearches, ...categoryMatches])
           setSelectedIndex(-1)
+          setLoading(false)
         }
         return
       }

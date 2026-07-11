@@ -25,11 +25,11 @@ foundation is stable and the data-source boundary has been made explicit.
 
 ## Current Refactor Status: 2026-07-11
 
-Latest local evidence:
+Latest local evidence after Phase 0 closeout and static preview artifact check:
 
 - Current branch is `july11`, tracking `origin/july11`.
-- Before the first plan-status edit in this session, `git status --short --branch`
-  was clean for tracked and untracked files:
+- Before this plan-status update, `git status --short --branch` was clean for tracked
+  and untracked files:
   `## july11...origin/july11`.
 - PR #137 exists for this branch:
   - URL: `https://github.com/serpcompany/json-directory-template/pull/137`
@@ -37,25 +37,28 @@ Latest local evidence:
   - Head/base: `serpcompany:july11` into `main`.
   - Title: `asdfsadf`.
   - Created: `2026-07-11T06:01:24Z`.
-  - Last observed update: `2026-07-11T06:02:45Z`.
-  - Mergeability from GitHub: `MERGEABLE`; merge state: `UNSTABLE`.
-- The branch has two commits over `origin/main`:
+  - Last observed update: `2026-07-11T06:19:11Z`.
+  - Mergeability from GitHub: `MERGEABLE`.
+- The branch has three commits over `origin/main`:
   - `5078f56 asdfsadf`: ShadcnBlocks/design-system foundation work plus Phase 1A-style
     pilot visual and functional parity coverage.
   - `f807300 asdfsadf`: cleanup outside the public UI refactor completion path
     (`.gitignore`, `.codex/config.toml`, deleted reference/old plan files).
-- PR #137 check status at inspection time:
+  - `860c5ab chore(refactor): close shadcn phase 0`: records the valid
+    `@shadcnblocks/hero125` registry dry-run and applies Biome formatting fixes for
+    the failed PR check.
+- PR #137 check status after the closeout push:
   - `Detect changes`: success.
   - `CodeQL / Analyze (actions)`: success.
-  - `CodeQL / Analyze (javascript-typescript)`: success in the latest `gh pr checks`
-    read, though it was still in progress in one earlier read.
-  - `PR Review / Validate Site & Policy`: failed.
-  - `PR Review / Type Check`: pending.
-  - `PR Review / Unit Tests`: pending.
-  - `PR Review / E2E Tests`: pending.
+  - `CodeQL / Analyze (javascript-typescript)`: success.
+  - `CodeQL`: success.
+  - `CodeRabbit`: success.
+  - `PR Review / Validate Site & Policy`: success.
+  - `PR Review / Type Check`: success.
+  - `PR Review / Unit Tests`: success.
+  - `PR Review / E2E Tests`: success.
   - `Label PRs / triage`: pending or queued.
-  - `CodeRabbit`: pending/in progress.
-- `Validate Site & Policy` failure root cause and local fix:
+- `Validate Site & Policy` failure root cause and fix:
   - `pnpm validate:sites` passed inside the job.
   - The job failed on
     `pnpm exec biome check --changed --since=origin/main --no-errors-on-unmatched`.
@@ -65,36 +68,59 @@ Latest local evidence:
     `packages/web-core/src/layout/mobile-drawer.tsx`, and
     `packages/web-core/src/ui/favorites-link.tsx`.
   - Local closeout applied Biome's safe formatting/import-order fixes to those four
-    files. PR #137 still needs the closeout commit pushed before GitHub can re-run the
-    failed job.
+    files, pushed the closeout commit, and GitHub now reports the job passing.
+- Local static preview artifacts were built for all active checked-in `sites/*`
+  wrappers because concurrent `dev:site` processes share `data/listings.json` and
+  would overwrite each other's prepared data:
+  - `browserextensions.io`: `http://127.0.0.1:4101/`
+  - `pornvideodownloaders.com`: `http://127.0.0.1:4102/`
+  - `serp.ai`: `http://127.0.0.1:4103/`
+  - `serp.co`: `http://127.0.0.1:4104/`
+  - `serp.software`: `http://127.0.0.1:4105/`
+  - `serpdownloaders.com`: `http://127.0.0.1:4106/`
+  - All six homepages returned HTTP 200 during the local static-server check.
+  - These localhost servers are not currently running; restart the Python static
+    servers from `dist/sites/<site-id>` when another click-through pass is needed.
 
 Phase status:
 
-- Phase 0 is closed locally after the 2026-07-11 closeout pass:
+- Phase 0 is closed on branch `july11` and pushed to PR #137 after the 2026-07-11
+  closeout pass:
   - the registry is configured,
   - design-system exports resolve to real files,
   - web-core import-boundary cleanup is in place,
   - `@shadcnblocks/hero125` dry-run proves the authenticated registry works from
     `packages/design-system`,
-  - and the local Biome fix addresses PR #137's `Validate Site & Policy` failure.
+  - and the PR check failure is fixed and passing on GitHub.
 - Phase 1 is not implemented. The branch contains baseline/parity preparation for
   Phase 1A, but there is no evidence of ShadcnBlocks-owned public directory UI source
   installed under `packages/design-system` and no Phase 1B/1C public UI refactor slice.
-- PR #137 is the active PR to continue from. It is already open as a draft, so future
-  gitflow work should update that PR rather than creating a duplicate.
+- PR #137 is the active Phase 0 PR. It is still open as a draft. Do not create a
+  duplicate PR.
 - Ignored repo-local temp paths exist under `./tmp` and `./.wrangler/tmp`. They were
   not modified for this status update and should be accounted for before any future
   PR, deploy, or cleanup claim.
 
-Verification run during this status update:
+Verification run during Phase 0 closeout:
 
 ```bash
+pnpm exec biome check --changed --since=origin/main --no-errors-on-unmatched
 pnpm --filter @thedaviddias/design-system typecheck
 pnpm typecheck
 pnpm test:repo
 ```
 
-All three passed.
+All four passed.
+
+Recommended next action:
+
+1. Review/rename PR #137, then mark it ready for review or merge it after confirming
+   the non-code cleanup in `f807300` is intended.
+2. After Phase 0 is merged, start Phase 1B only: create the registry/component mapping
+   table for public directory surfaces before installing or refactoring any public UI.
+3. Restart static localhost previews from `dist/sites/<site-id>` if another quick
+   visual click-through is needed while deciding the first Phase 1 slice. Do not treat
+   the static preview build as a deploy.
 
 Registry smoke-test status:
 

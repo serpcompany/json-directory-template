@@ -18,7 +18,7 @@ We have a lifetime full account to `https://www.shadcnblocks.com/docs`.
 
 The VSCODE extension is installed with the API key. 
 
-You can also use the API key in the `~/repos/dev/shadcnblocks/.env` file.
+You can also use the API key in the `~/dev/repos/shadcnblocks/.env` file.
 
 Use their components, blocks, pages, etc.
 
