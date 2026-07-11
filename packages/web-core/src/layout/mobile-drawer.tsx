@@ -1,6 +1,7 @@
 'use client'
 
 import { cn } from '@thedaviddias/design-system/lib/utils'
+import { ScrollArea } from '@thedaviddias/design-system/scroll-area'
 import { categories } from '@thedaviddias/web-core/categories'
 import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display'
 import { externalResources } from '@thedaviddias/web-core/external-resources'
@@ -10,7 +11,7 @@ import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { ExternalLink, Trophy, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { type ReactNode, useEffect } from 'react'
+import { type ReactNode, useEffect, useRef } from 'react'
 import { FavoritesLink } from '../ui/favorites-link'
 import type { HeaderAuthState } from './header-auth-state'
 
@@ -37,6 +38,8 @@ export function MobileDrawer({
   showFeaturedCategory = Boolean(featuredCount)
 }: MobileDrawerProps) {
   const pathname = usePathname()
+  const drawerRef = useRef<HTMLDivElement>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
   const isAuthenticated = authState?.isAuthenticated ?? false
   const isAuthConfigured = authState?.isConfigured ?? true
   const showExternalResources =
@@ -65,19 +68,66 @@ export function MobileDrawer({
     }
   }, [isOpen])
 
-  // Handle escape key
+  const getFocusableElements = () => {
+    const drawer = drawerRef.current
+    if (!drawer) return []
+
+    return Array.from(
+      drawer.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter(element => !element.hasAttribute('disabled'))
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement | null
+      window.requestAnimationFrame(() => {
+        getFocusableElements()[0]?.focus()
+      })
+      return
+    }
+
+    if (previousFocusRef.current?.isConnected) {
+      previousFocusRef.current.focus()
+    }
+  }, [isOpen])
+
+  // Handle escape key and keep keyboard focus inside the open drawer.
   useEffect(() => {
     /**
-     * Handles escape key press
+     * Handles drawer keyboard commands.
      */
-    const handleEscape = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
         onClose()
+        return
+      }
+
+      if (e.key !== 'Tab' || !isOpen) {
+        return
+      }
+
+      const focusableElements = getFocusableElements()
+      if (focusableElements.length === 0) {
+        e.preventDefault()
+        return
+      }
+
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault()
+        lastElement?.focus()
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault()
+        firstElement?.focus()
       }
     }
 
-    document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose])
 
   /**
@@ -101,17 +151,23 @@ export function MobileDrawer({
             onClose()
           }
         }}
-        tabIndex={isOpen ? 0 : -1}
+        tabIndex={-1}
         aria-label="Close menu"
         aria-hidden="true"
       />
 
       {/* Drawer */}
       <div
+        aria-hidden={!isOpen}
+        aria-label="Menu"
+        aria-modal={isOpen}
         className={cn(
           'fixed top-0 left-0 h-full w-[280px] bg-background border-r z-[70] transition-transform duration-300 sm:hidden',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
+        inert={!isOpen}
+        ref={drawerRef}
+        role="dialog"
       >
         {/* Drawer Header */}
         <div className="flex items-center justify-between p-4 border-b">
@@ -127,147 +183,149 @@ export function MobileDrawer({
         </div>
 
         {/* Drawer Content */}
-        <div className="overflow-y-auto h-[calc(100%-64px)] p-4 space-y-6">
-          {/* Main Navigation */}
-          <div>
-            <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Navigation</h3>
-            <nav className="space-y-1">
-              {siteConfig.features.showAuth && isAuthenticated ? (
+        <ScrollArea className="h-[calc(100%-64px)] overscroll-contain">
+          <div className="p-4 space-y-6">
+            {/* Main Navigation */}
+            <div>
+              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Navigation</h3>
+              <nav className="space-y-1">
+                {siteConfig.features.showAuth && isAuthenticated ? (
+                  <Link
+                    href={getRoute('account')}
+                    className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                  >
+                    Account
+                  </Link>
+                ) : siteConfig.features.showAuth && isAuthConfigured ? (
+                  <Link
+                    href={getRoute('login')}
+                    className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                  >
+                    Sign up / Sign in
+                  </Link>
+                ) : null}
+                {siteConfig.features.showProjects ? (
+                  <Link
+                    href={getRoute('projects')}
+                    className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                  >
+                    {siteCopy.networkLabel}
+                  </Link>
+                ) : null}
+                {siteConfig.features.showDocs ? (
+                  <Link
+                    href={getRoute('docs.list')}
+                    className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                  >
+                    {siteCopy.docsLabel}
+                  </Link>
+                ) : null}
+                {siteConfig.features.showGuides ? (
+                  <Link
+                    href={getRoute('guides.list')}
+                    className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                  >
+                    Posts
+                  </Link>
+                ) : null}
                 <Link
-                  href={getRoute('account')}
+                  href={getRoute('submit')}
                   className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
                 >
-                  Account
+                  {siteCopy.submitLabel}
                 </Link>
-              ) : siteConfig.features.showAuth && isAuthConfigured ? (
-                <Link
-                  href={getRoute('login')}
-                  className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                >
-                  Sign up / Sign in
-                </Link>
-              ) : null}
-              {siteConfig.features.showProjects ? (
-                <Link
-                  href={getRoute('projects')}
-                  className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                >
-                  {siteCopy.networkLabel}
-                </Link>
-              ) : null}
-              {siteConfig.features.showDocs ? (
-                <Link
-                  href={getRoute('docs.list')}
-                  className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                >
-                  {siteCopy.docsLabel}
-                </Link>
-              ) : null}
-              {siteConfig.features.showGuides ? (
-                <Link
-                  href={getRoute('guides.list')}
-                  className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                >
-                  Posts
-                </Link>
-              ) : null}
-              <Link
-                href={getRoute('submit')}
-                className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-              >
-                {siteCopy.submitLabel}
-              </Link>
-              {/* <Link
+                {/* <Link
                 href={getRoute('news')}
                 className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
               >
                 News
               </Link> */}
-              {siteConfig.features.showAuth && isAuthenticated ? signOutButton : null}
-            </nav>
-          </div>
-
-          {/* My Collection Section */}
-          {siteConfig.features.showFavorites ? (
-            <div>
-              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">My Collection</h3>
-              <nav className="space-y-1">
-                <FavoritesLink isMobile />
+                {siteConfig.features.showAuth && isAuthenticated ? signOutButton : null}
               </nav>
             </div>
-          ) : null}
 
-          {/* Categories */}
-          <div>
-            <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Categories</h3>
-            <nav className="space-y-1">
-              {showFeaturedCategory ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (pathname === '/') {
-                      onClose()
-                      setTimeout(() => {
-                        document.getElementById('featured')?.scrollIntoView()
-                      }, 100)
-                    } else {
-                      window.location.href = '/#featured'
-                    }
-                  }}
-                  className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors w-full text-left"
-                >
-                  <div className="flex items-center gap-2">
-                    <Trophy className="h-4 w-4" />
-                    Featured
-                  </div>
-                  {featuredCount && (
-                    <span className="text-xs bg-muted px-1.5 py-0.5 rounded-full">
-                      {featuredCount}
-                    </span>
-                  )}
-                </button>
-              ) : null}
-              {availableCategories.map(category => (
-                <Link
-                  key={category.slug}
-                  href={getRoute('category.page', { category: category.slug })}
-                  className={cn(
-                    'flex items-center gap-2 px-2 py-1.5 text-sm rounded-md transition-colors',
-                    isCategoryPage(category.slug)
-                      ? 'text-foreground font-medium bg-accent'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                  )}
-                >
-                  <category.icon className="h-4 w-4" />
-                  {getCategoryDisplayName(category.slug)}
-                </Link>
-              ))}
-            </nav>
-          </div>
+            {/* My Collection Section */}
+            {siteConfig.features.showFavorites ? (
+              <div>
+                <h3 className="font-semibold text-sm mb-3 text-muted-foreground">My Collection</h3>
+                <nav className="space-y-1">
+                  <FavoritesLink isMobile />
+                </nav>
+              </div>
+            ) : null}
 
-          {showExternalResources ? (
+            {/* Categories */}
             <div>
-              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Resources</h3>
+              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Categories</h3>
               <nav className="space-y-1">
-                {externalResources.map(resource => (
-                  <Link
-                    key={resource.slug}
-                    href={resource.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors group"
+                {showFeaturedCategory ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (pathname === '/') {
+                        onClose()
+                        setTimeout(() => {
+                          document.getElementById('featured')?.scrollIntoView()
+                        }, 100)
+                      } else {
+                        window.location.href = '/#featured'
+                      }
+                    }}
+                    className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors w-full text-left"
                   >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <resource.icon className="h-4 w-4 flex-shrink-0" />
-                      <span className="truncate">{resource.name}</span>
+                    <div className="flex items-center gap-2">
+                      <Trophy className="h-4 w-4" />
+                      Featured
                     </div>
-                    <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                    {featuredCount && (
+                      <span className="text-xs bg-muted px-1.5 py-0.5 rounded-full">
+                        {featuredCount}
+                      </span>
+                    )}
+                  </button>
+                ) : null}
+                {availableCategories.map(category => (
+                  <Link
+                    key={category.slug}
+                    href={getRoute('category.page', { category: category.slug })}
+                    className={cn(
+                      'flex items-center gap-2 px-2 py-1.5 text-sm rounded-md transition-colors',
+                      isCategoryPage(category.slug)
+                        ? 'text-foreground font-medium bg-accent'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                    )}
+                  >
+                    <category.icon className="h-4 w-4" />
+                    {getCategoryDisplayName(category.slug)}
                   </Link>
                 ))}
               </nav>
             </div>
-          ) : null}
-        </div>
+
+            {showExternalResources ? (
+              <div>
+                <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Resources</h3>
+                <nav className="space-y-1">
+                  {externalResources.map(resource => (
+                    <Link
+                      key={resource.slug}
+                      href={resource.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors group"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <resource.icon className="h-4 w-4 flex-shrink-0" />
+                        <span className="truncate">{resource.name}</span>
+                      </div>
+                      <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+            ) : null}
+          </div>
+        </ScrollArea>
       </div>
     </>
   )

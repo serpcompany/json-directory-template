@@ -52,7 +52,9 @@ test.describe('pilot public parity interactions', () => {
     const searchForm = page.getByRole('form', { name: /desktop search/i })
     const searchInput = searchForm.getByRole('textbox', { name: /^search$/i })
     await searchInput.fill('123movies')
-    await expect(page.getByRole('button', { name: /123movies downloader/i })).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: /123movies(?: video)? downloader/i })
+    ).toBeVisible()
 
     await page.keyboard.press('ArrowDown')
     await page.keyboard.press('Enter')
