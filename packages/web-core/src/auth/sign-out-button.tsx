@@ -1,24 +1,16 @@
 'use client'
 
+import { Button } from '@thedaviddias/design-system/button'
 import type { ReactElement } from 'react'
-import { Button } from '../../../design-system/components/shadcn/button'
 
 type SignOutButtonProps = {
   className?: string
   onSignOut: () => void
 }
 
-export function SignOutButton({
-  className,
-  onSignOut,
-}: SignOutButtonProps): ReactElement {
+export function SignOutButton({ className, onSignOut }: SignOutButtonProps): ReactElement {
   return (
-    <Button
-      type="button"
-      variant="ghost"
-      className={className}
-      onClick={onSignOut}
-    >
+    <Button type="button" variant="ghost" className={className} onClick={onSignOut}>
       Sign out
     </Button>
   )

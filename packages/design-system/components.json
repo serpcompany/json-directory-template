@@ -4,7 +4,7 @@
   "rsc": true,
   "tsx": true,
   "tailwind": {
-    "config": "../tailwind-config/config.ts",
+    "config": "",
     "css": "styles/globals.css",
     "baseColor": "neutral",
     "cssVariables": true
@@ -12,9 +12,17 @@
   "iconLibrary": "lucide",
   "aliases": {
     "components": "@thedaviddias/design-system/components",
-    "utils": "../../lib/utils",
+    "utils": "@thedaviddias/design-system/lib/utils",
     "hooks": "@thedaviddias/design-system/hooks",
     "lib": "@thedaviddias/design-system/lib",
     "ui": "@thedaviddias/design-system/components/shadcn"
+  },
+  "registries": {
+    "@shadcnblocks": {
+      "url": "https://www.shadcnblocks.com/r/{name}",
+      "headers": {
+        "Authorization": "Bearer ${SHADCNBLOCKS_API_KEY}"
+      }
+    }
   }
 }
