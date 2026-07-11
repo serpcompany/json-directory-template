@@ -34,6 +34,8 @@ type SitemapContentLoaders = {
 }
 
 const CANONICAL_SITEMAP_INDEX_PATH = '/sitemap-index.xml'
+const PUBLIC_FILE_EXTENSION_PATTERN =
+  /\.(?:css|gif|ico|jpeg|jpg|js|json|map|png|svg|txt|webp|woff2?|xml)$/i
 
 function normalizeBaseUrl(baseUrl: string): string {
   return baseUrl.replace(/\/+$/, '')
@@ -44,7 +46,9 @@ function withTrailingSlash(path: string): string {
     return path
   }
 
-  if (path.endsWith('/') || path.split('/').at(-1)?.includes('.')) {
+  const lastSegment = path.split('/').at(-1) ?? ''
+
+  if (path.endsWith('/') || PUBLIC_FILE_EXTENSION_PATTERN.test(lastSegment)) {
     return path
   }
 

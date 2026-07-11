@@ -64,12 +64,12 @@ describe('browserextensions.io artifact links', () => {
     expect(html).not.toContain('href="/legal/privacy"')
     expect(html).not.toContain('href="/legal/terms"')
     expect(html).not.toContain('href="/network"')
-    expect(html).not.toContain('href="/categories/featured"')
   })
 
-  it('emits route indexes for UI-linked search and products pages', () => {
+  it('emits route indexes for UI-linked search, products, and featured pages', () => {
     expect(routeIndexExists('/search')).toBe(true)
     expect(routeIndexExists('/products')).toBe(true)
+    expect(routeIndexExists('/categories/featured')).toBe(true)
   })
 
   it('emits trailing-slash internal links so linked pages do not need redirects', () => {
