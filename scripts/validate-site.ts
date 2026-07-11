@@ -1,14 +1,16 @@
-import { readFileSync, writeFileSync } from 'node:fs';
-import { mkdirSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   loadCheckedInSiteFromInput,
   parseSiteInputArgs,
   type SiteInputTarget,
 } from './site-config.ts';
+import {
+  getListingSourcePathDisplay,
+  writeListingSourceToPath,
+} from './listing-source-adapters.ts';
 import { createRunTempDir } from './run-context.ts';
-import { writeTrialWebsiteEntries } from './trial-build.ts';
 import {
   getActiveCategories,
   getUnknownCategorySlugs,
@@ -17,8 +19,6 @@ import {
   normalizeJsonWebsite,
   websiteJsonEntriesSchema,
 } from '@thedaviddias/web-core/website-schema';
-
-const workspaceRoot = resolve(process.cwd());
 
 function getCategoryFixHint(
   siteId: string,
@@ -35,7 +35,11 @@ function getCategoryFixHint(
     return `Update content.listingSource.category in ${configPath} or add the slug to sites/${siteId}/categories.json.`;
   }
 
-  return `Update the category values in ${listingSource.path} or add the slug to sites/${siteId}/categories.json.`;
+  if (listingSource.kind === 'd1-listings') {
+    return `Update approved D1 listings for ${listingSource.siteId ?? siteId} or add the slug to sites/${siteId}/categories.json.`;
+  }
+
+  return `Update the category values in ${getListingSourcePathDisplay(siteId, listingSource)} or add the slug to sites/${siteId}/categories.json.`;
 }
 
 export function validateSite(input: SiteInputTarget): void {
@@ -45,26 +49,7 @@ export function validateSite(input: SiteInputTarget): void {
   const validatePath = resolve(validateDir, 'listings.json');
 
   try {
-    mkdirSync(dirname(validatePath), { recursive: true });
-
-    if (definition.content.listingSource.kind === 'trial-products-json') {
-      writeTrialWebsiteEntries(
-        definition.content.listingSource.path,
-        validatePath,
-        {
-          category: definition.content.listingSource.category,
-          featuredCount: definition.content.listingSource.featuredCount,
-          publishedAt: definition.content.listingSource.publishedAt,
-        }
-      );
-    } else {
-      writeFileSync(
-        validatePath,
-        readFileSync(
-          resolve(workspaceRoot, definition.content.listingSource.path)
-        )
-      );
-    }
+    writeListingSourceToPath({ definition, outputPath: validatePath });
 
     const parsed = JSON.parse(readFileSync(validatePath, 'utf8')) as unknown;
     const result = websiteJsonEntriesSchema.safeParse(parsed);

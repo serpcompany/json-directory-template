@@ -108,6 +108,13 @@ export async function syncListingLogos(
 }> {
   const fetchImpl = options.fetchImpl ?? fetch;
   const definition = loadCheckedInSiteFromInput(input);
+
+  if (definition.content.listingSource.kind === 'd1-listings') {
+    throw new Error(
+      `Listing logo sync currently supports file-backed listing sources. ${definition.id} uses d1-listings.`
+    );
+  }
+
   const sourcePath = definition.content.listingSource.path;
   const sourceFilePath = resolve(process.cwd(), sourcePath);
   const manifestEntries = parseManifest(options.manifestPath);

@@ -1,4 +1,11 @@
 import { Button } from '@thedaviddias/design-system/button'
+import {
+  DirectoryPageSection,
+  DirectorySectionAction,
+  DirectorySectionDescription,
+  DirectorySectionHeader,
+  DirectorySectionTitle
+} from '@thedaviddias/design-system/shadcnblocks/directory-home-section'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
@@ -21,27 +28,20 @@ export function Section({
   titleId
 }: SectionProps) {
   return (
-    <section className="space-y-6" aria-labelledby={titleId ?? undefined}>
-      <div className="sticky top-16 z-30 bg-background/95 backdrop-blur-sm border-b border-border/50 flex items-center justify-between py-3 sm:py-4 -mx-6 px-6">
+    <DirectoryPageSection labelledBy={titleId ?? undefined}>
+      <DirectorySectionHeader>
         <div className="space-y-0.5 sm:space-y-1 flex-1">
-          <h2
-            id={titleId}
-            className="flex items-center gap-2 text-xl sm:text-2xl font-bold tracking-tight scroll-mt-20"
-          >
+          <DirectorySectionTitle id={titleId}>
             <span
               className="inline-block w-1.5 h-1.5 rounded-full bg-foreground"
               aria-hidden="true"
             />
             {title}
-          </h2>
-          {description && (
-            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 pl-3.5">
-              {description}
-            </p>
-          )}
+          </DirectorySectionTitle>
+          {description && <DirectorySectionDescription>{description}</DirectorySectionDescription>}
         </div>
         {viewAllHref && (
-          <div className="flex items-center gap-2 ml-2">
+          <DirectorySectionAction>
             <Button
               asChild
               variant="ghost"
@@ -52,10 +52,10 @@ export function Section({
                 <ArrowRight className="size-5 transition-transform group-hover:translate-x-0.5 sm:ml-2 sm:size-4" />
               </Link>
             </Button>
-          </div>
+          </DirectorySectionAction>
         )}
-      </div>
+      </DirectorySectionHeader>
       {children}
-    </section>
+    </DirectoryPageSection>
   )
 }

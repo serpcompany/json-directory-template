@@ -33,6 +33,7 @@ export function FeaturedProjectsSection({
     <Section
       title="Featured Listings"
       description="Discover standout listings from this directory"
+      titleId="featured"
       viewAllHref={hasFeaturedListings ? getFeaturedCategoryRoute() : undefined}
       viewAllText={hasFeaturedListings ? 'All featured' : undefined}
     >

@@ -15,6 +15,24 @@ export type ListingSourceConfig =
       path: string
     }
   | {
+      approvedOnly?: true
+      binding?: string
+      databaseName?: string
+      exportPath?: string
+      kind: 'd1-listings'
+      mode?: 'local-d1' | 'snapshot'
+      outputPath?: string
+      seedSource?: {
+        category: string
+        featuredCount: number
+        kind: 'trial-products-json'
+        path: string
+        publishedAt: string
+      }
+      siteId?: string
+      wranglerConfigPath?: string
+    }
+  | {
       category: string
       featuredCount: number
       kind: 'trial-products-json'

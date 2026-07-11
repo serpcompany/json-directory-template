@@ -1,31 +1,36 @@
-import { ExternalLink } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import type { ComponentType, ReactNode } from 'react';
-import { externalResources } from '../external-resources';
-import { Section } from '../layout/section';
+import {
+  DirectoryFeatureGrid,
+  DirectoryLinkList,
+  DirectoryLinkListItem
+} from '@thedaviddias/design-system/shadcnblocks/directory-home-section'
+import { ExternalLink } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import type { ComponentType, ReactNode } from 'react'
+import { externalResources } from '../external-resources'
+import { Section } from '../layout/section'
 
 export interface ExternalResourcesSectionProps {
-  layout?: 'default' | 'compact';
-  showImages?: boolean;
+  layout?: 'default' | 'compact'
+  showImages?: boolean
   slots: {
-    Card: ComponentType<{ children: ReactNode; className?: string }>;
-    CardContent: ComponentType<{ children: ReactNode; className?: string }>;
-    CardDescription: ComponentType<{ children: ReactNode; className?: string }>;
-    CardHeader: ComponentType<{ children: ReactNode; className?: string }>;
-    CardTitle: ComponentType<{ children: ReactNode; className?: string }>;
-  };
+    Card: ComponentType<{ children: ReactNode; className?: string }>
+    CardContent: ComponentType<{ children: ReactNode; className?: string }>
+    CardDescription: ComponentType<{ children: ReactNode; className?: string }>
+    CardHeader: ComponentType<{ children: ReactNode; className?: string }>
+    CardTitle: ComponentType<{ children: ReactNode; className?: string }>
+  }
 }
 
 export function ExternalResourcesSection({
   layout = 'default',
   showImages = true,
-  slots,
+  slots
 }: ExternalResourcesSectionProps) {
-  const { Card, CardContent, CardDescription, CardHeader, CardTitle } = slots;
+  const { Card, CardContent, CardDescription, CardHeader, CardTitle } = slots
 
   if (!externalResources.length) {
-    return null;
+    return null
   }
 
   if (!showImages) {
@@ -35,35 +40,33 @@ export function ExternalResourcesSection({
         description="Explore related external resources and reference links configured for this site."
         titleId="related-resources"
       >
-        <div className="overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm">
-          <ul className="divide-y divide-border/50">
-            {externalResources.map((resource) => (
-              <li key={resource.url}>
-                <Link
-                  href={resource.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-start gap-4 px-6 py-4 transition-colors hover:bg-muted/30 focus-visible:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
-                >
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate font-medium text-foreground transition-colors group-hover:text-primary">
-                      {resource.name}
-                    </span>
-                    <span className="mt-0.5 block line-clamp-2 text-sm text-muted-foreground">
-                      {resource.description}
-                    </span>
+        <DirectoryLinkList>
+          {externalResources.map(resource => (
+            <DirectoryLinkListItem key={resource.url}>
+              <Link
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-start gap-4 px-6 py-4 transition-colors hover:bg-muted/30 focus-visible:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-medium text-foreground transition-colors group-hover:text-primary">
+                    {resource.name}
                   </span>
-                  <ExternalLink
-                    className="mt-1 size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary"
-                    aria-hidden
-                  />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+                  <span className="mt-0.5 block line-clamp-2 text-sm text-muted-foreground">
+                    {resource.description}
+                  </span>
+                </span>
+                <ExternalLink
+                  className="mt-1 size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary"
+                  aria-hidden
+                />
+              </Link>
+            </DirectoryLinkListItem>
+          ))}
+        </DirectoryLinkList>
       </Section>
-    );
+    )
   }
 
   return (
@@ -73,8 +76,8 @@ export function ExternalResourcesSection({
       titleId="related-resources"
     >
       <div className="@container">
-        <div className="grid gap-4 @[500px]:grid-cols-2 @[800px]:grid-cols-4">
-          {externalResources.map((resource) => (
+        <DirectoryFeatureGrid className="@[500px]:grid-cols-2 @[800px]:grid-cols-4">
+          {externalResources.map(resource => (
             <Link
               key={resource.url}
               href={resource.url}
@@ -111,8 +114,8 @@ export function ExternalResourcesSection({
               </Card>
             </Link>
           ))}
-        </div>
+        </DirectoryFeatureGrid>
       </div>
     </Section>
-  );
+  )
 }

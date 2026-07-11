@@ -2,6 +2,11 @@
 
 import { cn } from '@thedaviddias/design-system/lib/utils'
 import { ScrollArea } from '@thedaviddias/design-system/scroll-area'
+import {
+  DirectoryNavigationItem,
+  DirectoryNavigationSection,
+  directoryNavigationInteractiveClassName
+} from '@thedaviddias/design-system/shadcnblocks/directory-navigation'
 import { categories } from '@thedaviddias/web-core/categories'
 import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display'
 import { externalResources } from '@thedaviddias/web-core/external-resources'
@@ -186,143 +191,146 @@ export function MobileDrawer({
         <ScrollArea className="h-[calc(100%-64px)] overscroll-contain">
           <div className="p-4 space-y-6">
             {/* Main Navigation */}
-            <div>
-              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Navigation</h3>
-              <nav className="space-y-1">
-                {siteConfig.features.showAuth && isAuthenticated ? (
-                  <Link
-                    href={getRoute('account')}
-                    className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                  >
-                    Account
-                  </Link>
-                ) : siteConfig.features.showAuth && isAuthConfigured ? (
-                  <Link
-                    href={getRoute('login')}
-                    className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                  >
-                    Sign up / Sign in
-                  </Link>
-                ) : null}
-                {siteConfig.features.showProjects ? (
-                  <Link
-                    href={getRoute('projects')}
-                    className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                  >
-                    {siteCopy.networkLabel}
-                  </Link>
-                ) : null}
-                {siteConfig.features.showDocs ? (
-                  <Link
-                    href={getRoute('docs.list')}
-                    className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                  >
-                    {siteCopy.docsLabel}
-                  </Link>
-                ) : null}
-                {siteConfig.features.showGuides ? (
-                  <Link
-                    href={getRoute('guides.list')}
-                    className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
-                  >
-                    Posts
-                  </Link>
-                ) : null}
+            <DirectoryNavigationSection title="Navigation" titleClassName="mb-3">
+              {siteConfig.features.showAuth && isAuthenticated ? (
                 <Link
-                  href={getRoute('submit')}
-                  className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                  href={getRoute('account')}
+                  className={directoryNavigationInteractiveClassName}
                 >
-                  {siteCopy.submitLabel}
+                  <DirectoryNavigationItem className="py-1.5">Account</DirectoryNavigationItem>
                 </Link>
-                {/* <Link
+              ) : siteConfig.features.showAuth && isAuthConfigured ? (
+                <Link href={getRoute('login')} className={directoryNavigationInteractiveClassName}>
+                  <DirectoryNavigationItem className="py-1.5">
+                    Sign up / Sign in
+                  </DirectoryNavigationItem>
+                </Link>
+              ) : null}
+              {siteConfig.features.showProjects ? (
+                <Link
+                  href={getRoute('projects')}
+                  className={directoryNavigationInteractiveClassName}
+                >
+                  <DirectoryNavigationItem className="py-1.5">
+                    {siteCopy.networkLabel}
+                  </DirectoryNavigationItem>
+                </Link>
+              ) : null}
+              {siteConfig.features.showDocs ? (
+                <Link
+                  href={getRoute('docs.list')}
+                  className={directoryNavigationInteractiveClassName}
+                >
+                  <DirectoryNavigationItem className="py-1.5">
+                    {siteCopy.docsLabel}
+                  </DirectoryNavigationItem>
+                </Link>
+              ) : null}
+              {siteConfig.features.showGuides ? (
+                <Link
+                  href={getRoute('guides.list')}
+                  className={directoryNavigationInteractiveClassName}
+                >
+                  <DirectoryNavigationItem className="py-1.5">Posts</DirectoryNavigationItem>
+                </Link>
+              ) : null}
+              <Link href={getRoute('submit')} className={directoryNavigationInteractiveClassName}>
+                <DirectoryNavigationItem className="py-1.5">
+                  {siteCopy.submitLabel}
+                </DirectoryNavigationItem>
+              </Link>
+              {/* <Link
                 href={getRoute('news')}
                 className="flex items-center gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
               >
                 News
               </Link> */}
-                {siteConfig.features.showAuth && isAuthenticated ? signOutButton : null}
-              </nav>
-            </div>
+              {siteConfig.features.showAuth && isAuthenticated ? signOutButton : null}
+            </DirectoryNavigationSection>
 
             {/* My Collection Section */}
             {siteConfig.features.showFavorites ? (
-              <div>
-                <h3 className="font-semibold text-sm mb-3 text-muted-foreground">My Collection</h3>
-                <nav className="space-y-1">
-                  <FavoritesLink isMobile />
-                </nav>
-              </div>
+              <DirectoryNavigationSection title="My Collection" titleClassName="mb-3">
+                <FavoritesLink isMobile />
+              </DirectoryNavigationSection>
             ) : null}
 
             {/* Categories */}
-            <div>
-              <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Categories</h3>
-              <nav className="space-y-1">
-                {showFeaturedCategory ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (pathname === '/') {
-                        onClose()
-                        setTimeout(() => {
-                          document.getElementById('featured')?.scrollIntoView()
-                        }, 100)
-                      } else {
-                        window.location.href = '/#featured'
-                      }
-                    }}
-                    className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors w-full text-left"
+            <DirectoryNavigationSection title="Categories" titleClassName="mb-3">
+              {showFeaturedCategory ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (pathname === '/') {
+                      onClose()
+                      setTimeout(() => {
+                        document.getElementById('featured')?.scrollIntoView()
+                      }, 100)
+                    } else {
+                      window.location.href = '/#featured'
+                    }
+                  }}
+                  className={cn(directoryNavigationInteractiveClassName, 'w-full text-left')}
+                >
+                  <DirectoryNavigationItem
+                    className="py-1.5"
+                    icon={<Trophy className="h-4 w-4" />}
+                    trailing={
+                      featuredCount ? (
+                        <span className="rounded-full bg-muted px-1.5 py-0.5 text-xs">
+                          {featuredCount}
+                        </span>
+                      ) : null
+                    }
                   >
-                    <div className="flex items-center gap-2">
-                      <Trophy className="h-4 w-4" />
-                      Featured
-                    </div>
-                    {featuredCount && (
-                      <span className="text-xs bg-muted px-1.5 py-0.5 rounded-full">
-                        {featuredCount}
-                      </span>
-                    )}
-                  </button>
-                ) : null}
-                {availableCategories.map(category => (
+                    Featured
+                  </DirectoryNavigationItem>
+                </button>
+              ) : null}
+              {availableCategories.map(category => {
+                const isActive = isCategoryPage(category.slug)
+
+                return (
                   <Link
                     key={category.slug}
                     href={getRoute('category.page', { category: category.slug })}
-                    className={cn(
-                      'flex items-center gap-2 px-2 py-1.5 text-sm rounded-md transition-colors',
-                      isCategoryPage(category.slug)
-                        ? 'text-foreground font-medium bg-accent'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                    )}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={directoryNavigationInteractiveClassName}
                   >
-                    <category.icon className="h-4 w-4" />
-                    {getCategoryDisplayName(category.slug)}
+                    <DirectoryNavigationItem
+                      className="py-1.5"
+                      icon={<category.icon className="h-4 w-4" />}
+                      active={isActive}
+                    >
+                      {getCategoryDisplayName(category.slug)}
+                    </DirectoryNavigationItem>
                   </Link>
-                ))}
-              </nav>
-            </div>
+                )
+              })}
+            </DirectoryNavigationSection>
 
             {showExternalResources ? (
-              <div>
-                <h3 className="font-semibold text-sm mb-3 text-muted-foreground">Resources</h3>
-                <nav className="space-y-1">
-                  {externalResources.map(resource => (
-                    <Link
-                      key={resource.slug}
-                      href={resource.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors group"
+              <DirectoryNavigationSection title="Resources" titleClassName="mb-3">
+                {externalResources.map(resource => (
+                  <Link
+                    key={resource.slug}
+                    href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={directoryNavigationInteractiveClassName}
+                  >
+                    <DirectoryNavigationItem
+                      className="py-1.5"
+                      icon={<resource.icon className="h-4 w-4 flex-shrink-0" />}
+                      trailing={
+                        <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100" />
+                      }
                     >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <resource.icon className="h-4 w-4 flex-shrink-0" />
-                        <span className="truncate">{resource.name}</span>
-                      </div>
-                      <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                    </Link>
-                  ))}
-                </nav>
-              </div>
+                      {resource.name}
+                    </DirectoryNavigationItem>
+                  </Link>
+                ))}
+              </DirectoryNavigationSection>
             ) : null}
           </div>
         </ScrollArea>

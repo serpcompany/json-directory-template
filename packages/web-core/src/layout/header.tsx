@@ -1,5 +1,12 @@
 'use client'
 import { Button } from '@thedaviddias/design-system/button'
+import {
+  DirectoryApplicationActions,
+  DirectoryApplicationHeader,
+  DirectoryApplicationHeaderBar,
+  DirectoryApplicationHeaderGroup,
+  DirectoryApplicationNav
+} from '@thedaviddias/design-system/shadcnblocks/directory-application-shell'
 import { getRoute } from '@thedaviddias/web-core/routes'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 import { siteCopy } from '@thedaviddias/web-core/site-copy'
@@ -115,10 +122,10 @@ export function Header({
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
-        <div className="w-full px-4 sm:px-6 h-16 flex 2xl:grid 2xl:grid-cols-3 items-center justify-between 2xl:justify-center gap-3 sm:gap-4">
+      <DirectoryApplicationHeader>
+        <DirectoryApplicationHeaderBar>
           {/* Logo + Menu - Left */}
-          <div className="flex items-center gap-2">
+          <DirectoryApplicationHeaderGroup>
             {/* Mobile menu toggle */}
             <Button
               type="button"
@@ -136,7 +143,7 @@ export function Header({
             >
               <span className="inline transition-colors">{siteConfig.name}</span>
             </Link>
-          </div>
+          </DirectoryApplicationHeaderGroup>
 
           {/* Search - Center (prominent on desktop) */}
           <DesktopSearchForm
@@ -154,9 +161,9 @@ export function Header({
           />
 
           {/* Navigation + Actions - Right */}
-          <div className="flex items-center gap-2 sm:gap-4 2xl:justify-end">
+          <DirectoryApplicationActions>
             {/* Desktop navigation */}
-            <nav className="hidden lg:flex items-center gap-4">
+            <DirectoryApplicationNav>
               {siteConfig.features.showProjects ? (
                 <NavLink href={getRoute('projects')}>{siteCopy.networkLabel}</NavLink>
               ) : null}
@@ -167,7 +174,7 @@ export function Header({
                 <NavLink href={getRoute('guides.list')}>Posts</NavLink>
               ) : null}
               {/* <NavLink href={getRoute('news')}>News</NavLink> */}
-            </nav>
+            </DirectoryApplicationNav>
 
             {/* Mobile search icon */}
             <Button
@@ -215,8 +222,8 @@ export function Header({
                 <Link href={getRoute('login')}>Sign up / Sign in</Link>
               </Button>
             ) : null}
-          </div>
-        </div>
+          </DirectoryApplicationActions>
+        </DirectoryApplicationHeaderBar>
 
         {/* Mobile search overlay */}
         <MobileSearchOverlay
@@ -237,7 +244,7 @@ export function Header({
             setSearchQuery('')
           }}
         />
-      </header>
+      </DirectoryApplicationHeader>
 
       {/* Mobile Drawer */}
       <MobileDrawer

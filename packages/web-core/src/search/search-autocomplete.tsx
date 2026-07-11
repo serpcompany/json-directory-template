@@ -1,6 +1,9 @@
 'use client'
 
-import { cn } from '@thedaviddias/design-system/lib/utils'
+import {
+  DirectoryCommand,
+  type DirectoryCommandItem
+} from '@thedaviddias/design-system/shadcnblocks/directory-command'
 import { logger } from '@thedaviddias/logging'
 import { categories } from '@thedaviddias/web-core/categories'
 import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display'
@@ -229,96 +232,80 @@ export function SearchAutocomplete({
 
   if (!isOpen || (!suggestions.length && !loading && searchQuery)) return null
 
+  const commandItems: DirectoryCommandItem[] = suggestions.map((suggestion, index) => {
+    const Icon = suggestion.icon || Search
+    return {
+      id: `${suggestion.type}-${suggestion.title}-${index}`,
+      value: `${suggestion.type}-${suggestion.title}`,
+      title: suggestion.title,
+      description: suggestion.description,
+      meta: suggestion.category
+        ? `Category: ${getCategoryDisplayName(suggestion.category)}`
+        : undefined,
+      icon:
+        suggestion.type === 'website' && suggestion.website ? (
+          <Favicon
+            website={suggestion.website}
+            fallbackIcon={Icon}
+            title={suggestion.title}
+            className="h-4 w-4"
+          />
+        ) : (
+          <Icon className="h-4 w-4 text-muted-foreground" />
+        ),
+      trailing: (
+        <>
+          {suggestion.type === 'recent' && (
+            <div className="rounded bg-muted/30 px-1.5 py-0.5 text-xs text-muted-foreground">
+              Recent
+            </div>
+          )}
+          {suggestion.type === 'trending' && (
+            <TrendingUp className="h-3 w-3 text-muted-foreground" />
+          )}
+          {suggestion.type === 'category' && (
+            <div className="rounded bg-blue-50 px-1.5 py-0.5 text-xs text-blue-600 dark:bg-blue-950/50 dark:text-blue-400">
+              Category
+            </div>
+          )}
+          <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+        </>
+      )
+    }
+  })
+
   return (
-    <div
-      ref={dropdownRef}
-      className="absolute top-full mt-2 w-full bg-background border rounded-lg shadow-lg z-[100] max-h-[400px] overflow-y-auto"
-    >
-      {loading ? (
-        <div className="p-4 text-center text-muted-foreground">
-          <div className="animate-pulse">Searching...</div>
-        </div>
-      ) : suggestions.length === 0 ? (
-        <div className="p-4 text-center text-muted-foreground">
-          {searchQuery ? 'No suggestions found' : 'Start typing to search'}
-        </div>
-      ) : (
-        <div className="py-2">
-          {suggestions.map((suggestion, index) => {
-            const Icon = suggestion.icon || Search
-            const isSelected = index === selectedIndex
-            return (
+    <div ref={dropdownRef} className="absolute top-full z-[100] mt-2 w-full">
+      <DirectoryCommand
+        items={commandItems}
+        selectedIndex={selectedIndex}
+        loading={loading}
+        emptyLabel={searchQuery ? 'No suggestions found' : 'Start typing to search'}
+        onHoverItem={setSelectedIndex}
+        onSelectItem={(_, index) => {
+          const suggestion = suggestions[index]
+          if (suggestion) handleSuggestionClick(suggestion)
+        }}
+        footer={
+          searchQuery ? (
+            <div className="border-t px-4 py-2">
               <button
-                key={`${suggestion.type}-${suggestion.title}-${index}`}
                 type="button"
-                onClick={() => handleSuggestionClick(suggestion)}
-                onMouseEnter={() => setSelectedIndex(index)}
-                className={cn(
-                  'w-full px-4 py-3 flex items-start gap-3 hover:bg-muted/50 transition-colors text-left cursor-pointer group',
-                  isSelected && 'bg-muted/50'
-                )}
+                onClick={() => {
+                  trackSearch(searchQuery, 0, 'autocomplete-search-button')
+                  saveRecentSearch(searchQuery)
+                  router.push(`${getRoute('search')}?q=${encodeURIComponent(searchQuery)}`)
+                  onClose()
+                }}
+                className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
               >
-                <div className="mt-0.5">
-                  {suggestion.type === 'website' && suggestion.website ? (
-                    <Favicon
-                      website={suggestion.website}
-                      fallbackIcon={Icon}
-                      title={suggestion.title}
-                      className="h-4 w-4"
-                    />
-                  ) : (
-                    <Icon className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-sm truncate">{suggestion.title}</div>
-                  {suggestion.description && (
-                    <div className="text-xs text-muted-foreground truncate mt-1">
-                      {suggestion.description}
-                    </div>
-                  )}
-                  {suggestion.category && (
-                    <div className="text-xs text-muted-foreground mt-1">
-                      Category: {getCategoryDisplayName(suggestion.category)}
-                    </div>
-                  )}
-                </div>
-                {suggestion.type === 'recent' && (
-                  <div className="text-xs text-muted-foreground bg-muted/30 px-1.5 py-0.5 rounded">
-                    Recent
-                  </div>
-                )}
-                {suggestion.type === 'trending' && (
-                  <TrendingUp className="h-3 w-3 text-muted-foreground" />
-                )}
-                {suggestion.type === 'category' && (
-                  <div className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 px-1.5 py-0.5 rounded">
-                    Category
-                  </div>
-                )}
-                <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Search className="h-3 w-3" />
+                Search for "{searchQuery}"
               </button>
-            )
-          })}
-        </div>
-      )}
-      {searchQuery && (
-        <div className="border-t px-4 py-2">
-          <button
-            type="button"
-            onClick={() => {
-              trackSearch(searchQuery, 0, 'autocomplete-search-button')
-              saveRecentSearch(searchQuery)
-              router.push(`${getRoute('search')}?q=${encodeURIComponent(searchQuery)}`)
-              onClose()
-            }}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 cursor-pointer"
-          >
-            <Search className="h-3 w-3" />
-            Search for "{searchQuery}"
-          </button>
-        </div>
-      )}
+            </div>
+          ) : null
+        }
+      />
     </div>
   )
 }

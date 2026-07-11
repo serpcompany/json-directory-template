@@ -1,36 +1,34 @@
-import type { ComponentType, ReactNode } from 'react';
-import type { GuideMetadata } from '../content-query';
-import { getRoute } from '../routes';
+import { DirectoryFeatureGrid } from '@thedaviddias/design-system/shadcnblocks/directory-home-section'
+import type { ComponentType, ReactNode } from 'react'
+import type { GuideMetadata } from '../content-query'
+import { getRoute } from '../routes'
 
 type SectionProps = {
-  children: ReactNode;
-  description?: string;
-  title: string;
-  viewAllHref?: string;
-  viewAllText?: string;
-};
-
-type GuideCardProps = {
-  guide: GuideMetadata;
-};
-
-interface FeaturedGuidesSectionProps {
-  guides: GuideMetadata[];
-  slots: {
-    GuideCard: ComponentType<GuideCardProps>;
-    Section: ComponentType<SectionProps>;
-  };
+  children: ReactNode
+  description?: string
+  title: string
+  viewAllHref?: string
+  viewAllText?: string
 }
 
-export function FeaturedGuidesSection({
-  guides,
-  slots,
-}: FeaturedGuidesSectionProps) {
+type GuideCardProps = {
+  guide: GuideMetadata
+}
+
+interface FeaturedGuidesSectionProps {
+  guides: GuideMetadata[]
+  slots: {
+    GuideCard: ComponentType<GuideCardProps>
+    Section: ComponentType<SectionProps>
+  }
+}
+
+export function FeaturedGuidesSection({ guides, slots }: FeaturedGuidesSectionProps) {
   if (guides.length === 0) {
-    return null;
+    return null
   }
 
-  const { GuideCard, Section } = slots;
+  const { GuideCard, Section } = slots
 
   return (
     <Section
@@ -39,11 +37,11 @@ export function FeaturedGuidesSection({
       viewAllHref={getRoute('guides.list')}
       viewAllText="All posts"
     >
-      <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6">
-        {guides.map((guide) => (
+      <DirectoryFeatureGrid className="sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6">
+        {guides.map(guide => (
           <GuideCard key={guide.slug} guide={guide} />
         ))}
-      </div>
+      </DirectoryFeatureGrid>
     </Section>
-  );
+  )
 }

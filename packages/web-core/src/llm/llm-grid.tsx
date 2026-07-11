@@ -1,6 +1,7 @@
 'use client'
 
 import { cn } from '@thedaviddias/design-system/lib/utils'
+import { DirectoryProductList } from '@thedaviddias/design-system/shadcnblocks/directory-product-list'
 import type { WebsiteRelatedCardMetadata } from '../content-query'
 import { CompactListingCard, ListingCard } from './listing-card'
 
@@ -54,16 +55,7 @@ export function LLMGrid({
   }
 
   return (
-    <div
-      className={
-        overrideGrid
-          ? className
-          : cn(
-              'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 4xl:grid-cols-8 gap-4',
-              className
-            )
-      }
-    >
+    <DirectoryProductList className={className} overrideGrid={overrideGrid}>
       {items.map((item, index) => {
         if (!item?.slug) return null
 
@@ -87,6 +79,6 @@ export function LLMGrid({
           </div>
         )
       })}
-    </div>
+    </DirectoryProductList>
   )
 }

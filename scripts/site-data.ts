@@ -1,18 +1,10 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
 import {
   loadCheckedInSiteFromInput,
   parseSiteInputArgs,
   type SiteInputTarget,
 } from './site-config.ts';
+import { prepareListingSource } from './listing-source-adapters.ts';
 import { warnIfUnsupportedNodeVersion } from './runtime-guards.ts';
-import { writeTrialWebsiteEntries } from './trial-build.ts';
-
-const workspaceRoot = resolve(process.cwd());
-
-function ensureParentDir(path: string): void {
-  mkdirSync(dirname(path), { recursive: true });
-}
 
 export type PreparedSiteData = {
   outputPath: string;
@@ -24,32 +16,7 @@ export type PreparedSiteData = {
 
 export function prepareSiteData(input: SiteInputTarget): PreparedSiteData {
   const definition = loadCheckedInSiteFromInput(input);
-  const sourcePlan = definition.content.listingSource;
-  const outputPath = resolve(workspaceRoot, sourcePlan.outputPath);
-
-  ensureParentDir(outputPath);
-
-  if (sourcePlan.kind === 'trial-products-json') {
-    writeTrialWebsiteEntries(sourcePlan.path, sourcePlan.outputPath, {
-      category: sourcePlan.category,
-      featuredCount: sourcePlan.featuredCount,
-      publishedAt: sourcePlan.publishedAt,
-    });
-  } else {
-    const sourcePath = resolve(workspaceRoot, sourcePlan.path);
-
-    if (sourcePath !== outputPath) {
-      writeFileSync(outputPath, readFileSync(sourcePath));
-    }
-  }
-
-  return {
-    outputPath,
-    outputPathDisplay: sourcePlan.outputPath,
-    siteId: definition.id,
-    sourceKind: sourcePlan.kind,
-    sourcePathDisplay: sourcePlan.path,
-  };
+  return prepareListingSource(definition);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

@@ -1,6 +1,5 @@
-import { Button } from '@thedaviddias/design-system/button'
-import { Empty, EmptyContent, EmptyHeader, EmptyMedia } from '@thedaviddias/design-system/empty'
 import { cn } from '@thedaviddias/design-system/lib/utils'
+import { DirectoryEmpty } from '@thedaviddias/design-system/shadcnblocks/directory-empty'
 import { FolderOpen, type LucideIcon } from 'lucide-react'
 import Link from 'next/link'
 
@@ -48,34 +47,23 @@ export function EmptyState({
   descriptionClassName
 }: EmptyStateProps) {
   const action =
-    onAction && actionLabel ? (
-      <Button onClick={onAction}>{actionLabel}</Button>
-    ) : actionHref && actionLabel ? (
-      <Button asChild>
-        <Link href={actionHref}>{actionLabel}</Link>
-      </Button>
-    ) : null
+    onAction && actionLabel
+      ? { label: actionLabel, onClick: onAction }
+      : actionHref && actionLabel
+        ? { label: actionLabel, slot: <Link href={actionHref}>{actionLabel}</Link> }
+        : undefined
 
   return (
-    <Empty
-      className={cn(
-        'h-[50vh] flex-none gap-0 rounded-none p-0 text-center [text-wrap:wrap] md:p-0',
-        className
-      )}
-    >
-      <EmptyHeader className="max-w-none gap-0">
-        <EmptyMedia className={cn('mb-0', iconContainerClassName)}>
-          <Icon
-            aria-hidden="true"
-            className={cn('h-16 w-16 text-muted-foreground mb-4', iconClassName)}
-          />
-        </EmptyMedia>
-        <h2 className={cn('text-2xl font-bold mb-2', titleClassName)}>{title}</h2>
-        <p className={cn('text-muted-foreground mb-4 max-w-md', descriptionClassName)}>
-          {description}
-        </p>
-      </EmptyHeader>
-      {action ? <EmptyContent className="max-w-none gap-0">{action}</EmptyContent> : null}
-    </Empty>
+    <DirectoryEmpty
+      title={title}
+      description={description}
+      action={action}
+      icon={Icon}
+      iconClassName={cn('h-16 w-16 text-muted-foreground mb-4', iconClassName)}
+      iconContainerClassName={iconContainerClassName}
+      className={className}
+      titleClassName={titleClassName}
+      descriptionClassName={descriptionClassName}
+    />
   )
 }

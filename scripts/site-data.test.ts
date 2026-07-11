@@ -90,7 +90,7 @@ describe('prepareSiteData', () => {
     });
     expect(mockedWriteTrialWebsiteEntries).toHaveBeenCalledWith(
       'sites/test-site/products.json',
-      relativeOutputPath,
+      outputPath,
       {
         category: 'automation-workflow',
         featuredCount: 6,

@@ -78,6 +78,42 @@ const trialProductsSourceSchema = z.object({
   publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
 })
 
+const d1ListingsSeedSourceSchema = trialProductsSourceSchema.omit({
+  outputPath: true
+})
+
+const d1ListingsSourceSchema = z
+  .object({
+    approvedOnly: z.literal(true).default(true),
+    binding: z.string().min(1).optional(),
+    databaseName: z.string().min(1).optional(),
+    exportPath: z.string().min(1).optional(),
+    kind: z.literal('d1-listings'),
+    mode: z.enum(['local-d1', 'snapshot']).default('snapshot'),
+    outputPath: z.string().min(1).default('data/listings.json'),
+    seedSource: d1ListingsSeedSourceSchema.optional(),
+    siteId: z.string().min(1).optional(),
+    wranglerConfigPath: z.string().min(1).default('wrangler.jsonc')
+  })
+  .superRefine((source, ctx) => {
+    if (source.mode === 'snapshot' && !source.exportPath) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'content.listingSource.exportPath is required when d1-listings mode is "snapshot".',
+        path: ['exportPath']
+      })
+    }
+
+    if (source.mode === 'local-d1' && !source.databaseName) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          'content.listingSource.databaseName is required when d1-listings mode is "local-d1".',
+        path: ['databaseName']
+      })
+    }
+  })
+
 const siteCopyDefaults = defaultSiteConfig.copy
 
 const siteCopySchema = z.object({
@@ -258,7 +294,11 @@ const checkedInSiteConfigSchema = z.object({
   }),
   copy: siteCopySchema.default(siteCopyDefaults),
   content: z.object({
-    listingSource: z.union([listingJsonSourceSchema, trialProductsSourceSchema])
+    listingSource: z.union([
+      listingJsonSourceSchema,
+      d1ListingsSourceSchema,
+      trialProductsSourceSchema
+    ])
   }),
   deploy: githubPagesRepoSyncDeploySchema.optional(),
   features: featureFlagsSchema.default({}),

@@ -1,7 +1,11 @@
 'use client'
 
-import { cn } from '@thedaviddias/design-system/lib/utils'
 import { ScrollArea } from '@thedaviddias/design-system/scroll-area'
+import {
+  DirectoryNavigationItem,
+  DirectoryNavigationSection,
+  directoryNavigationInteractiveClassName
+} from '@thedaviddias/design-system/shadcnblocks/directory-navigation'
 import { ExternalLink, Trophy } from 'lucide-react'
 import Link from 'next/link'
 import { categories } from '../categories'
@@ -37,72 +41,73 @@ export function AppSidebar({
           <h2 className="sr-only">Navigation</h2>
 
           {siteConfig.features.showFavorites ? (
-            <div>
-              <h3 className="font-semibold text-sm mb-4 text-muted-foreground">My Collection</h3>
-              <nav className="space-y-1">
-                <FavoritesLink />
-              </nav>
-            </div>
+            <DirectoryNavigationSection title="My Collection">
+              <FavoritesLink />
+            </DirectoryNavigationSection>
           ) : null}
 
-          <div>
-            <h3 className="font-semibold text-sm mb-4 text-muted-foreground">Categories</h3>
-            <nav className="space-y-1">
-              {showFeaturedCategory ? (
-                <Link
-                  href={getFeaturedCategoryRoute()}
-                  className="flex items-center justify-between gap-2 px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors cursor-pointer"
+          <DirectoryNavigationSection title="Categories">
+            {showFeaturedCategory ? (
+              <Link
+                href={getFeaturedCategoryRoute()}
+                className={directoryNavigationInteractiveClassName}
+              >
+                <DirectoryNavigationItem
+                  icon={<Trophy className="h-4 w-4" />}
+                  trailing={
+                    featuredCount > 0 ? (
+                      <span className="rounded-full bg-muted px-1.5 py-0.5 text-xs">
+                        {featuredCount}
+                      </span>
+                    ) : null
+                  }
                 >
-                  <div className="flex items-center gap-2">
-                    <Trophy className="h-4 w-4" />
-                    Featured
-                  </div>
-                  {featuredCount > 0 && (
-                    <span className="text-xs bg-muted px-1.5 py-0.5 rounded-full">
-                      {featuredCount}
-                    </span>
-                  )}
-                </Link>
-              ) : null}
-              {availableCategories.map(category => (
+                  Featured
+                </DirectoryNavigationItem>
+              </Link>
+            ) : null}
+            {availableCategories.map(category => {
+              const isActive = category.slug === currentCategory
+
+              return (
                 <Link
                   key={category.slug}
                   href={getRoute('category.page', { category: category.slug })}
-                  className={cn(
-                    'flex items-center gap-2 px-2 py-1 text-sm rounded-md transition-colors',
-                    category.slug === currentCategory
-                      ? 'text-foreground font-medium bg-accent'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                  )}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={directoryNavigationInteractiveClassName}
                 >
-                  <category.icon className="h-4 w-4" />
-                  {getCategoryDisplayName(category.slug)}
+                  <DirectoryNavigationItem
+                    icon={<category.icon className="h-4 w-4" />}
+                    active={isActive}
+                  >
+                    {getCategoryDisplayName(category.slug)}
+                  </DirectoryNavigationItem>
                 </Link>
-              ))}
-            </nav>
-          </div>
+              )
+            })}
+          </DirectoryNavigationSection>
 
           {showExternalResources ? (
-            <div>
-              <h3 className="font-semibold text-sm mb-4 text-muted-foreground">Resources</h3>
-              <nav className="space-y-1">
-                {externalResources.map(resource => (
-                  <Link
-                    key={resource.slug}
-                    href={resource.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between gap-2 px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors group"
+            <DirectoryNavigationSection title="Resources">
+              {externalResources.map(resource => (
+                <Link
+                  key={resource.slug}
+                  href={resource.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={directoryNavigationInteractiveClassName}
+                >
+                  <DirectoryNavigationItem
+                    icon={<resource.icon className="h-4 w-4 flex-shrink-0" />}
+                    trailing={
+                      <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100" />
+                    }
                   >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <resource.icon className="h-4 w-4 flex-shrink-0" />
-                      <span className="truncate">{resource.name}</span>
-                    </div>
-                    <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                  </Link>
-                ))}
-              </nav>
-            </div>
+                    {resource.name}
+                  </DirectoryNavigationItem>
+                </Link>
+              ))}
+            </DirectoryNavigationSection>
           ) : null}
         </div>
       </ScrollArea>

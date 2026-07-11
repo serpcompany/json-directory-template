@@ -31,12 +31,20 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   },
   content: {
     listingSource: {
-      category: 'video-downloaders',
-      featuredCount: 6,
-      kind: 'trial-products-json',
+      binding: 'DB',
+      databaseName: 'json-directory-local',
+      kind: 'd1-listings',
+      mode: 'local-d1',
       outputPath: 'data/listings.json',
-      path: 'sites/serpdownloaders.com/products.json',
-      publishedAt: '2026-03-24'
+      seedSource: {
+        category: 'video-downloaders',
+        featuredCount: 6,
+        kind: 'trial-products-json',
+        path: 'sites/serpdownloaders.com/products.json',
+        publishedAt: '2026-03-24'
+      },
+      siteId: 'serpdownloaders.com',
+      wranglerConfigPath: 'wrangler.jsonc'
     }
   },
   copy: {

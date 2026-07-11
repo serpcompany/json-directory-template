@@ -1,4 +1,9 @@
 'use client'
+import {
+  DirectoryApplicationMobileSearchBackdrop,
+  DirectoryApplicationMobileSearchPanel,
+  DirectoryApplicationSearchColumn
+} from '@thedaviddias/design-system/shadcnblocks/directory-application-shell'
 import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { useRef } from 'react'
 import { SearchAutocomplete } from '../search/search-autocomplete'
@@ -40,7 +45,7 @@ export function DesktopSearchForm({
   const searchInputRef = useRef<HTMLInputElement>(null)
 
   return (
-    <div className="hidden md:block flex-1 2xl:flex-none 2xl:w-full max-w-2xl 2xl:max-w-none">
+    <DirectoryApplicationSearchColumn>
       <form
         aria-label="Desktop search"
         onSubmit={onSubmit}
@@ -63,7 +68,7 @@ export function DesktopSearchForm({
           onSelect={onAutocompleteSelect}
         />
       </form>
-    </div>
+    </DirectoryApplicationSearchColumn>
   )
 }
 
@@ -110,14 +115,16 @@ export function MobileSearchOverlay({
   return (
     <>
       {/* Backdrop */}
-      <button
-        type="button"
-        className="md:hidden fixed inset-0 top-16 z-40 bg-black/50 backdrop-blur-sm"
-        onClick={onMobileSearchClose}
-        aria-label="Close search"
-      />
+      <DirectoryApplicationMobileSearchBackdrop>
+        <button
+          type="button"
+          className="h-full w-full bg-black/50 backdrop-blur-sm"
+          onClick={onMobileSearchClose}
+          aria-label="Close search"
+        />
+      </DirectoryApplicationMobileSearchBackdrop>
       {/* Search container */}
-      <div className="md:hidden fixed inset-x-0 top-16 z-50 bg-background">
+      <DirectoryApplicationMobileSearchPanel>
         <div className="px-4 sm:px-6 py-3 border-t">
           <form aria-label="Mobile search" onSubmit={onSubmit} className="relative">
             <SearchInput
@@ -138,7 +145,7 @@ export function MobileSearchOverlay({
             />
           </form>
         </div>
-      </div>
+      </DirectoryApplicationMobileSearchPanel>
     </>
   )
 }

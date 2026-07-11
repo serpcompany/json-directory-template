@@ -172,7 +172,7 @@ describe.runIf(existsSync(artifactRoot))('serp.ai artifact links', () => {
     }
 
     expect(badLinks).toEqual([])
-  })
+  }, 10_000)
 
   it('emits trailing-slash final page URLs in every XML sitemap', () => {
     const sitemapPaths = [

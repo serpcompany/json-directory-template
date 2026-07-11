@@ -66,7 +66,23 @@ describe('loadCheckedInSite', () => {
     const config = loadCheckedInSite('serpdownloaders.com')
 
     expect(config.id).toBe('serpdownloaders.com')
-    expect(config.content.listingSource.kind).toBe('trial-products-json')
+    expect(config.content.listingSource).toEqual({
+      approvedOnly: true,
+      binding: 'DB',
+      databaseName: 'json-directory-local',
+      kind: 'd1-listings',
+      mode: 'local-d1',
+      outputPath: 'data/listings.json',
+      seedSource: {
+        category: 'video-downloaders',
+        featuredCount: 6,
+        kind: 'trial-products-json',
+        path: 'sites/serpdownloaders.com/products.json',
+        publishedAt: '2026-03-24'
+      },
+      siteId: 'serpdownloaders.com',
+      wranglerConfigPath: 'wrangler.jsonc'
+    })
     expect(config.site.domain).toBe('serpdownloaders.com')
     expect(config.routes.listingBasePath).toBe('products')
     expect(config.routes.docsBasePath).toBe('docs')
@@ -384,6 +400,52 @@ describe('validateCheckedInSiteConfig', () => {
           message:
             'routes.listingBasePath cannot reuse "docs" because routes.docsBasePath already uses it.',
           path: ['routes', 'listingBasePath']
+        })
+      ])
+    )
+  })
+
+  it('accepts d1-listings source config with build-time snapshot defaults', () => {
+    const config = cloneDefaultSiteConfig()
+    config.content.listingSource = {
+      exportPath: 'tmp/d1/serpdownloaders.com.snapshot.json',
+      kind: 'd1-listings'
+    }
+
+    const validatedConfig = validateCheckedInSiteConfig(config)
+
+    expect(validatedConfig.content.listingSource).toEqual({
+      approvedOnly: true,
+      exportPath: 'tmp/d1/serpdownloaders.com.snapshot.json',
+      kind: 'd1-listings',
+      mode: 'snapshot',
+      outputPath: 'data/listings.json',
+      wranglerConfigPath: 'wrangler.jsonc'
+    })
+  })
+
+  it('rejects local d1-listings source config without a database name', () => {
+    const config = cloneDefaultSiteConfig()
+    config.content.listingSource = {
+      kind: 'd1-listings',
+      mode: 'local-d1'
+    }
+
+    let error: unknown
+
+    try {
+      validateCheckedInSiteConfig(config)
+    } catch (caughtError) {
+      error = caughtError
+    }
+
+    expect(error).toBeInstanceOf(ZodError)
+    expect((error as ZodError).issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message:
+            'content.listingSource.databaseName is required when d1-listings mode is "local-d1".',
+          path: ['content', 'listingSource', 'databaseName']
         })
       ])
     )
