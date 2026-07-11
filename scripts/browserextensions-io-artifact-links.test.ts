@@ -64,12 +64,12 @@ describe('browserextensions.io artifact links', () => {
     expect(html).not.toContain('href="/legal/privacy"')
     expect(html).not.toContain('href="/legal/terms"')
     expect(html).not.toContain('href="/network"')
-    expect(html).not.toContain('href="/categories/featured"')
   })
 
-  it('emits route indexes for UI-linked search and products pages', () => {
+  it('emits route indexes for UI-linked search, products, and featured pages', () => {
     expect(routeIndexExists('/search')).toBe(true)
     expect(routeIndexExists('/products')).toBe(true)
+    expect(routeIndexExists('/categories/featured')).toBe(true)
   })
 
   it('emits trailing-slash internal links so linked pages do not need redirects', () => {
@@ -182,6 +182,15 @@ describe('browserextensions.io artifact links', () => {
     expect(badSourceBodyLinks).toEqual([])
     expect(missingSerpLyProductPages).toEqual([])
     expect(badSearchIndexEntries).toEqual([])
+  })
+
+  it('does not render direct LaunchBuzz outbound links for the migrated product entry', () => {
+    const html = readArtifactHtml('products/launchbuzz.io/index.html')
+
+    expect(html).toContain('href="https://serp.ly/launchbuzz.io?via=browserextensions.io"')
+    expect(html).not.toContain('href="https://launchbuzz.io"')
+    expect(html).not.toContain('href="https://launchbuzz.io/projects/submit"')
+    expect(html).not.toContain('href="https://launchbuzz.io/pricing"')
   })
 
   it('renders BrowserExtensions.io about copy from the site-owned content source', () => {

@@ -3086,28 +3086,14 @@
       "categories": [
         "product-launch-websites"
       ],
-      "productPage": "https://launchbuzz.io",
+      "productPage": "https://serp.ly/launchbuzz.io",
       "slug": "launchbuzz.io",
       "tagline": "Discover and upvote products launching daily.",
       "title": "LaunchBuzz"
     },
     "content": {
       "body": "## Overview\n\nLaunchBuzz is a product launch and discovery website for tech products. It helps visitors discover and upvote products launching daily, while makers can submit projects, use a LaunchBuzz badge, and get a backlink.\n\n## What It Offers\n\n- Daily discovery for new tech product launches\n- Project submission for makers\n- Launch promotion surfaces including badges, backlinks, pricing, and sponsorship pages"
-    },
-    "relatedLinks": [
-      {
-        "label": "LaunchBuzz",
-        "url": "https://launchbuzz.io"
-      },
-      {
-        "label": "Submit Project",
-        "url": "https://launchbuzz.io/projects/submit"
-      },
-      {
-        "label": "Pricing",
-        "url": "https://launchbuzz.io/pricing"
-      }
-    ]
+    }
   },
   "linkedin-downloader": {
     "content": {

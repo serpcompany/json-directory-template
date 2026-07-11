@@ -71,14 +71,8 @@ export const browserextensionsIoSiteConfig: CheckedInSiteConfigOverride = {
         '/categories/social-media'
       ]
     },
-    artifactExcludedPaths: ['/categories/featured', '/legal/privacy', '/legal/terms'],
-    excludedPaths: [
-      '/categories/featured',
-      '/legal/privacy',
-      '/legal/terms',
-      '/products',
-      '/search'
-    ],
+    artifactExcludedPaths: ['/legal/privacy', '/legal/terms'],
+    excludedPaths: ['/legal/privacy', '/legal/terms', '/products', '/search'],
     pathByGroup: {
       listings: '/sitemaps/directory/1.xml',
       pages: '/sitemaps/pages/1.xml',

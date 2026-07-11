@@ -33,6 +33,7 @@ describe('writeSplitSitemaps', () => {
     writeFile(resolve(artifactDir, 'docs/index.html'))
     writeFile(resolve(artifactDir, 'products/index.html'))
     writeFile(resolve(artifactDir, 'products/example-tool/index.html'))
+    writeFile(resolve(artifactDir, 'products/launchbuzz.io/index.html'))
     writeFile(resolve(artifactDir, 'categories/developer-tools/index.html'))
     writeFile(resolve(artifactDir, 'categories/featured/index.html'))
     writeFile(resolve(artifactDir, 'cookies/index.html'))
@@ -93,6 +94,7 @@ describe('writeSplitSitemaps', () => {
 
     const listingSitemap = readFileSync(resolve(artifactDir, 'listings-sitemap.xml'), 'utf8')
     expect(listingSitemap).toContain('<loc>https://example.com/products/example-tool/</loc>')
+    expect(listingSitemap).toContain('<loc>https://example.com/products/launchbuzz.io/</loc>')
     expect(listingSitemap).toContain(`<lastmod>${DEFAULT_LASTMOD}</lastmod>`)
 
     const taxonomiesSitemap = readFileSync(resolve(artifactDir, 'taxonomies-sitemap.xml'), 'utf8')

@@ -3,6 +3,9 @@ import { dirname, join, resolve, sep } from 'node:path'
 
 export const SITEMAP_PAGE_SIZE = 10_000
 
+const PUBLIC_FILE_EXTENSION_PATTERN =
+  /\.(?:css|gif|ico|jpeg|jpg|js|json|map|png|svg|txt|webp|woff2?|xml)$/i
+
 type SitemapGroup = {
   key: 'docs' | 'listings' | 'pages' | 'posts' | 'taxonomies'
   name: string
@@ -93,7 +96,9 @@ function withTrailingSlash(path: string): string {
     return path
   }
 
-  if (path.endsWith('/') || path.split('/').at(-1)?.includes('.')) {
+  const lastSegment = path.split('/').at(-1) ?? ''
+
+  if (path.endsWith('/') || PUBLIC_FILE_EXTENSION_PATTERN.test(lastSegment)) {
     return path
   }
 
