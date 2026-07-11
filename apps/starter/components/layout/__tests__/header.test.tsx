@@ -42,10 +42,23 @@ describe('Header', () => {
   it('uses the configured submit label for the primary CTA', () => {
     render(<Header />)
 
-    expect(screen.getByRole('link', { name: siteCopy.submitLabel })).toHaveAttribute(
-      'href',
-      '/submit/'
-    )
+    const submitLink = screen.getByRole('link', { name: siteCopy.submitLabel })
+    expect(submitLink).toHaveAttribute('href', '/submit/')
+    expect(submitLink).toHaveAttribute('title', siteCopy.submitLabel)
+    expect(submitLink).toHaveClass('rounded-none', 'h-9')
+    expect(submitLink).toHaveAttribute('data-slot', 'button')
+  })
+
+  it('uses shadcn button controls for mobile menu and search triggers', () => {
+    render(<Header />)
+
+    const menuButton = screen.getByRole('button', { name: /open menu/i })
+    const searchButton = screen.getByRole('button', { name: /toggle search/i })
+
+    expect(menuButton).toHaveAttribute('type', 'button')
+    expect(menuButton).toHaveAttribute('data-slot', 'button')
+    expect(searchButton).toHaveAttribute('type', 'button')
+    expect(searchButton).toHaveAttribute('data-slot', 'button')
   })
 
   it('does not render the GitHub menu bar action', () => {

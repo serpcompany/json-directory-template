@@ -1,4 +1,5 @@
 'use client'
+import { Button } from '@thedaviddias/design-system/button'
 import { getRoute } from '@thedaviddias/web-core/routes'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
 import { siteCopy } from '@thedaviddias/web-core/site-copy'
@@ -119,14 +120,16 @@ export function Header({
           {/* Logo + Menu - Left */}
           <div className="flex items-center gap-2">
             {/* Mobile menu toggle */}
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => setShowMobileDrawer(true)}
-              className="block sm:hidden p-2 hover:bg-muted rounded-md transition-colors -ml-2"
+              className="block sm:hidden p-2 hover:bg-muted rounded-md transition-colors -ml-2 shadow-none active:scale-100"
               aria-label="Open menu"
             >
               <Menu className="h-5 w-5" />
-            </button>
+            </Button>
             <Link
               href={getRoute('home')}
               className="group text-lg font-bold whitespace-nowrap tracking-tight"
@@ -167,42 +170,50 @@ export function Header({
             </nav>
 
             {/* Mobile search icon */}
-            <button
+            <Button
               type="button"
-              className="md:hidden text-muted-foreground hover:text-foreground"
+              variant="ghost"
+              size="icon"
+              className="md:hidden text-muted-foreground hover:text-foreground shadow-none active:scale-100"
               onClick={() => setShowMobileSearch(!showMobileSearch)}
               aria-label="Toggle search"
             >
               <Search className="h-5 w-5" />
-            </button>
+            </Button>
 
-            <Link
-              href={getRoute('submit')}
-              className="inline-flex items-center justify-center rounded-none text-sm font-bold h-9 px-4 bg-foreground text-background hover:bg-foreground/90 transition-all duration-200 press-effect"
-              aria-label={siteCopy.submitLabel}
-              title={siteCopy.submitLabel}
+            <Button
+              asChild
+              className="inline-flex items-center justify-center rounded-none text-sm font-bold h-9 px-4 bg-foreground text-background hover:bg-foreground/90 transition-all duration-200 press-effect shadow-none active:scale-100"
             >
-              <Plus className="h-4 w-4 sm:hidden" />
-              <span className="hidden sm:inline">{siteCopy.submitLabel}</span>
-            </Link>
+              <Link
+                href={getRoute('submit')}
+                aria-label={siteCopy.submitLabel}
+                title={siteCopy.submitLabel}
+              >
+                <Plus className="h-4 w-4 sm:hidden" />
+                <span className="hidden sm:inline">{siteCopy.submitLabel}</span>
+              </Link>
+            </Button>
 
             {siteConfig.features.showAuth && isAuthenticated ? (
               <>
-                <Link
-                  href={getRoute('account')}
-                  className="hidden sm:inline-flex items-center justify-center rounded-none text-sm font-bold h-9 px-4 border border-border hover:bg-accent transition-colors"
+                <Button
+                  asChild
+                  variant="outline"
+                  className="hidden sm:inline-flex items-center justify-center rounded-none text-sm font-bold h-9 px-4 border border-border hover:bg-accent transition-colors shadow-none active:scale-100"
                 >
-                  Account
-                </Link>
+                  <Link href={getRoute('account')}>Account</Link>
+                </Button>
                 {desktopSignOutButton}
               </>
             ) : siteConfig.features.showAuth && isAuthConfigured ? (
-              <Link
-                href={getRoute('login')}
-                className="hidden sm:inline-flex items-center justify-center rounded-none text-sm font-bold h-9 px-4 border border-border hover:bg-accent transition-colors"
+              <Button
+                asChild
+                variant="outline"
+                className="hidden sm:inline-flex items-center justify-center rounded-none text-sm font-bold h-9 px-4 border border-border hover:bg-accent transition-colors shadow-none active:scale-100"
               >
-                Sign up / Sign in
-              </Link>
+                <Link href={getRoute('login')}>Sign up / Sign in</Link>
+              </Button>
             ) : null}
           </div>
         </div>
