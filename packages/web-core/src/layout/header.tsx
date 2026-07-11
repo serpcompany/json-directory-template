@@ -41,12 +41,12 @@ export function Header({
 
   // Auto-focus mobile search input when it appears and handle escape key
   useEffect(() => {
-    if (showMobileSearch) {
-      // Prevent body scroll when search is open
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
+    if (!showMobileSearch) {
+      return undefined
     }
+
+    // Prevent body scroll when search is open.
+    document.body.style.overflow = 'hidden'
 
     return () => {
       document.body.style.overflow = ''

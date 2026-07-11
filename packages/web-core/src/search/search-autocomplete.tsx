@@ -1,37 +1,34 @@
-'use client';
+'use client'
 
-import { cn } from '../../../design-system/lib/utils';
-import { logger } from '../../../logging/index';
-import { ArrowRight, Clock, Search, TrendingUp } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useAnalyticsEvents } from '../root-shell-client';
-import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display';
-import { categories } from '@thedaviddias/web-core/categories';
-import {
-  SEARCH_INDEX_PUBLIC_PATH,
-  searchIndexSchema,
-} from '@thedaviddias/web-core/search-index';
-import { getRoute } from '@thedaviddias/web-core/routes';
-import { Favicon } from './favicon';
+import { cn } from '@thedaviddias/design-system/lib/utils'
+import { logger } from '@thedaviddias/logging'
+import { categories } from '@thedaviddias/web-core/categories'
+import { getCategoryDisplayName } from '@thedaviddias/web-core/category-display'
+import { getRoute } from '@thedaviddias/web-core/routes'
+import { SEARCH_INDEX_PUBLIC_PATH, searchIndexSchema } from '@thedaviddias/web-core/search-index'
+import { ArrowRight, Clock, Search, TrendingUp } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useAnalyticsEvents } from '../root-shell-client'
+import { Favicon } from './favicon'
 
 interface SearchSuggestion {
-  type: 'website' | 'category' | 'recent' | 'trending';
-  title: string;
-  description?: string;
-  url?: string;
-  category?: string;
-  website?: string;
-  icon?: React.ComponentType<{ className?: string }>;
+  type: 'website' | 'category' | 'recent' | 'trending'
+  title: string
+  description?: string
+  url?: string
+  category?: string
+  website?: string
+  icon?: React.ComponentType<{ className?: string }>
 }
 
 interface SearchAutocompleteProps {
-  availableCategorySlugs: string[];
-  searchQuery: string;
-  onSelect?: (suggestion: SearchSuggestion) => void;
-  isOpen: boolean;
-  onClose: () => void;
-  anchorRef?: React.RefObject<HTMLInputElement | null>;
+  availableCategorySlugs: string[]
+  searchQuery: string
+  onSelect?: (suggestion: SearchSuggestion) => void
+  isOpen: boolean
+  onClose: () => void
+  anchorRef?: React.RefObject<HTMLInputElement | null>
 }
 
 /**
@@ -43,169 +40,162 @@ export function SearchAutocomplete({
   onSelect,
   isOpen,
   onClose,
-  anchorRef,
+  anchorRef
 }: SearchAutocompleteProps) {
-  const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const { trackSearch, trackSearchAutocomplete } = useAnalyticsEvents();
-  const availableCategories = categories.filter((category) =>
-    availableCategorySlugs.includes(category.slug)
-  );
+  const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([])
+  const [selectedIndex, setSelectedIndex] = useState(-1)
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const { trackSearch, trackSearchAutocomplete } = useAnalyticsEvents()
+  const availableCategoryKey = availableCategorySlugs.join('\0')
+  const availableCategories = useMemo(() => {
+    const availableCategorySet = new Set(availableCategoryKey.split('\0').filter(Boolean))
+    return categories.filter(category => availableCategorySet.has(category.slug))
+  }, [availableCategoryKey])
 
   const getRecentSearches = useCallback((): string[] => {
-    if (typeof window === 'undefined') return [];
-    const recent = localStorage.getItem('recentSearches');
-    return recent ? JSON.parse(recent).slice(0, 3) : [];
-  }, []);
+    if (typeof window === 'undefined') return []
+    const recent = localStorage.getItem('recentSearches')
+    return recent ? JSON.parse(recent).slice(0, 3) : []
+  }, [])
 
   const saveRecentSearch = useCallback(
     (query: string) => {
-      if (typeof window === 'undefined') return;
-      const recent = getRecentSearches();
-      const updated = [query, ...recent.filter((s) => s !== query)].slice(0, 5);
-      localStorage.setItem('recentSearches', JSON.stringify(updated));
+      if (typeof window === 'undefined') return
+      const recent = getRecentSearches()
+      const updated = [query, ...recent.filter(s => s !== query)].slice(0, 5)
+      localStorage.setItem('recentSearches', JSON.stringify(updated))
     },
     [getRecentSearches]
-  );
+  )
 
   useEffect(() => {
+    let cancelled = false
+
     /** Fetches and filters search suggestions based on the current query */
     const fetchSuggestions = async () => {
       if (!searchQuery.trim()) {
-        const recentSearches = getRecentSearches().map((search) => ({
+        const recentSearches = getRecentSearches().map(search => ({
           type: 'recent' as const,
           title: search,
-          icon: Clock,
-        }));
-        const categoryMatches = availableCategories.slice(0, 3).map((cat) => ({
+          icon: Clock
+        }))
+        const categoryMatches = availableCategories.slice(0, 3).map(cat => ({
           type: 'category' as const,
           title: `Browse ${getCategoryDisplayName(cat.slug)}`,
-          description: `View all ${getCategoryDisplayName(
-            cat.slug
-          ).toLowerCase()} listings`,
+          description: `View all ${getCategoryDisplayName(cat.slug).toLowerCase()} listings`,
           icon: cat.icon,
-          url: getRoute('category.page', { category: cat.slug }),
-        }));
+          url: getRoute('category.page', { category: cat.slug })
+        }))
 
-        setSuggestions([...recentSearches, ...categoryMatches]);
-        setSelectedIndex(-1);
-        return;
+        if (!cancelled) {
+          setSuggestions([...recentSearches, ...categoryMatches])
+          setSelectedIndex(-1)
+        }
+        return
       }
-      setLoading(true);
+      if (!cancelled) setLoading(true)
       try {
-        const response = await fetch(SEARCH_INDEX_PUBLIC_PATH);
-        if (!response.ok) throw new Error('Failed to fetch search index');
+        const response = await fetch(SEARCH_INDEX_PUBLIC_PATH)
+        if (!response.ok) throw new Error('Failed to fetch search index')
 
-        const searchIndex = searchIndexSchema.parse(await response.json());
-        const query = searchQuery.toLowerCase();
+        const searchIndex = searchIndexSchema.parse(await response.json())
+        const query = searchQuery.toLowerCase()
         const websiteMatches = searchIndex
-          .filter((item) => {
+          .filter(item => {
             const searchableText = `${item.name} ${item.description} ${
               item.category
-            } ${(item.categories || []).join(' ')}`.toLowerCase();
-            return searchableText.includes(query);
+            } ${(item.categories || []).join(' ')}`.toLowerCase()
+            return searchableText.includes(query)
           })
           .slice(0, 5)
-          .map((item) => ({
+          .map(item => ({
             type: 'website' as const,
             title: item.name,
             description: item.description,
             url: item.url,
             category: item.category,
-            website: item.website,
-          }));
+            website: item.website
+          }))
         const categoryMatches = availableCategories
           .filter(
-            (cat) =>
+            cat =>
               getCategoryDisplayName(cat.slug).toLowerCase().includes(query) ||
               cat.slug.includes(query)
           )
           .slice(0, 2)
-          .map((cat) => ({
+          .map(cat => ({
             type: 'category' as const,
             title: `Browse ${getCategoryDisplayName(cat.slug)}`,
-            description: `View all ${getCategoryDisplayName(
-              cat.slug
-            ).toLowerCase()} listings`,
+            description: `View all ${getCategoryDisplayName(cat.slug).toLowerCase()} listings`,
             icon: cat.icon,
-            url: getRoute('category.page', { category: cat.slug }),
-          }));
+            url: getRoute('category.page', { category: cat.slug })
+          }))
 
-        setSuggestions([...websiteMatches, ...categoryMatches]);
-        setSelectedIndex(-1);
+        if (!cancelled) {
+          setSuggestions([...websiteMatches, ...categoryMatches])
+          setSelectedIndex(-1)
+        }
       } catch (error) {
         logger.error('Error fetching suggestions:', {
           data: error,
-          tags: { type: 'component' },
-        });
-        setSuggestions([]);
+          tags: { type: 'component' }
+        })
+        if (!cancelled) setSuggestions([])
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false)
       }
-    };
+    }
 
-    const debounceTimer = setTimeout(fetchSuggestions, 150);
-    return () => clearTimeout(debounceTimer);
-  }, [availableCategories, searchQuery, getRecentSearches]);
+    const debounceTimer = setTimeout(fetchSuggestions, 150)
+    return () => {
+      cancelled = true
+      clearTimeout(debounceTimer)
+    }
+  }, [availableCategories, searchQuery, getRecentSearches])
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) return
     /** Handles keyboard navigation within the autocomplete dropdown */
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
         case 'ArrowDown':
-          e.preventDefault();
-          setSelectedIndex((prev) =>
-            prev < suggestions.length - 1 ? prev + 1 : 0
-          );
-          break;
+          e.preventDefault()
+          setSelectedIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : 0))
+          break
         case 'ArrowUp':
-          e.preventDefault();
-          setSelectedIndex((prev) =>
-            prev > 0 ? prev - 1 : suggestions.length - 1
-          );
-          break;
+          e.preventDefault()
+          setSelectedIndex(prev => (prev > 0 ? prev - 1 : suggestions.length - 1))
+          break
         case 'Enter':
-          e.preventDefault();
+          e.preventDefault()
           if (selectedIndex >= 0 && suggestions[selectedIndex]) {
-            handleSuggestionClick(suggestions[selectedIndex]);
+            handleSuggestionClick(suggestions[selectedIndex])
           } else if (searchQuery.trim()) {
-            trackSearch(searchQuery, 0, 'autocomplete-keyboard-enter');
-            saveRecentSearch(searchQuery);
-            router.push(
-              `${getRoute('search')}?q=${encodeURIComponent(searchQuery)}`
-            );
-            onClose();
+            trackSearch(searchQuery, 0, 'autocomplete-keyboard-enter')
+            saveRecentSearch(searchQuery)
+            router.push(`${getRoute('search')}?q=${encodeURIComponent(searchQuery)}`)
+            onClose()
           }
-          break;
+          break
         case 'Escape':
-          e.preventDefault();
-          onClose();
-          break;
+          e.preventDefault()
+          onClose()
+          break
       }
-    };
+    }
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [
-    isOpen,
-    selectedIndex,
-    suggestions,
-    searchQuery,
-    router,
-    onClose,
-    saveRecentSearch,
-  ]);
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, selectedIndex, suggestions, searchQuery, router, onClose, saveRecentSearch])
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) return
     /** Closes the dropdown when clicking outside */
     const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target;
-      if (!(target instanceof Node)) return;
+      const target = e.target
+      if (!(target instanceof Node)) return
 
       if (
         dropdownRef.current &&
@@ -213,36 +203,30 @@ export function SearchAutocomplete({
         anchorRef?.current &&
         !anchorRef.current.contains(target)
       ) {
-        onClose();
+        onClose()
       }
-    };
+    }
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen, onClose, anchorRef]);
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isOpen, onClose, anchorRef])
 
   /** Navigates to the selected suggestion and tracks the interaction */
   const handleSuggestionClick = (suggestion: SearchSuggestion) => {
-    trackSearchAutocomplete(
-      searchQuery,
-      suggestion.title,
-      `autocomplete-${suggestion.type}`
-    );
+    trackSearchAutocomplete(searchQuery, suggestion.title, `autocomplete-${suggestion.type}`)
     if (suggestion.type === 'recent') {
-      saveRecentSearch(suggestion.title);
-      trackSearch(suggestion.title, 0, 'autocomplete-recent');
-      router.push(
-        `${getRoute('search')}?q=${encodeURIComponent(suggestion.title)}`
-      );
+      saveRecentSearch(suggestion.title)
+      trackSearch(suggestion.title, 0, 'autocomplete-recent')
+      router.push(`${getRoute('search')}?q=${encodeURIComponent(suggestion.title)}`)
     } else if (suggestion.url) {
-      router.push(suggestion.url);
+      router.push(suggestion.url)
     }
 
-    onSelect?.(suggestion);
-    onClose();
-  };
+    onSelect?.(suggestion)
+    onClose()
+  }
 
-  if (!isOpen || (!suggestions.length && !loading && searchQuery)) return null;
+  if (!isOpen || (!suggestions.length && !loading && searchQuery)) return null
 
   return (
     <div
@@ -260,8 +244,8 @@ export function SearchAutocomplete({
       ) : (
         <div className="py-2">
           {suggestions.map((suggestion, index) => {
-            const Icon = suggestion.icon || Search;
-            const isSelected = index === selectedIndex;
+            const Icon = suggestion.icon || Search
+            const isSelected = index === selectedIndex
             return (
               <button
                 key={`${suggestion.type}-${suggestion.title}-${index}`}
@@ -286,9 +270,7 @@ export function SearchAutocomplete({
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-sm truncate">
-                    {suggestion.title}
-                  </div>
+                  <div className="font-medium text-sm truncate">{suggestion.title}</div>
                   {suggestion.description && (
                     <div className="text-xs text-muted-foreground truncate mt-1">
                       {suggestion.description}
@@ -315,7 +297,7 @@ export function SearchAutocomplete({
                 )}
                 <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
-            );
+            )
           })}
         </div>
       )}
@@ -324,12 +306,10 @@ export function SearchAutocomplete({
           <button
             type="button"
             onClick={() => {
-              trackSearch(searchQuery, 0, 'autocomplete-search-button');
-              saveRecentSearch(searchQuery);
-              router.push(
-                `${getRoute('search')}?q=${encodeURIComponent(searchQuery)}`
-              );
-              onClose();
+              trackSearch(searchQuery, 0, 'autocomplete-search-button')
+              saveRecentSearch(searchQuery)
+              router.push(`${getRoute('search')}?q=${encodeURIComponent(searchQuery)}`)
+              onClose()
             }}
             className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 cursor-pointer"
           >
@@ -339,5 +319,5 @@ export function SearchAutocomplete({
         </div>
       )}
     </div>
-  );
+  )
 }

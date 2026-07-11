@@ -2,3 +2,9 @@
 command = "npx"
 args = ["-y", "mcp-remote", "https://mcp.mermaid.ai/mcp"]
 enabled = false
+
+
+[mcp_servers.shadcn]
+command = "npx"
+args = ["shadcn@latest", "mcp"]
+enabled = true

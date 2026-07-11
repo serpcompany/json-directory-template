@@ -10,3 +10,18 @@
 - when the source worktree has uncommitted, untracked, unpushed, behind, or diverged changes, only build, audit, report, or `--dry-run` deploy commands are allowed
 - if a merge or post-merge fast-forward is blocked by a dirty worktree, stop and resolve the dirty state through evidence-based categorization before claiming gitflow is complete or anything is live
 - do not use deploy target overrides such as `DEPLOY_REPO_URL` or `DEPLOY_BRANCH` in normal deploys; deploy targets must come from checked-in site config unless the user gives explicit same-turn emergency bypass approval
+
+
+## UI
+
+We have a lifetime full account to `https://www.shadcnblocks.com/docs`. 
+
+The VSCODE extension is installed with the API key. 
+
+You can also use the API key in the `~/repos/dev/shadcnblocks/.env` file.
+
+Use their components, blocks, pages, etc.
+
+Do not roll your own items when there are existing ones available. 
+
+Make UI reusable, etc.

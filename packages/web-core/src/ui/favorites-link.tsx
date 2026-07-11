@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '../../../design-system/lib/utils'
+import { cn } from '@thedaviddias/design-system/lib/utils'
 import { Heart } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'

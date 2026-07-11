@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '../../design-system/components/shadcn/button'
+import { Button } from '@thedaviddias/design-system/button'
 import { Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 
