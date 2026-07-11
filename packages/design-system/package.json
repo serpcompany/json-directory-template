@@ -18,6 +18,7 @@
     "./dialog": "./components/shadcn/dialog.tsx",
     "./drawer": "./components/shadcn/drawer.tsx",
     "./dropdown-menu": "./components/shadcn/dropdown-menu.tsx",
+    "./empty": "./components/shadcn/empty.tsx",
     "./error-boundary": "./components/custom/error-boundary-custom.tsx",
     "./form": "./components/shadcn/form.tsx",
     "./input": "./components/shadcn/input.tsx",
