@@ -1,6 +1,6 @@
-import { render, screen } from '@/test/test-utils'
 import { HeroSection } from '@thedaviddias/web-core/sections/hero-section'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
+import { render, screen } from '@/test/test-utils'
 
 jest.mock('@thedaviddias/web-core/ui/animated-background', () => ({
   AnimatedBackground: () => <div data-testid="animated-background" />
@@ -17,6 +17,10 @@ describe('HeroSection', () => {
     expect(screen.getByText(/resources, and documentation links/i)).toBeInTheDocument()
     expect(screen.queryByText(/tools, and documentation links/i)).not.toBeInTheDocument()
     expect(screen.getByText(/searchable directory/i)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /submit a listing/i })).toBeInTheDocument()
+    const submitLink = screen.getByRole('link', { name: /submit a listing/i })
+    expect(submitLink).toBeInTheDocument()
+    expect(submitLink).toHaveAttribute('href', '/submit/')
+    expect(submitLink).toHaveAttribute('data-slot', 'button')
+    expect(submitLink).toHaveClass('rounded-none')
   })
 })

@@ -1,3 +1,4 @@
+import { Button } from '@thedaviddias/design-system/button'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
@@ -41,14 +42,16 @@ export function Section({
         </div>
         {viewAllHref && (
           <div className="flex items-center gap-2 ml-2">
-            <Link
-              href={viewAllHref}
-              className="group flex items-center text-sm sm:text-base font-medium whitespace-nowrap text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded"
-              aria-label={viewAllText}
+            <Button
+              asChild
+              variant="ghost"
+              className="group h-auto gap-0 rounded px-0 py-0 text-sm font-medium text-muted-foreground shadow-none transition-colors hover:bg-transparent hover:text-foreground active:scale-100 has-[>svg]:px-0 sm:text-base"
             >
-              <span className="hidden sm:inline">{viewAllText}</span>
-              <ArrowRight className="size-5 sm:size-4 sm:ml-2 transition-transform group-hover:translate-x-0.5" />
-            </Link>
+              <Link href={viewAllHref} aria-label={viewAllText}>
+                <span className="hidden sm:inline">{viewAllText}</span>
+                <ArrowRight className="size-5 transition-transform group-hover:translate-x-0.5 sm:ml-2 sm:size-4" />
+              </Link>
+            </Button>
           </div>
         )}
       </div>

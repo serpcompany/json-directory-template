@@ -1,3 +1,4 @@
+import { Button } from '@thedaviddias/design-system/button'
 import Link from 'next/link'
 import { getRoute } from '../routes'
 import { siteCopy } from '../site-copy'
@@ -19,12 +20,12 @@ export function NewsletterSection() {
           </p>
         </div>
         <div className="pt-2">
-          <Link
-            href={getRoute('submit')}
-            className="inline-flex items-center justify-center rounded-none bg-foreground px-5 py-2.5 text-sm font-bold text-background transition-colors hover:bg-foreground/90"
+          <Button
+            asChild
+            className="h-auto rounded-none bg-foreground px-5 py-2.5 text-sm font-bold text-background shadow-none transition-colors hover:bg-foreground/90 active:scale-100"
           >
-            {siteCopy.submitLabel}
-          </Link>
+            <Link href={getRoute('submit')}>{siteCopy.submitLabel}</Link>
+          </Button>
         </div>
       </div>
     </section>

@@ -1,10 +1,10 @@
-import { render, screen } from '@/test/test-utils'
 import { FeaturedProjectsSectionRoute as FeaturedProjectsSection } from '@thedaviddias/web-core/sections/featured-projects-section-route'
 import { RecentlyAddedSectionRoute as RecentlyAddedSection } from '@thedaviddias/web-core/sections/recently-added-section-route'
+import { render, screen } from '@/test/test-utils'
 
 jest.mock('@thedaviddias/web-core/llm/llm-grid', () => ({
   LLMGrid: ({ items }: { items: Array<{ slug: string }> }) => (
-    <div data-testid="llm-grid">{items.map((item) => item.slug).join(',')}</div>
+    <div data-testid="llm-grid">{items.map(item => item.slug).join(',')}</div>
   )
 }))
 
@@ -15,6 +15,7 @@ const sampleProjects = [
     description: 'First project',
     website: 'https://alpha.example.com',
     category: 'developer-tools',
+    featured: true,
     publishedAt: '2026-03-22'
   },
   {
@@ -24,7 +25,7 @@ const sampleProjects = [
     website: 'https://beta.example.com',
     category: 'developer-tools',
     publishedAt: '2026-03-23'
-  },
+  }
 ]
 
 describe('homepage list sections', () => {
@@ -33,6 +34,10 @@ describe('homepage list sections', () => {
 
     expect(screen.getByRole('heading', { name: /featured listings/i })).toBeInTheDocument()
     expect(screen.getByText(/discover standout listings from this directory/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /all featured/i })).toHaveAttribute(
+      'data-slot',
+      'button'
+    )
     expect(screen.getByTestId('llm-grid')).toHaveTextContent('alpha-tool,beta-tool')
   })
 
