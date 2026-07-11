@@ -445,6 +445,8 @@ Before installing or editing UI code:
 
 Phase 1B: Registry-Backed Component Mapping
 
+Source-of-truth mapping table: `docs/PHASE_1_REGISTRY_MAPPING.md`.
+
 For each target surface, use the shadcn MCP or CLI against the configured registries
 to inspect candidate source before deciding. The mapping should prefer the smallest
 source change that improves library alignment without visual churn:
