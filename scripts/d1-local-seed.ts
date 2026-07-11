@@ -2,16 +2,19 @@ import { execFileSync } from 'node:child_process'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { websiteJsonEntryToD1Record, type D1ListingRecord } from './d1-listing-records.ts'
+import {
+  type WebsiteJsonEntry,
+  websiteJsonEntriesSchema
+} from '@thedaviddias/web-core/website-schema'
+import { type D1ListingRecord, websiteJsonEntryToD1Record } from './d1-listing-records.ts'
 import { createRunTempDir } from './run-context.ts'
 import {
+  type CheckedInSiteConfigRecord,
   loadCheckedInSiteFromInput,
   parseSiteInputArgs,
-  type CheckedInSiteConfigRecord,
   type SiteInputTarget
 } from './site-config.ts'
 import { buildTrialWebsiteEntries } from './trial-build.ts'
-import { websiteJsonEntriesSchema, type WebsiteJsonEntry } from '@thedaviddias/web-core/website-schema'
 
 type TrialProductsSeedSource = {
   category: string
@@ -118,8 +121,7 @@ function recordToInsertStatement(record: D1ListingRecord): string {
 export function seedLocalD1Listings(input: SiteInputTarget): void {
   const definition = loadCheckedInSiteFromInput(input)
   const source = definition.content.listingSource
-  const databaseName =
-    source.kind === 'd1-listings' ? source.databaseName : 'json-directory-local'
+  const databaseName = source.kind === 'd1-listings' ? source.databaseName : 'json-directory-local'
   const wranglerConfigPath =
     source.kind === 'd1-listings' ? source.wranglerConfigPath : 'wrangler.jsonc'
 
@@ -177,7 +179,9 @@ export function seedLocalD1Listings(input: SiteInputTarget): void {
       }
     )
 
-    console.log(`Seeded local D1 database ${databaseName} for ${definition.id}: ${records.length} rows`)
+    console.log(
+      `Seeded local D1 database ${databaseName} for ${definition.id}: ${records.length} rows`
+    )
   } finally {
     runTempDir.cleanup()
   }

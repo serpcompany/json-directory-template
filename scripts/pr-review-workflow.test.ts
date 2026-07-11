@@ -70,6 +70,7 @@ describe('pr-review workflow', () => {
 
     expect(validateJob['runs-on']).toBe('ubuntu-latest')
     expect(checkoutStep?.with?.['fetch-depth']).toBe(0)
+    expect(stepRuns).toContain('pnpm d1:local:prepare')
     expect(stepRuns).toContain('pnpm validate:sites')
     expect(stepRuns).toContain(
       'pnpm exec biome check --changed --since=origin/main --no-errors-on-unmatched'

@@ -21,6 +21,7 @@
     "d1:import": "pnpm tsx scripts/d1-listings-snapshot.ts",
     "d1:export": "pnpm tsx scripts/d1-listings-snapshot.ts",
     "d1:local:migrate": "pnpm dlx wrangler@latest d1 migrations apply json-directory-local --local --persist-to .wrangler/state --config wrangler.jsonc",
+    "d1:local:prepare": "pnpm tsx scripts/d1-local-prepare.ts",
     "d1:local:seed": "pnpm tsx scripts/d1-local-seed.ts",
     "d1:snapshot": "pnpm tsx scripts/d1-listings-snapshot.ts",
     "format": "biome check --write .",

@@ -5,12 +5,14 @@ import { describe, expect, it } from 'vitest'
 
 const activeListingSourcePaths = [
   'data/listings.json',
+  'd1/**',
   'sites/browserextensions.io/products.json',
   'sites/pornvideodownloaders.com/products.json',
   'sites/serp.ai/products.json',
   'sites/serp.co/products.json',
   'sites/serp.software/products.json',
-  'sites/serpdownloaders.com/products.json'
+  'sites/serpdownloaders.com/products.json',
+  'wrangler.jsonc'
 ]
 
 interface WorkflowTrigger {
@@ -76,6 +78,9 @@ describe('update-listings-json workflow', () => {
     const activeSiteValidateStep = validateJob.steps?.find(
       step => step.name === 'Validate active checked-in site data'
     )
+    const localD1PrepareStep = validateJob.steps?.find(
+      step => step.name === 'Prepare local D1 listing sources'
+    )
 
     expect(checkoutStep?.with?.['fetch-depth']).toBe(0)
     expect(detectDataListingsStep?.id).toBe('detect-data-listings')
@@ -83,6 +88,7 @@ describe('update-listings-json workflow', () => {
     expect(detectDataListingsStep?.run).toContain('github.event.before')
     expect(jsonValidateStep?.if).toBe("steps.detect-data-listings.outputs.changed == 'true'")
     expect(jsonValidateStep?.run).toBe('pnpm tsx scripts/validate-data.ts data/listings.json')
+    expect(localD1PrepareStep?.run).toBe('pnpm d1:local:prepare')
     expect(activeSiteValidateStep?.run).toBe('pnpm validate:sites')
   })
 

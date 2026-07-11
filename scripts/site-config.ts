@@ -99,7 +99,8 @@ const d1ListingsSourceSchema = z
     if (source.mode === 'snapshot' && !source.exportPath) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'content.listingSource.exportPath is required when d1-listings mode is "snapshot".',
+        message:
+          'content.listingSource.exportPath is required when d1-listings mode is "snapshot".',
         path: ['exportPath']
       })
     }

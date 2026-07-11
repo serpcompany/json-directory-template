@@ -84,6 +84,8 @@ const config: Config.InitialOptions = {
       '<rootDir>/../../packages/design-system/lib/fonts.ts',
     '^@thedaviddias/design-system/lib/utils$':
       '<rootDir>/../../packages/design-system/lib/utils.ts',
+    '^@thedaviddias/design-system/shadcnblocks/(.*)$':
+      '<rootDir>/../../packages/design-system/components/shadcnblocks/$1.tsx',
     '^@thedaviddias/design-system/(.*)$':
       '<rootDir>/../../packages/design-system/components/shadcn/$1.tsx',
     '^@thedaviddias/([^/]+)/(.*)$': [

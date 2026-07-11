@@ -17,7 +17,9 @@ function parseWranglerJsonOutput(output: string): WranglerD1Result[] {
     throw new Error(`Wrangler did not return JSON output:\n${output}`)
   }
 
-  const parsed = JSON.parse(trimmedOutput.slice(jsonStartIndex)) as WranglerD1Result | WranglerD1Result[]
+  const parsed = JSON.parse(trimmedOutput.slice(jsonStartIndex)) as
+    | WranglerD1Result
+    | WranglerD1Result[]
   return Array.isArray(parsed) ? parsed : [parsed]
 }
 

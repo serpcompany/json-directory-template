@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'data/listings.json'
+      - 'd1/**'
       - 'sites/**'
       - 'apps/browserextensions.io/**'
       - 'apps/pornvideodownloaders.com/**'
@@ -15,6 +16,7 @@ on:
       - 'apps/starter/**'
       - 'packages/web-core/**'
       - 'scripts/**'
+      - 'wrangler.jsonc'
       - '!scripts/build-and-deploy-workflow.test.ts'
       - '!scripts/deploy-to-repo.sh'
       - '!scripts/deploy-to-repo-script.test.ts'
@@ -65,6 +67,11 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/install
+
+      - name: Prepare local D1 listing source
+        env:
+          SITE_ID: ${{ matrix.target.siteId }}
+        run: pnpm d1:local:prepare -- --site "$SITE_ID"
 
       - name: Validate site data
         env:

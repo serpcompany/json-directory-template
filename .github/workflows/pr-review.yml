@@ -25,6 +25,9 @@ jobs:
       - name: Install
         uses: ./.github/actions/install
 
+      - name: Prepare local D1 listing sources
+        run: pnpm d1:local:prepare
+
       - name: Validate active checked-in sites
         run: pnpm validate:sites
 

@@ -82,6 +82,7 @@ describe('build-and-deploy workflow', () => {
       target: `\${{ fromJson(needs.resolve.outputs.deploy_targets) }}`
     })
     expect(namedSteps).toEqual([
+      'Prepare local D1 listing source',
       'Validate site data',
       'Build static site',
       'Audit XML sitemaps',
@@ -118,6 +119,7 @@ describe('build-and-deploy workflow', () => {
     const workflow = loadWorkflow()
     const deployJob = workflow.jobs.deploy
     const steps = deployJob.steps ?? []
+    const localD1PrepareStep = steps.find(step => step.name === 'Prepare local D1 listing source')
     const validateStep = steps.find(step => step.name === 'Validate site data')
     const buildStep = steps.find(step => step.name === 'Build static site')
     const sitemapAuditStep = steps.find(step => step.name === 'Audit XML sitemaps')
@@ -127,6 +129,9 @@ describe('build-and-deploy workflow', () => {
     const deployStep = steps.find(step => step.name === 'Deploy')
     const stepNames = steps.map(step => step.name)
 
+    expect(localD1PrepareStep?.if).toBeUndefined()
+    expect(localD1PrepareStep?.run).toBe('pnpm d1:local:prepare -- --site "$SITE_ID"')
+    expect(localD1PrepareStep?.env?.SITE_ID).toBe(`\${{ matrix.target.siteId }}`)
     expect(validateStep?.if).toBeUndefined()
     expect(validateStep?.run).toBe('pnpm validate:site')
     expect(validateStep?.env?.SITE_ID).toBe(`\${{ matrix.target.siteId }}`)
@@ -142,6 +147,9 @@ describe('build-and-deploy workflow', () => {
     expect(deployStep?.if).toBeUndefined()
     expect(deployStep?.run).toBe('pnpm deploy:site')
     expect(deployStep?.env?.SITE_ID).toBe(`\${{ matrix.target.siteId }}`)
+    expect(stepNames.indexOf('Prepare local D1 listing source')).toBeLessThan(
+      stepNames.indexOf('Validate site data')
+    )
     expect(stepNames.indexOf('Validate site data')).toBeLessThan(
       stepNames.indexOf('Build static site')
     )
