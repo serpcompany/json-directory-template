@@ -1,14 +1,8 @@
 import path from 'node:path'
 import { withContentCollections } from '@content-collections/next'
 import withMDX from '@next/mdx'
-import {
-  baseConfig,
-  withAnalyzer,
-} from '@thedaviddias/config-next'
-import {
-  defaultSiteConfig,
-  resolveCheckedInSiteConfig,
-} from '@thedaviddias/site-contract'
+import { baseConfig, withAnalyzer } from '@thedaviddias/config-next'
+import { defaultSiteConfig, resolveCheckedInSiteConfig } from '@thedaviddias/site-contract'
 import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases'
 import { categories } from '@thedaviddias/web-core/categories'
 import type { NextConfig } from 'next'
@@ -18,7 +12,7 @@ export const INTERNAL_PACKAGES = [
   '@thedaviddias/design-system',
   '@thedaviddias/config-next',
   '@thedaviddias/site-contract',
-  '@thedaviddias/web-core',
+  '@thedaviddias/web-core'
 ]
 
 function normalizeBasePath(basePath: string): string {
@@ -29,10 +23,7 @@ function buildPublicRoute(basePath: string): string {
   return `/${normalizeBasePath(basePath)}`
 }
 
-function createAliasRewrites(
-  sourceBasePath: string,
-  destinationBasePath: string
-) {
+function createAliasRewrites(sourceBasePath: string, destinationBasePath: string) {
   if (sourceBasePath === destinationBasePath) {
     return []
   }
@@ -40,12 +31,12 @@ function createAliasRewrites(
   return [
     {
       source: buildPublicRoute(sourceBasePath),
-      destination: buildPublicRoute(destinationBasePath),
+      destination: buildPublicRoute(destinationBasePath)
     },
     {
       source: `${buildPublicRoute(sourceBasePath)}/:path*`,
-      destination: `${buildPublicRoute(destinationBasePath)}/:path*`,
-    },
+      destination: `${buildPublicRoute(destinationBasePath)}/:path*`
+    }
   ]
 }
 
@@ -55,7 +46,7 @@ function createLegacyCategoryRedirects() {
   return categoryRouteSlugs.map(slug => ({
     source: `/${slug}`,
     destination: `/categories/${slug}`,
-    permanent: true,
+    permanent: true
   }))
 }
 
@@ -76,8 +67,8 @@ let nextConfig: NextConfig = {
   trailingSlash: true,
   logging: {
     fetches: {
-      fullUrl: process.env.NODE_ENV === 'development',
-    },
+      fullUrl: process.env.NODE_ENV === 'development'
+    }
   },
   turbopack: {
     root: path.resolve(process.cwd(), '../..'),
@@ -94,83 +85,73 @@ let nextConfig: NextConfig = {
       'node:buffer': { browser: './turbopack-empty.ts' },
       'node:util': { browser: './turbopack-empty.ts' },
       'node:fs': { browser: './turbopack-empty.ts' },
-      'node:path': { browser: './turbopack-empty.ts' },
-    },
+      'node:path': { browser: './turbopack-empty.ts' }
+    }
   },
   images: {
     unoptimized: isStaticExportBuild(),
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'www.google.com',
-        pathname: '/s2/favicons/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 't0.gstatic.com',
-        pathname: '/faviconV2/**',
-      },
-      {
-        protocol: 'https',
         hostname: 'icon.horse',
-        pathname: '/icon/**',
-      },
-    ],
+        pathname: '/icon/**'
+      }
+    ]
   },
   rewrites: async () => ({
     beforeFiles: [
       ...createAliasRewrites(docsBasePath, 'docs'),
       ...createAliasRewrites(networkBasePath, 'projects'),
       ...createAliasRewrites(brandsBasePath, 'brands'),
-      ...(preservePostsRoute ? [] : createAliasRewrites('posts', 'guides')),
-    ],
+      ...(preservePostsRoute ? [] : createAliasRewrites('posts', 'guides'))
+    ]
   }),
   redirects: async () => {
     return [
       {
         source: '/news',
         destination: '/',
-        permanent: false,
+        permanent: false
       },
       ...rootListingAliases.map(slug => ({
         source: `/${slug}`,
         destination: `${buildPublicRoute(listingBasePath)}/${slug}/`,
-        permanent: true,
+        permanent: true
       })),
       {
         source: '/website/:path*',
         destination: `${buildPublicRoute(listingBasePath)}/:path*`,
-        permanent: true,
+        permanent: true
       },
       ...createAliasRewrites('websites', listingBasePath).map(rule => ({
         ...rule,
-        permanent: true,
+        permanent: true
       })),
       ...createAliasRewrites('docs', docsBasePath).map(rule => ({
         ...rule,
-        permanent: true,
+        permanent: true
       })),
       ...createAliasRewrites('projects', networkBasePath).map(rule => ({
         ...rule,
-        permanent: true,
+        permanent: true
       })),
       ...createAliasRewrites('brands', brandsBasePath).map(rule => ({
         ...rule,
-        permanent: true,
+        permanent: true
       })),
       ...createAliasRewrites('guides', 'posts').map(rule => ({
         ...rule,
-        permanent: true,
+        permanent: true
       })),
-      ...createLegacyCategoryRedirects(),
+      ...createLegacyCategoryRedirects()
     ]
-  },
+  }
 }
 
 if (isStaticExportBuild()) {
   nextConfig = {
     ...nextConfig,
-    output: 'export',
+    output: 'export'
   }
 }
 

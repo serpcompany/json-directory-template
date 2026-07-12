@@ -1,5 +1,8 @@
-import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url'
 import { getCategoryDisplayName } from './category-display'
+import {
+  getListingLogoFallbackPath,
+  shouldUseProvidedListingLogo
+} from './listing-logo-presentation'
 import { getCanonicalListingListRoute, getRoute } from './routes'
 import { SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL, SITE_URL } from './seo-config'
 import { siteCopy } from './site-copy'
@@ -15,6 +18,10 @@ export interface WebsiteMetadataLike {
   description: string
   name: string
   publishedAt: string
+  media?: {
+    images?: string[]
+    logo?: string
+  }
   resourceLinks?: Array<{ label: string; url: string }>
   slug: string
   website: string
@@ -115,6 +122,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadataLike) {
     : 'Developer Tools'
   const listingLabel = siteCopy.listingName.singular
   const listingLabelTitle = siteCopy.listingName.singularTitle
+  const primaryImageUrl = resolveSchemaImageUrl(website)
 
   return {
     '@context': 'https://schema.org',
@@ -130,7 +138,7 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadataLike) {
         },
         primaryImageOfPage: {
           '@type': 'ImageObject',
-          url: getFaviconUrl(website.website, 256)
+          url: primaryImageUrl
         },
         datePublished: website.publishedAt,
         dateModified: website.publishedAt,
@@ -252,6 +260,17 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadataLike) {
       }
     ]
   }
+}
+
+function resolveSchemaImageUrl(website: WebsiteMetadataLike): string {
+  const logo = website.media?.logo
+
+  if (shouldUseProvidedListingLogo(logo) && logo) {
+    if (logo.startsWith('/')) return `${SITE_PUBLIC_URL}${logo}`
+    return logo
+  }
+
+  return `${SITE_PUBLIC_URL}${getListingLogoFallbackPath()}`
 }
 
 export function generateCollectionSchema(websites: WebsiteMetadataLike[]): CollectionPageSchema {

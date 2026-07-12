@@ -5,7 +5,6 @@
   "exports": {
     "./content-paths": "./content-paths.ts",
     "./cookies": "./cookies.ts",
-    "./get-favicon-url": "./get-favicon-url.ts",
     "./environment": "./constants/environment.ts",
     "./get-base-url": "./get-base-url.ts"
   },

@@ -1,5 +1,5 @@
-import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { generateArticleSchema, generateWebsiteDetailSchema } from '@thedaviddias/web-core/schema'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import type { WebsiteMetadata } from '@/lib/content-loader'
 
 const sampleWebsite: WebsiteMetadata = {
@@ -38,5 +38,32 @@ describe('schema copy', () => {
     expect(faqSchema?.mainEntity[0]?.name).toBe("What is included in Example Project's listing?")
     expect(faqSchema?.mainEntity[0]?.acceptedAnswer?.text).toContain('primary link')
     expect(faqSchema?.mainEntity[0]?.acceptedAnswer?.text).not.toContain('website link')
+  })
+
+  it.each([
+    {
+      expectedImage: 'https://cdn.example.com/example.png',
+      logo: 'https://cdn.example.com/example.png'
+    },
+    {
+      expectedImage: '/listing-logos/example.png',
+      logo: '/listing-logos/example.png'
+    },
+    {
+      expectedImage: '/listing-logos/favicon-fallback-512x512.png',
+      logo: '/listing-logos/example.ico'
+    },
+    {
+      expectedImage: '/listing-logos/favicon-fallback-512x512.png',
+      logo: undefined
+    }
+  ])('uses the expected schema image for $logo', ({ expectedImage, logo }) => {
+    const detailSchema = generateWebsiteDetailSchema({
+      ...sampleWebsite,
+      media: logo ? { logo } : undefined
+    })
+    const webPageSchema = detailSchema['@graph'].find(item => item['@type'] === 'WebPage')
+
+    expect(webPageSchema?.primaryImageOfPage.url).toContain(expectedImage)
   })
 })

@@ -24,7 +24,9 @@ This file is an array of listing entries.
     "website": "https://example.com",
     "description": "Short summary of the project.",
     "category": "developer-tools",
-    "favicon": "https://www.google.com/s2/favicons?domain=example.com&sz=128",
+    "media": {
+      "logo": "/listing-logos/example.com/example-project.png"
+    },
     "featured": true,
     "resourceLinks": [
       {
@@ -47,7 +49,7 @@ This file is an array of listing entries.
 | `description`   | Yes         | Plain text summary. The loader strips HTML if older content included markup.                     |
 | `category`      | Yes         | Category slug used by the starter UI.                                                            |
 | `featured`      | No          | Marks the entry for featured lists.                                                              |
-| `favicon`       | No          | Generated convenience field. The current UI does not require it to render.                       |
+| `media.logo`    | No          | Root-relative or HTTPS listing logo. The UI falls back to a checked-in local placeholder.         |
 | `resourceLinks` | No          | Optional label/URL pairs rendered under the listing detail Resources section.                    |
 | `content`       | No          | Optional body content rendered on the listing detail page.                                       |
 | `priority`      | No          | Optional internal ordering hint used by some list views.                                         |

@@ -46,7 +46,6 @@ describe('buildTrialWebsiteEntries', () => {
         categories: ['automation-workflow', 'developer-tools'],
         content: expect.stringContaining('## FAQ'),
         description: 'Download videos from ExampleVideo in one click.',
-        favicon: 'https://www.google.com/s2/favicons?domain=serp.ly&sz=128',
         featured: true,
         media: {
           images: ['https://cdn.example.com/example-downloader/shot-1.png'],
@@ -233,7 +232,6 @@ describe('buildTrialWebsiteEntries', () => {
         categories: ['automation-workflow'],
         content: expect.stringContaining('Offline use cases'),
         description: 'Download videos from ExampleVideo in one click.',
-        favicon: 'https://www.google.com/s2/favicons?domain=serp.ly&sz=128',
         featured: true,
         name: 'SERP Example Downloader',
         publishedAt: '2026-03-23',

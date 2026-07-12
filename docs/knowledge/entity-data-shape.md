@@ -44,7 +44,6 @@ Use this shape when preparing rows to replace the placeholder data:
 - `slug`
 - `featured`
 - `priority`
-- `favicon`
 - `isUnofficial`
 - `resourceLinks`
 - `content`
@@ -94,7 +93,9 @@ They are added in `apps/starter/lib/content-loader.ts` when `getWebsiteBySlug()`
 
 ## Important Notes
 
-- `favicon` exists in the raw JSON today but is not part of the normalized detail-page contract.
+- Listing images belong in `media.logo`. Missing or broken listing logos use the
+  checked-in `/listing-logos/favicon-fallback-512x512.png` asset; remote favicon
+  generator URLs are not part of the authored data contract.
 - The loader sanitizes HTML out of `description`.
 - The loader still normalizes the legacy category slug `integration-automation` to `automation-workflow`.
 - The raw field name `website` is kept for compatibility and still means the destination URL for a listing.

@@ -1,5 +1,22 @@
 # Phase 1 Registry Mapping
 
+## Completion Status
+
+As of 2026-07-13, all mapped Phase 1 public surfaces have been implemented on
+`agent/shadcnblocks-source-adoption` and published through PR #147. The six adapted
+ShadcnBlocks component families are owned under
+`packages/design-system/components/shadcnblocks`, while behavior and public route
+composition remain in `packages/web-core`.
+
+The implementation is pending final PR checks, review, and merge. This document uses
+"ShadcnBlocks-backed" to describe the mapped public UI surfaces; it does not claim
+that routing, data loading, filtering, favorites, analytics, metadata, or schema have
+been replaced by ShadcnBlocks.
+
+The listing-card fallback contract now resolves to the local
+`/listing-logos/favicon-fallback-512x512.png` asset distributed with each app. Google
+and gstatic favicon services are not fallback candidates.
+
 Status: source-of-truth mapping for Phase 1B plus Phase 1C correction pass.
 
 Pilot target: `serpdownloaders.com`.

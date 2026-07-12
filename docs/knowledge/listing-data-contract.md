@@ -130,7 +130,10 @@ Use this as the rule of thumb:
   Use `product.categories` as the full category list. The first entry becomes the canonical route category when the app needs one.
 - `media`
   Optional structured assets such as a logo, screenshots, or one demo video URL.
-  For the current listing UI, `media.logo` should prefer a checked-in or remote `.png`. Non-`.png`, missing, or broken logos fall back to the neutral placeholder asset at `/placeholder.svg`.
+  For the current listing UI, `media.logo` should prefer a checked-in or remote `.png`.
+  Non-`.png`, missing, or broken logos fall back to the checked-in
+  `/listing-logos/favicon-fallback-512x512.png` asset. Do not generate Google or
+  gstatic favicon-service URLs.
 - `product.categories`
   Optional ordered list of all categories the listing should belong to. The first category is treated as the canonical route category.
 - `content`
@@ -153,7 +156,6 @@ Every normalized listing record must provide:
 - `slug`
 - `featured`
 - `priority`
-- `favicon`
 - `isUnofficial`
 - `resourceLinks`
 - `content`

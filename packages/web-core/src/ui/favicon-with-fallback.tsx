@@ -1,19 +1,18 @@
-'use client';
+'use client'
 
-import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url'
-import { Globe } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { Globe } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   getListingLogoFallbackPath,
-  shouldUseProvidedListingLogo,
-} from '../listing-logo-presentation';
+  shouldUseProvidedListingLogo
+} from '../listing-logo-presentation'
 
 interface FaviconWithFallbackProps {
-  website: string;
-  name: string;
-  logoUrl?: string;
-  size?: number;
-  className?: string;
+  website: string
+  name: string
+  logoUrl?: string
+  size?: number
+  className?: string
 }
 
 /**
@@ -22,49 +21,40 @@ interface FaviconWithFallbackProps {
  * @returns React component that handles favicon loading and errors
  */
 export function FaviconWithFallback({
-  website,
   name,
   logoUrl,
   size = 32,
-  className = 'rounded-lg',
+  className = 'rounded-lg'
 }: FaviconWithFallbackProps) {
-  const [candidateIndex, setCandidateIndex] = useState(0);
-  const fallbackPath = getListingLogoFallbackPath();
-  const shouldUseProvidedLogo = shouldUseProvidedListingLogo(logoUrl);
-  const faviconUrl = getFaviconUrl(website);
+  const [candidateIndex, setCandidateIndex] = useState(0)
+  const fallbackPath = getListingLogoFallbackPath()
+  const shouldUseProvidedLogo = shouldUseProvidedListingLogo(logoUrl)
   const imageCandidates = useMemo(() => {
     const candidates: Array<{
-      alt: string;
-      src: string;
-    }> = [];
+      alt: string
+      src: string
+    }> = []
 
     if (shouldUseProvidedLogo && logoUrl) {
       candidates.push({
         alt: `${name} logo`,
-        src: logoUrl,
-      });
-    }
-
-    if (faviconUrl && faviconUrl !== '/placeholder.svg') {
-      candidates.push({
-        alt: `${name} favicon`,
-        src: faviconUrl,
-      });
+        src: logoUrl
+      })
     }
 
     candidates.push({
       alt: `${name} fallback logo`,
-      src: fallbackPath,
-    });
+      src: fallbackPath
+    })
 
-    return candidates;
-  }, [fallbackPath, faviconUrl, logoUrl, name, shouldUseProvidedLogo]);
+    return candidates
+  }, [fallbackPath, logoUrl, name, shouldUseProvidedLogo])
 
   useEffect(() => {
-    setCandidateIndex(0);
-  }, [imageCandidates]);
+    setCandidateIndex(0)
+  }, [imageCandidates])
 
-  const currentImage = imageCandidates[candidateIndex];
+  const currentImage = imageCandidates[candidateIndex]
 
   if (!currentImage) {
     return (
@@ -74,7 +64,7 @@ export function FaviconWithFallback({
       >
         <Globe className="w-4 h-4 text-muted-foreground" />
       </div>
-    );
+    )
   }
 
   return (
@@ -86,8 +76,8 @@ export function FaviconWithFallback({
       className={`${className} flex-shrink-0 object-contain`}
       style={{ width: `${size}px`, height: 'auto', aspectRatio: '1/1' }}
       onError={() => {
-        setCandidateIndex((currentIndex) => currentIndex + 1);
+        setCandidateIndex(currentIndex => currentIndex + 1)
       }}
     />
-  );
+  )
 }

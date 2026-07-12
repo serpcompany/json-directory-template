@@ -1,8 +1,8 @@
 'use client'
 
-import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url'
 import { Globe } from 'lucide-react'
 import { useState } from 'react'
+import { getListingLogoFallbackPath } from '../listing-logo-presentation'
 
 interface FaviconProps {
   website: string
@@ -44,7 +44,7 @@ export function Favicon({
   const sizeMatch = className.match(/[hw]-(\d+)/)
   const size = sizeMatch ? Number.parseInt(sizeMatch[1], 10) * 4 : 16 // Convert Tailwind units to pixels
 
-  if (imageError || !website) {
+  if (imageError) {
     return (
       <div
         title={title}
@@ -56,20 +56,7 @@ export function Favicon({
     )
   }
 
-  const faviconUrl = getFaviconUrl(website)
-
-  // If getFaviconUrl returns placeholder, show fallback icon instead
-  if (faviconUrl === '/placeholder.svg') {
-    return (
-      <div
-        title={title}
-        className={className}
-        style={{ width: size, height: 'auto', aspectRatio: '1/1' }}
-      >
-        <FallbackIcon className="w-full h-full" />
-      </div>
-    )
-  }
+  const faviconUrl = getListingLogoFallbackPath()
 
   return (
     <div
@@ -82,7 +69,7 @@ export function Favicon({
       {!imageError ? (
         <img
           src={faviconUrl}
-          alt={`${title || website} favicon`}
+          alt={`${title || website} logo`}
           width={size}
           height={size}
           className={`w-full h-full rounded-sm object-contain ${imageLoading ? 'invisible' : 'visible'}`}

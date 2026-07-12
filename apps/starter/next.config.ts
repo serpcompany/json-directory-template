@@ -1,15 +1,12 @@
-import path from 'node:path';
-import { withContentCollections } from '@content-collections/next';
-import withMDX from '@next/mdx';
-import {
-  baseConfig,
-  withAnalyzer,
-} from '@thedaviddias/config-next';
-import { defaultSiteConfig, resolveCheckedInSiteConfig } from '@thedaviddias/site-contract';
-import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases';
-import { categories } from '@thedaviddias/web-core/categories';
-import type { NextConfig } from 'next';
-import { isStaticExportBuild } from './lib/runtime-mode';
+import path from 'node:path'
+import { withContentCollections } from '@content-collections/next'
+import withMDX from '@next/mdx'
+import { baseConfig, withAnalyzer } from '@thedaviddias/config-next'
+import { defaultSiteConfig, resolveCheckedInSiteConfig } from '@thedaviddias/site-contract'
+import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases'
+import { categories } from '@thedaviddias/web-core/categories'
+import type { NextConfig } from 'next'
+import { isStaticExportBuild } from './lib/runtime-mode'
 
 export const INTERNAL_PACKAGES = [
   '@thedaviddias/design-system',
@@ -19,62 +16,52 @@ export const INTERNAL_PACKAGES = [
   '@thedaviddias/logging',
   '@thedaviddias/site-contract',
   '@thedaviddias/utils',
-  '@thedaviddias/web-core',
-];
+  '@thedaviddias/web-core'
+]
 
 function normalizeBasePath(basePath: string): string {
-  return basePath.replace(/^\/+|\/+$/g, '');
+  return basePath.replace(/^\/+|\/+$/g, '')
 }
 
 function buildPublicRoute(basePath: string): string {
-  return `/${normalizeBasePath(basePath)}`;
+  return `/${normalizeBasePath(basePath)}`
 }
 
-function createAliasRewrites(
-  sourceBasePath: string,
-  destinationBasePath: string
-) {
+function createAliasRewrites(sourceBasePath: string, destinationBasePath: string) {
   if (sourceBasePath === destinationBasePath) {
-    return [];
+    return []
   }
 
   return [
     {
       source: buildPublicRoute(sourceBasePath),
-      destination: buildPublicRoute(destinationBasePath),
+      destination: buildPublicRoute(destinationBasePath)
     },
     {
       source: `${buildPublicRoute(sourceBasePath)}/:path*`,
-      destination: `${buildPublicRoute(destinationBasePath)}/:path*`,
-    },
-  ];
+      destination: `${buildPublicRoute(destinationBasePath)}/:path*`
+    }
+  ]
 }
 
-const categoryRouteSlugs = [
-  'featured',
-  ...categories.map((category) => category.slug),
-];
+const categoryRouteSlugs = ['featured', ...categories.map(category => category.slug)]
 
 function createLegacyCategoryRedirects() {
-  return categoryRouteSlugs.map((slug) => ({
+  return categoryRouteSlugs.map(slug => ({
     source: `/${slug}`,
     destination: `/categories/${slug}`,
-    permanent: true,
-  }));
+    permanent: true
+  }))
 }
 
 const runtimeSiteConfig = resolveCheckedInSiteConfig(
   process.env.NEXT_PUBLIC_SITE_ID || process.env.SITE_ID || defaultSiteConfig.id
-);
-const listingBasePath = normalizeBasePath(
-  runtimeSiteConfig.routes.listingBasePath
-);
-const docsBasePath = normalizeBasePath(runtimeSiteConfig.routes.docsBasePath);
-const networkBasePath = normalizeBasePath(
-  runtimeSiteConfig.routes.networkBasePath
-);
-const brandsBasePath = normalizeBasePath(runtimeSiteConfig.routes.brandsBasePath);
-const rootListingAliases = getSiteRootListingAliases(runtimeSiteConfig.id);
+)
+const listingBasePath = normalizeBasePath(runtimeSiteConfig.routes.listingBasePath)
+const docsBasePath = normalizeBasePath(runtimeSiteConfig.routes.docsBasePath)
+const networkBasePath = normalizeBasePath(runtimeSiteConfig.routes.networkBasePath)
+const brandsBasePath = normalizeBasePath(runtimeSiteConfig.routes.brandsBasePath)
+const rootListingAliases = getSiteRootListingAliases(runtimeSiteConfig.id)
 
 let nextConfig: NextConfig = {
   ...baseConfig,
@@ -86,8 +73,8 @@ let nextConfig: NextConfig = {
   // Configure logging behavior
   logging: {
     fetches: {
-      fullUrl: process.env.NODE_ENV === 'development',
-    },
+      fullUrl: process.env.NODE_ENV === 'development'
+    }
   },
 
   // Configure Turbopack (default bundler in Next.js 16)
@@ -106,8 +93,8 @@ let nextConfig: NextConfig = {
       'node:buffer': { browser: './turbopack-empty.ts' },
       'node:util': { browser: './turbopack-empty.ts' },
       'node:fs': { browser: './turbopack-empty.ts' },
-      'node:path': { browser: './turbopack-empty.ts' },
-    },
+      'node:path': { browser: './turbopack-empty.ts' }
+    }
   },
 
   images: {
@@ -115,20 +102,10 @@ let nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'www.google.com',
-        pathname: '/s2/favicons/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 't0.gstatic.com',
-        pathname: '/faviconV2/**',
-      },
-      {
-        protocol: 'https',
         hostname: 'icon.horse',
-        pathname: '/icon/**',
-      },
-    ],
+        pathname: '/icon/**'
+      }
+    ]
   },
 
   rewrites: async () => ({
@@ -137,8 +114,8 @@ let nextConfig: NextConfig = {
       ...createAliasRewrites(docsBasePath, 'docs'),
       ...createAliasRewrites(networkBasePath, 'projects'),
       ...createAliasRewrites(brandsBasePath, 'brands'),
-      ...createAliasRewrites('posts', 'guides'),
-    ],
+      ...createAliasRewrites('posts', 'guides')
+    ]
   }),
 
   redirects: async () => {
@@ -146,57 +123,57 @@ let nextConfig: NextConfig = {
       {
         source: '/news',
         destination: '/',
-        permanent: false,
+        permanent: false
       },
-      ...rootListingAliases.map((slug) => ({
+      ...rootListingAliases.map(slug => ({
         source: `/${slug}`,
         destination: `${buildPublicRoute(listingBasePath)}/${slug}/`,
-        permanent: true,
+        permanent: true
       })),
       {
         source: '/website/:path*',
         destination: `${buildPublicRoute(listingBasePath)}/:path*`,
-        permanent: true,
+        permanent: true
       },
-      ...createAliasRewrites('websites', listingBasePath).map((rule) => ({
+      ...createAliasRewrites('websites', listingBasePath).map(rule => ({
         ...rule,
-        permanent: true,
+        permanent: true
       })),
-      ...createAliasRewrites('docs', docsBasePath).map((rule) => ({
+      ...createAliasRewrites('docs', docsBasePath).map(rule => ({
         ...rule,
-        permanent: true,
+        permanent: true
       })),
-      ...createAliasRewrites('projects', networkBasePath).map((rule) => ({
+      ...createAliasRewrites('projects', networkBasePath).map(rule => ({
         ...rule,
-        permanent: true,
+        permanent: true
       })),
-      ...createAliasRewrites('brands', brandsBasePath).map((rule) => ({
+      ...createAliasRewrites('brands', brandsBasePath).map(rule => ({
         ...rule,
-        permanent: true,
+        permanent: true
       })),
-      ...createAliasRewrites('guides', 'posts').map((rule) => ({
+      ...createAliasRewrites('guides', 'posts').map(rule => ({
         ...rule,
-        permanent: true,
+        permanent: true
       })),
-      ...createLegacyCategoryRedirects(),
-    ];
-  },
-};
+      ...createLegacyCategoryRedirects()
+    ]
+  }
+}
 
 if (isStaticExportBuild()) {
   nextConfig = {
     ...nextConfig,
     output: 'export',
-    trailingSlash: true,
-  };
+    trailingSlash: true
+  }
 }
 
 // Apply other plugins first
-nextConfig = withMDX()(nextConfig);
+nextConfig = withMDX()(nextConfig)
 
 if (process.env.ANALYZE === 'true') {
-  nextConfig = withAnalyzer(nextConfig);
+  nextConfig = withAnalyzer(nextConfig)
 }
 
 // withContentCollections must be the outermost wrapper
-export default withContentCollections(nextConfig);
+export default withContentCollections(nextConfig)

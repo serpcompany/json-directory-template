@@ -23,104 +23,62 @@ strategy changes. The current project is intentionally static-first:
 Payload CMS and D1 are architecture changes. They should happen only after the UI
 foundation is stable and the data-source boundary has been made explicit.
 
-## Current Refactor Status: 2026-07-11
+## Current Refactor Status: 2026-07-13
 
-Latest local evidence after Phase 0 closeout and static preview artifact check:
+Latest repository and GitHub evidence:
 
-- Current branch is `july11`, tracking `origin/july11`.
-- Before this plan-status update, `git status --short --branch` was clean for tracked
-  and untracked files:
-  `## july11...origin/july11`.
-- PR #137 exists for this branch:
-  - URL: `https://github.com/serpcompany/json-directory-template/pull/137`
+- Phase 0 was merged into `main` before the current Phase 1 branch was created.
+- Current branch: `agent/shadcnblocks-source-adoption`, tracking the same remote branch.
+- Active pull request: PR #147, `Adopt ShadcnBlocks UI and local D1 source`:
+  - URL: `https://github.com/serpcompany/json-directory-template/pull/147`
+  - Head/base: `agent/shadcnblocks-source-adoption` into `main`.
   - State: open draft PR.
-  - Head/base: `serpcompany:july11` into `main`.
-  - Title: `asdfsadf`.
-  - Created: `2026-07-11T06:01:24Z`.
-  - Last observed update: `2026-07-11T06:19:11Z`.
-  - Mergeability from GitHub: `MERGEABLE`.
-- The branch has three commits over `origin/main`:
-  - `5078f56 asdfsadf`: ShadcnBlocks/design-system foundation work plus Phase 1A-style
-    pilot visual and functional parity coverage.
-  - `f807300 asdfsadf`: cleanup outside the public UI refactor completion path
-    (`.gitignore`, `.codex/config.toml`, deleted reference/old plan files).
-  - `860c5ab chore(refactor): close shadcn phase 0`: records the valid
-    `@shadcnblocks/hero125` registry dry-run and applies Biome formatting fixes for
-    the failed PR check.
-- PR #137 check status after the closeout push:
-  - `Detect changes`: success.
-  - `CodeQL / Analyze (actions)`: success.
-  - `CodeQL / Analyze (javascript-typescript)`: success.
-  - `CodeQL`: success.
-  - `CodeRabbit`: success.
-  - `PR Review / Validate Site & Policy`: success.
-  - `PR Review / Type Check`: success.
-  - `PR Review / Unit Tests`: success.
-  - `PR Review / E2E Tests`: success.
-  - `Label PRs / triage`: pending or queued.
-- `Validate Site & Policy` failure root cause and fix:
-  - `pnpm validate:sites` passed inside the job.
-  - The job failed on
-    `pnpm exec biome check --changed --since=origin/main --no-errors-on-unmatched`.
-  - Biome reported 6 fixable import-order/formatting errors in:
-    `packages/web-core/src/auth/sign-out-button.tsx`,
-    `packages/web-core/src/layout/header-nav-link.tsx`,
-    `packages/web-core/src/layout/mobile-drawer.tsx`, and
-    `packages/web-core/src/ui/favorites-link.tsx`.
-  - Local closeout applied Biome's safe formatting/import-order fixes to those four
-    files, pushed the closeout commit, and GitHub now reports the job passing.
-- Local static preview artifacts were built for all active checked-in `sites/*`
-  wrappers because concurrent `dev:site` processes share `data/listings.json` and
-  would overwrite each other's prepared data:
-  - `browserextensions.io`: `http://127.0.0.1:4101/`
-  - `pornvideodownloaders.com`: `http://127.0.0.1:4102/`
-  - `serp.ai`: `http://127.0.0.1:4103/`
-  - `serp.co`: `http://127.0.0.1:4104/`
-  - `serp.software`: `http://127.0.0.1:4105/`
-  - `serpdownloaders.com`: `http://127.0.0.1:4106/`
-  - All six homepages returned HTTP 200 during the local static-server check.
-  - These localhost servers are not currently running; restart the Python static
-    servers from `dist/sites/<site-id>` when another click-through pass is needed.
+- Phase 1A baseline and parity coverage is present for the pilot public routes and
+  interactive states.
+- Phase 1B is complete. The inspected registry candidates and adopted, adapted, and
+  rejected decisions are recorded in `docs/PHASE_1_REGISTRY_MAPPING.md`.
+- Phase 1C implementation is complete on the branch for the planned shared surfaces:
+  empty states, search/autocomplete, listing cards/grid, sidebar/mobile drawer,
+  header/application shell, and homepage sections.
+- Six reusable ShadcnBlocks-derived components are owned by
+  `packages/design-system/components/shadcnblocks`; shared public composition remains
+  in `packages/web-core`.
+- The public UI is ShadcnBlocks-backed for the Phase 1 surfaces. Route wrappers,
+  filtering, favorites, analytics, metadata, schema, and other application behavior
+  remain project-owned rather than being replaced by generic blocks.
+- PR #147 also contains a local D1 build-time source adapter. That work is separate
+  from the Phase 1 UI goal even though it currently shares the PR.
+- Listing-logo fallback behavior now uses the checked-in local
+  `/listing-logos/favicon-fallback-512x512.png` asset in every app. Public rendering,
+  schema, trial data, and Next.js image configuration no longer depend on Google or
+  gstatic favicon endpoints.
+
+Observed PR #147 checks before this documentation/fallback closeout commit:
+
+- `PR Review / Validate Site & Policy`: success.
+- `PR Review / Type Check`: success.
+- `PR Review / Unit Tests`: success.
+- `PR Review / E2E Tests`: success.
+- CodeQL and CodeRabbit checks: success.
+- `Validate Listing Sources / validate-listing-data`: cancelled and must be rerun or
+  otherwise resolved before merge.
 
 Phase status:
 
-- Phase 0 is closed on branch `july11` and pushed to PR #137 after the 2026-07-11
-  closeout pass:
-  - the registry is configured,
-  - design-system exports resolve to real files,
-  - web-core import-boundary cleanup is in place,
-  - `@shadcnblocks/hero125` dry-run proves the authenticated registry works from
-    `packages/design-system`,
-  - and the PR check failure is fixed and passing on GitHub.
-- Phase 1 is not implemented. The branch contains baseline/parity preparation for
-  Phase 1A, but there is no evidence of ShadcnBlocks-owned public directory UI source
-  installed under `packages/design-system` and no Phase 1B/1C public UI refactor slice.
-- PR #137 is the active Phase 0 PR. It is still open as a draft. Do not create a
-  duplicate PR.
-- Ignored repo-local temp paths exist under `./tmp` and `./.wrangler/tmp`. They were
-  not modified for this status update and should be accounted for before any future
-  PR, deploy, or cleanup claim.
+- Phase 0: complete and merged.
+- Phase 1A: complete.
+- Phase 1B: complete.
+- Phase 1C: implemented and locally verified; pending final PR review and merge.
+- Phase 1 is not closed until PR #147 has a clean worktree, required checks are
+  successful, the draft is reviewed, and the PR is merged.
+- No deployment is part of this closeout.
 
-Verification run during Phase 0 closeout:
+Next action:
 
-```bash
-pnpm exec biome check --changed --since=origin/main --no-errors-on-unmatched
-pnpm --filter @thedaviddias/design-system typecheck
-pnpm typecheck
-pnpm test:repo
-```
-
-All four passed.
-
-Recommended next action:
-
-1. Review/rename PR #137, then mark it ready for review or merge it after confirming
-   the non-code cleanup in `f807300` is intended.
-2. After Phase 0 is merged, start Phase 1B only: create the registry/component mapping
-   table for public directory surfaces before installing or refactoring any public UI.
-3. Restart static localhost previews from `dist/sites/<site-id>` if another quick
-   visual click-through is needed while deciding the first Phase 1 slice. Do not treat
-   the static preview build as a deploy.
+1. Commit and push the documentation and local favicon fallback closeout to PR #147.
+2. Confirm the new PR checks pass, including `Validate Listing Sources`.
+3. Review the combined Phase 1 and D1 scope explicitly before marking PR #147 ready.
+4. Merge PR #147 only after all task-related files are committed and checks pass.
 
 Registry smoke-test status:
 
@@ -314,9 +272,9 @@ pnpm test:repo
 Goal: refactor shared public directory surfaces so their owned source comes from
 ShadcnBlocks/shadcn patterns and primitives while preserving the current UI contract.
 
-Current status on `july11`:
+Current status on `agent/shadcnblocks-source-adoption`:
 
-- Phase 1A is partially started:
+- Phase 1A is complete:
   - `apps/e2e/tests/visual.spec.ts` now includes pilot desktop/tablet/mobile visual
     coverage for homepage, search, category, listing detail, empty search,
     autocomplete, favorites-only, sort/result-count, mobile drawer, and mobile search
@@ -327,11 +285,13 @@ Current status on `july11`:
     action behavior, and public link href/target/rel semantics.
   - New pilot snapshots are present under
     `apps/e2e/tests/visual.spec.ts-snapshots/`.
-- Phase 1B and Phase 1C have not started:
-  - No ShadcnBlocks block source is installed under `packages/design-system`.
-  - No public directory surfaces have been refactored to ShadcnBlocks-owned source.
-  - The branch contains import-boundary cleanup and parity coverage, not the public UI
-    component mapping/refactor.
+- Phase 1B is complete in `docs/PHASE_1_REGISTRY_MAPPING.md` with registry evidence
+  and adopted, adapted, and rejected decisions for every required public surface.
+- Phase 1C is implemented for all eight planned slices. Reusable adapted source is
+  installed under `packages/design-system/components/shadcnblocks`, and shared public
+  composition in `packages/web-core` consumes those package exports.
+- Final Phase 1 acceptance remains pending PR #147 review, successful required checks,
+  and merge. This is a delivery-state requirement, not missing UI implementation.
 
 The intended result is no user-visible redesign. Spacing, layout breakpoints, colors,
 border radii, typography scale, copy, ordering, routes, metadata, analytics attributes,
