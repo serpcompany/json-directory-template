@@ -79,6 +79,8 @@ Next action:
 2. Confirm the new PR checks pass, including `Validate Listing Sources`.
 3. Review the combined Phase 1 and D1 scope explicitly before marking PR #147 ready.
 4. Merge PR #147 only after all task-related files are committed and checks pass.
+5. Make Phase 7, runtime D1-backed public sites, the next main implementation
+   initiative after the current branch is consolidated.
 
 Registry smoke-test status:
 
@@ -838,18 +840,20 @@ Tests likely touched:
 - workflow tests that assume checked-in listing paths
 - e2e fixture assumptions around `data/listings.json`
 
-## Phase 5: Payload CMS and D1 Architecture Decision
+## Phase 5: Payload CMS and Runtime D1 Architecture Decision
 
-Goal: decide the architecture before implementation.
+Goal: record the architecture for the user-approved runtime D1 initiative before
+implementation. Runtime D1 and database ownership of published listing data are product
+decisions; this ADR must still decide the implementation and operational topology.
 
 Questions to answer:
 
 - Is Payload CMS a separate control plane, a new app inside this monorepo, or a
   replacement for the current starter?
-- Does published content remain checked-in and reviewable, or does the database become
-  canonical?
-- If using D1, is Cloudflare Workers/OpenNext deployment in scope?
-- Should D1 feed static builds, or should public pages query D1 at runtime?
+- How do reviewed records become canonical D1 records while retaining an auditable
+  publication history?
+- Which supported D1-capable Next.js runtime and adapter will replace static GitHub
+  Pages serving for migrated sites?
 - How do approvals trigger rebuild/deploy?
 - Where do media uploads live?
 - What auth providers are required?
@@ -858,15 +862,17 @@ Questions to answer:
 - Does the project actually have Payblocks source access, and should it be adapted or
   used only as a reference?
 
-Recommended architecture:
+Required direction:
 
-- Keep public sites static initially.
-- Treat Payload/D1 as a companion control plane.
-- Use the control plane for drafts, submissions, moderation, ownership verification,
-  and reviewer actions.
-- Approved records feed the existing build pipeline through a source adapter or
-  generated PR.
-- Do not make public static rendering depend on runtime sessions or database reads.
+- Make D1 canonical for approved, published listing records and query it through a
+  server-only repository at public runtime.
+- Keep Payload, submissions, moderation, ownership verification, and reviewer actions
+  as a separate control plane that publishes into the D1 contract.
+- Keep runtime public reads independent from user sessions unless a later feature
+  explicitly requires authentication.
+- Explicitly reconcile or supersede `docs/DEPLOY_STRATEGY_EXIT_PLAN.md`: its current
+  object-storage/CDN recommendation remains valid for static sites, but migrated sites
+  require the hosted runtime justified by the approved runtime-D1 product requirement.
 
 Required output:
 
@@ -884,7 +890,7 @@ Suggested subagents:
 - Data reviewer: schema mapping to normalized listings.
 - Decision-policing QA: challenge unsupported assumptions.
 
-## Phase 6: Optional Payload/D1 Build-Time Source Adapter
+## Phase 6: Payload/D1 Build-Time Source Adapter Foundation
 
 Goal: read approved CMS/database records into the existing normalized listing shape at
 build time.
@@ -929,14 +935,213 @@ pnpm deploy:site -- --site <pilot-site> --dry-run
 
 Only dry-run deploys unless explicitly approved and gitflow is complete.
 
-## Phase 7: Optional Hosted Submission and Moderation Flow
+## Phase 7: Runtime D1-Backed Public Sites
+
+Goal: make D1 the canonical serving source for public listing data and remove
+`data/listings.json` from the request-time public rendering path.
+
+This is the next main initiative after the current Phase 1/D1 foundation branch is
+consolidated. It is a runtime and hosting migration, not an extension of the current
+build-time adapter. Success means a public listing, category, search, homepage, feed,
+schema, and sitemap request obtains listing data through the runtime D1 repository
+without first materializing `data/listings.json`.
+
+Current factual constraint:
+
+- Every active checked-in deployable site currently uses `github-pages-repo-sync` as a
+  static export.
+- GitHub Pages cannot provide a Next.js server runtime or bind Cloudflare D1.
+- The runtime phase therefore requires an approved D1-capable hosting architecture,
+  DNS/certificate migration, runtime bindings, and rollback plan before public
+  cutover.
+
+Prerequisites:
+
+- Phase 5 ADR explicitly selects the D1-capable runtime and deployment model. Evaluate
+  Cloudflare Workers with the supported Next.js adapter against any other candidate;
+  record the decision from current official platform documentation and a repo proof of
+  concept rather than assuming compatibility.
+- Define whether there is one D1 database per site or one database partitioned by
+  `site_id`, including ownership, limits, isolation, backup, and restore consequences.
+- Approve D1 as the canonical source of published listing records.
+- Inventory every reader of `data/listings.json`, including public routes, metadata,
+  schema, sitemap, RSS/feed, search indexes, validation, E2E fixtures, build scripts,
+  and deploy workflows.
+- Define service-level objectives, query budgets, caching policy, observability,
+  incident ownership, and acceptable stale-read behavior.
+
+Implementation slices:
+
+1. Runtime architecture and deployment proof:
+   - Add an ADR for the selected Next.js runtime and D1 binding model.
+   - Prove one non-production site can render a server-side route with a read-only D1
+     binding.
+   - Verify supported Node/runtime APIs, static assets, image behavior, custom domains,
+     environment separation, logs, and rollback mechanics.
+   - Do not change production DNS or deploy a production site in this slice.
+2. Runtime repository boundary:
+   - Add a typed listing repository interface owned outside React components.
+   - Implement a D1 repository through the project's chosen query/ORM layer and
+     checked-in migrations; do not embed SQL in page components.
+   - Support deterministic pagination, category filters, featured/latest ordering,
+     slug lookups, counts, and related/previous/next listing queries.
+   - Keep authorization and moderation filters server-side. Under the current schema,
+     public rows require `status = 'approved'` and an eligible `published_at`; any
+     separate publication-state column requires a versioned migration and backfill.
+3. Schema and data migration:
+   - Map the normalized listing contract to versioned D1 migrations and constraints.
+   - Preserve the existing deterministic identity contract, `(site_id, slug)`, unless a
+     reviewed migration explicitly introduces a different primary key.
+   - Validate record counts, slugs, categories, links, media, timestamps, and content
+     hashes against the accepted source snapshot.
+   - Make migration and import operations idempotent and provide an export/restore
+     path before cutover.
+4. Dual-read parity mode:
+   - Keep the existing JSON path available only as a temporary rollback reader.
+   - Read D1 for the pilot while comparing route-level results against the accepted
+     JSON snapshot outside the user response path.
+   - Block cutover on missing, duplicate, reordered, unpublished, or schema-invalid
+     records and on route/metadata/schema/sitemap parity failures.
+   - Do not silently fall back from D1 to stale JSON in production; failures must be
+     observable and follow the approved incident policy.
+   - Define the final consistency strategy before cutover: an approval write freeze,
+     incremental delta capture, or verified dual-write. Perform a final reconciliation
+     after the last accepted write and before traffic changes so approvals cannot be
+     lost between snapshot and cutover.
+5. Pilot runtime cutover:
+   - Use `serpdownloaders.com` as the pilot unless the ADR selects another site with
+     recorded evidence.
+   - Move its build and deploy workflow to the selected runtime with development,
+     preview, and production D1 bindings separated.
+   - Verify homepage, search, category, listing detail, favorites behavior, metadata,
+     schema, sitemap, RSS, analytics attributes, and cache behavior against the
+     pre-cutover baseline.
+   - Rehearse rollback before changing production traffic, then require explicit user
+     approval for the production deploy and DNS cutover.
+6. Network rollout:
+   - Roll out one site at a time with per-site parity evidence, migration report,
+     rollback checkpoint, and post-cutover monitoring.
+   - Keep sites not yet migrated on their existing serving path; do not perform an
+     all-sites atomic cutover.
+7. JSON serving-path retirement:
+   - Remove public runtime imports and preparation steps that require
+     `data/listings.json`.
+   - Remove build/deploy workflow steps that materialize listing JSON for migrated
+     sites.
+   - Retain only explicit D1 export fixtures needed for tests, disaster recovery, or
+     audited snapshots; label them as exports rather than serving sources.
+   - Remove the temporary JSON rollback reader only after every site has completed its
+     rollback window and D1 restore has been rehearsed.
+
+Runtime requirements:
+
+- Use server-only D1 bindings; never expose database credentials or direct database
+  access to browser code.
+- Parameterize every query and enforce `site_id`, approval status, and publication
+  state at the repository boundary.
+- Define indexes from measured query plans for slug, site/status, category, featured,
+  and publication ordering queries.
+- Bound list and search queries with pagination and maximum limits.
+- Verify the selected Cloudflare account plan and current official D1/Workers limits;
+  gate the design on projected database size, query and bound-parameter limits, batch
+  sizes, concurrency/overload behavior, Worker CPU/memory, and bundle size.
+- Preserve canonical URLs, trailing-slash behavior, redirects, metadata, structured
+  data, analytics attributes, and public copy.
+- Define cache keys and invalidation by site, query, and content version. Document how
+  Payload publication invalidates or revalidates affected pages.
+- Emit metrics for query latency, query errors, empty/partial result anomalies, cache
+  hit rate, and D1 binding/configuration failures.
+- Keep local, preview, staging, and production data/bindings isolated.
+- Use least-privilege runtime and migration identities, protected CI environments,
+  auditable migration/publication actions, documented secret rotation and revocation,
+  and tenant-isolation negative tests. Preview environments must never bind production
+  D1, and runtime credentials must not have migration authority.
+- Deploy only reviewed source SHAs. Record billing/quota ownership, environment
+  approval gates, health thresholds, automated rollback triggers, DNS TTL preparation,
+  domain ownership/certificate validation, and coexistence rules for the Pages and
+  runtime origins during cutover.
+
+Rollback requirements:
+
+- Capture and verify a restorable D1 export before each schema migration and site
+  cutover.
+- Record a pre-change D1 Time Travel bookmark when supported by the verified account
+  plan. Document that in-place restore affects the live database, and test the restore
+  procedure outside production before relying on it.
+- Define RPO, RTO, backup retention beyond the platform Time Travel window, encrypted
+  export storage, integrity checks, and access ownership.
+- Make imports and migrations checkpointed and resumable. Define when to forward-repair
+  versus restore, and how writes after a restore point are reconciled.
+- Keep the last accepted static deployment available during the pilot rollback window.
+- Document separate rollback procedures for application code, DNS/traffic, and data
+  migrations.
+- Use backward-compatible expand/migrate/contract schema changes; do not combine a
+  destructive migration with the code release that first stops reading the old shape.
+- Define a point-of-no-return review before removing the JSON rollback reader or old
+  deployment target.
+
+Out of scope until separately approved:
+
+- Browser-to-D1 access.
+- Public writes directly into published tables.
+- Production database commands or production deploys without explicit user approval.
+- Payload CMS installation, submission authentication, and moderation UI; those remain
+  separate control-plane work even when they publish into D1.
+- Removing JSON fixtures used only by deterministic unit/E2E tests.
+
+Required QA evidence per site:
+
+- Record-count, slug, category, status, and content-hash migration report.
+- Query-plan/index review for representative list and detail queries.
+- Functional and visual parity for homepage, search, category, listing detail, empty
+  results, autocomplete, favorites-only, sorting, mobile drawer, and mobile search.
+- Metadata, schema, sitemap, RSS/feed, robots, canonical, redirect, analytics, and link
+  parity.
+- Load, cold-start, cache, D1 failure, empty-result anomaly, and rollback tests.
+- Preview-runtime smoke test using the same bindings and adapter shape as production.
+- Decision-policing, security, data-quality, accessibility, and code-quality reviews.
+
+Suggested subagents:
+
+- Runtime architecture reviewer: hosting adapter, bindings, platform limits, and deploy
+  topology.
+- Database implementer: repository, migrations, indexes, and import/export tooling.
+- Data-quality reviewer: parity reports, constraints, duplicate detection, and restore
+  verification.
+- Route/spec reviewer: routes, metadata, schema, sitemap, RSS, analytics, and copy.
+- Performance reviewer: query plans, caching, cold starts, limits, and load tests.
+- Security reviewer: binding isolation, secrets, parameterization, publication filters,
+  and abuse boundaries.
+- Decision-policing QA: prevent hidden JSON dependencies, silent fallback, unverified
+  platform claims, and premature production cutover.
+
+Completion criteria:
+
+- Every active public site reads canonical listing data from D1 at runtime.
+- No migrated public request or deploy workflow requires `data/listings.json`.
+- D1 publication changes can become visible through the documented cache/revalidation
+  path without rebuilding a complete static listing artifact.
+- All sites have passing parity evidence, monitoring, backups, restore rehearsal, and
+  rollback documentation.
+- The old GitHub Pages/static listing-serving path is retired only after explicit
+  approval and the rollback window closes.
+
+Platform references to re-verify during the ADR and before each production migration:
+
+- `https://developers.cloudflare.com/d1/platform/limits/`
+- `https://developers.cloudflare.com/d1/reference/time-travel/`
+- The current official Next.js-on-Cloudflare adapter and deployment documentation
+  selected by the ADR.
+
+## Phase 8: Optional Hosted Submission and Moderation Flow
 
 Goal: replace or supplement GitHub issue intake with a hosted CMS/control-plane workflow.
 
 Prerequisite:
 
 - Phase 5 architecture decision is approved.
-- Phase 6 source adapter or write-back path is proven.
+- Phase 6 source adapter, Phase 7 runtime repository, or an approved write-back path is
+  proven.
 
 Recommended flow:
 
@@ -946,9 +1151,11 @@ Recommended flow:
 4. Submission enters moderation.
 5. Reviewer approves, rejects, or requests changes.
 6. Approval creates either:
-   - a repo-owned PR, or
-   - an approved database record consumed by the build-time adapter.
-7. Existing validate/build/deploy pipeline publishes the result.
+   - a repo-owned PR consumed by a reviewed publisher, or
+   - an approved database record written through the control-plane publication path.
+7. For Phase 6 sites, the existing validate/build/deploy pipeline publishes the result.
+   For Phase 7 sites, the publisher updates canonical D1 and triggers the documented
+   cache invalidation or revalidation path.
 
 Required moderation states:
 
@@ -975,7 +1182,10 @@ Out of scope until explicitly approved:
 4. Phase 3: Operator/admin UI refactor.
 5. Phase 4: Source adapter foundation.
 6. Phase 5: Payload/D1 ADR.
-7. Phase 6 or 7 only after explicit approval.
+7. Phase 6: Build-time D1 adapter foundation.
+8. Phase 7: Runtime D1-backed public sites as the next main initiative.
+9. Phase 8: Hosted submission and moderation after the runtime/control-plane boundary
+   is approved.
 
 ## QA Gates Per PR
 
@@ -993,6 +1203,9 @@ Every PR should have:
 - Which site is the visual pilot? Recommended: `serpdownloaders.com`, because it is
   the default `pnpm dev` site.
 - Should Payblocks be used as source code, design reference, or not at all?
-- Should the long-term source of truth stay repo-owned or move to a database?
-- If D1 is used, should it be build-time only or public runtime?
+- D1 is the intended canonical source for published listing data; Phase 5 must still
+  record the ownership, backup, and operational consequences.
+- Public sites should move to runtime D1 reads through Phase 7. The remaining decision
+  is which D1-capable Next.js runtime and deployment topology meets the verified
+  requirements.
 - What auth and moderation requirements are actually needed for "Submit Yours"?
