@@ -63,9 +63,29 @@ describe('retired legacy sites', () => {
     })
   })
 
+  it('does not trigger a static deployment for deletion of retired site trees', () => {
+    const workflow = yaml.load(read('.github/workflows/build-and-deploy.yml')) as {
+      on: { push: { paths: string[] } }
+    }
+
+    expect(workflow.on.push.paths).toEqual(
+      expect.arrayContaining([
+        '!sites/pornvideodownloaders.com/**',
+        '!sites/serp.software/**'
+      ])
+    )
+  })
+
+  it('can explicitly skip the cleanup merge even when shared registries changed', () => {
+    const workflow = yaml.load(read('.github/workflows/build-and-deploy.yml')) as {
+      jobs: { resolve: { if: string } }
+    }
+
+    expect(workflow.jobs.resolve.if).toContain("'[skip static deploy]'")
+  })
+
   it('keeps retired repositories out of current workflow and badge authority', () => {
     const operationalSources = [
-      '.github/workflows/build-and-deploy.yml',
       '.github/workflows/reusable-verify-badge.yml',
       '.github/workflows/submit-gsc-sitemaps.yml',
       '.github/workflows/update-listings-json.yml',

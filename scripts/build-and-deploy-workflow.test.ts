@@ -54,11 +54,20 @@ describe('build-and-deploy workflow', () => {
 
     expect(workflow.on.push?.paths).toEqual(
       expect.arrayContaining([
+        '!sites/pornvideodownloaders.com/**',
+        '!sites/serp.software/**',
+        '!scripts/**/*.test.ts',
         '!scripts/deploy-to-repo.sh',
         '!scripts/build-and-deploy-workflow.test.ts',
         '!scripts/deploy-to-repo-script.test.ts',
+        '!scripts/featured-badge-approved-r2-assets.json',
+        '!scripts/generate-badges.ts',
+        '!scripts/import-downloaders-from-sheet.ts',
+        '!scripts/r2-featured-badge-assets.json',
         '!scripts/target-verify-badge-workflow.test.ts',
-        '!scripts/templates/target-verify-badge.yml'
+        '!scripts/templates/target-verify-badge.yml',
+        '!scripts/test-submission-flow.ts',
+        '!scripts/upgrade-downloader-content.ts'
       ])
     )
     expect(workflow.on.push?.paths).not.toContain('.github/workflows/build-and-deploy.yml')
@@ -74,6 +83,9 @@ describe('build-and-deploy workflow', () => {
 
     expect(jobNames).toEqual(['resolve', 'deploy'])
     expect(resolveJob).toBeDefined()
+    expect(resolveJob.if).toBe(
+      "github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip static deploy]')"
+    )
     expect(deployJob).toBeDefined()
     expect(deployJob.if).toBe(`needs.resolve.outputs.should_deploy == 'true'`)
     expect(deployJob.needs).toBe('resolve')
@@ -89,6 +101,13 @@ describe('build-and-deploy workflow', () => {
       'Verify deploy auth',
       'Deploy'
     ])
+  })
+
+  it('supports a one-commit static deployment skip without weakening manual dispatch', () => {
+    const workflow = loadWorkflow()
+
+    expect(workflow.jobs.resolve.if).toContain("'[skip static deploy]'")
+    expect(workflow.jobs.resolve.if).toContain("github.event_name != 'push'")
   })
 
   it('does not upload or download build artifacts for the normal deploy path', () => {
