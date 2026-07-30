@@ -74,7 +74,7 @@ Historical note:
 
 ## 8. Browser closeout sweep
 
-- [x] run the sweep in [browser-closeout-sweep.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/browser-closeout-sweep.md) with `agent-browser`
+- [x] run the sweep in [browser-closeout-sweep.md](./knowledge/browser-closeout-sweep.md) with `agent-browser`
 - [x] verify the default site only exposes the feature-flag-enabled public routes
 - [x] verify disabled default routes such as auth, favorites, docs, guides/posts, and network/projects do not stay publicly available
 - [x] verify GTM is absent for sites without checked-in `analytics.gtmId`
@@ -92,7 +92,7 @@ Historical note:
 
 - [x] capture the exact failing command or page path
 - [x] note whether it is wash, config, build, artifact, deploy, or UI behavior
-- [x] update [docs/IMPLEMENTATION_TRACKER.md](/Users/devin/dev/repos/json-directory-template/docs/IMPLEMENTATION_TRACKER.md) before continuing
+- [x] update [docs/IMPLEMENTATION_TRACKER.md](./IMPLEMENTATION_TRACKER.md) before continuing
 - [x] create or update a GitHub issue if the failure should survive beyond the current pass
 
 ## Verification notes
@@ -239,9 +239,9 @@ Historical note:
   passed after tightening stale homepage, directory-search, and mobile-drawer locators to the
   real default-site UI.
 - 2026-04-05: Cleaned the last active docs residue in
-  [docs/SITE_CONFIG_INVENTORY.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_CONFIG_INVENTORY.md)
+  [docs/SITE_CONFIG_INVENTORY.md](./SITE_CONFIG_INVENTORY.md)
   and
-  [docs/knowledge/reference-surfaces.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/reference-surfaces.md).
+  [docs/knowledge/reference-surfaces.md](./knowledge/reference-surfaces.md).
   The only remaining open checklist items are the taxonomy/discovery items already queued under
   `#42` plus internal-only root metadata residue tracked under the `#43` umbrella; `#48` did not
   need a new follow-up issue.

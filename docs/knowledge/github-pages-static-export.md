@@ -7,7 +7,8 @@ The active flow resolves a checked-in site config from `sites/site-config.defaul
 `serpdownloaders.com` remains the best current proof-site example, but it is not the only supported
 site shape.
 
-For the broader pipeline model and the “hosted later, static now” boundary, see [BUILD_PIPELINE.md](/Users/devin/dev/repos/json-directory-template/docs/BUILD_PIPELINE.md).
+For the broader pipeline model and the “hosted later, static now” boundary, see
+[BUILD_PIPELINE.md](../BUILD_PIPELINE.md).
 
 ## Current flow
 

@@ -4,7 +4,7 @@ Historical note:
 
 - The wrapper refactor and active-site migration work tracked here are complete.
 - This file is preserved as a compact completion record, not as a live task queue.
-- Current repo guidance now lives in [docs/PLAN.md](/Users/devin/dev/repos/json-directory-template/docs/PLAN.md).
+- Current repo guidance now lives in [docs/PLAN.md](./PLAN.md).
 
 ## Completed outcomes
 
@@ -36,11 +36,11 @@ Historical note:
 
 ## Historical execution plans
 
-- [docs/superpowers/plans/2026-04-18-wrapper-app-migration.md](/Users/devin/dev/repos/json-directory-template/docs/superpowers/plans/2026-04-18-wrapper-app-migration.md)
-- [docs/superpowers/plans/2026-04-18-thin-wrapper-completion.md](/Users/devin/dev/repos/json-directory-template/docs/superpowers/plans/2026-04-18-thin-wrapper-completion.md)
-- [docs/superpowers/plans/2026-04-18-apps-web-normalization.md](/Users/devin/dev/repos/json-directory-template/docs/superpowers/plans/2026-04-18-apps-web-normalization.md)
+- [docs/superpowers/plans/2026-04-18-wrapper-app-migration.md](./superpowers/plans/2026-04-18-wrapper-app-migration.md)
+- [docs/superpowers/plans/2026-04-18-thin-wrapper-completion.md](./superpowers/plans/2026-04-18-thin-wrapper-completion.md)
+- [docs/superpowers/plans/2026-04-18-apps-web-normalization.md](./superpowers/plans/2026-04-18-apps-web-normalization.md)
 
 ## Notes
 
 - If a future task needs a new execution queue, create a new dated plan under `docs/superpowers/plans/` instead of reopening this file as a mutable backlog.
-- If the repo architecture changes materially again, update [docs/PLAN.md](/Users/devin/dev/repos/json-directory-template/docs/PLAN.md) first.
+- If the repo architecture changes materially again, update [docs/PLAN.md](./PLAN.md) first.

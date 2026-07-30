@@ -60,4 +60,8 @@ Do not treat the raw Next route log alone as the final public route contract for
 
 ## Current status
 
-`serp.software` has been reactivated as a checked-in downloader catalog site. The earlier proof-site material remains historical context; current behavior is governed by `sites/serp.software`, the active-site registry, and the generated `apps/serp.software` wrapper.
+This proof-site lane was later activated and has since been retired from this
+repository. `serp.software` now runs from the D1/OpenNext platform in
+`serpcompany/directory-platform-d1`. There is no current
+`sites/serp.software`, `apps/serp.software`, static build target, or deploy target
+in this repository.

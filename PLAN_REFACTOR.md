@@ -1,5 +1,11 @@
 # UI, CMS, and Data Refactor Plan
 
+> Historical plan, superseded. This file records the earlier wrapper/static-site
+> refactor and is not current operating guidance. Use `docs/PLAN.md` for the active
+> repository state. In particular, `serp.software` and
+> `pornvideodownloaders.com` are now D1/OpenNext-owned and retired from this
+> repository's app, site-data, submission, badge, sitemap, build, and deploy graph.
+
 This plan coordinates the project refactor around ShadcnBlocks UI, future Payload CMS
 support, and a possible Cloudflare D1-backed content source.
 

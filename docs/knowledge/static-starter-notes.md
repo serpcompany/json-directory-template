@@ -11,7 +11,9 @@
 ## Website Data
 
 - `data/listings.json` is the active website-entry source for the default starter only.
-- `sites/serpdownloaders.com/products.json` and `sites/pornvideodownloaders.com/products.json` are active checked-in listing sources for powered checked-in sites.
+- `sites/serpdownloaders.com/products.json` is an active checked-in listing source.
+  The former `sites/pornvideodownloaders.com/products.json` source was retired when
+  that site moved to the D1/OpenNext platform.
 - `pnpm tsx scripts/validate-data.ts data/listings.json` validates the default starter JSON source.
 - `pnpm validate:site -- --site <id>` validates an active checked-in site's real source and generated surface contract.
 - `pnpm validate:sites` validates the active non-default checked-in sites; run `pnpm validate:site -- --site default` separately for the default starter.
