@@ -1,9 +1,12 @@
 # serp.software
 
-Checked-in example site override for the current JSON/shared contract.
+Historical incubating-site snapshot from before `serp.software` became an active
+static site and later migrated to D1/OpenNext. It is not current site configuration,
+deployment authority, or evidence that the retired public repository should exist.
 
 ## Notes
 
-- reuses the shared `data/listings.json` source via `listing-json`
-- does not define a deploy target yet because `serpcompany/serp.software` does not exist
-- changes only site-facing copy, domain/public URL, and the public listing route base path
+- reused the shared `data/listings.json` source via `listing-json`
+- did not define a deploy target at this early proof-site stage
+- changed only site-facing copy, domain/public URL, and the public listing route
+  base path

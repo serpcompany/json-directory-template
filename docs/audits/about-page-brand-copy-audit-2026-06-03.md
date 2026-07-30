@@ -2,6 +2,11 @@
 
 Generated: 2026-06-03
 
+> Historical snapshot. This audit records the source paths and live surfaces that
+> existed on 2026-06-03. `serp.software` and `pornvideodownloaders.com` later moved
+> to D1/OpenNext and their legacy app/site trees were removed. Preserve the table as
+> evidence; do not use its deleted paths as current operational guidance.
+
 Evidence check: official domain URLs listed below were opened or queried during this audit on 2026-06-03, and local source paths were read from the repository in the same pass. The URL column records evidence consulted, not a claim that the live pages already contained the final replacement copy.
 
 Scope: active domain-level `/about` pages only. Product-detail prose such as `## About 321tube` in `products.json` was intentionally out of scope.

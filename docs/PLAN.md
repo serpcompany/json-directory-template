@@ -10,7 +10,7 @@ For historical implementation plans, see:
 
 For completed execution history, see:
 
-- [docs/IMPLEMENTATION_TRACKER.md](/Users/devin/dev/repos/json-directory-template/docs/IMPLEMENTATION_TRACKER.md)
+- [docs/IMPLEMENTATION_TRACKER.md](./IMPLEMENTATION_TRACKER.md)
 
 ## Current state
 
@@ -56,8 +56,8 @@ For completed execution history, see:
 
 ## When to use which doc
 
-- Read [README.md](/Users/devin/dev/repos/json-directory-template/README.md) for setup and daily commands.
-- Read [docs/ONBOARDING.md](/Users/devin/dev/repos/json-directory-template/docs/ONBOARDING.md) for the current site-scaffolding flow.
-- Read [docs/BUILD_PIPELINE.md](/Users/devin/dev/repos/json-directory-template/docs/BUILD_PIPELINE.md) for validate/build/deploy behavior.
-- Read [docs/knowledge/site-config.md](/Users/devin/dev/repos/json-directory-template/docs/knowledge/site-config.md) for site ownership and config boundaries.
-- Read [docs/SITE_PROMOTION_CHECKLIST.md](/Users/devin/dev/repos/json-directory-template/docs/SITE_PROMOTION_CHECKLIST.md) before adding a new active site.
+- Read [README.md](../README.md) for setup and daily commands.
+- Read [docs/ONBOARDING.md](./ONBOARDING.md) for the current site-scaffolding flow.
+- Read [docs/BUILD_PIPELINE.md](./BUILD_PIPELINE.md) for validate/build/deploy behavior.
+- Read [docs/knowledge/site-config.md](./knowledge/site-config.md) for site ownership and config boundaries.
+- Read [docs/SITE_PROMOTION_CHECKLIST.md](./SITE_PROMOTION_CHECKLIST.md) before adding a new active site.

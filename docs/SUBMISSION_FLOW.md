@@ -5,6 +5,10 @@ details, builds a prefilled GitHub issue URL, and sends the submitter to GitHub.
 badge-state labels, and verified listing PR creation are handled by a tiny public issue repo
 `verify-badge.yml` caller that invokes the central reusable workflow in this repo.
 
+This flow applies only to the active static sites listed below. `serp.software` and
+`pornvideodownloaders.com` use D1-native submission intake and are not targets of
+this workflow.
+
 ---
 
 ## How it works

@@ -1,5 +1,10 @@
 # XML Sitemap Audit
 
+> Historical snapshot. Results and source/artifact paths below describe the
+> 2026-05-19 static deployment. `serp.software` and
+> `pornvideodownloaders.com` later moved to D1/OpenNext; their current canonical
+> sitemap is `/sitemap-index.xml` from the D1 Worker.
+
 Generated: 2026-05-19T21:31:42.330Z
 
 | Site | Scope | Sitemap files | URLs | Errors | Warnings |

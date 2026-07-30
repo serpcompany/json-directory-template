@@ -192,9 +192,9 @@ pnpm dev:site -- --site your-site-id
 
 ## Example templates
 
-- JSON example: [listing-template.json](/Users/devin/dev/repos/json-directory-template/docs/examples/listing-template.json)
-- CSV planning template: [listing-template.csv](/Users/devin/dev/repos/json-directory-template/docs/examples/listing-template.csv)
-- Adapter source example: [trial-products-template.json](/Users/devin/dev/repos/json-directory-template/docs/examples/trial-products-template.json)
+- JSON example: [listing-template.json](../examples/listing-template.json)
+- CSV planning template: [listing-template.csv](../examples/listing-template.csv)
+- Adapter source example: [trial-products-template.json](../examples/trial-products-template.json)
 
 The CSV file is a human collection template only. The runtime still expects normalized JSON before build.
 
