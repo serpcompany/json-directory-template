@@ -8,12 +8,17 @@ Historical note:
 
 ## Completed outcomes
 
-- `browserextensions.io`, `pornvideodownloaders.com`, `serp.ai`, `serp.co`, `serp.software`, and `serpdownloaders.com` are active checked-in sites in the runtime/build/deploy graph.
+- Historical: the wrapper migration originally activated `browserextensions.io`,
+  `pornvideodownloaders.com`, `serp.ai`, `serp.co`, `serp.software`, and
+  `serpdownloaders.com`.
+- Current: `pornvideodownloaders.com` and `serp.software` are superseded by
+  D1/OpenNext applications and retired from this repository's active graph.
 - Inactive sites are parked and excluded from active resolution paths.
 - Thin wrapper apps are in place.
 - `apps/web` was removed.
 - `apps/starter` is the neutral starter wrapper.
-- `apps/browserextensions.io`, `apps/pornvideodownloaders.com`, `apps/serp.ai`, `apps/serp.co`, `apps/serp.software`, and `apps/serpdownloaders.com` are active-site wrappers.
+- Current active wrappers are `apps/browserextensions.io`, `apps/serp.ai`,
+  `apps/serp.co`, and `apps/serpdownloaders.com`.
 - Shared route/runtime logic lives in `packages/web-core`.
 - Site contract logic lives in `packages/site-contract`.
 - Build/deploy tooling now targets wrapper apps instead of the old shared app.
@@ -25,12 +30,6 @@ Historical note:
 - `pnpm validate:site -- --site serpdownloaders.com`
 - `pnpm build:site -- --site serpdownloaders.com`
 - `pnpm deploy:site -- --site serpdownloaders.com --dry-run`
-- `pnpm validate:site -- --site pornvideodownloaders.com`
-- `pnpm build:site -- --site pornvideodownloaders.com`
-- `pnpm deploy:site -- --site pornvideodownloaders.com --dry-run`
-- `pnpm validate:site -- --site serp.software`
-- `pnpm build:site -- --site serp.software`
-- `pnpm deploy:site -- --site serp.software --dry-run`
 - `pnpm validate:site -- --site serp.co`
 - `pnpm build:site -- --site serp.co`
 - `pnpm deploy:site -- --site serp.co --dry-run`

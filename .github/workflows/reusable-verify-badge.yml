@@ -23,6 +23,16 @@ jobs:
             const issue = context.payload.issue;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
+            const supportedTargetRepositories = new Set([
+              'browserextensions.io',
+              'serp.ai',
+              'serp.co',
+              'serpdownloaders.com'
+            ]);
+            if (!supportedTargetRepositories.has(repo)) {
+              core.setFailed(`Repository "${repo}" is not an active legacy badge target.`);
+              return;
+            }
             const issueNumber = issue.number;
             const badgePendingLabel = 'badge-not-verified';
             const badgeVerifiedLabel = 'badge-verified';
@@ -355,6 +365,16 @@ jobs:
             const issue = context.payload.issue;
             const targetOwner = context.repo.owner;
             const siteRepo = context.repo.repo;
+            const supportedTargetRepositories = new Set([
+              'browserextensions.io',
+              'serp.ai',
+              'serp.co',
+              'serpdownloaders.com'
+            ]);
+            if (!supportedTargetRepositories.has(siteRepo)) {
+              core.setFailed(`Repository "${siteRepo}" is not an active legacy submission target.`);
+              return;
+            }
             const sourceOwner = 'serpcompany';
             const sourceRepo = 'json-directory-template';
             const assignee = 'devinschumacher';

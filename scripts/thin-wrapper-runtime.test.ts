@@ -7,7 +7,6 @@ const workspaceRoot = process.cwd()
 const wrapperLayouts = [
   'apps/starter/app/layout.tsx',
   'apps/serpdownloaders.com/app/layout.tsx',
-  'apps/pornvideodownloaders.com/app/layout.tsx',
 ] as const
 
 describe('thin wrapper runtime boundaries', () => {

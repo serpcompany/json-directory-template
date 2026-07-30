@@ -15,11 +15,8 @@ function sha256(path: string): string {
 
 describe('logo assets', () => {
   const logoPaths = [
-    'apps/pornvideodownloaders.com/public/apple-touch-icon.png',
-    'apps/pornvideodownloaders.com/public/logo.png',
     'apps/serpdownloaders.com/public/apple-touch-icon.png',
     'apps/serpdownloaders.com/public/logo.png',
-    'sites/pornvideodownloaders.com/assets/logo.png',
     'sites/serpdownloaders.com/assets/logo.png',
   ];
 

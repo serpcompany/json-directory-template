@@ -14,11 +14,6 @@ describe('resolveDrBadgeConfig', () => {
       href: 'https://dr.serp.co/sites/serp.ai',
       src: 'https://dr.serp.co/badge/serp.ai?style=serp-dr-v3'
     })
-    expect(resolveDrBadgeConfig('serp.software')).toEqual({
-      alt: 'Verified DR 27 for serp.software',
-      href: 'https://dr.serp.co/sites/serp.software',
-      src: 'https://dr.serp.co/badge/serp.software?style=serp-dr-v3'
-    })
     expect(resolveDrBadgeConfig('serpdownloaders.com')).toEqual({
       alt: 'Verified DR 27 for serpdownloaders.com',
       href: 'https://dr.serp.co/sites/serpdownloaders.com',
@@ -28,11 +23,6 @@ describe('resolveDrBadgeConfig', () => {
       alt: 'Verified DR 39 for browserextensions.io',
       href: 'https://dr.serp.co/sites/browserextensions.io',
       src: 'https://dr.serp.co/badge/browserextensions.io?style=serp-dr-v3'
-    })
-    expect(resolveDrBadgeConfig('pornvideodownloaders.com')).toEqual({
-      alt: 'Verified DR 16 for pornvideodownloaders.com',
-      href: 'https://dr.serp.co/sites/pornvideodownloaders.com',
-      src: 'https://dr.serp.co/badge/pornvideodownloaders.com?style=serp-dr-v3'
     })
   })
 

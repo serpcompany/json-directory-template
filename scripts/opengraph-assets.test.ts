@@ -13,10 +13,8 @@ function sha256(path: string): string {
 
 describe('Open Graph assets', () => {
   const openGraphPaths = [
-    'apps/pornvideodownloaders.com/app/opengraph-image.png',
     'apps/serpdownloaders.com/app/opengraph-image.png',
     'apps/starter/app/opengraph-image.png',
-    'sites/pornvideodownloaders.com/assets/opengraph-image.png',
     'sites/serpdownloaders.com/assets/opengraph-image.png',
   ];
 

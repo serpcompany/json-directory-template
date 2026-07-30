@@ -241,10 +241,8 @@ describe('build-and-deploy workflow', () => {
     expect(paths).toEqual(
       expect.arrayContaining([
         'apps/browserextensions.io/**',
-        'apps/pornvideodownloaders.com/**',
         'apps/serp.ai/**',
         'apps/serp.co/**',
-        'apps/serp.software/**',
         'apps/serpdownloaders.com/**',
         'apps/starter/**'
       ])

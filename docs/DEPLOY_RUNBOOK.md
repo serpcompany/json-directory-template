@@ -7,8 +7,10 @@ targets, then deploys each artifact through the target strategy in
 `sites/<site-id>/site-config.ts`.
 
 Current active checked-in deployable sites include `browserextensions.io`,
-`pornvideodownloaders.com`, `serp.ai`, `serp.co`, `serp.software`, and
-`serpdownloaders.com`.
+`serp.ai`, `serp.co`, and `serpdownloaders.com`.
+
+`pornvideodownloaders.com` and `serp.software` are D1/OpenNext-owned and must
+be rejected by this static deployment path.
 
 ## Prerequisites
 
@@ -141,10 +143,8 @@ For a normal static-site update, the redeploy path is the same as the first depl
 The public `/submit` GitHub issue intake is active for:
 
 - `browserextensions.io`
-- `pornvideodownloaders.com`
 - `serp.ai`
 - `serp.co`
-- `serp.software`
 - `serpdownloaders.com`
 
 Each active site's public issue repo is `serpcompany/<site-id>`. These repos must stay public and
@@ -167,10 +167,8 @@ Required setup for every active public issue repo:
 | Public issue repo | Issues | Workflow | Secret | Badge assets |
 |---|---|---|---|---|
 | `serpcompany/browserextensions.io` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
-| `serpcompany/pornvideodownloaders.com` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
 | `serpcompany/serp.ai` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
 | `serpcompany/serp.co` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
-| `serpcompany/serp.software` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
 | `serpcompany/serpdownloaders.com` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
 
 Prefer rolling out submit-intake config changes one site per source PR so review

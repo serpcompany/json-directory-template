@@ -105,7 +105,6 @@ const sourceDirs = [
 
 const sites = [
   'serpdownloaders.com',
-  'pornvideodownloaders.com',
   'serp.ai',
   'browserextensions.io',
   'serp.co'
@@ -581,5 +580,3 @@ for (const site of sites) {
 
   writeSiteProducts(site, upgradedProducts)
 }
-
-writeSiteProducts('serp.software', readSiteProducts('serpdownloaders.com'))

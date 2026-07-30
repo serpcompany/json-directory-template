@@ -141,10 +141,8 @@ Active public issue targets:
 | Site | Public issue repo | Submit URL |
 |---|---|---|
 | `browserextensions.io` | `serpcompany/browserextensions.io` | `https://browserextensions.io/submit/` |
-| `pornvideodownloaders.com` | `serpcompany/pornvideodownloaders.com` | `https://pornvideodownloaders.com/submit/` |
 | `serp.ai` | `serpcompany/serp.ai` | `https://serp.ai/submit/` |
 | `serp.co` | `serpcompany/serp.co` | `https://serp.co/submit/` |
-| `serp.software` | `serpcompany/serp.software` | `https://serp.software/submit/` |
 | `serpdownloaders.com` | `serpcompany/serpdownloaders.com` | `https://serpdownloaders.com/submit/` |
 
 Active target workflow rollout matrix:
@@ -152,10 +150,8 @@ Active target workflow rollout matrix:
 | Public issue repo | Required workflow | Required secret | Badge assets |
 |---|---|---|---|
 | `serpcompany/browserextensions.io` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-browserextensions.io-{light,dark}.svg` |
-| `serpcompany/pornvideodownloaders.com` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-pornvideodownloaders.com-{light,dark}.svg` |
 | `serpcompany/serp.ai` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serp.ai-{light,dark}.svg` |
 | `serpcompany/serp.co` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serp.co-{light,dark}.svg` |
-| `serpcompany/serp.software` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serp.software-{light,dark}.svg` |
 | `serpcompany/serpdownloaders.com` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serpdownloaders.com-{light,dark}.svg` |
 
 ---

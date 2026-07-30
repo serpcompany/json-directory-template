@@ -11,9 +11,7 @@ export const ACTIVE_DOWNLOADER_SITE_IDS = [
   'browserextensions.io',
   'serp.co',
   'serp.ai',
-  'serpdownloaders.com',
-  'serp.software',
-  'pornvideodownloaders.com'
+  'serpdownloaders.com'
 ] as const
 
 type ActiveDownloaderSiteId = (typeof ACTIVE_DOWNLOADER_SITE_IDS)[number]
@@ -108,10 +106,8 @@ const FORBIDDEN_HELP_CENTER_LINK_PATTERN = /\bhttps?:\/\/help\.serp\.co\/en(?:\/
 
 const SITE_PRODUCT_PATHS: Record<ActiveDownloaderSiteId, string> = {
   'browserextensions.io': 'sites/browserextensions.io/products.json',
-  'pornvideodownloaders.com': 'sites/pornvideodownloaders.com/products.json',
   'serp.ai': 'sites/serp.ai/products.json',
   'serp.co': 'sites/serp.co/products.json',
-  'serp.software': 'sites/serp.software/products.json',
   'serpdownloaders.com': 'sites/serpdownloaders.com/products.json'
 }
 

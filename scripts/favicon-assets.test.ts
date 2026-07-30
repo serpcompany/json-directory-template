@@ -14,10 +14,8 @@ function sha256(path: string): string {
 describe('favicon assets', () => {
   it('does not keep the old llms.txt favicon in checked-in app or site assets', () => {
     const faviconPaths = [
-      'apps/pornvideodownloaders.com/app/favicon.ico',
       'apps/serpdownloaders.com/app/favicon.ico',
       'apps/starter/app/favicon.ico',
-      'sites/pornvideodownloaders.com/assets/favicon.ico',
       'sites/serpdownloaders.com/assets/favicon.ico',
     ];
 
@@ -33,18 +31,10 @@ describe('favicon assets', () => {
     );
   });
 
-  it('uses the site-owned favicon in the pornvideodownloaders wrapper', () => {
-    expect(sha256('apps/pornvideodownloaders.com/app/favicon.ico')).toBe(
-      sha256('sites/pornvideodownloaders.com/assets/favicon.ico')
-    );
-  });
-
   it('uses the approved SERP favicon across checked-in app and site favicon assets', () => {
     const faviconPaths = [
-      'apps/pornvideodownloaders.com/app/favicon.ico',
       'apps/serpdownloaders.com/app/favicon.ico',
       'apps/starter/app/favicon.ico',
-      'sites/pornvideodownloaders.com/assets/favicon.ico',
       'sites/serpdownloaders.com/assets/favicon.ico',
     ];
 

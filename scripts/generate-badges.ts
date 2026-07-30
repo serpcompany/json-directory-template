@@ -35,11 +35,6 @@ const SITE_TYPOGRAPHY_OVERRIDES: Record<
   'browserextensions.io': {
     labelFontSize: 7,
     nameMaxFontSize: 12
-  },
-  'pornvideodownloaders.com': {
-    labelFontSize: 7,
-    letterSpacing: '0',
-    nameMaxFontSize: 13
   }
 }
 

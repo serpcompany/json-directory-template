@@ -152,94 +152,6 @@ describe('loadCheckedInSite', () => {
     })
   })
 
-  it('loads the checked-in pornvideodownloaders.com site config', () => {
-    const config = loadCheckedInSite('pornvideodownloaders.com')
-
-    expect(config.id).toBe('pornvideodownloaders.com')
-    expect(config.content.listingSource).toEqual({
-      category: 'video-downloaders',
-      featuredCount: 6,
-      kind: 'trial-products-json',
-      outputPath: 'data/listings.json',
-      path: 'sites/pornvideodownloaders.com/products.json',
-      publishedAt: '2026-05-03'
-    })
-    expect(config.site).toMatchObject({
-      domain: 'pornvideodownloaders.com',
-      name: 'Porn Video Downloaders',
-      publicUrl: 'https://pornvideodownloaders.com'
-    })
-    expect(config.build).toMatchObject({
-      appPackageName: 'pornvideodownloaders.com',
-      appOutDir: 'apps/pornvideodownloaders.com/out',
-      artifactDir: 'dist/sites/pornvideodownloaders.com'
-    })
-    expect(config.routes.listingBasePath).toBe('products')
-    expect(config.routes.brandsBasePath).toBe('brands')
-    expect(config.copy.listingName).toEqual({
-      plural: 'products',
-      singular: 'product'
-    })
-    expect(config.copy.brandsLabel).toBe('Brands')
-    expect(config.features.showBrands).toBe(true)
-    expect(config.networkBrandGroup).toBe('adultsOnly')
-    expect(config.social.githubIssueOwner).toBe('serpcompany')
-    expect(config.social.githubIssueRepo).toBe('pornvideodownloaders.com')
-    expect(config.social.githubIssuesUrl).toBe(
-      'https://github.com/serpcompany/pornvideodownloaders.com/issues'
-    )
-    expect(config.deploy).toEqual({
-      branch: 'main',
-      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
-      repoUrl: 'https://github.com/serpcompany/pornvideodownloaders.com.git',
-      strategy: 'github-pages-repo-sync'
-    })
-  })
-
-  it('loads the checked-in serp.software site config', () => {
-    const config = loadCheckedInSite('serp.software')
-
-    expect(config.id).toBe('serp.software')
-    expect(config.content.listingSource).toEqual({
-      category: 'video-downloaders',
-      featuredCount: 6,
-      kind: 'trial-products-json',
-      outputPath: 'data/listings.json',
-      path: 'sites/serp.software/products.json',
-      publishedAt: '2026-05-07'
-    })
-    expect(config.site).toMatchObject({
-      domain: 'serp.software',
-      name: 'SERP Software',
-      publicUrl: 'https://serp.software'
-    })
-    expect(config.build).toMatchObject({
-      appPackageName: 'serp.software',
-      appOutDir: 'apps/serp.software/out',
-      artifactDir: 'dist/sites/serp.software'
-    })
-    expect(config.routes.listingBasePath).toBe('products')
-    expect(config.copy.listingName).toEqual({
-      plural: 'products',
-      singular: 'product'
-    })
-    expect(config.copy.submitLabel).toBe('Submit Yours')
-    expect(config.features.showBrands).toBe(true)
-    expect(config.networkBrandGroup).toBe('all')
-    expect(config.analytics?.gtmId).toBe('GTM-W59GNHXF')
-    expect(config.social.githubIssueOwner).toBe('serpcompany')
-    expect(config.social.githubIssueRepo).toBe('serp.software')
-    expect(config.social.githubIssuesUrl).toBe(
-      'https://github.com/serpcompany/serp.software/issues'
-    )
-    expect(config.deploy).toEqual({
-      branch: 'main',
-      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
-      repoUrl: 'https://github.com/serpcompany/serp.software.git',
-      strategy: 'github-pages-repo-sync'
-    })
-  })
-
   it('loads the checked-in serp.co site config', () => {
     const config = loadCheckedInSite('serp.co')
 
@@ -291,25 +203,6 @@ describe('loadCheckedInSite', () => {
     })
   })
 
-  it('loads serp.software checked-in categories instead of default categories', () => {
-    expect(resolveCheckedInSiteCategories('serp.software')).toEqual([
-      {
-        description: 'Browse adult downloader listings and resources.',
-        name: 'Adult',
-        slug: 'adult'
-      },
-      {
-        description: 'Browse product launch website listings and resources.',
-        name: 'Product Launch Websites',
-        slug: 'product-launch-websites'
-      },
-      {
-        name: 'Video Downloaders',
-        slug: 'video-downloaders'
-      }
-    ])
-  })
-
   it('inherits default values when a site override does not redefine them', () => {
     const config = loadCheckedInSite('serpdownloaders.com')
 
@@ -331,7 +224,11 @@ describe('loadCheckedInSite', () => {
   })
 
   it('rejects parked site ids that were removed from the active registry', () => {
-    for (const siteId of ['extensions.serp.co']) {
+    for (const siteId of [
+      'extensions.serp.co',
+      'pornvideodownloaders.com',
+      'serp.software'
+    ]) {
       expect(() => loadCheckedInSite(siteId)).toThrow(
         `Site "${siteId}" was removed from this repo. Use a supported checked-in site id instead.`
       )
@@ -610,11 +507,6 @@ describe('resolveSiteArtifactDir', () => {
     )
   })
 
-  it('resolves the configured pornvideodownloaders artifact directory', () => {
-    expect(resolveSiteArtifactDir(loadCheckedInSite('pornvideodownloaders.com'))).toBe(
-      'dist/sites/pornvideodownloaders.com'
-    )
-  })
 })
 
 describe('buildSiteEnvironment', () => {
@@ -627,14 +519,6 @@ describe('buildSiteEnvironment', () => {
     })
   })
 
-  it('maps pornvideodownloaders.com config to the minimal app env contract', () => {
-    expect(buildSiteEnvironment(loadCheckedInSite('pornvideodownloaders.com'))).toEqual({
-      LISTING_ROUTE_BASE_PATH: 'products',
-      NEXT_PUBLIC_LISTING_ROUTE_BASE_PATH: 'products',
-      NEXT_PUBLIC_SITE_ID: 'pornvideodownloaders.com',
-      SITE_ID: 'pornvideodownloaders.com'
-    })
-  })
 })
 
 describe('resolveResolvedSiteConfig', () => {
@@ -665,29 +549,4 @@ describe('resolveResolvedSiteConfig', () => {
     })
   })
 
-  it('resolves pornvideodownloaders.com into the app-facing shape', () => {
-    expect(resolveResolvedSiteConfig(loadCheckedInSite('pornvideodownloaders.com'))).toMatchObject({
-      copy: {
-        listingName: {
-          plural: 'products',
-          singular: 'product'
-        },
-        submitLabel: 'Submit Yours'
-      },
-      description: 'Downloaders for adult video platforms and creator sites.',
-      domain: 'pornvideodownloaders.com',
-      githubIssueOwner: 'serpcompany',
-      githubIssueRepo: 'pornvideodownloaders.com',
-      githubIssuesUrl: 'https://github.com/serpcompany/pornvideodownloaders.com/issues',
-      id: 'pornvideodownloaders.com',
-      networkBrandGroup: 'adultsOnly',
-      docsRouteBasePath: 'docs',
-      brandsRouteBasePath: 'brands',
-      listingRouteBasePath: 'products',
-      name: 'Porn Video Downloaders',
-      networkRouteBasePath: 'network',
-      publicUrl: 'https://pornvideodownloaders.com',
-      tagline: 'Adult video downloader tools in one searchable directory.'
-    })
-  })
 })

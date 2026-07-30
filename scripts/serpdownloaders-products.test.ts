@@ -40,9 +40,7 @@ type ToolsProductEntry = {
 }
 
 const productsPath = resolve(process.cwd(), 'sites/serpdownloaders.com/products.json')
-const serpSoftwareProductsPath = resolve(process.cwd(), 'sites/serp.software/products.json')
 const serpdownloadersPublicPath = resolve(process.cwd(), 'apps/serpdownloaders.com/public')
-const serpSoftwarePublicPath = resolve(process.cwd(), 'apps/serp.software/public')
 const toolsProductsPath = resolve(
   '/Users/devin/dev/repos/tools.serp.co/packages/app-core/src/data/tools.json'
 )
@@ -252,10 +250,6 @@ describe('serpdownloaders checked-in products', () => {
         existsSync(resolve(serpdownloadersPublicPath, expectedImagePath.slice(1))),
         `${slug} homepage screenshot must exist in serpdownloaders.com public files`
       ).toBe(true)
-      expect(
-        existsSync(resolve(serpSoftwarePublicPath, expectedImagePath.slice(1))),
-        `${slug} homepage screenshot must exist in serp.software public files`
-      ).toBe(true)
     }
   })
 
@@ -383,81 +377,6 @@ describe('serpdownloaders checked-in products', () => {
           { label: 'GitHub Issues', url: `https://github.com/serpapps/${slug}/issues` }
         ])
       )
-    }
-  })
-})
-
-describe('serp.software checked-in products', () => {
-  it('keeps the full downloader catalog while rewriting submitted pages.dev copy', () => {
-    const serpdownloadersProducts = JSON.parse(readFileSync(productsPath, 'utf8')) as Record<
-      string,
-      SerpdownloadersProductEntry
-    >
-    const serpSoftwareProducts = JSON.parse(
-      readFileSync(serpSoftwareProductsPath, 'utf8')
-    ) as Record<string, SerpdownloadersProductEntry>
-
-    expect(Object.keys(serpSoftwareProducts)).toHaveLength(expectedSerpdownloadersProductCount)
-    expect(Object.keys(serpSoftwareProducts).sort()).toEqual(
-      Object.keys(serpdownloadersProducts).sort()
-    )
-
-    for (const [slug, product] of Object.entries(serpdownloadersProducts)) {
-      if (!isPagesDevWebsiteSubmission(slug)) {
-        expect(serpSoftwareProducts[slug], `${slug} non-pages.dev product`).toEqual(product)
-      }
-    }
-
-    for (const slug of pagesDevWebsiteSubmissionSlugs) {
-      const expectedImagePath = `/media/products/${slug}/homepage.png`
-      const serpdownloadersProduct = serpdownloadersProducts[slug]
-      const serpSoftwareProduct = serpSoftwareProducts[slug]
-
-      expect(serpSoftwareProduct?.product).toMatchObject({
-        productPage: `https://${slug}`,
-        slug,
-        title: pagesDevExpectedTitles[slug]
-      })
-      expect(serpSoftwareProduct?.media?.images?.[0], `${slug} main image`).toBe(expectedImagePath)
-      expect(
-        existsSync(resolve(serpSoftwarePublicPath, expectedImagePath.slice(1))),
-        `${slug} homepage screenshot must exist in the serp.software wrapper`
-      ).toBe(true)
-      expect(serpSoftwareProduct?.product?.tagline, `${slug} tagline`).not.toBe(
-        serpdownloadersProduct?.product?.tagline
-      )
-      expect(serpSoftwareProduct?.content?.body, `${slug} body`).not.toBe(
-        serpdownloadersProduct?.content?.body
-      )
-      expect(JSON.stringify(serpSoftwareProduct?.content?.faq ?? []), `${slug} faq`).not.toBe(
-        JSON.stringify(serpdownloadersProduct?.content?.faq ?? [])
-      )
-    }
-  })
-
-  it('has wrapper-public files for copied root-relative listing logos', () => {
-    const serpSoftwareProducts = JSON.parse(
-      readFileSync(serpSoftwareProductsPath, 'utf8')
-    ) as Record<
-      string,
-      SerpdownloadersProductEntry & {
-        media?: {
-          logo?: string
-        }
-      }
-    >
-
-    for (const [slug, product] of Object.entries(serpSoftwareProducts)) {
-      const logoPath = product.media?.logo
-
-      if (!logoPath?.startsWith('/listing-logos/')) {
-        continue
-      }
-
-      expect(
-        existsSync(resolve(process.cwd(), 'apps/serp.software/public', logoPath.slice(1))),
-        `${slug} logo ${logoPath} must exist in the serp.software wrapper`
-      ).toBe(true)
     }
   })
 })

@@ -18,13 +18,11 @@ const bannedActiveDomainPhrases = [
 
 const removedCommunitySections = [
   'Adult-Only Scope',
-  'Porn Video Downloaders is useful because its boundary is clear',
   'The Standard',
   'SERP AI should be honest about its live pages',
   'What Makes SERP Useful',
   'SERP should stay broad without becoming vague',
   'What Makes a Good Listing',
-  'SERP Software is strongest when each listing is plain about what the tool does',
   'A SERP Downloaders listing should help someone identify the downloader'
 ]
 
@@ -33,7 +31,6 @@ const removedStepsSections = [
   'Using the Catalog',
   'Using SERP AI',
   'Using SERP',
-  'Using SERP Software',
   'Using SERP Downloaders',
   'Browse by task',
   'Start with adult platforms',
@@ -45,10 +42,8 @@ const removedStepsSections = [
 
 const expectedSiteNames: Record<string, string> = {
   'browserextensions.io': 'BrowserExtensions.io',
-  'pornvideodownloaders.com': 'Porn Video Downloaders',
   'serp.ai': 'SERP AI',
   'serp.co': 'SERP',
-  'serp.software': 'SERP Software',
   'serpdownloaders.com': 'SERP Downloaders'
 }
 
@@ -68,10 +63,8 @@ describe('active site About page brand content', () => {
   it('keeps one site-owned About MDX file for every active checked-in site', () => {
     expect(activeSiteIds).toEqual([
       'browserextensions.io',
-      'pornvideodownloaders.com',
       'serp.ai',
       'serp.co',
-      'serp.software',
       'serpdownloaders.com'
     ])
 

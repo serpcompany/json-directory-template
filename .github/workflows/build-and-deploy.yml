@@ -7,10 +7,8 @@ on:
       - 'data/listings.json'
       - 'sites/**'
       - 'apps/browserextensions.io/**'
-      - 'apps/pornvideodownloaders.com/**'
       - 'apps/serp.ai/**'
       - 'apps/serp.co/**'
-      - 'apps/serp.software/**'
       - 'apps/serpdownloaders.com/**'
       - 'apps/starter/**'
       - 'packages/web-core/**'
@@ -25,6 +23,13 @@ on:
       site_id:
         description: 'Checked-in site config id'
         required: true
+        type: choice
+        options:
+          - all
+          - browserextensions.io
+          - serp.ai
+          - serp.co
+          - serpdownloaders.com
 
 concurrency:
   group: main-ci-${{ github.ref }}

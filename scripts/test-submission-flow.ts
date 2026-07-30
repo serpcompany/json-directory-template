@@ -167,9 +167,9 @@ try {
 <html>
 <head><title>Test Page</title></head>
 <body>
-  <a href="https://serp.software">
-    <img src="/badge/featured-on-serp.software-light.svg"
-         alt="Featured on SERP.software"
+  <a href="https://serp.ai">
+    <img src="/badge/featured-on-serp.ai-light.svg"
+         alt="Featured on SERP AI"
          data-verify-token="${testToken}"
          width="153" height="44" />
   </a>

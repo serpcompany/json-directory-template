@@ -40,10 +40,10 @@ describe('featured-on badge URL helpers', () => {
     expect(
       getFeaturedOnBadgeListingUrl({
         listingBasePath: 'products',
-        publicUrl: 'https://serp.software',
+        publicUrl: 'https://serpdownloaders.com',
         slug: 'launchbuzz.io'
       })
-    ).toBe('https://serp.software/products/launchbuzz.io/')
+    ).toBe('https://serpdownloaders.com/products/launchbuzz.io/')
   })
 
   it('uses the route-aware listing URL in copied badge embed HTML', () => {

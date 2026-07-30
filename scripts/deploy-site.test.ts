@@ -35,27 +35,14 @@ describe('buildDeployPlan', () => {
     })
   })
 
-  it('builds a deterministic deploy plan for pornvideodownloaders.com', () => {
-    expect(buildDeployPlan({ siteId: 'pornvideodownloaders.com' })).toEqual({
-      branch: 'main',
-      buildDir: expect.stringMatching(/dist\/sites\/pornvideodownloaders.com$/),
-      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
-      repoUrl: 'https://github.com/serpcompany/pornvideodownloaders.com.git',
-      siteId: 'pornvideodownloaders.com',
-      strategy: 'github-pages-repo-sync'
-    })
-  })
-
-  it('builds a deterministic deploy plan for serp.software', () => {
-    expect(buildDeployPlan({ siteId: 'serp.software' })).toEqual({
-      branch: 'main',
-      buildDir: expect.stringMatching(/dist\/sites\/serp.software$/),
-      preserve: ['.github/workflows/deploy.yml', 'CNAME'],
-      repoUrl: 'https://github.com/serpcompany/serp.software.git',
-      siteId: 'serp.software',
-      strategy: 'github-pages-repo-sync'
-    })
-  })
+  it.each(['pornvideodownloaders.com', 'serp.software'])(
+    'rejects retired deploy target %s',
+    siteId => {
+      expect(() => buildDeployPlan({ siteId })).toThrow(
+        `Site "${siteId}" was removed from this repo.`
+      )
+    }
+  )
 
   it('builds a deterministic deploy plan for browserextensions.io', () => {
     expect(buildDeployPlan({ siteId: 'browserextensions.io' })).toEqual({
