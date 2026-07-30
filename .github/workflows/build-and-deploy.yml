@@ -6,25 +6,39 @@ on:
     paths:
       - 'data/listings.json'
       - 'sites/**'
+      - '!sites/pornvideodownloaders.com/**'
+      - '!sites/serp.software/**'
       - 'apps/browserextensions.io/**'
-      - 'apps/pornvideodownloaders.com/**'
       - 'apps/serp.ai/**'
       - 'apps/serp.co/**'
-      - 'apps/serp.software/**'
       - 'apps/serpdownloaders.com/**'
       - 'apps/starter/**'
       - 'packages/web-core/**'
       - 'scripts/**'
+      - '!scripts/**/*.test.ts'
       - '!scripts/build-and-deploy-workflow.test.ts'
       - '!scripts/deploy-to-repo.sh'
       - '!scripts/deploy-to-repo-script.test.ts'
+      - '!scripts/featured-badge-approved-r2-assets.json'
+      - '!scripts/generate-badges.ts'
+      - '!scripts/import-downloaders-from-sheet.ts'
+      - '!scripts/r2-featured-badge-assets.json'
       - '!scripts/target-verify-badge-workflow.test.ts'
       - '!scripts/templates/target-verify-badge.yml'
+      - '!scripts/test-submission-flow.ts'
+      - '!scripts/upgrade-downloader-content.ts'
   workflow_dispatch:
     inputs:
       site_id:
         description: 'Checked-in site config id'
         required: true
+        type: choice
+        options:
+          - all
+          - browserextensions.io
+          - serp.ai
+          - serp.co
+          - serpdownloaders.com
 
 concurrency:
   group: main-ci-${{ github.ref }}
@@ -37,6 +51,7 @@ permissions:
 jobs:
   resolve:
     name: Resolve Deploy Targets
+    if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip static deploy]')
     runs-on: self-hosted
     outputs:
       deploy_targets: ${{ steps.resolve.outputs.deploy_targets }}

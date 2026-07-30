@@ -9,10 +9,8 @@ const siteIds = [defaultSiteConfig.id, ...activeCheckedInSiteIds] as const
 const badgeVariants = ['light', 'dark'] as const
 const manuallySelectedBadgeSites = [
   'browserextensions.io',
-  'pornvideodownloaders.com',
   'serp.ai',
   'serp.co',
-  'serp.software',
   'serpdownloaders.com'
 ] as const
 const PNG_SIGNATURE = '89504e470d0a1a0a'
@@ -27,20 +25,12 @@ const BADGE_ICON_SIZE = 20
 const BADGE_LABEL_FONT_SIZE = 8
 const BADGE_NAME_MAX_FONT_SIZE = 13
 const siteConfigLogoBadgeSites = [] as const
-const siteConfigFaviconFallbackBadgeSites = [
-  'pornvideodownloaders.com',
-  'serpdownloaders.com'
-] as const
+const siteConfigFaviconFallbackBadgeSites = ['serpdownloaders.com'] as const
 
 const siteTypographyOverrides = {
   'browserextensions.io': {
     labelFontSize: 7,
     nameMaxFontSize: 12
-  },
-  'pornvideodownloaders.com': {
-    labelFontSize: 7,
-    letterSpacing: '0',
-    nameMaxFontSize: 13
   }
 } as const
 
@@ -353,8 +343,7 @@ describe('featured badge assets', () => {
           variant === 'dark'
             ? '<rect x="1" y="1" width="198" height="48" rx="5" fill="#1a1a1a" stroke="#333333" stroke-width="1"/>'
             : '<rect x="1" y="1" width="198" height="48" rx="5" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>'
-        const typography =
-          siteTypographyOverrides[siteId as keyof typeof siteTypographyOverrides]
+        const typography = siteTypographyOverrides[siteId as keyof typeof siteTypographyOverrides]
         const labelFontSize = typography?.labelFontSize ?? BADGE_LABEL_FONT_SIZE
         const nameMaxFontSize = typography?.nameMaxFontSize ?? BADGE_NAME_MAX_FONT_SIZE
 
@@ -460,26 +449,6 @@ describe('featured badge assets', () => {
     )
 
     expect(badgesWithoutTypographyOverrides).toEqual([])
-  })
-
-  it('uses the configured PVD badge display name instead of the long site name', () => {
-    const siteId = 'pornvideodownloaders.com'
-    const config = resolveCheckedInSiteConfig(siteId)
-    const badgeDisplayName = config.badges?.featuredOn?.displayName
-
-    expect(badgeDisplayName).toBe('PV Downloaders')
-
-    const badgesWithLongName = badgeVariants.filter(variant => {
-      const assetPath = getBadgeAssetPath(siteId, variant)
-      const svg = readFileSync(assetPath, 'utf-8')
-
-      return (
-        !svg.includes('<title>Featured on PV Downloaders</title>') ||
-        svg.includes('Porn Video Downloaders')
-      )
-    })
-
-    expect(badgesWithLongName).toEqual([])
   })
 
   it('does not stretch or clip site names to force-fit the badge', () => {

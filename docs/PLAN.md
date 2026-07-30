@@ -17,9 +17,10 @@ For completed execution history, see:
 - The wrapper refactor is complete.
 - `apps/web` no longer exists.
 - `apps/starter` is the neutral starter wrapper.
-- `apps/browserextensions.io`, `apps/pornvideodownloaders.com`, `apps/serp.ai`,
-  `apps/serp.co`, `apps/serp.software`, and `apps/serpdownloaders.com` are
-  active checked-in site wrappers.
+- `apps/browserextensions.io`, `apps/serp.ai`, `apps/serp.co`, and
+  `apps/serpdownloaders.com` are active checked-in site wrappers.
+- `pornvideodownloaders.com` and `serp.software` moved to the D1/OpenNext
+  platform and are retired from this repository's runtime/build/deploy graph.
 - Shared runtime and route logic lives in `packages/web-core`.
 - Checked-in site contract and site resolution live in `packages/site-contract`.
 - The starter submit flow now uses a static-friendly GitHub issue handoff with PR-reviewed
@@ -31,9 +32,6 @@ For completed execution history, see:
    - `pnpm validate:site -- --site serpdownloaders.com`
    - `pnpm build:site -- --site serpdownloaders.com`
    - `pnpm deploy:site -- --site serpdownloaders.com --dry-run`
-   - `pnpm validate:site -- --site pornvideodownloaders.com`
-   - `pnpm build:site -- --site pornvideodownloaders.com`
-   - `pnpm deploy:site -- --site pornvideodownloaders.com --dry-run`
    - `pnpm validate:site -- --site serp.co`
    - `pnpm build:site -- --site serp.co`
    - `pnpm deploy:site -- --site serp.co --dry-run`

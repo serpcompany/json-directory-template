@@ -4,11 +4,12 @@ Use this checklist after the wash pass and before calling the JSON-first MVP clo
 
 Historical note:
 
-- older entries in this checklist mention `serp.software` from an earlier proof-site pass
-- `serpdownloaders.com`, `pornvideodownloaders.com`, and `serp.software` are active
-  non-default sites in the current runtime/build/deploy graph
-- treat the older `serp.software` proof-site notes below as historical verification context;
-  current `serp.software` requirements live in its checked-in site config and active-site tests
+- older entries in this checklist mention `serp.software` and
+  `pornvideodownloaders.com` from earlier proof-site passes
+- those two sites are now D1/OpenNext-owned and retired from the current
+  runtime/build/deploy graph
+- treat the older proof-site notes below as superseded historical verification
+  context, not current operational authority
 
 ## 1. Wash alignment
 
