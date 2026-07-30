@@ -69,10 +69,7 @@ describe('retired legacy sites', () => {
     }
 
     expect(workflow.on.push.paths).toEqual(
-      expect.arrayContaining([
-        '!sites/pornvideodownloaders.com/**',
-        '!sites/serp.software/**'
-      ])
+      expect.arrayContaining(['!sites/pornvideodownloaders.com/**', '!sites/serp.software/**'])
     )
   })
 

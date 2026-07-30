@@ -128,5 +128,4 @@ describe('WebsiteDetailSidebar', () => {
       light: 'https://serp.co/badge/featured-on-serp.co-light.svg'
     })
   })
-
 })

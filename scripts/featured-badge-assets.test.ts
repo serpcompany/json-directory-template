@@ -25,9 +25,7 @@ const BADGE_ICON_SIZE = 20
 const BADGE_LABEL_FONT_SIZE = 8
 const BADGE_NAME_MAX_FONT_SIZE = 13
 const siteConfigLogoBadgeSites = [] as const
-const siteConfigFaviconFallbackBadgeSites = [
-  'serpdownloaders.com'
-] as const
+const siteConfigFaviconFallbackBadgeSites = ['serpdownloaders.com'] as const
 
 const siteTypographyOverrides = {
   'browserextensions.io': {
@@ -345,8 +343,7 @@ describe('featured badge assets', () => {
           variant === 'dark'
             ? '<rect x="1" y="1" width="198" height="48" rx="5" fill="#1a1a1a" stroke="#333333" stroke-width="1"/>'
             : '<rect x="1" y="1" width="198" height="48" rx="5" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>'
-        const typography =
-          siteTypographyOverrides[siteId as keyof typeof siteTypographyOverrides]
+        const typography = siteTypographyOverrides[siteId as keyof typeof siteTypographyOverrides]
         const labelFontSize = typography?.labelFontSize ?? BADGE_LABEL_FONT_SIZE
         const nameMaxFontSize = typography?.nameMaxFontSize ?? BADGE_NAME_MAX_FONT_SIZE
 

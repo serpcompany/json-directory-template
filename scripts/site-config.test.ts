@@ -1,4 +1,3 @@
-import { resolveCheckedInSiteCategories } from '@thedaviddias/site-contract/categories'
 import { resolveSiteContent } from '@thedaviddias/site-contract/site-content'
 import { describe, expect, it } from 'vitest'
 import { ZodError } from 'zod'
@@ -224,11 +223,7 @@ describe('loadCheckedInSite', () => {
   })
 
   it('rejects parked site ids that were removed from the active registry', () => {
-    for (const siteId of [
-      'extensions.serp.co',
-      'pornvideodownloaders.com',
-      'serp.software'
-    ]) {
+    for (const siteId of ['extensions.serp.co', 'pornvideodownloaders.com', 'serp.software']) {
       expect(() => loadCheckedInSite(siteId)).toThrow(
         `Site "${siteId}" was removed from this repo. Use a supported checked-in site id instead.`
       )
@@ -506,7 +501,6 @@ describe('resolveSiteArtifactDir', () => {
       'dist/sites/serpdownloaders.com'
     )
   })
-
 })
 
 describe('buildSiteEnvironment', () => {
@@ -518,7 +512,6 @@ describe('buildSiteEnvironment', () => {
       SITE_ID: 'serpdownloaders.com'
     })
   })
-
 })
 
 describe('resolveResolvedSiteConfig', () => {
@@ -548,5 +541,4 @@ describe('resolveResolvedSiteConfig', () => {
       tagline: 'For the people who just like to get down...loading'
     })
   })
-
 })

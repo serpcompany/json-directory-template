@@ -103,12 +103,7 @@ const sourceDirs = [
   '/Users/devin/dev/repos/store-new/apps/store/data/adult-products'
 ]
 
-const sites = [
-  'serpdownloaders.com',
-  'serp.ai',
-  'browserextensions.io',
-  'serp.co'
-] as const
+const sites = ['serpdownloaders.com', 'serp.ai', 'browserextensions.io', 'serp.co'] as const
 
 const sourceBySlug = new Map<string, SourceProduct>()
 const toolsBySlug = new Map<string, ToolsProduct>()

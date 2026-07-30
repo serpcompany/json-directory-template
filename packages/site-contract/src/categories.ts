@@ -1,29 +1,27 @@
-import browserextensionsIoCategories from '../../../sites/browserextensions.io/categories.json';
-import defaultCategories from '../../../sites/default/categories.json';
-import serpAiCategories from '../../../sites/serp.ai/categories.json';
-import serpCoCategories from '../../../sites/serp.co/categories.json';
-import serpdownloadersCategories from '../../../sites/serpdownloaders.com/categories.json';
-import { assertSiteIdIsNotRemoved } from './active-site-ids';
-import { defaultSiteConfig } from './default-site-config';
-import type { SiteCategoryInput } from './types';
+import browserextensionsIoCategories from '../../../sites/browserextensions.io/categories.json'
+import defaultCategories from '../../../sites/default/categories.json'
+import serpAiCategories from '../../../sites/serp.ai/categories.json'
+import serpCoCategories from '../../../sites/serp.co/categories.json'
+import serpdownloadersCategories from '../../../sites/serpdownloaders.com/categories.json'
+import { assertSiteIdIsNotRemoved } from './active-site-ids'
+import { defaultSiteConfig } from './default-site-config'
+import type { SiteCategoryInput } from './types'
 
 const siteCategoriesById: Record<string, SiteCategoryInput[]> = {
   'browserextensions.io': browserextensionsIoCategories as SiteCategoryInput[],
   'serp.ai': serpAiCategories as SiteCategoryInput[],
   'serp.co': serpCoCategories as SiteCategoryInput[],
-  'serpdownloaders.com': serpdownloadersCategories as SiteCategoryInput[],
-};
+  'serpdownloaders.com': serpdownloadersCategories as SiteCategoryInput[]
+}
 
-export const defaultSiteCategories = defaultCategories as SiteCategoryInput[];
+export const defaultSiteCategories = defaultCategories as SiteCategoryInput[]
 
-export function resolveCheckedInSiteCategories(
-  siteId?: string
-): SiteCategoryInput[] {
+export function resolveCheckedInSiteCategories(siteId?: string): SiteCategoryInput[] {
   if (!siteId || siteId === defaultSiteConfig.id) {
-    return defaultSiteCategories;
+    return defaultSiteCategories
   }
 
-  assertSiteIdIsNotRemoved(siteId);
+  assertSiteIdIsNotRemoved(siteId)
 
-  return siteCategoriesById[siteId] ?? defaultSiteCategories;
+  return siteCategoriesById[siteId] ?? defaultSiteCategories
 }
