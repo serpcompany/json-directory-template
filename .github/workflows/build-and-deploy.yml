@@ -10,7 +10,6 @@ on:
       - '!sites/serp.software/**'
       - 'apps/browserextensions.io/**'
       - 'apps/serp.ai/**'
-      - 'apps/serp.co/**'
       - 'apps/serpdownloaders.com/**'
       - 'apps/starter/**'
       - 'packages/web-core/**'
@@ -37,7 +36,6 @@ on:
           - all
           - browserextensions.io
           - serp.ai
-          - serp.co
           - serpdownloaders.com
 
 concurrency:
