@@ -261,10 +261,11 @@ describe('build-and-deploy workflow', () => {
       expect.arrayContaining([
         'apps/browserextensions.io/**',
         'apps/serp.ai/**',
-        'apps/serp.co/**',
         'apps/serpdownloaders.com/**',
         'apps/starter/**'
       ])
     )
+    // serp.co deploys from serpcompany/best.serp.co (serpcompany/best.serp.co#34).
+    expect(paths).not.toContain('apps/serp.co/**')
   })
 })

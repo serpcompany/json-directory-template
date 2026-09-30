@@ -57,7 +57,8 @@ describe('retired legacy sites', () => {
 
     expect(workflow.on.workflow_dispatch.inputs.site_id).toEqual({
       description: 'Checked-in site config id',
-      options: ['all', ...activeSiteIds],
+      // serp.co deploys from serpcompany/best.serp.co (serpcompany/best.serp.co#34).
+      options: ['all', ...activeSiteIds.filter(siteId => siteId !== 'serp.co')],
       required: true,
       type: 'choice'
     })

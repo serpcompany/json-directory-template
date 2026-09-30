@@ -59,8 +59,17 @@ describe('resolveBuildRun', () => {
         SITE_ID: 'all'
       })
     ).resolves.toEqual({
-      deployTargets: expectedDeployTargets(activeCheckedInSiteIds),
+      deployTargets: expectedDeployTargets(
+        activeCheckedInSiteIds.filter(siteId => siteId !== 'serp.co')
+      ),
       shouldDeploy: true
+    })
+  })
+
+  it('never deploys serp.co, which is served from serpcompany/best.serp.co', async () => {
+    await expect(resolveBuildRun(['--site', 'serp.co'], {})).resolves.toEqual({
+      deployTargets: [],
+      shouldDeploy: false
     })
   })
 
