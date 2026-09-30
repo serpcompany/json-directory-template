@@ -147,8 +147,10 @@ The public `/submit` GitHub issue intake is active for:
 - `serp.co`
 - `serpdownloaders.com`
 
-Each active site's public issue repo is `serpcompany/<site-id>`. These repos must stay public and
-must keep Issues enabled because the static submit form opens GitHub's public issue composer.
+Each active site's public issue repo is `serpcompany/<site-id>`, except `serp.co`, whose public
+issue repo is `serpcompany/best.serp.co` (the site serves from `https://best.serp.co`). These repos
+must stay public and must keep Issues enabled because the static submit form opens GitHub's public
+issue composer.
 The target repo badge workflow is a thin caller source-managed in
 `scripts/templates/target-verify-badge.yml`; the implementation lives in
 `.github/workflows/reusable-verify-badge.yml` and is called at `@main` so badge logic fixes land in
@@ -168,7 +170,7 @@ Required setup for every active public issue repo:
 |---|---|---|---|---|
 | `serpcompany/browserextensions.io` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
 | `serpcompany/serp.ai` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
-| `serpcompany/serp.co` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
+| `serpcompany/best.serp.co` (site id `serp.co`) | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
 | `serpcompany/serpdownloaders.com` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
 
 Prefer rolling out submit-intake config changes one site per source PR so review
@@ -203,8 +205,9 @@ After deploy, check:
 - submit-enabled targets still contain `.github/workflows/verify-badge.yml`
 - the target provider publish completes successfully
 - the live domain returns the updated site from the intended provider
-- `https://<site-id>/build-info.json` returns HTTP `200`, has the expected `siteId`,
-  and has a `sourceSha` matching the deployed source commit
+- `<site.publicUrl>/build-info.json` returns HTTP `200`, has the expected `siteId`,
+  and has a `sourceSha` matching the deployed source commit. This is `https://<site-id>/` for
+  every active site except `serp.co`, which serves from `https://best.serp.co/`
 
 ## Related references
 

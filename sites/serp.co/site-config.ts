@@ -48,15 +48,22 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
   },
   deploy: {
     branch: 'main',
-    preserve: ['.github/workflows/deploy.yml', '.github/workflows/verify-badge.yml', '.github/workflows/approve-listing.yml', 'CNAME'],
-    repoUrl: 'https://github.com/serpcompany/serp.co.git',
+    preserve: [
+      '.github/workflows/deploy.yml',
+      '.github/workflows/verify-badge.yml',
+      '.github/workflows/approve-listing.yml'
+    ],
+    repoUrl: 'https://github.com/serpcompany/best.serp.co.git',
     strategy: 'github-pages-repo-sync'
   },
   id: 'serp.co',
   networkBrandGroup: 'all',
   features: {
     showBrands: true,
-    showGuides: true
+    showGuides: false
+  },
+  legal: {
+    contactEmailDomain: 'serp.co'
   },
   routes: {
     listingBasePath: 'products'
@@ -69,7 +76,6 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
     pathByGroup: {
       listings: '/sitemaps/directory/1.xml',
       pages: '/sitemaps/pages/1.xml',
-      posts: '/sitemaps/blog/1.xml',
       taxonomies: '/sitemaps/categories/1.xml'
     },
     staticPagePaths: [
@@ -82,7 +88,6 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
       '/legal/dmca',
       '/legal/privacy-policy',
       '/legal/terms-conditions',
-      '/posts',
       '/pricing',
       '/sponsor',
       '/submit'
@@ -91,15 +96,15 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
   site: {
     description:
       'SERP helps people discover software, AI tools, companies, resources, and projects from the SERP network.',
-    domain: 'serp.co',
+    domain: 'best.serp.co',
     name: 'SERP',
-    publicUrl: 'https://serp.co',
+    publicUrl: 'https://best.serp.co',
     tagline: 'Software, AI tools, companies, resources, and SERP projects'
   },
   social: {
     githubIssueOwner: 'serpcompany',
-    githubIssueRepo: 'serp.co',
-    githubIssuesUrl: 'https://github.com/serpcompany/serp.co/issues',
+    githubIssueRepo: 'best.serp.co',
+    githubIssuesUrl: 'https://github.com/serpcompany/best.serp.co/issues',
     githubRepoUrl: 'https://github.com/serpcompany',
     githubUrl: 'https://github.com/serpcompany',
     redditUrl: 'https://www.reddit.com/r/serpapps/',

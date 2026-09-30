@@ -106,8 +106,8 @@ describe('serp.co checked-in migration output', () => {
     const config = loadCheckedInSite('serp.co')
 
     expect(config.site.name).toBe('SERP')
-    expect(config.site.publicUrl).toBe('https://serp.co')
-    expect(config.site.domain).toBe('serp.co')
+    expect(config.site.publicUrl).toBe('https://best.serp.co')
+    expect(config.site.domain).toBe('best.serp.co')
     expect(config.site.description).toBe(
       'SERP helps people discover software, AI tools, companies, resources, and projects from the SERP network.'
     )

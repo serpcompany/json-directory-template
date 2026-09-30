@@ -46,6 +46,15 @@ const siteAnalyticsSchema = z
   })
   .optional()
 
+const siteLegalSchema = z
+  .object({
+    contactEmailDomain: z
+      .string()
+      .regex(/^(?:[a-z0-9-]+\.)+[a-z]{2,}$/)
+      .optional()
+  })
+  .optional()
+
 const badgeObjectKeySchema = z
   .string()
   .min(1)
@@ -263,6 +272,7 @@ const checkedInSiteConfigSchema = z.object({
   deploy: githubPagesRepoSyncDeploySchema.optional(),
   features: featureFlagsSchema.default({}),
   id: z.string().min(1),
+  legal: siteLegalSchema,
   networkBrandGroup: z.string().min(1).nullable().default(null),
   routes: z
     .object({

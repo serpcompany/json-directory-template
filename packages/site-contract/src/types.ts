@@ -78,6 +78,15 @@ export type SiteAnalyticsConfig = {
   gtmId?: string
 }
 
+export type SiteLegalConfig = {
+  /**
+   * Domain used for the contact addresses in the shared legal pages
+   * (for example `dmca[@]<domain>` and `privacy[@]<domain>`).
+   * Falls back to `site.domain` when omitted.
+   */
+  contactEmailDomain?: string
+}
+
 export type SiteBadgesConfig = {
   featuredOn?: {
     dark?: string
@@ -143,6 +152,7 @@ export type CheckedInSiteConfig = {
   deploy?: DeployConfig
   features: SiteFeatureFlags
   id: string
+  legal?: SiteLegalConfig
   networkBrandGroup: string | null
   routes: {
     brandsBasePath: string

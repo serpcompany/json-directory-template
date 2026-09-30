@@ -38,6 +38,7 @@ export type SiteConfig = {
   githubRepoUrl: string
   githubUrl: string
   id: string
+  legalContactEmailDomain: string
   listingSourcePublishedAt?: string
   listingRouteBasePath: string
   name: string
@@ -180,6 +181,7 @@ export function resolveSiteConfig(
     githubRepoUrl: configuredSite.social.githubRepoUrl,
     githubUrl: configuredSite.social.githubUrl,
     id: configuredSite.id,
+    legalContactEmailDomain: configuredSite.legal?.contactEmailDomain ?? configuredSite.site.domain,
     listingSourcePublishedAt:
       listingSource.kind === 'trial-products-json' ? listingSource.publishedAt : undefined,
     listingRouteBasePath: configuredSite.routes.listingBasePath,

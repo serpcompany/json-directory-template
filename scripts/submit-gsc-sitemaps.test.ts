@@ -48,7 +48,9 @@ describe('runSubmitGscSitemaps', () => {
     await runSubmitGscSitemaps(['--dry-run'], {})
 
     expect(log).toHaveBeenCalledTimes(activeCheckedInSiteIds.length)
-    expect(log).toHaveBeenCalledWith('SUBMIT https://serp.co/ -> https://serp.co/sitemap-index.xml')
+    expect(log).toHaveBeenCalledWith(
+      'SUBMIT https://best.serp.co/ -> https://best.serp.co/sitemap-index.xml'
+    )
   })
 
   it('can scope canonical submit operations from the workflow site id env', async () => {

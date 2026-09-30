@@ -171,6 +171,9 @@ export type CheckedInSiteConfig = {
     showExternalResources: boolean;
     showNewsletter: boolean;
   };
+  legal?: {
+    contactEmailDomain?: string;
+  };
   deploy?: {
     strategy: 'github-pages-repo-sync';
     repoUrl: string;
@@ -192,6 +195,7 @@ export type CheckedInSiteConfig = {
 | `routes.*`                             | Yes      | Controls the public base paths for listings, docs, and the site-owned network page.                                                 |
 | `sitemap.*`                            | No       | Controls sitemap output, static artifact exclusions, and optional featured-category canonical path overrides.                       |
 | `features.*`                           | Yes      | Controls starter-owned optional surfaces.                                                                                           |
+| `legal.contactEmailDomain`             | No       | Domain for the `{{domain}}` contact addresses in shared legal pages. Falls back to `site.domain`. Honored by the `serp.co` wrapper. |
 | `deploy.*`                             | No       | Required for deploy runs; omitted only for non-deploy examples.                                                                     |
 
 ## Minimum Real-Site Input Checklist
@@ -303,7 +307,10 @@ Operational guidance:
 
 ## Known Gaps
 
-- Legal/privacy contact emails are not first-class site-config fields yet; the legal content currently derives them from `site.domain`.
+- Legal/privacy contact emails derive from `site.domain` unless `legal.contactEmailDomain` is set.
+  Only the `serp.co` wrapper (`apps/serp.co/lib/content-loader.ts`) reads
+  `legalContactEmailDomain` today; the other wrappers still pass `site.domain`, which is the same
+  value because none of them sets the override.
 - About-page copy is still content-owned in `packages/content/data/about/about.mdx`, not part of `site-config`.
 - Future first-party `/tools` pages are reserved conceptually, but there is no dedicated `site-config` surface for them yet.
 - Newsletter copy is still starter-owned; only its on/off behavior is configurable today via `features.showNewsletter`.
