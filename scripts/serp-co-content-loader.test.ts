@@ -1,3 +1,5 @@
+import { readdirSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { getListingCategories } from '@thedaviddias/web-core/category-navigation'
 import type { WebsiteMetadata } from '@thedaviddias/web-core/content-query'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
@@ -108,6 +110,25 @@ describe('serp.co legal contact emails', () => {
       expect(content).not.toContain('best.serp.co')
       expect(content).not.toContain('{{domain}}')
     }
+  })
+
+  it('only uses the {{domain}} legal placeholder inside contact addresses', () => {
+    const legalDir = resolve(process.cwd(), 'packages/content/data/legal')
+    const placeholderUses = readdirSync(legalDir)
+      .filter(fileName => fileName.endsWith('.mdx'))
+      .flatMap(fileName => {
+        const source = readFileSync(resolve(legalDir, fileName), 'utf8')
+
+        return [...source.matchAll(/(\S*)\{\{domain\}\}/g)].map(
+          match => `${fileName}: ${match[1]}{{domain}}`
+        )
+      })
+
+    expect(placeholderUses).toEqual([
+      'dmca.mdx: dmca[@]{{domain}}',
+      'privacy.mdx: privacy[@]{{domain}}',
+      'terms.mdx: privacy[@]{{domain}}'
+    ])
   })
 
   it('keeps every other active site on its own domain for legal contact addresses', async () => {

@@ -611,7 +611,7 @@ describe('resolveBuildRun', () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
-          body: 'Shared change affects https://browserextensions.io and https://serp.co.',
+          body: 'Shared change affects https://browserextensions.io and https://best.serp.co.',
           merged_at: '2026-05-26T12:00:00Z',
           number: 42,
           title: 'Shared multi-site deploy'
