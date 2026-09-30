@@ -127,7 +127,7 @@ export async function getLegalContent(key: string): Promise<string> {
   }
 
   return applyLegalContentBranding(content, {
-    domain: siteConfig.domain,
+    domain: siteConfig.legalContactEmailDomain,
     siteName: siteConfig.name
   })
 }

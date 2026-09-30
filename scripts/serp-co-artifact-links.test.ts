@@ -3,6 +3,7 @@ import { join, resolve } from 'node:path'
 import { beforeAll, describe, expect, it } from 'vitest'
 
 const artifactRoot = resolve(process.cwd(), 'dist/sites/serp.co')
+const siteOrigin = 'https://best.serp.co'
 
 function readArtifactHtml(relativePath: string): string {
   return readFileSync(join(artifactRoot, relativePath), 'utf8')
@@ -65,12 +66,28 @@ describe('serp.co artifact links', () => {
     expect(oversizedFiles).toEqual([])
   })
 
-  it('emits route indexes for canonical product, category, brands, submit, and posts pages', () => {
+  it('emits route indexes for canonical product, category, brands, and submit pages', () => {
     expect(routeIndexExists('/products/youtube-downloader/reviews')).toBe(true)
     expect(routeIndexExists('/products/best/video-downloaders')).toBe(true)
     expect(routeIndexExists('/brands')).toBe(true)
     expect(routeIndexExists('/submit')).toBe(true)
-    expect(routeIndexExists('/posts')).toBe(true)
+  })
+
+  it('does not publish the blog', () => {
+    const postsLinks: string[] = []
+
+    for (const filePath of listArtifactFiles(artifactRoot, '.html')) {
+      const html = readFileSync(filePath, 'utf8')
+
+      if (/href="(?:https:\/\/best\.serp\.co)?\/posts(?:[/"?#])/.test(html)) {
+        postsLinks.push(filePath.replace(`${artifactRoot}/`, ''))
+      }
+    }
+
+    expect(existsSync(join(artifactRoot, 'posts'))).toBe(false)
+    expect(existsSync(join(artifactRoot, 'guides'))).toBe(false)
+    expect(existsSync(join(artifactRoot, 'sitemaps/blog'))).toBe(false)
+    expect(postsLinks).toEqual([])
   })
 
   it('renders every featured downloader on the featured category artifact', () => {
@@ -158,10 +175,10 @@ describe('serp.co artifact links', () => {
 
       for (const match of hrefMatches) {
         const href = match[1] ?? ''
-        const url = href.startsWith('https://serp.co')
+        const url = href.startsWith(`${siteOrigin}/`)
           ? new URL(href)
           : href.startsWith('/')
-            ? new URL(href, 'https://serp.co')
+            ? new URL(href, siteOrigin)
             : null
 
         if (!url) {
@@ -205,7 +222,6 @@ describe('serp.co artifact links', () => {
   it('emits trailing-slash final page URLs in every XML sitemap', () => {
     const sitemapPaths = [
       'sitemaps/pages/1.xml',
-      'sitemaps/blog/1.xml',
       'sitemaps/categories/1.xml',
       'sitemaps/directory/1.xml'
     ]
@@ -219,17 +235,57 @@ describe('serp.co artifact links', () => {
     expect(nonTrailingFinalUrls).toEqual([])
     expect(doubledReviewUrls).toEqual([])
     expect(readSitemapLocs('sitemap-index.xml')).toEqual([
-      'https://serp.co/sitemaps/pages/1.xml',
-      'https://serp.co/sitemaps/directory/1.xml',
-      'https://serp.co/sitemaps/categories/1.xml',
-      'https://serp.co/sitemaps/blog/1.xml'
+      'https://best.serp.co/sitemaps/pages/1.xml',
+      'https://best.serp.co/sitemaps/directory/1.xml',
+      'https://best.serp.co/sitemaps/categories/1.xml'
     ])
+  })
+
+  it('lists only indexable static pages in the pages sitemap', () => {
+    expect(readSitemapLocs('sitemaps/pages/1.xml')).toEqual([
+      'https://best.serp.co/',
+      'https://best.serp.co/about/',
+      'https://best.serp.co/brands/',
+      'https://best.serp.co/contact/',
+      'https://best.serp.co/legal/',
+      'https://best.serp.co/pricing/',
+      'https://best.serp.co/sponsor/'
+    ])
+  })
+
+  it('still builds the legal and submit pages excluded from the sitemap', () => {
+    for (const publicPath of [
+      '/legal/affiliate-disclosure',
+      '/legal/dmca',
+      '/legal/privacy-policy',
+      '/legal/terms-conditions',
+      '/submit'
+    ]) {
+      expect(routeIndexExists(publicPath), publicPath).toBe(true)
+      expect(isRedirectOrErrorShell(publicPath), publicPath).toBe(false)
+    }
+  })
+
+  it('uses the best.serp.co origin for every sitemap loc', () => {
+    const sitemapPaths = [
+      'sitemap-index.xml',
+      'sitemap.xml',
+      'sitemaps/pages/1.xml',
+      'sitemaps/categories/1.xml',
+      'sitemaps/directory/1.xml'
+    ]
+    const offOriginLocs = sitemapPaths.flatMap(relativePath =>
+      readSitemapLocs(relativePath)
+        .filter(url => new URL(url).origin !== siteOrigin)
+        .map(url => `${relativePath}: ${url}`)
+    )
+
+    expect(offOriginLocs).toEqual([])
   })
 
   it('emits XML sitemap locs only for generated route targets', () => {
     const sitemapPaths = [
       'sitemaps/pages/1.xml',
-      'sitemaps/blog/1.xml',
       'sitemaps/categories/1.xml',
       'sitemaps/directory/1.xml'
     ]

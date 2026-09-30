@@ -78,6 +78,15 @@ export type SiteAnalyticsConfig = {
   gtmId?: string
 }
 
+export type SiteLegalConfig = {
+  /**
+   * Domain passed to `applyLegalContentBranding` for the shared legal pages. It replaces every
+   * `{{domain}}` placeholder (today only the `dmca[@]` and `privacy[@]` contact addresses) and
+   * any literal `serp.co`. Falls back to `site.domain` when omitted.
+   */
+  contactEmailDomain?: string
+}
+
 export type SiteBadgesConfig = {
   featuredOn?: {
     dark?: string
@@ -143,6 +152,7 @@ export type CheckedInSiteConfig = {
   deploy?: DeployConfig
   features: SiteFeatureFlags
   id: string
+  legal?: SiteLegalConfig
   networkBrandGroup: string | null
   routes: {
     brandsBasePath: string

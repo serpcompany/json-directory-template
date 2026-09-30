@@ -1,6 +1,8 @@
+import { readdirSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { getListingCategories } from '@thedaviddias/web-core/category-navigation'
 import type { WebsiteMetadata } from '@thedaviddias/web-core/content-query'
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
 vi.mock('server-only', () => ({}))
 
@@ -76,5 +78,66 @@ describe('serp.co content loader listing cache', () => {
     expect(detail?.relatedWebsites.map(related => related.slug)).toEqual(
       computeLegacyRelatedOrder(websites, website!)
     )
+  })
+})
+
+describe('serp.co legal contact emails', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+    vi.resetModules()
+  })
+
+  it('keeps legal contact addresses on serp.co while the site origin is best.serp.co', async () => {
+    vi.stubEnv('NEXT_PUBLIC_SITE_ID', 'serp.co')
+    vi.stubEnv('SITE_ID', 'serp.co')
+    vi.resetModules()
+
+    const { siteConfig } = await import('@thedaviddias/web-core/site-config')
+    const serpCoContentLoader = await import('../apps/serp.co/lib/content-loader.ts')
+
+    expect(siteConfig.domain).toBe('best.serp.co')
+    expect(siteConfig.legalContactEmailDomain).toBe('serp.co')
+
+    const dmca = await serpCoContentLoader.getLegalContent('dmca')
+    const privacy = await serpCoContentLoader.getLegalContent('privacy')
+    const terms = await serpCoContentLoader.getLegalContent('terms')
+
+    expect(dmca).toContain('dmca[@]serp.co')
+    expect(privacy).toContain('privacy[@]serp.co')
+    expect(terms).toContain('privacy[@]serp.co')
+
+    for (const content of [dmca, privacy, terms]) {
+      expect(content).not.toContain('best.serp.co')
+      expect(content).not.toContain('{{domain}}')
+    }
+  })
+
+  it('only uses the {{domain}} legal placeholder inside contact addresses', () => {
+    const legalDir = resolve(process.cwd(), 'packages/content/data/legal')
+    const placeholderUses = readdirSync(legalDir)
+      .filter(fileName => fileName.endsWith('.mdx'))
+      .flatMap(fileName => {
+        const source = readFileSync(resolve(legalDir, fileName), 'utf8')
+
+        return [...source.matchAll(/(\S*)\{\{domain\}\}/g)].map(
+          match => `${fileName}: ${match[1]}{{domain}}`
+        )
+      })
+
+    expect(placeholderUses).toEqual([
+      'dmca.mdx: dmca[@]{{domain}}',
+      'privacy.mdx: privacy[@]{{domain}}',
+      'terms.mdx: privacy[@]{{domain}}'
+    ])
+  })
+
+  it('keeps every other active site on its own domain for legal contact addresses', async () => {
+    const { resolveSiteConfig } = await import('@thedaviddias/web-core/site-config')
+
+    for (const siteId of ['default', 'browserextensions.io', 'serp.ai', 'serpdownloaders.com']) {
+      const config = resolveSiteConfig(siteId)
+
+      expect(config.legalContactEmailDomain, siteId).toBe(config.domain)
+    }
   })
 })

@@ -102,7 +102,7 @@ The maintainer reviews and merges the PR. The existing deploy pipeline handles t
 ### Required secret
 
 The verified PR step requires a `GH_PAT` secret on each site's public issue repo
-(e.g. `serpcompany/serp.co`) with access to create branches and PRs in
+(e.g. `serpcompany/best.serp.co`) with access to create branches and PRs in
 `serpcompany/json-directory-template`. The caller passes that secret through to the reusable
 workflow. Without this secret, badge labels and comments still work, but the workflow fails the PR
 step after badge verification and comments that the secret is missing.
@@ -146,7 +146,7 @@ Active public issue targets:
 |---|---|---|
 | `browserextensions.io` | `serpcompany/browserextensions.io` | `https://browserextensions.io/submit/` |
 | `serp.ai` | `serpcompany/serp.ai` | `https://serp.ai/submit/` |
-| `serp.co` | `serpcompany/serp.co` | `https://serp.co/submit/` |
+| `serp.co` | `serpcompany/best.serp.co` | `https://best.serp.co/submit/` |
 | `serpdownloaders.com` | `serpcompany/serpdownloaders.com` | `https://serpdownloaders.com/submit/` |
 
 Active target workflow rollout matrix:
@@ -155,7 +155,7 @@ Active target workflow rollout matrix:
 |---|---|---|---|
 | `serpcompany/browserextensions.io` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-browserextensions.io-{light,dark}.svg` |
 | `serpcompany/serp.ai` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serp.ai-{light,dark}.svg` |
-| `serpcompany/serp.co` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serp.co-{light,dark}.svg` |
+| `serpcompany/best.serp.co` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serp.co-{light,dark}.svg` |
 | `serpcompany/serpdownloaders.com` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serpdownloaders.com-{light,dark}.svg` |
 
 ---
