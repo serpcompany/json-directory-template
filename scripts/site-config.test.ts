@@ -183,6 +183,16 @@ describe('loadCheckedInSite', () => {
       taxonomies: '/sitemaps/categories/1.xml'
     })
     expect(config.sitemap.staticPagePaths).not.toContain('/posts')
+    expect(config.sitemap.artifactExcludedPaths).toEqual([])
+    expect(config.sitemap.excludedPaths).toEqual([
+      '/legal/affiliate-disclosure',
+      '/legal/dmca',
+      '/legal/privacy-policy',
+      '/legal/terms-conditions',
+      '/products/best/featured',
+      '/products/best/other',
+      '/submit'
+    ])
     expect(config.features.showBrands).toBe(true)
     expect(config.features.showGuides).toBe(false)
     expect(config.legal?.contactEmailDomain).toBe('serp.co')

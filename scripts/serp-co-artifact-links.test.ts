@@ -241,6 +241,31 @@ describe('serp.co artifact links', () => {
     ])
   })
 
+  it('lists only indexable static pages in the pages sitemap', () => {
+    expect(readSitemapLocs('sitemaps/pages/1.xml')).toEqual([
+      'https://best.serp.co/',
+      'https://best.serp.co/about/',
+      'https://best.serp.co/brands/',
+      'https://best.serp.co/contact/',
+      'https://best.serp.co/legal/',
+      'https://best.serp.co/pricing/',
+      'https://best.serp.co/sponsor/'
+    ])
+  })
+
+  it('still builds the legal and submit pages excluded from the sitemap', () => {
+    for (const publicPath of [
+      '/legal/affiliate-disclosure',
+      '/legal/dmca',
+      '/legal/privacy-policy',
+      '/legal/terms-conditions',
+      '/submit'
+    ]) {
+      expect(routeIndexExists(publicPath), publicPath).toBe(true)
+      expect(isRedirectOrErrorShell(publicPath), publicPath).toBe(false)
+    }
+  })
+
   it('uses the best.serp.co origin for every sitemap loc', () => {
     const sitemapPaths = [
       'sitemap-index.xml',

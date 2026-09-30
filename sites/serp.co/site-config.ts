@@ -71,7 +71,15 @@ export const serpCoSiteConfig: CheckedInSiteConfigOverride = {
   sitemap: {
     categoryBasePath: 'products/best',
     artifactExcludedPaths: [],
-    excludedPaths: ['/products/best/featured', '/products/best/other'],
+    excludedPaths: [
+      '/legal/affiliate-disclosure',
+      '/legal/dmca',
+      '/legal/privacy-policy',
+      '/legal/terms-conditions',
+      '/products/best/featured',
+      '/products/best/other',
+      '/submit'
+    ],
     listingDetailSuffix: 'reviews',
     pathByGroup: {
       listings: '/sitemaps/directory/1.xml',
