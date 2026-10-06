@@ -272,6 +272,7 @@ export const PRICING_PATTERNS: Array<[string, RegExp]> = [
   ],
   ['unlimited use', /\bunlimited (?:downloads|use|access|usage)\b/i],
   ['paid plan', /\b(?:paid|premium|pro) (?:plans?|versions?|tiers?|licen[cs]es?)\b/i],
+  ['purchase decision', /\bbefore (?:subscribing|purchasing|buying|paying|committing)\b/i],
   ['free to try', /\btry (?:it )?(?:for )?free\b|\bfree (?:to try|version|plan|tier)\b/i],
   [
     'usage allowance',

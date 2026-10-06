@@ -706,6 +706,9 @@ describe('fact preservation', () => {
     expect(pricingLanguage('Test the tool on three of your own permitted pages first.')).toEqual([
       'test allowance ("Test the tool on three of your own permitted pages")'
     ])
+    expect(pricingLanguage('Check compatibility before committing to the tool.')).toEqual([
+      'purchase decision ("before committing")'
+    ])
     expect(
       isPricingFaq({ answer: 'After the free trial you can buy it.', question: 'Save more?' })
     ).toBe(true)
