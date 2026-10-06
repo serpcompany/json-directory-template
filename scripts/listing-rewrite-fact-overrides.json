@@ -1,4 +1,8 @@
 {
+  "topvids-downloader": {
+    "ignoreNumbers": ["33820"],
+    "reason": "33820 is an internal test page path (/video/33820/) in the source, not a product fact."
+  },
   "roughsexualvideos-downloader": {
     "ignoreNumbers": ["2"],
     "reason": "The only 2 in the source is the tagline's \"two-step flow\", which contradicts its own three-step How It Works; the rewrite omits the count."
