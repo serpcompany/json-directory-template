@@ -171,7 +171,7 @@ describe('browserextensions.io checked-in downloader products', () => {
     expect(siteProducts['soundgasm-downloader']?.product?.title).toBe('Soundgasm Downloader')
   })
 
-  it('keeps the 291-record catalog rich without serpdownloaders media or generic links', () => {
+  it('keeps the 297-record catalog rich without serpdownloaders media or generic links', () => {
     const siteProducts = readJson<
       Record<
         string,
@@ -187,7 +187,7 @@ describe('browserextensions.io checked-in downloader products', () => {
       >
     >(resolve(siteRoot, 'products.json'))
 
-    expect(Object.keys(siteProducts)).toHaveLength(291)
+    expect(Object.keys(siteProducts)).toHaveLength(297)
 
     for (const [key, entry] of Object.entries(siteProducts)) {
       const slug = entry.product?.slug ?? key

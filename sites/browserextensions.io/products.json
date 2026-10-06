@@ -22480,5 +22480,398 @@
         "url": "https://github.com/serpapps/zbporn-downloader/issues"
       }
     ]
+  },
+  "skool-bulk-downloader": {
+    "content": {
+      "body": "## Course Backups Without the Busywork\n\nSaving a Skool course by hand means visiting every lesson, grabbing each video and attachment, and then trying to remember where everything belonged. Skool Bulk Downloader handles that sequence for you. It reads the classroom your account can open, lists what it finds, and writes your chosen material to disk inside Course / Module / Lesson folders that mirror the instructor's layout.\n\nVideo hosted natively on Skool, plus lessons using Loom, Vimeo or Wistia players, can be saved when they are compatible. Lessons built around YouTube are handled differently: the extension notes them in information/link mode, so your report lists them as referenced rather than pretending the file was captured. Media handling for compatible sources happens inside your own browser instead of being routed through a SERP conversion server.\n\n## Who Gets the Most Out of It\n\n- Members who want a full course archive without saving each lesson manually.\n- Learners who study on the road or deal with patchy connections and need permitted material on hand.\n- People who care about context, since lesson notes and resources sit right next to the matching video.\n- Anyone who wants a clear record of which items finished, which need another look and which were information-only.\n- Users who would rather skip screen capture tools and terminal setups for the providers listed here.\n\n## What Lands in Your Backup\n\n- Folders ordered the same way as the original classroom.\n- Compatible video from Skool Native, Loom, Vimeo and Wistia.\n- Written lesson content and notes.\n- Linked resources and file attachments.\n- A redacted backup report you can audit afterwards, with completed, skipped, information-only and failed entries.\n- YouTube lessons appear as information/link entries only; the bulk workflow does not download them.\n\n## Running a Course Job\n\n- **Start in the classroom.** Visit a Skool course your membership already opens, then click the Skool Bulk Downloader icon in the toolbar.\n- **Pick the scope.** The side panel shows every module and lesson it discovered in sequence. Tick the full course, certain modules, or just a handful of lessons you are allowed to keep.\n- **Let the manager work.** Lessons are processed individually, never in parallel, with the provider and current status visible as each one runs. Pause, resume, cancel or retry whenever you like, and check history afterwards.\n- **Pick up after a hiccup.** Job state is kept locally, so an interrupted run can be recovered and eligible lessons continue without restarting the whole course.\n\nWhen the queue empties you get the organized folders plus the report.\n\n## Tested Desktop Targets\n\nTested desktop targets are Google Chrome 116+, Microsoft Edge and Brave, running on Windows, macOS or Linux.\n\nOutside that list:\n\n- Firefox is not available yet, though support is coming soon.\n- Safari does not work with it.\n- Mobile browsers are not supported.\n\n## Boundaries to Know\n\n- Media protected by DRM is out of scope, and so are live streams.\n- The scheduler deliberately handles a single selected lesson at a time.\n- Inside the bulk workflow, YouTube stays in information/link mode.\n- You need existing permission both to view and to save whatever you back up.\n- The quality you receive is whatever source each lesson exposes.\n- It cannot bypass a membership, paywall or DRM, and it does not alter the rights attached to course material.\n- Available in every region: Worldwide.\n\n## Access the Extension Asks For\n\n- **downloads**: hands the approved backup files to the browser's own download flow, which writes them to the location you pick there.\n- **activeTab** and **tabs**: identify the Skool classroom you have open and keep a course job in step with that tab as lessons are processed.\n- **storage**: holds your selections, job progress, recovery data, history and activation state locally in the browser.\n- **scripting**: reads lesson structure and player details from supported pages your account can already view.\n- **offscreen**: lets compatible media be processed even when the lesson tab is not in front.\n- **sidePanel**: displays the course picker and job manager in a responsive panel alongside the classroom.\n- **cookies**: reuses your current session when a supported provider needs it to fetch media the signed-in member can already reach.\n- **declarativeNetRequestWithHostAccess** and **host_permissions**: grant narrow access to Skool and the supported provider domains so courses can be discovered and compatible media requested.",
+      "faq": [
+        {
+          "answer": "It is. After the extension maps the classroom you have open, tick everything or trim the list to particular modules and lessons. The queue then moves down that ordered list lesson by lesson.",
+          "question": "Is it possible to save a whole Skool course in a single job?"
+        },
+        {
+          "answer": "Expect Course / Module / Lesson folders holding compatible video, written lesson content, resources and attachments. A report sits alongside them, marking every item as completed, skipped, information-only or failed.",
+          "question": "What ends up on my drive after a course job finishes?"
+        },
+        {
+          "answer": "Skool's own player, Loom, Vimeo and Wistia, when the video is compatible. Anything on YouTube gets logged in information/link mode and is left undownloaded by the bulk workflow.",
+          "question": "Which video hosts can the bulk workflow actually save?"
+        },
+        {
+          "answer": "Unlikely. Progress lives in local job state, and controls for pause, resume, retry, history and recovery let eligible lessons carry on from the break point instead of restarting the course from the top.",
+          "question": "If a job stops partway, do I lose my progress?"
+        },
+        {
+          "answer": "A desktop running Windows, macOS or Linux with Chrome 116 or later, Microsoft Edge or Brave. Firefox is coming soon; Safari and mobile browsers won't work.",
+          "question": "What browser setup do I need?"
+        },
+        {
+          "answer": "They aren't. Compatible media is handled locally in your browser. Remote calls exist only for activation and product updates, never for converting media.",
+          "question": "Are my course videos sent off to a remote server for conversion?"
+        },
+        {
+          "answer": "Nothing like that. Its reach ends at compatible material your current browser session opens already. Memberships, paywalls and DRM are left untouched, and the rights on the material stay the same.",
+          "question": "Will it get me into courses, paywalls or DRM-protected lessons I don't already have?"
+        },
+        {
+          "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
+          "question": "Is this legal?"
+        }
+      ]
+    },
+    "featured": true,
+    "media": {
+      "images": [
+        "https://apps.serp.co/media/optimized-products/skool-bulk-downloader-classroom-sidepanel-3ef4a43da3.webp",
+        "https://apps.serp.co/media/optimized-products/skool-bulk-downloader-classroom-popup-53073e9c55.webp",
+        "https://apps.serp.co/media/optimized-products/skool-bulk-downloader-course-discovery-2ca21eee4b.webp",
+        "https://apps.serp.co/media/optimized-products/skool-bulk-downloader-course-progress-1ed48df3f4.webp",
+        "https://apps.serp.co/media/optimized-products/skool-bulk-downloader-download-manager-ebdb0e7ea7.webp",
+        "https://apps.serp.co/media/optimized-products/skool-bulk-downloader-recovery-ab3268f293.webp",
+        "https://apps.serp.co/media/optimized-products/skool-bulk-downloader-course-complete-5bd9fe3930.webp",
+        "https://apps.serp.co/media/optimized-products/skool-bulk-downloader-vimeo-complete-9766a9633d.webp",
+        "https://apps.serp.co/media/optimized-products/skool-bulk-downloader-responsive-sidepanel-ef5b1f8e8a.webp"
+      ]
+    },
+    "product": {
+      "categories": [
+        "course-platform-downloaders",
+        "video-downloaders"
+      ],
+      "productPage": "https://serp.ly/skool-bulk-downloader",
+      "slug": "skool-bulk-downloader",
+      "tagline": "Turn the Skool classrooms you already belong to into a tidy offline archive, saved lesson by lesson in the order the instructor built them.",
+      "title": "Skool Bulk Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Install browser extension",
+        "url": "https://serp.ly/skool-bulk-downloader"
+      },
+      {
+        "label": "SERP Apps",
+        "url": "https://apps.serp.co/skool-bulk-downloader"
+      },
+      {
+        "label": "Browser Extensions",
+        "url": "https://browserextensions.io/products/skool-bulk-downloader/"
+      }
+    ]
+  },
+  "fluidplayer-downloader": {
+    "content": {
+      "body": "## A Note on Fluid Player First\n\nFluid Player is a player library rather than a video host: the media you see on a site that uses it is not hosted by Fluid Player. Fluid Player Downloader is built around that fact. If the page you are viewing exposes a saveable source to your browser, the extension finds it on that same tab and lets you keep it, without copying a link or detouring through another website.\n\nIt is intended for offline viewing of media you are allowed to keep. Spotting a Fluid Player embed on a page doesn't by itself mean there is anything to save, so the extension respects each site's boundaries and acts only when a usable source exists in your current session.\n\n## From Embed to File\n\nBegin by opening the page that carries the Fluid Player video and giving it time to load as it normally would. Next, either press the download button shown on the video itself or open the extension from its toolbar popup; it checks the active page for a source and, when one is there, presents a download option. The format menu then lists whatever file options the player supplies, so choose one and the video is written directly to your device. While it transfers, progress and a completion cue appear in your browser's familiar download bar.\n\n## What You Can Count On\n\nThe extension stays on the page you already have open. It only works with the Fluid Player page in front of you and the video on it, and it handles one video at a time so each save stays controlled. Saving runs through the browser's standard download system, which means status is visible in the built-in panel, and finished files are placed in a dedicated Fluidplayer folder inside your normal download location.\n\nOn the file side:\n\n- The MP4 the site provides is captured and kept as MP4, with no conversion applied.\n- Finished files play in any video player that can handle MP4.\n- Format and quality choices are limited to what the page itself exposes.\n- The copy sits on your own machine for viewing later, with no shuttling of links between services.\n\n## Browsers, Systems and Region\n\nDesktop browsers: Chrome, Firefox, Edge, Brave, Opera, Whale and Yandex.\n\nOperating systems: Windows, macOS and Linux.\n\nRegion: Worldwide.\n\nGood fits are public pages using Fluid Player that offer video options, along with media your current browser session can already play.\n\n## When It Won't Work\n\nSafari and mobile browsers are outside its reach. So is protected media: DRM-encrypted streams and other protected streams, as well as anything behind a login, paid access, an age gate or a regional limit. The extension will not bypass those, nor any other protection, access control or site permission.\n\nIt also has nothing to work with when media has been removed, made private, is unavailable or never reaches the browser, or when a page shows a Fluid Player embed yet exposes no saveable source. You need to be able to watch the media in your current session already, and the source tab should stay open until the browser download finishes. There is no promise that every site using Fluid Player can be saved from.\n\n## Permissions in Plain Terms\n\n- `downloads`: sends the eligible file you picked through the browser's download flow.\n- `activeTab`: inspects the current page, and only once you open the extension.\n- `storage`: keeps activation status and your local preferences in the browser.\n- `notifications`: displays download status messages.",
+      "faq": [
+        {
+          "answer": "Press the download button on the video, or open the extension's toolbar popup and begin from there.",
+          "question": "Once the page has loaded, where do I click to save a Fluid Player video?"
+        },
+        {
+          "answer": "In a dedicated Fluidplayer folder, which you'll find inside your browser's standard download location.",
+          "question": "Where on my drive does a finished Fluid Player video get stored?"
+        },
+        {
+          "answer": "No. Videos are processed individually, so let the current file complete before you begin the next one.",
+          "question": "Can I start a second Fluid Player download before the first is done?"
+        },
+        {
+          "answer": "MP4, provided the site offers it. Nothing is converted along the way, so the file keeps the form the page delivered.",
+          "question": "Will the file arrive as MP4, or in some other format?"
+        },
+        {
+          "answer": "Yes. Chrome works, and so do Firefox, Edge, Brave, Opera, Whale and Yandex on the desktop.",
+          "question": "Does Chrome count among the supported browsers?"
+        },
+        {
+          "answer": "It needs the player to be loaded and a compatible MP4 source to be exposed to your current browser session. If the page doesn't reveal one, there is nothing for it to grab.",
+          "question": "How does the extension decide whether a video can be saved?"
+        },
+        {
+          "answer": "It won't. Safari and mobile browsers are unsupported; it targets desktop browsers that accept extensions.",
+          "question": "Will it run on a phone or a tablet?"
+        },
+        {
+          "answer": "Yes. Closing the source tab early can stop the file from saving properly, so wait for the browser to report the download as finished.",
+          "question": "Should the video tab stay open while the file saves?"
+        },
+        {
+          "answer": "In the download panel your browser already has. Saves from this extension appear there like any other file from the web.",
+          "question": "Where can I watch the progress of a save?"
+        },
+        {
+          "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
+          "question": "Is this legal?"
+        }
+      ]
+    },
+    "featured": true,
+    "media": {
+      "images": [
+        "https://apps.serp.co/media/optimized-products/fluidplayer-downloader-ready-state-4b5c40e4c3.webp"
+      ]
+    },
+    "product": {
+      "categories": [
+        "video-downloaders"
+      ],
+      "productPage": "https://serp.ly/fluidplayer-downloader",
+      "slug": "fluidplayer-downloader",
+      "tagline": "When a page plays video through Fluid Player and exposes the MP4 to your browser, this extension saves that file into your usual downloads with no link copying.",
+      "title": "Fluid Player Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Install browser extension",
+        "url": "https://serp.ly/fluidplayer-downloader"
+      },
+      {
+        "label": "SERP Apps",
+        "url": "https://apps.serp.co/fluidplayer-downloader"
+      },
+      {
+        "label": "Browser Extensions",
+        "url": "https://browserextensions.io/products/fluidplayer-downloader/"
+      }
+    ]
+  },
+  "fansly-downloader": {
+    "content": {
+      "body": "## What Fansly Downloader Does\n\nYour Fansly subscriptions give you access to creator media. Fansly Downloader is a browser extension that lets you keep the photos and videos you're allowed to view on your own device, at original quality and with a single click, so there's less reason to fret about media vanishing or your access coming to an end.\n\nIt works inside the Fansly session you already have open. As pages load, it scans them for media you can view, lines up every compatible file in a queue, and writes videos out as MP4 while pictures keep the source format they arrived in. Each creator's material is sorted into its own folder automatically, with no tidying needed on your part.\n\nBigger batches carry on in the background, reporting speed, active tasks and retries as they go. Should the connection stumble, the queue is kept and resumes by itself, so nothing has to be restarted from the beginning.\n\n## Reasons People Use It\n\n- An offline archive of Fansly media your account has permission to view, kept at original quality\n- Creator content that sorts itself, thanks to automatic per-creator folder names\n- Big Fansly drops saved in bulk without throttling, duplicate files, or constant supervision\n- A private library that lives on your device and stays available offline\n\n## Getting a File Saved\n\n1. Browse to the Fansly post or video you're after and wait for it to finish loading in the usual way.\n2. Launch Fansly Downloader so it can locate the media source on that page and list what's available to save.\n3. Select one of the quality or file options offered, and the finished file is written straight to your computer.\n\n## Feature Rundown\n\nYou can kick off a download in the middle of watching a video on Fansly, or click the extension's toolbar icon to work from the popup instead. Either way, the downloader aims at the video currently on screen and confines itself to the active Fansly page.\n\nIt isn't limited to single clips. Creator feeds your account can reach, gallery posts and bulk-scanned feeds are all covered, and photos keep their original source format.\n\nUnder the hood, it reads the same streaming source Fansly uses for playback and turns out a local video file. The browser's built-in download manager handles each transfer, so status appears in the normal downloads list, and finished videos are dropped into a dedicated Fansly folder you can open from the browser's downloads area whenever you want to watch offline.\n\n## Compatibility\n\n**Browsers:** Chrome, Firefox, Edge, Opera\n\n**Operating systems:** Windows, macOS, Linux\n\n**Not covered:**\n\n- Safari, plus browsers running on mobile devices\n- Media from creators your current account cannot access\n- Posts that were deleted or have expired and no longer load\n- Workflows built around redistributing or sharing content\n\n## Caveats\n\nEverything hinges on your own session: you have to be signed in to Fansly and able to view the creator's media there, and the quality and file format you end up with depend on what Fansly provides. Posts that were removed, have expired or are otherwise out of reach can't join the queue.\n\nBulk scanning only gathers items that actually load as the creator feed scrolls. Because large feeds are scanned and downloaded in sequence, they can take some time to get through. Neither Safari nor any mobile browser can run the extension. Availability: Worldwide.\n\n## Browser Permissions and Their Jobs\n\n- `downloads`: writes Fansly photos and videos to your device at their original format and resolution.\n- `activeTab`: finds downloadable media on the Fansly creator page you have open.\n- `storage`: remembers your folder preferences, download history, and license activation from one session to the next.\n- `notifications`: lets you know when a batch is done or when something needs your attention.",
+      "faq": [
+        {
+          "answer": "Open the video on Fansly and trigger the extension. It reads that video's source, passes it to your browser's download manager, and the file ends up in a dedicated Fansly folder.",
+          "question": "How does a Fansly video get from my screen onto my hard drive?"
+        },
+        {
+          "answer": "In a dedicated Fansly folder created inside your browser's default download location. You can open finished videos straight from the browser's downloads area.",
+          "question": "Once a Fansly video finishes, where is it kept on my computer?"
+        },
+        {
+          "answer": "Yes. You can start the download while the video plays. The extension picks up the video currently on screen and queues it.",
+          "question": "Is it possible to download a video I'm in the middle of watching?"
+        },
+        {
+          "answer": "Videos are saved as MP4 files. The extension works from the streaming source Fansly uses for playback and stores the result as a local video file on your computer.",
+          "question": "In what format are Fansly videos written to disk?"
+        },
+        {
+          "answer": "Yes. Photos are kept in the original format and resolution Fansly provides, and gallery posts containing several items are processed together.",
+          "question": "Can I save Fansly pictures too, not just videos?"
+        },
+        {
+          "answer": "Yes. Alongside starting a download from a video you're viewing on Fansly, you can click the extension's icon in the browser toolbar to bring up its popup.",
+          "question": "Besides the video itself, is there another place to launch the downloader?"
+        },
+        {
+          "answer": "Yes, each of those is supported, on Windows, macOS and Linux. Safari isn't, and neither is any browser on a phone or tablet.",
+          "question": "Will Fansly Downloader install on Chrome, Firefox, Edge or Opera?"
+        },
+        {
+          "answer": "Yes. Your browser's built-in download manager does the transfer, so the regular downloads list shows how it's progressing.",
+          "question": "Can I follow a Fansly download while it transfers?"
+        },
+        {
+          "answer": "The active one. It concentrates on the video currently open in your browser, on the Fansly page you're viewing.",
+          "question": "Which Fansly page does the downloader act on?"
+        },
+        {
+          "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
+          "question": "Is this legal?"
+        }
+      ]
+    },
+    "featured": true,
+    "media": {
+      "images": [
+        "https://apps.serp.co/media/optimized-products/fansly-downloader-homescreen-52b85c8653.webp"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "social-media-downloaders",
+        "video-downloaders",
+        "fansite-downloaders"
+      ],
+      "productPage": "https://serp.ly/fansly-downloader",
+      "slug": "fansly-downloader",
+      "tagline": "Fansly Downloader keeps an offline copy of the creator photos and videos your account can already open, filed neatly on your own computer.",
+      "title": "Fansly Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Install browser extension",
+        "url": "https://serp.ly/fansly-downloader"
+      },
+      {
+        "label": "SERP Apps",
+        "url": "https://apps.serp.co/fansly-downloader"
+      },
+      {
+        "label": "GitHub repository",
+        "url": "https://github.com/serpapps/fansly-downloader"
+      },
+      {
+        "label": "Browser Extensions",
+        "url": "https://browserextensions.io/products/fansly-downloader/"
+      },
+      {
+        "label": "Latest Release",
+        "url": "https://github.com/serpapps/fansly-downloader/releases/latest"
+      }
+    ]
+  },
+  "thumbzilla-downloader": {
+    "content": {
+      "body": "## Offline Copies From the Tab You're On\n\nThumbzilla Video Downloader turns a video playing in your browser into a file you can open later without a connection. Everything happens from the active page: load the clip, open the extension, and the save carries on while you keep browsing, with no extra tabs and no complicated routine.\n\nEach saved clip goes into a folder reserved for Thumbzilla, and file names are built from details on the page, which makes it easy to recognise a video when you come looking for it. The extension runs in desktop browsers with extension support on Windows, macOS and Linux, and it is meant only for videos you are already able to view.\n\n## Steps on the Video Page\n\n- **Cue up the video.** Go to the Thumbzilla page you want and let it load normally.\n- **Bring up the popup.** Click the extension in your toolbar, or use the download button on the video page instead. It looks for a usable source on the current page and then shows a download option.\n- **Choose a file option.** Pick from what the format menu lists and save; the video is written directly to your device.\n\n## Behavior at a Glance\n\nThe extension sticks to the Thumbzilla page and video you currently have open and works through them one at a time. It doesn't manage the transfer itself: your browser's standard download mechanism takes charge of the file, its built-in download tracker shows when the file arrives, and every clip is dropped into a folder named for Thumbzilla.\n\nWhat you get is the MP4 the platform offers, with the MP4 wrapper left intact from start to finish. Finished files open in whichever media player you have installed and remain on your device for watching later.\n\n## Setup Requirements\n\n**Browsers:** Chrome, Firefox, Edge, Brave, Opera, Whale and Yandex.\n\n**Operating systems:** Windows, macOS and Linux.\n\n**Availability:** Worldwide.\n\nIt is designed for Thumbzilla video pages opened in a desktop browser that accepts extensions, where the page provides a usable video source that your current session can play.\n\nIt isn't designed for Safari or mobile browsers, for DRM-encrypted or otherwise protected streams, or for videos that were removed or are unavailable. Crawling pages in bulk and scraping galleries are out of scope as well, and so is any attempt to get past private, paid, regional, age-gated or permission restrictions.\n\n## Conditions for a Successful Save\n\n- **On the page:** a saveable video option has to be exposed, and playback sometimes needs to start before the extension can detect the active source. The quality choices come from whatever the current player or host provides.\n- **On your side:** you must already be able to watch the video in your browser, and the source tab should stay open until the download completes. Working with one active video page or download per tab is recommended.\n- **Never bypassed:** logins, age gates, paid access, regional limits, protected streams, removed or unavailable media, and site permissions.\n\n## What the Manifest Requests\n\n- `downloads`: lets Thumbzilla video files be saved via the browser's download flow.\n- `activeTab`: allows a look at the Thumbzilla tab you selected, and only after you start the workflow.\n- `storage`: keeps activation, trial and local preference state.\n- `notifications`: surfaces messages about download status.\n- `contextMenus`: adds the configured Thumbzilla download action to the browser's right-click menu.\n- `tabs`: coordinates messaging between the popup, the background process and the page for the tab you chose.\n- `scripting`: injects small Thumbzilla page checks and player controls when you use the extension.\n- `offscreen`: handles video options processing in an offscreen document so downloads can complete in the browser.\n- `webRequest`: observes the video options requests and redirects that the active video page makes.\n- `declarativeNetRequest`: applies the configured request rules that video options and host workflows rely on.\n- `host_permissions`: enables video detection on Thumbzilla pages and the related host patterns.",
+      "faq": [
+        {
+          "answer": "Once the video page has loaded, press the download button on that page, or open the extension's toolbar popup and start the download from there.",
+          "question": "Which button kicks off a Thumbzilla download?"
+        },
+        {
+          "answer": "Yes. A dedicated Thumbzilla folder in your browser's default download location collects them, so they stay together and are simple to find.",
+          "question": "Do Thumbzilla clips get a folder of their own?"
+        },
+        {
+          "answer": "It stays an MP4. The extension works with the MP4 videos Thumbzilla provides and saves them without any conversion, ready to play.",
+          "question": "Does the clip stay an MP4, or is it converted first?"
+        },
+        {
+          "answer": "It is built to handle a single video at a time, namely the one on the Thumbzilla page you have open, which keeps the process straightforward.",
+          "question": "Why does the extension only take the video on the current page?"
+        },
+        {
+          "answer": "Watch your browser's built-in download list. The file shows up there and updates just like anything else you save from the web.",
+          "question": "How do I know when a Thumbzilla file has finished arriving?"
+        },
+        {
+          "answer": "No. Any video player on your computer that handles MP4, such as VLC or your system's default player, will open them.",
+          "question": "Do I need special software to watch the saved files?"
+        },
+        {
+          "answer": "No. It runs in desktop browsers with extension support, Chrome, Edge and Firefox among them, on Windows, macOS or Linux. Safari isn't an option, and neither is any mobile browser.",
+          "question": "Is Thumbzilla Video Downloader limited to Chrome?"
+        },
+        {
+          "answer": "The extension needs the page to expose a working video source. Videos that are restricted, taken down or otherwise unavailable can't be saved.",
+          "question": "Why won't a particular video save?"
+        },
+        {
+          "answer": "Keep it open until the file finishes. The extension captures the video from that active page, so closing the tab early can interrupt the save.",
+          "question": "Can I close the Thumbzilla tab once the download begins?"
+        },
+        {
+          "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
+          "question": "Is this legal?"
+        }
+      ]
+    },
+    "featured": true,
+    "media": {
+      "images": [
+        "https://apps.serp.co/media/optimized-products/thumbzilla-downloader-ready-state-cf69086218.webp"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://serp.ly/thumbzilla-downloader",
+      "slug": "thumbzilla-downloader",
+      "tagline": "For Thumbzilla videos you can already watch, this extension keeps an MP4 copy on your computer inside a folder of its own.",
+      "title": "Thumbzilla Video Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Install browser extension",
+        "url": "https://serp.ly/thumbzilla-downloader"
+      },
+      {
+        "label": "SERP Apps",
+        "url": "https://apps.serp.co/thumbzilla-downloader"
+      },
+      {
+        "label": "Browser Extensions",
+        "url": "https://browserextensions.io/products/thumbzilla-downloader/"
+      }
+    ]
+  },
+  "sharesome-downloader": {
+    "content": {
+      "body": "## Built for the Post You're Watching\n\nSharesome Downloader is a desktop browser extension for holding on to Sharesome videos for personal offline viewing. Nothing pulls you away from the post: while the video plays, the extension detects its source and offers to save it.\n\nIts menu lists only the quality options that particular page provides. After you choose one, the download runs directly through your browser and the file is put in a dedicated Sharesome folder, so locating it later takes no effort. A single click replaces the old routine of copying and pasting links by hand.\n\n## Why Bother\n\nThe idea is to keep the Sharesome videos you like while staying in the tab you're browsing, and to end up with a collection that's organized enough to look through and return to whenever you want. Rather than improvising a messy manual process each time, you repeat one short workflow.\n\n## Mechanics\n\n- **Starting points:** a download button appears on the video page, and the toolbar popup offers a second way in.\n- **Scope:** every action saves a single video, and attention stays on the Sharesome page you have open and the video on it.\n- **Handling:** your browser's standard download manager does the transfer, progress is tracked in its download list, and finished videos go into the Sharesome folder the extension creates.\n- **Output:** the MP4 Sharesome serves for your current stream, left as MP4 with no conversion step, kept on your device and playable in any compatible player.\n\n## Saving a Post's Video\n\n- Visit the Sharesome page that holds the video and allow it to load as normal.\n- Open the extension, which searches the page for an available video source and then displays the download option.\n- Choose an entry in the format menu, and the video is written to your device.\n\n## Coverage Map\n\nSupported browsers: Chrome, Firefox, Edge, Brave, Opera, Whale, Yandex.\n\nSupported operating systems: Windows, macOS, Linux.\n\nRegion: Worldwide.\n\nCompatible with:\n\n- Sharesome post pages served over HTTPS\n- Direct streams that become visible during playback and are compatible\n- Your current signed-in browser session\n\nNot handled:\n\n- Posts or galleries made up only of images\n- Profiles, feeds, and community pages that contain no media\n- Safari or browsing on mobile\n- Media restricted by access rules or protected with DRM\n\n## Known Limits\n\nA result can only appear once a post exposes a video options stream, and the formats and quality on offer are set by the active page. HLS handling working on one post doesn't mean every Sharesome post will work.\n\nPictures and galleries sit outside this extension's direct-media behavior, and Safari and mobile browsers aren't on the supported list. Keep the source tab open until the download has actually started.\n\n## Why the Extension Needs This Access\n\n- `downloads`: begins saving the file you picked.\n- `activeTab`: inspects only the Sharesome tab you chose.\n- `storage`: holds your local settings and sign-in state.\n- `notifications`: displays download notices when they matter.\n- `contextMenus`: places an action in the menus of applicable Sharesome pages and media.\n- `tabs`: links your request to the tab you selected.\n- `scripting`: looks through the chosen page for video options.\n- `offscreen`: works on a compatible HLS stream away from the visible tab.\n- `webRequest`: watches video options traffic for the post that is active.\n- `declarativeNetRequest`: applies the request handling a chosen compatible download requires.\n- `host_permissions`: limits the extension to approved Sharesome HTTPS pages.",
+      "faq": [
+        {
+          "answer": "On the page itself, once the post with the video has loaded. If you'd rather, the extension's toolbar popup can start the save too.",
+          "question": "Where does the Sharesome download button show up?"
+        },
+        {
+          "answer": "Yes, a dedicated Sharesome folder on your device. Files reach it through your browser's normal download manager, and you can open the folder whenever you like.",
+          "question": "Is there one place where all my Sharesome videos collect?"
+        },
+        {
+          "answer": "No. You receive the MP4 exactly as Sharesome serves it for the current stream; no conversion step is applied.",
+          "question": "Does Sharesome's MP4 get altered during the download?"
+        },
+        {
+          "answer": "Just the one on the page you're viewing. To save more, repeat the steps on each further post.",
+          "question": "How many Sharesome videos does a single click save?"
+        },
+        {
+          "answer": "Check that the Sharesome page is fully loaded and that the video has begun playing, since the source is detected during playback. Leave the tab open until the option shows up.",
+          "question": "I don't see a download button. What now?"
+        },
+        {
+          "answer": "All of them work, along with Chrome, Firefox and Edge, on Windows, macOS and Linux desktops. Safari and phone or tablet browsers fall outside the supported set.",
+          "question": "Is Sharesome Downloader usable in Brave, Opera, Whale or Yandex, or only Chrome?"
+        },
+        {
+          "answer": "It should, as long as that player is compatible with MP4, because each download is a standard MP4 meant for offline viewing.",
+          "question": "Will the saved Sharesome MP4 open in the player I already have?"
+        },
+        {
+          "answer": "No. It is built for video only, so posts and galleries made up only of images won't produce anything to download.",
+          "question": "Will it pick up image posts on Sharesome?"
+        },
+        {
+          "answer": "It can be. Closing the tab early may cut off detection, so keep it open until your browser has started the download.",
+          "question": "Is it a problem if I leave the Sharesome tab before the download starts?"
+        },
+        {
+          "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
+          "question": "Is this legal?"
+        }
+      ]
+    },
+    "featured": false,
+    "media": {
+      "images": [
+        "https://apps.serp.co/media/optimized-products/sharesome-downloader-ready-state-add374d26c.webp"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult"
+      ],
+      "productPage": "https://serp.ly/sharesome-downloader",
+      "slug": "sharesome-downloader",
+      "tagline": "Skip the copy-paste routine and keep the MP4 from the Sharesome post you're viewing, saved straight from that same tab.",
+      "title": "Sharesome Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Install browser extension",
+        "url": "https://serp.ly/sharesome-downloader"
+      },
+      {
+        "label": "SERP Apps",
+        "url": "https://apps.serp.co/sharesome-downloader"
+      },
+      {
+        "label": "Browser Extensions",
+        "url": "https://browserextensions.io/products/sharesome-downloader/"
+      }
+    ]
   }
 }

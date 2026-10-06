@@ -1,0 +1,26 @@
+# Slugs that scripts/listing-rewrite.ts prepare skips (one per line, # comments allowed).
+# Deepfake / leak / upskirt / non-consensual-content site downloaders: not rewritten or
+# added until the owner decides (serpcompany/json-directory-template#156).
+adultdeepfakes-downloader
+celebdeepfakes-downloader
+celebjihad-downloader
+celebsroulette-downloader
+deepfakeporn-downloader
+deepfakesporn-downloader
+deepfucks-downloader
+deepkpop-downloader
+exposedtostrangers-downloader
+findhername-downloader
+gotanynudes-downloader
+incestporn-downloader
+javleak-downloader
+leak-downloader
+leakedzone-downloader
+leakporner-downloader
+nudecelebvideo-downloader
+porndeepfake-downloader
+pureleaks-downloader
+realdeepfakes-downloader
+slutleaks-downloader
+streamleak-downloader
+upskirtjerk-downloader

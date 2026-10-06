@@ -62,6 +62,7 @@ tmp/deploy/
 tmp/sites/
 tmp/build-site-*/
 tmp/validate-site/
+tmp/listing-rewrites/
 
 # llms.txt files
 .llms/
