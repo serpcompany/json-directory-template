@@ -9,10 +9,10 @@ export type FooterBadgeConfig = {
 
 const featuredOnBestSerpCoBadgesByDomain: Record<string, FooterBadgeConfig> = {
   'serp.ai': {
-    alt: 'Featured on best.serp.co',
+    alt: 'Featured on SERP Best',
     href: 'https://best.serp.co/products/serp.ai/',
     src: 'https://best.serp.co/badge/featured-on-serp.co-light.svg',
-    title: 'Featured on best.serp.co'
+    title: 'Featured on SERP Best'
   }
 }
 
