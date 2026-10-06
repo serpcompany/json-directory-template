@@ -25,6 +25,44 @@ afterEach(() => {
 })
 
 describe('writeSplitSitemaps', () => {
+  it('leaves out noindex pages and pages that canonicalize to another URL', () => {
+    const artifactDir = makeTempArtifactDir()
+
+    writeFile(resolve(artifactDir, 'index.html'))
+    writeFile(
+      resolve(artifactDir, 'legal/dmca/index.html'),
+      '<meta name="robots" content="noindex, follow"/>'
+    )
+    writeFile(
+      resolve(artifactDir, 'categories/livestream/index.html'),
+      '<link rel="canonical" href="https://example.com/categories/livestream-downloaders/"/>'
+    )
+    writeFile(
+      resolve(artifactDir, 'categories/livestream-downloaders/index.html'),
+      '<link rel="canonical" href="https://example.com/categories/livestream-downloaders/"/>'
+    )
+    writeFile(
+      resolve(artifactDir, 'products/example-tool/index.html'),
+      '<link rel="canonical" href="https://example.com/products/example-tool/reviews/"/>'
+    )
+
+    writeSplitSitemaps(artifactDir, {
+      baseUrl: 'https://example.com',
+      defaultLastmod: DEFAULT_LASTMOD,
+      listingBasePath: 'products',
+      listingDetailSuffix: 'reviews'
+    })
+
+    const pages = readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')
+    const taxonomies = readFileSync(resolve(artifactDir, 'taxonomies-sitemap.xml'), 'utf8')
+    const listings = readFileSync(resolve(artifactDir, 'listings-sitemap.xml'), 'utf8')
+
+    expect(pages).not.toContain('/legal/dmca/')
+    expect(taxonomies).toContain('/categories/livestream-downloaders/')
+    expect(taxonomies).not.toContain('/categories/livestream/')
+    expect(listings).toContain('/products/example-tool/reviews/')
+  })
+
   it('writes sitemap index files and grouped page files for the static artifact', () => {
     const artifactDir = makeTempArtifactDir()
 
