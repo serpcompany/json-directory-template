@@ -152,6 +152,7 @@ export const DEFAULT_SITE = 'browserextensions.io'
 export const DEFAULT_THRESHOLD = 0.5
 export const DEFAULT_WORK_DIR = 'tmp/listing-rewrites'
 export const DEFAULT_EXCLUDE_FILE = 'scripts/listing-rewrite-excluded.txt'
+export const FACT_OVERRIDES_FILE = 'scripts/listing-rewrite-fact-overrides.json'
 /** Live apps.serp.co products that aren't browser extensions (owner decision on #156). */
 export const NOT_EXTENSIONS = new Set(['serp-downloaders-bundle'])
 export const LEGAL_QUESTION = 'Is this legal?'
@@ -271,8 +272,21 @@ export const PRICING_PATTERNS: Array<[string, RegExp]> = [
   ],
   ['unlimited use', /\bunlimited (?:downloads|use|access|usage)\b/i],
   ['paid plan', /\b(?:paid|premium|pro) (?:plans?|versions?|tiers?|licen[cs]es?)\b/i],
-  ['free to try', /\btry (?:it )?(?:for )?free\b|\bfree (?:to try|version|plan|tier)\b/i]
+  ['free to try', /\btry (?:it )?(?:for )?free\b|\bfree (?:to try|version|plan|tier)\b/i],
+  [
+    'usage allowance',
+    /\b(?:\d+|two|three|four|five|ten) (?:free |trial |permitted |included )+(?:pages|videos|downloads|saves|files)\b/i
+  ],
+  [
+    'test allowance',
+    /\b(?:test|try)\b[^.\n]{0,40}\b(?:\d+|two|three|four|five|ten)\b[^.\n]{0,30}\b(?:pages|videos|downloads|saves)\b/i
+  ]
 ]
+
+/** FAQ entries about pricing or trials; they are neither rewritten nor counted. */
+export function isPricingFaq(entry: FaqEntry): boolean {
+  return pricingLanguage(`${entry.question}\n${entry.answer}`).length > 0
+}
 
 /** Pricing / trial phrases found in `text`. */
 export function pricingLanguage(text: string): string[] {
@@ -284,10 +298,17 @@ export function pricingLanguage(text: string): string[] {
 
 /** `text` with pricing / trial phrases blanked out, so facts never require them. */
 export function withoutPricing(text: string): string {
-  return PRICING_PATTERNS.reduce(
-    (result, [, pattern]) => result.replace(new RegExp(pattern.source, 'gi'), ' '),
-    text
-  )
+  return text
+    .split('\n')
+    .map(line => {
+      // Keep a list item's label ("- storage:") so permission names survive.
+      const label =
+        line.match(/^\s*(?:[-*]|\d+\.)\s+(?:\*\*)?[^:\n]{1,100}?(?:\*\*)?:\s*/)?.[0] ?? ''
+      const sentences = line.slice(label.length).split(/(?<=[.!?])\s+/)
+      const kept = sentences.filter(sentence => pricingLanguage(sentence).length === 0)
+      return kept.length === sentences.length ? line : `${label}${kept.join(' ')}`
+    })
+    .join('\n')
 }
 
 const LIMITATION_PATTERNS: Array<[string, RegExp]> = [
@@ -1069,9 +1090,15 @@ export function diffSourceAgainstSite(
 // ---------------------------------------------------------------------------
 // Prepare
 
+export type FactOverride = { ignoreNumbers?: string[]; reason: string }
+
 export function buildInput(
   file: SourceProductFile,
-  options: { serpAiSlugs: Set<string>; site: string }
+  options: {
+    factOverrides?: Record<string, FactOverride>
+    serpAiSlugs: Set<string>
+    site: string
+  }
 ): { input?: RewriteInput; skipReason?: string; unmapped: string[] } {
   const source = file.product
   const slug = source.slug as string
@@ -1092,7 +1119,9 @@ export function buildInput(
   const body = buildSourceBody(source)
   const faq = buildSourceFaq(source)
   const tagline = cleanString(source.tagline) ?? ''
-  const factText = withoutPricing([tagline, body, faqText(faq)].join('\n\n'))
+  const factText = withoutPricing(
+    [tagline, body, faqText(faq.filter(entry => !isPricingFaq(entry)))].join('\n\n')
+  )
   const conflicts = findSourceConflicts(source)
 
   return {
@@ -1106,7 +1135,10 @@ export function buildInput(
         relatedLinks: buildRelatedLinks(source, options),
         title: cleanString(source.name) ?? slug
       },
-      facts: extractFacts(factText, platform, names),
+      facts: applyFactOverride(
+        extractFacts(factText, platform, names),
+        options.factOverrides?.[slug]
+      ),
       mode: 'new',
       names,
       site: options.site,
@@ -1116,6 +1148,16 @@ export function buildInput(
     },
     unmapped
   }
+}
+
+/**
+ * Reviewed exceptions for source errors that would otherwise force a wrong fact into the
+ * rewrite (e.g. another product's name left in by copy-paste). Kept in
+ * scripts/listing-rewrite-fact-overrides.json with a reason for each.
+ */
+function applyFactOverride(facts: Facts, override?: FactOverride): Facts {
+  if (!override?.ignoreNumbers?.length) return facts
+  return { ...facts, numbers: facts.numbers.filter(n => !override.ignoreNumbers?.includes(n)) }
 }
 
 /** Input for rewriting an existing site listing in place (#157). */
@@ -1140,7 +1182,9 @@ export function buildExistingInput(
       title: entry.product.title
     },
     facts: extractFacts(
-      withoutPricing([tagline, body, faqText(faq)].join('\n\n')),
+      withoutPricing(
+        [tagline, body, faqText(faq.filter(entry => !isPricingFaq(entry)))].join('\n\n')
+      ),
       platform,
       names
     ),
@@ -1507,9 +1551,10 @@ export function checkRewrite(
     )
   }
 
-  if (output.faq.length < input.source.faq.length) {
+  const requiredFaq = input.source.faq.filter(entry => !isPricingFaq(entry)).length
+  if (output.faq.length < requiredFaq) {
     issues.push(
-      `faq dropped entries (${output.faq.length} vs ${input.source.faq.length} in source); rewrite every one`
+      `faq dropped entries (${output.faq.length} vs ${requiredFaq} non-pricing in source); rewrite every one`
     )
   }
   const sourceWords = normalizeWords(input.source.body, names).length
@@ -1793,6 +1838,10 @@ async function prepare(options: CliOptions, repoRoot: string): Promise<void> {
     }
   } else {
     const { diff, dir } = runDiff(options, repoRoot)
+    const overridesPath = resolve(repoRoot, FACT_OVERRIDES_FILE)
+    const factOverrides = existsSync(overridesPath)
+      ? readJson<Record<string, FactOverride>>(overridesPath)
+      : {}
     for (const ambiguous of diff.ambiguous) {
       skipped.push({ reason: `ambiguous: ${ambiguous.reason}`, slug: ambiguous.slug })
     }
@@ -1809,6 +1858,7 @@ async function prepare(options: CliOptions, repoRoot: string): Promise<void> {
         continue
       }
       const { input, skipReason, unmapped } = buildInput(file, {
+        factOverrides,
         serpAiSlugs,
         site: options.site
       })

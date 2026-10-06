@@ -24,6 +24,7 @@ import {
   githubRepoRoot,
   hasPassingOutput,
   isLegalFaq,
+  isPricingFaq,
   main,
   mapCategories,
   parseArgs,
@@ -685,7 +686,8 @@ describe('fact preservation', () => {
   it('finds pricing and trial language', () => {
     expect(pricingLanguage('Three free downloads, then a monthly subscription.')).toEqual([
       'subscription plan ("monthly subscription")',
-      'free downloads ("Three free downloads")'
+      'free downloads ("Three free downloads")',
+      'usage allowance ("Three free downloads")'
     ])
     expect(pricingLanguage('Stores trial state. No credit card.')).toEqual([
       'trial ("trial")',
@@ -695,6 +697,21 @@ describe('fact preservation', () => {
       pricingLanguage('Works with your Fansly subscriptions and paid access you already have.')
     ).toEqual([])
     expect(withoutPricing('Get 3 free downloads today.')).not.toMatch(/3/)
+    expect(
+      withoutPricing('Saves MP4. You get three free trial downloads, no credit card required.')
+    ).toBe('Saves MP4.')
+    expect(withoutPricing('- storage: Stores activation, trial, and preference state.')).toBe(
+      '- storage: '
+    )
+    expect(pricingLanguage('Test the tool on three of your own permitted pages first.')).toEqual([
+      'test allowance ("Test the tool on three of your own permitted pages")'
+    ])
+    expect(
+      isPricingFaq({ answer: 'After the free trial you can buy it.', question: 'Save more?' })
+    ).toBe(true)
+    expect(pricingLanguage('Save three permitted pages after email verification.')).toEqual([
+      'usage allowance ("three permitted pages")'
+    ])
   })
 
   it('ignores ordered-list markers when comparing numbers', () => {
@@ -857,7 +874,7 @@ describe('checkRewrite', () => {
     const input = exampleInput()
     input.source.faq.push({ answer: 'More.', question: 'An extra source question?' })
     expect(checkRewrite(input, goodRewrite, context).issues).toContain(
-      'faq dropped entries (3 vs 4 in source); rewrite every one'
+      'faq dropped entries (3 vs 4 non-pricing in source); rewrite every one'
     )
   })
 
