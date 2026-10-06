@@ -59,18 +59,15 @@ describe('resolveBuildRun', () => {
         SITE_ID: 'all'
       })
     ).resolves.toEqual({
-      deployTargets: expectedDeployTargets(
-        activeCheckedInSiteIds.filter(siteId => siteId !== 'serp.co')
-      ),
+      deployTargets: expectedDeployTargets(activeCheckedInSiteIds),
       shouldDeploy: true
     })
   })
 
-  it('never deploys serp.co, which is served from serpcompany/best.serp.co', async () => {
-    await expect(resolveBuildRun(['--site', 'serp.co'], {})).resolves.toEqual({
-      deployTargets: [],
-      shouldDeploy: false
-    })
+  it('rejects serp.co, which moved to serpcompany/best.serp.co', async () => {
+    await expect(resolveBuildRun(['--site', 'serp.co'], {})).rejects.toThrow(
+      'Site "serp.co" was removed from this repo. Use a supported checked-in site id instead.'
+    )
   })
 
   it('falls back to the default checked-in site config outside push events', async () => {
@@ -105,14 +102,16 @@ describe('resolveBuildRun', () => {
   it('infers a single checked-in site id from changed wrapper app paths', () => {
     expect(
       inferSiteIdFromChangedPaths([
-        'apps/serp.co/lib/content-loader.ts',
-        'apps/serp.co/app/products/[slug]/reviews/page.tsx'
+        'apps/serpdownloaders.com/lib/content-loader.ts',
+        'apps/serpdownloaders.com/app/products/[slug]/page.tsx'
       ])
-    ).toBe('serp.co')
+    ).toBe('serpdownloaders.com')
   })
 
   it('infers a single checked-in site id from changed site config paths', () => {
-    expect(inferSiteIdFromChangedPaths(['sites/serp.co/site-config.ts'])).toBe('serp.co')
+    expect(inferSiteIdFromChangedPaths(['sites/serpdownloaders.com/site-config.ts'])).toBe(
+      'serpdownloaders.com'
+    )
   })
 
   it('maps starter app changes to the default checked-in site', () => {
@@ -129,12 +128,12 @@ describe('resolveBuildRun', () => {
   })
 
   it('infers exact deploy targets when changed paths touch multiple concrete sites', () => {
-    const paths = ['apps/serp.co/app/layout.tsx', 'apps/serp.ai/app/layout.tsx']
+    const paths = ['apps/serpdownloaders.com/app/layout.tsx', 'apps/serp.ai/app/layout.tsx']
 
     expect(inferSiteIdFromChangedPaths(paths)).toBeUndefined()
     expect(resolvePushSiteInputFromChangedPaths(paths)).toEqual({
       shouldDeploy: true,
-      siteIds: ['serp.ai', 'serp.co']
+      siteIds: ['serp.ai', 'serpdownloaders.com']
     })
   })
 
@@ -150,11 +149,28 @@ describe('resolveBuildRun', () => {
     })
   })
 
-  it('deploys the site inferred from push changed paths', () => {
-    expect(resolvePushSiteInputFromChangedPaths(['apps/serp.co/lib/content-loader.ts'])).toEqual({
+  it('does not map paths under the removed serp.co trees to a site', () => {
+    expect(
+      inferSiteIdFromChangedPaths(['apps/serp.co/app/page.tsx', 'sites/serp.co/products.json'])
+    ).toBeUndefined()
+    expect(
+      resolvePushSiteInputFromChangedPaths([
+        'apps/serp.co/app/page.tsx',
+        'sites/serp.co/products.json'
+      ])
+    ).toEqual({
       shouldDeploy: true,
-      siteId: 'serp.co',
-      siteIds: ['serp.co']
+      siteIds: activeCheckedInSiteIds
+    })
+  })
+
+  it('deploys the site inferred from push changed paths', () => {
+    expect(
+      resolvePushSiteInputFromChangedPaths(['apps/serpdownloaders.com/lib/content-loader.ts'])
+    ).toEqual({
+      shouldDeploy: true,
+      siteId: 'serpdownloaders.com',
+      siteIds: ['serpdownloaders.com']
     })
   })
 
@@ -308,7 +324,7 @@ describe('resolveBuildRun', () => {
           commits: [
             {
               id: 'abc123',
-              modified: ['sites/serp.co/products.json', 'sites/serp.ai/products.json']
+              modified: ['sites/serpdownloaders.com/products.json', 'sites/serp.ai/products.json']
             }
           ],
           repository: {
@@ -324,7 +340,7 @@ describe('resolveBuildRun', () => {
       )
     ).resolves.toEqual({
       shouldDeploy: true,
-      siteIds: ['serp.ai', 'serp.co']
+      siteIds: ['serp.ai', 'serpdownloaders.com']
     })
     expect(fetch).not.toHaveBeenCalled()
   })
@@ -333,15 +349,15 @@ describe('resolveBuildRun', () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
-          body: 'Shared import for serp.co.',
+          body: 'Shared import for serpdownloaders.com.',
           merged_at: '2026-05-26T12:00:00Z',
           number: 42,
-          title: 'Refresh serp.co data'
+          title: 'Refresh serpdownloaders.com data'
         }
       ],
       'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
         {
-          filename: 'sites/serp.co/products.json'
+          filename: 'sites/serpdownloaders.com/products.json'
         },
         {
           filename: 'sites/serp.ai/products.json'
@@ -372,7 +388,7 @@ describe('resolveBuildRun', () => {
       )
     ).resolves.toEqual({
       shouldDeploy: true,
-      siteIds: ['serp.ai', 'serp.co']
+      siteIds: ['serp.ai', 'serpdownloaders.com']
     })
   })
 
@@ -620,7 +636,7 @@ describe('resolveBuildRun', () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
-          body: 'Shared change affects https://browserextensions.io and https://best.serp.co.',
+          body: 'Shared change affects https://browserextensions.io and https://serpdownloaders.com.',
           merged_at: '2026-05-26T12:00:00Z',
           number: 42,
           title: 'Shared multi-site deploy'
@@ -655,7 +671,7 @@ describe('resolveBuildRun', () => {
         fetch
       )
     ).rejects.toThrow(
-      'Push metadata matched multiple concrete sites (browserextensions.io, serp.co); manual site_id required via workflow_dispatch for each site.'
+      'Push metadata matched multiple concrete sites (browserextensions.io, serpdownloaders.com); manual site_id required via workflow_dispatch for each site.'
     )
   })
 
@@ -722,7 +738,7 @@ describe('resolveBuildRun', () => {
           filename: 'sites/browserextensions.io/products.json'
         },
         {
-          filename: 'apps/serp.co/app/page.tsx'
+          filename: 'apps/serpdownloaders.com/app/page.tsx'
         }
       ]
     })
@@ -750,7 +766,7 @@ describe('resolveBuildRun', () => {
       )
     ).resolves.toEqual({
       shouldDeploy: true,
-      siteIds: ['browserextensions.io', 'serp.co']
+      siteIds: ['browserextensions.io', 'serpdownloaders.com']
     })
   })
 

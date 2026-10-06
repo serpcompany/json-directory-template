@@ -6,13 +6,6 @@ import { loadCheckedInSite, loadCheckedInSiteFromInput, parseSiteInputArgs } fro
 
 const defaultSiteId = 'default'
 
-/**
- * Sites still checked in here but deployed from their own repository. serp.co is served
- * by the D1-backed serpcompany/best.serp.co Worker (serpcompany/best.serp.co#34); a
- * repo-sync deploy from here would overwrite that repository's source.
- */
-export const externallyDeployedSiteIds = new Set(['serp.co'])
-
 const changedPathSitePrefixes: Array<readonly [string, string]> = [
   ...activeCheckedInSiteIds.flatMap(siteId => [
     [`apps/${siteId}/`, siteId] as const,
@@ -815,16 +808,14 @@ export async function resolvePushSiteInput(
 }
 
 function createDeployTargets(siteIds: readonly string[]): DeployTarget[] {
-  return siteIds
-    .filter(siteId => !externallyDeployedSiteIds.has(siteId))
-    .map(siteId => {
-      const definition = loadCheckedInSite(siteId)
+  return siteIds.map(siteId => {
+    const definition = loadCheckedInSite(siteId)
 
-      return {
-        artifactDir: definition.build.artifactDir,
-        siteId: definition.id
-      }
-    })
+    return {
+      artifactDir: definition.build.artifactDir,
+      siteId: definition.id
+    }
+  })
 }
 
 function isWorkflowDispatchAllSites(env: NodeJS.ProcessEnv): boolean {
@@ -858,9 +849,6 @@ export async function resolveBuildRun(
 
   if ('siteIds' in input && input.siteIds?.length) {
     const deployTargets = createDeployTargets(input.siteIds)
-    if (deployTargets.length === 0) {
-      return { deployTargets: [], shouldDeploy: false }
-    }
 
     return {
       artifactDir: deployTargets.length === 1 ? deployTargets[0]?.artifactDir : undefined,
@@ -871,9 +859,6 @@ export async function resolveBuildRun(
   }
 
   const definition = loadCheckedInSiteFromInput(input)
-  if (externallyDeployedSiteIds.has(definition.id)) {
-    return { deployTargets: [], shouldDeploy: false }
-  }
   const deployTargets = [
     {
       artifactDir: definition.build.artifactDir,

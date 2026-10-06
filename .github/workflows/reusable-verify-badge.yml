@@ -26,7 +26,6 @@ jobs:
             const supportedTargetRepositories = new Set([
               'browserextensions.io',
               'serp.ai',
-              'serp.co',
               'serpdownloaders.com'
             ]);
             if (!supportedTargetRepositories.has(repo)) {
@@ -151,8 +150,7 @@ jobs:
 
             const domain = repo;
             const listingDetailSuffixBySite = {
-              'serp.ai': 'reviews',
-              'serp.co': 'reviews'
+              'serp.ai': 'reviews'
             };
             const listingDetailSuffix = listingDetailSuffixBySite[domain];
             const listingPathParts = ['products', submission.slug, listingDetailSuffix].filter(Boolean);
@@ -162,12 +160,6 @@ jobs:
               badgeImageUrl,
               `https://${domain}/badge/featured-on-${domain}-dark.svg`
             ];
-            if (domain === 'serp.co') {
-              expectedBadgeImageUrls.push(
-                'https://serp.co/badge/featured-on-serp-co-light.svg',
-                'https://serp.co/badge/featured-on-serp-co-dark.svg'
-              );
-            }
             const badgeSnippet = `<a href="${listingUrl}" target="_blank" title="Featured on ${domain}">\n  <img src="${badgeImageUrl}" alt="Featured on ${domain}" width="200" height="50" />\n</a>`;
 
             function parseAttributes(tag) {
@@ -368,7 +360,6 @@ jobs:
             const supportedTargetRepositories = new Set([
               'browserextensions.io',
               'serp.ai',
-              'serp.co',
               'serpdownloaders.com'
             ]);
             if (!supportedTargetRepositories.has(siteRepo)) {

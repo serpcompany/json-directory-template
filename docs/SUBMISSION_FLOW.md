@@ -5,9 +5,9 @@ details, builds a prefilled GitHub issue URL, and sends the submitter to GitHub.
 badge-state labels, and verified listing PR creation are handled by a tiny public issue repo
 `verify-badge.yml` caller that invokes the central reusable workflow in this repo.
 
-This flow applies only to the active static sites listed below. `serp.software` and
-`pornvideodownloaders.com` use D1-native submission intake and are not targets of
-this workflow.
+This flow applies only to the active static sites listed below. `serp.software`,
+`pornvideodownloaders.com`, and the `serp.co` directory (now `https://best.serp.co`, served from
+`serpcompany/best.serp.co`) use D1-native submission intake and are not targets of this workflow.
 
 ---
 
@@ -55,7 +55,7 @@ labeled `badge-not-verified`.
 
 1. The workflow fetches the submitter's website URL (server-side, 10s timeout).
 2. It searches the HTML for a dofollow `<a href>` link to the exact directory domain
-   (e.g. `serp.co`, with optional `www.`).
+   (e.g. `serp.ai`, with optional `www.`).
 3. If a backlink is found, the issue gets `badge-verified` and the source PR step runs.
 4. If the link is missing, unreachable, or marked `nofollow`, the bot replies with badge embed code
    the submitter can copy-paste and leaves `badge-not-verified` on the issue.
@@ -65,8 +65,8 @@ labeled `badge-not-verified`.
 The badge snippet links to the listing's detail page and references the site's static SVG badge:
 
 ```html
-<a href="https://serp.co/products/example.com/reviews/" target="_blank" title="Featured on serp.co">
-  <img src="https://serp.co/badge/featured-on-serp.co-light.svg" alt="Featured on serp.co" width="200" height="50" />
+<a href="https://serp.ai/products/example.com/reviews/" target="_blank" title="Featured on serp.ai">
+  <img src="https://serp.ai/badge/featured-on-serp.ai-light.svg" alt="Featured on serp.ai" width="200" height="50" />
 </a>
 ```
 
@@ -102,7 +102,7 @@ The maintainer reviews and merges the PR. The existing deploy pipeline handles t
 ### Required secret
 
 The verified PR step requires a `GH_PAT` secret on each site's public issue repo
-(e.g. `serpcompany/best.serp.co`) with access to create branches and PRs in
+(e.g. `serpcompany/serp.ai`) with access to create branches and PRs in
 `serpcompany/json-directory-template`. The caller passes that secret through to the reusable
 workflow. Without this secret, badge labels and comments still work, but the workflow fails the PR
 step after badge verification and comments that the secret is missing.
@@ -146,7 +146,6 @@ Active public issue targets:
 |---|---|---|
 | `browserextensions.io` | `serpcompany/browserextensions.io` | `https://browserextensions.io/submit/` |
 | `serp.ai` | `serpcompany/serp.ai` | `https://serp.ai/submit/` |
-| `serp.co` | `serpcompany/best.serp.co` | `https://best.serp.co/submit/` |
 | `serpdownloaders.com` | `serpcompany/serpdownloaders.com` | `https://serpdownloaders.com/submit/` |
 
 Active target workflow rollout matrix:
@@ -155,7 +154,6 @@ Active target workflow rollout matrix:
 |---|---|---|---|
 | `serpcompany/browserextensions.io` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-browserextensions.io-{light,dark}.svg` |
 | `serpcompany/serp.ai` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serp.ai-{light,dark}.svg` |
-| `serpcompany/best.serp.co` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serp.co-{light,dark}.svg` |
 | `serpcompany/serpdownloaders.com` | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | `/badge/featured-on-serpdownloaders.com-{light,dark}.svg` |
 
 ---

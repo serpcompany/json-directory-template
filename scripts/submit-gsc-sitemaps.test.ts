@@ -49,7 +49,7 @@ describe('runSubmitGscSitemaps', () => {
 
     expect(log).toHaveBeenCalledTimes(activeCheckedInSiteIds.length)
     expect(log).toHaveBeenCalledWith(
-      'SUBMIT https://best.serp.co/ -> https://best.serp.co/sitemap-index.xml'
+      'SUBMIT https://serpdownloaders.com/ -> https://serpdownloaders.com/sitemap-index.xml'
     )
   })
 

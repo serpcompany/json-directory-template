@@ -32,13 +32,13 @@ describe('resolveDrBadgeConfig', () => {
 })
 
 describe('resolveFooterBadgeConfigs', () => {
-  it('returns the serp.co featured badge and DR badge for serp.ai', () => {
+  it('returns the best.serp.co featured badge and DR badge for serp.ai', () => {
     expect(resolveFooterBadgeConfigs('serp.ai')).toEqual([
       {
-        alt: 'Featured on serp.co',
-        href: 'https://serp.co/products/serp.ai/reviews/',
-        src: 'https://serp.co/badge/featured-on-serp.co-light.svg',
-        title: 'Featured on serp.co'
+        alt: 'Featured on SERP Best',
+        href: 'https://best.serp.co/products/serp.ai/',
+        src: 'https://best.serp.co/badge/featured-on-serp.co-light.svg',
+        title: 'Featured on SERP Best'
       },
       {
         alt: 'Verified DR 69 for serp.ai',
@@ -48,7 +48,7 @@ describe('resolveFooterBadgeConfigs', () => {
     ])
   })
 
-  it('does not return the serp.co featured badge for unrelated domains', () => {
+  it('does not return the best.serp.co featured badge for unrelated domains', () => {
     expect(resolveFooterBadgeConfigs('example.com')).toEqual([])
     expect(resolveFooterBadgeConfigs('serp.co')).toEqual([
       {

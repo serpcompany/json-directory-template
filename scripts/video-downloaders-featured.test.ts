@@ -11,7 +11,7 @@ type TrialProductFixture = {
   }
 }
 
-const siteIds = ['serp.co', 'browserextensions.io', 'serp.ai'] as const
+const siteIds = ['browserextensions.io', 'serp.ai'] as const
 
 function readProducts(siteId: (typeof siteIds)[number]) {
   return JSON.parse(
@@ -86,8 +86,7 @@ describe('video downloader featured listings', () => {
   it('does not feed featured category pages from the homepage-capped featured list', () => {
     const featuredRoutePaths = [
       'apps/browserextensions.io/app/categories/featured/page.tsx',
-      'apps/serp.ai/app/categories/featured/page.tsx',
-      'apps/serp.co/app/categories/featured/page.tsx'
+      'apps/serp.ai/app/categories/featured/page.tsx'
     ]
 
     for (const routePath of featuredRoutePaths) {

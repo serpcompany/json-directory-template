@@ -89,10 +89,10 @@ Options:
 Map JSON format:
 [
   {
-    "siteId": "serp.co",
+    "siteId": "serp.ai",
     "variant": "light",
-    "key": "badge/featured-on-serp.co-light.svg",
-    "source": "apps/serp.co/public/badge/featured-on-serp.co-light.svg",
+    "key": "badge/featured-on-serp.ai-light.svg",
+    "source": "apps/serp.ai/public/badge/featured-on-serp.ai-light.svg",
     "contentType": "image/svg+xml",
     "width": 200,
     "height": 50

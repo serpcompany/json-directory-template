@@ -254,7 +254,6 @@ describe('validateDownloaderImport', () => {
   it('validates the remaining active downloader site set', () => {
     expect(ACTIVE_DOWNLOADER_SITE_IDS).toEqual([
       'browserextensions.io',
-      'serp.co',
       'serp.ai',
       'serpdownloaders.com'
     ])
@@ -263,7 +262,6 @@ describe('validateDownloaderImport', () => {
       validateDownloaderImport({
         'browserextensions.io': {},
         'serp.ai': {},
-        'serp.co': {},
         'serpdownloaders.com': {
           'example-downloader': {
             content: {

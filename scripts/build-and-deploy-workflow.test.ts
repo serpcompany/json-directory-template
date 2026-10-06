@@ -265,7 +265,6 @@ describe('build-and-deploy workflow', () => {
         'apps/starter/**'
       ])
     )
-    // serp.co deploys from serpcompany/best.serp.co (serpcompany/best.serp.co#34).
     expect(paths).not.toContain('apps/serp.co/**')
   })
 })

@@ -17,10 +17,14 @@ For completed execution history, see:
 - The wrapper refactor is complete.
 - `apps/web` no longer exists.
 - `apps/starter` is the neutral starter wrapper.
-- `apps/browserextensions.io`, `apps/serp.ai`, `apps/serp.co`, and
-  `apps/serpdownloaders.com` are active checked-in site wrappers.
+- `apps/browserextensions.io`, `apps/serp.ai`, and `apps/serpdownloaders.com`
+  are active checked-in site wrappers.
 - `pornvideodownloaders.com` and `serp.software` moved to the D1/OpenNext
   platform and are retired from this repository's runtime/build/deploy graph.
+- `serp.co` is retired from this repository too. Its directory serves from
+  `https://best.serp.co` out of the D1-backed `serpcompany/best.serp.co` repo,
+  and `serp.co` itself is the parent-brand site. The site id is in
+  `removedSiteIds`, so validate, build, and deploy reject it.
 - Shared runtime and route logic lives in `packages/web-core`.
 - Checked-in site contract and site resolution live in `packages/site-contract`.
 - The starter submit flow now uses a static-friendly GitHub issue handoff with PR-reviewed
@@ -32,9 +36,9 @@ For completed execution history, see:
    - `pnpm validate:site -- --site serpdownloaders.com`
    - `pnpm build:site -- --site serpdownloaders.com`
    - `pnpm deploy:site -- --site serpdownloaders.com --dry-run`
-   - `pnpm validate:site -- --site serp.co`
-   - `pnpm build:site -- --site serp.co`
-   - `pnpm deploy:site -- --site serp.co --dry-run`
+   - `pnpm validate:site -- --site serp.ai`
+   - `pnpm build:site -- --site serp.ai`
+   - `pnpm deploy:site -- --site serp.ai --dry-run`
 2. Keep `apps/starter` thin and generic.
 3. Add or promote new sites only through the checked-in site contract and promotion checklist.
 4. Use `pnpm generate:site-wrapper -- --site <site-id>` as the standard starting point for new wrapper apps.

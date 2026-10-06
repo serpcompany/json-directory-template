@@ -7,7 +7,6 @@ const activeListingSourcePaths = [
   'data/listings.json',
   'sites/browserextensions.io/products.json',
   'sites/serp.ai/products.json',
-  'sites/serp.co/products.json',
   'sites/serpdownloaders.com/products.json'
 ]
 

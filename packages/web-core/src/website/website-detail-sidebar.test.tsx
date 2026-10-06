@@ -105,14 +105,14 @@ describe('WebsiteDetailSidebar', () => {
   })
 
   it('passes suffix-aware listing URLs into copied badge embeds for suffix-based sites', async () => {
-    vi.stubEnv('NEXT_PUBLIC_SITE_ID', 'serp.co')
-    vi.stubEnv('SITE_ID', 'serp.co')
+    vi.stubEnv('NEXT_PUBLIC_SITE_ID', 'serp.ai')
+    vi.stubEnv('SITE_ID', 'serp.ai')
     vi.resetModules()
 
-    const { WebsiteDetailSidebar: SerpCoWebsiteDetailSidebar } = await import(
+    const { WebsiteDetailSidebar: SerpAiWebsiteDetailSidebar } = await import(
       './website-detail-sidebar'
     )
-    const sidebar = SerpCoWebsiteDetailSidebar({
+    const sidebar = SerpAiWebsiteDetailSidebar({
       website: {
         name: 'LaunchBuzz',
         slug: 'launchbuzz.io',
@@ -121,11 +121,11 @@ describe('WebsiteDetailSidebar', () => {
     })
 
     expect(collectStringProp(sidebar, 'listingUrl')).toContain(
-      'https://best.serp.co/products/launchbuzz.io/reviews/'
+      'https://serp.ai/products/launchbuzz.io/reviews/'
     )
     expect(collectRecordProp<Record<string, string>>(sidebar, 'badgeUrls')).toContainEqual({
-      dark: 'https://best.serp.co/badge/featured-on-serp.co-dark.svg',
-      light: 'https://best.serp.co/badge/featured-on-serp.co-light.svg'
+      dark: 'https://serp.ai/badge/featured-on-serp.ai-dark.svg',
+      light: 'https://serp.ai/badge/featured-on-serp.ai-light.svg'
     })
   })
 })

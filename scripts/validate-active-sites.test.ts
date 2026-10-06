@@ -9,7 +9,6 @@ describe('getActiveCheckedInSiteIds', () => {
     expect(getActiveCheckedInSiteIds()).toEqual([
       'browserextensions.io',
       'serp.ai',
-      'serp.co',
       'serpdownloaders.com'
     ])
   })

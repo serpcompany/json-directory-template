@@ -10,6 +10,12 @@ explicitly approves a runtime move.
 
 ## Current Baseline
 
+Status: the `serp.co` site measured below has since been retired from this
+repository. Its directory now serves from `https://best.serp.co` out of the
+D1-backed `serpcompany/best.serp.co` repo, so no remaining active site here is
+known to meet the artifact-size trigger. The numbers are kept as the historical
+baseline that motivated this plan.
+
 Measured `serp.co` after the build optimization work:
 
 - final artifact: about `892M` in `dist/sites/serp.co`
@@ -85,7 +91,7 @@ How it would work:
 
 - source CI builds the same static artifact
 - CI uploads versioned artifacts to object storage, for example
-  `sites/serp.co/releases/<source-sha>/...`
+  `sites/<site-id>/releases/<source-sha>/...`
 - CI updates a small release pointer or invalidates CDN paths after upload
 - DNS points the domain at the CDN distribution
 
@@ -156,8 +162,9 @@ Recommended trigger:
 - a single deploy would push the published site over GitHub Pages' `1 GB`
   guidance
 
-`serp.co` already meets the artifact-size planning trigger, so the next
-implementation phase should prepare object-storage/CDN deployment behind an
+`serp.co` met the artifact-size planning trigger before it was retired from
+this repo. If another active site reaches it, the next implementation phase
+should prepare object-storage/CDN deployment behind an
 explicit, reviewed deploy strategy flag. It should not change the default
 deploy path until a dry-run and rollback rehearsal pass.
 

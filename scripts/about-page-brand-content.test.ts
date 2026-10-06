@@ -43,7 +43,6 @@ const removedStepsSections = [
 const expectedSiteNames: Record<string, string> = {
   'browserextensions.io': 'BrowserExtensions.io',
   'serp.ai': 'SERP AI',
-  'serp.co': 'SERP',
   'serpdownloaders.com': 'SERP Downloaders'
 }
 
@@ -61,12 +60,7 @@ function aboutArtifactPath(siteId: string): string {
 
 describe('active site About page brand content', () => {
   it('keeps one site-owned About MDX file for every active checked-in site', () => {
-    expect(activeSiteIds).toEqual([
-      'browserextensions.io',
-      'serp.ai',
-      'serp.co',
-      'serpdownloaders.com'
-    ])
+    expect(activeSiteIds).toEqual(['browserextensions.io', 'serp.ai', 'serpdownloaders.com'])
 
     for (const siteId of activeSiteIds) {
       expect(siteAboutPath(siteId), `${siteId} must own About content`).toSatisfy(existsSync)
