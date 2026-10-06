@@ -61,16 +61,6 @@ export const browserextensionsIoSiteConfig: CheckedInSiteConfigOverride = {
     listingBasePath: 'products'
   },
   sitemap: {
-    additionalPathsByGroup: {
-      taxonomies: [
-        '/categories/course-platforms',
-        '/categories/image-downloader',
-        '/categories/image-hosting',
-        '/categories/livestream',
-        '/categories/movies-and-tv',
-        '/categories/social-media'
-      ]
-    },
     artifactExcludedPaths: ['/legal/privacy', '/legal/terms'],
     excludedPaths: ['/legal/privacy', '/legal/terms', '/products', '/search'],
     pathByGroup: {

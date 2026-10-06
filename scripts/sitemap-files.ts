@@ -317,6 +317,55 @@ function buildSitemapIndexXml(
   ].join('')
 }
 
+function getHtmlAttribute(tag: string, attributeName: string): string | undefined {
+  const match = tag.match(new RegExp(`\\s${attributeName}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, 'i'))
+
+  return match?.[1] ?? match?.[2]
+}
+
+// Mirrors the audit-sitemaps rules: a page that opts out of indexing, or canonicalizes to a
+// different URL, must not be listed in the sitemap.
+function isNonCanonicalOrNoindexHtml(html: string, publicPath: string): boolean {
+  for (const tag of html.matchAll(/<meta\b[^>]*>/gi)) {
+    const name = getHtmlAttribute(tag[0], 'name')?.toLowerCase()
+
+    if (name !== 'robots' && name !== 'googlebot') {
+      continue
+    }
+
+    const directives = (getHtmlAttribute(tag[0], 'content') ?? '').toLowerCase().split(/[,\s]+/)
+    if (directives.includes('noindex') || directives.includes('nofollow')) {
+      return true
+    }
+  }
+
+  for (const tag of html.matchAll(/<link\b[^>]*>/gi)) {
+    const rel = getHtmlAttribute(tag[0], 'rel')
+
+    if (!rel?.split(/\s+/).some(value => value.toLowerCase() === 'canonical')) {
+      continue
+    }
+
+    const href = getHtmlAttribute(tag[0], 'href')
+    if (!href) {
+      return false
+    }
+
+    try {
+      const canonicalPath = normalizeArtifactPath(
+        new URL(href, 'https://canonical.invalid').pathname
+      )
+      // A canonical below the route (e.g. a listing's `/reviews` detail suffix) is resolved by
+      // groupArtifactPaths, so only a canonical pointing elsewhere excludes the route.
+      return canonicalPath !== publicPath && !canonicalPath.startsWith(`${publicPath}/`)
+    } catch {
+      return false
+    }
+  }
+
+  return false
+}
+
 function listArtifactRoutePaths(
   artifactDir: string,
   currentDir = artifactDir,
@@ -356,6 +405,10 @@ function listArtifactRoutePaths(
 
     const html = readFileSync(entryPath, 'utf8')
     if (html.includes('NEXT_REDIRECT') || html.includes('__next_error__')) {
+      continue
+    }
+
+    if (isNonCanonicalOrNoindexHtml(html, publicPath)) {
       continue
     }
 
