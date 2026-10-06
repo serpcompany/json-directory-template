@@ -74275,5 +74275,82 @@
         "url": "https://browserextensions.io/products/zzcartoon-downloader/"
       }
     ]
+  },
+  "hentaishare-downloader": {
+    "content": {
+      "body": "## In Short\n\nHentai-Share Video Downloader is a browser extension that saves the video you have open on Hentai-Share without sending you to another page or tool. You start it from the page you're watching, and the rest happens in the background while playback carries on.\n\nThe transfer itself is handed to the browser's own download system, so nothing about it is unfamiliar: progress shows up in the regular downloads list, and the result is a local video file. Every file lands in a Hentai-Share folder inside your default download location, which keeps these saves apart from everything else you've downloaded.\n\n## What You Gain\n\n- Videos you want to revisit, kept without leaving the tab you're in\n- A collection that is simpler to search, sort and come back to\n- The same short routine every time, in place of fiddly manual steps\n\n## Capabilities\n\n- Starts from the Hentai-Share video page while the video is playing, or from the extension's toolbar popup if you prefer\n- Targets the video currently open in your browser and stays confined to that Hentai-Share page\n- Works from whatever video source the site supplies\n- Lets your browser handle each file transfer, with progress visible in its download list\n- Collects every save in one Hentai-Share folder for quick retrieval\n- Leaves a video file on your device that you can open from the downloads folder whenever you like\n\n## Saving a Video, Step by Step\n\nLoad the Hentai-Share page with the video you're after and press play. Next, open the extension; if more than one quality is offered, pick the one you want. The browser then downloads the file into the dedicated product folder.\n\n## Where It Runs\n\nYou can install it in Chrome, Edge, Firefox, Opera, Brave, Yandex or Whale, running on Linux, macOS or Windows.\n\nRegion: Worldwide.\n\nIt is designed around compatible public media links, saved one at a time through the browser.\n\nIt does not cover:\n\n- Any bypass of sign-in walls or paywalls\n- Private material\n- Protected streams\n- Bulk collection of many videos\n- Sources that are unavailable\n\n## Boundaries\n\n- The video needs a compatible public source.\n- Which formats you can pick from is up to the source.\n- Restricted material stays out of reach.\n- Only one link is processed at a time.\n- How downloads behave can differ from browser to browser.\n\n## Permissions Requested\n\n- `downloads`: hands compatible files to the browser so it can save them.\n- `activeTab`: works with the page you've selected when a tab-based flow is on offer.\n- `storage`: holds activation details and your local preferences.\n- `notifications`: reports how a save is progressing and when it's done.\n- `contextMenus`: adds a shortcut for compatible links.\n- `tabs`: keeps the downloader in step with the browser page you picked.\n- `scripting`: looks for compatible media on the page once you begin the action.\n- `offscreen`: lets the browser do processing in the background while a save is being prepared.\n- `webRequest`: watches for compatible public media requests coming from the page you chose.\n- `host_permissions`: allows the extension to detect a compatible source on the pages where you start it.",
+      "faq": [
+        {
+          "answer": "Go to the page with the video, start playing it, and then trigger the extension's save option. Everything happens from the page you already have open.",
+          "question": "What sequence of clicks keeps a Hentai-Share clip on my computer?"
+        },
+        {
+          "answer": "No. The downloader shows up on the Hentai-Share page while the video plays, so you can start a save without leaving or pausing your session.",
+          "question": "Do I have to navigate somewhere else to use it?"
+        },
+        {
+          "answer": "No. Clicking the extension's icon in the browser toolbar opens a popup that can also start saving the video currently open.",
+          "question": "Is the page the only place to launch it from?"
+        },
+        {
+          "answer": "The one open and playing in your current tab. The extension picks up the active video on the Hentai-Share page in front of you.",
+          "question": "When I hit save, which video gets downloaded?"
+        },
+        {
+          "answer": "Your browser's built-in download system. The extension kicks off the save and the browser processes it exactly as it would any other download.",
+          "question": "What actually moves the file onto my computer?"
+        },
+        {
+          "answer": "Open your browser's download list. It displays the status, speed and time remaining while the video is being written to your device.",
+          "question": "While the file transfers, what lets me check its status?"
+        },
+        {
+          "answer": "A dedicated Hentai-Share folder created inside your browser's default download location, kept separate from your other downloads.",
+          "question": "On my disk, where does the extension put Hentai-Share files?"
+        },
+        {
+          "answer": "A local video file on your device. You can open it from the browser's downloads folder and play it in whichever media player you like.",
+          "question": "What am I left with once the download completes?"
+        },
+        {
+          "answer": "Yes. The files remain on your device, so you can watch them again any time without an internet connection or a visit to Hentai-Share.",
+          "question": "Do saved videos stay available after I go offline?"
+        },
+        {
+          "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
+          "question": "Is this legal?"
+        }
+      ]
+    },
+    "featured": true,
+    "media": {
+      "images": [
+        "https://apps.serp.co/media/optimized-products/hentaishare-downloader-ready-state-a2771e9b08.webp"
+      ]
+    },
+    "product": {
+      "categories": [
+        "adult",
+        "video-downloaders"
+      ],
+      "productPage": "https://serp.ly/hentaishare-downloader",
+      "slug": "hentaishare-downloader",
+      "tagline": "Hentai-Share Video Downloader lets you keep the video playing in your current Hentai-Share tab as a file on your own computer, with your browser doing the actual transfer.",
+      "title": "Hentai-Share Video Downloader"
+    },
+    "relatedLinks": [
+      {
+        "label": "Install browser extension",
+        "url": "https://serp.ly/hentaishare-downloader"
+      },
+      {
+        "label": "SERP Apps",
+        "url": "https://apps.serp.co/hentaishare-downloader"
+      },
+      {
+        "label": "Browser Extensions",
+        "url": "https://browserextensions.io/products/hentaishare-downloader/"
+      }
+    ]
   }
 }

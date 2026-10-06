@@ -153,6 +153,7 @@ export const DEFAULT_THRESHOLD = 0.5
 export const DEFAULT_WORK_DIR = 'tmp/listing-rewrites'
 export const DEFAULT_EXCLUDE_FILE = 'scripts/listing-rewrite-excluded.txt'
 export const FACT_OVERRIDES_FILE = 'scripts/listing-rewrite-fact-overrides.json'
+export const SOURCE_OVERRIDES_FILE = 'scripts/listing-rewrite-source-overrides.json'
 /** Live apps.serp.co products that aren't browser extensions (owner decision on #156). */
 export const NOT_EXTENSIONS = new Set(['serp-downloaders-bundle'])
 export const LEGAL_QUESTION = 'Is this legal?'
@@ -847,6 +848,8 @@ export type Resolution = {
 
 export type DiffResult = {
   ambiguous: Array<{ reason: string; slug: string }>
+  /** Live products the owner chose to skip (source overrides with `skip`). */
+  ownerSkipped: Array<{ reason: string; slug: string }>
   /** Duplicates resolved to one canonical listing (owner rules on #156). */
   resolved: Resolution[]
   duplicateUnderOtherSlug: Array<{ matchedBy: string; siteSlug: string; slug: string }>
@@ -855,6 +858,40 @@ export type DiffResult = {
   present: string[]
   slugOnlyMissing: string[]
   sourceDuplicates: Array<{ chosen?: string; files: string[]; identical: boolean; slug: string }>
+}
+
+/**
+ * Owner-reviewed corrections to source products, kept in
+ * scripts/listing-rewrite-source-overrides.json with a reason for each: replace fields such
+ * as a generic `serply_link`, or skip a product outright.
+ */
+export type SourceOverride = {
+  reason: string
+  set?: Partial<Pick<SourceProduct, 'github_repo_url' | 'serply_link'>>
+  skip?: boolean
+}
+
+/** Apply source overrides; returns the corrected files and the owner-skipped slugs. */
+export function applySourceOverrides(
+  files: SourceProductFile[],
+  overrides: Record<string, SourceOverride> = {}
+): { files: SourceProductFile[]; skipped: Array<{ reason: string; slug: string }> } {
+  const skipped: Array<{ reason: string; slug: string }> = []
+  const seen = new Set<string>()
+  const kept = files.flatMap(file => {
+    const slug = file.product.slug ?? ''
+    const override = overrides[slug]
+    if (!override) return [file]
+    if (override.skip) {
+      if (!seen.has(slug) && file.product.status === 'live') {
+        skipped.push({ reason: override.reason, slug })
+      }
+      seen.add(slug)
+      return []
+    }
+    return [{ ...file, product: { ...file.product, ...(override.set ?? {}) } }]
+  })
+  return { files: kept, skipped }
 }
 
 /** Commit times (newest first) of a source file, used to pick between duplicate files. */
@@ -944,6 +981,7 @@ export function diffSourceAgainstSite(
     duplicateUnderOtherSlug: [],
     liveCount: bySlug.size,
     missing: [],
+    ownerSkipped: [],
     present: [],
     resolved: [],
     slugOnlyMissing: [],
@@ -1761,7 +1799,14 @@ function runDiff(options: CliOptions, repoRoot: string) {
   const fileHistory = options.sourceGit
     ? gitFileHistory(resolve(options.sourceGit), options.sourceRev ?? 'HEAD')
     : undefined
-  const diff = diffSourceAgainstSite(files, siteProducts, { fileHistory })
+  const overridesPath = resolve(repoRoot, SOURCE_OVERRIDES_FILE)
+  const corrected = applySourceOverrides(
+    files,
+    existsSync(overridesPath) ? readJson<Record<string, SourceOverride>>(overridesPath) : {}
+  )
+  const diff = diffSourceAgainstSite(corrected.files, siteProducts, { fileHistory })
+  diff.ownerSkipped = corrected.skipped
+  diff.liveCount += corrected.skipped.length
   return { diff, dir, siteProducts }
 }
 
@@ -1773,6 +1818,7 @@ function summarizeDiff(diff: DiffResult) {
     missingCount: diff.missing.length,
     missingSlugs: diff.missing.map(file => file.product.slug),
     presentCount: diff.present.length,
+    ownerSkipped: diff.ownerSkipped,
     resolved: diff.resolved,
     slugOnlyMissingCount: diff.slugOnlyMissing.length,
     sourceDuplicates: diff.sourceDuplicates
@@ -1875,6 +1921,9 @@ async function prepare(options: CliOptions, repoRoot: string): Promise<void> {
       inputs.push(input)
     }
     const missingSlugs = new Set(diff.missing.map(file => file.product.slug))
+    for (const owner of diff.ownerSkipped) {
+      skipped.push({ reason: owner.reason, slug: owner.slug })
+    }
     for (const resolution of diff.resolved) {
       // A same-slug file pick keeps the slug as a candidate; only other slugs are skipped.
       if (missingSlugs.has(resolution.slug)) continue

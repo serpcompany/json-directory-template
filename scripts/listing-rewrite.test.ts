@@ -6,6 +6,7 @@ import {
   absoluteMediaUrl,
   addRelatedLink,
   applyLinkCheck,
+  applySourceOverrides,
   buildEntry,
   buildExistingInput,
   buildImages,
@@ -495,6 +496,35 @@ describe('diffSourceAgainstSite', () => {
     ])
     const tie = diffSourceAgainstSite(files, {}, { fileHistory: () => [5, 4] })
     expect(tie.ambiguous.map(item => item.slug)).toEqual(['dupe-downloader'])
+  })
+
+  it('applies owner source overrides before the diff', () => {
+    const generic = (slug: string) =>
+      file(
+        sourceProduct({
+          github_repo_url: null,
+          serply_link: 'https://serp.ly/serp-video-tools',
+          slug
+        })
+      )
+    const files = [generic('hentaishare-downloader'), generic('pornvideocasting-downloader')]
+    expect(diffSourceAgainstSite(files, {}).ambiguous).toHaveLength(2)
+
+    const corrected = applySourceOverrides(files, {
+      'hentaishare-downloader': {
+        reason: 'owner: product-specific install link',
+        set: { serply_link: 'https://serp.ly/hentaishare-downloader' }
+      },
+      'pornvideocasting-downloader': { reason: 'owner: unknown product, skipped', skip: true }
+    })
+    expect(corrected.skipped).toEqual([
+      { reason: 'owner: unknown product, skipped', slug: 'pornvideocasting-downloader' }
+    ])
+    const result = diffSourceAgainstSite(corrected.files, {})
+    expect(result.ambiguous).toEqual([])
+    expect(result.missing.map(item => item.product.serply_link)).toEqual([
+      'https://serp.ly/hentaishare-downloader'
+    ])
   })
 
   it('reads the slug of a serp.ly or GitHub link', () => {
