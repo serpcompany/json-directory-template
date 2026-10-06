@@ -82,7 +82,7 @@ export type SiteLegalConfig = {
   /**
    * Domain passed to `applyLegalContentBranding` for the shared legal pages. It replaces every
    * `{{domain}}` placeholder (today only the `dmca[@]` and `privacy[@]` contact addresses) and
-   * any literal `serp.co`. Falls back to `site.domain` when omitted.
+   * any literal `serp.co` (the parent-brand domain). Falls back to `site.domain` when omitted.
    */
   contactEmailDomain?: string
 }

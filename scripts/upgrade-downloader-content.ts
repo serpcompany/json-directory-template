@@ -103,7 +103,7 @@ const sourceDirs = [
   '/Users/devin/dev/repos/store-new/apps/store/data/adult-products'
 ]
 
-const sites = ['serpdownloaders.com', 'serp.ai', 'browserextensions.io', 'serp.co'] as const
+const sites = ['serpdownloaders.com', 'serp.ai', 'browserextensions.io'] as const
 
 const sourceBySlug = new Map<string, SourceProduct>()
 const toolsBySlug = new Map<string, ToolsProduct>()
@@ -537,15 +537,6 @@ function upgradeProduct(key: string, product: SiteProduct, site: string): SitePr
   return JSON.parse(JSON.stringify(upgraded)) as SiteProduct
 }
 
-function isDownloaderProduct(key: string, product: SiteProduct): boolean {
-  return (
-    key.includes('downloader') ||
-    product.product?.slug?.includes('downloader') === true ||
-    product.product?.title?.toLowerCase().includes('downloader') === true ||
-    product.product?.categories?.includes('video-downloaders') === true
-  )
-}
-
 function readSiteProducts(site: string): Record<string, SiteProduct> {
   return JSON.parse(
     readFileSync(resolve(repoRoot, 'sites', site, 'products.json'), 'utf8')
@@ -565,12 +556,7 @@ loadToolsProducts()
 for (const site of sites) {
   const products = readSiteProducts(site)
   const upgradedProducts = Object.fromEntries(
-    Object.entries(products).map(([key, product]) => [
-      key,
-      site === 'serp.co' && !isDownloaderProduct(key, product)
-        ? product
-        : upgradeProduct(key, product, site)
-    ])
+    Object.entries(products).map(([key, product]) => [key, upgradeProduct(key, product, site)])
   )
 
   writeSiteProducts(site, upgradedProducts)

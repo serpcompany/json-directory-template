@@ -39,16 +39,18 @@ describe('deterministic Next build id', () => {
   it('returns a stable build id for the same site and source revision', () => {
     process.env.NEXT_BUILD_ID = 'phase-4c-source'
 
-    expect(resolveDeterministicBuildId('serp.co')).toBe(resolveDeterministicBuildId('serp.co'))
+    expect(resolveDeterministicBuildId('serpdownloaders.com')).toBe(
+      resolveDeterministicBuildId('serpdownloaders.com')
+    )
   })
 
   it('separates build ids by site and source revision', () => {
     process.env.NEXT_BUILD_ID = 'phase-4c-source-a'
-    const firstRevision = resolveDeterministicBuildId('serp.co')
+    const firstRevision = resolveDeterministicBuildId('serpdownloaders.com')
     const otherSite = resolveDeterministicBuildId('serp.ai')
 
     process.env.NEXT_BUILD_ID = 'phase-4c-source-b'
-    const secondRevision = resolveDeterministicBuildId('serp.co')
+    const secondRevision = resolveDeterministicBuildId('serpdownloaders.com')
 
     expect(firstRevision).toHaveLength(20)
     expect(firstRevision).not.toBe(otherSite)
@@ -60,24 +62,24 @@ describe('deterministic Next build id', () => {
     process.env.NEXT_BUILD_ID = 'explicit-source'
     process.env.GITHUB_SHA = 'github-source'
     process.env.VERCEL_GIT_COMMIT_SHA = 'vercel-source'
-    const explicitBuildId = resolveDeterministicBuildId('serp.co')
+    const explicitBuildId = resolveDeterministicBuildId('serpdownloaders.com')
 
     clearManagedEnv()
     process.env.NEXT_BUILD_ID = 'github-source'
-    const expectedGithubBuildId = resolveDeterministicBuildId('serp.co')
+    const expectedGithubBuildId = resolveDeterministicBuildId('serpdownloaders.com')
 
     clearManagedEnv()
     process.env.GITHUB_SHA = 'github-source'
     process.env.VERCEL_GIT_COMMIT_SHA = 'vercel-source'
-    const githubBuildId = resolveDeterministicBuildId('serp.co')
+    const githubBuildId = resolveDeterministicBuildId('serpdownloaders.com')
 
     clearManagedEnv()
     process.env.NEXT_BUILD_ID = 'vercel-source'
-    const expectedVercelBuildId = resolveDeterministicBuildId('serp.co')
+    const expectedVercelBuildId = resolveDeterministicBuildId('serpdownloaders.com')
 
     clearManagedEnv()
     process.env.VERCEL_GIT_COMMIT_SHA = 'vercel-source'
-    const vercelBuildId = resolveDeterministicBuildId('serp.co')
+    const vercelBuildId = resolveDeterministicBuildId('serpdownloaders.com')
 
     expect(explicitBuildId).not.toBe(githubBuildId)
     expect(githubBuildId).toBe(expectedGithubBuildId)
@@ -87,7 +89,7 @@ describe('deterministic Next build id', () => {
   it('wires the deterministic resolver into the shared Next base config', async () => {
     clearManagedEnv()
     process.env.NEXT_BUILD_ID = 'base-config-source'
-    process.env.NEXT_PUBLIC_SITE_ID = 'serp.co'
+    process.env.NEXT_PUBLIC_SITE_ID = 'serpdownloaders.com'
 
     expect(baseConfig.generateBuildId).toBeTypeOf('function')
     expect(await baseConfig.generateBuildId?.()).toBe(resolveDeterministicBuildId())
@@ -96,8 +98,8 @@ describe('deterministic Next build id', () => {
   it('falls back to the repository revision or local source without randomness', () => {
     clearManagedEnv()
 
-    const firstBuildId = resolveDeterministicBuildId('serp.co')
-    const secondBuildId = resolveDeterministicBuildId('serp.co')
+    const firstBuildId = resolveDeterministicBuildId('serpdownloaders.com')
+    const secondBuildId = resolveDeterministicBuildId('serpdownloaders.com')
 
     expect(firstBuildId).toHaveLength(20)
     expect(firstBuildId).toBe(secondBuildId)

@@ -81,7 +81,8 @@ Latest local evidence after Phase 0 closeout and static preview artifact check:
   - `browserextensions.io`: `http://127.0.0.1:4101/`
   - `pornvideodownloaders.com`: `http://127.0.0.1:4102/`
   - `serp.ai`: `http://127.0.0.1:4103/`
-  - `serp.co`: `http://127.0.0.1:4104/`
+  - `serp.co`: `http://127.0.0.1:4104/` (since retired from this repo; served from
+    `serpcompany/best.serp.co`)
   - `serp.software`: `http://127.0.0.1:4105/`
   - `serpdownloaders.com`: `http://127.0.0.1:4106/`
   - All six homepages returned HTTP 200 during the local static-server check.

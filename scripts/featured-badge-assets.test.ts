@@ -10,7 +10,6 @@ const badgeVariants = ['light', 'dark'] as const
 const manuallySelectedBadgeSites = [
   'browserextensions.io',
   'serp.ai',
-  'serp.co',
   'serpdownloaders.com'
 ] as const
 const PNG_SIGNATURE = '89504e470d0a1a0a'

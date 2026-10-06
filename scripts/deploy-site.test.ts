@@ -24,10 +24,6 @@ afterEach(() => {
 })
 
 describe('buildDeployPlan', () => {
-  it('refuses serp.co, which is deployed from serpcompany/best.serp.co', () => {
-    expect(() => buildDeployPlan({ siteId: 'serp.co' })).toThrow('serpcompany/best.serp.co')
-  })
-
   it('builds a deterministic deploy plan from the checked-in site config', () => {
     expect(buildDeployPlan({ siteId: 'serpdownloaders.com' })).toEqual({
       branch: 'main',

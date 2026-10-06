@@ -9,8 +9,8 @@ import { loadCheckedInSite } from './site-config.ts'
 import { getSitemapTargets } from './submit-gsc-sitemaps.ts'
 import { validateSite } from './validate-site.ts'
 
-const retiredSiteIds = ['pornvideodownloaders.com', 'serp.software'] as const
-const activeSiteIds = ['browserextensions.io', 'serp.ai', 'serp.co', 'serpdownloaders.com'] as const
+const retiredSiteIds = ['pornvideodownloaders.com', 'serp.co', 'serp.software'] as const
+const activeSiteIds = ['browserextensions.io', 'serp.ai', 'serpdownloaders.com'] as const
 
 function read(relativePath: string): string {
   return readFileSync(resolve(process.cwd(), relativePath), 'utf8')
@@ -57,8 +57,7 @@ describe('retired legacy sites', () => {
 
     expect(workflow.on.workflow_dispatch.inputs.site_id).toEqual({
       description: 'Checked-in site config id',
-      // serp.co deploys from serpcompany/best.serp.co (serpcompany/best.serp.co#34).
-      options: ['all', ...activeSiteIds.filter(siteId => siteId !== 'serp.co')],
+      options: ['all', ...activeSiteIds],
       required: true,
       type: 'choice'
     })
@@ -70,7 +69,11 @@ describe('retired legacy sites', () => {
     }
 
     expect(workflow.on.push.paths).toEqual(
-      expect.arrayContaining(['!sites/pornvideodownloaders.com/**', '!sites/serp.software/**'])
+      expect.arrayContaining([
+        '!sites/pornvideodownloaders.com/**',
+        '!sites/serp.co/**',
+        '!sites/serp.software/**'
+      ])
     )
   })
 

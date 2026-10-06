@@ -103,8 +103,8 @@ SERP Lists helps teams and solo operators.`
 }
 
 function badgeAnchor(
-  attributes = 'href="https://serp.co/products/dr.serp.co/reviews/" target="_blank" rel="noopener noreferrer"',
-  imageSrc = 'https://serp.co/badge/featured-on-serp.co-light.svg'
+  attributes = 'href="https://serp.ai/products/dr.serp.co/reviews/" target="_blank" rel="noopener noreferrer"',
+  imageSrc = 'https://serp.ai/badge/featured-on-serp.ai-light.svg'
 ): string {
   return `<a ${attributes} title="Featured on SERP"><img src="${imageSrc}" alt="Featured on SERP" width="200" height="50"/></a>`
 }
@@ -113,7 +113,7 @@ async function runBadgeCheck({
   eventName = 'issue_comment',
   html = '<html><body>No badge yet</body></html>',
   issueBody = submissionIssueBody(),
-  repo = 'serp.co',
+  repo = 'serp.ai',
   responses
 }: {
   eventName?: 'issue_comment' | 'issues'
@@ -123,6 +123,7 @@ async function runBadgeCheck({
   responses?: Array<{ html: string; ok?: boolean; status?: number; url?: string }>
 } = {}) {
   const comments: string[] = []
+  const failures: string[] = []
   const labelsAdded: string[][] = []
   const labelsRemoved: string[] = []
   const notices: string[] = []
@@ -176,6 +177,9 @@ async function runBadgeCheck({
     notice: vi.fn((message: string) => {
       notices.push(message)
     }),
+    setFailed: vi.fn((message: string) => {
+      failures.push(message)
+    }),
     setOutput: vi.fn((name: string, value: string) => {
       outputs[name] = value
     })
@@ -201,7 +205,7 @@ async function runBadgeCheck({
     }
   }
 
-  return { comments, fetch, github, labelsAdded, labelsRemoved, notices, outputs }
+  return { comments, failures, fetch, github, labelsAdded, labelsRemoved, notices, outputs }
 }
 
 async function runCreateListingPr({
@@ -235,7 +239,7 @@ async function runCreateListingPr({
     },
     repo: {
       owner: 'serpcompany',
-      repo: 'serp.co'
+      repo: 'serp.ai'
     }
   }
   const core = {
@@ -258,7 +262,7 @@ async function runCreateListingPr({
     if (
       method === 'GET' &&
       decodedPath ===
-        '/repos/serpcompany/json-directory-template/pulls?state=open&head=serpcompany:listing/serp.co/serplists.com&base=main'
+        '/repos/serpcompany/json-directory-template/pulls?state=open&head=serpcompany:listing/serp.ai/serplists.com&base=main'
     ) {
       data = []
     } else if (
@@ -268,7 +272,7 @@ async function runCreateListingPr({
       data = { object: { sha: 'main-sha' } }
     } else if (
       method === 'GET' &&
-      decodedPath === '/repos/serpcompany/json-directory-template/git/trees/main-sha:sites/serp.co'
+      decodedPath === '/repos/serpcompany/json-directory-template/git/trees/main-sha:sites/serp.ai'
     ) {
       data = { tree: [{ path: 'products.json', sha: 'main-products-sha' }] }
     } else if (
@@ -413,13 +417,13 @@ describe('reusable verify badge workflow', () => {
     expect(failures).toEqual([])
     expect(outputs.pr_url).toBeUndefined()
     expect(comments).toEqual([
-      ':white_check_mark: **Badge verified**\n\nA listing with slug `serplists.com` already exists in `sites/serp.co/products.json`. @devinschumacher, please review whether this issue should be closed.'
+      ':white_check_mark: **Badge verified**\n\nA listing with slug `serplists.com` already exists in `sites/serp.ai/products.json`. @devinschumacher, please review whether this issue should be closed.'
     ])
     expect(requests).toEqual([
       {
         body: undefined,
         method: 'GET',
-        path: '/repos/serpcompany/json-directory-template/pulls?state=open&head=serpcompany:listing%2Fserp.co%2Fserplists.com&base=main'
+        path: '/repos/serpcompany/json-directory-template/pulls?state=open&head=serpcompany:listing%2Fserp.ai%2Fserplists.com&base=main'
       },
       {
         body: undefined,
@@ -429,7 +433,7 @@ describe('reusable verify badge workflow', () => {
       {
         body: undefined,
         method: 'GET',
-        path: '/repos/serpcompany/json-directory-template/git/trees/main-sha%3Asites%2Fserp.co'
+        path: '/repos/serpcompany/json-directory-template/git/trees/main-sha%3Asites%2Fserp.ai'
       },
       {
         body: undefined,
@@ -463,7 +467,7 @@ describe('reusable verify badge workflow', () => {
     const source = loadWorkflowSource(reusableWorkflowPath)
 
     expect(source).toContain("'serp.ai': 'reviews'")
-    expect(source).toContain("'serp.co': 'reviews'")
+    expect(source).not.toContain("'serp.co'")
     expect(source).toContain('const badgeImageUrl = `https://')
     expect(source).toContain('/badge/featured-on-')
     expect(source).toContain('-light.svg`')
@@ -496,24 +500,24 @@ describe('reusable verify badge workflow', () => {
     expect(outputs).toMatchObject({ found: 'false', slug: 'serplists.com' })
     expect(github.rest.issues.addLabels).toHaveBeenCalledWith({
       owner: 'serpcompany',
-      repo: 'serp.co',
+      repo: 'serp.ai',
       issue_number: 1,
       labels: ['badge-not-verified']
     })
     expect(github.rest.issues.createComment).toHaveBeenCalledWith(
       expect.objectContaining({
         owner: 'serpcompany',
-        repo: 'serp.co',
+        repo: 'serp.ai',
         issue_number: 1
       })
     )
     expect(labelsAdded).toContainEqual(['badge-not-verified'])
-    expect(comments[0]).toContain('No badge link to serp.co found on https://serplists.com')
+    expect(comments[0]).toContain('No badge link to serp.ai found on https://serplists.com')
   })
 
-  it('accepts the current dr.serp.co footer badge markup', async () => {
+  it('accepts the standard footer badge markup', async () => {
     const footerBadge =
-      '<footer><a href="https://serp.co/products/dr.serp.co/reviews/" target="_blank" rel="noopener noreferrer" title="Featured on SERP"><img src="https://serp.co/badge/featured-on-serp.co-light.svg" alt="Featured on SERP" width="200" height="50"/></a></footer>'
+      '<footer><a href="https://serp.ai/products/dr.serp.co/reviews/" target="_blank" rel="noopener noreferrer" title="Featured on SERP AI"><img src="https://serp.ai/badge/featured-on-serp.ai-light.svg" alt="Featured on SERP AI" width="200" height="50"/></a></footer>'
     const { comments, labelsAdded, labelsRemoved, outputs } = await runBadgeCheck({
       html: footerBadge,
       issueBody: submissionIssueBody('https://dr.serp.co')
@@ -530,7 +534,7 @@ describe('reusable verify badge workflow', () => {
   it('treats noopener noreferrer as dofollow', async () => {
     const { outputs } = await runBadgeCheck({
       html: badgeAnchor(
-        'href="https://serp.co/products/serplists.com/reviews/" rel="noopener noreferrer"'
+        'href="https://serp.ai/products/serplists.com/reviews/" rel="noopener noreferrer"'
       )
     })
 
@@ -539,7 +543,7 @@ describe('reusable verify badge workflow', () => {
 
   it('accepts protocol-relative unquoted attributes case-insensitively', async () => {
     const { outputs } = await runBadgeCheck({
-      html: '<A HREF=//www.serp.co/products/serplists.com/reviews/ REL=noopener><IMG SRC=//serp.co/badge/featured-on-serp.co-light.svg></A>'
+      html: '<A HREF=//www.serp.ai/products/serplists.com/reviews/ REL=noopener><IMG SRC=//serp.ai/badge/featured-on-serp.ai-light.svg></A>'
     })
 
     expect(outputs.found).toBe('true')
@@ -548,7 +552,7 @@ describe('reusable verify badge workflow', () => {
   it('rejects tokenized nofollow links even when other rel tokens are present', async () => {
     const { comments, outputs } = await runBadgeCheck({
       html: badgeAnchor(
-        'href="https://serp.co/products/serplists.com/reviews/" rel="nofollow noopener"'
+        'href="https://serp.ai/products/serplists.com/reviews/" rel="nofollow noopener"'
       )
     })
 
@@ -559,7 +563,7 @@ describe('reusable verify badge workflow', () => {
 
   it('rejects a dofollow link when the badge image is outside the anchor', async () => {
     const { comments, outputs } = await runBadgeCheck({
-      html: '<a href="https://serp.co/products/serplists.com/reviews/">SERP</a><img src="https://serp.co/badge/featured-on-serp.co-light.svg">'
+      html: '<a href="https://serp.ai/products/serplists.com/reviews/">SERP</a><img src="https://serp.ai/badge/featured-on-serp.ai-light.svg">'
     })
 
     expect(outputs.found).toBe('false')
@@ -569,7 +573,7 @@ describe('reusable verify badge workflow', () => {
 
   it('rejects a preloaded badge image without a linked image anchor', async () => {
     const { comments, outputs } = await runBadgeCheck({
-      html: '<link rel="preload" as="image" href="https://serp.co/badge/featured-on-serp.co-light.svg"><a href="https://serp.co/products/serplists.com/reviews/">SERP</a>'
+      html: '<link rel="preload" as="image" href="https://serp.ai/badge/featured-on-serp.ai-light.svg"><a href="https://serp.ai/products/serplists.com/reviews/">SERP</a>'
     })
 
     expect(outputs.found).toBe('false')
@@ -577,21 +581,24 @@ describe('reusable verify badge workflow', () => {
     expect(comments[0]).toContain('does not wrap the expected Featured on badge image')
   })
 
-  it('accepts dark and legacy serp.co badge image variants', async () => {
-    for (const imageSrc of [
-      'https://serp.co/badge/featured-on-serp.co-dark.svg',
-      'https://serp.co/badge/featured-on-serp-co-light.svg',
-      'https://serp.co/badge/featured-on-serp-co-dark.svg'
-    ]) {
-      const { outputs } = await runBadgeCheck({
-        html: badgeAnchor(
-          'HREF=https://www.serp.co/products/serplists.com/reviews/ REL="noopener noreferrer"',
-          imageSrc
-        )
-      })
+  it('accepts the dark badge image variant', async () => {
+    const { outputs } = await runBadgeCheck({
+      html: badgeAnchor(
+        'HREF=https://www.serp.ai/products/serplists.com/reviews/ REL="noopener noreferrer"',
+        'https://serp.ai/badge/featured-on-serp.ai-dark.svg'
+      )
+    })
 
-      expect(outputs.found).toBe('true')
-    }
+    expect(outputs.found).toBe('true')
+  })
+
+  it('rejects the retired serp.co repository as a badge target', async () => {
+    const { comments, failures, fetch, outputs } = await runBadgeCheck({ repo: 'serp.co' })
+
+    expect(failures).toEqual(['Repository "serp.co" is not an active legacy badge target.'])
+    expect(fetch).not.toHaveBeenCalled()
+    expect(comments).toEqual([])
+    expect(outputs).toEqual({})
   })
 
   it('retries new issue badge checks until a later fetch contains the badge', async () => {
@@ -600,7 +607,7 @@ describe('reusable verify badge workflow', () => {
       responses: [
         { html: '<html><body>No badge yet</body></html>' },
         { html: '<html><body>No badge yet</body></html>' },
-        { html: badgeAnchor("href='https://serp.co/products/serplists.com/reviews/'") }
+        { html: badgeAnchor("href='https://serp.ai/products/serplists.com/reviews/'") }
       ]
     })
 
@@ -626,7 +633,7 @@ describe('reusable verify badge workflow', () => {
     expect(notices).toHaveLength(3)
     expect(outputs.found).toBe('false')
     expect(comments).toHaveLength(1)
-    expect(comments[0]).toContain('No badge link to serp.co found on https://serplists.com')
+    expect(comments[0]).toContain('No badge link to serp.ai found on https://serplists.com')
   })
 })
 

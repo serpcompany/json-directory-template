@@ -7,21 +7,21 @@ export type FooterBadgeConfig = {
   title?: string
 }
 
-const featuredOnSerpCoBadgesByDomain: Record<string, FooterBadgeConfig> = {
+const featuredOnBestSerpCoBadgesByDomain: Record<string, FooterBadgeConfig> = {
   'serp.ai': {
-    alt: 'Featured on serp.co',
-    href: 'https://serp.co/products/serp.ai/reviews/',
-    src: 'https://serp.co/badge/featured-on-serp.co-light.svg',
-    title: 'Featured on serp.co'
+    alt: 'Featured on best.serp.co',
+    href: 'https://best.serp.co/products/serp.ai/',
+    src: 'https://best.serp.co/badge/featured-on-serp.co-light.svg',
+    title: 'Featured on best.serp.co'
   }
 }
 
-function resolveFeaturedOnSerpCoBadgeConfig(domain: string): FooterBadgeConfig | undefined {
-  return featuredOnSerpCoBadgesByDomain[domain.toLowerCase()]
+function resolveFeaturedOnBestSerpCoBadgeConfig(domain: string): FooterBadgeConfig | undefined {
+  return featuredOnBestSerpCoBadgesByDomain[domain.toLowerCase()]
 }
 
 export function resolveFooterBadgeConfigs(domain: string): FooterBadgeConfig[] {
-  return [resolveFeaturedOnSerpCoBadgeConfig(domain), resolveDrBadgeConfig(domain)].filter(
+  return [resolveFeaturedOnBestSerpCoBadgeConfig(domain), resolveDrBadgeConfig(domain)].filter(
     (badge): badge is FooterBadgeConfig => Boolean(badge)
   )
 }

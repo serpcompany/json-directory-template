@@ -153,7 +153,7 @@ describe('pr-review workflow', () => {
     expect(isE2eRelevant('data/listings.json')).toBe(true)
     expect(isE2eRelevant('packages/web-core/src/root-shell.tsx')).toBe(true)
     expect(isE2eRelevant('packages/ui/button.tsx')).toBe(true)
-    expect(isE2eRelevant('sites/serp.co/products.json')).toBe(true)
+    expect(isE2eRelevant('sites/serpdownloaders.com/products.json')).toBe(true)
     expect(isE2eRelevant('docs/BUILD_PIPELINE.md')).toBe(false)
     expect(isE2eRelevant('.github/workflows/pr-review.yml')).toBe(false)
   })

@@ -7,10 +7,12 @@ targets, then deploys each artifact through the target strategy in
 `sites/<site-id>/site-config.ts`.
 
 Current active checked-in deployable sites include `browserextensions.io`,
-`serp.ai`, `serp.co`, and `serpdownloaders.com`.
+`serp.ai`, and `serpdownloaders.com`.
 
 `pornvideodownloaders.com` and `serp.software` are D1/OpenNext-owned and must
-be rejected by this static deployment path.
+be rejected by this static deployment path. `serp.co` is retired from this repo
+too: its directory serves from `https://best.serp.co` out of the D1-backed
+`serpcompany/best.serp.co` repository, so the site id is rejected here as well.
 
 ## Prerequisites
 
@@ -144,11 +146,9 @@ The public `/submit` GitHub issue intake is active for:
 
 - `browserextensions.io`
 - `serp.ai`
-- `serp.co`
 - `serpdownloaders.com`
 
-Each active site's public issue repo is `serpcompany/<site-id>`, except `serp.co`, whose public
-issue repo is `serpcompany/best.serp.co` (the site serves from `https://best.serp.co`). These repos
+Each active site's public issue repo is `serpcompany/<site-id>`. These repos
 must stay public and must keep Issues enabled because the static submit form opens GitHub's public
 issue composer.
 The target repo badge workflow is a thin caller source-managed in
@@ -170,7 +170,6 @@ Required setup for every active public issue repo:
 |---|---|---|---|---|
 | `serpcompany/browserextensions.io` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
 | `serpcompany/serp.ai` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
-| `serpcompany/best.serp.co` (site id `serp.co`) | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
 | `serpcompany/serpdownloaders.com` | Enabled | Thin `.github/workflows/verify-badge.yml` caller | `GH_PAT` | Light and dark SVGs under `/badge/` |
 
 Prefer rolling out submit-intake config changes one site per source PR so review
@@ -207,7 +206,7 @@ After deploy, check:
 - the live domain returns the updated site from the intended provider
 - `<site.publicUrl>/build-info.json` returns HTTP `200`, has the expected `siteId`,
   and has a `sourceSha` matching the deployed source commit. This is `https://<site-id>/` for
-  every active site except `serp.co`, which serves from `https://best.serp.co/`
+  every active site
 
 ## Related references
 

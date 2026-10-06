@@ -308,11 +308,12 @@ Operational guidance:
 ## Known Gaps
 
 - Legal/privacy contact emails derive from `site.domain` unless `legal.contactEmailDomain` is set.
-  The value replaces every `{{domain}}` placeholder and any literal `serp.co` in the shared legal
-  MDX; today `{{domain}}` only appears in the `dmca[@]` and `privacy[@]` addresses.
-  Only `apps/serp.co/lib/content-loader.ts` passes `siteConfig.legalContactEmailDomain` to
-  `applyLegalContentBranding`. Every other wrapper, including `apps/starter` (the template that
-  `pnpm generate:site-wrapper` copies), still passes `siteConfig.domain` and ignores the override.
+  The value replaces every `{{domain}}` placeholder and any literal `serp.co` (the parent-brand
+  domain) in the shared legal MDX; today `{{domain}}` only appears in the `dmca[@]` and `privacy[@]` addresses.
+  No active wrapper passes `siteConfig.legalContactEmailDomain` to `applyLegalContentBranding`
+  (the retired `serp.co` wrapper was the only one). Every wrapper, including `apps/starter` (the
+  template that `pnpm generate:site-wrapper` copies), passes `siteConfig.domain` and ignores the
+  override.
   A site that sets `legal.contactEmailDomain` must also switch its `getLegalContent` to
   `siteConfig.legalContactEmailDomain`, or validation passes while the legal pages keep
   `site.domain`.

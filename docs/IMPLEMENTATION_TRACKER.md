@@ -13,12 +13,14 @@ Historical note:
   `serpdownloaders.com`.
 - Current: `pornvideodownloaders.com` and `serp.software` are superseded by
   D1/OpenNext applications and retired from this repository's active graph.
+- Current: `serp.co` is retired from this repository as well; its directory is
+  served from `https://best.serp.co` by the `serpcompany/best.serp.co` repo.
 - Inactive sites are parked and excluded from active resolution paths.
 - Thin wrapper apps are in place.
 - `apps/web` was removed.
 - `apps/starter` is the neutral starter wrapper.
-- Current active wrappers are `apps/browserextensions.io`, `apps/serp.ai`,
-  `apps/serp.co`, and `apps/serpdownloaders.com`.
+- Current active wrappers are `apps/browserextensions.io`, `apps/serp.ai`, and
+  `apps/serpdownloaders.com`.
 - Shared route/runtime logic lives in `packages/web-core`.
 - Site contract logic lives in `packages/site-contract`.
 - Build/deploy tooling now targets wrapper apps instead of the old shared app.
@@ -30,9 +32,9 @@ Historical note:
 - `pnpm validate:site -- --site serpdownloaders.com`
 - `pnpm build:site -- --site serpdownloaders.com`
 - `pnpm deploy:site -- --site serpdownloaders.com --dry-run`
-- `pnpm validate:site -- --site serp.co`
-- `pnpm build:site -- --site serp.co`
-- `pnpm deploy:site -- --site serp.co --dry-run`
+- `pnpm validate:site -- --site serp.ai`
+- `pnpm build:site -- --site serp.ai`
+- `pnpm deploy:site -- --site serp.ai --dry-run`
 
 ## Historical execution plans
 

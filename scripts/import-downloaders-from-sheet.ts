@@ -9,7 +9,6 @@ export const EXPECTED_DOWNLOADER_ROW_COUNT = 214
 
 export const ACTIVE_DOWNLOADER_SITE_IDS = [
   'browserextensions.io',
-  'serp.co',
   'serp.ai',
   'serpdownloaders.com'
 ] as const
@@ -107,7 +106,6 @@ const FORBIDDEN_HELP_CENTER_LINK_PATTERN = /\bhttps?:\/\/help\.serp\.co\/en(?:\/
 const SITE_PRODUCT_PATHS: Record<ActiveDownloaderSiteId, string> = {
   'browserextensions.io': 'sites/browserextensions.io/products.json',
   'serp.ai': 'sites/serp.ai/products.json',
-  'serp.co': 'sites/serp.co/products.json',
   'serpdownloaders.com': 'sites/serpdownloaders.com/products.json'
 }
 
@@ -122,10 +120,6 @@ const SITE_PRODUCT_OPTIONS: Partial<Record<ActiveDownloaderSiteId, BuildDownload
       featured: true
     },
     'serp.ai': {
-      categories: ['adult', 'video-downloaders'],
-      featured: true
-    },
-    'serp.co': {
       categories: ['adult', 'video-downloaders'],
       featured: true
     }

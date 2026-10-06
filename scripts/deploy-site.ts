@@ -81,12 +81,6 @@ export function buildDeployPlan(
 
   assertDeployTargetOverrideAllowed(env)
 
-  if (definition.id === 'serp.co') {
-    throw new Error(
-      'serp.co is deployed from serpcompany/best.serp.co (D1 Worker) since serpcompany/best.serp.co#34; this repository must not repo-sync it.'
-    )
-  }
-
   if (!definition.deploy) {
     throw new Error(`Site ${definition.id} does not define a deploy target`)
   }

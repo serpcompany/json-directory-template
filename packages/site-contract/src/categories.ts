@@ -1,7 +1,6 @@
 import browserextensionsIoCategories from '../../../sites/browserextensions.io/categories.json'
 import defaultCategories from '../../../sites/default/categories.json'
 import serpAiCategories from '../../../sites/serp.ai/categories.json'
-import serpCoCategories from '../../../sites/serp.co/categories.json'
 import serpdownloadersCategories from '../../../sites/serpdownloaders.com/categories.json'
 import { assertSiteIdIsNotRemoved } from './active-site-ids'
 import { defaultSiteConfig } from './default-site-config'
@@ -10,7 +9,6 @@ import type { SiteCategoryInput } from './types'
 const siteCategoriesById: Record<string, SiteCategoryInput[]> = {
   'browserextensions.io': browserextensionsIoCategories as SiteCategoryInput[],
   'serp.ai': serpAiCategories as SiteCategoryInput[],
-  'serp.co': serpCoCategories as SiteCategoryInput[],
   'serpdownloaders.com': serpdownloadersCategories as SiteCategoryInput[]
 }
 

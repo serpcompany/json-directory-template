@@ -30,10 +30,10 @@ describe('featured-on badge URL helpers', () => {
       getFeaturedOnBadgeListingUrl({
         listingBasePath: 'products',
         listingDetailSuffix: 'reviews',
-        publicUrl: 'https://serp.co/',
+        publicUrl: 'https://serp.ai/',
         slug: 'launchbuzz.io'
       })
-    ).toBe('https://serp.co/products/launchbuzz.io/reviews/')
+    ).toBe('https://serp.ai/products/launchbuzz.io/reviews/')
   })
 
   it('builds listing URLs without a detail suffix when the site has none', () => {

@@ -1,6 +1,5 @@
 import { browserextensionsIoSiteConfig } from '../../../sites/browserextensions.io/site-config'
 import { serpAiSiteConfig } from '../../../sites/serp.ai/site-config'
-import { serpCoSiteConfig } from '../../../sites/serp.co/site-config'
 import { serpdownloadersComSiteConfig } from '../../../sites/serpdownloaders.com/site-config'
 import { assertSiteIdIsSupported } from './active-site-ids'
 import { defaultSiteConfig } from './default-site-config'
@@ -13,7 +12,6 @@ export type { CheckedInSiteConfig, CheckedInSiteConfigOverride } from './types'
 export const siteConfigsById: Record<string, CheckedInSiteConfigOverride> = {
   'browserextensions.io': browserextensionsIoSiteConfig,
   'serp.ai': serpAiSiteConfig,
-  'serp.co': serpCoSiteConfig,
   'serpdownloaders.com': serpdownloadersComSiteConfig
 }
 

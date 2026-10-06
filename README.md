@@ -43,7 +43,8 @@ pnpm deploy:site -- --site serpdownloaders.com
 ```
 
 Other active checked-in sites can be selected with `--site`, for example
-`browserextensions.io`, `serp.ai`, or `serp.co`.
+`browserextensions.io` or `serp.ai`. The former `serp.co` directory now lives at
+`https://best.serp.co` in the `serpcompany/best.serp.co` repo and is no longer built here.
 
 Starter wrapper:
 
