@@ -1,4 +1,12 @@
 {
+  "roughsexualvideos-downloader": {
+    "ignoreNumbers": ["2"],
+    "reason": "The only 2 in the source is the tagline's \"two-step flow\", which contradicts its own three-step How It Works; the rewrite omits the count."
+  },
+  "thexxxvideos-downloader": {
+    "ignoreNumbers": ["4800"],
+    "reason": "4800 is an internal test page path (/video/4800) in the source limitations, not a product fact."
+  },
   "pornoaffe-downloader": {
     "ignoreNumbers": ["3"],
     "reason": "The only 3 in the source is the tagline's \"in just three clicks\", which contradicts its own multi-step flow; the rewrite omits the count."
