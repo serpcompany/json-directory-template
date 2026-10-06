@@ -1,6 +1,56 @@
 {
   "akih-downloader": {
-    "ignoreNumbers": ["51"],
-    "reason": "Source copy-paste error: the Aki-H product lists \"A loaded Area 51 video page\" (another product's name)."
+    "ignoreNumbers": [
+      "51"
+    ],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "javfc2-downloader": {
+    "ignoreNumbers": [
+      "51"
+    ],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "memojav-downloader": {
+    "ignoreNumbers": [
+      "51"
+    ],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "peeks-downloader": {
+    "ignoreNumbers": [
+      "51"
+    ],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "sheeshfans-downloader": {
+    "ignoreNumbers": [
+      "51"
+    ],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "underhentai-downloader": {
+    "ignoreNumbers": [
+      "51"
+    ],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "vrsumo-downloader": {
+    "ignoreNumbers": [
+      "51"
+    ],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "whereismyporn-downloader": {
+    "ignoreNumbers": [
+      "51"
+    ],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "milffox-downloader": {
+    "ignoreNumbers": [
+      "3"
+    ],
+    "reason": "The only 3 in the source is the tagline label \"three-step routine\"; the rewrite describes the same steps without counting them."
   }
 }
