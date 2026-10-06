@@ -1,0 +1,54 @@
+{
+  "topvids-downloader": {
+    "ignoreNumbers": ["33820"],
+    "reason": "33820 is an internal test page path (/video/33820/) in the source, not a product fact."
+  },
+  "roughsexualvideos-downloader": {
+    "ignoreNumbers": ["2"],
+    "reason": "The only 2 in the source is the tagline's \"two-step flow\", which contradicts its own three-step How It Works; the rewrite omits the count."
+  },
+  "thexxxvideos-downloader": {
+    "ignoreNumbers": ["4800"],
+    "reason": "4800 is an internal test page path (/video/4800) in the source limitations, not a product fact."
+  },
+  "pornoaffe-downloader": {
+    "ignoreNumbers": ["3"],
+    "reason": "The only 3 in the source is the tagline's \"in just three clicks\", which contradicts its own multi-step flow; the rewrite omits the count."
+  },
+  "akih-downloader": {
+    "ignoreNumbers": ["51"],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "javfc2-downloader": {
+    "ignoreNumbers": ["51"],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "memojav-downloader": {
+    "ignoreNumbers": ["51"],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "peeks-downloader": {
+    "ignoreNumbers": ["51"],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "sheeshfans-downloader": {
+    "ignoreNumbers": ["51"],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "underhentai-downloader": {
+    "ignoreNumbers": ["51"],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "vrsumo-downloader": {
+    "ignoreNumbers": ["51"],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "whereismyporn-downloader": {
+    "ignoreNumbers": ["51"],
+    "reason": "Source copy-paste error: lists \"A loaded Area 51 video page\" (another product's name)."
+  },
+  "milffox-downloader": {
+    "ignoreNumbers": ["3"],
+    "reason": "The only 3 in the source is the tagline label \"three-step routine\"; the rewrite describes the same steps without counting them."
+  }
+}

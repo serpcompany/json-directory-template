@@ -9,6 +9,7 @@
 - do not run a real deploy unless the user explicitly asks for that deploy and the source repo changes have already gone through gitflow: branch, commit, push, review/merge, then deploy from a clean branch synced with upstream or from GitHub Actions
 - when the source worktree has uncommitted, untracked, unpushed, behind, or diverged changes, only build, audit, report, or `--dry-run` deploy commands are allowed
 - if a merge or post-merge fast-forward is blocked by a dirty worktree, stop and resolve the dirty state through evidence-based categorization before claiming gitflow is complete or anything is live
+- listing copy must be unique to each site: rewrite taglines, bodies, and FAQs before adding or refreshing any listing, and never paste copy from apps.serp.co or another site's `products.json`. Follow the "Unique content rule" in `docs/knowledge/listing-data-contract.md`
 - do not use deploy target overrides such as `DEPLOY_REPO_URL` or `DEPLOY_BRANCH` in normal deploys; deploy targets must come from checked-in site config unless the user gives explicit same-turn emergency bypass approval
 
 

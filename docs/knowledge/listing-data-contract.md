@@ -50,6 +50,19 @@ http://localhost:3005/operator/onboard-site
 
 Use that UI when you want required/optional fields, inline validation, and JSON export. Use the checked-in source files directly for quick one-off edits.
 
+## Unique content rule
+
+Every listing's copy must be unique to its site. The same products are published across the network (apps.serp.co, serp.ai, serpdownloaders.com, browserextensions.io), so copied text competes with those pages as duplicate content.
+
+When adding or refreshing a listing from another source (apps.serp.co / `serpcompany/store-new`, another site's `products.json`, a README, or a sheet):
+
+- Rewrite `product.tagline`, every section of `content.body`, and every `content.faq` question and answer before adding it. Never paste source copy verbatim, and never copy a listing from one site's `products.json` into another's.
+- Rewrite with new wording and new sentence structure, not just synonym swaps or reordered bullets. Vary the phrasing between listings on the same site too, so pages don't share one template with only the platform name swapped.
+- Keep facts exactly as in the source: platform name, supported browsers and OS, formats, quality options, trial terms, permissions, save location, limitations, and pricing. Don't add claims that aren't in the source.
+- Don't change product names, slugs, URLs, or category values. Keep the standard legal-disclaimer FAQ ("Is this legal?") as it appears on the site.
+- Check uniqueness before merging. Compare each rewritten `content.body` against the source text, the same slug in every other site's `products.json`, and the site's other listings. Regenerate anything above roughly 0.5 similarity (`difflib.SequenceMatcher` ratio or 5-word shingle Jaccard), and put the scores in the PR.
+- Run rewrites in a Claude Code session in the Claude desktop app using rewriter subagents, not through the Anthropic API from a script. For bulk work, follow the prepare → subagent rewrite → check → apply flow described in #156.
+
 ## Public submit intake rule
 
 The public `/submit` flow currently collects one category only.

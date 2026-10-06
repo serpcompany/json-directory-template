@@ -1,0 +1,10 @@
+{
+  "hentaishare-downloader": {
+    "reason": "Owner decision (#156): the source serply_link is the generic serp.ly/serp-video-tools shared with pornvideocasting; use the product-specific install link (verified 200).",
+    "set": { "serply_link": "https://serp.ly/hentaishare-downloader" }
+  },
+  "pornvideocasting-downloader": {
+    "reason": "owner: unknown product, skipped",
+    "skip": true
+  }
+}
