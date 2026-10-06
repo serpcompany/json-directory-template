@@ -51,12 +51,17 @@ For each slug:
   fails shared sentences, reused FAQ questions and identical heading sequences across
   listings.
 - Keep the facts exactly: platform name, supported and unsupported browsers and OS, output
-  formats, quality options, trial terms, permissions and their purpose, save location or
-  folder, limitations (including "one at a time" and "keep the tab open until ..."), region,
-  and pricing. Keep a "recommended" as a recommendation, not a rule.
+  formats, quality options, permissions and their purpose, save location or folder,
+  limitations (including "one at a time" and "keep the tab open until ..."), and region.
+  Keep a "recommended" as a recommendation, not a rule.
+- **No pricing or trial language at all**, even when the source has it: no prices, payments,
+  plans, one-time vs subscription, lifetime licences, trials, free-download counts, credit
+  cards, refunds or discounts. Where a permission's reason mentions trial state, describe it
+  without the word (e.g. "activation and local preference state"). `check` fails any of it.
+  "Subscriptions" in the sense of a user's subscriptions to creators on the platform is fine.
 - Don't add anything that isn't in the source: features, benefits stated as features,
-  numbers, browsers, formats, pricing or trial terms, or claims about why content disappears.
-  Avoid spelled-out numbers (two, three, ...) unless the source has that number.
+  numbers, browsers or formats, or claims about why content disappears. Avoid spelled-out
+  numbers (two, three, ...) unless the source has that number.
 - If `conflicts` is present, keep every fact the source states and don't pick a side in a
   way that contradicts another part of the source. Mention the conflict in your report.
 - Don't change product names, slugs, URLs or category values.

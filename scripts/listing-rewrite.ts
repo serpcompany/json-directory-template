@@ -17,8 +17,12 @@
  *   --work-dir <dir>     inputs/outputs root (default tmp/listing-rewrites)
  *   --exclude a,b        extra slugs to skip
  *   --exclude-file <f>   newline-separated slugs to skip (default scripts/listing-rewrite-excluded.txt)
+ *   --replace            apply: overwrite listings already in products.json; prepare (with
+ *                        --slugs): re-prepare listings this pipeline already applied
  *   --threshold <n>      similarity ceiling, 0 < n <= 0.5 (default 0.5)
  *   --source-rev <sha>   store-new commit the source dir was read from (recorded in diff.json)
+ *   --source-git <dir>   store-new git checkout; with --source-rev it breaks ties between
+ *                        two source files for one slug (the file with the newer commit wins)
  *   --no-verify-links    prepare: skip the HTTP check of links and images (apply then refuses
  *                        the inputs). By default prepare HEAD-checks every GitHub link, install
  *                        link, SERP Apps page and image; it drops GitHub / Latest Release links
@@ -27,6 +31,7 @@
  *
  * Rewriter subagents get scripts/listing-rewrite-brief.md plus their input files.
  */
+import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -77,7 +82,6 @@ export type Facts = {
   operatingSystems: string[]
   permissions: string[]
   platform: string
-  pricingTerms: string[]
   quality: string[]
   regions: string[]
   savePaths: string[]
@@ -148,6 +152,8 @@ export const DEFAULT_SITE = 'browserextensions.io'
 export const DEFAULT_THRESHOLD = 0.5
 export const DEFAULT_WORK_DIR = 'tmp/listing-rewrites'
 export const DEFAULT_EXCLUDE_FILE = 'scripts/listing-rewrite-excluded.txt'
+/** Live apps.serp.co products that aren't browser extensions (owner decision on #156). */
+export const NOT_EXTENSIONS = new Set(['serp-downloaders-bundle'])
 export const LEGAL_QUESTION = 'Is this legal?'
 /** Shortest sentence compared across listings (short fact lists repeat legitimately). */
 export const MIN_SHARED_SENTENCE_WORDS = 8
@@ -242,23 +248,47 @@ const FORMAT_PATTERNS: Array<[string, RegExp]> = [
   ['PDF', /\bpdf\b/i]
 ]
 
-const PRICING_PATTERNS: Array<[string, RegExp]> = [
-  ['subscription', /subscri/i],
-  ['one-time', /one[- ]time/i],
-  ['lifetime', /lifetime/i],
-  ['trial', /\btrial\b/i],
-  ['credit card', /credit card/i],
-  ['refund', /refund|money[- ]back/i],
-  ['unlimited', /unlimited/i],
-  ['price', /\$\s?\d|\bpric(?:e|ing)\b/i],
-  ['discount', /discount|coupon/i],
-  ['OTP', /\bOTP\b|one[- ]time (?:pass)?code/i],
+/**
+ * Pricing and trial language. Owner decision on #156: listings carry no prices, plans,
+ * trial terms or free-download counts, so `check` fails any rewrite that contains these, and
+ * facts are extracted from source text with them blanked out.
+ */
+export const PRICING_PATTERNS: Array<[string, RegExp]> = [
+  ['price', /\$\s?\d|\bpric(?:e|es|ed|ing)\b|\bcosts?\b|\bpayments?\b|\bbilling\b/i],
   [
-    'email verification',
-    /\bemail\b.{0,40}\b(?:verif|code|sign[- ]?in|activat)|\b(?:verif|activat)\w*\b.{0,40}\bemail\b/i
+    'subscription plan',
+    /\bsubscription (?:plans?|prices?|fees?|billing|tiers?)\b|\b(?:paid|monthly|annual|yearly) subscriptions?\b|\bsubscribe to (?:a|the) (?:plan|pro|premium)\b/i
   ],
-  ['free downloads', /\bfree\b.{0,20}\bdownloads\b/i]
+  ['one-time', /\bone[- ]time (?:payment|purchase|fee|price|charge)\b/i],
+  ['lifetime', /\blifetime (?:access|license|licence|updates|deal|plan)\b/i],
+  ['trial', /\btrials?\b/i],
+  ['credit card', /\bcredit cards?\b/i],
+  ['refund', /\brefunds?\b|\bmoney[- ]back\b/i],
+  ['discount', /\bdiscounts?\b|\bcoupons?\b/i],
+  [
+    'free downloads',
+    /\bfree\b[^.\n]{0,20}\bdownloads?\b|\b\d+ (?:free |trial )?downloads\b|\b(?:two|three|four|five|ten) (?:free |trial )?downloads\b/i
+  ],
+  ['unlimited use', /\bunlimited (?:downloads|use|access|usage)\b/i],
+  ['paid plan', /\b(?:paid|premium|pro) (?:plans?|versions?|tiers?|licen[cs]es?)\b/i],
+  ['free to try', /\btry (?:it )?(?:for )?free\b|\bfree (?:to try|version|plan|tier)\b/i]
 ]
+
+/** Pricing / trial phrases found in `text`. */
+export function pricingLanguage(text: string): string[] {
+  return PRICING_PATTERNS.flatMap(([label, pattern]) => {
+    const match = text.match(new RegExp(pattern.source, 'i'))
+    return match ? [`${label} ("${match[0]}")`] : []
+  })
+}
+
+/** `text` with pricing / trial phrases blanked out, so facts never require them. */
+export function withoutPricing(text: string): string {
+  return PRICING_PATTERNS.reduce(
+    (result, [, pattern]) => result.replace(new RegExp(pattern.source, 'gi'), ' '),
+    text
+  )
+}
 
 const LIMITATION_PATTERNS: Array<[string, RegExp]> = [
   ['Safari', /\bSafari\b/],
@@ -729,7 +759,6 @@ export function extractFacts(text: string, platform: string, names: string[] = [
     operatingSystems: matchingLabels(text, OS_PATTERNS),
     permissions: permissionsIn(text),
     platform,
-    pricingTerms: matchingLabels(text, PRICING_PATTERNS),
     quality: extractQuality(text, names),
     regions: [...new Set(text.match(/\bWorldwide\b/g) ?? [])],
     savePaths: [...new Set(text.match(/\bDownloads\/[A-Za-z0-9 ._-]+?(?=[\s.,;)]|$)/g) ?? [])]
@@ -739,6 +768,8 @@ export function extractFacts(text: string, platform: string, names: string[] = [
 /** Facts in the rewrite must match the source: nothing dropped, nothing invented. */
 export function checkFacts(facts: Facts, rewriteText: string, names: string[] = []): string[] {
   const issues: string[] = []
+  const pricing = pricingLanguage(rewriteText)
+  if (pricing.length) issues.push(`pricing/trial language not allowed: ${pricing.join(', ')}`)
   const rewrite = extractFacts(rewriteText, facts.platform, names)
 
   if (!namePattern(facts.platform, 'i').test(rewriteText)) {
@@ -755,7 +786,6 @@ export function checkFacts(facts: Facts, rewriteText: string, names: string[] = 
   compare('browsers', facts.browsers, rewrite.browsers)
   compare('operating systems', facts.operatingSystems, rewrite.operatingSystems)
   compare('formats', facts.formats, rewrite.formats)
-  compare('pricing/trial terms', facts.pricingTerms, rewrite.pricingTerms)
   compare('permissions', facts.permissions, rewrite.permissions)
   compare('quality options', facts.quality ?? [], rewrite.quality)
 
@@ -784,14 +814,46 @@ export function checkFacts(facts: Facts, rewriteText: string, names: string[] = 
 // ---------------------------------------------------------------------------
 // Diff against the site
 
+export type Resolution = {
+  /** Listing that stays: an existing site key, or the source slug / file that wins. */
+  canonical: string
+  /** For an existing canonical listing: the skipped product's install link and name. */
+  installLink?: { label: string; url: string }
+  rule: string
+  slug: string
+}
+
 export type DiffResult = {
   ambiguous: Array<{ reason: string; slug: string }>
+  /** Duplicates resolved to one canonical listing (owner rules on #156). */
+  resolved: Resolution[]
   duplicateUnderOtherSlug: Array<{ matchedBy: string; siteSlug: string; slug: string }>
   liveCount: number
   missing: SourceProductFile[]
   present: string[]
   slugOnlyMissing: string[]
-  sourceDuplicates: Array<{ files: string[]; identical: boolean; slug: string }>
+  sourceDuplicates: Array<{ chosen?: string; files: string[]; identical: boolean; slug: string }>
+}
+
+/** Commit times (newest first) of a source file, used to pick between duplicate files. */
+export type FileHistory = (file: string) => number[] | undefined
+
+/** Last path segment of a serp.ly link or serpapps GitHub URL. */
+export function urlSlug(url?: string | null): string | undefined {
+  const match = cleanString(url ?? undefined)?.match(
+    /^https:\/\/(?:serp\.ly|github\.com\/serpapps)\/([^/?#]+)\/?$/i
+  )
+  return match?.[1]?.toLowerCase()
+}
+
+/** Newest-first commit times compared element by element; positive when `a` is newer. */
+function compareHistories(a: number[], b: number[]): number {
+  for (let index = 0; index < Math.max(a.length, b.length); index++) {
+    const left = a[index] ?? -1
+    const right = b[index] ?? -1
+    if (left !== right) return left - right
+  }
+  return 0
 }
 
 function normalizeUrl(url?: string | null): string | undefined {
@@ -823,7 +885,8 @@ function canonicalJson(value: unknown): string {
 
 export function diffSourceAgainstSite(
   files: SourceProductFile[],
-  siteProducts: SiteProducts
+  siteProducts: SiteProducts,
+  options: { fileHistory?: FileHistory } = {}
 ): DiffResult {
   const siteSlugs = new Set<string>()
   const siteByUrl = new Map<string, string>()
@@ -860,6 +923,7 @@ export function diffSourceAgainstSite(
     liveCount: bySlug.size,
     missing: [],
     present: [],
+    resolved: [],
     slugOnlyMissing: [],
     sourceDuplicates: []
   }
@@ -871,17 +935,44 @@ export function diffSourceAgainstSite(
       const identical = group.every(
         file => canonicalJson(file.product) === canonicalJson(group[0]?.product)
       )
-      result.sourceDuplicates.push({ files: group.map(file => file.file), identical, slug })
-      if (!identical) {
-        result.ambiguous.push({
-          reason: `multiple source files with different content: ${group.map(file => file.file).join(', ')}`,
-          slug
-        })
+      const names = group.map(file => file.file)
+      if (identical) {
+        const chosen = group.find(file => file.file.endsWith('.json')) ?? group[0]
+        result.sourceDuplicates.push({ chosen: chosen?.file, files: names, identical, slug })
+        if (chosen) candidates.push(chosen)
         continue
       }
+      // Different content: the file with the newer commit in store-new wins.
+      const histories = group.map(file => ({ file, history: options.fileHistory?.(file.file) }))
+      const ranked = histories
+        .filter((item): item is { file: SourceProductFile; history: number[] } =>
+          Boolean(item.history?.length)
+        )
+        .sort((a, b) => compareHistories(b.history, a.history))
+      const [first, second] = ranked
+      if (
+        ranked.length === group.length &&
+        first &&
+        second &&
+        compareHistories(first.history, second.history) > 0
+      ) {
+        result.sourceDuplicates.push({ chosen: first.file.file, files: names, identical, slug })
+        result.resolved.push({
+          canonical: first.file.file,
+          rule: `same slug in ${names.join(' and ')}; ${first.file.file} has the newer store-new commit history`,
+          slug
+        })
+        candidates.push(first.file)
+      } else {
+        result.sourceDuplicates.push({ files: names, identical, slug })
+        result.ambiguous.push({
+          reason: `multiple source files with different content (${names.join(', ')}) and no newer commit to choose by${options.fileHistory ? '' : ' (pass --source-git)'}`,
+          slug
+        })
+      }
+      continue
     }
-    const preferred = group.find(file => file.file.endsWith('.json')) ?? group[0]
-    if (preferred) candidates.push(preferred)
+    if (group[0]) candidates.push(group[0])
   }
 
   // Source products that share an install link or GitHub repo with another live product.
@@ -920,21 +1011,50 @@ export function diffSourceAgainstSite(
       continue
     }
 
-    const sharedUrl = urls
-      .map(([, url]) => (url ? sourceUrlOwners.get(url) : undefined))
-      .find(owners => owners && owners.length > 1)
-    if (sharedUrl) {
-      result.ambiguous.push({
-        reason: `shares install/GitHub URL with live products ${sharedUrl.join(', ')}`,
-        slug
-      })
-      continue
+    const shared = urls
+      .map(([label, url]) => ({ label, owners: url ? sourceUrlOwners.get(url) : undefined, url }))
+      .find(item => item.owners && item.owners.length > 1)
+    if (shared?.owners) {
+      // Pick the product whose slug matches the shared serp.ly / GitHub slug.
+      const sharedSlug = urlSlug(shared.url)
+      const winner = shared.owners.find(owner => owner === sharedSlug)
+      if (!winner) {
+        result.ambiguous.push({
+          reason: `shares ${shared.url} with ${shared.owners.join(', ')}, and no slug matches "${sharedSlug ?? shared.url}"`,
+          slug
+        })
+        continue
+      }
+      if (winner !== slug) {
+        result.resolved.push({
+          canonical: winner,
+          rule: `shares ${shared.url} with ${winner}, whose slug matches it`,
+          slug
+        })
+        continue
+      }
     }
 
     const coreMatch = siteByCore.get(slugCore(slug))
     if (coreMatch) {
-      result.ambiguous.push({
-        reason: `same product name as existing listing ${coreMatch} but different serply/GitHub URLs`,
+      const existing = siteProducts[coreMatch]
+      const existingUrls = new Set(
+        [existing?.product?.productPage, ...(existing?.relatedLinks ?? []).map(link => link.url)]
+          .map(url => normalizeUrl(url))
+          .filter(Boolean)
+      )
+      const install = cleanString(file.product.serply_link)
+      result.resolved.push({
+        canonical: coreMatch,
+        ...(install?.startsWith('https://serp.ly/') && !existingUrls.has(normalizeUrl(install))
+          ? {
+              installLink: {
+                label: cleanString(file.product.name) ?? slug,
+                url: install
+              }
+            }
+          : {}),
+        rule: `existing listing ${coreMatch} is canonical`,
         slug
       })
       continue
@@ -959,6 +1079,9 @@ export function buildInput(
   if (categories.length === 0) {
     return { skipReason: 'no mappable category', unmapped }
   }
+  // Owner decision on #156: every new listing is a video downloader and featured, including
+  // products whose only source category is Adult.
+  if (!categories.includes('video-downloaders')) categories.push('video-downloaders')
   const productPage = cleanString(source.serply_link)
   if (!productPage?.startsWith('https://serp.ly/')) {
     return { skipReason: 'missing serply_link', unmapped }
@@ -969,7 +1092,7 @@ export function buildInput(
   const body = buildSourceBody(source)
   const faq = buildSourceFaq(source)
   const tagline = cleanString(source.tagline) ?? ''
-  const factText = [tagline, body, faqText(faq)].join('\n\n')
+  const factText = withoutPricing([tagline, body, faqText(faq)].join('\n\n'))
   const conflicts = findSourceConflicts(source)
 
   return {
@@ -977,7 +1100,7 @@ export function buildInput(
       ...(conflicts.length ? { conflicts } : {}),
       entry: {
         categories,
-        featured: categories.includes('video-downloaders'),
+        featured: true,
         images: buildImages(source),
         productPage,
         relatedLinks: buildRelatedLinks(source, options),
@@ -1016,7 +1139,11 @@ export function buildExistingInput(
       relatedLinks: entry.relatedLinks ?? [],
       title: entry.product.title
     },
-    facts: extractFacts([tagline, body, faqText(faq)].join('\n\n'), platform, names),
+    facts: extractFacts(
+      withoutPricing([tagline, body, faqText(faq)].join('\n\n')),
+      platform,
+      names
+    ),
     mode: 'existing',
     names,
     site,
@@ -1068,6 +1195,29 @@ export async function checkUrls(
 
 const GITHUB_LINK_LABELS = new Set(['GitHub repository', 'Latest Release'])
 const REQUIRED_LINK_LABELS = new Set(['Install browser extension', 'SERP Apps'])
+
+export type LinkAddition = {
+  label: string
+  /** Existing listing the link is added to. */
+  listing: string
+  /** Skipped duplicate slug the link comes from. */
+  from: string
+  status: UrlStatus | 'not checked'
+  url: string
+}
+
+/** Add a canonical listing's extra install link after its own install link (idempotent). */
+export function addRelatedLink(entry: SiteProduct, link: RelatedLink): SiteProduct {
+  const links = entry.relatedLinks ?? []
+  const normalized = withoutTrailingSlash(link.url).toLowerCase()
+  if (links.some(item => withoutTrailingSlash(item.url).toLowerCase() === normalized)) return entry
+  let label = link.label
+  for (let n = 2; links.some(item => item.label === label); n++) label = `${link.label} (${n})`
+  const index = links.findIndex(item => item.label === 'Install browser extension')
+  const next = [...links]
+  next.splice(index === -1 ? 0 : index + 1, 0, { label, url: link.url })
+  return { ...entry, relatedLinks: next }
+}
 
 /** URLs prepare verifies for one input (the site's own product page isn't live yet). */
 export function urlsToVerify(input: RewriteInput): string[] {
@@ -1438,6 +1588,7 @@ type CliOptions = {
   site: string
   slugs?: string[]
   sourceDir?: string
+  sourceGit?: string
   sourceRev?: string
   threshold: number
   verifyLinks: boolean
@@ -1488,6 +1639,7 @@ export function parseArgs(args: string[], repoRoot: string): CliOptions {
     site: readOption(args, '--site') ?? DEFAULT_SITE,
     slugs: slugs.length ? slugs : undefined,
     sourceDir: readOption(args, '--source-dir'),
+    sourceGit: readOption(args, '--source-git'),
     sourceRev: readOption(args, '--source-rev'),
     threshold,
     verifyLinks: !args.includes('--no-verify-links'),
@@ -1536,10 +1688,34 @@ function loadSourceFiles(options: CliOptions): { dir: string; files: SourceProdu
   return { dir, files: readSourceProductFiles(dir) }
 }
 
+/** Commit times (newest first) of a products file in a store-new git checkout. */
+function gitFileHistory(gitDir: string, rev: string): FileHistory {
+  return file => {
+    try {
+      const out = execFileSync(
+        'git',
+        ['-C', gitDir, 'log', '--format=%ct', rev, '--', `${STORE_NEW_PRODUCTS_SUBDIR}/${file}`],
+        { encoding: 'utf8' }
+      )
+      const times = out.split('\n').filter(Boolean).map(Number)
+      return times.length ? times : undefined
+    } catch {
+      return undefined
+    }
+  }
+}
+
 function runDiff(options: CliOptions, repoRoot: string) {
   const { dir, files } = loadSourceFiles(options)
   const siteProducts = readSiteProducts(repoRoot, options.site)
-  const diff = diffSourceAgainstSite(files, siteProducts)
+  // `--replace --slugs a,b` re-prepares listings this pipeline already applied.
+  if (options.replace && options.slugs) {
+    for (const slug of options.slugs) delete siteProducts[slug]
+  }
+  const fileHistory = options.sourceGit
+    ? gitFileHistory(resolve(options.sourceGit), options.sourceRev ?? 'HEAD')
+    : undefined
+  const diff = diffSourceAgainstSite(files, siteProducts, { fileHistory })
   return { diff, dir, siteProducts }
 }
 
@@ -1551,6 +1727,7 @@ function summarizeDiff(diff: DiffResult) {
     missingCount: diff.missing.length,
     missingSlugs: diff.missing.map(file => file.product.slug),
     presentCount: diff.present.length,
+    resolved: diff.resolved,
     slugOnlyMissingCount: diff.slugOnlyMissing.length,
     sourceDuplicates: diff.sourceDuplicates
   }
@@ -1605,6 +1782,7 @@ async function prepare(options: CliOptions, repoRoot: string): Promise<void> {
   let inputs: RewriteInput[] = []
   const skipped: Array<{ reason: string; slug: string }> = []
   let report: Record<string, unknown> = {}
+  let linkAdditions: LinkAddition[] = []
 
   if (options.existing) {
     for (const slug of options.slugs ?? Object.keys(siteProducts)) {
@@ -1626,6 +1804,10 @@ async function prepare(options: CliOptions, repoRoot: string): Promise<void> {
         skipped.push({ reason: 'excluded (needs owner decision)', slug })
         continue
       }
+      if (NOT_EXTENSIONS.has(slug)) {
+        skipped.push({ reason: 'not a browser extension (owner decision)', slug })
+        continue
+      }
       const { input, skipReason, unmapped } = buildInput(file, {
         serpAiSlugs,
         site: options.site
@@ -1641,6 +1823,27 @@ async function prepare(options: CliOptions, repoRoot: string): Promise<void> {
       if (missing.length) missingMedia[slug] = missing
       inputs.push(input)
     }
+    const missingSlugs = new Set(diff.missing.map(file => file.product.slug))
+    for (const resolution of diff.resolved) {
+      // A same-slug file pick keeps the slug as a candidate; only other slugs are skipped.
+      if (missingSlugs.has(resolution.slug)) continue
+      skipped.push({
+        reason: `duplicate of ${resolution.canonical}: ${resolution.rule}`,
+        slug: resolution.slug
+      })
+    }
+    linkAdditions = diff.resolved.flatMap(resolution =>
+      resolution.installLink
+        ? [
+            {
+              ...resolution.installLink,
+              from: resolution.slug,
+              listing: resolution.canonical,
+              status: 'not checked' as const
+            }
+          ]
+        : []
+    )
     report = {
       ...summarizeDiff(diff),
       missingMedia,
@@ -1654,7 +1857,14 @@ async function prepare(options: CliOptions, repoRoot: string): Promise<void> {
   if (options.limit) inputs = inputs.slice(0, options.limit)
 
   if (options.verifyLinks && !options.existing) {
-    const statuses = await checkUrls(inputs.flatMap(urlsToVerify))
+    const statuses = await checkUrls([
+      ...inputs.flatMap(urlsToVerify),
+      ...linkAdditions.map(link => link.url)
+    ])
+    linkAdditions = linkAdditions.map(link => ({
+      ...link,
+      status: statuses.get(link.url) ?? 'unknown'
+    }))
     const checkedAt = new Date().toISOString()
     const verified: RewriteInput[] = []
     for (const input of inputs) {
@@ -1694,6 +1904,7 @@ async function prepare(options: CliOptions, repoRoot: string): Promise<void> {
     pending.push(input.slug)
   }
   writeJson(join(options.workDir, 'manifest.json'), manifest)
+  if (!options.existing) writeJson(join(options.workDir, 'link-additions.json'), linkAdditions)
   writeFileSync(
     join(options.workDir, 'pending.txt'),
     pending.length ? `${pending.join('\n')}\n` : ''
@@ -1886,6 +2097,24 @@ function apply(options: CliOptions, repoRoot: string): void {
     }
     products[result.slug] = buildEntry(input, output, legalAnswer, existing)
     applied.push(result.slug)
+  }
+
+  // Install links of skipped duplicates go onto their canonical existing listing, but only
+  // when prepare verified them (2xx/3xx).
+  const additionsPath = join(options.workDir, 'link-additions.json')
+  const additions = existsSync(additionsPath) ? readJson<LinkAddition[]>(additionsPath) : []
+  for (const link of additions) {
+    const entry = products[link.listing]
+    if (!entry) continue
+    if (link.status !== 'ok') {
+      refused.push(`link ${link.url} for ${link.listing}: ${link.status}`)
+      continue
+    }
+    const updated = addRelatedLink(entry, link)
+    if (updated !== entry) {
+      products[link.listing] = updated
+      applied.push(`${link.listing} (+${link.label})`)
+    }
   }
 
   writeJson(productsPath, products)

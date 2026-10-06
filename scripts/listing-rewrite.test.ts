@@ -4,6 +4,7 @@ import { join, resolve } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   absoluteMediaUrl,
+  addRelatedLink,
   applyLinkCheck,
   buildEntry,
   buildExistingInput,
@@ -27,6 +28,7 @@ import {
   mapCategories,
   parseArgs,
   permissionsIn,
+  pricingLanguage,
   type RewriteInput,
   type RewriteOutput,
   readExcludeFile,
@@ -35,7 +37,9 @@ import {
   similarity,
   slugCore,
   standardLegalAnswer,
-  urlsToVerify
+  urlSlug,
+  urlsToVerify,
+  withoutPricing
 } from './listing-rewrite.ts'
 import type { SourceProduct, SourceProductFile } from './store-new-products.ts'
 
@@ -377,65 +381,146 @@ describe('diffSourceAgainstSite', () => {
       },
       { matchedBy: 'serply_link', siteSlug: 'cam4-downloader', slug: 'cam4-video-downloader' }
     ])
-    expect(result.ambiguous.map(item => item.slug)).toEqual(['beeg-downloader'])
+    expect(result.ambiguous).toEqual([])
+    expect(result.resolved).toEqual([
+      {
+        canonical: 'beeg-video-downloader',
+        installLink: {
+          label: 'Example Tube Video Downloader',
+          url: 'https://serp.ly/beeg-downloader'
+        },
+        rule: 'existing listing beeg-video-downloader is canonical',
+        slug: 'beeg-downloader'
+      }
+    ])
     expect(result.missing.map(item => item.product.slug)).toEqual(['new-downloader'])
   })
 
-  it('flags source files that share a slug or an install URL', () => {
-    const product = sourceProduct({ slug: 'dupe-downloader', serply_link: 'https://serp.ly/a' })
+  it('offers no extra install link when the existing listing already has it', () => {
     const result = diffSourceAgainstSite(
       [
-        file(product, 'dupe-downloader.json'),
-        file({ ...product, tagline: 'different' }, 'dupe-downloader.jsonc'),
-        file(product, 'same-downloader.json'),
-        file({ ...product }, 'same-downloader.jsonc'),
         file(
           sourceProduct({
             github_repo_url: null,
-            serply_link: 'https://serp.ly/x',
-            slug: 'x1-downloader'
-          })
-        ),
-        file(
-          sourceProduct({
-            github_repo_url: null,
-            serply_link: 'https://serp.ly/x',
-            slug: 'x2-downloader'
+            serply_link: 'https://serp.ly/beeg-alt',
+            slug: 'beeg-downloader'
           })
         )
-      ].map(item =>
-        item.file === 'same-downloader.json' || item.file === 'same-downloader.jsonc'
-          ? {
-              ...item,
-              product: {
-                ...item.product,
-                slug: 'same-downloader',
-                serply_link: 'https://serp.ly/s'
-              }
-            }
-          : item
-      ),
-      {}
+      ],
+      {
+        'beeg-video-downloader': {
+          product: { productPage: 'https://serp.ly/beeg-video-downloader', title: 'Beeg' },
+          relatedLinks: [{ label: 'Beeg Alt', url: 'https://serp.ly/beeg-alt/' }]
+        }
+      }
     )
+    expect(result.resolved).toEqual([
+      expect.objectContaining({ canonical: 'beeg-video-downloader', slug: 'beeg-downloader' })
+    ])
+    expect(result.resolved[0]?.installLink).toBeUndefined()
+  })
+
+  it('resolves same-slug source files by commit history and shared links by slug', () => {
+    const product = sourceProduct({
+      github_repo_url: null,
+      serply_link: 'https://serp.ly/a',
+      slug: 'dupe-downloader'
+    })
+    const same = sourceProduct({
+      github_repo_url: null,
+      serply_link: 'https://serp.ly/s',
+      slug: 'same-downloader'
+    })
+    const shared = (slug: string) =>
+      file(
+        sourceProduct({ github_repo_url: null, serply_link: 'https://serp.ly/x2-downloader', slug })
+      )
+    const generic = (slug: string) =>
+      file(sourceProduct({ github_repo_url: null, serply_link: 'https://serp.ly/tools', slug }))
+    const files = [
+      file(product, 'dupe-downloader.json'),
+      file({ ...product, tagline: 'different' }, 'dupe-downloader.jsonc'),
+      file(same, 'same-downloader.json'),
+      file({ ...same }, 'same-downloader.jsonc'),
+      shared('x1-downloader'),
+      shared('x2-downloader'),
+      generic('g1-downloader'),
+      generic('g2-downloader')
+    ]
+    // Both files share their newest commit; the .json was also changed more recently before.
+    const history: Record<string, number[]> = {
+      'dupe-downloader.json': [300, 200, 100],
+      'dupe-downloader.jsonc': [300, 100]
+    }
+    const result = diffSourceAgainstSite(files, {}, { fileHistory: name => history[name] })
 
     expect(result.sourceDuplicates).toEqual([
       {
+        chosen: 'dupe-downloader.json',
         files: ['dupe-downloader.json', 'dupe-downloader.jsonc'],
         identical: false,
         slug: 'dupe-downloader'
       },
       {
+        chosen: 'same-downloader.json',
         files: ['same-downloader.json', 'same-downloader.jsonc'],
         identical: true,
         slug: 'same-downloader'
       }
     ])
-    expect(result.ambiguous.map(item => item.slug).sort()).toEqual([
-      'dupe-downloader',
-      'x1-downloader',
-      'x2-downloader'
+    expect(result.resolved).toEqual([
+      expect.objectContaining({ canonical: 'dupe-downloader.json', slug: 'dupe-downloader' }),
+      expect.objectContaining({ canonical: 'x2-downloader', slug: 'x1-downloader' })
     ])
-    expect(result.missing.map(item => item.file)).toEqual(['same-downloader.json'])
+    expect(result.ambiguous.map(item => item.slug).sort()).toEqual([
+      'g1-downloader',
+      'g2-downloader'
+    ])
+    expect(result.missing.map(item => item.file)).toEqual([
+      'dupe-downloader.json',
+      'same-downloader.json',
+      'x2-downloader.json'
+    ])
+  })
+
+  it('leaves differing same-slug files ambiguous without commit history', () => {
+    const product = sourceProduct({ slug: 'dupe-downloader' })
+    const files = [
+      file(product, 'dupe-downloader.json'),
+      file({ ...product, tagline: 'different' }, 'dupe-downloader.jsonc')
+    ]
+    expect(diffSourceAgainstSite(files, {}).ambiguous.map(item => item.slug)).toEqual([
+      'dupe-downloader'
+    ])
+    const tie = diffSourceAgainstSite(files, {}, { fileHistory: () => [5, 4] })
+    expect(tie.ambiguous.map(item => item.slug)).toEqual(['dupe-downloader'])
+  })
+
+  it('reads the slug of a serp.ly or GitHub link', () => {
+    expect(urlSlug('https://serp.ly/serp-video-tools')).toBe('serp-video-tools')
+    expect(urlSlug('https://github.com/serpapps/x-downloader/')).toBe('x-downloader')
+    expect(urlSlug('https://example.com/x')).toBeUndefined()
+  })
+
+  it("adds an extra install link after the listing's own one, once", () => {
+    const entry = {
+      relatedLinks: [
+        { label: 'Install browser extension', url: 'https://serp.ly/beeg-video-downloader' },
+        { label: 'SERP Apps', url: 'https://apps.serp.co/beeg-video-downloader' }
+      ]
+    }
+    const link = { label: 'Beeg Video Downloader', url: 'https://serp.ly/beeg-downloader' }
+    const once = addRelatedLink(entry, link)
+    expect(once.relatedLinks?.map(item => item.label)).toEqual([
+      'Install browser extension',
+      'Beeg Video Downloader',
+      'SERP Apps'
+    ])
+    expect(addRelatedLink(once, link)).toBe(once)
+    expect(
+      addRelatedLink(once, { label: 'Beeg Video Downloader', url: 'https://serp.ly/other' })
+        .relatedLinks?.[1]?.label
+    ).toBe('Beeg Video Downloader (2)')
   })
 
   it('reads the repo root from any serpapps GitHub URL', () => {
@@ -505,12 +590,35 @@ describe('buildInput', () => {
     expect(result.skipReason).toBe('no mappable category')
   })
 
-  it('only features products in video-downloaders', () => {
-    const result = buildInput(file(sourceProduct({ categories: ['Adult'] })), {
+  it('puts adult-only products in video-downloaders and features every listing', () => {
+    const result = buildInput(file(sourceProduct({ categories: ['Downloader', 'Adult'] })), {
       serpAiSlugs: new Set(),
       site: 'browserextensions.io'
     })
-    expect(result.input?.entry.featured).toBe(false)
+    expect(result.input?.entry.categories).toEqual(['adult', 'video-downloaders'])
+    expect(result.input?.entry.featured).toBe(true)
+  })
+
+  it('builds facts without pricing or trial terms', () => {
+    const result = buildInput(
+      file(
+        sourceProduct({
+          features: [
+            'Saves MP4 files into a dedicated Example Tube folder',
+            'Try it free with 3 downloads'
+          ],
+          permission_justifications: [
+            {
+              justification: 'Stores activation, trial, and preference state.',
+              permission: 'storage'
+            }
+          ]
+        })
+      ),
+      { serpAiSlugs: new Set(), site: 'browserextensions.io' }
+    )
+    expect(result.input?.facts.numbers).toEqual([])
+    expect(result.input?.facts.permissions).toEqual(['storage'])
   })
 })
 
@@ -549,27 +657,44 @@ describe('similarity', () => {
 
 describe('fact preservation', () => {
   const facts = extractFacts(
-    [
-      'Works on Chrome and Firefox (Windows, macOS). Saves MP4 in 1080p or 720p into a folder.',
-      '3 free downloads after email OTP verification. Worldwide.',
-      '- downloads: saves the file',
-      '- activeTab: reads the open tab'
-    ].join('\n'),
+    withoutPricing(
+      [
+        'Works on Chrome and Firefox (Windows, macOS). Saves MP4 in 1080p or 720p into a folder.',
+        'Try it free: 3 free downloads, then a one-time payment. Up to 2 videos per tab. Worldwide.',
+        '- downloads: saves the file',
+        '- activeTab: reads the open tab'
+      ].join('\n')
+    ),
     'Example Tube'
   )
 
-  it('passes when every fact is kept', () => {
+  it('passes when every fact is kept and no pricing is mentioned', () => {
     expect(
       checkFacts(
         facts,
         [
           'Example Tube clips save as MP4 (1080p or 720p) inside a folder; Chrome or Firefox on Windows or macOS.',
-          'Three free downloads come after you verify your email with an OTP. Worldwide.',
+          'At most 2 videos per tab. Worldwide.',
           '- `downloads` writes the file',
           '- `activeTab` looks at the open tab'
         ].join('\n')
       )
     ).toEqual([])
+  })
+
+  it('finds pricing and trial language', () => {
+    expect(pricingLanguage('Three free downloads, then a monthly subscription.')).toEqual([
+      'subscription plan ("monthly subscription")',
+      'free downloads ("Three free downloads")'
+    ])
+    expect(pricingLanguage('Stores trial state. No credit card.')).toEqual([
+      'trial ("trial")',
+      'credit card ("credit card")'
+    ])
+    expect(
+      pricingLanguage('Works with your Fansly subscriptions and paid access you already have.')
+    ).toEqual([])
+    expect(withoutPricing('Get 3 free downloads today.')).not.toMatch(/3/)
   })
 
   it('ignores ordered-list markers when comparing numbers', () => {
@@ -592,26 +717,25 @@ describe('fact preservation', () => {
     ).toEqual(['activeTab', 'declarativeNetRequestWithHostAccess', 'host_permissions', 'tabs'])
   })
 
-  it('reports dropped and invented facts', () => {
+  it('reports dropped and invented facts, and pricing language', () => {
     const issues = checkFacts(
       facts,
-      'Example Tube saves WebM files in 480p on Chrome, Edge and Android with 5 downloads, no email needed, and a lifetime license. Uses `downloads`.'
+      'Example Tube saves WebM files in 480p on Chrome, Edge and Android with 5 videos and a lifetime license. Uses `downloads`.'
     )
     expect(issues).toEqual(
       expect.arrayContaining([
+        'pricing/trial language not allowed: lifetime ("lifetime license")',
         'browsers missing: Firefox',
         'browsers not in source: Edge',
         'operating systems missing: Windows, macOS',
         'operating systems not in source: Android',
         'formats missing: MP4',
         'formats not in source: WebM',
-        'pricing/trial terms missing: OTP, email verification, free downloads',
-        'pricing/trial terms not in source: lifetime',
         'permissions missing: activeTab',
         'quality options missing: 1080p, 720p',
         'quality options not in source: 480p',
         'numbers not in source: 5',
-        'numbers missing: 3',
+        'numbers missing: 2',
         'regions missing: Worldwide',
         'save folder missing'
       ])

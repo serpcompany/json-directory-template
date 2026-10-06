@@ -180,6 +180,10 @@
         "url": "https://serp.ly/alpha-porno-downloader"
       },
       {
+        "label": "Alphaporno Video Downloader",
+        "url": "https://serp.ly/alphaporno-downloader"
+      },
+      {
         "label": "SERP Apps",
         "url": "https://apps.serp.co/alpha-porno-video-downloader"
       },
@@ -406,6 +410,10 @@
       {
         "label": "Install browser extension",
         "url": "https://serp.ly/beeg-video-downloader"
+      },
+      {
+        "label": "Beeg Video Downloader",
+        "url": "https://serp.ly/beeg-downloader"
       },
       {
         "label": "SERP Apps",
@@ -4742,6 +4750,10 @@
         "url": "https://serp.ly/redtube-video-downloader"
       },
       {
+        "label": "RedTube Video Downloader",
+        "url": "https://serp.ly/redtube-downloader"
+      },
+      {
         "label": "SERP Apps",
         "url": "https://apps.serp.co/redtube-video-downloader"
       },
@@ -5035,6 +5047,10 @@
       {
         "label": "Install browser extension",
         "url": "https://serp.ly/spankbang-video-downloader"
+      },
+      {
+        "label": "SpankBang Video Downloader",
+        "url": "https://serp.ly/spankbang-downloader"
       },
       {
         "label": "SERP Apps",
@@ -5368,6 +5384,10 @@
       {
         "label": "Install browser extension",
         "url": "https://serp.ly/stripchat-video-downloader"
+      },
+      {
+        "label": "Stripchat Downloader",
+        "url": "https://serp.ly/stripchat-downloader"
       },
       {
         "label": "SERP Apps",
@@ -5933,6 +5953,10 @@
       {
         "label": "Install browser extension",
         "url": "https://serp.ly/tnaflix-video-downloader"
+      },
+      {
+        "label": "TNAFlix Video Downloader",
+        "url": "https://serp.ly/tnaflix-downloader"
       },
       {
         "label": "SERP Apps",
@@ -6865,6 +6889,10 @@
         "url": "https://serp.ly/xhamster-video-downloader"
       },
       {
+        "label": "xHamster Video Downloader",
+        "url": "https://serp.ly/xhamster-downloader"
+      },
+      {
         "label": "SERP Apps",
         "url": "https://apps.serp.co/xhamster-video-downloader"
       },
@@ -7141,6 +7169,10 @@
       {
         "label": "Install browser extension",
         "url": "https://serp.ly/xnxx-video-downloader"
+      },
+      {
+        "label": "XNXX Video Downloader",
+        "url": "https://serp.ly/xnxx-downloader"
       },
       {
         "label": "SERP Apps",
@@ -7492,6 +7524,10 @@
       {
         "label": "Install browser extension",
         "url": "https://serp.ly/youporn-video-downloader"
+      },
+      {
+        "label": "YouPorn Video Downloader",
+        "url": "https://serp.ly/youporn-downloader"
       },
       {
         "label": "SERP Apps",
@@ -22723,7 +22759,7 @@
   },
   "thumbzilla-downloader": {
     "content": {
-      "body": "## Offline Copies From the Tab You're On\n\nThumbzilla Video Downloader turns a video playing in your browser into a file you can open later without a connection. Everything happens from the active page: load the clip, open the extension, and the save carries on while you keep browsing, with no extra tabs and no complicated routine.\n\nEach saved clip goes into a folder reserved for Thumbzilla, and file names are built from details on the page, which makes it easy to recognise a video when you come looking for it. The extension runs in desktop browsers with extension support on Windows, macOS and Linux, and it is meant only for videos you are already able to view.\n\n## Steps on the Video Page\n\n- **Cue up the video.** Go to the Thumbzilla page you want and let it load normally.\n- **Bring up the popup.** Click the extension in your toolbar, or use the download button on the video page instead. It looks for a usable source on the current page and then shows a download option.\n- **Choose a file option.** Pick from what the format menu lists and save; the video is written directly to your device.\n\n## Behavior at a Glance\n\nThe extension sticks to the Thumbzilla page and video you currently have open and works through them one at a time. It doesn't manage the transfer itself: your browser's standard download mechanism takes charge of the file, its built-in download tracker shows when the file arrives, and every clip is dropped into a folder named for Thumbzilla.\n\nWhat you get is the MP4 the platform offers, with the MP4 wrapper left intact from start to finish. Finished files open in whichever media player you have installed and remain on your device for watching later.\n\n## Setup Requirements\n\n**Browsers:** Chrome, Firefox, Edge, Brave, Opera, Whale and Yandex.\n\n**Operating systems:** Windows, macOS and Linux.\n\n**Availability:** Worldwide.\n\nIt is designed for Thumbzilla video pages opened in a desktop browser that accepts extensions, where the page provides a usable video source that your current session can play.\n\nIt isn't designed for Safari or mobile browsers, for DRM-encrypted or otherwise protected streams, or for videos that were removed or are unavailable. Crawling pages in bulk and scraping galleries are out of scope as well, and so is any attempt to get past private, paid, regional, age-gated or permission restrictions.\n\n## Conditions for a Successful Save\n\n- **On the page:** a saveable video option has to be exposed, and playback sometimes needs to start before the extension can detect the active source. The quality choices come from whatever the current player or host provides.\n- **On your side:** you must already be able to watch the video in your browser, and the source tab should stay open until the download completes. Working with one active video page or download per tab is recommended.\n- **Never bypassed:** logins, age gates, paid access, regional limits, protected streams, removed or unavailable media, and site permissions.\n\n## What the Manifest Requests\n\n- `downloads`: lets Thumbzilla video files be saved via the browser's download flow.\n- `activeTab`: allows a look at the Thumbzilla tab you selected, and only after you start the workflow.\n- `storage`: keeps activation, trial and local preference state.\n- `notifications`: surfaces messages about download status.\n- `contextMenus`: adds the configured Thumbzilla download action to the browser's right-click menu.\n- `tabs`: coordinates messaging between the popup, the background process and the page for the tab you chose.\n- `scripting`: injects small Thumbzilla page checks and player controls when you use the extension.\n- `offscreen`: handles video options processing in an offscreen document so downloads can complete in the browser.\n- `webRequest`: observes the video options requests and redirects that the active video page makes.\n- `declarativeNetRequest`: applies the configured request rules that video options and host workflows rely on.\n- `host_permissions`: enables video detection on Thumbzilla pages and the related host patterns.",
+      "body": "## Offline Copies From the Tab You're On\n\nThumbzilla Video Downloader turns a video playing in your browser into a file you can open later without a connection. Everything happens from the active page: load the clip, open the extension, and the save carries on while you keep browsing, with no extra tabs and no complicated routine.\n\nEach saved clip goes into a folder reserved for Thumbzilla, and file names are built from details on the page, which makes it easy to recognise a video when you come looking for it. The extension runs in desktop browsers with extension support on Windows, macOS and Linux, and it is meant only for videos you are already able to view.\n\n## Steps on the Video Page\n\n- **Cue up the video.** Go to the Thumbzilla page you want and let it load normally.\n- **Bring up the popup.** Click the extension in your toolbar, or use the download button on the video page instead. It looks for a usable source on the current page and then shows a download option.\n- **Choose a file option.** Pick from what the format menu lists and save; the video is written directly to your device.\n\n## Behavior at a Glance\n\nThe extension sticks to the Thumbzilla page and video you currently have open and works through them one at a time. It doesn't manage the transfer itself: your browser's standard download mechanism takes charge of the file, its built-in download tracker shows when the file arrives, and every clip is dropped into a folder named for Thumbzilla.\n\nWhat you get is the MP4 the platform offers, with the MP4 wrapper left intact from start to finish. Finished files open in whichever media player you have installed and remain on your device for watching later.\n\n## Setup Requirements\n\n**Browsers:** Chrome, Firefox, Edge, Brave, Opera, Whale and Yandex.\n\n**Operating systems:** Windows, macOS and Linux.\n\n**Availability:** Worldwide.\n\nIt is designed for Thumbzilla video pages opened in a desktop browser that accepts extensions, where the page provides a usable video source that your current session can play.\n\nIt isn't designed for Safari or mobile browsers, for DRM-encrypted or otherwise protected streams, or for videos that were removed or are unavailable. Crawling pages in bulk and scraping galleries are out of scope as well, and so is any attempt to get past private, paid, regional, age-gated or permission restrictions.\n\n## Conditions for a Successful Save\n\n- **On the page:** a saveable video option has to be exposed, and playback sometimes needs to start before the extension can detect the active source. The quality choices come from whatever the current player or host provides.\n- **On your side:** you must already be able to watch the video in your browser, and the source tab should stay open until the download completes. Working with one active video page or download per tab is recommended.\n- **Never bypassed:** logins, age gates, paid access, regional limits, protected streams, removed or unavailable media, and site permissions.\n\n## What the Manifest Requests\n\n- `downloads`: lets Thumbzilla video files be saved via the browser's download flow.\n- `activeTab`: allows a look at the Thumbzilla tab you selected, and only after you start the workflow.\n- `storage`: keeps activation and local preference state.\n- `notifications`: surfaces messages about download status.\n- `contextMenus`: adds the configured Thumbzilla download action to the browser's right-click menu.\n- `tabs`: coordinates messaging between the popup, the background process and the page for the tab you chose.\n- `scripting`: injects small Thumbzilla page checks and player controls when you use the extension.\n- `offscreen`: handles video options processing in an offscreen document so downloads can complete in the browser.\n- `webRequest`: observes the video options requests and redirects that the active video page makes.\n- `declarativeNetRequest`: applies the configured request rules that video options and host workflows rely on.\n- `host_permissions`: enables video detection on Thumbzilla pages and the related host patterns.",
       "faq": [
         {
           "answer": "Once the video page has loaded, press the download button on that page, or open the extension's toolbar popup and start the download from there.",
@@ -22844,7 +22880,7 @@
         }
       ]
     },
-    "featured": false,
+    "featured": true,
     "media": {
       "images": [
         "https://apps.serp.co/media/optimized-products/sharesome-downloader-ready-state-add374d26c.webp"
@@ -22852,7 +22888,8 @@
     },
     "product": {
       "categories": [
-        "adult"
+        "adult",
+        "video-downloaders"
       ],
       "productPage": "https://serp.ly/sharesome-downloader",
       "slug": "sharesome-downloader",
