@@ -1,7 +1,10 @@
 import { existsSync, readdirSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { resolveCheckedInSiteCategories } from '@thedaviddias/site-contract/categories'
-import type { LegacyListingRedirect } from '@thedaviddias/site-contract/legacy-listing-slugs'
+import {
+  type LegacyListingRedirect,
+  trimSlashes
+} from '@thedaviddias/site-contract/legacy-listing-slugs'
 import { getSiteLegacyListingRedirects } from '@thedaviddias/site-contract/site-root-listing-aliases'
 import type { CheckedInSiteConfigRecord } from './site-config.ts'
 
@@ -40,7 +43,7 @@ const STARTER_RESERVED_ROOT_SEGMENTS = [
 ]
 
 function firstSegment(path: string | undefined): string | undefined {
-  return path?.replace(/^\/+|\/+$/g, '').split('/')[0] || undefined
+  return path === undefined ? undefined : trimSlashes(path).split('/')[0] || undefined
 }
 
 // Next.js route directories and public files that become top-level URLs. Route groups such as
@@ -93,7 +96,7 @@ export function getReservedRootRouteSegments(definition: CheckedInSiteConfigReco
 }
 
 function normalizeRoutePath(path: string | undefined): string {
-  return path?.replace(/^\/+|\/+$/g, '') ?? ''
+  return path === undefined ? '' : trimSlashes(path)
 }
 
 // Static (non-dynamic) route directories under a Next.js app route directory. Route groups such as

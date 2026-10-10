@@ -24,9 +24,36 @@ export interface WebsitesListWithSortProps {
   }
 }
 
-function stripHtmlTags(html: string | null | undefined): string {
+/**
+ * Removes `<...>` tags in one linear pass. Same result as `html.replace(/<[^>]*>/g, '')`, which
+ * backtracks polynomially on long runs of `<` (CodeQL js/polynomial-redos).
+ */
+export function stripHtmlTags(html: string | null | undefined): string {
   if (!html) return ''
-  return html.replace(/<[^>]*>/g, '').trim()
+
+  let result = ''
+  let index = 0
+
+  while (index < html.length) {
+    const tagStart = html.indexOf('<', index)
+
+    if (tagStart === -1) {
+      result += html.slice(index)
+      break
+    }
+
+    const tagEnd = html.indexOf('>', tagStart + 1)
+
+    if (tagEnd === -1) {
+      result += html.slice(index)
+      break
+    }
+
+    result += html.slice(index, tagStart)
+    index = tagEnd + 1
+  }
+
+  return result.trim()
 }
 
 export function WebsitesListWithSort({

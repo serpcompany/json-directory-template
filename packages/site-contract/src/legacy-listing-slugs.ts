@@ -16,6 +16,29 @@ export const LISTING_SLUG_PATTERN = /^[a-z0-9]+(?:[.-][a-z0-9]+)*$/
 export const PUBLIC_FILE_EXTENSION_PATTERN =
   /\.(?:css|gif|ico|jpeg|jpg|js|json|map|png|svg|txt|webp|woff2?|xml)$/i
 
+/**
+ * Removes leading and trailing `/` characters. A plain loop instead of `/^\/+|\/+$/g`, which
+ * backtracks polynomially on long runs of `/` (CodeQL js/polynomial-redos).
+ */
+export function trimSlashes(value: string): string {
+  let start = 0
+  let end = value.length
+
+  while (start < end && value[start] === '/') {
+    start += 1
+  }
+
+  while (end > start && value[end - 1] === '/') {
+    end -= 1
+  }
+
+  return value.slice(start, end)
+}
+
+function firstPathSegment(value: string): string {
+  return trimSlashes(value).split('/')[0] ?? ''
+}
+
 export type LegacyListingSlugSource = {
   legacySlugs?: string[]
   slug: string
@@ -68,16 +91,12 @@ export function collectLegacyListingRedirects(
 ): LegacyListingRedirect[] {
   const liveSlugs = new Set(listings.map(listing => listing.slug))
   const reservedRootSegments = new Set(
-    [...(options.reservedRootSegments ?? [])]
-      .map(segment => segment.replace(/^\/+|\/+$/g, '').split('/')[0] ?? '')
-      .filter(Boolean)
+    [...(options.reservedRootSegments ?? [])].map(firstPathSegment).filter(Boolean)
   )
   const reservedListingSegments = new Set(
-    [...(options.reservedListingSegments ?? [])]
-      .map(segment => segment.replace(/^\/+|\/+$/g, '').split('/')[0] ?? '')
-      .filter(Boolean)
+    [...(options.reservedListingSegments ?? [])].map(firstPathSegment).filter(Boolean)
   )
-  const listingBasePath = (options.listingBasePath ?? 'listing').replace(/^\/+|\/+$/g, '')
+  const listingBasePath = trimSlashes(options.listingBasePath ?? 'listing')
   const ownersByLegacySlug = new Map<string, string>()
   const redirects: LegacyListingRedirect[] = []
   const errors: string[] = []

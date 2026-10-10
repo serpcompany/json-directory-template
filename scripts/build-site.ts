@@ -15,7 +15,10 @@ import {
 } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { LegacyListingRedirect } from '@thedaviddias/site-contract/legacy-listing-slugs'
+import {
+  type LegacyListingRedirect,
+  trimSlashes
+} from '@thedaviddias/site-contract/legacy-listing-slugs'
 import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases'
 import type { AssetSource, CheckedInSiteConfig } from '@thedaviddias/site-contract/types'
 import { categories } from '@thedaviddias/web-core/categories'
@@ -1095,7 +1098,7 @@ export function buildStaticRedirectHtml(destinationPath: string, publicUrl: stri
 }
 
 function normalizeRouteSegment(path: string | undefined): string {
-  return path?.replace(/^\/+|\/+$/g, '') ?? ''
+  return path === undefined ? '' : trimSlashes(path)
 }
 
 export function applyConfiguredPublicRoutePaths(
