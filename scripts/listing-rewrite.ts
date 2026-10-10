@@ -595,7 +595,7 @@ export function buildRelatedLinks(
 // ---------------------------------------------------------------------------
 // Source text
 
-/** Markdown body built from source fields, like upgrade-downloader-content.ts (no reviews). */
+/** Markdown body built from source fields (no reviews). */
 export function buildSourceBody(source: SourceProduct): string {
   const sections: string[] = []
   addSection(sections, 'Overview', markdownParagraphs(source.description))
