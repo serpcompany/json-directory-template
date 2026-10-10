@@ -22,9 +22,7 @@ describe('categories', () => {
   })
 
   it('applies fallback metadata when a category only supplies slug and name', () => {
-    const category = resolveCategories('default').find(
-      item => item.slug === 'developer-tools'
-    )
+    const category = resolveCategories('default').find(item => item.slug === 'developer-tools')
 
     expect(category).toBeDefined()
     expect(category?.icon).toBeDefined()

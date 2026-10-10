@@ -9,12 +9,6 @@ import {
   applySourceOverrides,
   buildEntry,
   buildExistingInput,
-  withoutReviews,
-  validateOutputShape,
-  withoutInternalNotes,
-  copiedRuns,
-  pipelineNotes,
-  existingListingCopyIssues,
   buildImages,
   buildInput,
   buildRelatedLinks,
@@ -22,8 +16,10 @@ import {
   checkFacts,
   checkRewrite,
   checkUrls,
+  copiedRuns,
   DEFAULT_EXCLUDE_FILE,
   diffSourceAgainstSite,
+  existingListingCopyIssues,
   extractFacts,
   extractNumbers,
   extractQuality,
@@ -36,6 +32,7 @@ import {
   mapCategories,
   parseArgs,
   permissionsIn,
+  pipelineNotes,
   pricingLanguage,
   type RewriteInput,
   type RewriteOutput,
@@ -47,7 +44,10 @@ import {
   standardLegalAnswer,
   urlSlug,
   urlsToVerify,
-  withoutPricing
+  validateOutputShape,
+  withoutInternalNotes,
+  withoutPricing,
+  withoutReviews
 } from './listing-rewrite.ts'
 import type { SourceProduct, SourceProductFile } from './store-new-products.ts'
 

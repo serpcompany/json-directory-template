@@ -116,9 +116,7 @@ const homepageScreenshotSlugs = Object.entries(foldedLegacySlugs)
 // 339 records before #161, minus 21 folded records and the 4 removed listings:
 // launchbuzz.io and serp-notes (off-topic), xvgold and tellatv (discontinued upstream).
 const expectedSerpdownloadersProductCount =
-  339 -
-  Object.values(foldedLegacySlugs).filter(slug => !renamedSlugs.includes(slug)).length -
-  4
+  339 - Object.values(foldedLegacySlugs).filter(slug => !renamedSlugs.includes(slug)).length - 4
 
 function cleanLabel(label?: string): string | undefined {
   if (label === 'Install extension') {
@@ -196,7 +194,9 @@ describe('serpdownloaders checked-in products', () => {
         title: expect.any(String)
       })
       // #161 rewrote every listing with its own structure, so assert shape, not headings.
-      expect(products[slug]?.content?.body?.match(/^## \S/gm)?.length ?? 0).toBeGreaterThanOrEqual(3)
+      expect(products[slug]?.content?.body?.match(/^## \S/gm)?.length ?? 0).toBeGreaterThanOrEqual(
+        3
+      )
       expect(products[slug]?.content?.body).not.toMatch(/Trial & Access|Troubleshooting/)
       expect(products[slug]?.content?.faq?.length).toBeGreaterThanOrEqual(3)
       expect(products[slug]?.relatedLinks).toEqual(
