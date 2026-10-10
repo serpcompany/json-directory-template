@@ -1408,6 +1408,19 @@ export function validateOutputShape(value: unknown, slug: string): string[] {
     }
     if (/^# \S/m.test(output.body)) issues.push('body must not contain an h1')
     if (/https?:\/\//i.test(output.body)) issues.push('body must not contain URLs')
+    // Bodies and FAQ answers render as MDX: a bare <tag> or {expression} outside a code span
+    // breaks the static build (#161, analdin `/videos/<id>/<title>/`).
+    const mdxText = [
+      output.body,
+      ...(Array.isArray(output.faq)
+        ? output.faq.map(f => `${f?.question ?? ''} ${f?.answer ?? ''}`)
+        : [])
+    ]
+      .join('\n')
+      .replace(/`[^`]*`/g, '')
+    if (/<[A-Za-z/!]|[{}]/.test(mdxText)) {
+      issues.push('MDX-unsafe "<tag>" or "{" outside a code span; wrap it in backticks')
+    }
   }
   if (!Array.isArray(output.faq) || output.faq.length < 3) {
     issues.push('faq needs at least 3 entries (legal FAQ is added by apply)')

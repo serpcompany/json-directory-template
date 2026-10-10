@@ -10,6 +10,7 @@ import {
   buildEntry,
   buildExistingInput,
   withoutReviews,
+  validateOutputShape,
   withoutInternalNotes,
   copiedRuns,
   pipelineNotes,
@@ -1077,6 +1078,23 @@ describe('apply helpers', () => {
       'raw "{}" route placeholders not allowed',
       'product named "Okxxx Downloader"; use the title "Okxxx Video Downloader"'
     ])
+  })
+
+  it('rejects MDX-unsafe tags and braces outside code spans', () => {
+    const base = {
+      body: '## A\n\na\n\n## B\n\nb\n\n## C\n\nc',
+      faq: [1, 2, 3].map(n => ({ answer: 'Pages like /videos/<id>/.', question: `Q${n}?` })),
+      slug: 'x',
+      tagline: 't'
+    }
+    expect(validateOutputShape(base, 'x')).toContain(
+      'MDX-unsafe "<tag>" or "{" outside a code span; wrap it in backticks'
+    )
+    const safe = {
+      ...base,
+      faq: base.faq.map(f => ({ ...f, answer: 'Pages like `/videos/<id>/`.' }))
+    }
+    expect(validateOutputShape(safe, 'x')).toEqual([])
   })
 
   it('rejects unusable --threshold and --limit values', () => {
