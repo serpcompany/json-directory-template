@@ -15,6 +15,7 @@ type SerpdownloadersProductEntry = {
     url?: string
   }>
   product?: {
+    legacySlugs?: string[]
     productPage?: string
     slug?: string
     tagline?: string
@@ -75,55 +76,48 @@ const missing404ProductSlugs = [
   'teachable-video-downloader'
 ] as const
 
-const pagesDevWebsiteSubmissionSlugs = [
-  'coomervideodownloader.pages.dev',
-  'doodstreamvideodownloader.pages.dev',
-  'hdzogvideodownloader.pages.dev',
-  'hotmovsvideodownloader.pages.dev',
-  'javvideodownloader.pages.dev',
-  'luxuretvvideodownloader.pages.dev',
-  'manyvidsvideodownloader.pages.dev',
-  'onlyfansvideodownloader.pages.dev',
-  'pornhatvideodownloader.pages.dev',
-  'pornhubvideodownloader.pages.dev',
-  'pornonevideodownloader.pages.dev',
-  'stripchatvideodownloader.pages.dev',
-  'txxxvideodownloader.pages.dev',
-  'uporniavideodownloader.pages.dev',
-  'whopvideodownloader.pages.dev',
-  'xfantazyvideodownloader.pages.dev',
-  'xfreehdvideodownloader.pages.dev',
-  'xgroovyvideodownloader.pages.dev',
-  'youpornvideodownloader.pages.dev'
-] as const
-
-const expectedSerpdownloadersProductCount = 319 + pagesDevWebsiteSubmissionSlugs.length
-
-const pagesDevExpectedTitles: Record<(typeof pagesDevWebsiteSubmissionSlugs)[number], string> = {
-  'coomervideodownloader.pages.dev': 'Coomer Video Downloader',
-  'doodstreamvideodownloader.pages.dev': 'DoodStream Video Downloader',
-  'hdzogvideodownloader.pages.dev': 'HDZog Video Downloader',
-  'hotmovsvideodownloader.pages.dev': 'HotMovs Video Downloader',
-  'javvideodownloader.pages.dev': 'JAV Video Downloader',
-  'luxuretvvideodownloader.pages.dev': 'LuxureTV Video Downloader',
-  'manyvidsvideodownloader.pages.dev': 'ManyVids Video Downloader',
-  'onlyfansvideodownloader.pages.dev': 'OnlyFans Video Downloader',
-  'pornhatvideodownloader.pages.dev': 'PornHat Video Downloader',
-  'pornhubvideodownloader.pages.dev': 'Pornhub Video Downloader',
-  'pornonevideodownloader.pages.dev': 'PornOne Video Downloader',
-  'stripchatvideodownloader.pages.dev': 'Stripchat Video Downloader',
-  'txxxvideodownloader.pages.dev': 'TXXX Video Downloader',
-  'uporniavideodownloader.pages.dev': 'Upornia Video Downloader',
-  'whopvideodownloader.pages.dev': 'Whop Video Downloader',
-  'xfantazyvideodownloader.pages.dev': 'XFantazy Video Downloader',
-  'xfreehdvideodownloader.pages.dev': 'XFreeHD Video Downloader',
-  'xgroovyvideodownloader.pages.dev': 'XGroovy Video Downloader',
-  'youpornvideodownloader.pages.dev': 'YouPorn Video Downloader'
+// #161: the submitted `*videodownloader.pages.dev` listings and the duplicate `<x>-downloader`
+// records were folded into one surviving listing each. The old slug is kept in
+// `product.legacySlugs` so the build emits a redirect to the survivor.
+const foldedLegacySlugs: Record<string, string> = {
+  'coomervideodownloader.pages.dev': 'coomer-downloader',
+  'doodstreamvideodownloader.pages.dev': 'doodstream-downloader',
+  'hdzogvideodownloader.pages.dev': 'hdzog-downloader',
+  'hotmovsvideodownloader.pages.dev': 'hotmovs-downloader',
+  'javvideodownloader.pages.dev': 'javhd-downloader',
+  'luxuretvvideodownloader.pages.dev': 'luxuretv-downloader',
+  'manyvidsvideodownloader.pages.dev': 'manyvids-downloader',
+  'onlyfansvideodownloader.pages.dev': 'onlyfans-downloader',
+  'pornhatvideodownloader.pages.dev': 'pornhat-downloader',
+  'pornhubvideodownloader.pages.dev': 'pornhub-downloader',
+  'pornonevideodownloader.pages.dev': 'pornone-downloader',
+  'stripchatvideodownloader.pages.dev': 'stripchat-downloader',
+  'txxxvideodownloader.pages.dev': 'txxx-downloader',
+  'uporniavideodownloader.pages.dev': 'upornia-downloader',
+  'whopvideodownloader.pages.dev': 'whop-downloader',
+  'xfantazyvideodownloader.pages.dev': 'xfantazy-downloader',
+  'xfreehdvideodownloader.pages.dev': 'xfreehd-downloader',
+  'xgroovyvideodownloader.pages.dev': 'xgroovy-downloader',
+  'youpornvideodownloader.pages.dev': 'youporn-downloader',
+  'redtube-downloader': 'redtube-video-downloader',
+  'skool-downloader': 'skool-video-downloader',
+  'xnxx-downloader': 'xnxx-video-downloader',
+  'wistia-downloader': 'wistia-video-downloader'
 }
 
-function isPagesDevWebsiteSubmission(slug: string): boolean {
-  return (pagesDevWebsiteSubmissionSlugs as readonly string[]).includes(slug)
-}
+// doodstream and jav had no twin, so they were renamed rather than folded.
+const renamedSlugs = ['doodstream-downloader', 'javhd-downloader']
+
+// Survivors that took over the submitted website's homepage screenshot (whop keeps its own screenshots).
+const homepageScreenshotSlugs = Object.entries(foldedLegacySlugs)
+  .filter(([legacySlug, slug]) => legacySlug.endsWith('.pages.dev') && slug !== 'whop-downloader')
+  .map(([, slug]) => slug)
+
+// 339 records before #161, minus 21 folded records and the removed launchbuzz.io and serp-notes.
+const expectedSerpdownloadersProductCount =
+  339 -
+  Object.values(foldedLegacySlugs).filter(slug => !renamedSlugs.includes(slug)).length -
+  2
 
 function cleanLabel(label?: string): string | undefined {
   if (label === 'Install extension') {
@@ -221,48 +215,44 @@ describe('serpdownloaders checked-in products', () => {
     >
 
     for (const [slug, product] of Object.entries(products)) {
-      if (isPagesDevWebsiteSubmission(slug)) {
-        expect(product.product?.productPage, slug).toBe(`https://${slug}`)
-        expect(product.content?.body ?? '', slug).toContain('## How It Works')
-        expect(product.content?.body ?? '', slug).toContain('## What It Does')
-        expect(product.content?.faq?.length ?? 0, slug).toBeGreaterThanOrEqual(5)
-      } else {
-        expect(product.product?.productPage, slug).toMatch(/^https:\/\/serp\.ly\/.+/)
-      }
+      expect(product.product?.productPage, slug).toMatch(/^https:\/\/serp\.ly\/.+/)
       expect(product.content?.body ?? '', slug).not.toContain('https://apps.serp.co/')
 
       expectCleanRelatedLinks(slug, product.relatedLinks)
     }
   })
 
-  it('uses homepage screenshots as main images for submitted pages.dev websites', () => {
+  it('folds duplicate and submitted pages.dev records into one listing with legacy slugs', () => {
     const products = JSON.parse(readFileSync(productsPath, 'utf8')) as Record<
       string,
       SerpdownloadersProductEntry
     >
 
-    for (const slug of pagesDevWebsiteSubmissionSlugs) {
-      const expectedImagePath = `/media/products/${slug}/homepage.png`
-      const product = products[slug]
+    for (const [legacySlug, slug] of Object.entries(foldedLegacySlugs)) {
+      expect(products[legacySlug], `${legacySlug} must not stay a live listing`).toBeUndefined()
+      expect(products[slug]?.product?.slug, slug).toBe(slug)
+      expect(products[slug]?.product?.legacySlugs, slug).toContain(legacySlug)
+    }
 
-      expect(product?.media?.images?.[0], `${slug} main image`).toBe(expectedImagePath)
+    for (const removedSlug of ['launchbuzz.io', 'serp-notes']) {
+      expect(products[removedSlug], removedSlug).toBeUndefined()
+    }
+  })
+
+  it('keeps the submitted website homepage screenshot on the surviving listing', () => {
+    const products = JSON.parse(readFileSync(productsPath, 'utf8')) as Record<
+      string,
+      SerpdownloadersProductEntry
+    >
+
+    for (const slug of homepageScreenshotSlugs) {
+      const expectedImagePath = `/media/products/${slug}/homepage.png`
+
+      expect(products[slug]?.media?.images, `${slug} images`).toContain(expectedImagePath)
       expect(
         existsSync(resolve(serpdownloadersPublicPath, expectedImagePath.slice(1))),
         `${slug} homepage screenshot must exist in serpdownloaders.com public files`
       ).toBe(true)
-    }
-  })
-
-  it('uses concise product names for submitted pages.dev website H1s', () => {
-    const products = JSON.parse(readFileSync(productsPath, 'utf8')) as Record<
-      string,
-      SerpdownloadersProductEntry
-    >
-
-    for (const slug of pagesDevWebsiteSubmissionSlugs) {
-      expect(products[slug]?.product?.title, `${slug} product title`).toBe(
-        pagesDevExpectedTitles[slug]
-      )
     }
   })
 

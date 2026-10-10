@@ -1,5 +1,7 @@
 # SERP Downloaders Website Submission Intake Plan
 
+> **Superseded 2026-10-10 by #161:** the separate `*videodownloader.pages.dev` listings were folded into their `-downloader` twins, with each old slug kept in `product.legacySlugs` so the build emits a redirect. The two hosts without a twin were renamed: `doodstreamvideodownloader.pages.dev` became `doodstream-downloader`, and `javvideodownloader.pages.dev` became `javhd-downloader` (that site links to serp.ly/javhd-downloader). Each live pages.dev host now appears on its surviving listing as a "Standalone website" related link. The rule below about not mapping hosts to existing product slugs no longer applies.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Create temporary intake files for submitted Pages.dev websites so each submitted host can become its own `serpdownloaders.com` directory listing.

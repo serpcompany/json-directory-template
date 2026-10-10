@@ -772,8 +772,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/adobe-stock-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/adobe-stock-downloader/main/images/featured.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/adobe-stock-downloader.jpg"
       ]
     },
     "product": {
@@ -971,8 +970,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/alamy-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/alamy-downloader/main/images/featured.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/alamy-downloader.jpg"
       ]
     },
     "product": {
@@ -1736,16 +1734,6 @@
       ]
     },
     "media": {
-      "images": [
-        "/media/products/beeg-video-downloader/beeg-video-downloader-1.webp",
-        "/media/products/beeg-video-downloader/beeg-video-downloader-2.webp",
-        "/media/products/beeg-video-downloader/beeg-video-downloader-3.webp",
-        "/media/products/beeg-video-downloader/beeg-video-downloader-4.webp",
-        "/media/products/beeg-video-downloader/beeg-video-downloader-5.webp",
-        "/media/products/beeg-video-downloader/beeg-video-downloader-6.webp",
-        "/media/products/beeg-video-downloader/beeg-video-downloader-7.webp",
-        "/media/products/beeg-video-downloader/beeg-video-downloader-8.webp"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/beeg-downloader.png"
     },
     "product": {
@@ -2998,10 +2986,6 @@
       ]
     },
     "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/cam4-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/cam4-video-downloader/main/images/featured.gif"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/cam4-downloader.png"
     },
     "product": {
@@ -3566,9 +3550,6 @@
       ]
     },
     "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpdownloaders/clientclub-downloader/main/images/featured.gif"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/clientclub-downloader.png"
     },
     "product": {
@@ -3735,12 +3716,14 @@
     },
     "media": {
       "images": [
-        "/media/products/coomer-downloader/featured.webp",
-        "/media/products/coomer-downloader/coomer-homepage.webp"
+        "/media/products/coomer-downloader/homepage.png"
       ],
       "logo": "/listing-logos/serpdownloaders.com/coomer-downloader.png"
     },
     "product": {
+      "legacySlugs": [
+        "coomervideodownloader.pages.dev"
+      ],
       "productPage": "https://serp.ly/coomer-downloader",
       "slug": "coomer-downloader",
       "tagline": "Coomer content cycles quickly. Save videos, images, and posts to your device in bulk before they rotate out of reach.",
@@ -3786,47 +3769,12 @@
       {
         "label": "Latest Release",
         "url": "https://github.com/serpapps/coomer-downloader/releases/latest"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://coomervideodownloader.pages.dev"
       }
     ]
-  },
-  "coomervideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://coomervideodownloader.pages.dev",
-      "slug": "coomervideodownloader.pages.dev",
-      "tagline": "Save Coomer media to your device for offline viewing. A quick, secure browser-based Coomer downloader.",
-      "title": "Coomer Video Downloader"
-    },
-    "media": {
-      "logo": "https://coomervideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/coomervideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave Coomer media to your device for offline viewing. A quick, secure browser-based Coomer downloader.\n\nCoomer Video Downloader is a browser extension built for desktop users who want to capture accessible Coomer videos directly from pages already visible in their active browser session.\n\nEverything happens within the browser itself: navigate to the page, allow the extension to identify available media streams, select your preferred quality tier, and store the resulting file on your local machine.\n\nThere is no terminal usage required, no screen-capture workaround, and no additional steps beyond your normal browsing routine.\n\n## How It Works\n\n- Install the extension: Visit the Coomer Video Downloader product page and add the appropriate build for your desktop browser.\n- Navigate to Coomer: Browse to any Coomer page containing media that is already viewable in your current session.\n- Select a detected source: Use the extension panel or the in-page overlay to examine available video streams and resolution options.\n- Download to your machine: Save the chosen media as a local file for offline access.\n\n## What It Does\n\n- Identifies Coomer media across supported pages: Locates video streams from Coomer pages and embedded content your browser can already render.\n- Produces standard MP4 output: Stores videos in your local downloads directory for offline playback, reference, archival, or review purposes.\n- Maintains your privacy throughout: The extension-based approach means no source media gets uploaded to any external conversion service.\n- Compatible with popular desktop browsers: Run the downloader in Chromium-based browsers and other supported desktop environments.\n- Respects content accessibility boundaries: Only captures media you already have legitimate access to view and save.\n- Streamlined single-page experience: Visit the page, let detection run, pick your option, and save the file.\n\n## Browser and Platform Support\n\nCompatible with the leading desktop browsers and operating systems people rely on every day.\n\nChoose the browser build that fits your setup. If a direct GitHub release exists, you can download the ZIP package from there.\n\nGet Coomer Video Downloader installed on your preferred desktop browser.\n\nWe suggest using the ZIP distribution from the GitHub release when one is available. This approach allows us to deliver the most feature-complete build, including capabilities that browser extension stores may not always permit.\n\n## Privacy and Use Boundaries\n\n- Produces standard MP4 output: Stores videos in your local downloads directory for offline playback, reference, archival, or review purposes.\n- Maintains your privacy throughout: The extension-based approach means no source media gets uploaded to any external conversion service.\n- Respects content accessibility boundaries: Only captures media you already have legitimate access to view and save.\n- Use the downloader exclusively for content you have the rights or authorization to save.\n- Detection results depend on the media sources the current page makes available.\n- Changes to the site layout may necessitate extension updates.",
-      "faq": [
-        {
-          "question": "How do I download videos from Coomer?",
-          "answer": "Set up Coomer Video Downloader, open a Coomer page with media it is possible to access, then use the tool action to detect and save the available file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No -- The browser extension workflow is designed around local detection and local saving instead of uploading source media to a separate conversion service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "This utility is intended for supported desktop browsers such as Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not compatible."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "Only capture media it is possible to already access and are authorized to capture. This utility is not for bypassing restrictions or account controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Output prioritizes standard offline video files such as MP4 when the source page exposes a compatible media stream."
-        }
-      ]
-    }
   },
   "coursera-downloader": {
     "content": {
@@ -3868,8 +3816,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/coursera-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/coursera-downloader/main/images/featured.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/coursera-downloader.jpg"
       ]
     },
     "product": {
@@ -4087,11 +4034,7 @@
     },
     "media": {
       "images": [
-        "/media/products/dailymotion-downloader/dailymotion-homepage.jpg",
-        "/media/products/dailymotion-downloader/dailymotion-downloader-screenshot-1.jpg",
-        "/media/products/dailymotion-downloader/dailymotion-downloader-screenshot-2.jpg",
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/dailymotion-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/dailymotion-downloader/main/images/dailymotion-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/dailymotion-downloader.jpg"
       ],
       "logo": "/listing-logos/serpdownloaders.com/dailymotion-downloader.png"
     },
@@ -4308,13 +4251,6 @@
         }
       ]
     },
-    "media": {
-      "images": [
-        "/media/products/deviantart-downloader/deviantart-homepage.webp",
-        "/media/products/deviantart-downloader/featured.webp",
-        "https://raw.githubusercontent.com/serpapps/deviantart-downloader/main/images/deviantart-downloader.gif"
-      ]
-    },
     "product": {
       "productPage": "https://serp.ly/deviantart-downloader",
       "slug": "deviantart-downloader",
@@ -4336,17 +4272,20 @@
       }
     ]
   },
-  "doodstreamvideodownloader.pages.dev": {
+  "doodstream-downloader": {
     "product": {
-      "productPage": "https://doodstreamvideodownloader.pages.dev",
-      "slug": "doodstreamvideodownloader.pages.dev",
+      "legacySlugs": [
+        "doodstreamvideodownloader.pages.dev"
+      ],
+      "productPage": "https://serp.ly/doodstream-downloader",
+      "slug": "doodstream-downloader",
       "tagline": "Capture DoodStream videos as MP4 files with no wait timers, direct URL resolution, and completely local saves.",
       "title": "DoodStream Video Downloader"
     },
     "media": {
       "logo": "https://doodstreamvideodownloader.pages.dev/logo.png",
       "images": [
-        "/media/products/doodstreamvideodownloader.pages.dev/homepage.png"
+        "/media/products/doodstream-downloader/homepage.png"
       ]
     },
     "content": {
@@ -4373,7 +4312,13 @@
           "answer": "Output prioritizes standard offline video files such as MP4 when the source page exposes a compatible media stream."
         }
       ]
-    }
+    },
+    "relatedLinks": [
+      {
+        "label": "Standalone website",
+        "url": "https://doodstreamvideodownloader.pages.dev"
+      }
+    ]
   },
   "dreamcam-downloader": {
     "content": {
@@ -4434,10 +4379,6 @@
       ]
     },
     "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/dreamcam-video-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/dreamcam-video-downloader/main/images/featured.gif"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/dreamcam-downloader.png"
     },
     "product": {
@@ -4540,10 +4481,6 @@
       ]
     },
     "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/dreamcam-vr-video-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/dreamcam-vr-video-downloader/main/images/featured.gif"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/dreamcam-vr-downloader.png"
     },
     "product": {
@@ -5450,10 +5387,6 @@
       ]
     },
     "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/fansly-live-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/fansly-live-downloader/main/images/featured.gif"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/fansly-live-downloader.png"
     },
     "product": {
@@ -6569,8 +6502,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/getty-images-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/getty-images-downloader/main/images/getty-images-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/getty-images-downloader.jpg"
       ]
     },
     "product": {
@@ -7262,9 +7194,15 @@
       ]
     },
     "media": {
-      "logo": "/listing-logos/serpdownloaders.com/hdzog-downloader.png"
+      "logo": "/listing-logos/serpdownloaders.com/hdzog-downloader.png",
+      "images": [
+        "/media/products/hdzog-downloader/homepage.png"
+      ]
     },
     "product": {
+      "legacySlugs": [
+        "hdzogvideodownloader.pages.dev"
+      ],
       "productPage": "https://serp.ly/hdzog-downloader",
       "slug": "hdzog-downloader",
       "tagline": "HDZog lacks a native download button, but you can still capture any video to your device at the quality you prefer. Quick, private, dependable.",
@@ -7310,47 +7248,12 @@
       {
         "label": "Latest Release",
         "url": "https://github.com/serpapps/hdzog-downloader/releases/latest"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://hdzogvideodownloader.pages.dev"
       }
     ]
-  },
-  "hdzogvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://hdzogvideodownloader.pages.dev",
-      "slug": "hdzogvideodownloader.pages.dev",
-      "tagline": "Save HDZog videos for offline access. A quick, private HDZog downloader.",
-      "title": "HDZog Video Downloader"
-    },
-    "media": {
-      "logo": "https://hdzogvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/hdzogvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave HDZog videos for offline access. A quick, private HDZog downloader.\n\nHDZog Video Downloader is a browser extension designed for desktop users who want to capture accessible HDZog videos from pages their browser session can already display.\n\nThe entire workflow stays within your browser: navigate to the page, let the extension identify the active media source, select an available quality option, and store the final file locally.\n\nNo command-line tools, no screen recording software, and no additional workflow beyond your normal browsing experience.\n\n## How It Works\n\n- Install the extension: Go to the HDZog Video Downloader product page and add the build for your supported desktop browser.\n- Navigate to HDZog: Browse to an HDZog page with media you can already view in your current session.\n- Pick a detected file: Use the extension panel or in-page action to review available video sources and quality options.\n- Download locally: Store the selected media as an offline file on your computer.\n\n## What It Does\n\n- Identifies HDZog media on supported pages: Locates available video sources from HDZog pages and embeds your browser can access.\n- Produces standard MP4 files locally: Stores videos in a local downloads directory for offline playback, study, review, or archiving.\n- Keeps media handling private: The browser extension workflow avoids sending source media to any third-party conversion service.\n- Works with popular desktop browsers: Use the downloader from Chromium-based browsers and other supported desktop builds.\n- Designed for accessible content: Only captures content you can already access and have authorization to save.\n- Efficient single-page workflow: Navigate to the page, let detection run, pick your option, and save.\n\n## Browser and Platform Support\n\nCompatible with the leading desktop browsers and operating systems people use in their daily workflows.\n\nChoose the browser build that suits your setup. When a direct GitHub release is available, you can grab the ZIP file from there.\n\nGet HDZog Video Downloader installed on your preferred desktop browser.\n\nWe suggest using the ZIP distribution from the GitHub release when available. This allows us to deliver the most feature-complete build, including capabilities that browser extension stores may not always permit.\n\n## Privacy and Use Boundaries\n\n- Produces standard MP4 files locally: Stores videos in a local downloads directory for offline playback, study, review, or archiving.\n- Keeps media handling private: The browser extension workflow avoids sending source media to any third-party conversion service.\n- Designed for accessible content: Only captures content you can already access and have authorization to save.\n- Use the downloader exclusively for content you have the rights or authorization to save.\n- Detection results depend on the media sources the current page makes available.\n- Changes to the site layout may necessitate extension updates.",
-      "faq": [
-        {
-          "question": "How do I download videos from HDZog?",
-          "answer": "Set up HDZog Video Downloader, open a HDZog page with media it is possible to access, then use the tool action to detect and save the available file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No -- The browser extension workflow is designed around local detection and local saving instead of uploading source media to a separate conversion service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "This utility is intended for supported desktop browsers such as Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not compatible."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "Only capture media it is possible to already access and are authorized to capture. This utility is not for bypassing restrictions or account controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Output prioritizes standard offline video files such as MP4 when the source page exposes a compatible media stream."
-        }
-      ]
-    }
   },
   "helloporn-downloader": {
     "content": {
@@ -7618,10 +7521,18 @@
         }
       ]
     },
+    "media": {
+      "images": [
+        "/media/products/hotmovs-downloader/homepage.png"
+      ]
+    },
     "product": {
       "categories": [
         "adult",
         "video-downloaders"
+      ],
+      "legacySlugs": [
+        "hotmovsvideodownloader.pages.dev"
       ],
       "productPage": "https://serp.ly/hotmovs-downloader",
       "slug": "hotmovs-downloader",
@@ -7656,47 +7567,12 @@
       {
         "label": "GitHub Issues",
         "url": "https://github.com/serpapps/hotmovs-downloader/issues"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://hotmovsvideodownloader.pages.dev"
       }
     ]
-  },
-  "hotmovsvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://hotmovsvideodownloader.pages.dev",
-      "slug": "hotmovsvideodownloader.pages.dev",
-      "tagline": "Save accessible HotMovs videos as MP4 files through private in-browser detection, local storage, and offline playback support.",
-      "title": "HotMovs Video Downloader"
-    },
-    "media": {
-      "logo": "https://hotmovsvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/hotmovsvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave HotMovs videos as MP4 files using a private, browser-based download workflow with no external tools.\n\nHotMovs Video Downloader is a desktop browser extension that lets you grab accessible HotMovs videos directly from pages your browser can already load and play.\n\nThe entire process happens inside your browser: visit the page, let the extension identify the playing media, pick your preferred quality, and save the file to your computer.\n\nNo terminal commands, no screen capture software, and nothing outside the browser window.\n\n## How It Works\n\n- Get the extension: Visit the HotMovs Video Downloader page and install the version built for your desktop browser.\n- Browse to HotMovs: Go to any HotMovs page where media is already viewable in your session.\n- Review detected sources: Open the extension panel or use the on-page control to see available video files and quality levels.\n- Download to your machine: Save the chosen media as a local file for offline access.\n\n## What It Does\n\n- Finds HotMovs video sources on supported pages: Locates playable media from HotMovs pages and embedded players your browser session can reach.\n- Stores MP4 files on your computer: Downloads land in a local folder ready for offline playback, reference, or personal archiving.\n- Processes everything privately: The extension runs in your browser without sending media through any third-party conversion service.\n- Works with popular desktop browsers: Install and use the downloader in Chromium-based browsers and other supported desktop builds.\n- Designed for accessible content: Intended for saving content you can already view and have permission to keep.\n- Streamlined single-page workflow: Visit the page, let detection run, select your option, and save.\n\n## Browser and Platform Support\n\nRuns on the desktop browsers and operating systems people use daily.\n\nChoose the build that matches your browser. If a direct GitHub release is available, download the ZIP from there.\n\nInstall HotMovs Video Downloader for your preferred desktop browser.\n\nWe suggest the ZIP build from GitHub releases when possible. It includes the most complete feature set, including capabilities that browser extension stores may restrict.\n\n## Privacy and Use Boundaries\n\n- Stores MP4 files on your computer: Downloads go to a local folder for offline playback, reference, or archiving.\n- Processes everything privately: Media stays in your browser without passing through external converters.\n- Designed for accessible content: Only save content you can already view and have the right to download.\n- Respect content ownership and save only what you have permission to keep.\n- Detection depends on the media sources the current page provides.\n- Updates may be needed if the site changes its page layout or player structure.",
-      "faq": [
-        {
-          "question": "How do I download videos from HotMovs?",
-          "answer": "Get HotMovs Video Downloader installed, visit a HotMovs page with media you can view, then use the extension action to find and save the available file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No. The browser extension pipeline is built around local detection and local saving rather than routing source media through an external conversion service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "The downloader is intended for supported desktop browsers such as Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not supported."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "Only save media you can already view and have rights to keep. The downloader is not designed to bypass restrictions or account controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Downloads are focused on standard offline video files such as MP4 when the source page exposes a compatible media stream."
-        }
-      ]
-    }
   },
   "hqfap-downloader": {
     "content": {
@@ -7868,8 +7744,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/hulu-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/hulu-downloader/main/images/hulu-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/hulu-downloader.jpg"
       ]
     },
     "product": {
@@ -8224,8 +8099,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/internet-archive-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/internet-archive-downloader/main/images/internet-archive-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/internet-archive-downloader.jpg"
       ]
     },
     "product": {
@@ -8450,17 +8324,20 @@
       }
     ]
   },
-  "javvideodownloader.pages.dev": {
+  "javhd-downloader": {
     "product": {
-      "productPage": "https://javvideodownloader.pages.dev",
-      "slug": "javvideodownloader.pages.dev",
+      "legacySlugs": [
+        "javvideodownloader.pages.dev"
+      ],
+      "productPage": "https://serp.ly/javhd-downloader",
+      "slug": "javhd-downloader",
       "tagline": "Save JAVHD videos for offline viewing. Quick, private JAVHD downloader.",
       "title": "JAV Video Downloader"
     },
     "media": {
       "logo": "https://javvideodownloader.pages.dev/logo.png",
       "images": [
-        "/media/products/javvideodownloader.pages.dev/homepage.png"
+        "/media/products/javhd-downloader/homepage.png"
       ]
     },
     "content": {
@@ -8487,7 +8364,13 @@
           "answer": "Downloads focus on standard offline video files such as MP4 when the source page provides a compatible media stream."
         }
       ]
-    }
+    },
+    "relatedLinks": [
+      {
+        "label": "Standalone website",
+        "url": "https://javvideodownloader.pages.dev"
+      }
+    ]
   },
   "jerkmotion-downloader": {
     "content": {
@@ -9304,41 +9187,6 @@
       }
     ]
   },
-  "launchbuzz.io": {
-    "featured": false,
-    "media": {
-      "images": [
-        "/media/products/launchbuzz.io/og.png"
-      ],
-      "logo": "/media/products/launchbuzz.io/og.png"
-    },
-    "product": {
-      "categories": [
-        "product-launch-websites"
-      ],
-      "productPage": "https://launchbuzz.io",
-      "slug": "launchbuzz.io",
-      "tagline": "Find and upvote products launching every day.",
-      "title": "LaunchBuzz"
-    },
-    "content": {
-      "body": "## Overview\n\nLaunchBuzz is a community-driven platform for showcasing and discovering new tech products. Visitors browse daily launches, upvote their favorites, and find tools worth trying. Makers submit their projects to gain visibility, earn a LaunchBuzz badge for credibility, and receive a backlink to their product page.\n\n## What It Offers\n\n- A daily feed of new tech product launches for discovery and voting\n- A submission process for makers to showcase projects and reach early adopters\n- Promotional features including launch badges, backlinks, tiered pricing, and sponsorship placements"
-    },
-    "relatedLinks": [
-      {
-        "label": "LaunchBuzz",
-        "url": "https://launchbuzz.io"
-      },
-      {
-        "label": "Submit Project",
-        "url": "https://launchbuzz.io/projects/submit"
-      },
-      {
-        "label": "Pricing",
-        "url": "https://launchbuzz.io/pricing"
-      }
-    ]
-  },
   "letmejerk-downloader": {
     "content": {
       "body": "## Overview\n\nLetMeJerk and its sibling domain LetMeJizz share a distinctive URL layout where a compact short code sits between the domain and the content slug. This two-part route is unique to these sites and marks the pages where an iframe embed handoff delivers the actual video player. The media stream, whether M3U8 or MP4, only appears after the embed fully resolves inside the iframe chain.\n\nThis extension was built around that specific page structure. It detects the short-code route segment, waits for the iframe embed to load and settle, and then checks for available M3U8 playlists or direct MP4 files. Both LetMeJerk and LetMeJizz domains are covered as a paired footprint.\n\n- Targets the short-code-plus-slug route pattern on LetMeJerk and LetMeJizz\n- Monitors the iframe embed handoff to find media after it resolves\n- Detects M3U8 playlists and direct MP4 file references\n- Covers both LetMeJerk and LetMeJizz domains as paired sites\n- Verified target with honest messaging about current capabilities\n\n## Why Letmejerk Downloader\n\nThe short-code route structure on LetMeJerk and LetMeJizz confuses most generic download tools. They see the URL, do not recognize the route pattern, and attempt a standard page scan that finds nothing because the media loads inside an iframe embed. The handoff sequence needs to complete before any stream reference becomes visible, and tools that scan immediately will always come up empty.\n\nThis extension takes a patient, site-aware approach. It recognizes the short-code segment as a signal that media will arrive through an iframe handoff, gives the embed time to fully resolve, and then inspects the loaded player for M3U8 or MP4 sources. That waiting period and route awareness is what separates a successful download from a blank popup.\n\n## Features\n\n- Short-code route detection for LetMeJerk and LetMeJizz page patterns\n- Patient iframe embed monitoring that waits for the handoff to complete\n- M3U8 playlist detection from the resolved player\n- Direct MP4 file capture when the player serves them\n- Dual-domain coverage across LetMeJerk and LetMeJizz\n- Popup interface listing detected streams with quality and format information\n- All downloads saved as standard MP4 files\n- Cautious readiness messaging reflecting current development status\n\n## How It Works\n\n1. Install the extension from the latest release build.\n2. Browse to a LetMeJerk or LetMeJizz video page with a short-code route.\n3. Allow the iframe embed to fully resolve and the player to load.\n4. Open the extension popup from the toolbar.\n5. Browse detected streams and choose your preferred option.\n6. Click download to save the MP4 file locally.\n7. Play it in any standard media player.\n\n## Step-by-Step Tutorial: How to Download Videos from Letmejerk\n\n1. Navigate to LetMeJerk or LetMeJizz and open a video page.\n2. Look for the short-code segment in the URL between the domain and the slug.\n3. Wait for the page to load and the iframe embed to finish its handoff.\n4. Click the extension icon in the browser toolbar to open the popup.\n5. The extension scans the resolved embed for M3U8 or MP4 sources.\n6. Select the format and quality you want.\n7. Press download and monitor the progress.\n8. Find the completed MP4 in your downloads directory.\n\n## Supported Formats\n\n- Input: M3U8 playlists and direct MP4 files from the iframe embed on LetMeJerk and LetMeJizz short-code route pages\n- Output: MP4\n\nStandard MP4 output guarantees playback compatibility across all major devices and players.\n\n## Who It's For\n\n- LetMeJerk and LetMeJizz visitors who want to save videos from the short-code route pages\n- Users whose generic tools consistently fail on the iframe embed handoff\n- People who want a single extension covering both paired domains\n- Anyone who values transparent communication about extension capabilities\n\n## Common Use Cases\n\n- Save a video from LetMeJerk or LetMeJizz for offline viewing\n- Archive content before it gets removed or becomes unavailable\n- Let the extension handle the iframe embed resolution instead of manual network inspection\n- Use one tool for both LetMeJerk and LetMeJizz instead of configuring separate solutions\n- Test with the free trial on real pages before upgrading\n\n## Troubleshooting\n\n**No media detected after scanning.**\nThe iframe embed may not have completed its handoff. Wait 10-15 seconds after the page loads, then reopen the popup.\n\n**Download fails before finishing.**\nM3U8 segmented downloads are sensitive to connection drops. Verify your network stability and retry.\n\n**Extension does not activate.**\nCheck the URL for a short-code segment between the domain and the slug. Standard listing pages do not trigger the extension.\n\n**Only one stream option available.**\nSome videos expose a single variant through the embed. The extension shows everything it detects.\n\n**Saved file will not play back.**\nTry VLC Media Player, which supports a wider range of MP4 variations than most default players.\n\n## Trial & Access\n\n- **3 free downloads** to test on actual LetMeJerk or LetMeJizz pages\n- Email sign-in with one-time password authentication\n- No credit card needed for the trial\n- Unlimited saves with a paid license\n\nStart here: [https://serp.ly/letmejerk-downloader](https://serp.ly/letmejerk-downloader)\n\n## Installation Instructions\n\n1. Go to the release page: [GitHub Releases](https://github.com/serpapps/letmejerk-downloader/releases/latest)\n2. Download the build matching your browser.\n3. Install the extension.\n4. Open a LetMeJerk or LetMeJizz video page.\n5. Use the popup to detect and save available media.\n\n## Notes\n\n- Only download content you have permission to save\n- Active internet required throughout the download process\n- The extension covers both LetMeJerk and LetMeJizz as paired domains\n- Iframe embed resolution timing can vary between pages\n\n## About Letmejerk\n\nLetMeJerk and LetMeJizz are paired adult video platforms that use a short-code route structure for their video pages. Media delivery runs through iframe embed handoffs, making a route-aware extension that waits for the embed to resolve substantially more effective than generic tools.",
@@ -9512,10 +9360,6 @@
       ]
     },
     "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/linkedin-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/linkedin-downloader/main/images/featured.gif"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/linkedin-downloader.png"
     },
     "product": {
@@ -9587,11 +9431,6 @@
           "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
           "question": "Is this legal?"
         }
-      ]
-    },
-    "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/livejasmin-downloader/main/images/livejasmin-downloader.gif"
       ]
     },
     "product": {
@@ -9897,7 +9736,15 @@
         }
       ]
     },
+    "media": {
+      "images": [
+        "/media/products/luxuretv-downloader/homepage.png"
+      ]
+    },
     "product": {
+      "legacySlugs": [
+        "luxuretvvideodownloader.pages.dev"
+      ],
       "productPage": "https://serp.ly/luxuretv-downloader",
       "slug": "luxuretv-downloader",
       "tagline": "Keep LuxureTV videos on your device with a single click. Build your niche collection offline and always accessible.",
@@ -9943,47 +9790,12 @@
       {
         "label": "Latest Release",
         "url": "https://github.com/serpapps/luxuretv-downloader/releases/latest"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://luxuretvvideodownloader.pages.dev"
       }
     ]
-  },
-  "luxuretvvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://luxuretvvideodownloader.pages.dev",
-      "slug": "luxuretvvideodownloader.pages.dev",
-      "tagline": "Save LuxureTV videos for offline viewing. Quick, private LuxureTV downloader.",
-      "title": "LuxureTV Video Downloader"
-    },
-    "media": {
-      "logo": "https://luxuretvvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/luxuretvvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave LuxureTV videos to your computer for offline access. A fast, private download extension.\n\nLuxureTV Video Downloader is a desktop browser extension for capturing accessible LuxureTV videos from pages you can already watch in your browser.\n\nThe workflow stays entirely local: go to the page, let the extension detect the active stream, choose your quality tier, and save the file to your drive.\n\nNo command-line utilities, no screen capture tools, and no external workflow required.\n\n## How It Works\n\n- Get the extension: Open the LuxureTV Video Downloader page and install the appropriate build for your desktop browser.\n- Navigate to LuxureTV: Browse to a LuxureTV page where media is already playing or available in your session.\n- Select a detected source: Open the extension panel or use the page-level action to review video sources and quality tiers.\n- Save the file: Download the chosen media as a local file for offline use.\n\n## What It Does\n\n- Identifies LuxureTV media on supported pages: Discovers playable video sources from LuxureTV pages and embedded players your browser can access.\n- Saves MP4 files locally: Downloaded videos go to a folder on your computer for offline viewing, reference, or archiving.\n- Handles everything privately: The browser extension processes media locally without routing it through external conversion services.\n- Supports popular desktop browsers: Available for Chromium-based browsers and other supported desktop builds.\n- Intended for accessible content: Save only content you can already view and are authorized to download.\n- Minimal-step workflow: Open the page, wait for detection, select your file, and save.\n\n## Browser and Platform Support\n\nCompatible with the desktop browsers and operating systems used in everyday computing.\n\nPick the build that matches your browser. GitHub release ZIP downloads are available where applicable.\n\nInstall LuxureTV Video Downloader for your preferred desktop browser.\n\nThe ZIP build from GitHub releases is preferred when available. It contains the most complete feature set, including options that browser extension stores may not permit.\n\n## Privacy and Use Boundaries\n\n- Saves MP4 files locally: Videos land in a local folder for offline viewing, reference, or archiving purposes.\n- Handles everything privately: Media processing stays inside your browser with no external converters involved.\n- Intended for accessible content: Download only content visible in your session that you have the right to save.\n- Save content responsibly and only when you have appropriate rights.\n- Available sources depend on what the current LuxureTV page makes accessible.\n- Page structure changes on LuxureTV may require extension updates.",
-      "faq": [
-        {
-          "question": "How do I download videos from LuxureTV?",
-          "answer": "Install LuxureTV Video Downloader, go to a LuxureTV page with media you can view, then use the extension action to find and save the available file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No. The browser extension pipeline is built around local detection and local saving rather than routing source media through an external conversion service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "The downloader is built for supported desktop browsers such as Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not supported."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "Only save media you can already view and have permission to keep. The downloader is not designed to bypass restrictions or account controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Downloads focus on standard offline video files such as MP4 when the source page provides a compatible media stream."
-        }
-      ]
-    }
   },
   "m3u8-downloader": {
     "content": {
@@ -10192,9 +10004,15 @@
       ]
     },
     "media": {
-      "logo": "/listing-logos/serpdownloaders.com/manyvids-downloader.png"
+      "logo": "/listing-logos/serpdownloaders.com/manyvids-downloader.png",
+      "images": [
+        "/media/products/manyvids-downloader/homepage.png"
+      ]
     },
     "product": {
+      "legacySlugs": [
+        "manyvidsvideodownloader.pages.dev"
+      ],
       "productPage": "https://serp.ly/manyvids-downloader",
       "slug": "manyvids-downloader",
       "tagline": "You purchased it, you should keep it. Save your ManyVids purchases as MP4 files stored on your device, not on someone else's server.",
@@ -10240,47 +10058,12 @@
       {
         "label": "Latest Release",
         "url": "https://github.com/serpapps/manyvids-downloader/releases/latest"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://manyvidsvideodownloader.pages.dev"
       }
     ]
-  },
-  "manyvidsvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://manyvidsvideodownloader.pages.dev",
-      "slug": "manyvidsvideodownloader.pages.dev",
-      "tagline": "Save ManyVids videos you own at original quality. Private ManyVids downloader with batch capability.",
-      "title": "ManyVids Video Downloader"
-    },
-    "media": {
-      "logo": "https://manyvidsvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/manyvidsvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nKeep ManyVids purchases in original quality on your own device. A secure browser extension with batch download support.\n\nManyVids Video Downloader is a desktop browser extension that saves accessible ManyVids videos from pages you can already view in your browser.\n\nThe entire process runs locally: visit the page, let the extension find the active media source, pick the quality level, and save the file to your computer.\n\nNo command-line tools needed, no screen recording, and nothing happens outside your browser.\n\n## How It Works\n\n- Install the extension: Go to the ManyVids Video Downloader product page and install the build for your desktop browser.\n- Browse ManyVids: Navigate to a ManyVids page with media you can already view in your active session.\n- Review available files: Use the extension panel or in-page control to see detected video sources and quality options.\n- Save locally: Download the selected media as a file on your computer for offline access.\n\n## What It Does\n\n- Discovers ManyVids media on supported pages: Identifies available video sources from ManyVids pages and embedded players your browser session can reach.\n- Stores MP4 files on your device: Downloads go to a local folder for offline playback, study, personal reference, or archiving.\n- Processes media privately: The extension operates entirely inside your browser without sending content to third-party conversion services.\n- Works with popular desktop browsers: Use it in Chromium-based browsers and other supported desktop builds.\n- Built for content you own or can access: Designed for saving media already viewable in your browser that you have the right to keep.\n- Clean single-page workflow: Visit, detect, select, and save.\n\n## Browser and Platform Support\n\nRuns on the desktop browsers and operating systems people depend on daily.\n\nSelect the build for your browser. GitHub release ZIP downloads are available when applicable.\n\nInstall ManyVids Video Downloader for your desktop browser.\n\nWe recommend the ZIP version from GitHub releases when available. It ships the most complete build with features that browser store policies sometimes restrict.\n\n## Privacy and Use Boundaries\n\n- Stores MP4 files on your device: Videos download to a local folder for offline playback, personal reference, or archiving.\n- Processes media privately: Everything stays in your browser with no third-party converter involvement.\n- Built for content you own or can access: Only save content already viewable in your session that you have permission to download.\n- Use the extension responsibly for content you have the right to save.\n- Detection availability depends on the sources the current page exposes.\n- Platform changes on ManyVids may require an extension update.",
-      "faq": [
-        {
-          "question": "How do I download videos from ManyVids?",
-          "answer": "Install ManyVids Video Downloader, go to a ManyVids page with media you can view, then use the extension action to find and save the available file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No. The browser extension pipeline is built around local detection and local saving rather than routing source media through an external conversion service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "The downloader is built for supported desktop browsers such as Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not supported."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "Only save media you can already view and have permission to keep. The downloader is not designed to bypass restrictions or account controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Downloads focus on standard offline video files such as MP4 when the source page provides a compatible media stream."
-        }
-      ]
-    }
   },
   "maxporn-downloader": {
     "content": {
@@ -10538,9 +10321,6 @@
       ]
     },
     "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/mindvalley-downloader.jpg"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/mindvalley-downloader.png"
     },
     "product": {
@@ -10821,8 +10601,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/moodle-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/moodle-downloader/main/images/moodle-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/moodle-downloader.jpg"
       ]
     },
     "product": {
@@ -11427,8 +11206,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/netflix-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/netflix-downloader/main/images/netflix-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/netflix-downloader.jpg"
       ]
     },
     "product": {
@@ -11503,10 +11281,6 @@
       ]
     },
     "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/nhentai-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/nhentai-downloader/main/images/featured.gif"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/nhentai-downloader.png"
     },
     "product": {
@@ -11590,8 +11364,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/nicovideo-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/nicovideo-downloader/main/images/nicovideo-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/nicovideo-downloader.jpg"
       ]
     },
     "product": {
@@ -12005,17 +11778,14 @@
     },
     "media": {
       "images": [
-        "/media/products/onlyfans-downloader/screenshot-onlyfans-downloader-media-modal.jpg",
-        "/media/products/onlyfans-downloader/screenshot-onlyfans-downloader-media-detection.jpg",
-        "/media/products/onlyfans-downloader/screenshot-onlyfans-downloader-automatic-download-organization.jpg",
-        "/media/products/onlyfans-downloader/screenshot-onlyfans-downloader-creator-selection.jpg",
-        "/media/products/onlyfans-downloader/screenshot-onlyfans-downloader-download-button-overlay.jpg",
-        "/media/products/onlyfans-downloader/screenshot-onlyfans-downloader-download-progress.jpg",
-        "/media/products/onlyfans-downloader/onlyfans-downloader-1.jpg"
+        "/media/products/onlyfans-downloader/homepage.png"
       ],
       "logo": "/listing-logos/serpdownloaders.com/onlyfans-downloader.png"
     },
     "product": {
+      "legacySlugs": [
+        "onlyfansvideodownloader.pages.dev"
+      ],
       "productPage": "https://serp.ly/onlyfans-downloader",
       "slug": "onlyfans-downloader",
       "tagline": "Archive the OnlyFans content you are paying for before creators remove it or your subscription runs out.",
@@ -12073,47 +11843,12 @@
       {
         "label": "Product Hunt",
         "url": "https://www.producthunt.com/products/onlyfans-downloader-2"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://onlyfansvideodownloader.pages.dev"
       }
     ]
-  },
-  "onlyfansvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://onlyfansvideodownloader.pages.dev",
-      "slug": "onlyfansvideodownloader.pages.dev",
-      "tagline": "Grab OnlyFans videos, images, GIFs, and text posts for offline access using a streamlined browser extension.",
-      "title": "OnlyFans Video Downloader"
-    },
-    "media": {
-      "logo": "https://onlyfansvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/onlyfansvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave OnlyFans videos, images, GIFs, and text posts straight from creator pages using overlay buttons, bulk media scans, and automatic MP4 conversion.\n\nOnlyFans Video Downloader is made for people who need a dependable way to keep OnlyFans media they already have permission to access. Rather than wrestling with manual captures, expired URLs, or questionable downloader sites, the extension works inside your active browser session and lets you save content directly from the page.\n\nUse overlay buttons for one-off saves, open the side panel to browse detected media, or run a bulk scan across a creator media page when you need the whole gallery. Videos are converted to standard MP4 files automatically, and downloads stay organized by creator so your archive does not turn into a giant cleanup project later.\n\nThe workflow stays private by default. Processing happens in your browser, downloaded files stay on your device, and the extension does not depend on third-party upload services to handle your media.\n\nNo command line, no screen recording, and no extra workflow outside your browser.\n\n## How It Works\n\n- Install the extension: Add OnlyFans Video Downloader to your desktop browser and open OnlyFans normally in the same browser profile.\n- Open the creator page or media area: Browse to any OnlyFans profile, media gallery, or post that contains videos, images, GIFs, or text content you want to save.\n- Choose quick save or bulk scan: Use overlay buttons for single downloads, or open the side panel Bulk tab to scan and queue an entire creator media page.\n- Save organized files to your device: Pick the best available quality when needed, let the extension convert video to MP4, and store everything in per-creator folders on your computer.\n\n## What It Does\n\n- One-click download from any video page\n- Local media handling for downloads\n- Auto-detect videos on the page\n- Smart Page Scan\n- Embedded Video Support\n- Full HD Downloads\n- Lightning fast downloads (no re-encoding)\n- Original quality preserved (up to 4K)\n- No registration or personal data required\n- No watermarks or branding added\n\n## Browser and Platform Support\n\nAvailable on major desktop browsers and operating systems used in day-to-day workflows.\n\nPick the browser build you need. When a direct GitHub release is available, you can grab the ZIP there.\n\nUse the SERP Extensions listing for the standard Chromium install flow, or pull the latest build from GitHub.\n\nInstall the Firefox build from Mozilla Add-ons.\n\nEdge works with the Chromium build and follows the same install path as Chrome.\n\n## Privacy and Use Boundaries\n\n- Local media handling for downloads\n- Save OnlyFans videos, images, GIFs, and text posts straight from creator pages using overlay buttons, bulk media scans, and automatic MP4 conversion.\n- OnlyFans Video Downloader is made for people who need a dependable way to keep OnlyFans media they already have permission to access. Rather than wrestling with manual captures, expired URLs, or questionable downloader sites, the extension works inside your active browser session and lets you save content directly from the page.\n- Use overlay buttons for one-off saves, open the side panel to browse detected media, or run a bulk scan across a creator media page when you need the whole gallery. Videos are converted to standard MP4 files automatically, and downloads stay organized by creator so your archive does not turn into a giant cleanup project later.\n- The workflow stays private by default. Processing happens in your browser, downloaded files stay on your device, and the extension does not depend on third-party upload services to handle your media.\n- Bulk download OnlyFans videos more efficiently with gallery scanning, per-creator organization, and a workflow that avoids opening every post one by one.",
-      "faq": [
-        {
-          "question": "How do I use the OnlyFans downloader?",
-          "answer": "Install the extension, log into OnlyFans in that browser, navigate to a creator page or media area, and tap the overlay download button or use the side panel to initiate a save."
-        },
-        {
-          "question": "Can I download images and GIFs too?",
-          "answer": "Yes. The extension recognizes videos, photos, GIFs, and text posts, and the side panel sorts detected content by media type."
-        },
-        {
-          "question": "How does bulk download work?",
-          "answer": "Open the Bulk tab in the side panel, let the extension auto-scroll through the creator media page, and queue everything it discovers in a single run."
-        },
-        {
-          "question": "What quality options are available?",
-          "answer": "The downloader relies on the qualities the source exposes. Depending on the media, that can include common options such as 720p, 1080p, source, or original."
-        },
-        {
-          "question": "Does it work on all browsers?",
-          "answer": "It supports major desktop browsers including Chrome, Firefox, Edge, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not supported."
-        }
-      ]
-    }
   },
   "pandamovies-downloader": {
     "content": {
@@ -12281,8 +12016,6 @@
     },
     "media": {
       "images": [
-        "/media/products/patreon-downloader/patreon-homepage.webp",
-        "/media/products/patreon-downloader/featured.webp",
         "https://raw.githubusercontent.com/serpapps/patreon-downloader/main/images/patreon-downloader.gif"
       ]
     },
@@ -12540,8 +12273,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/pexels-video-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/pexels-video-downloader/main/images/pexels-video-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/pexels-video-downloader.jpg"
       ]
     },
     "product": {
@@ -12813,8 +12545,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/podia-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/podia-downloader/main/images/podia-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/podia-downloader.jpg"
       ]
     },
     "product": {
@@ -13865,10 +13596,18 @@
         }
       ]
     },
+    "media": {
+      "images": [
+        "/media/products/pornhat-downloader/homepage.png"
+      ]
+    },
     "product": {
       "categories": [
         "adult",
         "video-downloaders"
+      ],
+      "legacySlugs": [
+        "pornhatvideodownloader.pages.dev"
       ],
       "productPage": "https://serp.ly/pornhat-downloader",
       "slug": "pornhat-downloader",
@@ -13903,47 +13642,12 @@
       {
         "label": "GitHub Issues",
         "url": "https://github.com/serpapps/pornhat-downloader/issues"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://pornhatvideodownloader.pages.dev"
       }
     ]
-  },
-  "pornhatvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://pornhatvideodownloader.pages.dev",
-      "slug": "pornhatvideodownloader.pages.dev",
-      "tagline": "Save accessible PornHat videos as MP4 files with private local processing, supported host detection, and offline playback capability.",
-      "title": "PornHat Video Downloader"
-    },
-    "media": {
-      "logo": "https://pornhatvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/pornhatvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave accessible PornHat videos as MP4 files with private local processing, supported host detection, and offline playback capability.\n\nPornHat Video Downloader is a desktop browser extension that lets you save accessible PornHat videos from pages your browser session can already view.\n\nThe entire workflow lives inside your browser: open the page, let the extension identify the active media source, select an available quality, and save the final file locally.\n\nNo command line, no screen recording, and no extra workflow outside your browser.\n\n## How It Works\n\n- Install the extension: Open the PornHat Video Downloader product page and install the build for your supported desktop browser.\n- Open PornHat: Navigate to a PornHat page with media you can already view in your browser.\n- Choose a detected file: Use the extension panel or in-page action to review available video sources and quality options.\n- Save locally: Download the selected media as an offline file on your computer.\n\n## What It Does\n\n- Detects PornHat media on supported pages: Find available video sources from PornHat pages and embeds your browser can access.\n- Saves clean MP4 files locally: Store videos in a local downloads folder for offline playback, study, review, or archiving.\n- Keeps media handling private: The browser extension workflow avoids uploading source media to a third-party converter.\n- Supports common desktop browsers: Use the downloader from Chromium-based browsers and other supported desktop browser builds.\n- Built for accessible content: Download only content you can already access and have permission to save.\n- Simple one-page workflow: Open the page, let the extension detect media, choose the available option, and save.\n\n## Browser and Platform Support\n\nAvailable on major desktop browsers and operating systems used in day-to-day workflows.\n\nPick the browser build you need. When a direct GitHub release is available, you can grab the ZIP there.\n\nInstall PornHat Video Downloader for supported desktop browsers.\n\nWe recommend using the ZIP version from the GitHub release when available. It lets us ship the most complete build, including features that browser stores do not always allow.\n\n## Privacy and Use Boundaries\n\n- Saves clean MP4 files locally: Store videos in a local downloads folder for offline playback, study, review, or archiving.\n- Keeps media handling private: The browser extension workflow avoids uploading source media to a third-party converter.\n- Built for accessible content: Download only content you can already access and have permission to save.\n- Only use the downloader for content you have rights or permission to save.\n- Availability depends on the media sources exposed by the current page.\n- Site layout changes can require extension updates.",
-      "faq": [
-        {
-          "question": "How do I download videos from PornHat?",
-          "answer": "Install PornHat Video Downloader, navigate to a PornHat page with media you can access, then use the extension action to detect and save the available file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No. The browser extension workflow is structured around local detection and local saving rather than uploading source media to a separate conversion service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "The downloader is designed for supported desktop browsers such as Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not supported."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "Only download media you can already access and have permission to save. The downloader is not intended for bypassing restrictions or account controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Downloads are focused on standard offline video files such as MP4 when the source page exposes a compatible media stream."
-        }
-      ]
-    }
   },
   "pornhd3x-downloader": {
     "content": {
@@ -14272,9 +13976,15 @@
       ]
     },
     "media": {
-      "logo": "/listing-logos/serpdownloaders.com/pornhub-downloader.png"
+      "logo": "/listing-logos/serpdownloaders.com/pornhub-downloader.png",
+      "images": [
+        "/media/products/pornhub-downloader/homepage.png"
+      ]
     },
     "product": {
+      "legacySlugs": [
+        "pornhubvideodownloader.pages.dev"
+      ],
       "productPage": "https://serp.ly/pornhub-video-downloader",
       "slug": "pornhub-downloader",
       "tagline": "Ditch unsafe online converter tools. Grab Pornhub videos directly from the player in full quality.",
@@ -14320,47 +14030,12 @@
       {
         "label": "Latest Release",
         "url": "https://github.com/serpapps/pornhub-video-downloader/releases/latest"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://pornhubvideodownloader.pages.dev"
       }
     ]
-  },
-  "pornhubvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://pornhubvideodownloader.pages.dev",
-      "slug": "pornhubvideodownloader.pages.dev",
-      "tagline": "Capture Pornhub videos for offline access. A dependable browser-based downloader delivering high-fidelity MP4 exports.",
-      "title": "Pornhub Video Downloader"
-    },
-    "media": {
-      "logo": "https://pornhubvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/pornhubvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nCapture Pornhub videos as MP4 files using a browser extension equipped with direct MP4 source identification, HLS conversion capabilities, and local file storage.\n\nPornhub Video Downloader is a browser extension purpose-built for archiving accessible Pornhub videos, bypassing the need for web-based converter sites, manual URL extraction, or third-party desktop software.\n\nStart playing any Pornhub video, interact with the download control that materializes on the player, and select your target quality. The resulting file saves as a conventional MP4 directly to your storage device.\n\nThe extension identifies all exposed streams, including sources that general-purpose utilities frequently fail to capture, and carries out all media handling locally on your device without transmitting data through external infrastructure.\n\nNo terminal commands, no screen capture workarounds, and no additional workflow steps beyond your browser.\n\n## How It Works\n\n- Install the extension: Add Pornhub Video Downloader to a compatible desktop browser.\n- Open and play a video: Navigate to a Pornhub video page and initiate playback so the stream becomes visible to the browser environment.\n- Choose quality: Interact with the in-player control, toolbar popup, or context-menu entry and specify your desired quality tier.\n- Save the MP4: The extension captures direct MP4 sources immediately or transforms HLS streams into MP4 format within the browser.\n\n## What It Does\n\n- One-click download from any video page\n- Local media handling for downloads\n- Auto-detect videos on the page\n- Smart Page Scan\n- Embedded Video Support\n- Full HD Downloads\n- Lightning fast downloads (no re-encoding)\n- Original quality preserved (up to 4K)\n- No registration or personal data required\n- No watermarks or branding added\n\n## Browser and Platform Support\n\nAvailable on major desktop browsers and operating systems used in day-to-day workflows.\n\nPick the browser build you need. When a direct GitHub release is available, you can grab the ZIP there.\n\nInstall the Pornhub downloader for supported desktop browsers.\n\nWe recommend using the ZIP version from the GitHub release when available. It lets us ship the most complete build, including features that browser stores do not always allow.\n\n## Privacy and Use Boundaries\n\n- Local media handling for downloads\n- Does not support live-stream capture or VR-specific workflows.\n- Does not bypass DRM, paywalls, or account permissions.\n- Pornhub Premium content requires an already-authorized active session.\n- Use only with content you own or have permission to download.",
-      "faq": [
-        {
-          "question": "How do I download a video from Pornhub?",
-          "answer": "After installing Pornhub Video Downloader, navigate to a Pornhub video page, initiate playback, and then interact with the in-player control, toolbar popup, or context-menu entry. Select a quality tier and the extension exports the video as an MP4."
-        },
-        {
-          "question": "Does this work with Pornhub Premium and Thumbzilla?",
-          "answer": "Yes. Full compatibility extends to Pornhub, Pornhub Premium, and Thumbzilla. Accessing Premium-tier content requires an existing authenticated and active session."
-        },
-        {
-          "question": "What quality options are available?",
-          "answer": "The extension analyzes mediaDefinitions, HTML5 source elements, and HLS manifests to enumerate available format variants. These are presented in descending quality order, with MP4 given priority where both stream types are available."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Output is consistently in standard MP4 format. Direct MP4 endpoints are saved without transformation, while HLS streams are transcoded to MP4 entirely within the browser."
-        },
-        {
-          "question": "Can it bypass DRM, paywalls, or restricted account access?",
-          "answer": "No. The extension is limited to content your browser session can already reach and does not circumvent DRM, paywalls, or account-level access controls."
-        }
-      ]
-    }
   },
   "pornlib-downloader": {
     "content": {
@@ -14924,10 +14599,18 @@
         }
       ]
     },
+    "media": {
+      "images": [
+        "/media/products/pornone-downloader/homepage.png"
+      ]
+    },
     "product": {
       "categories": [
         "adult",
         "video-downloaders"
+      ],
+      "legacySlugs": [
+        "pornonevideodownloader.pages.dev"
       ],
       "productPage": "https://serp.ly/pornone-downloader",
       "slug": "pornone-downloader",
@@ -14962,47 +14645,12 @@
       {
         "label": "GitHub Issues",
         "url": "https://github.com/serpapps/pornone-downloader/issues"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://pornonevideodownloader.pages.dev"
       }
     ]
-  },
-  "pornonevideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://pornonevideodownloader.pages.dev",
-      "slug": "pornonevideodownloader.pages.dev",
-      "tagline": "Save accessible PornOne videos as local MP4 files through browser-based detection, private processing, and offline-ready output.",
-      "title": "PornOne Video Downloader"
-    },
-    "media": {
-      "logo": "https://pornonevideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/pornonevideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave accessible PornOne videos as local MP4 files through browser-based detection, private processing, and offline-ready output.\n\nPornOne Video Downloader is a desktop browser extension designed to capture accessible PornOne video content from pages your browser session can already display.\n\nThe entire workflow remains within your browser: navigate to the page, let the extension identify the active media source, select an available quality tier, and store the resulting file locally.\n\nNo terminal commands, no screen capture utilities, and no additional workflow beyond your browser.\n\n## How It Works\n\n- Install the extension: Navigate to the PornOne Video Downloader product page and install the appropriate build for your desktop browser.\n- Open PornOne: Browse to a PornOne page containing media your browser session can already display.\n- Choose a detected file: Utilize the extension panel or in-page action to examine available video sources and quality options.\n- Save locally: Download the selected media as an offline file on your local storage device.\n\n## What It Does\n\n- Detects PornOne media on supported pages: Identifies available video sources from PornOne pages and embeds accessible to your browser.\n- Saves clean MP4 files locally: Stores videos in a local downloads folder for offline playback, study, review, or archiving.\n- Keeps media handling private: The browser extension workflow avoids uploading source media to a third-party converter.\n- Supports common desktop browsers: Use the downloader from Chromium-based browsers and other supported desktop browser builds.\n- Built for accessible content: Download only content you can already access and have permission to save.\n- Simple one-page workflow: Open the page, let the extension detect media, choose the available option, and save.\n\n## Browser and Platform Support\n\nAvailable on major desktop browsers and operating systems used in day-to-day workflows.\n\nPick the browser build you need. When a direct GitHub release is available, you can grab the ZIP there.\n\nInstall PornOne Video Downloader for supported desktop browsers.\n\nWe recommend using the ZIP version from the GitHub release when available. It lets us ship the most complete build, including features that browser stores do not always allow.\n\n## Privacy and Use Boundaries\n\n- Saves clean MP4 files locally: Store videos in a local downloads folder for offline playback, study, review, or archiving.\n- Keeps media handling private: The browser extension workflow avoids uploading source media to a third-party converter.\n- Built for accessible content: Download only content you can already access and have permission to save.\n- Only use the downloader for content you have rights or permission to save.\n- Availability depends on the media sources exposed by the current page.\n- Site layout changes can require extension updates.",
-      "faq": [
-        {
-          "question": "How do I download videos from PornOne?",
-          "answer": "Add PornOne Video Downloader to your browser, navigate to a PornOne page with accessible media, then use the extension action to identify and capture the available file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No. The browser extension architecture centers on local detection and local saving, avoiding any upload of source media to a separate conversion service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "The downloader targets supported desktop browsers including Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not within the supported scope."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "Only capture media you can already access and have authorization to save. The downloader is not designed for circumventing restrictions or account-level controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Output focuses on standard offline video files such as MP4 when the source page provides a compatible media stream."
-        }
-      ]
-    }
   },
   "pornslash-downloader": {
     "content": {
@@ -15986,8 +15634,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/rawpixel-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/rawpixel-downloader/main/images/rawpixel-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/rawpixel-downloader.jpg"
       ]
     },
     "product": {
@@ -16058,10 +15705,6 @@
       ]
     },
     "media": {
-      "images": [
-        "/media/products/reddit-downloader/reddit-homepage.webp",
-        "/media/products/reddit-downloader/featured.webp"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/reddit-downloader.png"
     },
     "product": {
@@ -16281,112 +15924,6 @@
       }
     ]
   },
-  "redtube-downloader": {
-    "content": {
-      "body": "## Overview\n\nWeb-based video converters are riddled with advertisements, popup windows, and failed downloads. Paste a link, wait around, and frequently end up with a corrupted file or nothing whatsoever. RedTube Downloader replaces that entire frustrating process with a single control on the video player.\n\nNavigate to any RedTube video, initiate playback, and activate the download control. Select your preferred quality from a clearly organized list and the video saves directly to your computer as a clean MP4 file. The extension operates across standard RedTube pages, embeds, and regional domains for consistent performance regardless of where you encounter the video.\n\nFiles are automatically deposited in a dedicated RedTube folder, and all processing occurs privately on your own device. No uploads to third-party servers, no dubious websites, and no advertisements. Functions on Chrome, Edge, Firefox, Brave, and Opera across Windows, macOS, and Linux.\n\n## Why It Exists\n\n- Capture RedTube videos for offline access without relying on separate desktop software or command-line utilities.\n- Achieve consistent MP4 output from both direct MP4 endpoints and HLS streams.\n- Apply a unified workflow for detection, quality selection, conversion, and progress monitoring.\n- Maintain download privacy and organization with local processing and automatic RedTube folder storage.\n\n## Key Features\n\n- Identifies RedTube formats from sources object data, mediaDefinitions arrays, nested media fetches, HTML5 source tags, and M3U8 playlists.\n- Employs page-context extraction and RedTubeExtractor logic to enhance detection across standard pages and embed URLs.\n- Positions an in-player download control on supported RedTube MGP player surfaces for one-click format access.\n- Converts HLS streams to MP4 within the browser through an offscreen processing workflow.\n- Immediately saves direct MP4 variants when they are available from the source.\n- Quality selector presents detected formats arranged by resolution with MP4 prioritized over HLS.\n- In-page download manager delivers progress, speed, cancel controls, and completion feedback.\n- Right-click context menu action \"Download RedTube Video\" operates on page and video contexts.\n- Auto-deposits completed files to Downloads/RedTube without repeated save-as dialog interruptions.\n- Supports RedTube main pages, embed.redtube.com URLs, and regional RedTube domains.\n\n## How It Works\n\n- Install and activate: Add RedTube Downloader to your browser and complete secure OTP email verification to unlock 3 trial downloads.\n- Open and play a video: Navigate to RedTube, initiate playback so source variants become detectable, then access in-player or popup controls.\n- Choose quality and download: Select a preferred format from the quality list and initiate the download using player, popup, or context menu.\n- Save MP4 locally: The download manager tracks progress while the final MP4 is written into your Downloads/RedTube folder.\n\n## Reviews\n\n- Reliable across RedTube domains (5/5): Regional domains used to break other tools, but this workflow keeps detection stable and MP4 output clean. - Lila Montrose\n- Strong stream handling (4.9/5): Nested media and HLS streams are handled consistently, and progress tracking is clear on long downloads. - Oscar DeLuca\n- Private and organized (4.8/5): Everything stays local and saves into the right folder automatically, which makes archive management easier. - Hanna Voss\n\n## Platform Support\n\n### Browsers\n\n- Chrome\n- Edge\n- Firefox\n- Brave\n- Opera\n- Whale\n- Yandex\n\n### Operating Systems\n\n- Windows\n- macOS\n- Linux\n\n### Supported Content\n\n- RedTube standard video pages\n- embed.redtube.com player URLs\n- Regional RedTube domain variants\n- Direct MP4 and HLS sources convertible to MP4\n\n### Not Supported\n\n- Safari and mobile browsers\n- Live-stream capture workflows\n- DRM or inaccessible content outside session access\n- Bypassing permissions or paywalls\n\n## Privacy and Permissions\n\nSupported regions: Worldwide.\n\nLimitations:\n- You must press play before full source detection can populate formats.\n- Available quality depends on source variants exposed by the current page.\n- Safari and mobile browsers are not supported.\n- Live-stream capture is not supported.\n- You must already have permission to access and download the content.\n- Email OTP sign-in is required to activate the free trial.\n\nPermissions:\n- downloads: Saves completed MP4 files to your device and keeps in-page progress indicators synchronized.\n- storage: Stores activation state, trial counters, preferred quality, and local UI settings between sessions.\n- activeTab: Detects supported RedTube players on the current tab and injects download controls only where needed.\n- tabs: Maintains download state when navigating between pages and restores status when you return.\n- scripting: Extracts stream metadata from sources object data, mediaDefinitions, and page context for reliable format lists.\n- notifications: Shows completion and error alerts without requiring the popup to remain open.",
-      "faq": [
-        {
-          "answer": "Navigate to a RedTube video page, begin playback, then interact with the in-player control, extension popup action, or right-click context-menu item. Select your quality and the extension saves the video as MP4.",
-          "question": "How do I download a video from RedTube?"
-        },
-        {
-          "answer": "The extension compiles available variants from sources object data, mediaDefinitions, nested media definitions, and M3U8 playlists. Formats are arranged from highest resolution downward, with MP4 prioritized when available.",
-          "question": "What quality options are available?"
-        },
-        {
-          "answer": "All output uses standard MP4 format. Direct MP4 sources are saved without modification, while HLS sources undergo in-browser conversion to MP4.",
-          "question": "What format are downloads saved in?"
-        },
-        {
-          "answer": "Files are automatically deposited in a RedTube subfolder within your browser's default Downloads directory.",
-          "question": "Where are my files saved?"
-        },
-        {
-          "answer": "Yes. The extension supports embed.redtube.com URLs and identifies supported formats there using the same workflow.",
-          "question": "Does this work with embedded RedTube videos?"
-        },
-        {
-          "answer": "Yes. Detection supports RedTube domain variants where identical player and media structures are present.",
-          "question": "Does this support regional RedTube domains?"
-        },
-        {
-          "answer": "Following secure email OTP verification, each device receives 3 complimentary downloads. Unlimited access requires the paid subscription.",
-          "question": "How does the free trial work?"
-        },
-        {
-          "answer": "Begin playback first so stream sources become exposed. If detection still fails, reload the page and retry after the player completes initialization.",
-          "question": "Why is the extension not finding my video?"
-        },
-        {
-          "answer": "Desktop builds are available for Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex across Windows, macOS, and Linux.",
-          "question": "Which browsers are supported?"
-        },
-        {
-          "answer": "Permissions including downloads, activeTab, scripting, tabs, contextMenus, notifications, and offscreen are utilized to identify formats, embed controls, convert HLS streams, and save MP4 files reliably.",
-          "question": "Why does the extension need these permissions?"
-        },
-        {
-          "answer": "Yes. Detection, extraction, conversion, and file writing operations execute locally within your browser. Media files are not transmitted to third-party servers.",
-          "question": "Is my data private?"
-        },
-        {
-          "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
-          "question": "Is this legal?"
-        }
-      ]
-    },
-    "media": {
-      "logo": "/listing-logos/serpdownloaders.com/redtube-downloader.png"
-    },
-    "product": {
-      "productPage": "https://serp.ly/redtube-video-downloader",
-      "slug": "redtube-downloader",
-      "tagline": "Bypass the unreliable converter sites. Capture RedTube videos as pristine MP4 files directly to your device at your chosen quality.",
-      "title": "RedTube Video Downloader"
-    },
-    "relatedLinks": [
-      {
-        "label": "Install browser extension",
-        "url": "https://serp.ly/redtube-video-downloader"
-      },
-      {
-        "label": "SERP Apps",
-        "url": "https://apps.serp.co/redtube-video-downloader"
-      },
-      {
-        "label": "GitHub repository",
-        "url": "https://github.com/serpapps/redtube-video-downloader"
-      },
-      {
-        "label": "SERP Extensions",
-        "url": "https://extensions.serp.co/extensions/serp/redtube-video-downloader/"
-      },
-      {
-        "label": "Apify",
-        "url": "https://apify.com/serpxxx/redtube-video-downloader/"
-      },
-      {
-        "label": "ExtensionHub",
-        "url": "https://www.extensionhub.io/extensions/Redtube-Downloader-1294"
-      },
-      {
-        "label": "SERP",
-        "url": "https://serp.co/products/redtube-video-downloader/reviews/"
-      },
-      {
-        "label": "SERP AI",
-        "url": "https://serp.ai/products/redtube-video-downloader/reviews/"
-      },
-      {
-        "label": "Browser Extensions",
-        "url": "https://browserextensions.io/products/redtube-video-downloader/"
-      },
-      {
-        "label": "Latest Release",
-        "url": "https://github.com/serpapps/redtube-video-downloader/releases/latest"
-      }
-    ]
-  },
   "redtube-video-downloader": {
     "content": {
       "body": "## Overview\n\nWeb-based video converters are riddled with advertisements, popup windows, and failed downloads. Paste a link, wait around, and frequently end up with a corrupted file or nothing whatsoever. RedTube Downloader replaces that entire frustrating process with a single control on the video player.\n\nNavigate to any RedTube video, initiate playback, and activate the download control. Select your preferred quality from a clearly organized list and the video saves directly to your computer as a clean MP4 file. The extension operates across standard RedTube pages, embeds, and regional domains for consistent performance regardless of where you encounter the video.\n\nFiles are automatically deposited in a dedicated RedTube folder, and all processing occurs privately on your own device. No uploads to third-party servers, no dubious websites, and no advertisements. Functions on Chrome, Edge, Firefox, Brave, and Opera across Windows, macOS, and Linux.\n\n## Why It Exists\n\n- Capture RedTube videos for offline access without relying on separate desktop software or command-line utilities.\n- Achieve consistent MP4 output from both direct MP4 endpoints and HLS streams.\n- Apply a unified workflow for detection, quality selection, conversion, and progress monitoring.\n- Maintain download privacy and organization with local processing and automatic RedTube folder storage.\n\n## Key Features\n\n- Identifies RedTube formats from sources object data, mediaDefinitions arrays, nested media fetches, HTML5 source tags, and M3U8 playlists.\n- Employs page-context extraction and RedTubeExtractor logic to enhance detection across standard pages and embed URLs.\n- Positions an in-player download control on supported RedTube MGP player surfaces for one-click format access.\n- Converts HLS streams to MP4 within the browser through an offscreen processing workflow.\n- Immediately saves direct MP4 variants when they are available from the source.\n- Quality selector presents detected formats arranged by resolution with MP4 prioritized over HLS.\n- In-page download manager delivers progress, speed, cancel controls, and completion feedback.\n- Right-click context menu action \"Download RedTube Video\" operates on page and video contexts.\n- Auto-deposits completed files to Downloads/RedTube without repeated save-as dialog interruptions.\n- Supports RedTube main pages, embed.redtube.com URLs, and regional RedTube domains.\n\n## How It Works\n\n- Install and activate: Add RedTube Downloader to your browser and complete secure OTP email verification to unlock 3 trial downloads.\n- Open and play a video: Navigate to RedTube, initiate playback so source variants become detectable, then access in-player or popup controls.\n- Choose quality and download: Select a preferred format from the quality list and initiate the download using player, popup, or context menu.\n- Save MP4 locally: The download manager tracks progress while the final MP4 is written into your Downloads/RedTube folder.\n\n## Reviews\n\n- Reliable across RedTube domains (5/5): Regional domains used to break other tools, but this workflow keeps detection stable and MP4 output clean. - Lila Montrose\n- Strong stream handling (4.9/5): Nested media and HLS streams are handled consistently, and progress tracking is clear on long downloads. - Oscar DeLuca\n- Private and organized (4.8/5): Everything stays local and saves into the right folder automatically, which makes archive management easier. - Hanna Voss\n\n## Platform Support\n\n### Browsers\n\n- Chrome\n- Edge\n- Firefox\n- Brave\n- Opera\n- Whale\n- Yandex\n\n### Operating Systems\n\n- Windows\n- macOS\n- Linux\n\n### Supported Content\n\n- RedTube standard video pages\n- embed.redtube.com player URLs\n- Regional RedTube domain variants\n- Direct MP4 and HLS sources convertible to MP4\n\n### Not Supported\n\n- Safari and mobile browsers\n- Live-stream capture workflows\n- DRM or inaccessible content outside session access\n- Bypassing permissions or paywalls\n\n## Privacy and Permissions\n\nSupported regions: Worldwide.\n\nLimitations:\n- You must press play before full source detection can populate formats.\n- Available quality depends on source variants exposed by the current page.\n- Safari and mobile browsers are not supported.\n- Live-stream capture is not supported.\n- You must already have permission to access and download the content.\n- Email OTP sign-in is required to activate the free trial.\n\nPermissions:\n- downloads: Saves completed MP4 files to your device and keeps in-page progress indicators synchronized.\n- storage: Stores activation state, trial counters, preferred quality, and local UI settings between sessions.\n- activeTab: Detects supported RedTube players on the current tab and injects download controls only where needed.\n- tabs: Maintains download state when navigating between pages and restores status when you return.\n- scripting: Extracts stream metadata from sources object data, mediaDefinitions, and page context for reliable format lists.\n- notifications: Shows completion and error alerts without requiring the popup to remain open.",
@@ -16445,6 +15982,9 @@
       "logo": "/listing-logos/serpdownloaders.com/redtube-downloader.png"
     },
     "product": {
+      "legacySlugs": [
+        "redtube-downloader"
+      ],
       "productPage": "https://serp.ly/redtube-video-downloader",
       "slug": "redtube-video-downloader",
       "tagline": "Bypass the unreliable converter sites. Capture RedTube videos as pristine MP4 files directly to your device at your chosen quality.",
@@ -16627,68 +16167,6 @@
       }
     ]
   },
-  "serp-notes": {
-    "content": {
-      "body": "## Overview\n\nNotes is a browser extension that delivers a complete markdown note-taking workspace directly within your browser's side panel. Author content in markdown, organize with folders and tags, search instantaneously, and synchronize across devices. An integrated AI assistant (Serpy) can compose, condense, elaborate, rephrase, or generate notes from natural language instructions, and voice transcription enables hands-free dictation. Share any note via a live link -- or export to Markdown, Word, HTML, PDF, or plain text.\n\n## Why It Exists\n\nA comprehensive note-taking workspace that resides in your browser sidebar. No application switching, no tab proliferation, no SaaS login requirements. Author markdown alongside any web page, capture text selections with a right-click, embed screenshots into your notes, and leverage AI for writing assistance. Cloud synchronization keeps everything accessible across devices, and offline-first storage guarantees your notes remain available at all times.\n\n## Offline use cases\n\n- Compose research notes alongside articles, documentation, or tutorials within the browser side panel\n- Right-click selected text on any web page to preserve it as a note\n- Employ Serpy AI to distill a web page into organized notes\n- Dictate meeting notes or spontaneous ideas through voice transcription\n- Share a live note link with a colleague for real-time collaboration visibility\n- Structure project research using folders and tags\n- Export notes as Word documents or PDFs for reports and deliverables",
-      "faq": [
-        {
-          "answer": "Use Ctrl+Shift+Y to launch the side panel, or click the Notes icon in your browser toolbar. The complete workspace opens alongside your current page.",
-          "question": "How do I open the notes workspace?"
-        },
-        {
-          "answer": "Yes. The side panel functions on any page. You can also right-click selected text on any page to preserve it as a note.",
-          "question": "Can I use this alongside any website?"
-        },
-        {
-          "answer": "Notes are stored locally in your browser first (offline-first architecture). When connectivity is available, they synchronize to the cloud for cross-device access.",
-          "question": "Where are my notes stored?"
-        },
-        {
-          "answer": "Serpy is the integrated AI assistant. Provide a natural language instruction (such as 'summarize this,' 'make this more concise,' or 'create meeting notes') and Serpy will edit or generate content within your note.",
-          "question": "What is Serpy?"
-        },
-        {
-          "answer": "Press and hold the microphone button in the Serpy bar. Speak your note content, then release. Serpy transcribes the audio and inserts the resulting text into your note. Maximum recording duration is 25 seconds.",
-          "question": "How does voice transcription work?"
-        },
-        {
-          "answer": "Yes. Click 'Share live' in the note footer. This generates a public link at notes.serp.co displaying the latest version of your note. You can also create a frozen snapshot.",
-          "question": "Can I share a note with someone?"
-        },
-        {
-          "answer": "Markdown (.md), Plain Text (.txt), Word (.docx), HTML (.html), and PDF (.pdf). You can also export your entire workspace as a JSON backup.",
-          "question": "What export formats are supported?"
-        },
-        {
-          "answer": "Yes. Notes operates offline-first. All notes are saved locally and synchronize to the cloud when connectivity returns. The editor, search, and export features all function without internet.",
-          "question": "Does this work offline?"
-        },
-        {
-          "answer": "Type [[ followed by a note title to establish a link between notes. The backlinks panel displays which notes reference the current one.",
-          "question": "What are wiki links?"
-        },
-        {
-          "answer": "Chrome, Edge, Brave, and Opera are fully supported. Firefox support depends on side panel API availability.",
-          "question": "Does this work on Firefox?"
-        }
-      ]
-    },
-    "media": {
-      "logo": "/listing-logos/serpdownloaders.com/serp-notes.png"
-    },
-    "product": {
-      "productPage": "https://serp.ly/serp-notes",
-      "slug": "serp-notes",
-      "tagline": "A full markdown note-taking environment inside your browser sidebar. AI writing assistant, voice dictation, cloud sync, live sharing. Functions alongside any page.",
-      "title": "Notes"
-    },
-    "relatedLinks": [
-      {
-        "label": "Install browser extension",
-        "url": "https://serp.ly/serp-notes"
-      }
-    ]
-  },
   "serp-video-downloader": {
     "content": {
       "body": "## Overview\n\nAdding a new extension every time you need to save a video from a different website is tedious and wasteful. SERP Video Downloader consolidates all of them into one lightweight tool that functions across 1,000+ streaming, social media, and file-hosting platforms.\n\nVisit any page containing a video, activate the extension, and select your quality. The download begins immediately at the original resolution, whether it is a brief clip or a complete course. Queue multiple videos simultaneously, capture subtitles alongside the file, and save everything to an organized folder structure.\n\nNo command lines, no confusing configuration, and no quality degradation. Anything you can watch in your browser, you can save to your computer.\n\n## Why It Exists\n\n- Consolidate dozens of single-site downloaders into one actively maintained extension\n- Provide archivists and compliance teams with broadcast-quality master files\n- Reduce support overhead with reproducible download recipes that any team member can execute\n\n## Key Features\n\n- Detects 1,000+ video, audio, and image providers in any tab without manual toggles\n- Keeps a continuously updated extractor manifest backed by automated regression tests\n- Handles HLS, DASH, progressive MP4/WebM, audio-only streams, and zipped galleries\n- Uses hardware-accelerated merges so multi-hour 4K downloads finish in minutes\n- Batch queues mixed providers and formats with per-item priorities and retries\n- Generates reusable recipes that pre-fill authentication headers, cookies, and output presets\n- Auto-captures subtitles, metadata, and cover art into structured sidecar files\n- Ships with privacy-first defaults - no analytics, no remote logging, everything stays local\n- Works across Chrome, Edge, Firefox, Brave, and Arc with Manifest V3 compliance\n- Integrates with yt-dlp and ffmpeg behind the scenes so power users can export CLI commands\n\n## Reviews\n\n- Built for serious archive teams (5/5): We maintain compliance archives for dozens of brands. SERP Downloader finally gave us one tool that handles the weird internal portals and consumer platforms equally well. - Jordan Ellis\n- My production team's secret weapon (4.9/5): The recipe system means junior editors can pull reference clips without touching yt-dlp. Everything lands in the same folder structure every time. - Casey Morgan\n- Handles every client request (4.8/5): From livestream replays to gated course modules, the extension hasn't failed us yet. Updates roll in fast when providers change players. - Amara Singh\n\n## Privacy and Permissions\n\nSupported regions: Worldwide.\n\nPermissions:\n- downloads: Writes completed media files, subtitles, and metadata bundles directly to your downloads folder with resume support for long jobs.\n- storage: Caches provider manifests, queued jobs, and recipe presets locally so workflows persist across browser sessions.\n- activeTab: Injects the SERP Downloader controls into the page you are viewing and reads media descriptors only for that context.\n- tabs: Detects when you switch videos or open playlists in new tabs so queued downloads keep pointing at the right source.\n- scripting: Extracts manifests, signed URLs, and media segments from complex players without exposing data to external services.\n- declarativeNetRequest: Rewrites streaming requests when providers use obscured segment paths or token refreshers, ensuring downloads stay stable.",
@@ -16849,10 +16327,6 @@
       ]
     },
     "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/sexchathu-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/sexchathu-downloader/main/images/featured.gif"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/sexchathu-downloader.png"
     },
     "product": {
@@ -17395,13 +16869,6 @@
         }
       ]
     },
-    "media": {
-      "images": [
-        "/media/products/skillshare-downloader/skillshare-homepage.webp",
-        "/media/products/skillshare-downloader/featured.webp",
-        "https://raw.githubusercontent.com/serpapps/skillshare-downloader/main/images/skillshare-downloader.gif"
-      ]
-    },
     "product": {
       "productPage": "https://serp.ly/skillshare-downloader",
       "slug": "skillshare-downloader",
@@ -17420,111 +16887,6 @@
       {
         "label": "GitHub repository",
         "url": "https://github.com/serpapps/skillshare-downloader"
-      }
-    ]
-  },
-  "skool-downloader": {
-    "content": {
-      "body": "## Overview\n\nSkool cohorts expire. Memberships lapse. When that happens, every lesson, replay, and community video you depended on disappears without warning.\n\nThis extension prevents that loss. Navigate to any Skool classroom lesson, community post, or course module, initiate video playback, click the extension icon, select your quality, and the complete video saves as an MP4 directly to your computer. It functions regardless of which video player the creator employed. The extension handles all of them automatically, so you never need to determine where the video is actually hosted.\n\nQueue up to three downloads concurrently and monitor progress in real time. Every file is processed within your browser, meaning your videos never traverse external servers. Evaluate it free with 3 downloads, no credit card needed. Functions on Chrome, Edge, Firefox, Brave, Opera, and additional Chromium-based browsers.\n\n## Why It Exists\n\n- Preserve Skool lessons and replays before cohorts or memberships conclude\n- One extension handles every video platform on Skool -- no need to install separate tools for Loom, Vimeo, YouTube, or Wistia\n- Study offline during travel or low-connectivity periods without buffering interruptions\n- Maintain download privacy with all processing handled on your own device\n\n## Key Features\n\n- Multi-platform video detection -- automatically identifies Skool native (Mux), Loom, Vimeo, YouTube, and Wistia videos\n- Downloads from Skool classrooms, community posts, about pages, and course modules\n- Understands Skool's Next.js architecture -- extracts video data directly from page props\n- Quality selector showing all available resolutions per platform before you download\n- Converts HLS streams to standard MP4 files entirely in your browser -- no external tools needed\n- Concurrent download queue supporting up to 3 simultaneous downloads\n- Real-time download manager panel with progress bars, speed tracking, and cancel controls\n- Member-only and private community content supported via your existing Skool login\n- Auto-save as MP4 directly to your computer -- no save-as dialogs\n- Intelligent platform detection -- auto-defers to Loom, Vimeo, YouTube, or Wistia handlers when embedded content is found\n\n## How It Works\n\n- Install the extension: Add Skool Video Downloader to Chrome, Edge, Firefox, Brave, or Opera and sign into your Skool community normally.\n- Open the lesson or post: Navigate to any Skool classroom lesson, community post, or course module with a video.\n- Play the video: Start the video so the extension can detect the stream -- it automatically identifies Loom, Vimeo, YouTube, Wistia, or Skool's native player.\n- Choose quality and download: Click the extension icon, select your preferred resolution, and download. The video saves as MP4 directly to your computer.\n\n## Reviews\n\n- Perfect for cohort replays (5/5): I grabbed every classroom replay before the cohort closed. Segment counters let me know how long each download would take. - Mariah Keene\n- Works with private communities (4.9/5): My membership site locks lessons to members only. The downloader honoured my login automatically and the MP4 quality is flawless. - Theo Richter\n- Offline study made simple (4.8/5): I travel often and need lessons offline. This keeps downloads private and never asks for extra credentials. - Ines Navarro\n\n## Platform Support\n\n### Browsers\n\n- Chrome\n- Edge\n- Firefox\n- Brave\n- Opera\n- Whale\n- Yandex\n\n### Operating Systems\n\n- Windows\n- macOS\n- Linux\n\n### Supported Content\n\n- Skool Classroom Lessons\n- Community Video Posts\n- Course Modules\n- About Pages\n\n### Detected Video Platforms\n\n- Skool Native (Mux)\n- Loom\n- Vimeo\n- YouTube\n- Wistia\n\n### Not Supported\n\n- Mobile browsers\n- Safari\n- DRM-protected content\n- Live streams (wait for recording)\n\n## Privacy and Permissions\n\nSupported regions: Worldwide.\n\nLimitations:\n- DRM-protected content is not supported.\n- Live streams cannot be downloaded -- wait for the recording to be available.\n- Mobile and Safari browsers are not supported.\n- You must press play on the video before the extension can detect the stream.\n- You must already have access to the content. It does not bypass paywalls or permissions.\n- Available quality depends on what the source platform and course creator uploaded.\n- Requires email sign-in (OTP) for trial activation.\n\nPermissions:\n- downloads: Saves the finished MP4 to your downloads folder and keeps the progress tracker accurate for each video.\n- storage: Stores licence activation, download manager state, and preferences locally so the extension stays ready between sessions.\n- activeTab: Detects video players and embedded content on the tab you are viewing so the extension can identify the video platform and source.\n- tabs: Allows the download manager to track active downloads across tab changes and restores state when you return.\n- scripting: Injects multi-platform video detectors to extract stream manifests, quality variants, and page data from Skool, Loom, Vimeo, YouTube, and Wistia.\n- offscreen: Converts HLS stream segments into MP4 files in the background using an offscreen document, keeping your lesson tab responsive.",
-      "faq": [
-        {
-          "answer": "Navigate to any Skool classroom, community post, or course page containing a video. Begin playback, then click the extension icon in your toolbar. Select your preferred quality and click Download -- it saves as MP4.",
-          "question": "How do I download a video from Skool?"
-        },
-        {
-          "answer": "The extension identifies videos from Skool's native player (Mux-based), Loom, Vimeo, YouTube, and Wistia -- all commonly employed within Skool communities and courses.",
-          "question": "What video platforms does this support?"
-        },
-        {
-          "answer": "Yes. The extension functions with any Skool community or course you can access in your browser. If you can see and play the video, you can download it.",
-          "question": "Does it work with private communities or paid cohorts?"
-        },
-        {
-          "answer": "3 complimentary trial downloads after signing in with your email. No credit card required. Acquire a license for unlimited downloads.",
-          "question": "How many free downloads do I get?"
-        },
-        {
-          "answer": "Yes. The extension supports a concurrent download queue with up to 3 simultaneous downloads, each with its own progress bar and speed tracking.",
-          "question": "Can I download multiple videos at once?"
-        },
-        {
-          "answer": "Begin playback on the video first. The extension needs the stream to start before detection functions. If the video is embedded from an external platform, ensure the embed has loaded completely. Reload the page if issues persist.",
-          "question": "Why isn't the extension finding my video?"
-        },
-        {
-          "answer": "Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex across Windows, macOS, and Linux desktops. Safari is not supported.",
-          "question": "Which browsers are supported?"
-        },
-        {
-          "answer": "All videos are saved as standard MP4 files that play on any device or media player. HLS streams undergo automatic conversion to MP4 within your browser.",
-          "question": "What format are downloaded videos?"
-        },
-        {
-          "answer": "Yes. Video processing occurs entirely within your browser. Authentication uses secure OTP -- no passwords stored. No video data is transmitted to external servers.",
-          "question": "Is my data private?"
-        },
-        {
-          "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
-          "question": "Is this legal?"
-        }
-      ]
-    },
-    "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/skool-video-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/skool-downloader/main/screenshots/skool%20video%20downloader%201.png",
-        "https://raw.githubusercontent.com/serpapps/skool-downloader/main/screenshots/skool%20video%20downloader%202.png",
-        "https://raw.githubusercontent.com/serpapps/skool-downloader/main/screenshots/skool%20video%20downloader%203.png",
-        "https://raw.githubusercontent.com/serpapps/skool-downloader/main/images/skool-video-downloader.gif"
-      ],
-      "logo": "/listing-logos/serpdownloaders.com/skool-downloader.png"
-    },
-    "product": {
-      "productPage": "https://serp.ly/skool-video-downloader",
-      "slug": "skool-downloader",
-      "tagline": "Your Skool cohort has an expiration date -- preserve every lesson and replay as MP4 before access vanishes.",
-      "title": "Skool Video Downloader"
-    },
-    "relatedLinks": [
-      {
-        "label": "Install browser extension",
-        "url": "https://serp.ly/skool-video-downloader"
-      },
-      {
-        "label": "SERP Apps",
-        "url": "https://apps.serp.co/skool-video-downloader"
-      },
-      {
-        "label": "GitHub repository",
-        "url": "https://github.com/serpapps/skool-downloader"
-      },
-      {
-        "label": "SERP Extensions",
-        "url": "https://extensions.serp.co/extensions/serp/skool-video-downloader/"
-      },
-      {
-        "label": "ExtensionHub",
-        "url": "https://www.extensionhub.io/extensions/Skool-Video-Downloader-882"
-      },
-      {
-        "label": "SERP",
-        "url": "https://serp.co/products/skool-video-downloader/reviews/"
-      },
-      {
-        "label": "SERP AI",
-        "url": "https://serp.ai/products/skool-video-downloader/reviews/"
-      },
-      {
-        "label": "Browser Extensions",
-        "url": "https://browserextensions.io/products/skool-video-downloader/"
-      },
-      {
-        "label": "Product Hunt",
-        "url": "https://www.producthunt.com/products/skool-com-downloader"
-      },
-      {
-        "label": "Chrome Web Store",
-        "url": "https://chromewebstore.google.com/detail/skool-video-downloader-by/adjbknblejbhfmcefnhgkdboanoboimj"
       }
     ]
   },
@@ -17585,6 +16947,9 @@
       "logo": "/listing-logos/serpdownloaders.com/skool-downloader.png"
     },
     "product": {
+      "legacySlugs": [
+        "skool-downloader"
+      ],
       "productPage": "https://serp.ly/skool-video-downloader",
       "slug": "skool-video-downloader",
       "tagline": "Your Skool cohort has an expiration date -- preserve every lesson and replay as MP4 before access vanishes.",
@@ -17665,10 +17030,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/snapchat-video-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/snapchat-video-downloader/main/images/snapchat-downloader.gif",
-        "https://raw.githubusercontent.com/serpapps/snapchat-video-downloader/main/images/snapchat-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/snapchat-video-downloader/main/images/snapchat-video-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/snapchat-video-downloader.jpg"
       ]
     },
     "product": {
@@ -17992,8 +17354,7 @@
         "https://raw.githubusercontent.com/serpapps/sprout-video-downloader/refs/heads/main/screenshots/sprout-video-downloader-5.jpg",
         "https://raw.githubusercontent.com/serpapps/sprout-video-downloader/refs/heads/main/screenshots/sprout-video-downloader-6.jpg",
         "https://raw.githubusercontent.com/serpapps/sprout-video-downloader/refs/heads/main/screenshots/sprout-video-downloader-7.jpg",
-        "https://raw.githubusercontent.com/serpapps/sprout-video-downloader/refs/heads/main/screenshots/sprout-video-downloader-8.jpg",
-        "https://raw.githubusercontent.com/serpapps/sprout-downloader/main/images/featured.gif"
+        "https://raw.githubusercontent.com/serpapps/sprout-video-downloader/refs/heads/main/screenshots/sprout-video-downloader-8.jpg"
       ],
       "logo": "/listing-logos/serpdownloaders.com/sprout-downloader.png"
     },
@@ -18333,9 +17694,15 @@
       ]
     },
     "media": {
-      "logo": "/listing-logos/serpdownloaders.com/stripchat-downloader.png"
+      "logo": "/listing-logos/serpdownloaders.com/stripchat-downloader.png",
+      "images": [
+        "/media/products/stripchat-downloader/homepage.png"
+      ]
     },
     "product": {
+      "legacySlugs": [
+        "stripchatvideodownloader.pages.dev"
+      ],
       "productPage": "https://serp.ly/stripchat-video-downloader",
       "slug": "stripchat-downloader",
       "tagline": "Stripchat recordings vanish without warning. Capture live streams and save recordings to your computer before they disappear.",
@@ -18381,6 +17748,10 @@
       {
         "label": "Latest Release",
         "url": "https://github.com/serpapps/stripchat-video-downloader/releases/latest"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://stripchatvideodownloader.pages.dev"
       }
     ]
   },
@@ -18415,10 +17786,6 @@
       ]
     },
     "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/stripchat-vr-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/stripchat-vr-downloader/main/images/featured.gif"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/stripchat-vr-downloader.png"
     },
     "product": {
@@ -18457,45 +17824,6 @@
         "url": "https://browserextensions.io/products/stripchat-vr-downloader/"
       }
     ]
-  },
-  "stripchatvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://stripchatvideodownloader.pages.dev",
-      "slug": "stripchatvideodownloader.pages.dev",
-      "tagline": "Save Stripchat videos, images, and content locally. Browser-based detection and private downloading.",
-      "title": "Stripchat Video Downloader"
-    },
-    "media": {
-      "logo": "https://stripchatvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/stripchatvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave Stripchat videos for offline access. Private, browser-native Stripchat downloader.\n\nStripchat Video Downloader is a desktop browser extension for capturing accessible Stripchat media from pages your browser session can already display.\n\nEverything stays within your browser from start to finish: visit a Stripchat page, let the extension identify the media source, pick the quality you want, and save the file to your computer.\n\nNo command-line tools, no screen recording software, no external workflows.\n\n## How It Works\n\n- Install the extension: Go to the Stripchat Video Downloader product page and grab the build for your desktop browser.\n- Open Stripchat: Browse to a Stripchat page with media your session can already access.\n- Choose a detected file: Use the extension panel or in-page control to browse available video sources and quality levels.\n- Save locally: Download the selected media to your computer for offline playback.\n\n## What It Does\n\n- Identifies Stripchat media on supported pages: Locates available video sources from Stripchat pages and embeds that your browser can access.\n- Stores clean MP4 files locally: Saves videos in a local folder for offline playback, review, or personal archiving.\n- Keeps media handling private: The browser-based pipeline avoids sending source media to any external conversion service.\n- Supports common desktop browsers: Use the downloader from Chromium-based browsers and other supported desktop builds.\n- Designed for accessible content: Only download media you can already view and have permission to save.\n- One-page workflow: Visit the Stripchat page, let the extension detect media, pick your option, and save.\n\n## Browser and Platform Support\n\nRuns on major desktop browsers and operating systems used for everyday work.\n\nSelect the browser build you need. When a direct GitHub release is available, grab the ZIP from there.\n\nInstall Stripchat Video Downloader for your supported desktop browser.\n\nWe recommend the ZIP version from the GitHub release when available for the most reliable installation.\n\n## Privacy and Use Boundaries\n\nContent access: Only download Stripchat media you can already view and have the right to save. The extension does not bypass private-show paywalls, age gates, or access restrictions.\n\nPrivacy: Media detection and file saving happen entirely within your browser. Source videos are never routed through external converters or cloud services.\n\nPermissions: The extension requests only the browser permissions required for media detection, download handling, and extension state management on supported Stripchat pages.",
-      "faq": [
-        {
-          "question": "How do I download videos from Stripchat?",
-          "answer": "Install the extension, navigate to a Stripchat page with media you can access, and use the extension panel to detect and save the available file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No. The extension detects and saves media locally within your browser. Source videos are never uploaded to an external converter or cloud service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "The downloader supports desktop browsers including Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not compatible."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "No. Only download media your current browser session can already display. The extension does not bypass private-show restrictions, age gates, or access controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Downloads target standard offline video files, primarily MP4, when the source page exposes a compatible media stream."
-        }
-      ]
-    }
   },
   "sunporno-downloader": {
     "content": {
@@ -18868,8 +18196,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/teachable-video-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/teachable-video-downloader/main/images/teachable-video-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/teachable-video-downloader.jpg"
       ]
     },
     "product": {
@@ -19023,8 +18350,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/terabox-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/terabox-downloader/main/images/terabox-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/terabox-downloader.jpg"
       ]
     },
     "product": {
@@ -19312,8 +18638,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/thumbnail-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/thumbnail-downloader/main/images/thumbnail-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/thumbnail-downloader.jpg"
       ]
     },
     "product": {
@@ -20090,9 +19415,15 @@
       ]
     },
     "media": {
-      "logo": "/listing-logos/serpdownloaders.com/txxx-downloader.png"
+      "logo": "/listing-logos/serpdownloaders.com/txxx-downloader.png",
+      "images": [
+        "/media/products/txxx-downloader/homepage.png"
+      ]
     },
     "product": {
+      "legacySlugs": [
+        "txxxvideodownloader.pages.dev"
+      ],
       "productPage": "https://serp.ly/txxx-downloader",
       "slug": "txxx-downloader",
       "tagline": "TXXX provides no way to save videos. Add the missing download button and keep your favorites as MP4 files.",
@@ -20134,47 +19465,12 @@
       {
         "label": "Browser Extensions",
         "url": "https://browserextensions.io/products/txxx-downloader/"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://txxxvideodownloader.pages.dev"
       }
     ]
-  },
-  "txxxvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://txxxvideodownloader.pages.dev",
-      "slug": "txxxvideodownloader.pages.dev",
-      "tagline": "Save TXXX videos for offline viewing. Local detection, local saving, fully private.",
-      "title": "TXXX Video Downloader"
-    },
-    "media": {
-      "logo": "https://txxxvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/txxxvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave TXXX videos for offline access. Private, browser-based TXXX downloader.\n\nTXXX Video Downloader is a desktop browser extension for capturing accessible TXXX videos from pages your browser can already display.\n\nThe process stays inside your browser from start to finish: visit the page, let the extension identify the active media source, pick the quality you want, and save the file locally.\n\nNo command-line utilities, no screen recording, no external workflows.\n\n## How It Works\n\n- Install the extension: Go to the TXXX Video Downloader product page and grab the build that matches your desktop browser.\n- Open TXXX: Browse to a TXXX page with media your session can already view.\n- Choose a detected file: Use the extension panel or in-page action to browse available video sources and quality levels.\n- Save locally: Download the selected file to your computer for offline playback.\n\n## What It Does\n\n- Identifies TXXX media on supported pages: Locates available video sources from TXXX pages and embeds that your browser can access.\n- Saves clean MP4 files locally: Stores videos in a local folder for offline playback, review, study, or archiving.\n- Keeps media handling private: The browser-based pipeline avoids uploading source media to any third-party conversion service.\n- Supports common desktop browsers: Use the downloader from Chromium-based browsers and other supported desktop builds.\n- Built for accessible content: Only download media you can already view and have permission to save.\n- Simple one-page workflow: Visit the page, let the extension detect media, choose your option, and save.\n\n## Browser and Platform Support\n\nRuns on major desktop browsers and operating systems used for everyday work.\n\nChoose the browser build you need. When a direct GitHub release is available, grab the ZIP from there.\n\nInstall TXXX Video Downloader for your supported desktop browser.\n\nWe recommend the ZIP version from the GitHub release when available for the most stable experience.\n\n## Privacy and Use Boundaries\n\nContent access: Download only TXXX media you can already access and have rights to save. The extension does not bypass login walls, age gates, or access restrictions.\n\nPrivacy: Media detection and file saving happen locally in your browser. Source videos are not routed through external converters or cloud services.\n\nPermissions: The extension requests only the browser permissions needed for media detection, download handling, and extension state management on supported TXXX pages.",
-      "faq": [
-        {
-          "question": "How do I download videos from TXXX?",
-          "answer": "Install the extension, navigate to a TXXX page with video content you can access, then use the extension panel to detect the available file and save it locally."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No. The extension detects and saves media locally within your browser. Source videos are never uploaded to an external converter or cloud service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "The downloader supports desktop browsers including Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not compatible."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "No. Only download media your current browser session can already display. The extension does not bypass login walls, age restrictions, or access controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Downloads target standard offline video files, primarily MP4, when the source page exposes a compatible media stream."
-        }
-      ]
-    }
   },
   "udemy-downloader": {
     "content": {
@@ -20224,8 +19520,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/udemy-video-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/udemy-video-downloader/main/images/udemy-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/udemy-video-downloader.jpg"
       ],
       "logo": "/listing-logos/serpdownloaders.com/udemy-downloader.png"
     },
@@ -20294,8 +19589,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/unsplash-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/unsplash-downloader/main/images/unsplash-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/unsplash-downloader.jpg"
       ]
     },
     "product": {
@@ -20375,12 +19669,14 @@
     },
     "media": {
       "images": [
-        "/media/products/upornia-downloader/featured.webp",
-        "/media/products/upornia-downloader/upornia-homepage.webp"
+        "/media/products/upornia-downloader/homepage.png"
       ],
       "logo": "/listing-logos/serpdownloaders.com/upornia-downloader.png"
     },
     "product": {
+      "legacySlugs": [
+        "uporniavideodownloader.pages.dev"
+      ],
       "productPage": "https://serp.ly/upornia-downloader",
       "slug": "upornia-downloader",
       "tagline": "Upornia has no save button. This extension adds one — download any video as a clean MP4 with a single click.",
@@ -20426,47 +19722,12 @@
       {
         "label": "Latest Release",
         "url": "https://github.com/serpapps/upornia-downloader/releases/latest"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://uporniavideodownloader.pages.dev"
       }
     ]
-  },
-  "uporniavideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://uporniavideodownloader.pages.dev",
-      "slug": "uporniavideodownloader.pages.dev",
-      "tagline": "Save Upornia videos offline. Browser-based detection and local saving — no uploads, no converters.",
-      "title": "Upornia Video Downloader"
-    },
-    "media": {
-      "logo": "https://uporniavideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/uporniavideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nGrab Upornia videos for offline access. Private, browser-native Upornia downloader.\n\nUpornia Video Downloader is a desktop browser extension for capturing accessible Upornia videos from pages your browser session can already display.\n\nEverything stays within your browser: visit the page, let the extension identify the media source, select the quality you prefer, and save the file to your computer.\n\nNo command-line tools, no screen capture, no steps outside your browser window.\n\n## How It Works\n\n- Install the extension: Visit the Upornia Video Downloader product page and grab the build for your desktop browser.\n- Open Upornia: Browse to a Upornia page with media your session can already view.\n- Choose a detected file: Use the extension panel or in-page control to browse available sources and quality levels.\n- Save locally: Download the selected video as a local file on your computer.\n\n## What It Does\n\n- Identifies Upornia media on supported pages: Locates available video sources from Upornia pages and embeds your browser can access.\n- Stores clean MP4 files locally: Saves videos to a local folder for offline playback, review, study, or personal archiving.\n- Keeps media handling private: The browser-based workflow avoids sending source media to any external conversion service.\n- Supports common desktop browsers: Use the downloader from Chromium-based browsers and other supported desktop builds.\n- Designed for accessible content: Only download media you can already view and have permission to save.\n- One-page workflow: Visit the page, let the extension detect media, pick your option, and save.\n\n## Browser and Platform Support\n\nRuns on major desktop browsers and operating systems used in everyday workflows.\n\nSelect the browser build you need. When a direct GitHub release is available, grab the ZIP from there.\n\nInstall Upornia Video Downloader for your supported desktop browser.\n\nWe recommend the ZIP version from the GitHub release when available for the most stable installation.\n\n## Privacy and Use Boundaries\n\nContent access: Only download Upornia media you can already view and have rights to save. The extension does not bypass login walls, age gates, or access restrictions.\n\nPrivacy: Media detection and file saving happen entirely within your browser. Source videos are never routed through external converters or cloud services.\n\nPermissions: The extension requests only the browser permissions needed for media detection, download management, and extension state on supported Upornia pages.",
-      "faq": [
-        {
-          "question": "How do I download videos from Upornia?",
-          "answer": "Install the extension, navigate to a Upornia page with video content you can access, and use the extension panel to detect and save the available file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No. The extension handles detection and saving locally in your browser. Source videos are never sent to an external converter or cloud service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "The downloader supports desktop browsers including Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not compatible."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "No. Only download media your current browser session can already display. The extension does not bypass login requirements, age gates, or access controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Downloads target standard offline video files, primarily MP4, when the source page provides a compatible media stream."
-        }
-      ]
-    }
   },
   "usersporn-downloader": {
     "content": {
@@ -20575,8 +19836,7 @@
     },
     "media": {
       "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/vectorstock-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/vectorstock-downloader/main/images/vectorstock-downloader.gif"
+        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/vectorstock-downloader.jpg"
       ]
     },
     "product": {
@@ -21215,6 +20475,18 @@
           "question": "Do I need to keep the tab open while downloading?"
         },
         {
+          "question": "Can I download images and text too?",
+          "answer": "Yes. The extension detects videos, images, and text posts, then organizes them into separate popup tabs so you can download each type independently."
+        },
+        {
+          "question": "What does Download Visible do?",
+          "answer": "Download Visible initiates downloads for every video, image, or text item currently detected in the active tab. Scroll down and rescan if more content loads below the fold."
+        },
+        {
+          "question": "Why do I need to press play before downloading a video?",
+          "answer": "Whop videos expose their stream only after playback begins. Pressing play provides the extension with the media data it needs to build the download."
+        },
+        {
           "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
           "question": "Is this legal?"
         }
@@ -21232,6 +20504,9 @@
       "logo": "/listing-logos/serpdownloaders.com/whop-downloader.png"
     },
     "product": {
+      "legacySlugs": [
+        "whopvideodownloader.pages.dev"
+      ],
       "productPage": "https://serp.ly/whop-video-downloader",
       "slug": "whop-downloader",
       "tagline": "Your Whop access is temporary. Download every video you paid for as MP4 before the membership ends.",
@@ -21281,47 +20556,12 @@
       {
         "label": "Firefox Add-ons",
         "url": "https://addons.mozilla.org/en-US/firefox/addon/whop-video-downloader/"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://whopvideodownloader.pages.dev"
       }
     ]
-  },
-  "whopvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://whopvideodownloader.pages.dev",
-      "slug": "whopvideodownloader.pages.dev",
-      "tagline": "Save Whop videos, images, and text from courses, lessons, and community pages. Built for Whop's page structure, works with your existing access.",
-      "title": "Whop Video Downloader"
-    },
-    "media": {
-      "logo": "https://whopvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/whopvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave Whop videos, images, and text posts from courses, lessons, and community pages using a browser extension engineered for Whop's specific layout.\n\nWhop Video Downloader is a SERP Apps browser extension that captures content from Whop and saves it as standard local files. It detects videos, images, and text posts on course pages, lesson pages, and community posts.\n\nWhop streams course videos in a way that prevents standard right-click saving, and media is often nested inside layered page structures that generic download tools overlook. This extension is built to navigate that Whop-specific layout, organizing detected content by type inside the browser popup.\n\nUse it for offline study, personal backups of purchased material, and creator archive workflows. The extension works through your existing Whop access and is meant for content you own or have permission to save.\n\nNo command-line tools, no screen recording, no extra steps outside your browser.\n\n## How It Works\n\n- Install the extension: Add SERP Whop Downloader from the product page or install the latest release manually from GitHub.\n- Open your Whop content: Browse to the Whop course, lesson, or community post you want to save.\n- Press play for videos: Start playback when you want to download a video so the stream becomes accessible and the extension can detect it.\n- Save what you need: Download items one at a time, use an overlay button on a video player, or choose Download Visible for everything in the active tab.\n\n## What It Does\n\n- Whop-aware media detection: Reads Whop course, lesson, community, and post pages for videos, image assets, and text content that generic downloaders typically miss.\n- Overlay buttons on videos: Places in-page download controls on supported Whop video players once the stream loads.\n- Bulk Download Visible action: Captures every currently detected video, image, and text item in the active tab after content has loaded.\n- Tabbed popup for videos, images, and text: Sorts detected content by type so you can download exactly the media format you need.\n- Video-to-MP4 conversion: Converts Whop's streaming format into standard MP4 files for offline playback on any device.\n- Local processing: Handles detection, conversion, and saving inside your browser without routing media through external servers.\n\n## Browser and Platform Support\n\nRuns on major desktop browsers and operating systems used for daily work.\n\nSelect the browser build that matches your setup. When a direct GitHub release is available, use the ZIP for the most stable installation.\n\nInstall Whop Video Downloader for your supported desktop browser.\n\n## Privacy and Use Boundaries\n\nContent access: Download only Whop content you can already view through your current logged-in session. The extension does not bypass paywalls, membership gates, or access restrictions.\n\nPrivacy: All detection, conversion, and file saving happen locally in your browser. Media is never uploaded to external converters or cloud services.\n\nPermissions: The extension requests only the browser permissions needed for media detection, download handling, and extension state management on supported Whop pages.",
-      "faq": [
-        {
-          "question": "How do I download a video from Whop?",
-          "answer": "Open a Whop page with a video, press play so the stream loads, then click the overlay download button or open the extension popup to save the file as MP4."
-        },
-        {
-          "question": "Can I download images and text too?",
-          "answer": "Yes. The extension detects videos, images, and text posts, then organizes them into separate popup tabs so you can download each type independently."
-        },
-        {
-          "question": "What does Download Visible do?",
-          "answer": "Download Visible initiates downloads for every video, image, or text item currently detected in the active tab. Scroll down and rescan if more content loads below the fold."
-        },
-        {
-          "question": "Why do I need to press play before downloading a video?",
-          "answer": "Whop videos expose their stream only after playback begins. Pressing play provides the extension with the media data it needs to build the download."
-        },
-        {
-          "question": "Does it work with private or paid Whop content?",
-          "answer": "It works exclusively with content you can already access through your current logged-in Whop session. It does not bypass paywalls, membership requirements, or access restrictions."
-        }
-      ]
-    }
   },
   "whoreshub-downloader": {
     "content": {
@@ -21390,91 +20630,6 @@
       }
     ]
   },
-  "wistia-downloader": {
-    "content": {
-      "body": "## Overview\n\nIf you have ever tried to grab a training clip, how-to walkthrough, or lecture from a website running Wistia, you already know the frustration. Wistia hosts video for countless businesses, yet practically none of them let you download anything. You can stream it, but keeping a copy? Not an option.\n\nThis extension fixes that problem. It scans every page you visit for Wistia players -- including full playlists and channel libraries -- and places a download button next to each one. Select the resolution that works best for you, and the file lands on your machine as a regular MP4. You can run up to three downloads simultaneously, which means pulling an entire playlist is fast and painless.\n\nWhether you need to archive marketing materials, grab onboarding clips before switching platforms, or stash training recordings for offline study, the tool handles it. All processing takes place right on your computer with zero involvement from external servers.\n\n## Why It Exists\n\n- Grab embedded Wistia content from campaign pages before they get taken down\n- Pull down complete playlists or channels without chasing individual links\n- Every download stays private thanks to local-only processing and no analytics\n\n## Key Features\n\n- Finds Wistia embeds across any site, covering playlists and channel pages\n- Shows every video in a playlist complete with title, thumbnail, and resolution choices\n- Grabs direct MP4 files or converts HLS streams when a direct file is not available\n- Handles up to three parallel downloads, each with its own progress indicator\n- Works on Chrome, Edge, Firefox, Brave, and Opera on desktop\n- Keeps licence information on your device and never sends downloads through outside servers\n\n## Reviews\n\n- Playlist capture in minutes (5/5): Our marketing channel had 24 videos. The extension listed them instantly and I downloaded the ones I needed in one pass. - Mason Fuller\n- Perfect for campaign landing pages (4.9/5): We archive campaign sites before they expire. This finds every embedded Wistia player without digging through code. - Riya Beale\n- Reliable HLS fallback (4.8/5): When a direct MP4 wasn’t available it merged the stream flawlessly. Progress bars kept me updated the whole time. - Hugo Lambert\n\n## Privacy and Permissions\n\nSupported regions: Worldwide.\n\nPermissions:\n- downloads: Writes each Wistia MP4 to your downloads folder and maintains accurate progress displays for concurrent jobs.\n- storage: Holds licence activation and quality choices locally so your playlist settings carry over between sessions.\n- activeTab: Identifies Wistia players on the page you are currently browsing and loads the video list into the extension popup.\n- tabs: Lets the extension update its list of detected videos as you move between pages or switch to tabs containing embedded players.\n- scripting: Accesses Wistia player settings and manifest information so the downloader can locate the right stream or MP4 file.\n- notifications: Delivers finish and error notifications for every download so you can work on other things while videos save.",
-      "faq": [
-        {
-          "answer": "Navigate to the page that holds the playlist, click the extension icon, browse through the listed videos, pick the ones you want along with your preferred resolution, and hit download. Each video shows its own progress tracker.",
-          "question": "How do I download a Wistia playlist with this extension?"
-        },
-        {
-          "answer": "Absolutely. The extension inspects every page you open and surfaces any Wistia videos it finds, whether they are embedded on landing pages, help docs, or online course platforms.",
-          "question": "Can it download embedded Wistia videos on marketing sites?"
-        },
-        {
-          "answer": "The extension can only access videos that are publicly visible or do not require a password. Content behind password gates or restricted access settings stays protected in line with Wistia’s security model.",
-          "question": "Does it work with password-protected projects?"
-        },
-        {
-          "answer": "You can run three downloads at the same time. Each one has a dedicated progress bar so you can keep track of everything at a glance.",
-          "question": "How many videos can download at once?"
-        },
-        {
-          "answer": "You can get builds for Chrome, Edge, Firefox, Brave, and Opera across Windows, macOS, and Linux desktops.",
-          "question": "Which browsers are supported?"
-        },
-        {
-          "answer": "This tool is focused on video and audio files. If you need captions, transcripts, or supplementary attachments, those should be grabbed directly from the original site.",
-          "question": "Are captions or transcripts included?"
-        },
-        {
-          "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
-          "question": "Is this legal?"
-        }
-      ]
-    },
-    "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/wistia-video-downloader.jpg"
-      ],
-      "logo": "/listing-logos/serpdownloaders.com/wistia-downloader.png"
-    },
-    "product": {
-      "productPage": "https://serp.ly/wistia-video-downloader",
-      "slug": "wistia-downloader",
-      "tagline": "Wistia powers video across SaaS and education, but never gives viewers a save button. This extension adds one.",
-      "title": "Wistia Video Downloader"
-    },
-    "relatedLinks": [
-      {
-        "label": "Install browser extension",
-        "url": "https://serp.ly/wistia-video-downloader"
-      },
-      {
-        "label": "SERP Apps",
-        "url": "https://apps.serp.co/wistia-video-downloader"
-      },
-      {
-        "label": "GitHub repository",
-        "url": "https://github.com/serpapps/wistia-video-downloader"
-      },
-      {
-        "label": "SERP Extensions",
-        "url": "https://extensions.serp.co/extensions/serp/wistia-video-downloader/"
-      },
-      {
-        "label": "ExtensionHub",
-        "url": "https://www.extensionhub.io/extensions/Wistia-Video-Downloader-1308"
-      },
-      {
-        "label": "SERP",
-        "url": "https://serp.co/products/wistia-video-downloader/reviews/"
-      },
-      {
-        "label": "SERP AI",
-        "url": "https://serp.ai/products/wistia-video-downloader/reviews/"
-      },
-      {
-        "label": "Browser Extensions",
-        "url": "https://browserextensions.io/products/wistia-video-downloader/"
-      },
-      {
-        "label": "Chrome Web Store",
-        "url": "https://chromewebstore.google.com/detail/wistia-video-downloader/enlffdifedcjihdhejdgbihipfehgibl"
-      }
-    ]
-  },
   "wistia-video-downloader": {
     "content": {
       "body": "## Overview\n\nWistia is everywhere -- powering product demos, online courses, and internal training portals for thousands of organizations. But almost none of those sites give you a way to download what you are watching. You can view it in the browser, and that is where it stays.\n\nThis extension changes the equation. It automatically recognizes Wistia-hosted videos on whatever page you are browsing, including multi-video playlists and complete channel libraries. Each detected video gets a straightforward download option. Pick your preferred quality level and the content saves as a universal MP4 file. With support for three concurrent downloads, grabbing an entire collection takes a fraction of the time.\n\nUse it to preserve campaign assets, back up employee onboarding material before migrating systems, or download course videos for offline study sessions. The whole operation runs locally on your hardware -- no third-party processing servers touch your data.\n\n## Why It Exists\n\n- Preserve Wistia-embedded campaign content before web pages expire or change\n- Download full playlists or channels in one session without tracking down each link manually\n- Maintain total privacy through on-device processing with zero tracking or analytics\n\n## Key Features\n\n- Recognizes Wistia embeds across every website, including playlist and channel pages\n- Presents every video in a playlist with its title, thumbnail, and available quality tiers\n- Fetches direct MP4 files when available and falls back to HLS conversion automatically\n- Allows up to three simultaneous downloads with separate progress displays for each\n- Compatible with Chrome, Edge, Firefox, Brave, and Opera on desktop platforms\n- Saves licence details locally and never routes your downloads through third-party infrastructure\n\n## Reviews\n\n- Playlist capture in minutes (5/5): Our marketing channel had 24 videos. The extension listed them instantly and I downloaded the ones I needed in one pass. - Mason Fuller\n- Perfect for campaign landing pages (4.9/5): We archive campaign sites before they expire. This finds every embedded Wistia player without digging through code. - Riya Beale\n- Reliable HLS fallback (4.8/5): When a direct MP4 wasn’t available it merged the stream flawlessly. Progress bars kept me updated the whole time. - Hugo Lambert\n\n## Privacy and Permissions\n\nSupported regions: Worldwide.\n\nPermissions:\n- downloads: Delivers each Wistia MP4 to your downloads folder while keeping progress bars accurate across parallel jobs.\n- storage: Retains licence activation data and quality preferences locally so your playlist configuration persists across sessions.\n- activeTab: Spots Wistia players on whatever page you are viewing and populates the video list inside the extension popup.\n- tabs: Enables the extension to update detected videos when you navigate between pages or jump to tabs with embedded players.\n- scripting: Reads Wistia player configuration and manifest details so the downloader can pinpoint the correct stream or MP4 source.\n- notifications: Pushes completion and error alerts for each download so you can focus on other tasks while videos save.",
@@ -21516,6 +20671,9 @@
       "logo": "/listing-logos/serpdownloaders.com/wistia-downloader.png"
     },
     "product": {
+      "legacySlugs": [
+        "wistia-downloader"
+      ],
       "productPage": "https://serp.ly/wistia-video-downloader",
       "slug": "wistia-video-downloader",
       "tagline": "Wistia hosts video for thousands of businesses but none offer a download link. This extension fills that gap.",
@@ -21926,9 +21084,15 @@
       ]
     },
     "media": {
-      "logo": "/listing-logos/serpdownloaders.com/xfantazy-downloader.png"
+      "logo": "/listing-logos/serpdownloaders.com/xfantazy-downloader.png",
+      "images": [
+        "/media/products/xfantazy-downloader/homepage.png"
+      ]
     },
     "product": {
+      "legacySlugs": [
+        "xfantazyvideodownloader.pages.dev"
+      ],
       "productPage": "https://serp.ly/xfantazy-downloader",
       "slug": "xfantazy-downloader",
       "tagline": "Xfantazy offers no download feature. Keep videos on your device at full quality and watch whenever you want.",
@@ -21970,47 +21134,12 @@
       {
         "label": "Browser Extensions",
         "url": "https://browserextensions.io/products/xfantazy-downloader/"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://xfantazyvideodownloader.pages.dev"
       }
     ]
-  },
-  "xfantazyvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://xfantazyvideodownloader.pages.dev",
-      "slug": "xfantazyvideodownloader.pages.dev",
-      "tagline": "Save XFantazy videos you have access to view. Private, fast XFantazy downloader with batch support.",
-      "title": "XFantazy Video Downloader"
-    },
-    "media": {
-      "logo": "https://xfantazyvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/xfantazyvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave XFantazy videos you are authorized to view. Fast, private XFantazy downloader with batch support.\n\nXFantazy Video Downloader is a desktop browser extension that lets you save accessible XFantazy videos from pages your browser session can already reach.\n\nThe entire workflow happens inside your browser: open the page, allow the extension to identify the active media source, pick an available quality, and store the finished file on your computer.\n\nNo terminal commands, no screen recording, and no extra steps outside your browser.\n\n## How It Works\n\n- Install the extension: Visit the XFantazy Video Downloader product page and install the build designed for your supported desktop browser.\n- Open XFantazy: Go to an XFantazy page with media your browser can already play.\n- Choose a detected file: Use the extension panel or in-page action to review available video sources and quality tiers.\n- Save locally: Download the selected media as an offline file to your computer.\n\n## What It Does\n\n- Detects XFantazy media on supported pages: Locate available video sources from XFantazy pages and embeds your browser can access.\n- Saves clean MP4 files locally: Store videos in a local downloads folder for offline playback, study, review, or archiving.\n- Keeps media handling private: The browser extension workflow avoids uploading source media to a third-party converter.\n- Supports common desktop browsers: Use the downloader from Chromium-based browsers and other supported desktop browser builds.\n- Built for accessible content: Download only content you can already access and have permission to save.\n- Simple one-page workflow: Open the page, let the extension detect media, choose the available option, and save.\n\n## Browser and Platform Support\n\nAvailable on major desktop browsers and operating systems used in day-to-day workflows.\n\nPick the browser build you need. When a direct GitHub release is available, you can grab the ZIP there.\n\nInstall XFantazy Video Downloader for supported desktop browsers.\n\nWe recommend using the ZIP version from the GitHub release when available. It lets us ship the most complete build, including features that browser stores do not always allow.\n\n## Privacy and Use Boundaries\n\n- Saves clean MP4 files locally: Store videos in a local downloads folder for offline playback, study, review, or archiving.\n- Keeps media handling private: The browser extension workflow avoids uploading source media to a third-party converter.\n- Built for accessible content: Download only content you can already access and have permission to save.\n- Only use the downloader for content you have rights or permission to save.\n- Availability depends on the media sources exposed by the current page.\n- Site layout changes can require extension updates.",
-      "faq": [
-        {
-          "question": "How do I download videos from XFantazy?",
-          "answer": "Get the XFantazy Video Downloader extension, open an XFantazy page with media you can view, then use the extension action to detect and save the file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No. The extension is designed around local detection and local saving rather than sending source media to an external conversion service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "The downloader targets supported desktop browsers including Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not supported."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "Only save media you can already access and have permission to keep. The downloader is not designed to circumvent restrictions or account controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Downloads focus on standard offline video files like MP4 when the source page provides a compatible media stream."
-        }
-      ]
-    }
   },
   "xfreehd-downloader": {
     "content": {
@@ -22038,10 +21167,18 @@
         }
       ]
     },
+    "media": {
+      "images": [
+        "/media/products/xfreehd-downloader/homepage.png"
+      ]
+    },
     "product": {
       "categories": [
         "adult",
         "video-downloaders"
+      ],
+      "legacySlugs": [
+        "xfreehdvideodownloader.pages.dev"
       ],
       "productPage": "https://serp.ly/xfreehd-downloader",
       "slug": "xfreehd-downloader",
@@ -22076,47 +21213,12 @@
       {
         "label": "GitHub Issues",
         "url": "https://github.com/serpapps/xfreehd-downloader/issues"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://xfreehdvideodownloader.pages.dev"
       }
     ]
-  },
-  "xfreehdvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://xfreehdvideodownloader.pages.dev",
-      "slug": "xfreehdvideodownloader.pages.dev",
-      "tagline": "Save accessible XFreeHD videos as MP4 files with private local detection, host matching, and offline playback.",
-      "title": "XFreeHD Video Downloader"
-    },
-    "media": {
-      "logo": "https://xfreehdvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/xfreehdvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave accessible XFreeHD videos as MP4 files with private local browser detection, supported host matching, and offline playback.\n\nXFreeHD Video Downloader is a desktop browser extension for saving accessible XFreeHD videos from pages your browser session is already able to view.\n\nThe whole workflow takes place inside your browser: open the page, let the extension spot the active media source, select an available quality, and store the final file locally.\n\nNo terminal commands, no screen recording, and no steps outside your browser.\n\n## How It Works\n\n- Install the extension: Head to the XFreeHD Video Downloader product page and install the build for your supported desktop browser.\n- Open XFreeHD: Go to an XFreeHD page with media your browser can already view.\n- Choose a detected file: Use the extension panel or in-page action to review available video sources and quality tiers.\n- Save locally: Download the selected media as an offline file on your computer.\n\n## What It Does\n\n- Detects XFreeHD media on supported pages: Identify available video sources from XFreeHD pages and embeds your browser can access.\n- Saves clean MP4 files locally: Place videos in a local downloads folder for offline playback, study, review, or archiving.\n- Keeps media handling private: The browser extension workflow avoids sending source media to a third-party converter.\n- Supports common desktop browsers: Use the downloader from Chromium-based browsers and other supported desktop browser builds.\n- Built for accessible content: Download only content you can already access and have permission to save.\n- Simple one-page workflow: Open the page, let the extension detect media, choose the available option, and save.\n\n## Browser and Platform Support\n\nAvailable on major desktop browsers and operating systems used in day-to-day workflows.\n\nPick the browser build you need. When a direct GitHub release is available, you can grab the ZIP there.\n\nInstall XFreeHD Video Downloader for supported desktop browsers.\n\nWe recommend using the ZIP version from the GitHub release when available. It lets us ship the most complete build, including features that browser stores do not always allow.\n\n## Privacy and Use Boundaries\n\n- Saves clean MP4 files locally: Place videos in a local downloads folder for offline playback, study, review, or archiving.\n- Keeps media handling private: The browser extension workflow avoids sending source media to a third-party converter.\n- Built for accessible content: Download only content you can already access and have permission to save.\n- Only use the downloader for content you have rights or permission to save.\n- Availability depends on the media sources exposed by the current page.\n- Site layout changes can require extension updates.",
-      "faq": [
-        {
-          "question": "How do I download videos from XFreeHD?",
-          "answer": "Get XFreeHD Video Downloader, visit an XFreeHD page with media you can access, then use the extension action to detect and save the available file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No. The extension is built around local detection and local saving rather than uploading source media to a separate conversion service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "The downloader targets supported desktop browsers including Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not supported."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "Only save media you can already access and have authorization to keep. The downloader is not designed to bypass restrictions or account controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Downloads prioritize standard offline video files like MP4 when the source page provides a compatible media stream."
-        }
-      ]
-    }
   },
   "xfuntaxy-downloader": {
     "content": {
@@ -22211,10 +21313,18 @@
         }
       ]
     },
+    "media": {
+      "images": [
+        "/media/products/xgroovy-downloader/homepage.png"
+      ]
+    },
     "product": {
       "categories": [
         "adult",
         "video-downloaders"
+      ],
+      "legacySlugs": [
+        "xgroovyvideodownloader.pages.dev"
       ],
       "productPage": "https://serp.ly/xgroovy-downloader",
       "slug": "xgroovy-downloader",
@@ -22249,47 +21359,12 @@
       {
         "label": "GitHub Issues",
         "url": "https://github.com/serpapps/xgroovy-downloader/issues"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://xgroovyvideodownloader.pages.dev"
       }
     ]
-  },
-  "xgroovyvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://xgroovyvideodownloader.pages.dev",
-      "slug": "xgroovyvideodownloader.pages.dev",
-      "tagline": "Save accessible XGroovy videos as MP4 files with private local processing, host detection, and offline playback.",
-      "title": "XGroovy Video Downloader"
-    },
-    "media": {
-      "logo": "https://xgroovyvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/xgroovyvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nSave accessible XGroovy videos as MP4 files with private local processing, supported host detection, and offline playback.\n\nXGroovy Video Downloader is a desktop browser extension for saving accessible XGroovy videos from pages your browser session can already view.\n\nThe entire workflow stays within your browser: open the page, let the extension spot the active media source, pick an available quality, and store the final file locally.\n\nNo terminal commands, no screen recording, and no extra steps outside your browser.\n\n## How It Works\n\n- Install the extension: Head to the XGroovy Video Downloader product page and install the build for your supported desktop browser.\n- Open XGroovy: Navigate to an XGroovy page with media you can already view in your browser.\n- Choose a detected file: Use the extension panel or in-page action to review available video sources and quality tiers.\n- Save locally: Download the selected media as an offline file on your computer.\n\n## What It Does\n\n- Detects XGroovy media on supported pages: Locate available video sources from XGroovy pages and embeds your browser can access.\n- Saves clean MP4 files locally: Keep videos in a local downloads folder for offline playback, study, review, or archiving.\n- Keeps media handling private: The browser extension workflow avoids sending source media to a third-party converter.\n- Supports common desktop browsers: Use the downloader from Chromium-based browsers and other supported desktop browser builds.\n- Built for accessible content: Download only content you can already access and have permission to save.\n- Simple one-page workflow: Open the page, let the extension detect media, choose the available option, and save.\n\n## Browser and Platform Support\n\nAvailable on major desktop browsers and operating systems used in day-to-day workflows.\n\nPick the browser build you need. When a direct GitHub release is available, you can grab the ZIP there.\n\nInstall XGroovy Video Downloader for supported desktop browsers.\n\nWe recommend using the ZIP version from the GitHub release when available. It lets us ship the most complete build, including features that browser stores do not always allow.\n\n## Privacy and Use Boundaries\n\n- Saves clean MP4 files locally: Keep videos in a local downloads folder for offline playback, study, review, or archiving.\n- Keeps media handling private: The browser extension workflow avoids sending source media to a third-party converter.\n- Built for accessible content: Download only content you can already access and have permission to save.\n- Only use the downloader for content you have rights or permission to save.\n- Availability depends on the media sources exposed by the current page.\n- Site layout changes can require extension updates.",
-      "faq": [
-        {
-          "question": "How do I download videos from XGroovy?",
-          "answer": "Get XGroovy Video Downloader, open an XGroovy page with media you can access, then use the extension action to detect and save the available file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No. The extension is built around local detection and local saving rather than uploading source media to a separate conversion service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "The downloader targets supported desktop browsers including Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not supported."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "Only save media you can already access and have permission to keep. The downloader is not designed to bypass restrictions or account controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Downloads focus on standard offline video files like MP4 when the source page provides a compatible media stream."
-        }
-      ]
-    }
   },
   "xhamster-downloader": {
     "content": {
@@ -22408,10 +21483,6 @@
       ]
     },
     "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/xhamsterlive-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/xhamsterlive-downloader/main/images/featured.gif"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/xhamsterlive-downloader.png"
     },
     "product": {
@@ -22577,10 +21648,6 @@
       ]
     },
     "media": {
-      "images": [
-        "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/xlovecam-video-downloader.jpg",
-        "https://raw.githubusercontent.com/serpapps/xlovecam-video-downloader/main/images/featured.gif"
-      ],
       "logo": "/listing-logos/serpdownloaders.com/xlovecam-downloader.png"
     },
     "product": {
@@ -22829,88 +21896,6 @@
       }
     ]
   },
-  "xnxx-downloader": {
-    "content": {
-      "body": "## Overview\n\nXNXX does not offer a save option, leaving online converters packed with ads, redirects, and suspicious prompts as the only alternative. XNXX Video Downloader offers a better path: a lightweight browser extension that provides the save feature XNXX never included.\n\nHead to any video on xnxx.com, xnxx3.com, or any mirror site, click the extension icon, and choose the resolution you prefer. The file saves as a standard MP4 directly to your computer with a clear progress bar. No URL copying, no pasting into random websites, no guessing what you just clicked on.\n\nEvery download goes into an organized XNXX folder, keeps the original video quality with zero degradation, and runs entirely on your device. Your browsing stays private and your computer stays clean.\n\n## Why It Exists\n\n- Grab XNXX videos from any mirror without manual configuration\n- Select the exact MP4 resolution you need for offline playback\n- Maintain download privacy with on-device processing and no analytics\n\n## Key Features\n\n- Works across xnxx.com, video.xnxx.com, xnxx3.com, and other XNXX mirror domains without extra configuration.\n- One-click download from the toolbar icon or the right-click context menu on any XNXX video page.\n- Quality selector surfaces every available resolution sorted by height with file-size estimates for each option.\n- Saves the original MP4 as served by XNXX with no re-encoding, watermarks, or quality degradation.\n- Download progress bar with real-time speed and a desktop notification when the file is ready.\n- Auto-saves completed files into a dedicated XNXX subfolder inside your browser's Downloads directory.\n- Licence check at activation only and the extension never uploads browsing or download history.\n- Cross-browser builds for Chrome, Edge, Firefox, Brave, and Opera on Windows, macOS, and Linux.\n- Regular update checks ensure detection stays aligned with XNXX CDN and player changes.\n- Lightweight popup UI with dark theme stays consistent and unobtrusive on XNXX pages.\n\n## Reviews\n\n- Works on every domain I try (5/5): No matter which mirror I land on, the downloader recognises the video and saves the MP4 without any extra steps. - Gio Ramirez\n- Clean quality picker (4.9/5): Highest resolution is always first and file sizes help me choose quickly. Downloads finish fast too. - Kira Sato\n- Dependable offline copies (4.8/5): I save favourites before they vanish. Progress stays visible and the files play perfectly offline. - Leon Briggs\n\n## Privacy and Permissions\n\nSupported regions: Worldwide.\n\nPermissions:\n- downloads: Required for downloading XNXX videos to the user's computer while tracking progress.\n\nUsage highlights:\n- `background-enhanced.js:60` cancels downloads through the Chrome Downloads API.\n- `background-enhanced.js:357` starts new downloads.\n- `background-enhanced.js:446, 455, 459` watch download state and progress events.\n- `popup.js:210` looks up downloads by ID to show progress in the popup.\n- activeTab: Enables the extension to work with the active tab, validate XNXX pages, and gather video metadata.\n\nUsage highlights:\n- `chrome.tabs.query({ active: true, currentWindow: true })` provides implicit access to the focused tab.\n- Supports communication with content scripts running on the active tab.\n- storage: Stores activation status and license information locally so paid features remain enabled.\n\nUsage highlights:\n- `auth.js` `saveActivation` persists activation flags, license keys, and emails.\n- `auth.js` `checkActivationStatus` reloads stored activation details when the popup initializes.\n- notifications: Allows the extension to issue system notifications about download completion and error states.\n\nUsage highlights:\n- `background-enhanced.js:477` creates notifications via `chrome.notifications.create`.\n- Notifications inform users about finished downloads and failure scenarios.\n- contextMenus: Adds a \"Download XNXX Video\" item to the right-click menu on XNXX domains for quick access.\n\nUsage highlights:\n- `background-enhanced.js:10` registers the context menu item with `chrome.contextMenus.create`.\n- `background-enhanced.js:23` listens for clicks using `chrome.contextMenus.onClicked`.\n- tabs: Supports tab queries, messaging, and opening helper tabs to coordinate downloads.\n\nUsage highlights:\n- `popup.js:30, 44, 265` query tabs, communicate with content scripts, and open new tabs.\n- `background-enhanced.js:25, 319, 325, 493` handle tab messaging for download workflows.",
-      "faq": [
-        {
-          "answer": "Navigate to the video on any XNXX domain, click the downloader icon, choose the resolution you prefer, and wait for the progress bar to finish. The MP4 saves automatically.",
-          "question": "How do I download an XNXX video with this extension?"
-        },
-        {
-          "answer": "Yes. The extension works with xnxx.com, video.xnxx.com, xnxx3.com, and other mirrors without additional setup.",
-          "question": "Does it work on alternative domains like xnxx3.com?"
-        },
-        {
-          "answer": "Downloads process one at a time to ensure file integrity. Begin the next video after the current one finishes.",
-          "question": "Can I download multiple videos at once?"
-        },
-        {
-          "answer": "Builds are available for Chrome, Edge, Firefox, Brave, and Opera on Windows, macOS, and Linux desktops.",
-          "question": "Which browsers are supported?"
-        },
-        {
-          "answer": "No. The downloader stores the original MP4 exactly as XNXX provides it, maintaining quality and any embedded overlays.",
-          "question": "Does it change the video or remove watermarks?"
-        },
-        {
-          "answer": "All operations happen locally. The extension only verifies your licence and never sends browsing or download history externally.",
-          "question": "Is my activity private?"
-        },
-        {
-          "answer": "DISCLAIMER: We are not attorneys and do not offer legal advice. Laws vary by country and platform. For any legal question please consult a qualified legal professional.\n\nWe give you full control over download speeds because we believe users should decide how they use their software.\n\nThat said, here are a few widely accepted best practices for safe, responsible downloading:\n\n- Only download content you created, own, or have explicit permission from the rights holder to access.\n\n- Protect your personal data by respecting platform rules and rate limits with reasonable download speeds to avoid automated abuse systems putting your account at risk.\n\n- Protect your privacy by using a reputable VPN for IP protection before initiating downloads — this is the VPN we recommend & use.",
-          "question": "Is this legal?"
-        }
-      ]
-    },
-    "media": {
-      "logo": "/listing-logos/serpdownloaders.com/xnxx-downloader.png"
-    },
-    "product": {
-      "productPage": "https://serp.ly/xnxx-video-downloader",
-      "slug": "xnxx-downloader",
-      "tagline": "XNXX has no save button? Skip the sketchy converter sites and download videos directly.",
-      "title": "XNXX Video Downloader"
-    },
-    "relatedLinks": [
-      {
-        "label": "Install browser extension",
-        "url": "https://serp.ly/xnxx-video-downloader"
-      },
-      {
-        "label": "SERP Apps",
-        "url": "https://apps.serp.co/xnxx-video-downloader"
-      },
-      {
-        "label": "GitHub repository",
-        "url": "https://github.com/serpapps/xnxx-video-downloader"
-      },
-      {
-        "label": "SERP Extensions",
-        "url": "https://extensions.serp.co/extensions/serp/xnxx-video-downloader/"
-      },
-      {
-        "label": "Apify",
-        "url": "https://apify.com/serpxxx/xnxx-video-downloader/"
-      },
-      {
-        "label": "ExtensionHub",
-        "url": "https://www.extensionhub.io/extensions/Xnxx-Downloader-1313"
-      },
-      {
-        "label": "SERP",
-        "url": "https://serp.co/products/xnxx-video-downloader/reviews/"
-      },
-      {
-        "label": "SERP AI",
-        "url": "https://serp.ai/products/xnxx-video-downloader/reviews/"
-      },
-      {
-        "label": "Browser Extensions",
-        "url": "https://browserextensions.io/products/xnxx-video-downloader/"
-      }
-    ]
-  },
   "xnxx-video-downloader": {
     "content": {
       "body": "## Overview\n\nXNXX provides no native download feature, which means online converters loaded with ads, redirects, and dubious prompts are what most people resort to. XNXX Video Downloader offers a cleaner alternative: a simple browser extension that adds the save button XNXX never provided.\n\nVisit any video on xnxx.com, xnxx3.com, or any mirror site, tap the extension icon, and pick the resolution you want. The file saves as a standard MP4 directly to your computer with an easy-to-read progress bar. No URL copying, no pasting into unfamiliar websites, no guessing about what you just clicked.\n\nEvery download lands in a tidy XNXX folder, preserves the original video quality without any degradation, and runs entirely on your device. Your browsing stays private and your system stays clean.\n\n## Why It Exists\n\n- Save XNXX videos from any mirror without manual configuration\n- Pick the precise MP4 resolution you need for offline viewing\n- Keep downloads private with on-device processing and zero analytics\n\n## Key Features\n\n- Works across xnxx.com, video.xnxx.com, xnxx3.com, and other XNXX mirror domains without extra configuration.\n- One-click download from the toolbar icon or the right-click context menu on any XNXX video page.\n- Quality selector surfaces every available resolution sorted by height with file-size estimates for each option.\n- Saves the original MP4 as served by XNXX with no re-encoding, watermarks, or quality degradation.\n- Download progress bar with real-time speed and a desktop notification when the file is ready.\n- Auto-saves completed files into a dedicated XNXX subfolder inside your browser's Downloads directory.\n- Licence check at activation only and the extension never uploads browsing or download history.\n- Cross-browser builds for Chrome, Edge, Firefox, Brave, and Opera on Windows, macOS, and Linux.\n- Regular update checks ensure detection stays aligned with XNXX CDN and player changes.\n- Lightweight popup UI with dark theme stays consistent and unobtrusive on XNXX pages.\n\n## Reviews\n\n- Works on every domain I try (5/5): No matter which mirror I land on, the downloader recognises the video and saves the MP4 without any extra steps. - Gio Ramirez\n- Clean quality picker (4.9/5): Highest resolution is always first and file sizes help me choose quickly. Downloads finish fast too. - Kira Sato\n- Dependable offline copies (4.8/5): I save favourites before they vanish. Progress stays visible and the files play perfectly offline. - Leon Briggs\n\n## Privacy and Permissions\n\nSupported regions: Worldwide.\n\nPermissions:\n- downloads: Required for downloading XNXX videos to the user's computer while tracking progress.\n\nUsage highlights:\n- `background-enhanced.js:60` cancels downloads through the Chrome Downloads API.\n- `background-enhanced.js:357` starts new downloads.\n- `background-enhanced.js:446, 455, 459` watch download state and progress events.\n- `popup.js:210` looks up downloads by ID to show progress in the popup.\n- activeTab: Enables the extension to work with the active tab, validate XNXX pages, and gather video metadata.\n\nUsage highlights:\n- `chrome.tabs.query({ active: true, currentWindow: true })` provides implicit access to the focused tab.\n- Supports communication with content scripts running on the active tab.\n- storage: Stores activation status and license information locally so paid features remain enabled.\n\nUsage highlights:\n- `auth.js` `saveActivation` persists activation flags, license keys, and emails.\n- `auth.js` `checkActivationStatus` reloads stored activation details when the popup initializes.\n- notifications: Allows the extension to issue system notifications about download completion and error states.\n\nUsage highlights:\n- `background-enhanced.js:477` creates notifications via `chrome.notifications.create`.\n- Notifications inform users about finished downloads and failure scenarios.\n- contextMenus: Adds a \"Download XNXX Video\" item to the right-click menu on XNXX domains for quick access.\n\nUsage highlights:\n- `background-enhanced.js:10` registers the context menu item with `chrome.contextMenus.create`.\n- `background-enhanced.js:23` listens for clicks using `chrome.contextMenus.onClicked`.\n- tabs: Supports tab queries, messaging, and opening helper tabs to coordinate downloads.\n\nUsage highlights:\n- `popup.js:30, 44, 265` query tabs, communicate with content scripts, and open new tabs.\n- `background-enhanced.js:25, 319, 325, 493` handle tab messaging for download workflows.",
@@ -22949,6 +21934,9 @@
       "logo": "/listing-logos/serpdownloaders.com/xnxx-downloader.png"
     },
     "product": {
+      "legacySlugs": [
+        "xnxx-downloader"
+      ],
       "productPage": "https://serp.ly/xnxx-video-downloader",
       "slug": "xnxx-video-downloader",
       "tagline": "XNXX lacks a download option? Forget sketchy converter sites. Save videos offline the clean way.",
@@ -24153,16 +23141,14 @@
     },
     "media": {
       "images": [
-        "/media/products/youporn-video-downloader/youporn-downloader-screenshot1.webp",
-        "/media/products/youporn-video-downloader/youporn-downloader-screenshot2.webp",
-        "/media/products/youporn-video-downloader/youporn-downloader-screenshot3.webp",
-        "/media/products/youporn-video-downloader/youporn-downloader-screenshot4.webp",
-        "/media/products/youporn-video-downloader/youporn-downloader-screenshot5.webp",
-        "/media/products/youporn-video-downloader/featured.webp"
+        "/media/products/youporn-downloader/homepage.png"
       ],
       "logo": "/listing-logos/serpdownloaders.com/youporn-downloader.png"
     },
     "product": {
+      "legacySlugs": [
+        "youpornvideodownloader.pages.dev"
+      ],
       "productPage": "https://serp.ly/youporn-video-downloader",
       "slug": "youporn-downloader",
       "tagline": "Frustrated with sluggish, ad-infested online downloaders? Save YouPorn videos quickly as clean MP4 files — no pop-ups, no waiting.",
@@ -24200,47 +23186,12 @@
       {
         "label": "Browser Extensions",
         "url": "https://browserextensions.io/products/youporn-video-downloader/"
+      },
+      {
+        "label": "Standalone website",
+        "url": "https://youpornvideodownloader.pages.dev"
       }
     ]
-  },
-  "youpornvideodownloader.pages.dev": {
-    "product": {
-      "productPage": "https://youpornvideodownloader.pages.dev",
-      "slug": "youpornvideodownloader.pages.dev",
-      "tagline": "Save YouPorn videos for offline viewing. Fast, reliable YouPorn video downloader offering high-quality downloads.",
-      "title": "YouPorn Video Downloader"
-    },
-    "media": {
-      "logo": "https://youpornvideodownloader.pages.dev/logo.png",
-      "images": [
-        "/media/products/youpornvideodownloader.pages.dev/homepage.png"
-      ]
-    },
-    "content": {
-      "body": "## Overview\n\nDownload YouPorn videos easily for offline viewing. Fast, reliable YouPorn video downloader with high-quality downloads.\n\nYouPorn Video Downloader is a desktop browser extension for saving accessible YouPorn videos from pages your browser session can already reach.\n\nThe workflow remains entirely browser-based: visit the page, let the extension identify the active media source, pick an available quality, and save the file locally.\n\nNo command line, no screen capture, and no extra steps outside your browser.\n\n## How It Works\n\n- Install the extension: Visit the YouPorn Video Downloader product page and grab the build for your supported desktop browser.\n- Open YouPorn: Navigate to a YouPorn page featuring media you can already view in your browser.\n- Choose a detected file: Use the extension panel or in-page action to browse available video sources and quality options.\n- Save locally: Download the selected media as an offline file on your computer.\n\n## What It Does\n\n- Finds YouPorn media on supported pages: Locates available video sources from YouPorn pages and embeds your browser can access.\n- Saves standard MP4 files locally: Store videos in a local downloads folder for offline playback, study, review, or personal archiving.\n- Handles media privately: The browser extension workflow avoids uploading source media to any third-party converter.\n- Supports popular desktop browsers: Use the downloader from Chromium-based browsers and other supported desktop builds.\n- Designed for accessible content: Download only content you can already access and have permission to save.\n- Simple single-page workflow: Visit the page, let the extension identify the media, pick your option, and save.\n\n## Browser and Platform Support\n\nAvailable on major desktop browsers and operating systems used in day-to-day workflows.\n\nPick the browser build you need. When a direct GitHub release is available, you can grab the ZIP there.\n\nInstall YouPorn Video Downloader for supported desktop browsers.\n\nWe recommend using the ZIP version from the GitHub release when available. It lets us ship the most complete build, including features that browser stores do not always allow.\n\n## Privacy and Use Boundaries\n\n- Saves standard MP4 files locally: Store videos in a local downloads folder for offline playback, study, review, or personal archiving.\n- Handles media privately: The browser extension workflow avoids uploading source media to any third-party converter.\n- Designed for accessible content: Download only content you can already access and have permission to save.\n- Only use the downloader for content you have rights or permission to save.\n- Availability depends on the media sources exposed by the current page.\n- Site layout changes can require extension updates.",
-      "faq": [
-        {
-          "question": "How do I download videos from YouPorn?",
-          "answer": "Install YouPorn Video Downloader, visit a YouPorn page with media you can access, then use the extension action to identify and save the available file."
-        },
-        {
-          "question": "Does this upload videos to a converter?",
-          "answer": "No. The browser extension workflow is designed around local detection and local saving rather than uploading source media to a separate conversion service."
-        },
-        {
-          "question": "Which browsers are supported?",
-          "answer": "The downloader is built for supported desktop browsers such as Chrome, Edge, Firefox, Brave, Opera, Whale, and Yandex. Safari and mobile browsers are not supported."
-        },
-        {
-          "question": "Can I download private or restricted content?",
-          "answer": "Only download media you can already access and have permission to save. The downloader is not intended for bypassing restrictions or account controls."
-        },
-        {
-          "question": "What format are downloads saved in?",
-          "answer": "Downloads target standard offline video files such as MP4 when the source page exposes a compatible media stream."
-        }
-      ]
-    }
   },
   "yourdailypornvideos-downloader": {
     "content": {
