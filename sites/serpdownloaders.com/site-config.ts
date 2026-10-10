@@ -39,7 +39,21 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
       publishedAt: '2026-03-24'
     }
   },
+  browse: {
+    categoryPageSize: 60,
+    homepageListingLayout: 'category-sections'
+  },
   copy: {
+    brandsDescription:
+      'Other websites in the SERP network, including SERP AI, SERP Apps and Browser Extensions IO.',
+    homepage: {
+      description:
+        'Browser extensions that save videos from YouTube, TikTok, Udemy, Vimeo and 300+ other sites as MP4 files you keep for offline viewing.',
+      heading: 'Video Downloader Browser Extensions',
+      intro:
+        'Pick the site you want to save videos from and get the SERP Downloaders extension built for it. Most add a download button to the video player and save files straight to your computer.',
+      title: 'Video Downloader Browser Extensions | SERP Downloaders'
+    },
     listingName: {
       plural: 'products',
       singular: 'product'
