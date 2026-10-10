@@ -28,8 +28,10 @@ import {
   hasPassingOutput,
   isLegalFaq,
   isPricingFaq,
+  listingMdx,
   main,
   mapCategories,
+  mdxIssues,
   parseArgs,
   permissionsIn,
   pipelineNotes,
@@ -50,6 +52,7 @@ import {
   withoutReviews
 } from './listing-rewrite.ts'
 import type { SourceProduct, SourceProductFile } from './store-new-products.ts'
+import { buildTrialWebsiteEntries } from './trial-build.ts'
 
 const LEGAL_ANSWER = 'DISCLAIMER: standard site legal answer.'
 
@@ -1087,9 +1090,9 @@ describe('apply helpers', () => {
       slug: 'x',
       tagline: 't'
     }
-    expect(validateOutputShape(base, 'x')).toContain(
-      'MDX-unsafe "<tag>" or "{" outside a code span; wrap it in backticks'
-    )
+    expect(validateOutputShape(base, 'x')).toEqual([
+      expect.stringMatching(/^MDX parse error in FAQ line "Pages like \/videos\/<id>\/\.": /)
+    ])
     const safe = {
       ...base,
       faq: base.faq.map(f => ({ ...f, answer: 'Pages like `/videos/<id>/`.' }))
@@ -1306,6 +1309,91 @@ describe('review fixes (#161)', () => {
       'tagline must be 70-160 characters (has 31)'
     ])
     expect(checkRewrite({ ...input, mode: 'new' }, output, context).issues).toEqual([])
+  })
+})
+
+describe('MDX safety (both modes)', () => {
+  const sections = '## A\n\na\n\n## B\n\nb\n\n## C\n\nc'
+  const faq = (answer: string) => [{ answer, question: 'Q?' }]
+  const bodyIssues = (text: string) => mdxIssues(`${sections}\n\n${text}`, [])
+
+  it('builds the page content exactly like trial-build', () => {
+    const body = '## A\n\nUses `{id}` routes.\n\n## B\n\nb\n\n## C\n\nc\n'
+    const entries = [
+      { answer: ' Opens /v/{id}/ pages. ', question: 'Which {pages}? ' },
+      { answer: 'Yes.', question: 'Second?' }
+    ]
+    const [entry] = buildTrialWebsiteEntries(
+      {
+        x: {
+          content: { body, faq: entries },
+          product: { productPage: 'https://serp.ly/x', slug: 'x', tagline: 't', title: 'X' }
+        }
+      },
+      { category: 'video-downloaders', publishedAt: '2026-01-01' }
+    )
+    expect(listingMdx(body, entries)).toBe(entry?.content)
+  })
+
+  it.each([
+    ['a <1080p cap'],
+    ['less <= more'],
+    ['arrow <- here'],
+    ['empty <> tag'],
+    ['under <_x> score'],
+    ['dollar <$x> sign'],
+    ['accent <é> tag'],
+    ['trailing <'],
+    ['<!-- comment -->'],
+    ['bare <id> tag'],
+    ['`unclosed span <id>'],
+    ['`spans\n\nparagraphs` <id>'],
+    ['escaped \\` tick `<id>']
+  ])('fails %j in the body', text => {
+    expect(bodyIssues(text)).toEqual([expect.stringMatching(/^MDX (?:parse error|tag) in body/)])
+  })
+
+  it.each([
+    ['a < b and c > d'],
+    ['`<id>` in a span'],
+    ['`` a ` <id> `` in a double-backtick span'],
+    ['```\n<id> {x}\n```'],
+    ['~~~\n<id> {x}\n~~~'],
+    ['escaped \\{ braces \\}'],
+    ['`{id}` in a span']
+  ])('accepts %j in the body', text => {
+    expect(bodyIssues(text)).toEqual([])
+  })
+
+  it('fails body braces and import/export lines but not FAQ braces, which the build escapes', () => {
+    expect(bodyIssues('Routes like /v/{id}/.')).toEqual([
+      'MDX expression in body line "Routes like /v/{id}/."; wrap it in backticks or escape the braces as \\{ \\}'
+    ])
+    expect(bodyIssues('export const a = 1')).toEqual([
+      'MDX import/export in body line "export const a = 1"; wrap it in backticks'
+    ])
+    expect(bodyIssues('export the list')).toEqual([
+      expect.stringMatching(/^MDX parse error in body line "export the list": /)
+    ])
+    expect(mdxIssues(sections, faq('Routes like /v/{id}/.'))).toEqual([])
+    expect(mdxIssues(sections, faq('Routes like /v/\\{id\\}/.'))).toEqual([
+      expect.stringMatching(
+        /^MDX parse error in FAQ line .*; write FAQ braces without a backslash \(the build escapes them\)$/
+      )
+    ])
+    expect(mdxIssues(sections, faq('Routes like `/v/{id}/`.'))).toEqual([
+      'FAQ braces inside a code span render as "\\{": FAQ line "Routes like `/v/\\{id\\}/`."; drop the backticks'
+    ])
+    expect(mdxIssues(sections, faq('Pages like `/v/<id>/`.'))).toEqual([])
+  })
+
+  it('applies to new-mode rewrites too', () => {
+    const result = checkRewrite(
+      exampleInput(),
+      { ...goodRewrite, body: `${goodRewrite.body}\n\nOpens /v/<id>/ pages.` },
+      { otherListings: [], otherSites: {}, threshold: 0.5 }
+    )
+    expect(result.issues).toEqual([expect.stringMatching(/^MDX parse error in body/)])
   })
 })
 

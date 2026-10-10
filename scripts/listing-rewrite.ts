@@ -36,6 +36,10 @@ import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import remarkGfm from 'remark-gfm'
+import remarkMdx from 'remark-mdx'
+import remarkParse from 'remark-parse'
+import { unified } from 'unified'
 import {
   addSection,
   cleanString,
@@ -1425,6 +1429,104 @@ export function applyLinkCheck(
 // ---------------------------------------------------------------------------
 // Check
 
+/**
+ * The page content scripts/trial-build.ts builds from a listing: the body, then a "## FAQ"
+ * section with each entry as a "###" question and its answer, FAQ braces escaped.
+ */
+export function listingMdx(body: string, faq: FaqEntry[]): string {
+  const escapeBraces = (value: string) => value.replaceAll('{', '\\{').replaceAll('}', '\\}')
+  const entries = faq
+    .map(entry => ({ answer: entry.answer.trim(), question: entry.question.trim() }))
+    .filter(entry => entry.answer && entry.question)
+  return [
+    body.trim(),
+    entries.length
+      ? `## FAQ\n\n${entries
+          .map(entry => `### ${escapeBraces(entry.question)}\n\n${escapeBraces(entry.answer)}`)
+          .join('\n\n')}`
+      : ''
+  ]
+    .filter(Boolean)
+    .join('\n\n')
+}
+
+/** Same parser next-mdx-remote uses for listing pages (format "mdx" with remark-gfm). */
+const mdxParser = unified().use(remarkParse).use(remarkMdx).use(remarkGfm)
+
+type MdxNode = {
+  children?: MdxNode[]
+  name?: string | null
+  position?: { start: { line: number } }
+  type: string
+  value?: string
+}
+
+const MDX_NODE_LABELS: Record<string, string> = {
+  mdxFlowExpression: 'expression',
+  mdxJsxFlowElement: 'tag',
+  mdxJsxTextElement: 'tag',
+  mdxTextExpression: 'expression',
+  mdxjsEsm: 'import/export'
+}
+
+/**
+ * Bodies and FAQs render as MDX on the listing page. Parses the content exactly as the page
+ * gets it (listingMdx) and reports parse errors (a bare "<id>", "<1080p", "<="), JSX tags,
+ * "{expressions}" and import/export lines, none of which belong in listing copy. Applies in
+ * both modes (#161, analdin `/videos/<id>/<title>/` broke the static build).
+ */
+export function mdxIssues(body: string, faq: FaqEntry[]): string[] {
+  const content = listingMdx(body, faq)
+  const bodyLines = body.trim().split('\n').length
+  const inFaq = (line?: number) => line !== undefined && line > bodyLines
+  const braceFix = (line?: number) =>
+    inFaq(line)
+      ? 'write FAQ braces without a backslash (the build escapes them)'
+      : 'wrap it in backticks or escape the braces as \\{ \\}'
+  const where = (line?: number) => {
+    if (!line) return 'body or FAQ'
+    const text = content.split('\n')[line - 1]?.trim() ?? ''
+    return `${inFaq(line) ? 'FAQ' : 'body'} line "${text.slice(0, 80)}"`
+  }
+  let tree: MdxNode
+  try {
+    tree = mdxParser.parse(content) as MdxNode
+  } catch (error) {
+    const { line, place, reason } = error as {
+      line?: number
+      place?: { line?: number; start?: { line?: number } }
+      reason?: string
+    }
+    const at = line ?? place?.start?.line ?? place?.line
+    const message = reason ?? String(error)
+    const fix = /expression/i.test(message)
+      ? braceFix(at)
+      : 'wrap the offending text in backticks (a "<" followed by a space is fine)'
+    return [`MDX parse error in ${where(at)}: ${message}; ${fix}`]
+  }
+  const issues: string[] = []
+  const visit = (node: MdxNode) => {
+    const line = node.position?.start.line
+    const label = MDX_NODE_LABELS[node.type]
+    if (label) {
+      const fix = label === 'expression' ? braceFix(line) : 'wrap it in backticks'
+      issues.push(`MDX ${label} in ${where(line)}; ${fix}`)
+    } else if (
+      (node.type === 'inlineCode' || node.type === 'code') &&
+      inFaq(line) &&
+      /\\[{}]/.test(node.value ?? '')
+    ) {
+      // trial-build escapes FAQ braces, so inside a code span they render as "\{ \}".
+      issues.push(
+        `FAQ braces inside a code span render as "\\{": ${where(line)}; drop the backticks`
+      )
+    }
+    for (const child of node.children ?? []) visit(child)
+  }
+  visit(tree)
+  return issues
+}
+
 export function validateOutputShape(value: unknown, slug: string): string[] {
   const issues: string[] = []
   const output = value as Partial<RewriteOutput> | undefined
@@ -1444,19 +1546,11 @@ export function validateOutputShape(value: unknown, slug: string): string[] {
     }
     if (/^# \S/m.test(output.body)) issues.push('body must not contain an h1')
     if (/https?:\/\//i.test(output.body)) issues.push('body must not contain URLs')
-    // Bodies and FAQ answers render as MDX: a bare <tag> or {expression} outside a code span
-    // breaks the static build (#161, analdin `/videos/<id>/<title>/`).
-    const mdxText = [
-      output.body,
-      ...(Array.isArray(output.faq)
-        ? output.faq.map(f => `${f?.question ?? ''} ${f?.answer ?? ''}`)
-        : [])
-    ]
-      .join('\n')
-      .replace(/`[^`]*`/g, '')
-    if (/<[A-Za-z/!]|[{}]/.test(mdxText)) {
-      issues.push('MDX-unsafe "<tag>" or "{" outside a code span; wrap it in backticks')
-    }
+    const faq = (Array.isArray(output.faq) ? output.faq : []).filter(
+      (entry): entry is FaqEntry =>
+        typeof entry?.question === 'string' && typeof entry?.answer === 'string'
+    )
+    issues.push(...mdxIssues(output.body, faq))
   }
   if (!Array.isArray(output.faq) || output.faq.length < 3) {
     issues.push('faq needs at least 3 entries (legal FAQ is added by apply)')
