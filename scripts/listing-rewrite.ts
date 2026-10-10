@@ -897,7 +897,10 @@ export function checkFacts(facts: Facts, rewriteText: string, names: string[] = 
   if (missingLimitations.length) {
     issues.push(`limitations missing: ${missingLimitations.join(', ')}`)
   }
-  const missingRegions = facts.regions.filter(region => !rewriteText.includes(region))
+  // Case-insensitive, so prose can say "available worldwide".
+  const missingRegions = facts.regions.filter(
+    region => !rewriteText.toLowerCase().includes(region.toLowerCase())
+  )
   if (missingRegions.length) issues.push(`regions missing: ${missingRegions.join(', ')}`)
   if (facts.folder && !rewrite.folder) issues.push('save folder missing')
   const missingPaths = facts.savePaths.filter(path => !rewriteText.includes(path))

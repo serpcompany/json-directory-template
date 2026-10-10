@@ -810,6 +810,12 @@ describe('fact preservation', () => {
         'save folder missing'
       ])
     )
+    expect(
+      checkFacts(
+        { ...facts, browsers: [], numbers: [], operatingSystems: [], permissions: [], quality: [] },
+        'Example Tube is available worldwide.'
+      ).filter(issue => issue.startsWith('regions'))
+    ).toEqual([])
   })
 })
 
