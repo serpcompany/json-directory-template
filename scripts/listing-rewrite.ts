@@ -270,7 +270,7 @@ export const PRICING_PATTERNS: Array<[string, RegExp]> = [
   ['discount', /\bdiscounts?\b|\bcoupons?\b/i],
   [
     'free downloads',
-    /\bfree\b[^.\n]{0,20}\bdownloads?\b|\b\d+ (?:free |trial )?downloads\b|\b(?:two|three|four|five|ten) (?:free |trial )?downloads\b/i
+    /\b(?:free|complimentary)\b[^.\n]{0,20}\bdownloads?\b|\b\d+ (?:free |trial )?downloads\b|\b(?:two|three|four|five|ten) (?:free |trial )?downloads\b/i
   ],
   ['unlimited use', /\bunlimited (?:downloads|use|access|usage)\b/i],
   ['paid plan', /\b(?:paid|premium|pro) (?:plans?|versions?|tiers?|licen[cs]es?)\b/i],
@@ -278,11 +278,11 @@ export const PRICING_PATTERNS: Array<[string, RegExp]> = [
   ['free to try', /\btry (?:it )?(?:for )?free\b|\bfree (?:to try|version|plan|tier)\b/i],
   [
     'usage allowance',
-    /\b(?:\d+|two|three|four|five|ten) (?:free |trial |permitted |included )+(?:pages|videos|downloads|saves|files)\b/i
+    /\b(?:\d+|two|three|four|five|ten) (?:free |trial |permitted |included |complimentary )+(?:pages|videos|downloads|saves|files|recordings|clips|captures)\b/i
   ],
   [
     'test allowance',
-    /\b(?:test|try)\b[^.\n]{0,40}\b(?:\d+|two|three|four|five|ten)\b[^.\n]{0,30}\b(?:pages|videos|downloads|saves)\b/i
+    /\b(?:test|try)\b[^.\n]{0,40}\b(?:\d+|two|three|four|five|ten)\b[^.\n]{0,30}\b(?:pages|videos|downloads|saves|captures|recordings|clips)\b/i
   ]
 ]
 
@@ -300,6 +300,17 @@ export function pricingLanguage(text: string): string[] {
 }
 
 /** `text` with pricing / trial phrases blanked out, so facts never require them. */
+/**
+ * Drops a "## Reviews" section (star-rated testimonials). The brief bans reviews and
+ * testimonials in rewrites, so their ratings and quoted numbers are not product facts (#161).
+ */
+export function withoutReviews(body: string): string {
+  return body
+    .replace(/(^|\n)##\s+Reviews\s*\n[\s\S]*?(?=\n##\s|$)/i, '$1')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
 export function withoutPricing(text: string): string {
   return text
     .split('\n')
@@ -1223,7 +1234,9 @@ export function buildExistingInput(
     },
     facts: extractFacts(
       withoutPricing(
-        [tagline, body, faqText(faq.filter(entry => !isPricingFaq(entry)))].join('\n\n')
+        [tagline, withoutReviews(body), faqText(faq.filter(entry => !isPricingFaq(entry)))].join(
+          '\n\n'
+        )
       ),
       platform,
       names

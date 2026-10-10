@@ -9,6 +9,7 @@ import {
   applySourceOverrides,
   buildEntry,
   buildExistingInput,
+  withoutReviews,
   buildImages,
   buildInput,
   buildRelatedLinks,
@@ -719,6 +720,17 @@ describe('fact preservation', () => {
       'free downloads ("Three free downloads")',
       'usage allowance ("Three free downloads")'
     ])
+    expect(pricingLanguage('Includes 3 complimentary downloads.')).toEqual([
+      'free downloads ("complimentary downloads")',
+      'usage allowance ("3 complimentary downloads")'
+    ])
+    expect(pricingLanguage('Try 3 free captures.')).toEqual([
+      'usage allowance ("3 free captures")',
+      'test allowance ("Try 3 free captures")'
+    ])
+    expect(pricingLanguage('Record 3 free recordings first.')).toEqual([
+      'usage allowance ("3 free recordings")'
+    ])
     expect(pricingLanguage('Stores trial state. No credit card.')).toEqual([
       'trial ("trial")',
       'credit card ("credit card")'
@@ -972,6 +984,28 @@ describe('apply helpers', () => {
     expect(
       buildEntry(input, goodRewrite, LEGAL_ANSWER, withoutLegal).content?.faq?.map(f => f.question)
     ).toEqual(goodRewrite.faq.map(f => f.question))
+  })
+
+  it('leaves star-rated review testimonials out of existing-listing facts', () => {
+    const body = [
+      '## Overview\n\nSaves X videos as MP4 in 720p.',
+      '## Reviews\n\n- Great (4.9/5): Saved 50+ videos. - A. B.\n- Solid (5/5): Works. - C. D.',
+      '## Platform Support\n\n- Chrome'
+    ].join('\n\n')
+    expect(withoutReviews(body)).toBe(
+      '## Overview\n\nSaves X videos as MP4 in 720p.\n\n## Platform Support\n\n- Chrome'
+    )
+    const input = buildExistingInput(
+      'x-downloader',
+      {
+        content: { body, faq: [] },
+        product: { productPage: 'https://serp.ly/x', title: 'X Downloader' }
+      },
+      'serpdownloaders.com'
+    )
+    expect(input?.facts.quality).toEqual(expect.arrayContaining(['720p']))
+    expect(input?.facts.numbers).not.toEqual(expect.arrayContaining(['4.9']))
+    expect(input?.facts.numbers).not.toEqual(expect.arrayContaining(['50']))
   })
 
   it('rejects unusable --threshold and --limit values', () => {
