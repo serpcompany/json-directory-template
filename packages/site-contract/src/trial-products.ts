@@ -33,6 +33,7 @@ type CanonicalTrialProductInput = {
   }
   product?: {
     categories?: string[]
+    legacySlugs?: string[]
     name?: string
     primaryCategory?: string
     productPage?: string
@@ -89,6 +90,7 @@ export type NormalizedTrialProduct = {
   }
   description: string
   featured?: boolean
+  legacySlugs?: string[]
   media?: {
     images?: string[]
     logo?: string
@@ -332,6 +334,7 @@ function normalizeCanonicalTrialProduct(
     },
     description,
     featured: product.featured,
+    legacySlugs: cleanStringArray(product.product?.legacySlugs),
     media: cleanMedia(product.media),
     name,
     resourceLinks:
@@ -419,6 +422,13 @@ function buildCanonicalTrialProduct(
 
   if (product.featured !== undefined) {
     canonicalProduct.featured = product.featured
+  }
+
+  if (product.legacySlugs?.length) {
+    canonicalProduct.product = {
+      ...canonicalProduct.product,
+      legacySlugs: product.legacySlugs
+    }
   }
 
   if (product.media) {

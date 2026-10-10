@@ -211,6 +211,53 @@ describe('loadCheckedInSite', () => {
 })
 
 describe('validateCheckedInSiteConfig', () => {
+  it('accepts optional homepage copy, brands description, and browse layout', () => {
+    const config = cloneDefaultSiteConfig()
+    config.copy.brandsDescription = 'Every brand in one place.'
+    config.copy.homepage = { heading: 'Heading', intro: 'Intro.', title: 'Title' }
+    config.browse = {
+      categoryPageSize: 60,
+      homepageCategorySectionLimit: 8,
+      homepageListingLayout: 'category-sections'
+    }
+
+    const record = validateCheckedInSiteConfig(config)
+
+    expect(record.copy.homepage).toEqual({ heading: 'Heading', intro: 'Intro.', title: 'Title' })
+    expect(record.copy.brandsDescription).toBe('Every brand in one place.')
+    expect(record.browse).toEqual(config.browse)
+  })
+
+  it('leaves browse and homepage copy unset by default', () => {
+    const record = validateCheckedInSiteConfig(cloneDefaultSiteConfig())
+
+    expect(record.browse).toBeUndefined()
+    expect(record.copy.homepage).toBeUndefined()
+    expect(record.copy.brandsDescription).toBeUndefined()
+  })
+
+  it.each([
+    [{ categoryPageSize: 0 }],
+    [{ categoryPageSize: 1.5 }],
+    [{ homepageListingLayout: 'grid' }],
+    [{ unknownKey: true }]
+  ])('rejects invalid browse config %j', browse => {
+    const config = cloneDefaultSiteConfig() as unknown as Record<string, unknown>
+    config.browse = browse
+
+    expect(() => validateCheckedInSiteConfig(config as never)).toThrow(ZodError)
+  })
+
+  it('rejects category pagination together with sitemap.categoryBasePath', () => {
+    const config = cloneDefaultSiteConfig()
+    config.browse = { categoryPageSize: 60 }
+    config.sitemap = { ...config.sitemap, categoryBasePath: 'products/best' }
+
+    expect(() => validateCheckedInSiteConfig(config)).toThrow(
+      'browse.categoryPageSize is not supported together with sitemap.categoryBasePath'
+    )
+  })
+
   it('rejects duplicate public route base paths', () => {
     const invalidConfig = cloneDefaultSiteConfig()
     invalidConfig.routes.listingBasePath = invalidConfig.routes.docsBasePath

@@ -5,6 +5,7 @@ import yaml from 'js-yaml'
 import { describe, expect, it } from 'vitest'
 import { runBuildSite } from './build-site.ts'
 import { buildDeployPlan } from './deploy-site.ts'
+import { matchesWorkflowPathFilter } from './deploy-trigger-paths.ts'
 import { loadCheckedInSite } from './site-config.ts'
 import { getSitemapTargets } from './submit-gsc-sitemaps.ts'
 import { validateSite } from './validate-site.ts'
@@ -68,13 +69,12 @@ describe('retired legacy sites', () => {
       on: { push: { paths: string[] } }
     }
 
-    expect(workflow.on.push.paths).toEqual(
-      expect.arrayContaining([
-        '!sites/pornvideodownloaders.com/**',
-        '!sites/serp.co/**',
-        '!sites/serp.software/**'
-      ])
-    )
+    // The push filter lists only active site directories, so retired trees never match it.
+    for (const siteId of retiredSiteIds) {
+      for (const path of [`sites/${siteId}/products.json`, `apps/${siteId}/app/page.tsx`]) {
+        expect(matchesWorkflowPathFilter(path, workflow.on.push.paths), path).toBe(false)
+      }
+    }
   })
 
   it('can explicitly skip the cleanup merge even when shared registries changed', () => {

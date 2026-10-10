@@ -84,4 +84,20 @@ describe('ci workflow install isolation', () => {
       "hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx')"
     )
   })
+
+  it('sets up Node and pnpm itself so GitHub-hosted runners need no preinstalled tools', () => {
+    const action = loadYamlFile<InstallAction>('.github/actions/install/action.yml')
+    const actionUses = action.runs.steps.map(step => step.uses).filter(Boolean)
+
+    expect(actionUses).toContain('actions/setup-node@v6')
+    expect(actionUses).toContain(pnpmAction)
+  })
+
+  it('runs the GSC sitemap submit job on a GitHub-hosted runner while self-hosted runners are offline', () => {
+    const workflow = loadYamlFile<{ jobs: Record<string, { 'runs-on'?: string }> }>(
+      '.github/workflows/submit-gsc-sitemaps.yml'
+    )
+
+    expect(workflow.jobs.submit?.['runs-on']).toBe('ubuntu-latest')
+  })
 })

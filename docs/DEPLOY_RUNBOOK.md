@@ -113,15 +113,29 @@ The workflow:
 Workflow dispatch with a concrete `site_id` deploys that site. Workflow dispatch
 with `site_id=all` deploys every active checked-in site.
 
-Push changed paths that identify one site deploy that site. Push changed paths
-that identify multiple concrete sites deploy those exact sites. Shared-only
-pushes with no concrete site signal deploy every active checked-in site. Shared
-maintainer PRs may still deploy one site when metadata mentions exactly one
-checked-in site domain/public URL or links to exactly one configured public issue
-repo. Metadata that matches multiple concrete sites fails and requires manual
-workflow dispatch per `site_id`, unless concrete changed paths already identify
-the exact deploy targets. Do not add fallback deploy sites through repository
-variables.
+Push deploy targets come from the changed files, classified by
+`scripts/deploy-trigger-paths.ts` (the same list is the workflow `paths:` filter):
+
+| Push changes | Deployed sites |
+|---|---|
+| Any shared build input (the `.github/actions/install/**` Node/pnpm setup, `packages/**`, `configs/**`, `scripts/**` build code, top-level `sites/*`, `sites/default/**`, `.nvmrc`, `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`) | Every active checked-in site |
+| Shared build input plus one site's `apps/<site-id>/` or `sites/<site-id>/` files | Every active checked-in site |
+| Only `apps/<site-id>/` or `sites/<site-id>/` files of one or more active sites | Exactly those sites |
+| Only tests, Markdown, non-build scripts, `data/listings.json`, `apps/starter/**`, or retired site paths | None (the workflow does not start) |
+| Head commit message contains `[skip static deploy]` | None |
+| No changed files in the push payload or the associated merged PR | The one site named by PR/commit metadata, else every active site |
+
+PR titles, bodies, and commit messages never narrow a push that changed shared build inputs: a
+shared fix reaches every site's artifact, so every site redeploys. Before this rule, #159 changed
+`scripts/sitemap-files.ts` together with `sites/browserextensions.io/site-config.ts` and deployed
+only browserextensions.io, which left the other sites on stale builds. Metadata that matches
+multiple concrete sites fails and requires manual workflow dispatch per `site_id`. Do not add
+fallback deploy sites through repository variables.
+
+Both workflow jobs, and the GSC sitemap submit workflow, currently run on GitHub-hosted
+`ubuntu-latest` runners because the self-hosted runners are offline (#161). The install action sets
+up pnpm and the `.nvmrc` Node version, and the deploy only needs `git`, `bash`, and coreutils plus
+the `GH_PAT` secret.
 
 The generated artifact stays in the same GitHub Actions job workspace between
 build, audit, and deploy. Normal deploys do not upload/download the large
@@ -174,8 +188,8 @@ Required setup for every active public issue repo:
 
 Prefer rolling out submit-intake config changes one site per source PR so review
 and live verification stay simple. If a PR changes multiple concrete site paths,
-the push deploy resolver deploys those exact sites. Metadata-only multi-site
-signals still fail and require manual `workflow_dispatch` per `site_id`.
+the push deploy resolver deploys those exact sites; if it also changes shared
+build inputs, every active site deploys.
 
 For each site PR:
 

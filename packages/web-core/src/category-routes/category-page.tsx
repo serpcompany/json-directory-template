@@ -7,7 +7,18 @@ import {
   getFeaturedListingCount,
   listingMatchesCategory
 } from '../category-navigation'
-import { getCategorySEO } from '../category-seo'
+import {
+  getCategoryPageCount,
+  getCategoryPageRoute,
+  getConfiguredCategoryPageSize,
+  sliceCategoryPage
+} from '../category-pagination'
+import {
+  buildCategoryCountSentence,
+  buildCategoryMetaDescription,
+  buildCategoryMetaTitle,
+  getCategorySEO
+} from '../category-seo'
 import {
   type GuideMetadata,
   toWebsiteBrowseCardMetadata,
@@ -15,17 +26,12 @@ import {
   type WebsiteMetadata
 } from '../content-query'
 import { AppSidebar } from '../layout/app-sidebar'
-import { getRoute } from '../routes'
 import { NewsletterSection } from '../sections/newsletter-section'
-import {
-  generateDynamicMetadata,
-  optimizeMetaDescription,
-  SITE_LOGO_URL,
-  SITE_NAME,
-  SITE_PUBLIC_URL
-} from '../seo-config'
+import { generateDynamicMetadata, SITE_NAME, SITE_PUBLIC_URL } from '../seo-config'
 import { siteConfig } from '../site-config'
 import { siteCopy } from '../site-copy'
+import { CategoryPaginationNav } from './category-pagination-nav'
+import { buildListingCollectionPageSchema } from './collection-page-schema'
 import { resolveCollectionPageSchemaDates } from './schema-dates'
 
 type JsonLdProps = {
@@ -34,6 +40,7 @@ type JsonLdProps = {
 
 type CategoryWebsitesListProps = {
   initialWebsites: WebsiteBrowseCardMetadata[]
+  summary?: string
 }
 
 type FeaturedGuidesSectionProps = {
@@ -56,10 +63,12 @@ export function generateCategoryRouteStaticParams(categories: Category[]) {
 
 export async function generateCategoryRouteMetadata({
   allProjects,
-  category
+  category,
+  page = 1
 }: {
   allProjects: Array<WebsiteMetadata & CategoryLike>
   category: Category
+  page?: number
 }): Promise<Metadata> {
   const seoContent = getCategorySEO(category.slug, category)
   const categoryProjectsCount =
@@ -67,23 +76,55 @@ export async function generateCategoryRouteMetadata({
       ? allProjects.filter(project => project.featured === true).length
       : allProjects.filter(project => listingMatchesCategory(project, category.slug)).length
 
-  const title =
-    categoryProjectsCount > 0
-      ? `${categoryProjectsCount}+ ${seoContent.metaTitle}`
-      : seoContent.metaTitle
+  const categoryName = getCategoryDisplayName(category.slug)
+  const title = buildCategoryMetaTitle({
+    categoryName,
+    listingCount: categoryProjectsCount,
+    siteName: SITE_NAME
+  })
+  const description = buildCategoryMetaDescription([
+    buildCategoryCountSentence(categoryName, categoryProjectsCount),
+    category.description
+  ])
 
-  const description =
-    categoryProjectsCount > 0
-      ? `${categoryProjectsCount}+ ${siteCopy.listingName.plural}. ${seoContent.metaDescription}`
-      : seoContent.metaDescription
-
-  return generateDynamicMetadata({
+  const metadata = generateDynamicMetadata({
     type: 'category',
     name: title,
-    description: optimizeMetaDescription(description),
+    description,
     slug: category.slug,
     additionalKeywords: seoContent.keywords
   })
+
+  if (page <= 1) {
+    return metadata
+  }
+
+  // Later pages are self-canonical with their own title and description.
+  const pageCount = getCategoryPageCount(categoryProjectsCount, getConfiguredCategoryPageSize())
+  const pageUrl = `${SITE_PUBLIC_URL}${getCategoryPageRoute(category.slug, page)}`
+  const pageTitle = `${buildCategoryMetaTitle({
+    categoryName,
+    listingCount: categoryProjectsCount,
+    siteName: `${SITE_NAME} - Page ${page}`
+  })} - Page ${page}`
+  const pageDescription = buildCategoryMetaDescription([
+    `Page ${page} of ${pageCount}`,
+    ...description.split(/(?<=[.!?])\s+/)
+  ])
+
+  return {
+    ...metadata,
+    title: pageTitle,
+    description: pageDescription,
+    alternates: { canonical: pageUrl },
+    openGraph: {
+      ...metadata.openGraph,
+      title: pageTitle,
+      description: pageDescription,
+      url: pageUrl
+    },
+    twitter: { ...metadata.twitter, title: pageTitle, description: pageDescription }
+  }
 }
 
 export function CategoryRoutePage({
@@ -92,6 +133,7 @@ export function CategoryRoutePage({
   category,
   featuredGuides,
   featuredProjects,
+  page = 1,
   slots
 }: {
   activeCategorySlugs: string[]
@@ -99,6 +141,8 @@ export function CategoryRoutePage({
   category: Category
   featuredGuides: GuideMetadata[]
   featuredProjects: WebsiteMetadata[]
+  /** 1-based category page; pages after the first exist only when `browse.categoryPageSize` is set. */
+  page?: number
   slots: CategoryRouteSlots
 }) {
   const {
@@ -111,8 +155,8 @@ export function CategoryRoutePage({
 
   const seoContent = getCategorySEO(category.slug, category)
   const categoryDisplayName = getCategoryDisplayName(category.slug)
-  const categoryPath = getRoute('category.page', { category: category.slug })
-  const categoryUrl = `${SITE_PUBLIC_URL}${categoryPath}`
+  const categoryPageSize = getConfiguredCategoryPageSize()
+  const categoryUrl = `${SITE_PUBLIC_URL}${getCategoryPageRoute(category.slug, page)}`
 
   const categoryProjects =
     category.slug === 'featured'
@@ -123,86 +167,51 @@ export function CategoryRoutePage({
           .filter(project => listingMatchesCategory(project, category.slug))
           .sort((a, b) => a.name.localeCompare(b.name))
   const listedCategoryProjects =
-    category.slug === 'other' && categoryProjects.length > 200
+    !categoryPageSize && category.slug === 'other' && categoryProjects.length > 200
       ? categoryProjects.slice(0, 200)
       : categoryProjects
-  const listedCategoryProjectCards = listedCategoryProjects.map(toWebsiteBrowseCardMetadata)
+  const categoryPage = sliceCategoryPage(listedCategoryProjects, page, categoryPageSize)
+
+  if (!categoryPage) {
+    return { categoryProjects: [], element: null }
+  }
+
+  const listedCategoryProjectCards = categoryPage.items.map(toWebsiteBrowseCardMetadata)
   const schemaDates = resolveCollectionPageSchemaDates(categoryProjects)
+  const pageSummary =
+    categoryPage.pageCount > 1
+      ? `Showing ${categoryPage.startIndex + 1}-${categoryPage.startIndex + categoryPage.items.length} of ${categoryPage.totalCount} ${siteCopy.listingName.plural} in this category`
+      : undefined
 
   return {
-    categoryProjects,
+    categoryProjects: categoryPage.items,
     element: (
       <>
         <JsonLd
-          data={{
-            '@context': 'https://schema.org',
-            '@type': 'CollectionPage',
-            '@id': categoryUrl,
-            name: `${categoryDisplayName} - ${SITE_NAME}`,
-            headline: `${categoryProjects.length}+ ${categoryDisplayName} ${siteCopy.listingName.pluralTitle}`,
+          data={buildListingCollectionPageSchema({
+            dates: schemaDates,
             description: `Explore ${
               categoryProjects.length
             }+ curated ${categoryDisplayName.toLowerCase()} ${
               siteCopy.listingName.plural
             } from ${SITE_NAME}. ${category.description}`,
-            url: categoryUrl,
-            inLanguage: 'en-US',
-            isPartOf: {
-              '@type': 'WebSite',
-              '@id': SITE_PUBLIC_URL,
-              name: SITE_NAME,
-              description: siteConfig.description,
-              url: SITE_PUBLIC_URL
-            },
-            breadcrumb: {
-              '@type': 'BreadcrumbList',
-              itemListElement: [
-                {
-                  '@type': 'ListItem',
-                  position: 1,
-                  name: 'Home',
-                  item: SITE_PUBLIC_URL
-                },
-                {
-                  '@type': 'ListItem',
-                  position: 2,
-                  name: categoryDisplayName,
-                  item: categoryUrl
+            headline: `${categoryProjects.length}+ ${categoryDisplayName} ${siteCopy.listingName.pluralTitle}`,
+            itemListDescription: category.description,
+            itemListName: `${categoryDisplayName} ${siteCopy.listingName.pluralTitle}`,
+            ...(categoryPage.pageCount > 1
+              ? {
+                  itemLimit: categoryPage.items.length,
+                  listings: categoryPage.items,
+                  numberOfItems: categoryPage.totalCount,
+                  positionOffset: categoryPage.startIndex
                 }
-              ]
-            },
-            numberOfItems: categoryProjects.length,
-            itemListElement: categoryProjects.slice(0, 10).map((project, index) => ({
-              '@type': 'ListItem',
-              position: index + 1,
-              url: project.website,
-              name: project.name,
-              description: project.description
-            })),
-            mainEntity: {
-              '@type': 'ItemList',
-              name: `${categoryDisplayName} ${siteCopy.listingName.pluralTitle}`,
-              description: category.description,
-              numberOfItems: categoryProjects.length,
-              itemListOrder: 'https://schema.org/ItemListOrderAscending',
-              itemListElement: categoryProjects.slice(0, 20).map((project, index) => ({
-                '@type': 'Thing',
-                position: index + 1,
-                url: project.website,
-                name: project.name
-              }))
-            },
-            publisher: {
-              '@type': 'Organization',
-              name: SITE_NAME,
-              url: SITE_PUBLIC_URL,
-              logo: {
-                '@type': 'ImageObject',
-                url: SITE_LOGO_URL
-              }
-            },
-            ...schemaDates
-          }}
+              : { listings: categoryProjects }),
+            name:
+              page > 1
+                ? `${categoryDisplayName} - Page ${page} - ${SITE_NAME}`
+                : `${categoryDisplayName} - ${SITE_NAME}`,
+            url: categoryUrl
+          })}
         />
         {seoContent.faqQuestions && seoContent.faqQuestions.length > 0 && (
           <JsonLd
@@ -239,7 +248,15 @@ export function CategoryRoutePage({
                   </div>
                   <p className="text-muted-foreground mt-1">{seoContent.introText}</p>
                 </div>
-                <CategoryWebsitesList initialWebsites={listedCategoryProjectCards} />
+                <CategoryWebsitesList
+                  initialWebsites={listedCategoryProjectCards}
+                  summary={pageSummary}
+                />
+                <CategoryPaginationNav
+                  categorySlug={category.slug}
+                  page={categoryPage.page}
+                  pageCount={categoryPage.pageCount}
+                />
               </section>
 
               {siteConfig.features.showExternalResources && <ExternalResourcesSection />}

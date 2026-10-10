@@ -11,6 +11,8 @@ export interface WebsitesListWithSortProps {
   initialWebsites: WebsiteBrowseCardMetadata[]
   emptyTitle?: string
   emptyDescription?: string
+  /** Replaces the default "Showing N ..." line. Sorting applies to the listings passed in. */
+  summary?: string
   trackSortChange?: (currentSort: string, nextSort: string, source?: string) => void
   slots: {
     Badge: ComponentType<any>
@@ -22,15 +24,43 @@ export interface WebsitesListWithSortProps {
   }
 }
 
-function stripHtmlTags(html: string | null | undefined): string {
+/**
+ * Removes `<...>` tags in one linear pass. Same result as `html.replace(/<[^>]*>/g, '')`, which
+ * backtracks polynomially on long runs of `<` (CodeQL js/polynomial-redos).
+ */
+export function stripHtmlTags(html: string | null | undefined): string {
   if (!html) return ''
-  return html.replace(/<[^>]*>/g, '').trim()
+
+  let result = ''
+  let index = 0
+
+  while (index < html.length) {
+    const tagStart = html.indexOf('<', index)
+
+    if (tagStart === -1) {
+      result += html.slice(index)
+      break
+    }
+
+    const tagEnd = html.indexOf('>', tagStart + 1)
+
+    if (tagEnd === -1) {
+      result += html.slice(index)
+      break
+    }
+
+    result += html.slice(index, tagStart)
+    index = tagEnd + 1
+  }
+
+  return result.trim()
 }
 
 export function WebsitesListWithSort({
   initialWebsites,
   emptyTitle = siteCopy.categoryEmptyTitle,
   emptyDescription = siteCopy.categoryEmptyDescription,
+  summary,
   trackSortChange,
   slots: { Badge, Card, EmptyState, FaviconWithFallback, ToggleGroup, ToggleGroupItem }
 }: WebsitesListWithSortProps) {
@@ -116,11 +146,12 @@ export function WebsitesListWithSort({
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div className="text-sm text-muted-foreground">
-          {initialWebsites.length > 0 && (
-            <>
-              Showing {sortedWebsites.length} {siteCopy.listingName.plural} in this category
-            </>
-          )}
+          {initialWebsites.length > 0 &&
+            (summary ?? (
+              <>
+                Showing {sortedWebsites.length} {siteCopy.listingName.plural} in this category
+              </>
+            ))}
         </div>
 
         <div className="flex items-center gap-2">

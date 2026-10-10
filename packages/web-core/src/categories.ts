@@ -131,7 +131,7 @@ function resolveRuntimeSiteId(): string {
 }
 
 function buildFallbackDescription(name: string): string {
-  return `Browse ${name.toLowerCase()} listings and resources.`
+  return `Browse ${name} listings and resources.`
 }
 
 function resolveCategoryDescription(category: SiteCategoryInput): string {

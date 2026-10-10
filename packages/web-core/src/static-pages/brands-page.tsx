@@ -12,6 +12,10 @@ import { Card, CardContent } from '../ui/card'
 
 export const dynamic = 'force-static'
 
+const brandsDescription =
+  siteConfig.copy.brandsDescription ??
+  `Browse sites and products in the ${siteConfig.name} network.`
+
 export function generateMetadata(): Metadata {
   if (!siteConfig.features.showBrands) {
     return generateDisabledRouteMetadata()
@@ -19,7 +23,7 @@ export function generateMetadata(): Metadata {
 
   return generateBaseMetadata({
     title: siteCopy.brandsLabel,
-    description: `Browse sites and products in the ${siteConfig.name} network.`,
+    description: brandsDescription,
     path: getRoute('brands'),
     keywords: ['brands', 'network', siteConfig.name]
   })
@@ -31,7 +35,7 @@ function BrandsJsonLd({ brands }: { brands: NetworkBrandEntry[] }) {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: siteCopy.brandsLabel,
-    description: `Browse sites and products in the ${siteConfig.name} network.`,
+    description: brandsDescription,
     url: brandsUrl,
     isPartOf: {
       '@type': 'WebSite',
@@ -80,9 +84,7 @@ export default function BrandsPage() {
             Network
           </p>
           <h1 className="text-4xl font-bold tracking-tight">{siteCopy.brandsLabel}</h1>
-          <p className="max-w-3xl text-lg text-muted-foreground">
-            Browse sites and products in the {siteConfig.name} network.
-          </p>
+          <p className="max-w-3xl text-lg text-muted-foreground">{brandsDescription}</p>
         </section>
 
         <section

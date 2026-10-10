@@ -139,8 +139,15 @@ export type CheckedInSiteConfig = {
         };
   };
   copy: {
+    brandsDescription?: string;
     categoryLabels: Record<string, string>;
     docsLabel: string;
+    homepage?: {
+      description?: string;
+      heading?: string;
+      intro?: string;
+      title?: string;
+    };
     listingName: {
       singular: string;
       plural: string;
@@ -159,6 +166,11 @@ export type CheckedInSiteConfig = {
     excludedPaths?: string[];
     featuredCategoryPath?: string;
     staticPagePaths?: string[];
+  };
+  browse?: {
+    categoryPageSize?: number;
+    homepageCategorySectionLimit?: number;
+    homepageListingLayout?: 'alphabetical' | 'category-sections';
   };
   features: {
     showAuth: boolean;
@@ -195,8 +207,38 @@ export type CheckedInSiteConfig = {
 | `routes.*`                             | Yes      | Controls the public base paths for listings, docs, and the site-owned network page.                                                 |
 | `sitemap.*`                            | No       | Controls sitemap output, static artifact exclusions, and optional featured-category canonical path overrides.                       |
 | `features.*`                           | Yes      | Controls starter-owned optional surfaces.                                                                                           |
+| `copy.homepage.*`                      | No       | Homepage `<title>`, meta description, H1, and intro paragraph. Each omitted field keeps the starter copy.                           |
+| `copy.brandsDescription`               | No       | Brands page meta and intro description. Defaults to "Browse sites and products in the {site name} network."                        |
+| `browse.categoryPageSize`              | No       | Listings per category page. Later pages are `/categories/<slug>/page/<n>/`. Omit to keep one page per category. See below.          |
+| `browse.homepageListingLayout`         | No       | `alphabetical` (default, first 200 listings by name) or `category-sections` (one capped section per category).                      |
+| `browse.homepageCategorySectionLimit`  | No       | Cards per homepage category section. Defaults to 12.                                                                                |
 | `legal.contactEmailDomain`             | No       | Domain for `{{domain}}` (the contact addresses) in shared legal pages. Falls back to `site.domain`. See Known Gaps.                 |
 | `deploy.*`                             | No       | Required for deploy runs; omitted only for non-deploy examples.                                                                     |
+
+## Browse layout
+
+`browse.*` is opt-in. With no `browse` block a site keeps the starter behaviour: one page per
+category and one alphabetical homepage list.
+
+Category pagination (`browse.categoryPageSize`):
+
+- page 1 stays at `/categories/<slug>/`; pages 2..n are `/categories/<slug>/page/<n>/`
+- every page is self-canonical, has its own title (`... - Page n`) and description, and is listed in
+  the categories sitemap
+- each page's CollectionPage JSON-LD marks up that page's listings, with ListItem positions that
+  continue across pages
+- the visible pager uses the design-system (shadcn) `Pagination` component
+- 60 is a good size for the listing grid: it fills complete rows at 2, 3, 4, 5, and 6 columns
+- not supported with `sitemap.categoryBasePath`; validation rejects the combination
+- the build stages the paginated route out of the static export when no category has a second page,
+  because `output: export` rejects an empty `generateStaticParams()`
+
+Homepage category sections (`browse.homepageListingLayout: 'category-sections'`):
+
+- one section per active category, in `sites/<site-id>/categories.json` order, so put mainstream
+  categories first
+- each listing appears once, under its canonical (first) category
+- each section shows up to `homepageCategorySectionLimit` cards and links to the category page
 
 ## Minimum Real-Site Input Checklist
 

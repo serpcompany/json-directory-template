@@ -15,9 +15,16 @@ import {
 } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import {
+  type LegacyListingRedirect,
+  trimSlashes
+} from '@thedaviddias/site-contract/legacy-listing-slugs'
 import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases'
 import type { AssetSource, CheckedInSiteConfig } from '@thedaviddias/site-contract/types'
 import { categories } from '@thedaviddias/web-core/categories'
+import { type CategoryLike, getActiveCategories } from '@thedaviddias/web-core/category-navigation'
+import { generateCategoryPaginationStaticParams } from '@thedaviddias/web-core/category-pagination'
+import { resolveSiteLegacyListingRedirects } from './legacy-listing-redirects.ts'
 import { createRunTempDir } from './run-context.ts'
 import {
   buildSiteEnvironment,
@@ -47,6 +54,7 @@ type BuildSourceAppPaths = {
   authRouteBackupPath: string
   authRoutePath: string
   brandsRoutePath: string
+  categoryPaginationRoutePath: string
   docsRoutePath: string
   favoritesRoutePath: string
   faviconPath: string
@@ -74,6 +82,7 @@ type StaticExportRoutePaths = Pick<
   | 'accountRoutePath'
   | 'apiRoutePath'
   | 'brandsRoutePath'
+  | 'categoryPaginationRoutePath'
   | 'docsRoutePath'
   | 'favoritesRoutePath'
   | 'guidesRoutePath'
@@ -99,6 +108,7 @@ export function resolveBuildSourceAppPaths({
     authRouteBackupPath: resolve(appDir, 'app/api/auth/[...nextauth]/route.static-export-disabled'),
     authRoutePath: resolve(appDir, 'app/api/auth/[...nextauth]/route.ts'),
     brandsRoutePath: resolve(appDir, 'app/brands'),
+    categoryPaginationRoutePath: resolve(appDir, 'app/categories/[category]/page'),
     docsRoutePath: resolve(appDir, 'app/docs'),
     favoritesRoutePath: resolve(appDir, 'app/favorites'),
     faviconPath: resolve(appDir, 'app/favicon.ico'),
@@ -468,10 +478,17 @@ async function prepareBrandAssets(input: SiteInputTarget): Promise<{ restore: ()
 
 export function prepareDisabledRoutePathsForStaticExport({
   featureFlags,
+  hasCategoryPaginationPages = false,
   siteId,
   sourceAppPaths
 }: {
   featureFlags: StaticExportRouteFeatureFlags
+  /**
+   * Whether any category page after the first is generated. `output: export` rejects a dynamic
+   * route whose `generateStaticParams()` is empty, so the paginated category route is staged out
+   * when there is nothing to paginate.
+   */
+  hasCategoryPaginationPages?: boolean
   siteId: string
   sourceAppPaths: StaticExportRoutePaths
 }): { restore: () => void } {
@@ -513,6 +530,10 @@ export function prepareDisabledRoutePathsForStaticExport({
     maybeStage(sourceAppPaths.guidesRoutePath, 'guides')
   }
 
+  if (!hasCategoryPaginationPages) {
+    maybeStage(sourceAppPaths.categoryPaginationRoutePath, 'category-pagination')
+  }
+
   return {
     restore: () => {
       stages.reverse().forEach(restoreStagedPath)
@@ -532,9 +553,33 @@ function prepareDisabledRoutesForStaticExport(input: SiteInputTarget): {
 
   return prepareDisabledRoutePathsForStaticExport({
     featureFlags: definition.features,
+    hasCategoryPaginationPages: hasCategoryPaginationPages(definition),
     siteId: definition.id,
     sourceAppPaths
   })
+}
+
+// Reads the listing data prepared for this build (prepareSourceData runs first).
+function hasCategoryPaginationPages(
+  definition: ReturnType<typeof loadCheckedInSiteFromInput>
+): boolean {
+  const pageSize = definition.browse?.categoryPageSize
+
+  if (!pageSize) {
+    return false
+  }
+
+  const listings = JSON.parse(
+    readFileSync(resolve(workspaceRoot, definition.content.listingSource.outputPath), 'utf8')
+  ) as CategoryLike[]
+
+  return (
+    generateCategoryPaginationStaticParams(
+      getActiveCategories(listings, definition.id),
+      listings,
+      pageSize
+    ).length > 0
+  )
 }
 
 type ArtifactSurfaceFlags = {
@@ -1004,24 +1049,56 @@ type ListingLastmodEntry = {
 
 type LegacyRootListingRedirectInput = {
   listingBasePath: string
+  publicUrl: string
   siteId: string
 }
 
-function buildStaticRedirectHtml(destinationPath: string): string {
+type LegacyListingRedirectInput = {
+  listingBasePath: string
+  listingDetailSuffix?: string
+  publicUrl: string
+  redirects: LegacyListingRedirect[]
+}
+
+function escapeHtmlAttribute(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+}
+
+/**
+ * Static redirect page for GitHub Pages, which cannot send HTTP redirects. The instant meta
+ * refresh plus `location.replace` move visitors, and the absolute canonical points crawlers at the
+ * destination. The page is deliberately not `noindex`: like the alias category pages in #159 it
+ * relies on the canonical, which also keeps it out of the generated sitemaps (`writeSplitSitemaps`
+ * skips routes whose canonical points elsewhere), and a noindex next to a canonical sends Google
+ * conflicting signals.
+ */
+export function buildStaticRedirectHtml(destinationPath: string, publicUrl: string): string {
+  const canonicalUrl = new URL(destinationPath, `${publicUrl.replace(/\/+$/, '')}/`).toString()
+  const escapedDestinationPath = escapeHtmlAttribute(destinationPath)
+  const escapedCanonicalUrl = escapeHtmlAttribute(canonicalUrl)
+
   return `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <title>Redirecting...</title>
-    <meta http-equiv="refresh" content="0; url=${destinationPath}">
-    <link rel="canonical" href="${destinationPath}">
+    <meta http-equiv="refresh" content="0; url=${escapedDestinationPath}">
+    <link rel="canonical" href="${escapedCanonicalUrl}">
     <script>window.location.replace(${JSON.stringify(destinationPath)});</script>
   </head>
   <body>
-    <p>Redirecting to <a href="${destinationPath}">${destinationPath}</a>.</p>
+    <p>Redirecting to <a href="${escapedDestinationPath}">${escapedCanonicalUrl}</a>.</p>
   </body>
 </html>
 `
+}
+
+function normalizeRouteSegment(path: string | undefined): string {
+  return path === undefined ? '' : trimSlashes(path)
 }
 
 export function applyConfiguredPublicRoutePaths(
@@ -1059,8 +1136,62 @@ export function applyLegacyRootListingRedirects(
     const redirectPagePath = resolve(artifactDir, slug, 'index.html')
     removeArtifactPath(resolve(artifactDir, slug))
     mkdirSync(dirname(redirectPagePath), { recursive: true })
-    writeFileSync(redirectPagePath, buildStaticRedirectHtml(destinationPath))
+    writeFileSync(redirectPagePath, buildStaticRedirectHtml(destinationPath, input.publicUrl))
   }
+}
+
+/**
+ * Writes a static redirect page for every `product.legacySlugs` entry at the old listing detail
+ * route (`/<listingBasePath>/<legacy>/`, plus `/<listingBasePath>/<legacy>/<suffix>/` when the site
+ * uses a listing detail suffix) and at the root alias (`/<legacy>/`). Every page points at the
+ * surviving listing's canonical detail route. Fails instead of overwriting a generated route.
+ */
+export function applyLegacyListingRedirects(
+  artifactDir: string,
+  input: LegacyListingRedirectInput
+): string[] {
+  const listingBasePath = normalizeRouteSegment(input.listingBasePath)
+  const listingDetailSuffix = normalizeRouteSegment(input.listingDetailSuffix)
+  const writtenRoutePaths: string[] = []
+
+  for (const { legacySlug, slug } of input.redirects) {
+    const destinationSegments = [listingBasePath, slug, listingDetailSuffix].filter(Boolean)
+    const destinationPath = `/${destinationSegments.join('/')}/`
+    const destinationIndexPath = resolve(artifactDir, ...destinationSegments, 'index.html')
+
+    if (!existsSync(destinationIndexPath)) {
+      throw new Error(
+        `Legacy slug "${legacySlug}" redirects to ${destinationPath}, but that listing page was not generated.`
+      )
+    }
+
+    const legacyRouteDirs = [
+      [listingBasePath, legacySlug].filter(Boolean),
+      ...(listingDetailSuffix
+        ? [[listingBasePath, legacySlug, listingDetailSuffix].filter(Boolean)]
+        : []),
+      [legacySlug]
+    ]
+
+    for (const routeSegments of legacyRouteDirs) {
+      const routeDir = resolve(artifactDir, ...routeSegments)
+
+      if (existsSync(routeDir)) {
+        throw new Error(
+          `Legacy slug "${legacySlug}" would overwrite the generated route /${routeSegments.join('/')}/.`
+        )
+      }
+    }
+
+    for (const routeSegments of legacyRouteDirs) {
+      const redirectPagePath = resolve(artifactDir, ...routeSegments, 'index.html')
+      mkdirSync(dirname(redirectPagePath), { recursive: true })
+      writeFileSync(redirectPagePath, buildStaticRedirectHtml(destinationPath, input.publicUrl))
+      writtenRoutePaths.push(`/${routeSegments.join('/')}`)
+    }
+  }
+
+  return writtenRoutePaths
 }
 
 export function removeUnsuffixedListingDetailArtifacts(
@@ -1316,7 +1447,14 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
   }
   applyLegacyRootListingRedirects(artifactDir, {
     listingBasePath: definition.routes.listingBasePath,
+    publicUrl: definition.site.publicUrl,
     siteId: definition.id
+  })
+  const legacyListingRedirectPaths = applyLegacyListingRedirects(artifactDir, {
+    listingBasePath: definition.routes.listingBasePath,
+    listingDetailSuffix: definition.sitemap.listingDetailSuffix,
+    publicUrl: definition.site.publicUrl,
+    redirects: resolveSiteLegacyListingRedirects(definition)
   })
   removeExcludedStaticArtifactPaths(artifactDir, artifactExcludedPaths)
   writeSplitSitemaps(artifactDir, {
@@ -1326,6 +1464,7 @@ function finalizeArtifactDir(input: SiteInputTarget): void {
     defaultLastmod: resolveSourceLastmod(buildInfo),
     excludedPaths: [
       ...legacySlugs.map(slug => `/${slug}`),
+      ...legacyListingRedirectPaths,
       ...(definition.sitemap.excludedPaths ?? [])
     ],
     indexGroupOrder: definition.sitemap.indexGroupOrder,

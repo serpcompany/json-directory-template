@@ -25,6 +25,39 @@ afterEach(() => {
 })
 
 describe('writeSplitSitemaps', () => {
+  it('lists self-canonical paginated category pages in the categories sitemap', () => {
+    const artifactDir = makeTempArtifactDir()
+    const categoryPage = (path: string) =>
+      `<link rel="canonical" href="https://example.com${path}"/>`
+
+    writeFile(resolve(artifactDir, 'index.html'))
+    writeFile(
+      resolve(artifactDir, 'categories/adult/index.html'),
+      categoryPage('/categories/adult/')
+    )
+    writeFile(
+      resolve(artifactDir, 'categories/adult/page/2/index.html'),
+      categoryPage('/categories/adult/page/2/')
+    )
+    writeFile(
+      resolve(artifactDir, 'categories/adult/page/3/index.html'),
+      categoryPage('/categories/adult/page/3/')
+    )
+
+    writeSplitSitemaps(artifactDir, {
+      baseUrl: 'https://example.com',
+      defaultLastmod: DEFAULT_LASTMOD,
+      listingBasePath: 'products'
+    })
+
+    const taxonomies = readFileSync(resolve(artifactDir, 'taxonomies-sitemap.xml'), 'utf8')
+
+    expect(taxonomies).toContain('<loc>https://example.com/categories/adult/</loc>')
+    expect(taxonomies).toContain('<loc>https://example.com/categories/adult/page/2/</loc>')
+    expect(taxonomies).toContain('<loc>https://example.com/categories/adult/page/3/</loc>')
+    expect(readFileSync(resolve(artifactDir, 'pages-sitemap.xml'), 'utf8')).not.toContain('/page/')
+  })
+
   it('leaves out noindex pages and pages that canonicalize to another URL', () => {
     const artifactDir = makeTempArtifactDir()
 

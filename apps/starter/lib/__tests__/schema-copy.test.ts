@@ -1,5 +1,5 @@
-import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { generateArticleSchema, generateWebsiteDetailSchema } from '@thedaviddias/web-core/schema'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import type { WebsiteMetadata } from '@/lib/content-loader'
 
 const sampleWebsite: WebsiteMetadata = {
@@ -24,13 +24,18 @@ describe('schema copy', () => {
     const graph = detailSchema['@graph']
 
     const webPageSchema = graph.find(item => item['@type'] === 'WebPage')
-    const breadcrumbSchema = graph.find(item => item['@type'] === 'BreadcrumbList')
+    const softwareSchema = graph.find(item => item['@type'] === 'SoftwareApplication')
     const detailArticleSchema = graph.find(item => item['@type'] === 'TechArticle')
     const faqSchema = graph.find(item => item['@type'] === 'FAQPage')
 
     expect(articleSchema.headline).toBe(`Example Project ${siteCopy.listingName.singularTitle}`)
     expect(webPageSchema?.name).toBe(`Example Project ${siteCopy.listingName.singularTitle}`)
-    expect(breadcrumbSchema?.itemListElement[1]?.name).toBe(siteCopy.allLabel)
+    // The visible Breadcrumb component emits the page's only BreadcrumbList.
+    expect(graph.some(item => item['@type'] === 'BreadcrumbList')).toBe(false)
+    expect(webPageSchema).not.toHaveProperty('breadcrumb')
+    // No price or rating data exists in listing sources, so none is claimed.
+    expect(softwareSchema).not.toHaveProperty('offers')
+    expect(softwareSchema).not.toHaveProperty('aggregateRating')
     expect(detailArticleSchema?.headline).toBe('Example Project Overview')
     expect(detailArticleSchema?.description).toContain("Explore Example Project's listing")
     expect(detailArticleSchema?.keywords).toContain('listing details')

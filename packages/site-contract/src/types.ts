@@ -23,16 +23,50 @@ export type ListingSourceConfig =
       publishedAt: string
     }
 
+/** Optional homepage copy overrides. Each field falls back to the starter homepage copy. */
+export type SiteHomepageCopy = {
+  /** Meta description of the homepage. */
+  description?: string
+  /** Visible H1. Defaults to `site.name`. */
+  heading?: string
+  /** Intro paragraph under the H1. */
+  intro?: string
+  /** `<title>` of the homepage (the root layout does not append the site name to it). */
+  title?: string
+}
+
 export type SiteCopyConfig = {
+  /** Optional brands page meta and intro description. */
+  brandsDescription?: string
   brandsLabel: string
   categoryLabels: Record<string, string>
   docsLabel: string
+  homepage?: SiteHomepageCopy
   listingName: {
     plural: string
     singular: string
   }
   networkLabel: string
   submitLabel: string
+}
+
+export type SiteHomepageListingLayout = 'alphabetical' | 'category-sections'
+
+/** Optional browse-surface layout. Omitted fields keep the starter behaviour. */
+export type SiteBrowseConfig = {
+  /**
+   * Listings per category page. Pages after the first are served at
+   * `<category route>page/<n>/`. Omit to render every listing on one page.
+   */
+  categoryPageSize?: number
+  /** Cards per category section when `homepageListingLayout` is `category-sections`. */
+  homepageCategorySectionLimit?: number
+  /**
+   * `alphabetical` (default): one flat list of the first 200 listings by name.
+   * `category-sections`: one section per active category in `categories.json` order, each capped
+   * at `homepageCategorySectionLimit` cards with a link to the category page.
+   */
+  homepageListingLayout?: SiteHomepageListingLayout
 }
 
 export type SiteExternalResourceIcon = 'chrome' | 'code2' | 'command' | 'gitBranch' | 'terminal'
@@ -139,6 +173,7 @@ export type CheckedInSiteConfig = {
     logo?: AssetSource
     opengraphImage?: AssetSource
   }
+  browse?: SiteBrowseConfig
   build: {
     appPackageName: string
     appOutDir: string

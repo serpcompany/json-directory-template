@@ -1,14 +1,14 @@
 import { Button } from '@thedaviddias/design-system/button'
-import type { Metadata } from 'next'
-import Link from 'next/link'
 import { getRoute } from '@thedaviddias/web-core/routes'
 import { generateBaseMetadata } from '@thedaviddias/web-core/seo-config'
 import { hasConfiguredGitHubIssueTarget, siteConfig } from '@thedaviddias/web-core/site-config'
+import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = generateBaseMetadata({
   title: 'Page Not Found',
   description: `The page you are looking for does not exist. Browse ${siteConfig.name} to explore the directory.`,
-  path: '/404',
+  canonical: false,
   noindex: true
 })
 

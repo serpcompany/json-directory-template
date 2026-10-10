@@ -9,6 +9,7 @@ import {
 } from './content-query'
 import { AppSidebar } from './layout/app-sidebar'
 import { HeroSection } from './sections/hero-section'
+import { HomepageCategorySectionsRoute } from './sections/homepage-category-sections-route'
 import { NewsletterSection } from './sections/newsletter-section'
 import { generateBaseMetadata, generateWebsiteSchema, KEYWORDS } from './seo-config'
 import { siteConfig } from './site-config'
@@ -91,8 +92,12 @@ export interface HomePageSlots {
 }
 
 export const homePageMetadata: Metadata = generateBaseMetadata({
-  title: `${siteConfig.name} Directory of ${siteCopy.listingName.pluralTitle} and Resources`,
-  description: `${siteConfig.tagline}. Browse curated ${siteCopy.listingName.plural}, resources, and documentation links in one searchable directory.`,
+  title:
+    siteConfig.copy.homepage?.title ??
+    `${siteConfig.name} Directory of ${siteCopy.listingName.pluralTitle} and Resources`,
+  description:
+    siteConfig.copy.homepage?.description ??
+    `${siteConfig.tagline}. Browse curated ${siteCopy.listingName.plural}, resources, and documentation links in one searchable directory.`,
   keywords: [
     ...KEYWORDS.homepage,
     ...KEYWORDS.global,
@@ -156,13 +161,17 @@ export function HomePageRoute({ data, slots }: HomePageRouteProps): ReactElement
               <RecentlyAddedSection websites={recentlyUpdatedProjectCards} />
             </section>
 
-            <section>
-              <StaticWebsitesList
-                websites={homepageProjects}
-                totalCount={totalCount}
-                displayLimit={HOMEPAGE_SECTION_LIMIT}
-              />
-            </section>
+            {siteConfig.browse.homepageListingLayout === 'category-sections' ? (
+              <HomepageCategorySectionsRoute listings={allProjects} />
+            ) : (
+              <section>
+                <StaticWebsitesList
+                  websites={homepageProjects}
+                  totalCount={totalCount}
+                  displayLimit={HOMEPAGE_SECTION_LIMIT}
+                />
+              </section>
+            )}
 
             {siteConfig.features.showExternalResources && <ExternalResourcesSection />}
             {siteConfig.features.showFeaturedGuides && (

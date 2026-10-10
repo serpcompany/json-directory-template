@@ -42,6 +42,7 @@ describe('resolveBuildSourceAppPaths', () => {
         '/workspace/apps/starter/app/api/auth/[...nextauth]/route.static-export-disabled',
       authRoutePath: '/workspace/apps/starter/app/api/auth/[...nextauth]/route.ts',
       brandsRoutePath: '/workspace/apps/starter/app/brands',
+      categoryPaginationRoutePath: '/workspace/apps/starter/app/categories/[category]/page',
       favoritesRoutePath: '/workspace/apps/starter/app/favorites',
       faviconPath: '/workspace/apps/starter/app/favicon.ico',
       guidesRoutePath: '/workspace/apps/starter/app/guides',
@@ -89,6 +90,7 @@ describe('prepareDisabledRoutePathsForStaticExport', () => {
     writeFile(resolve(paths.accountRoutePath, 'page.tsx'), 'account')
     writeFile(resolve(paths.loginRoutePath, 'page.tsx'), 'login')
     writeFile(resolve(paths.docsRoutePath, 'page.tsx'), 'docs')
+    writeFile(resolve(paths.categoryPaginationRoutePath, '[page]/page.tsx'), 'category pages')
 
     const routeState = prepareDisabledRoutePathsForStaticExport({
       featureFlags: {
@@ -107,8 +109,13 @@ describe('prepareDisabledRoutePathsForStaticExport', () => {
     expect(existsSync(paths.accountRoutePath)).toBe(false)
     expect(existsSync(paths.loginRoutePath)).toBe(false)
     expect(existsSync(paths.docsRoutePath)).toBe(false)
+    expect(existsSync(paths.categoryPaginationRoutePath)).toBe(false)
 
     routeState.restore()
+
+    expect(
+      readFileSync(resolve(paths.categoryPaginationRoutePath, '[page]/page.tsx'), 'utf8')
+    ).toBe('category pages')
 
     expect(readFileSync(resolve(paths.apiRoutePath, 'cron/check-badges/route.ts'), 'utf8')).toBe(
       'export async function GET() {}'
@@ -116,5 +123,32 @@ describe('prepareDisabledRoutePathsForStaticExport', () => {
     expect(readFileSync(resolve(paths.accountRoutePath, 'page.tsx'), 'utf8')).toBe('account')
     expect(readFileSync(resolve(paths.loginRoutePath, 'page.tsx'), 'utf8')).toBe('login')
     expect(readFileSync(resolve(paths.docsRoutePath, 'page.tsx'), 'utf8')).toBe('docs')
+  })
+
+  it('keeps the paginated category route when category pages after the first exist', () => {
+    const workspaceRoot = makeTempDir()
+    const paths = resolveBuildSourceAppPaths({
+      appOutDir: 'apps/example.com/out',
+      workspaceRoot
+    })
+
+    writeFile(resolve(paths.categoryPaginationRoutePath, '[page]/page.tsx'), 'category pages')
+
+    const routeState = prepareDisabledRoutePathsForStaticExport({
+      featureFlags: {
+        showAuth: true,
+        showBrands: true,
+        showDocs: true,
+        showFavorites: true,
+        showGuides: true,
+        showProjects: true
+      },
+      hasCategoryPaginationPages: true,
+      siteId: 'example.com',
+      sourceAppPaths: paths
+    })
+
+    expect(existsSync(paths.categoryPaginationRoutePath)).toBe(true)
+    routeState.restore()
   })
 })

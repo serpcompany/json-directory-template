@@ -17,7 +17,9 @@ on:
 jobs:
   submit:
     name: Submit sitemap indexes
-    runs-on: self-hosted
+    # Was `self-hosted`. Swapped to GitHub-hosted runners for now because the self-hosted runners
+    # are offline (owner decision, #161).
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/install
