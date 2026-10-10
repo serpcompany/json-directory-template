@@ -311,6 +311,26 @@ export function withoutReviews(body: string): string {
     .trim()
 }
 
+const CODE_REFERENCE = /`?[\w./-]+\.(?:js|mjs|ts|json):\d+(?::\d+)?`?/g
+const PIPELINE_LABEL = /\b(?:pass|lineup|batch)-\d+\b|\blineups?\b|\bCSV\b/i
+
+/**
+ * Drops source code references (`background.js:69`) and every sentence that only carries
+ * internal pipeline status, so their numbers are not demanded as product facts (#161).
+ */
+export function withoutInternalNotes(text: string): string {
+  return text
+    .replace(CODE_REFERENCE, '')
+    .split('\n')
+    .map(line =>
+      line
+        .split(/(?<=[.!?])\s+/)
+        .filter(sentence => !PIPELINE_LABEL.test(sentence) && pipelineNotes(sentence).length === 0)
+        .join(' ')
+    )
+    .join('\n')
+}
+
 export function withoutPricing(text: string): string {
   return text
     .split('\n')
@@ -1234,9 +1254,9 @@ export function buildExistingInput(
     },
     facts: extractFacts(
       withoutPricing(
-        [tagline, withoutReviews(body), faqText(faq.filter(entry => !isPricingFaq(entry)))].join(
-          '\n\n'
-        )
+        [tagline, withoutReviews(body), faqText(faq.filter(entry => !isPricingFaq(entry)))]
+          .map(withoutInternalNotes)
+          .join('\n\n')
       ),
       platform,
       names
@@ -1464,6 +1484,14 @@ export function existingListingCopyIssues(output: RewriteOutput, names: string[]
   )
   if (opensWithDefinition) issues.push('body opens with a "<Name> is a ..." definition')
   if (/\blicen[cs](?:e|es|ing)\b/i.test(all)) issues.push('use "activation", not licence wording')
+  const scriptFiles = (all.match(/\b[a-z][\w-]*\.(?:js|mjs|ts)\b/g) ?? []).filter(
+    name => !/^(?:video|next|node|react|vue|hls|dash)\.js$/i.test(name)
+  )
+  if (new RegExp(CODE_REFERENCE.source).test(all) || scriptFiles.length) {
+    issues.push(
+      `source code references not allowed${scriptFiles.length ? `: ${scriptFiles.join(', ')}` : ''}`
+    )
+  }
   const taglineLength = output.tagline.trim().length
   if (taglineLength < 70 || taglineLength > 160) {
     issues.push(`tagline must be 70-160 characters (has ${taglineLength})`)

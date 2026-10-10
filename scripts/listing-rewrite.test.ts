@@ -10,6 +10,7 @@ import {
   buildEntry,
   buildExistingInput,
   withoutReviews,
+  withoutInternalNotes,
   pipelineNotes,
   existingListingCopyIssues,
   buildImages,
@@ -1030,6 +1031,24 @@ describe('apply helpers', () => {
       'body opens with a "<Name> is a ..." definition',
       'tagline must be 70-160 characters (has 10)'
     ])
+    expect(
+      existingListingCopyIssues(
+        {
+          ...output,
+          body: '## A\n\nWorks with Video.js players; `background-enhanced.js`, line 69 cancels.\n\n## B\n\nb\n\n## C\n\nc',
+          tagline: 'x'.repeat(80)
+        },
+        ['X Downloader']
+      )
+    ).toEqual(['source code references not allowed: background-enhanced.js'])
+  })
+
+  it('drops code references and pipeline-only sentences before extracting facts', () => {
+    expect(
+      withoutInternalNotes(
+        'Saves MP4 at 720p. Listed in the pass-242 lineup CSV. See `popup.js:210` for details.'
+      )
+    ).toBe('Saves MP4 at 720p. See  for details.')
   })
 
   it('rejects unusable --threshold and --limit values', () => {
