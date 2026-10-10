@@ -75,8 +75,8 @@ Both modes:
 - MDX safety. The body and FAQ are assembled the way `scripts/trial-build.ts` builds the page (FAQ braces escaped) and parsed with the same MDX + GFM parser as the listing page. Parse errors (a bare `<id>`, `<1080p`, `<=`), JSX tags, `{expressions}` in the body and import/export lines fail. FAQ braces inside a code span also fail, because they render as `\{`. A `<` followed by a space is fine.
 - Similarity at most 0.5 (word LCS ratio and 5-word shingle Jaccard) against the source, the same product on other sites, and the site's other listings; no 8-word sentences shared with another listing or site, no near-identical FAQ questions, and no reused heading sequence.
 - No sentence of 6+ words and no FAQ question copied from the source, and at least as many FAQ entries as the source has non-pricing ones.
-- Pricing and trial language: prices, payments, plans, subscriptions, one-time and lifetime terms, trials, credit cards, refunds, discounts, free or complimentary download counts, "unlimited downloads" and "try it free" wording.
-- Facts: the platform name, browsers, operating systems, formats, quality options, permissions, limitations, region, save folder, save paths and numbers match the source (nothing dropped, nothing added).
+- Pricing and trial language (`PRICING_PATTERNS`): prices, costs, payments and billing; subscription plans and paid, premium or pro plans and licences; one-time and lifetime terms; trials; credit cards; refunds and money-back terms; discounts and coupons; free or complimentary downloads and download allowances ("3 free clips", "try 3 recordings"); "unlimited downloads"; "try it free"; and "before purchasing" wording.
+- Facts: the platform name must appear; browsers, operating systems, formats, quality options, permissions and numbers must match the source (nothing dropped, nothing added; the number 1 may be dropped); limitations, region, save folder and save paths must not be dropped.
 - Body length: at least 0.6 of the source body's words in `new` mode, or 0.45 of the cleaned source body (reviews, pricing and internal notes removed) in `existing` mode.
 
 `existing` mode only:

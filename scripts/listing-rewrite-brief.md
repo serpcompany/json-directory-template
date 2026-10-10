@@ -67,10 +67,10 @@ For each slug:
   way that contradicts another part of the source. Mention the conflict in your report.
 - Don't change product names, slugs, URLs or category values.
 - Use plain, readable language. No keyword stuffing and no hype.
-
-- Bodies and FAQs render as MDX. Put tags, route shapes such as `/videos/<id>/` and other
-  text with `<` or `{` in backticks in the body. In FAQ text write braces plainly (the build
-  escapes them; inside backticks they would show as `\{`). A `<` followed by a space is fine.
+- Bodies and FAQs render as MDX. Put tags, route shapes such as `/videos/<id>/` and anything
+  else with a `<` in backticks, in the body and the FAQ; a `<` followed by a space is fine. In
+  the body, braces go in backticks too. In FAQ text write braces plainly: the build escapes
+  them, and inside backticks they would show as `\{`.
 
 ## Existing listings (`prepare --existing`)
 

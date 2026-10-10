@@ -289,7 +289,7 @@ export const PRICING_PATTERNS: Array<[string, RegExp]> = [
   // clips" or "2 screen captures side by side" don't match.
   [
     'test allowance',
-    /\b(?:test|try)\b[^.\n]{0,40}?\b(?:\d+|two|three|four|five|ten) (?:(?:of|your|own|free|trial|complimentary|included|permitted) )*(?:pages|videos|downloads|saves|captures|recordings|clips)\b/i
+    /\b(?:test|try)\b[^.\n]{0,40}?\b(?:\d+|two|three|four|five|ten) (?:(?:of|your|own|free|trial|complimentary|included|permitted|full|sample|hd|video) )*(?:pages|videos|downloads|saves|files|captures|recordings|clips)\b/i
   ]
 ]
 
@@ -345,7 +345,7 @@ function hasFactTokens(text: string): boolean {
  * Drops source code references (`background.js:69`) and internal pipeline notes, so their
  * numbers are not demanded as product facts (#161). A sentence that is only a note goes;
  * a sentence that also states facts (browsers, formats, permissions, ...) keeps them and
- * loses just the note phrase.
+ * loses the note phrase and its bare numbers.
  */
 export function withoutInternalNotes(text: string): string {
   const notePatterns = [PIPELINE_LABEL, ...PIPELINE_NOTE_PATTERNS.map(([, pattern]) => pattern)]
@@ -363,7 +363,10 @@ export function withoutInternalNotes(text: string): string {
             (result, pattern) => result.replace(new RegExp(pattern.source, 'gi'), ' '),
             sentence
           )
-          return hasFactTokens(stripped) ? [stripped.replace(/ {2,}/g, ' ')] : []
+          // Numbers in a note ("sampled 40 pages") are not product facts; 1080p and 4K stay.
+          return hasFactTokens(stripped)
+            ? [stripped.replace(/\b\d+(?:\.\d+)?\b/g, ' ').replace(/ {2,}/g, ' ')]
+            : []
         })
         .join(' ')
     )
@@ -1274,6 +1277,22 @@ function applyFactOverride(facts: Facts, override?: FactOverride): Facts {
   return { ...facts, numbers: facts.numbers.filter(n => !override.ignoreNumbers?.includes(n)) }
 }
 
+/**
+ * The product facts of an existing listing's copy: no reviews, pricing / trial FAQs or
+ * sentences, internal notes or code references.
+ */
+export function existingFactText(source: RewriteInput['source']): string {
+  return withoutPricing(
+    [
+      source.tagline,
+      withoutReviews(source.body),
+      faqText(source.faq.filter(entry => !isLegalFaq(entry) && !isPricingFaq(entry)))
+    ]
+      .map(withoutInternalNotes)
+      .join('\n\n')
+  )
+}
+
 /** Input for rewriting an existing site listing in place (#157). */
 export function buildExistingInput(
   slug: string,
@@ -1295,15 +1314,7 @@ export function buildExistingInput(
       relatedLinks: entry.relatedLinks ?? [],
       title: entry.product.title
     },
-    facts: extractFacts(
-      withoutPricing(
-        [tagline, withoutReviews(body), faqText(faq.filter(entry => !isPricingFaq(entry)))]
-          .map(withoutInternalNotes)
-          .join('\n\n')
-      ),
-      platform,
-      names
-    ),
+    facts: extractFacts(existingFactText({ body, faq, tagline }), platform, names),
     mode: 'existing',
     names,
     site,
@@ -1657,7 +1668,9 @@ const TEMPLATE_HEADING =
 export function existingListingCopyIssues(
   output: RewriteOutput,
   names: string[],
-  sourceText = ''
+  sourceText = '',
+  /** The source's product facts (existingFactText); defaults to `sourceText` minus pricing. */
+  factText = withoutPricing(sourceText)
 ): string[] {
   const issues: string[] = []
   const copyText = [output.tagline, output.body, faqText(output.faq)].join('\n')
@@ -1700,9 +1713,9 @@ export function existingListingCopyIssues(
   )
   if (opensWithDefinition) issues.push('body opens with a "<Name> is a ..." definition')
   // "licensed" that describes the content ("licensed stock images", "licensed shows") is a
-  // product fact when the source says it outside its pricing/trial sentences. Any other licence
-  // wording is about the extension's own trial or plan.
-  const contentLicensed = /\blicen[cs]ed\b/i.test(withoutPricing(sourceText))
+  // product fact when the source's facts (no pricing FAQs or sentences, reviews or notes) say
+  // it. Any other licence wording is about the extension's own trial or plan.
+  const contentLicensed = /\blicen[cs]ed\b/i.test(factText)
   const licenceWords = (all.match(/\blicen[cs](?:e|es|ed|ing)\b/gi) ?? []).filter(
     word => !(contentLicensed && /ed$/i.test(word))
   )
@@ -1944,7 +1957,9 @@ export function checkRewrite(
 
   issues.push(...checkFacts(input.facts, rewriteText, names))
   if (input.mode === 'existing')
-    issues.push(...existingListingCopyIssues(output, names, sourceText))
+    issues.push(
+      ...existingListingCopyIssues(output, names, sourceText, existingFactText(input.source))
+    )
 
   return { issues, pass: issues.length === 0, scores, slug: input.slug, threshold }
 }

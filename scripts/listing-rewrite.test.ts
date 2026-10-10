@@ -19,6 +19,7 @@ import {
   copiedRuns,
   DEFAULT_EXCLUDE_FILE,
   diffSourceAgainstSite,
+  existingFactText,
   existingListingCopyIssues,
   extractFacts,
   extractNumbers,
@@ -1152,6 +1153,9 @@ describe('review fixes (#161)', () => {
       'free downloads ("3 downloads")',
       'test allowance ("Test it with 3 downloads")'
     ])
+    for (const text of ['Try 3 full videos.', 'Test 3 sample pages.', 'Try 3 files free.']) {
+      expect(pricingLanguage(text).some(label => label.startsWith('test allowance'))).toBe(true)
+    }
     expect(pricingLanguage('Comes with complimentary downloads.')).toEqual([
       'free downloads ("complimentary downloads")'
     ])
@@ -1168,6 +1172,9 @@ describe('review fixes (#161)', () => {
     )
     expect(withoutInternalNotes('It sampled 40 pages. Saves 720p MP4 files.')).toBe(
       'Saves 720p MP4 files.'
+    )
+    expect(withoutInternalNotes('Handoff still needs 3 checks of 1080p MP4 on Edge.')).toBe(
+      ' needs checks of 1080p MP4 on Edge.'
     )
     const input = buildExistingInput(
       'pv-downloader',
@@ -1203,6 +1210,21 @@ describe('review fixes (#161)', () => {
         { ...output, body: output.body.replace('## Trials', '## C') },
         ['X'],
         'After the trial, a licensed copy unlocks more.'
+      )
+    ).toEqual(['use "activation", not licence wording'])
+    const pricingFaqSource = {
+      body: '## A\n\nSaves clips.',
+      faq: [
+        { answer: 'After that, activate your licensed copy.', question: 'How long is the trial?' }
+      ],
+      tagline: ''
+    }
+    expect(
+      existingListingCopyIssues(
+        { ...output, body: output.body.replace('## Trials', '## C') },
+        ['X'],
+        'After that, activate your licensed copy.',
+        existingFactText(pricingFaqSource)
       )
     ).toEqual(['use "activation", not licence wording'])
     expect(
@@ -1275,7 +1297,8 @@ describe('review fixes (#161)', () => {
 
   it('measures existing-mode length against the cleaned source with a 0.45 floor', () => {
     const reviews = `\n\n## Reviews\n\n- Great (5/5): ${Array.from({ length: 150 }, (_, i) => `review${i}`).join(' ')}`
-    const pricing = '\n\nThe trial gives 3 free downloads before a paid plan is needed.'
+    const pricing =
+      '\n\n## Access\n\nThe trial gives 3 free downloads before a paid plan is needed.'
     const input = buildExistingInput(
       'example-tube-downloader',
       existingSource(`${reviews}${pricing}`),
@@ -1283,13 +1306,13 @@ describe('review fixes (#161)', () => {
     )
     if (!input) throw new Error('expected input')
     expect(input.mode).toBe('existing')
-    // The cleaned source has 105 words, so the floor is 47.25 words.
+    // The cleaned source has 106 words, so the floor is 47.7 words.
     expect(checkRewrite(input, existingOutput(30), context).issues).toEqual([])
     expect(shorter(checkRewrite(input, existingOutput(20), context))).toEqual([
-      'body is much shorter than source (44 vs 105 words)'
+      'body is much shorter than source (44 vs 106 words)'
     ])
     expect(shorter(checkRewrite({ ...input, mode: 'new' }, existingOutput(30), context))).toEqual([
-      'body is much shorter than source (54 vs 271 words)'
+      'body is much shorter than source (54 vs 272 words)'
     ])
   })
 
