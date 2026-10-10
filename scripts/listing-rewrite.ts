@@ -36,6 +36,10 @@ import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import remarkGfm from 'remark-gfm'
+import remarkMdx from 'remark-mdx'
+import remarkParse from 'remark-parse'
+import { unified } from 'unified'
 import {
   addSection,
   cleanString,
@@ -270,7 +274,7 @@ export const PRICING_PATTERNS: Array<[string, RegExp]> = [
   ['discount', /\bdiscounts?\b|\bcoupons?\b/i],
   [
     'free downloads',
-    /\bfree\b[^.\n]{0,20}\bdownloads?\b|\b\d+ (?:free |trial )?downloads\b|\b(?:two|three|four|five|ten) (?:free |trial )?downloads\b/i
+    /\b(?:free|complimentary)\b[^.\n]{0,20}\bdownloads?\b|\b\d+ (?:free |trial )?downloads\b|\b(?:two|three|four|five|ten) (?:free |trial )?downloads\b/i
   ],
   ['unlimited use', /\bunlimited (?:downloads|use|access|usage)\b/i],
   ['paid plan', /\b(?:paid|premium|pro) (?:plans?|versions?|tiers?|licen[cs]es?)\b/i],
@@ -278,11 +282,14 @@ export const PRICING_PATTERNS: Array<[string, RegExp]> = [
   ['free to try', /\btry (?:it )?(?:for )?free\b|\bfree (?:to try|version|plan|tier)\b/i],
   [
     'usage allowance',
-    /\b(?:\d+|two|three|four|five|ten) (?:free |trial |permitted |included )+(?:pages|videos|downloads|saves|files)\b/i
+    /\b(?:\d+|two|three|four|five|ten) (?:free |trial |permitted |included |complimentary )+(?:pages|videos|downloads|saves|files|recordings|clips|captures)\b/i
   ],
+  // "Try 3 recordings free", "test it on three of your own permitted pages": only allowance
+  // words sit between the count and the noun, so feature sentences such as "Try it on 60 fps
+  // clips" or "2 screen captures side by side" don't match.
   [
     'test allowance',
-    /\b(?:test|try)\b[^.\n]{0,40}\b(?:\d+|two|three|four|five|ten)\b[^.\n]{0,30}\b(?:pages|videos|downloads|saves)\b/i
+    /\b(?:test|try)\b[^.\n]{0,40}?\b(?:\d+|two|three|four|five|ten) (?:(?:of|your|own|free|trial|complimentary|included|permitted|full|sample|hd|video) )*(?:pages|videos|downloads|saves|files|captures|recordings|clips)\b/i
   ]
 ]
 
@@ -297,6 +304,73 @@ export function pricingLanguage(text: string): string[] {
     const match = text.match(new RegExp(pattern.source, 'i'))
     return match ? [`${label} ("${match[0]}")`] : []
   })
+}
+
+/**
+ * Drops every "## Reviews" section (star-rated testimonials). The brief bans reviews and
+ * testimonials in rewrites, so their ratings and quoted numbers are not product facts (#161).
+ */
+export function withoutReviews(body: string): string {
+  return body
+    .replace(/(^|\n)##\s+Reviews\s*\n[\s\S]*?(?=\n##\s|$)/gi, '$1')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
+// The lookbehind starts a match only at the beginning of a path run, so a long run that
+// never reaches ".js:<line>" is scanned once instead of once per character (ReDoS).
+export const CODE_REFERENCE =
+  /`?(?<![\w./-])[\w./-]+\.(?:js|mjs|ts|json):\d+(?:[-:]\d+)?(?:,\s*\d+(?:-\d+)?)*`?/g
+const PIPELINE_LABEL = /\b(?:pass|lineup|batch)-\d+\b|\blineups?\b|\bCSV\b/i
+
+/**
+ * True when `text` names a product fact the fact check compares. Numbers and the bare word
+ * "folder" don't count: notes such as "the generated app folder was not found" carry both.
+ */
+function hasFactTokens(text: string): boolean {
+  const facts = extractFacts(text, '')
+  return [
+    facts.browsers,
+    facts.formats,
+    facts.limitationTerms,
+    facts.operatingSystems,
+    facts.permissions,
+    facts.quality,
+    facts.regions,
+    facts.savePaths
+  ].some(list => list.length > 0)
+}
+
+/**
+ * Drops source code references (`background.js:69`) and internal pipeline notes, so their
+ * numbers are not demanded as product facts (#161). A sentence that is only a note goes;
+ * a sentence that also states facts (browsers, formats, permissions, ...) keeps them and
+ * loses the note phrase and its bare numbers.
+ */
+export function withoutInternalNotes(text: string): string {
+  const notePatterns = [PIPELINE_LABEL, ...PIPELINE_NOTE_PATTERNS.map(([, pattern]) => pattern)]
+  return text
+    .replace(CODE_REFERENCE, '')
+    .split('\n')
+    .map(line =>
+      line
+        .split(/(?<=[.!?])\s+/)
+        .flatMap(sentence => {
+          if (!PIPELINE_LABEL.test(sentence) && pipelineNotes(sentence).length === 0) {
+            return [sentence]
+          }
+          const stripped = notePatterns.reduce(
+            (result, pattern) => result.replace(new RegExp(pattern.source, 'gi'), ' '),
+            sentence
+          )
+          // Numbers in a note ("sampled 40 pages") are not product facts; 1080p and 4K stay.
+          return hasFactTokens(stripped)
+            ? [stripped.replace(/\b\d+(?:\.\d+)?\b/g, ' ').replace(/ {2,}/g, ' ')]
+            : []
+        })
+        .join(' ')
+    )
+    .join('\n')
 }
 
 /** `text` with pricing / trial phrases blanked out, so facts never require them. */
@@ -826,7 +900,10 @@ export function checkFacts(facts: Facts, rewriteText: string, names: string[] = 
   if (missingLimitations.length) {
     issues.push(`limitations missing: ${missingLimitations.join(', ')}`)
   }
-  const missingRegions = facts.regions.filter(region => !rewriteText.includes(region))
+  // Case-insensitive, so prose can say "available worldwide".
+  const missingRegions = facts.regions.filter(
+    region => !rewriteText.toLowerCase().includes(region.toLowerCase())
+  )
   if (missingRegions.length) issues.push(`regions missing: ${missingRegions.join(', ')}`)
   if (facts.folder && !rewrite.folder) issues.push('save folder missing')
   const missingPaths = facts.savePaths.filter(path => !rewriteText.includes(path))
@@ -1200,6 +1277,22 @@ function applyFactOverride(facts: Facts, override?: FactOverride): Facts {
   return { ...facts, numbers: facts.numbers.filter(n => !override.ignoreNumbers?.includes(n)) }
 }
 
+/**
+ * The product facts of an existing listing's copy: no reviews, pricing / trial FAQs or
+ * sentences, internal notes or code references.
+ */
+export function existingFactText(source: RewriteInput['source']): string {
+  return withoutPricing(
+    [
+      source.tagline,
+      withoutReviews(source.body),
+      faqText(source.faq.filter(entry => !isLegalFaq(entry) && !isPricingFaq(entry)))
+    ]
+      .map(withoutInternalNotes)
+      .join('\n\n')
+  )
+}
+
 /** Input for rewriting an existing site listing in place (#157). */
 export function buildExistingInput(
   slug: string,
@@ -1221,13 +1314,7 @@ export function buildExistingInput(
       relatedLinks: entry.relatedLinks ?? [],
       title: entry.product.title
     },
-    facts: extractFacts(
-      withoutPricing(
-        [tagline, body, faqText(faq.filter(entry => !isPricingFaq(entry)))].join('\n\n')
-      ),
-      platform,
-      names
-    ),
+    facts: extractFacts(existingFactText({ body, faq, tagline }), platform, names),
     mode: 'existing',
     names,
     site,
@@ -1356,6 +1443,104 @@ export function applyLinkCheck(
 // ---------------------------------------------------------------------------
 // Check
 
+/**
+ * The page content scripts/trial-build.ts builds from a listing: the body, then a "## FAQ"
+ * section with each entry as a "###" question and its answer, FAQ braces escaped.
+ */
+export function listingMdx(body: string, faq: FaqEntry[]): string {
+  const escapeBraces = (value: string) => value.replaceAll('{', '\\{').replaceAll('}', '\\}')
+  const entries = faq
+    .map(entry => ({ answer: entry.answer.trim(), question: entry.question.trim() }))
+    .filter(entry => entry.answer && entry.question)
+  return [
+    body.trim(),
+    entries.length
+      ? `## FAQ\n\n${entries
+          .map(entry => `### ${escapeBraces(entry.question)}\n\n${escapeBraces(entry.answer)}`)
+          .join('\n\n')}`
+      : ''
+  ]
+    .filter(Boolean)
+    .join('\n\n')
+}
+
+/** Same parser next-mdx-remote uses for listing pages (format "mdx" with remark-gfm). */
+const mdxParser = unified().use(remarkParse).use(remarkMdx).use(remarkGfm)
+
+type MdxNode = {
+  children?: MdxNode[]
+  name?: string | null
+  position?: { start: { line: number } }
+  type: string
+  value?: string
+}
+
+const MDX_NODE_LABELS: Record<string, string> = {
+  mdxFlowExpression: 'expression',
+  mdxJsxFlowElement: 'tag',
+  mdxJsxTextElement: 'tag',
+  mdxTextExpression: 'expression',
+  mdxjsEsm: 'import/export'
+}
+
+/**
+ * Bodies and FAQs render as MDX on the listing page. Parses the content exactly as the page
+ * gets it (listingMdx) and reports parse errors (a bare "<id>", "<1080p", "<="), JSX tags,
+ * "{expressions}" and import/export lines, none of which belong in listing copy. Applies in
+ * both modes (#161, analdin `/videos/<id>/<title>/` broke the static build).
+ */
+export function mdxIssues(body: string, faq: FaqEntry[]): string[] {
+  const content = listingMdx(body, faq)
+  const bodyLines = body.trim().split('\n').length
+  const inFaq = (line?: number) => line !== undefined && line > bodyLines
+  const braceFix = (line?: number) =>
+    inFaq(line)
+      ? 'write FAQ braces without a backslash (the build escapes them)'
+      : 'wrap it in backticks or escape the braces as \\{ \\}'
+  const where = (line?: number) => {
+    if (!line) return 'body or FAQ'
+    const text = content.split('\n')[line - 1]?.trim() ?? ''
+    return `${inFaq(line) ? 'FAQ' : 'body'} line "${text.slice(0, 80)}"`
+  }
+  let tree: MdxNode
+  try {
+    tree = mdxParser.parse(content) as MdxNode
+  } catch (error) {
+    const { line, place, reason } = error as {
+      line?: number
+      place?: { line?: number; start?: { line?: number } }
+      reason?: string
+    }
+    const at = line ?? place?.start?.line ?? place?.line
+    const message = reason ?? String(error)
+    const fix = /expression/i.test(message)
+      ? braceFix(at)
+      : 'wrap the offending text in backticks (a "<" followed by a space is fine)'
+    return [`MDX parse error in ${where(at)}: ${message}; ${fix}`]
+  }
+  const issues: string[] = []
+  const visit = (node: MdxNode) => {
+    const line = node.position?.start.line
+    const label = MDX_NODE_LABELS[node.type]
+    if (label) {
+      const fix = label === 'expression' ? braceFix(line) : 'wrap it in backticks'
+      issues.push(`MDX ${label} in ${where(line)}; ${fix}`)
+    } else if (
+      (node.type === 'inlineCode' || node.type === 'code') &&
+      inFaq(line) &&
+      /\\[{}]/.test(node.value ?? '')
+    ) {
+      // trial-build escapes FAQ braces, so inside a code span they render as "\{ \}".
+      issues.push(
+        `FAQ braces inside a code span render as "\\{": ${where(line)}; drop the backticks`
+      )
+    }
+    for (const child of node.children ?? []) visit(child)
+  }
+  visit(tree)
+  return issues
+}
+
 export function validateOutputShape(value: unknown, slug: string): string[] {
   const issues: string[] = []
   const output = value as Partial<RewriteOutput> | undefined
@@ -1375,6 +1560,11 @@ export function validateOutputShape(value: unknown, slug: string): string[] {
     }
     if (/^# \S/m.test(output.body)) issues.push('body must not contain an h1')
     if (/https?:\/\//i.test(output.body)) issues.push('body must not contain URLs')
+    const faq = (Array.isArray(output.faq) ? output.faq : []).filter(
+      (entry): entry is FaqEntry =>
+        typeof entry?.question === 'string' && typeof entry?.answer === 'string'
+    )
+    issues.push(...mdxIssues(output.body, faq))
   }
   if (!Array.isArray(output.faq) || output.faq.length < 3) {
     issues.push('faq needs at least 3 entries (legal FAQ is added by apply)')
@@ -1389,6 +1579,160 @@ export function validateOutputShape(value: unknown, slug: string): string[] {
       if (entry && isLegalFaq(entry)) issues.push(`faq[${index}] is a legal FAQ; apply adds it`)
       if (/https?:\/\//i.test(entry?.answer ?? '')) issues.push(`faq[${index}] contains a URL`)
     })
+  }
+  return issues
+}
+
+/** Browser, OS, format and function words that may legitimately repeat a source fact list. */
+const FACT_LIST_WORDS = new Set(
+  'chrome edge firefox brave opera whale yandex safari arc windows macos linux mobile browsers browser mp4 hls m3u8 dash webm and or the a an on to for of in with'.split(
+    ' '
+  )
+)
+
+/**
+ * 8-word runs shared with the source that carry at least 4 words outside fact lists
+ * (browser/OS/format names and function words). The brief bans copied runs (#161).
+ */
+export function copiedRuns(sourceText: string, rewriteText: string, size = 8): string[] {
+  const words = (text: string) =>
+    text
+      .toLowerCase()
+      .replace(/’/g, "'")
+      .match(/[a-z0-9']+/g) ?? []
+  const grams = (tokens: string[]) => {
+    const out = new Set<string>()
+    for (let index = 0; index + size <= tokens.length; index += 1) {
+      const gram = tokens.slice(index, index + size)
+      if (gram.filter(token => !FACT_LIST_WORDS.has(token)).length >= 4) out.add(gram.join(' '))
+    }
+    return out
+  }
+  const source = grams(words(sourceText))
+  return [...grams(words(rewriteText))].filter(gram => source.has(gram))
+}
+
+/** Internal build/QA status from the source pipeline. Not product facts; never public copy (#161). */
+export const PIPELINE_NOTE_PATTERNS: Array<[string, RegExp]> = [
+  [
+    'handoff',
+    /\bhand-?off (?:is|still|verification|information|rated|needs|has)\b|\b(?:target|solid) hand-?off\b/i
+  ],
+  ['seed candidate', /\bseed candidates?\b/i],
+  [
+    'candidate status',
+    /\bcandidate[- ](?:stage|status|build|release|extension|tool)\b|\b(?:still|currently|remains) (?:an? |in )?candidate\b/i
+  ],
+  ['stubs', /\b(?:generated|placeholder|direct-video) (?:direct-video )?stubs?\b|\bstubs?\b/i],
+  ['adapter probing', /\badapter probing\b|\bprobe-rejected\b/i],
+  ['confidence rating', /\bconfidence (?:rating|level)\b|\bready-solid\b/i],
+  ['extraction QA', /\bextraction (?:QA|review)\b/i],
+  ['stale config', /\bstale config(?:uration)?\b/i],
+  ['release readiness', /\brelease[- ]read(?:y|iness)\b|\breadiness messaging\b/i],
+  ['verified target', /\btarget[- ](?:verified|ready)\b|\bverified target\b|\bconfirmed target\b/i],
+  ['candidate level', /\bcandidate[- ]level\b|\btarget candidate\b/i],
+  [
+    'proven',
+    /\b(?:not (?:yet )?(?:a )?proven|fully proven|proven downloader|how (?:well )?proven)\b/i
+  ],
+  [
+    'readiness',
+    /\breadiness\b|\bdevelopment stage\b|\bstill being (?:expanded|refined)\b|\bkeeps being refined\b/i
+  ],
+  [
+    'sample notes',
+    /\bsampled\b|\bdocumented (?:sample|case|example)\b|\bbest-documented\b|\bruntime configuration\b|\brealistic (?:terms|messaging)\b|\bstatic-media\b|\bdeclared host\b|\bverified (?:address|url) pattern\b/i
+  ],
+  [
+    'writer notes',
+    /\b(?:the|this) listing\b(?! (?:layout|pages?|grid|view|to\b))|\bthe (?:product's|repository|repo) (?:own )?(?:notes|documentation)\b|\b(?:its|the|per the) documentation\b|\bclaimed here\b|\bgeneric (?:copy|text)\b/i
+  ]
+]
+
+export function pipelineNotes(text: string): string[] {
+  return PIPELINE_NOTE_PATTERNS.flatMap(([label, pattern]) => {
+    const match = text.match(pattern)
+    return match ? [`${label} ("${match[0]}")`] : []
+  })
+}
+
+/** Old shared-template section titles the existing-listing rewrites must not recreate (#161). */
+const TEMPLATE_HEADING =
+  /\btroubleshoot|\bfix(?:es|ing)\b|\bsymptom|\bproblems\b|\bproblem[- ]solving|\bhiccups\b|\bsnags\b|\berrors\b|\brecover|\bwhen (?:something|things) go|\bhonest|\bnotes?\b|^about\b|\bsupported formats\b|\bstep[- ]by[- ]step\b|\bwho it'?s for\b|\buse cases\b|\binstallation instructions\b|\btrials?\b/i
+
+/**
+ * Copy rules for rewriting existing listings: no pipeline notes, no recreated template
+ * sections, no "<Name> is a ..." opening, "activation" instead of licence wording, and a
+ * tagline that fits a meta description.
+ */
+export function existingListingCopyIssues(
+  output: RewriteOutput,
+  names: string[],
+  sourceText = '',
+  /** The source's product facts (existingFactText); defaults to `sourceText` minus pricing. */
+  factText = withoutPricing(sourceText)
+): string[] {
+  const issues: string[] = []
+  const copyText = [output.tagline, output.body, faqText(output.faq)].join('\n')
+  if (/\{\}/.test(copyText)) issues.push('raw "{}" route placeholders not allowed')
+  const title = names[0] ?? ''
+  const platform = names.at(-1) ?? ''
+  const wrongName = `${platform} Downloader`
+  if (title && platform && title.toLowerCase() !== wrongName.toLowerCase()) {
+    const misnamed = new RegExp(`\\b${escapeRegExp(wrongName)}\\b`, 'i')
+    if (misnamed.test(copyText.split(title).join(' '))) {
+      issues.push(`product named "${wrongName}"; use the title "${title}"`)
+    }
+  }
+  if (sourceText) {
+    const runs = copiedRuns(sourceText, copyText)
+    if (runs.length) {
+      issues.push(
+        `${runs.length} runs of 8+ words copied from source: ${runs.slice(0, 3).join(' | ')}`
+      )
+    }
+  }
+  const all = [output.tagline, output.body, faqText(output.faq)].join('\n')
+  const notes = pipelineNotes(all)
+  if (notes.length) issues.push(`internal pipeline notes not allowed: ${notes.join(', ')}`)
+  const templateHeadings = (output.body.match(/^##+ .+$/gm) ?? [])
+    .map(line => line.replace(/^#+\s*/, ''))
+    .filter(heading => TEMPLATE_HEADING.test(heading))
+  if (templateHeadings.length) {
+    issues.push(`old template section headings: ${templateHeadings.join(' | ')}`)
+  }
+  const firstSentence = output.body
+    .replace(/^##+ .+$/gm, '')
+    .trim()
+    .split(/(?<=[.!?])\s+/)[0]
+  const opensWithDefinition = [...names, 'This extension', 'The extension'].some(name =>
+    new RegExp(
+      `^(?:the )?${escapeRegExp(name)}(?: video)?(?: downloader)?(?: extension)? is an? `,
+      'i'
+    ).test(firstSentence ?? '')
+  )
+  if (opensWithDefinition) issues.push('body opens with a "<Name> is a ..." definition')
+  // "licensed" that describes the content ("licensed stock images", "licensed shows") is a
+  // product fact when the source's facts (no pricing FAQs or sentences, reviews or notes) say
+  // it. Any other licence wording is about the extension's own trial or plan.
+  const contentLicensed = /\blicen[cs]ed\b/i.test(factText)
+  const licenceWords = (all.match(/\blicen[cs](?:e|es|ed|ing)\b/gi) ?? []).filter(
+    word => !(contentLicensed && /ed$/i.test(word))
+  )
+  if (licenceWords.length) issues.push('use "activation", not licence wording')
+  // `(?<![\w-])` rather than `\b`: a match starts only where a name starts, so "a-a-a-..." is
+  // scanned once instead of once per letter (ReDoS).
+  const scriptFiles = (all.match(/(?<![\w-])[a-z][\w-]*\.(?:js|mjs|ts)\b/g) ?? []).filter(
+    name => !/^(?:video|next|node|react|vue|hls|dash)\.js$/i.test(name)
+  )
+  if (new RegExp(CODE_REFERENCE.source).test(all) || scriptFiles.length) {
+    issues.push(
+      `source code references not allowed${scriptFiles.length ? `: ${scriptFiles.join(', ')}` : ''}`
+    )
+  }
+  const taglineLength = output.tagline.trim().length
+  if (taglineLength < 70 || taglineLength > 160) {
+    issues.push(`tagline must be 70-160 characters (has ${taglineLength})`)
   }
   return issues
 }
@@ -1597,14 +1941,25 @@ export function checkRewrite(
       `faq dropped entries (${output.faq.length} vs ${requiredFaq} non-pricing in source); rewrite every one`
     )
   }
-  const sourceWords = normalizeWords(input.source.body, names).length
-  if (own.bodyWords.length < sourceWords * 0.6) {
+  // Existing listings drop reviews, pricing, internal notes and the shared template the
+  // owner asked to remove (#161), so measure against the cleaned source with a lower floor;
+  // checkFacts still guards against dropped facts.
+  const existing = input.mode === 'existing'
+  const comparableBody = existing
+    ? withoutInternalNotes(withoutPricing(withoutReviews(input.source.body)))
+    : input.source.body
+  const sourceWords = normalizeWords(comparableBody, names).length
+  if (own.bodyWords.length < sourceWords * (existing ? 0.45 : 0.6)) {
     issues.push(
       `body is much shorter than source (${own.bodyWords.length} vs ${sourceWords} words)`
     )
   }
 
   issues.push(...checkFacts(input.facts, rewriteText, names))
+  if (input.mode === 'existing')
+    issues.push(
+      ...existingListingCopyIssues(output, names, sourceText, existingFactText(input.source))
+    )
 
   return { issues, pass: issues.length === 0, scores, slug: input.slug, threshold }
 }

@@ -58,10 +58,38 @@ When adding or refreshing a listing from another source (apps.serp.co / `serpcom
 
 - Rewrite `product.tagline`, every section of `content.body`, and every `content.faq` question and answer before adding it. Never paste source copy verbatim, and never copy a listing from one site's `products.json` into another's.
 - Rewrite with new wording and new sentence structure, not just synonym swaps or reordered bullets. Vary the phrasing between listings on the same site too, so pages don't share one template with only the platform name swapped.
-- Keep facts exactly as in the source: platform name, supported browsers and OS, formats, quality options, trial terms, permissions, save location, limitations, and pricing. Don't add claims that aren't in the source.
+- Keep facts exactly as in the source: platform name, supported browsers and OS, formats, quality options, permissions, save location, and limitations. Don't add claims that aren't in the source.
+- Leave out pricing and trial terms (prices, plans, trials, free-download counts, licence wording). This is an owner decision from #156, confirmed for serpdownloaders.com in #161. A fact that only exists because of the trial is dropped, not relabelled. Describe sign-in as activation. See "What `check` enforces" below for which parts the script checks in each mode.
+- Leave out source material that isn't a product fact: star-rated reviews and testimonials, internal build or QA status ("candidate", "handoff", "generated stubs", readiness notes), and source code references such as `popup.js:44`.
 - Don't change product names, slugs, URLs, or category values. Keep the standard legal-disclaimer FAQ ("Is this legal?") as it appears on the site.
 - Check uniqueness before merging. Compare each rewritten `content.body` against the source text, the same slug in every other site's `products.json`, and the site's other listings. Regenerate anything above roughly 0.5 similarity (`difflib.SequenceMatcher` ratio or 5-word shingle Jaccard), and put the scores in the PR.
 - Run rewrites in a Claude Code session in the Claude desktop app using rewriter subagents, not through the Anthropic API from a script. For bulk work, follow the prepare → subagent rewrite → check → apply flow described in #156.
+
+### What `check` enforces
+
+`scripts/listing-rewrite.ts` has two modes. `prepare` (new listings from apps.serp.co, #156) writes `new` inputs; `prepare --existing` (rewriting a site's own listings, #157 and #161) writes `existing` inputs. The writer brief is `scripts/listing-rewrite-brief.md`.
+
+Both modes:
+
+- Output shape: matching slug, a tagline, a body with at least 3 `##` sections, no `#` h1, no URLs, and at least 3 FAQ entries whose questions end in "?" (no "Is this legal?" entry; `apply` keeps or adds it).
+- MDX safety. The body and FAQ are assembled the way `scripts/trial-build.ts` builds the page (FAQ braces escaped) and parsed with the same MDX + GFM parser as the listing page. Parse errors (a bare `<id>`, `<1080p`, `<=`), JSX tags, `{expressions}` in the body and import/export lines fail. FAQ braces inside a code span also fail, because they render as `\{`. A `<` followed by a space is fine.
+- Similarity at most 0.5 (word LCS ratio and 5-word shingle Jaccard) against the source, the same product on other sites, and the site's other listings; no 8-word sentences shared with another listing or site, no near-identical FAQ questions, and no reused heading sequence.
+- No sentence of 6+ words and no FAQ question copied from the source, and at least as many FAQ entries as the source has non-pricing ones.
+- Pricing and trial language (`PRICING_PATTERNS`): prices, costs, payments and billing; subscription plans and paid, premium or pro plans and licences; one-time and lifetime terms; trials; credit cards; refunds and money-back terms; discounts and coupons; free or complimentary downloads and download allowances ("3 free clips", "try 3 recordings"); "unlimited downloads"; "try it free"; and "before purchasing" wording.
+- Facts: the platform name must appear; browsers, operating systems, formats, quality options, permissions and numbers must match the source (nothing dropped, nothing added; the number 1 may be dropped); limitations, region, save folder and save paths must not be dropped.
+- Body length: at least 0.6 of the source body's words in `new` mode, or 0.45 of the cleaned source body (reviews, pricing and internal notes removed) in `existing` mode.
+
+`existing` mode only:
+
+- Facts are read from the source with "## Reviews" sections and internal notes removed.
+- No 8-word runs copied from the source (browser, OS and format lists excepted).
+- No internal pipeline or writer notes ("handoff", "candidate", "generated stubs", "readiness", "the listing", "the repository documentation", ...).
+- No old template headings (Troubleshooting, Notes, About, Supported Formats, Step by step, Who it's for, Use cases, Installation Instructions, Trial, ...).
+- The body doesn't open with "<Name> is a ...".
+- "Activation", not licence wording ("licence", "license", "licensed", "licensing"). "Licensed" stays allowed where it describes the content and the source says it outside its pricing sentences ("licensed stock images").
+- No source code references (`popup.js:44`, `background.js`).
+- No raw `{}` route placeholders, and the product is named by its title, not "<Platform> Downloader".
+- The tagline is 70–160 characters (it is the meta description).
 
 ## Public submit intake rule
 

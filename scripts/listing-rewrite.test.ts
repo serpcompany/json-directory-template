@@ -16,8 +16,11 @@ import {
   checkFacts,
   checkRewrite,
   checkUrls,
+  copiedRuns,
   DEFAULT_EXCLUDE_FILE,
   diffSourceAgainstSite,
+  existingFactText,
+  existingListingCopyIssues,
   extractFacts,
   extractNumbers,
   extractQuality,
@@ -26,10 +29,13 @@ import {
   hasPassingOutput,
   isLegalFaq,
   isPricingFaq,
+  listingMdx,
   main,
   mapCategories,
+  mdxIssues,
   parseArgs,
   permissionsIn,
+  pipelineNotes,
   pricingLanguage,
   type RewriteInput,
   type RewriteOutput,
@@ -41,9 +47,13 @@ import {
   standardLegalAnswer,
   urlSlug,
   urlsToVerify,
-  withoutPricing
+  validateOutputShape,
+  withoutInternalNotes,
+  withoutPricing,
+  withoutReviews
 } from './listing-rewrite.ts'
 import type { SourceProduct, SourceProductFile } from './store-new-products.ts'
+import { buildTrialWebsiteEntries } from './trial-build.ts'
 
 const LEGAL_ANSWER = 'DISCLAIMER: standard site legal answer.'
 
@@ -719,6 +729,17 @@ describe('fact preservation', () => {
       'free downloads ("Three free downloads")',
       'usage allowance ("Three free downloads")'
     ])
+    expect(pricingLanguage('Includes 3 complimentary downloads.')).toEqual([
+      'free downloads ("complimentary downloads")',
+      'usage allowance ("3 complimentary downloads")'
+    ])
+    expect(pricingLanguage('Try 3 free captures.')).toEqual([
+      'usage allowance ("3 free captures")',
+      'test allowance ("Try 3 free captures")'
+    ])
+    expect(pricingLanguage('Record 3 free recordings first.')).toEqual([
+      'usage allowance ("3 free recordings")'
+    ])
     expect(pricingLanguage('Stores trial state. No credit card.')).toEqual([
       'trial ("trial")',
       'credit card ("credit card")'
@@ -790,6 +811,12 @@ describe('fact preservation', () => {
         'save folder missing'
       ])
     )
+    expect(
+      checkFacts(
+        { ...facts, browsers: [], numbers: [], operatingSystems: [], permissions: [], quality: [] },
+        'Example Tube is available worldwide.'
+      ).filter(issue => issue.startsWith('regions'))
+    ).toEqual([])
   })
 })
 
@@ -974,6 +1001,128 @@ describe('apply helpers', () => {
     ).toEqual(goodRewrite.faq.map(f => f.question))
   })
 
+  it("keeps an existing listing's featured flag even when its input predates it", () => {
+    const featuredListing: SiteProducts[string] = {
+      content: { body: 'old', faq: [{ answer: 'old', question: 'Old question?' }] },
+      featured: true,
+      product: { productPage: 'https://serp.ly/x', title: 'X Downloader' }
+    }
+    const input = buildExistingInput(
+      'x-downloader',
+      { ...featuredListing, featured: undefined },
+      'serpdownloaders.com'
+    )
+    if (!input) throw new Error('expected input')
+    expect(input.entry.featured).toBe(false)
+    expect(buildEntry(input, goodRewrite, LEGAL_ANSWER, featuredListing).featured).toBe(true)
+  })
+
+  it('leaves star-rated review testimonials out of existing-listing facts', () => {
+    const body = [
+      '## Overview\n\nSaves X videos as MP4 in 720p.',
+      '## Reviews\n\n- Great (4.9/5): Saved 50+ videos. - A. B.\n- Solid (5/5): Works. - C. D.',
+      '## Platform Support\n\n- Chrome'
+    ].join('\n\n')
+    expect(withoutReviews(body)).toBe(
+      '## Overview\n\nSaves X videos as MP4 in 720p.\n\n## Platform Support\n\n- Chrome'
+    )
+    const input = buildExistingInput(
+      'x-downloader',
+      {
+        content: { body, faq: [] },
+        product: { productPage: 'https://serp.ly/x', title: 'X Downloader' }
+      },
+      'serpdownloaders.com'
+    )
+    expect(input?.facts.quality).toEqual(expect.arrayContaining(['720p']))
+    expect(input?.facts.numbers).not.toEqual(expect.arrayContaining(['4.9']))
+    expect(input?.facts.numbers).not.toEqual(expect.arrayContaining(['50']))
+  })
+
+  it('flags pipeline notes and recreated template structure in existing-listing rewrites', () => {
+    expect(pipelineNotes('Detects MP4 and HLS candidates on the page.')).toEqual([])
+    expect(pipelineNotes('Links pass through a handoff route; useful for team handoffs.')).toEqual(
+      []
+    )
+    expect(pipelineNotes('It is still a candidate that relies on generated stubs.')).toEqual([
+      'candidate status ("still a candidate")',
+      'stubs ("generated stubs")'
+    ])
+    const output = {
+      body: '## Troubleshooting\n\nX Downloader is a browser extension.\n\n## B\n\nb\n\n## C\n\nc',
+      faq: [],
+      slug: 'x-downloader',
+      tagline: 'Too short.'
+    }
+    expect(existingListingCopyIssues(output, ['X Downloader'])).toEqual([
+      'old template section headings: Troubleshooting',
+      'body opens with a "<Name> is a ..." definition',
+      'tagline must be 70-160 characters (has 10)'
+    ])
+    expect(
+      existingListingCopyIssues(
+        {
+          ...output,
+          body: '## A\n\nWorks with Video.js players; `background-enhanced.js`, line 69 cancels.\n\n## B\n\nb\n\n## C\n\nc',
+          tagline: 'x'.repeat(80)
+        },
+        ['X Downloader']
+      )
+    ).toEqual(['source code references not allowed: background-enhanced.js'])
+  })
+
+  it('drops code references and pipeline-only sentences before extracting facts', () => {
+    expect(
+      withoutInternalNotes(
+        'Saves MP4 at 720p. Listed in the pass-242 lineup CSV. See `popup.js:30-33, 265` for details.'
+      )
+    ).toBe('Saves MP4 at 720p. See  for details.')
+  })
+
+  it('flags copied source runs, wrong product names and raw placeholders', () => {
+    const source =
+      'Works on Chrome, Edge, Firefox, Brave and Opera on Windows, macOS and Linux. Only download content you own or have explicit permission to save.'
+    expect(
+      copiedRuns(
+        source,
+        'Runs in Chrome, Edge, Firefox, Brave and Opera on Windows, macOS and Linux.'
+      )
+    ).toEqual([])
+    expect(
+      copiedRuns(
+        source,
+        'Please only download content you own or have explicit permission to save.'
+      )
+    ).toHaveLength(4)
+    const output = {
+      body: '## A\n\nClick the Okxxx Downloader icon on /video/{}/.\n\n## B\n\nb\n\n## C\n\nc',
+      faq: [],
+      slug: 'okxxx-downloader',
+      tagline: 'x'.repeat(80)
+    }
+    expect(existingListingCopyIssues(output, ['Okxxx Video Downloader', 'Okxxx'])).toEqual([
+      'raw "{}" route placeholders not allowed',
+      'product named "Okxxx Downloader"; use the title "Okxxx Video Downloader"'
+    ])
+  })
+
+  it('rejects MDX-unsafe tags and braces outside code spans', () => {
+    const base = {
+      body: '## A\n\na\n\n## B\n\nb\n\n## C\n\nc',
+      faq: [1, 2, 3].map(n => ({ answer: 'Pages like /videos/<id>/.', question: `Q${n}?` })),
+      slug: 'x',
+      tagline: 't'
+    }
+    expect(validateOutputShape(base, 'x')).toEqual([
+      expect.stringMatching(/^MDX parse error in FAQ line "Pages like \/videos\/<id>\/\.": /)
+    ])
+    const safe = {
+      ...base,
+      faq: base.faq.map(f => ({ ...f, answer: 'Pages like `/videos/<id>/`.' }))
+    }
+    expect(validateOutputShape(safe, 'x')).toEqual([])
+  })
+
   it('rejects unusable --threshold and --limit values', () => {
     expect(() => parseArgs(['check', '--threshold', 'abc'], process.cwd())).toThrow()
     expect(() => parseArgs(['check', '--threshold', '0.9'], process.cwd())).toThrow()
@@ -1000,6 +1149,340 @@ describe('apply helpers', () => {
     rmSync(dir, { force: true, recursive: true })
     const shipped = readExcludeFile(resolve(process.cwd(), DEFAULT_EXCLUDE_FILE))
     expect(shipped.every(slug => /^[a-z0-9-]+-downloader$/.test(slug))).toBe(true)
+  })
+})
+
+describe('review fixes (#161)', () => {
+  it('matches trial allowances but not feature sentences that mention counts', () => {
+    for (const text of [
+      'Try it on 60 fps clips.',
+      'Test the recorder with 2 screen captures side by side.',
+      'Try the 4 quality presets on your videos.'
+    ]) {
+      expect(pricingLanguage(text)).toEqual([])
+    }
+    expect(pricingLanguage('You get 3 free clips.')).toEqual(['usage allowance ("3 free clips")'])
+    expect(pricingLanguage('Try 3 recordings free.')).toEqual([
+      'test allowance ("Try 3 recordings")'
+    ])
+    expect(pricingLanguage('Test it with 3 downloads before deciding.')).toEqual([
+      'free downloads ("3 downloads")',
+      'test allowance ("Test it with 3 downloads")'
+    ])
+    for (const text of ['Try 3 full videos.', 'Test 3 sample pages.', 'Try 3 files free.']) {
+      expect(pricingLanguage(text).some(label => label.startsWith('test allowance'))).toBe(true)
+    }
+    expect(pricingLanguage('Comes with complimentary downloads.')).toEqual([
+      'free downloads ("complimentary downloads")'
+    ])
+  })
+
+  it('keeps the facts of a sentence that also carries a writer or pipeline note', () => {
+    const sentence =
+      'The extension functions on Chrome, Edge, Brave, and Firefox based on the repository documentation.'
+    expect(withoutInternalNotes(sentence)).toBe(
+      'The extension functions on Chrome, Edge, Brave, and Firefox based on .'
+    )
+    expect(withoutInternalNotes('Exports a CSV of the MP4 links it finds.')).toBe(
+      'Exports a of the MP4 links it finds.'
+    )
+    expect(withoutInternalNotes('It sampled 40 pages. Saves 720p MP4 files.')).toBe(
+      'Saves 720p MP4 files.'
+    )
+    expect(withoutInternalNotes('Handoff still needs 3 checks of 1080p MP4 on Edge.')).toBe(
+      ' needs checks of 1080p MP4 on Edge.'
+    )
+    const input = buildExistingInput(
+      'pv-downloader',
+      {
+        content: { body: `## Overview\n\nSaves PV videos as MP4. ${sentence}`, faq: [] },
+        product: { productPage: 'https://serp.ly/pv', title: 'PV Downloader' }
+      },
+      'serpdownloaders.com'
+    )
+    expect(input?.facts.browsers).toEqual(['Chrome', 'Firefox', 'Edge', 'Brave'])
+  })
+
+  it('closes the small gaps: licensed, curly apostrophes, heading word boundaries, every Reviews section', () => {
+    const output = {
+      body: '## Industrial footage\n\nSaves licensed clips.\n\n## B\n\nb\n\n## Trials\n\nc',
+      faq: [],
+      slug: 'x',
+      tagline: 'x'.repeat(80)
+    }
+    expect(existingListingCopyIssues(output, ['X'])).toEqual([
+      'old template section headings: Trials',
+      'use "activation", not licence wording'
+    ])
+    expect(
+      existingListingCopyIssues(
+        { ...output, body: output.body.replace('## Trials', '## C') },
+        ['X'],
+        'Only assets you have licensed can be saved. A paid license unlocks more.'
+      )
+    ).toEqual([])
+    expect(
+      existingListingCopyIssues(
+        { ...output, body: output.body.replace('## Trials', '## C') },
+        ['X'],
+        'After the trial, a licensed copy unlocks more.'
+      )
+    ).toEqual(['use "activation", not licence wording'])
+    const pricingFaqSource = {
+      body: '## A\n\nSaves clips.',
+      faq: [
+        { answer: 'After that, activate your licensed copy.', question: 'How long is the trial?' }
+      ],
+      tagline: ''
+    }
+    expect(
+      existingListingCopyIssues(
+        { ...output, body: output.body.replace('## Trials', '## C') },
+        ['X'],
+        'After that, activate your licensed copy.',
+        existingFactText(pricingFaqSource)
+      )
+    ).toEqual(['use "activation", not licence wording'])
+    expect(
+      copiedRuns(
+        "Don't download anything you don't own or have permission to keep.",
+        'Don’t download anything you don’t own or have permission to keep.'
+      )
+    ).toHaveLength(4)
+    expect(
+      withoutReviews(
+        '## A\n\na\n\n## Reviews\n\n- Great (5/5)\n\n## B\n\nb\n\n## Reviews\n\n- Fine (4/5)'
+      )
+    ).toBe('## A\n\na\n\n## B\n\nb')
+  })
+
+  it('fails copied runs of 8 words, not 7', () => {
+    const source = 'Paste the address of any clip into the popup field and press start.'
+    expect(copiedRuns(source, 'Then paste the address of any clip into it.')).toEqual([])
+    expect(copiedRuns(source, 'Then paste the address of any clip into the box.')).toEqual([
+      'paste the address of any clip into the'
+    ])
+  })
+
+  const existingSource = (extra: string) => ({
+    content: {
+      body: [
+        '## Overview',
+        '',
+        `Example Tube clips can be saved for offline viewing. ${Array.from({ length: 96 }, (_, i) => `srcword${i}`).join(' ')}`,
+        extra
+      ].join('\n'),
+      faq: [
+        { answer: 'They go to the downloads folder.', question: 'Where do files go?' },
+        { answer: 'It needs desktop Chrome.', question: 'Which browser?' },
+        { answer: 'Only one clip at a time.', question: 'Can it batch?' }
+      ]
+    },
+    product: {
+      productPage: 'https://serp.ly/example-tube-downloader',
+      tagline: 'Old tagline.',
+      title: 'Example Tube Downloader'
+    }
+  })
+  const existingOutput = (words: number): RewriteOutput => ({
+    body: [
+      '## What you get',
+      '',
+      `Keep Example Tube clips in your downloads folder using desktop Chrome. ${Array.from({ length: words }, (_, i) => `newword${i}`).join(' ')}`,
+      '',
+      '## Limits',
+      '',
+      'One clip at a time.',
+      '',
+      '## Setup',
+      '',
+      'Add it to Chrome.'
+    ].join('\n'),
+    faq: [
+      { answer: 'Your downloads folder.', question: 'Where do saved clips land?' },
+      { answer: 'Desktop Chrome.', question: 'What browser do I need?' },
+      { answer: 'No, one clip at a time.', question: 'Does it save several clips together?' }
+    ],
+    slug: 'example-tube-downloader',
+    tagline:
+      'Save Example Tube clips to your downloads folder from desktop Chrome, one clip at a time, for offline viewing.'
+  })
+  const context = { otherListings: [], otherSites: {}, threshold: 0.5 }
+  const shorter = (result: { issues: string[] }) =>
+    result.issues.filter(issue => issue.startsWith('body is much shorter than source'))
+
+  it('measures existing-mode length against the cleaned source with a 0.45 floor', () => {
+    const reviews = `\n\n## Reviews\n\n- Great (5/5): ${Array.from({ length: 150 }, (_, i) => `review${i}`).join(' ')}`
+    const pricing =
+      '\n\n## Access\n\nThe trial gives 3 free downloads before a paid plan is needed.'
+    const input = buildExistingInput(
+      'example-tube-downloader',
+      existingSource(`${reviews}${pricing}`),
+      'serpdownloaders.com'
+    )
+    if (!input) throw new Error('expected input')
+    expect(input.mode).toBe('existing')
+    // The cleaned source has 106 words, so the floor is 47.7 words.
+    expect(checkRewrite(input, existingOutput(30), context).issues).toEqual([])
+    expect(shorter(checkRewrite(input, existingOutput(20), context))).toEqual([
+      'body is much shorter than source (44 vs 106 words)'
+    ])
+    expect(shorter(checkRewrite({ ...input, mode: 'new' }, existingOutput(30), context))).toEqual([
+      'body is much shorter than source (54 vs 272 words)'
+    ])
+  })
+
+  it('applies the existing-only copy rules in existing mode only', () => {
+    const input = buildExistingInput(
+      'example-tube-downloader',
+      existingSource(''),
+      'serpdownloaders.com'
+    )
+    if (!input) throw new Error('expected input')
+    const output = {
+      ...existingOutput(40),
+      body: existingOutput(40)
+        .body.replace('## Limits', '## Troubleshooting')
+        .replace('One clip at a time.', 'One clip at a time per licence, see popup.js.'),
+      tagline: 'Short tagline for Example Tube.'
+    }
+    const existingIssues = checkRewrite(input, output, context).issues
+    expect(existingIssues).toEqual([
+      'old template section headings: Troubleshooting',
+      'use "activation", not licence wording',
+      'source code references not allowed: popup.js',
+      'tagline must be 70-160 characters (has 31)'
+    ])
+    expect(checkRewrite({ ...input, mode: 'new' }, output, context).issues).toEqual([])
+  })
+})
+
+describe('MDX safety (both modes)', () => {
+  const sections = '## A\n\na\n\n## B\n\nb\n\n## C\n\nc'
+  const faq = (answer: string) => [{ answer, question: 'Q?' }]
+  const bodyIssues = (text: string) => mdxIssues(`${sections}\n\n${text}`, [])
+
+  it('builds the page content exactly like trial-build', () => {
+    const body = '## A\n\nUses `{id}` routes.\n\n## B\n\nb\n\n## C\n\nc\n'
+    const entries = [
+      { answer: ' Opens /v/{id}/ pages. ', question: 'Which {pages}? ' },
+      { answer: 'Yes.', question: 'Second?' }
+    ]
+    const [entry] = buildTrialWebsiteEntries(
+      {
+        x: {
+          content: { body, faq: entries },
+          product: { productPage: 'https://serp.ly/x', slug: 'x', tagline: 't', title: 'X' }
+        }
+      },
+      { category: 'video-downloaders', publishedAt: '2026-01-01' }
+    )
+    expect(listingMdx(body, entries)).toBe(entry?.content)
+  })
+
+  it.each([
+    ['a <1080p cap'],
+    ['less <= more'],
+    ['arrow <- here'],
+    ['empty <> tag'],
+    ['under <_x> score'],
+    ['dollar <$x> sign'],
+    ['accent <é> tag'],
+    ['trailing <'],
+    ['<!-- comment -->'],
+    ['bare <id> tag'],
+    ['`unclosed span <id>'],
+    ['`spans\n\nparagraphs` <id>'],
+    ['escaped \\` tick `<id>']
+  ])('fails %j in the body', text => {
+    expect(bodyIssues(text)).toEqual([expect.stringMatching(/^MDX (?:parse error|tag) in body/)])
+  })
+
+  it.each([
+    ['a < b and c > d'],
+    ['`<id>` in a span'],
+    ['`` a ` <id> `` in a double-backtick span'],
+    ['```\n<id> {x}\n```'],
+    ['~~~\n<id> {x}\n~~~'],
+    ['escaped \\{ braces \\}'],
+    ['`{id}` in a span']
+  ])('accepts %j in the body', text => {
+    expect(bodyIssues(text)).toEqual([])
+  })
+
+  it('fails body braces and import/export lines but not FAQ braces, which the build escapes', () => {
+    expect(bodyIssues('Routes like /v/{id}/.')).toEqual([
+      'MDX expression in body line "Routes like /v/{id}/."; wrap it in backticks or escape the braces as \\{ \\}'
+    ])
+    expect(bodyIssues('export const a = 1')).toEqual([
+      'MDX import/export in body line "export const a = 1"; wrap it in backticks'
+    ])
+    expect(bodyIssues('export the list')).toEqual([
+      expect.stringMatching(/^MDX parse error in body line "export the list": /)
+    ])
+    expect(mdxIssues(sections, faq('Routes like /v/{id}/.'))).toEqual([])
+    expect(mdxIssues(sections, faq('Routes like /v/\\{id\\}/.'))).toEqual([
+      expect.stringMatching(
+        /^MDX parse error in FAQ line .*; write FAQ braces without a backslash \(the build escapes them\)$/
+      )
+    ])
+    expect(mdxIssues(sections, faq('Routes like `/v/{id}/`.'))).toEqual([
+      'FAQ braces inside a code span render as "\\{": FAQ line "Routes like `/v/\\{id\\}/`."; drop the backticks'
+    ])
+    expect(mdxIssues(sections, faq('Pages like `/v/<id>/`.'))).toEqual([])
+  })
+
+  it('applies to new-mode rewrites too', () => {
+    const result = checkRewrite(
+      exampleInput(),
+      { ...goodRewrite, body: `${goodRewrite.body}\n\nOpens /v/<id>/ pages.` },
+      { otherListings: [], otherSites: {}, threshold: 0.5 }
+    )
+    expect(result.issues).toEqual([expect.stringMatching(/^MDX parse error in body/)])
+  })
+})
+
+describe('regex performance (ReDoS)', () => {
+  const elapsed = (run: () => void) => {
+    const started = performance.now()
+    run()
+    return performance.now() - started
+  }
+  const output = (text: string) => ({
+    body: `## A\n\n${text}\n\n## B\n\nb\n\n## C\n\nc`,
+    faq: [],
+    slug: 'x',
+    tagline: 'x'.repeat(80)
+  })
+
+  it('keeps finding code references', () => {
+    expect(withoutInternalNotes('See `src/popup.js:30-33, 265` and lib/a.ts:9.')).toBe('See  and .')
+    expect(
+      existingListingCopyIssues(output('Uses `background-enhanced.js` and video.js.'), ['X'])
+    ).toEqual(['source code references not allowed: background-enhanced.js'])
+  })
+
+  it('stays fast on long path-like runs that never reach a line number', () => {
+    for (const text of [
+      'a'.repeat(20_000),
+      'a/'.repeat(10_000),
+      'a.'.repeat(10_000),
+      `${'a.js'.repeat(5_000)}:`
+    ]) {
+      expect(elapsed(() => withoutInternalNotes(text))).toBeLessThan(100)
+      expect(elapsed(() => existingListingCopyIssues(output(text), ['X']))).toBeLessThan(100)
+    }
+  })
+
+  it('stays fast on long hyphenated runs that never reach a script extension', () => {
+    for (const text of ['a-'.repeat(10_000), `${'a-'.repeat(10_000)}.j`, 'a'.repeat(20_000)]) {
+      expect(elapsed(() => existingListingCopyIssues(output(text), ['X']))).toBeLessThan(100)
+    }
+  })
+
+  it('stays fast on long pricing-like runs', () => {
+    const text = `try ${'3 '.repeat(10_000)} test ${'free '.repeat(4_000)}`
+    expect(elapsed(() => pricingLanguage(text))).toBeLessThan(100)
   })
 })
 

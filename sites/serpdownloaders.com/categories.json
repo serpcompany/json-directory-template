@@ -1,16 +1,62 @@
 [
   {
+    "slug": "video-downloaders",
+    "name": "Video Downloaders",
+    "description": "Extensions that save video from mainstream sites, plus all-in-one and M3U8 tools."
+  },
+  {
+    "slug": "social-media-downloaders",
+    "name": "Social Media Downloaders",
+    "description": "Save videos, Reels, Stories and images from TikTok, Instagram, X and Reddit."
+  },
+  {
+    "slug": "course-platform-downloaders",
+    "name": "Course & Membership Downloaders",
+    "description": "Keep lessons and paid posts from Udemy, Teachable, Skool and Patreon."
+  },
+  {
+    "slug": "video-platform-downloaders",
+    "name": "Video Platform Downloaders",
+    "description": "Download from YouTube, Vimeo, Dailymotion, Niconico, Loom and Wistia."
+  },
+  {
+    "slug": "movies-and-tv-downloaders",
+    "name": "Movie & TV Downloaders",
+    "description": "Save movies and episodes from Netflix, Hulu and 123Movies to watch offline."
+  },
+  {
+    "slug": "stock-media-downloaders",
+    "name": "Stock Media & Art Downloaders",
+    "description": "Batch-save photos, vectors and clips from Getty, Adobe Stock and Unsplash."
+  },
+  {
+    "slug": "file-hosting-downloaders",
+    "name": "File Host & Archive Downloaders",
+    "description": "Save shared files and videos from TeraBox, DoodStream and Archive.org."
+  },
+  {
     "slug": "adult",
     "name": "Adult",
-    "description": "Browse adult downloader listings and resources."
+    "description": "All 18+ downloaders: tube sites, live cams, creator content, hentai and JAV."
   },
   {
-    "slug": "product-launch-websites",
-    "name": "Product Launch Websites",
-    "description": "Browse product launch website listings and resources."
+    "slug": "adult-tube-downloaders",
+    "name": "Adult Tube Site Downloaders",
+    "description": "Save MP4s from Pornhub, XVideos, xHamster and other tube sites. 18+."
   },
   {
-    "slug": "video-downloaders",
-    "name": "Video Downloaders"
+    "slug": "adult-cam-downloaders",
+    "name": "Adult Cam Site Downloaders",
+    "description": "Record live shows from Chaturbate, Stripchat, CamSoda and more. 18+."
+  },
+  {
+    "slug": "adult-creator-downloaders",
+    "name": "Adult Creator Content Downloaders",
+    "description": "Save posts, clips and albums from OnlyFans, Fansly and ManyVids. 18+."
+  },
+  {
+    "slug": "hentai-jav-downloaders",
+    "name": "Hentai & JAV Downloaders",
+    "description": "Save hentai, doujinshi and JAV from HentaiHaven, nhentai and JAVHD. 18+."
   }
 ]

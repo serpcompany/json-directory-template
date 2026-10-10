@@ -2,7 +2,8 @@
 
 Give this file to each rewriter subagent together with its list of slugs. It is the
 working version of the "Unique content rule" in `docs/knowledge/listing-data-contract.md`
-for `scripts/listing-rewrite.ts` (serpcompany/json-directory-template#156, #157).
+for `scripts/listing-rewrite.ts` (serpcompany/json-directory-template#156, #157, #161). The
+contract lists which rules `check` applies in each mode.
 
 Run every command from the repo root. Don't touch git, and don't edit anything except your
 own `tmp/listing-rewrites/output/<slug>.json` files. Never edit `tmp/listing-rewrites/input/`;
@@ -66,6 +67,35 @@ For each slug:
   way that contradicts another part of the source. Mention the conflict in your report.
 - Don't change product names, slugs, URLs or category values.
 - Use plain, readable language. No keyword stuffing and no hype.
+- Bodies and FAQs render as MDX. Put tags, route shapes such as `/videos/<id>/` and anything
+  else with a `<` in backticks, in the body and the FAQ; a `<` followed by a space is fine. In
+  the body, braces go in backticks too. In FAQ text write braces plainly: the build escapes
+  them, and inside backticks they would show as `\{`.
+
+## Existing listings (`prepare --existing`)
+
+When the inputs say `"mode": "existing"` you are replacing a site's own copy, and `check`
+also fails:
+
+- any 8-word run copied from the source (browser, OS and format lists excepted);
+- internal pipeline or writer notes: "handoff", "candidate", "generated stubs", "adapter
+  probing", "confidence rating", "readiness", "release-ready", "extraction QA", "the
+  listing", "the repository documentation", "claimed here". Present the product as available
+  and state real limitations plainly;
+- the old template headings: Troubleshooting, Fixes, Problems, Errors, Notes, About ...,
+  Supported Formats, Step by step, Who it's for, Use cases, Installation Instructions, Trial.
+  Fold troubleshooting facts into the FAQ or a short limits paragraph, in your own order;
+- a body that opens with "<Name> is a ..." or "The extension is a ...";
+- licence wording ("licence", "license", "licensed", "licensing"): say "activation". "Licensed"
+  is fine only where it describes the content and the source says so (licensed stock images);
+- source code references such as `popup.js:44` or `background.js`;
+- raw `{}` route placeholders, and naming the product "<Platform> Downloader" when its title is
+  different;
+- a tagline outside 70–160 characters (it is the page's meta description).
+
+Facts are read from the source without its reviews and internal notes, and the body may be
+shorter than in new mode (0.45 of the cleaned source rather than 0.6), but every fact still has
+to survive.
 
 ## Self-check (required)
 

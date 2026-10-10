@@ -12,13 +12,13 @@ describe('resolveSiteConfig', () => {
     expect(config.name).toBe('SERP Downloaders')
     expect(config.domain).toBe('serpdownloaders.com')
     expect(config.description).toBe(
-      'A collection of tools to help you download anything from anywhere, anytime.'
+      'Browser extensions that save videos from YouTube, TikTok, Udemy, Vimeo and hundreds of other sites for offline viewing.'
     )
     expect(config.githubIssueOwner).toBe('serpcompany')
     expect(config.githubIssueRepo).toBe('serpdownloaders.com')
     expect(config.githubIssuesUrl).toBe('https://github.com/serpcompany/serpdownloaders.com/issues')
-    expect(config.githubRepoUrl).toBe('https://github.com/serpdownloaders')
-    expect(config.githubUrl).toBe('https://github.com/serpdownloaders')
+    expect(config.githubRepoUrl).toBe('https://github.com/serpapps')
+    expect(config.githubUrl).toBe('https://github.com/serpapps')
     expect(config.publicUrl).toBe('https://serpdownloaders.com')
     expect(config.gtmId).toBe('GTM-M82HC3SC')
     expect(config.listingRouteBasePath).toBe('products')
@@ -26,9 +26,19 @@ describe('resolveSiteConfig', () => {
     expect(config.networkRouteBasePath).toBe('network')
     expect(config.brandsRouteBasePath).toBe('brands')
     expect(config.copy).toEqual({
+      brandsDescription:
+        'Other websites in the SERP network, including SERP AI, SERP Apps and Browser Extensions IO.',
       brandsLabel: 'Brands',
       categoryLabels: {},
       docsLabel: 'Docs',
+      homepage: {
+        description:
+          'Browser extensions that save videos from YouTube, TikTok, Udemy, Vimeo and 300+ other sites as MP4 files you keep for offline viewing.',
+        heading: 'Video Downloader Browser Extensions',
+        intro:
+          'Pick the site you want to save videos from and get the SERP Downloaders extension built for it. Most add a download button to the video player and save files straight to your computer.',
+        title: 'Video Downloader Browser Extensions | SERP Downloaders'
+      },
       listingName: {
         plural: 'products',
         singular: 'product'
@@ -70,8 +80,8 @@ describe('resolveSiteConfig', () => {
     expect(config.githubIssueOwner).toBe('serpcompany')
     expect(config.githubIssueRepo).toBe('serpdownloaders.com')
     expect(config.githubIssuesUrl).toBe('https://github.com/serpcompany/serpdownloaders.com/issues')
-    expect(config.githubRepoUrl).toBe('https://github.com/serpdownloaders')
-    expect(config.githubUrl).toBe('https://github.com/serpdownloaders')
+    expect(config.githubRepoUrl).toBe('https://github.com/serpapps')
+    expect(config.githubUrl).toBe('https://github.com/serpapps')
     expect(config.listingRouteBasePath).toBe('products')
     expect(config.docsRouteBasePath).toBe('docs')
     expect(config.networkRouteBasePath).toBe('network')
@@ -136,7 +146,7 @@ describe('resolveSiteConfig', () => {
     expect(hasConfiguredGitHubIssueTarget(config)).toBe(true)
     expect(hasConfiguredPublicSocialLinks(config)).toBe(true)
     expect(getConfiguredSocialLinks(config)).toEqual([
-      'https://github.com/serpdownloaders',
+      'https://github.com/serpapps',
       'https://www.reddit.com/r/serpdownloaders/',
       'https://x.com/serpdownloaders'
     ])

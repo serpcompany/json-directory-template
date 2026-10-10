@@ -28,7 +28,7 @@ describe('resolveSiteContent', () => {
         },
         {
           description: 'Watch SERP Downloaders videos on YouTube.',
-          href: 'https://youtube.com/@serp-downloaders',
+          href: 'https://www.youtube.com/@serp-downloaders',
           label: 'YouTube',
           title: 'YouTube'
         }
