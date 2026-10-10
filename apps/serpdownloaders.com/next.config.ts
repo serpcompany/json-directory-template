@@ -62,6 +62,12 @@ const networkBasePath = normalizeBasePath(runtimeSiteConfig.routes.networkBasePa
 const brandsBasePath = normalizeBasePath(runtimeSiteConfig.routes.brandsBasePath)
 const rootListingAliases = getSiteRootListingAliases(runtimeSiteConfig.id)
 const legacyListingRedirects = getSiteLegacyListingRedirects(runtimeSiteConfig.id)
+const listingDetailSuffix = normalizeBasePath(runtimeSiteConfig.sitemap.listingDetailSuffix ?? '')
+
+// Canonical listing detail route, including the configured detail suffix (serp.ai `/reviews/`).
+function buildListingDetailRoute(slug: string): string {
+  return `${buildPublicRoute(listingBasePath)}/${slug}/${listingDetailSuffix ? `${listingDetailSuffix}/` : ''}`
+}
 
 let nextConfig: NextConfig = {
   ...baseConfig,
@@ -127,13 +133,19 @@ let nextConfig: NextConfig = {
       },
       ...rootListingAliases.map(slug => ({
         source: `/${slug}`,
-        destination: `${buildPublicRoute(listingBasePath)}/${slug}/`,
+        destination: buildListingDetailRoute(slug),
         permanent: true
       })),
       ...legacyListingRedirects.flatMap(({ legacySlug, slug }) =>
-        [`/${legacySlug}`, `${buildPublicRoute(listingBasePath)}/${legacySlug}`].map(source => ({
+        [
+          `/${legacySlug}`,
+          `${buildPublicRoute(listingBasePath)}/${legacySlug}`,
+          ...(listingDetailSuffix
+            ? [`${buildPublicRoute(listingBasePath)}/${legacySlug}/${listingDetailSuffix}`]
+            : [])
+        ].map(source => ({
           source,
-          destination: `${buildPublicRoute(listingBasePath)}/${slug}/`,
+          destination: buildListingDetailRoute(slug),
           permanent: true
         }))
       ),
