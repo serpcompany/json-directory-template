@@ -1126,6 +1126,233 @@ describe('apply helpers', () => {
   })
 })
 
+describe('review fixes (#161)', () => {
+  it('matches trial allowances but not feature sentences that mention counts', () => {
+    for (const text of [
+      'Try it on 60 fps clips.',
+      'Test the recorder with 2 screen captures side by side.',
+      'Try the 4 quality presets on your videos.'
+    ]) {
+      expect(pricingLanguage(text)).toEqual([])
+    }
+    expect(pricingLanguage('You get 3 free clips.')).toEqual(['usage allowance ("3 free clips")'])
+    expect(pricingLanguage('Try 3 recordings free.')).toEqual([
+      'test allowance ("Try 3 recordings")'
+    ])
+    expect(pricingLanguage('Test it with 3 downloads before deciding.')).toEqual([
+      'free downloads ("3 downloads")',
+      'test allowance ("Test it with 3 downloads")'
+    ])
+    expect(pricingLanguage('Comes with complimentary downloads.')).toEqual([
+      'free downloads ("complimentary downloads")'
+    ])
+  })
+
+  it('keeps the facts of a sentence that also carries a writer or pipeline note', () => {
+    const sentence =
+      'The extension functions on Chrome, Edge, Brave, and Firefox based on the repository documentation.'
+    expect(withoutInternalNotes(sentence)).toBe(
+      'The extension functions on Chrome, Edge, Brave, and Firefox based on .'
+    )
+    expect(withoutInternalNotes('Exports a CSV of the MP4 links it finds.')).toBe(
+      'Exports a of the MP4 links it finds.'
+    )
+    expect(withoutInternalNotes('It sampled 40 pages. Saves 720p MP4 files.')).toBe(
+      'Saves 720p MP4 files.'
+    )
+    const input = buildExistingInput(
+      'pv-downloader',
+      {
+        content: { body: `## Overview\n\nSaves PV videos as MP4. ${sentence}`, faq: [] },
+        product: { productPage: 'https://serp.ly/pv', title: 'PV Downloader' }
+      },
+      'serpdownloaders.com'
+    )
+    expect(input?.facts.browsers).toEqual(['Chrome', 'Firefox', 'Edge', 'Brave'])
+  })
+
+  it('closes the small gaps: licensed, curly apostrophes, heading word boundaries, every Reviews section', () => {
+    const output = {
+      body: '## Industrial footage\n\nSaves licensed clips.\n\n## B\n\nb\n\n## Trials\n\nc',
+      faq: [],
+      slug: 'x',
+      tagline: 'x'.repeat(80)
+    }
+    expect(existingListingCopyIssues(output, ['X'])).toEqual([
+      'old template section headings: Trials',
+      'use "activation", not licence wording'
+    ])
+    expect(
+      existingListingCopyIssues(
+        { ...output, body: output.body.replace('## Trials', '## C') },
+        ['X'],
+        'Only assets you have licensed can be saved. A paid license unlocks more.'
+      )
+    ).toEqual([])
+    expect(
+      existingListingCopyIssues(
+        { ...output, body: output.body.replace('## Trials', '## C') },
+        ['X'],
+        'After the trial, a licensed copy unlocks more.'
+      )
+    ).toEqual(['use "activation", not licence wording'])
+    expect(
+      copiedRuns(
+        "Don't download anything you don't own or have permission to keep.",
+        'Don’t download anything you don’t own or have permission to keep.'
+      )
+    ).toHaveLength(4)
+    expect(
+      withoutReviews(
+        '## A\n\na\n\n## Reviews\n\n- Great (5/5)\n\n## B\n\nb\n\n## Reviews\n\n- Fine (4/5)'
+      )
+    ).toBe('## A\n\na\n\n## B\n\nb')
+  })
+
+  it('fails copied runs of 8 words, not 7', () => {
+    const source = 'Paste the address of any clip into the popup field and press start.'
+    expect(copiedRuns(source, 'Then paste the address of any clip into it.')).toEqual([])
+    expect(copiedRuns(source, 'Then paste the address of any clip into the box.')).toEqual([
+      'paste the address of any clip into the'
+    ])
+  })
+
+  const existingSource = (extra: string) => ({
+    content: {
+      body: [
+        '## Overview',
+        '',
+        `Example Tube clips can be saved for offline viewing. ${Array.from({ length: 96 }, (_, i) => `srcword${i}`).join(' ')}`,
+        extra
+      ].join('\n'),
+      faq: [
+        { answer: 'They go to the downloads folder.', question: 'Where do files go?' },
+        { answer: 'It needs desktop Chrome.', question: 'Which browser?' },
+        { answer: 'Only one clip at a time.', question: 'Can it batch?' }
+      ]
+    },
+    product: {
+      productPage: 'https://serp.ly/example-tube-downloader',
+      tagline: 'Old tagline.',
+      title: 'Example Tube Downloader'
+    }
+  })
+  const existingOutput = (words: number): RewriteOutput => ({
+    body: [
+      '## What you get',
+      '',
+      `Keep Example Tube clips in your downloads folder using desktop Chrome. ${Array.from({ length: words }, (_, i) => `newword${i}`).join(' ')}`,
+      '',
+      '## Limits',
+      '',
+      'One clip at a time.',
+      '',
+      '## Setup',
+      '',
+      'Add it to Chrome.'
+    ].join('\n'),
+    faq: [
+      { answer: 'Your downloads folder.', question: 'Where do saved clips land?' },
+      { answer: 'Desktop Chrome.', question: 'What browser do I need?' },
+      { answer: 'No, one clip at a time.', question: 'Does it save several clips together?' }
+    ],
+    slug: 'example-tube-downloader',
+    tagline:
+      'Save Example Tube clips to your downloads folder from desktop Chrome, one clip at a time, for offline viewing.'
+  })
+  const context = { otherListings: [], otherSites: {}, threshold: 0.5 }
+  const shorter = (result: { issues: string[] }) =>
+    result.issues.filter(issue => issue.startsWith('body is much shorter than source'))
+
+  it('measures existing-mode length against the cleaned source with a 0.45 floor', () => {
+    const reviews = `\n\n## Reviews\n\n- Great (5/5): ${Array.from({ length: 150 }, (_, i) => `review${i}`).join(' ')}`
+    const pricing = '\n\nThe trial gives 3 free downloads before a paid plan is needed.'
+    const input = buildExistingInput(
+      'example-tube-downloader',
+      existingSource(`${reviews}${pricing}`),
+      'serpdownloaders.com'
+    )
+    if (!input) throw new Error('expected input')
+    expect(input.mode).toBe('existing')
+    // The cleaned source has 105 words, so the floor is 47.25 words.
+    expect(checkRewrite(input, existingOutput(30), context).issues).toEqual([])
+    expect(shorter(checkRewrite(input, existingOutput(20), context))).toEqual([
+      'body is much shorter than source (44 vs 105 words)'
+    ])
+    expect(shorter(checkRewrite({ ...input, mode: 'new' }, existingOutput(30), context))).toEqual([
+      'body is much shorter than source (54 vs 271 words)'
+    ])
+  })
+
+  it('applies the existing-only copy rules in existing mode only', () => {
+    const input = buildExistingInput(
+      'example-tube-downloader',
+      existingSource(''),
+      'serpdownloaders.com'
+    )
+    if (!input) throw new Error('expected input')
+    const output = {
+      ...existingOutput(40),
+      body: existingOutput(40)
+        .body.replace('## Limits', '## Troubleshooting')
+        .replace('One clip at a time.', 'One clip at a time per licence, see popup.js.'),
+      tagline: 'Short tagline for Example Tube.'
+    }
+    const existingIssues = checkRewrite(input, output, context).issues
+    expect(existingIssues).toEqual([
+      'old template section headings: Troubleshooting',
+      'use "activation", not licence wording',
+      'source code references not allowed: popup.js',
+      'tagline must be 70-160 characters (has 31)'
+    ])
+    expect(checkRewrite({ ...input, mode: 'new' }, output, context).issues).toEqual([])
+  })
+})
+
+describe('regex performance (ReDoS)', () => {
+  const elapsed = (run: () => void) => {
+    const started = performance.now()
+    run()
+    return performance.now() - started
+  }
+  const output = (text: string) => ({
+    body: `## A\n\n${text}\n\n## B\n\nb\n\n## C\n\nc`,
+    faq: [],
+    slug: 'x',
+    tagline: 'x'.repeat(80)
+  })
+
+  it('keeps finding code references', () => {
+    expect(withoutInternalNotes('See `src/popup.js:30-33, 265` and lib/a.ts:9.')).toBe('See  and .')
+    expect(
+      existingListingCopyIssues(output('Uses `background-enhanced.js` and video.js.'), ['X'])
+    ).toEqual(['source code references not allowed: background-enhanced.js'])
+  })
+
+  it('stays fast on long path-like runs that never reach a line number', () => {
+    for (const text of [
+      'a'.repeat(20_000),
+      'a/'.repeat(10_000),
+      'a.'.repeat(10_000),
+      `${'a.js'.repeat(5_000)}:`
+    ]) {
+      expect(elapsed(() => withoutInternalNotes(text))).toBeLessThan(100)
+      expect(elapsed(() => existingListingCopyIssues(output(text), ['X']))).toBeLessThan(100)
+    }
+  })
+
+  it('stays fast on long hyphenated runs that never reach a script extension', () => {
+    for (const text of ['a-'.repeat(10_000), `${'a-'.repeat(10_000)}.j`, 'a'.repeat(20_000)]) {
+      expect(elapsed(() => existingListingCopyIssues(output(text), ['X']))).toBeLessThan(100)
+    }
+  })
+
+  it('stays fast on long pricing-like runs', () => {
+    const text = `try ${'3 '.repeat(10_000)} test ${'free '.repeat(4_000)}`
+    expect(elapsed(() => pricingLanguage(text))).toBeLessThan(100)
+  })
+})
+
 describe('prepare -> check -> apply', () => {
   let root: string | undefined
 

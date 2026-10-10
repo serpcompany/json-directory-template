@@ -280,9 +280,12 @@ export const PRICING_PATTERNS: Array<[string, RegExp]> = [
     'usage allowance',
     /\b(?:\d+|two|three|four|five|ten) (?:free |trial |permitted |included |complimentary )+(?:pages|videos|downloads|saves|files|recordings|clips|captures)\b/i
   ],
+  // "Try 3 recordings free", "test it on three of your own permitted pages": only allowance
+  // words sit between the count and the noun, so feature sentences such as "Try it on 60 fps
+  // clips" or "2 screen captures side by side" don't match.
   [
     'test allowance',
-    /\b(?:test|try)\b[^.\n]{0,40}\b(?:\d+|two|three|four|five|ten)\b[^.\n]{0,30}\b(?:pages|videos|downloads|saves|captures|recordings|clips)\b/i
+    /\b(?:test|try)\b[^.\n]{0,40}?\b(?:\d+|two|three|four|five|ten) (?:(?:of|your|own|free|trial|complimentary|included|permitted) )*(?:pages|videos|downloads|saves|captures|recordings|clips)\b/i
   ]
 ]
 
@@ -299,38 +302,71 @@ export function pricingLanguage(text: string): string[] {
   })
 }
 
-/** `text` with pricing / trial phrases blanked out, so facts never require them. */
 /**
- * Drops a "## Reviews" section (star-rated testimonials). The brief bans reviews and
+ * Drops every "## Reviews" section (star-rated testimonials). The brief bans reviews and
  * testimonials in rewrites, so their ratings and quoted numbers are not product facts (#161).
  */
 export function withoutReviews(body: string): string {
   return body
-    .replace(/(^|\n)##\s+Reviews\s*\n[\s\S]*?(?=\n##\s|$)/i, '$1')
+    .replace(/(^|\n)##\s+Reviews\s*\n[\s\S]*?(?=\n##\s|$)/gi, '$1')
     .replace(/\n{3,}/g, '\n\n')
     .trim()
 }
 
-const CODE_REFERENCE = /`?[\w./-]+\.(?:js|mjs|ts|json):\d+(?:[-:]\d+)?(?:,\s*\d+(?:-\d+)?)*`?/g
+// The lookbehind starts a match only at the beginning of a path run, so a long run that
+// never reaches ".js:<line>" is scanned once instead of once per character (ReDoS).
+export const CODE_REFERENCE =
+  /`?(?<![\w./-])[\w./-]+\.(?:js|mjs|ts|json):\d+(?:[-:]\d+)?(?:,\s*\d+(?:-\d+)?)*`?/g
 const PIPELINE_LABEL = /\b(?:pass|lineup|batch)-\d+\b|\blineups?\b|\bCSV\b/i
 
 /**
- * Drops source code references (`background.js:69`) and every sentence that only carries
- * internal pipeline status, so their numbers are not demanded as product facts (#161).
+ * True when `text` names a product fact the fact check compares. Numbers and the bare word
+ * "folder" don't count: notes such as "the generated app folder was not found" carry both.
+ */
+function hasFactTokens(text: string): boolean {
+  const facts = extractFacts(text, '')
+  return [
+    facts.browsers,
+    facts.formats,
+    facts.limitationTerms,
+    facts.operatingSystems,
+    facts.permissions,
+    facts.quality,
+    facts.regions,
+    facts.savePaths
+  ].some(list => list.length > 0)
+}
+
+/**
+ * Drops source code references (`background.js:69`) and internal pipeline notes, so their
+ * numbers are not demanded as product facts (#161). A sentence that is only a note goes;
+ * a sentence that also states facts (browsers, formats, permissions, ...) keeps them and
+ * loses just the note phrase.
  */
 export function withoutInternalNotes(text: string): string {
+  const notePatterns = [PIPELINE_LABEL, ...PIPELINE_NOTE_PATTERNS.map(([, pattern]) => pattern)]
   return text
     .replace(CODE_REFERENCE, '')
     .split('\n')
     .map(line =>
       line
         .split(/(?<=[.!?])\s+/)
-        .filter(sentence => !PIPELINE_LABEL.test(sentence) && pipelineNotes(sentence).length === 0)
+        .flatMap(sentence => {
+          if (!PIPELINE_LABEL.test(sentence) && pipelineNotes(sentence).length === 0) {
+            return [sentence]
+          }
+          const stripped = notePatterns.reduce(
+            (result, pattern) => result.replace(new RegExp(pattern.source, 'gi'), ' '),
+            sentence
+          )
+          return hasFactTokens(stripped) ? [stripped.replace(/ {2,}/g, ' ')] : []
+        })
         .join(' ')
     )
     .join('\n')
 }
 
+/** `text` with pricing / trial phrases blanked out, so facts never require them. */
 export function withoutPricing(text: string): string {
   return text
     .split('\n')
@@ -1451,7 +1487,11 @@ const FACT_LIST_WORDS = new Set(
  * (browser/OS/format names and function words). The brief bans copied runs (#161).
  */
 export function copiedRuns(sourceText: string, rewriteText: string, size = 8): string[] {
-  const words = (text: string) => text.toLowerCase().match(/[a-z0-9']+/g) ?? []
+  const words = (text: string) =>
+    text
+      .toLowerCase()
+      .replace(/’/g, "'")
+      .match(/[a-z0-9']+/g) ?? []
   const grams = (tokens: string[]) => {
     const out = new Set<string>()
     for (let index = 0; index + size <= tokens.length; index += 1) {
@@ -1510,7 +1550,7 @@ export function pipelineNotes(text: string): string[] {
 
 /** Old shared-template section titles the existing-listing rewrites must not recreate (#161). */
 const TEMPLATE_HEADING =
-  /troubleshoot|\bfix(?:es|ing)\b|symptom|\bproblems\b|problem[- ]solving|hiccups|snags|\berrors\b|recover|when (?:something|things) go|honest|\bnotes?\b|^about\b|supported formats|step[- ]by[- ]step|who it'?s for|use cases|installation instructions|trial/i
+  /\btroubleshoot|\bfix(?:es|ing)\b|\bsymptom|\bproblems\b|\bproblem[- ]solving|\bhiccups\b|\bsnags\b|\berrors\b|\brecover|\bwhen (?:something|things) go|\bhonest|\bnotes?\b|^about\b|\bsupported formats\b|\bstep[- ]by[- ]step\b|\bwho it'?s for\b|\buse cases\b|\binstallation instructions\b|\btrials?\b/i
 
 /**
  * Copy rules for rewriting existing listings: no pipeline notes, no recreated template
@@ -1562,8 +1602,17 @@ export function existingListingCopyIssues(
     ).test(firstSentence ?? '')
   )
   if (opensWithDefinition) issues.push('body opens with a "<Name> is a ..." definition')
-  if (/\blicen[cs](?:e|es|ing)\b/i.test(all)) issues.push('use "activation", not licence wording')
-  const scriptFiles = (all.match(/\b[a-z][\w-]*\.(?:js|mjs|ts)\b/g) ?? []).filter(
+  // "licensed" that describes the content ("licensed stock images", "licensed shows") is a
+  // product fact when the source says it outside its pricing/trial sentences. Any other licence
+  // wording is about the extension's own trial or plan.
+  const contentLicensed = /\blicen[cs]ed\b/i.test(withoutPricing(sourceText))
+  const licenceWords = (all.match(/\blicen[cs](?:e|es|ed|ing)\b/gi) ?? []).filter(
+    word => !(contentLicensed && /ed$/i.test(word))
+  )
+  if (licenceWords.length) issues.push('use "activation", not licence wording')
+  // `(?<![\w-])` rather than `\b`: a match starts only where a name starts, so "a-a-a-..." is
+  // scanned once instead of once per letter (ReDoS).
+  const scriptFiles = (all.match(/(?<![\w-])[a-z][\w-]*\.(?:js|mjs|ts)\b/g) ?? []).filter(
     name => !/^(?:video|next|node|react|vue|hls|dash)\.js$/i.test(name)
   )
   if (new RegExp(CODE_REFERENCE.source).test(all) || scriptFiles.length) {
