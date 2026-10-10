@@ -311,7 +311,7 @@ export function withoutReviews(body: string): string {
     .trim()
 }
 
-const CODE_REFERENCE = /`?[\w./-]+\.(?:js|mjs|ts|json):\d+(?::\d+)?`?/g
+const CODE_REFERENCE = /`?[\w./-]+\.(?:js|mjs|ts|json):\d+(?:[-:]\d+)?(?:,\s*\d+(?:-\d+)?)*`?/g
 const PIPELINE_LABEL = /\b(?:pass|lineup|batch)-\d+\b|\blineups?\b|\bCSV\b/i
 
 /**

@@ -1046,7 +1046,7 @@ describe('apply helpers', () => {
   it('drops code references and pipeline-only sentences before extracting facts', () => {
     expect(
       withoutInternalNotes(
-        'Saves MP4 at 720p. Listed in the pass-242 lineup CSV. See `popup.js:210` for details.'
+        'Saves MP4 at 720p. Listed in the pass-242 lineup CSV. See `popup.js:30-33, 265` for details.'
       )
     ).toBe('Saves MP4 at 720p. See  for details.')
   })
