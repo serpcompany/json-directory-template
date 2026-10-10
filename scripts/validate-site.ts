@@ -103,10 +103,13 @@ export function validateSite(input: SiteInputTarget): void {
       );
     }
 
-    let legacyListingRedirects: ReturnType<typeof resolveSiteLegacyListingRedirects>;
+    let legacyListingRedirects: ReturnType<typeof resolveSiteLegacyListingRedirects> = [];
 
     try {
-      legacyListingRedirects = resolveSiteLegacyListingRedirects(definition);
+      // Only the trial-products-json source supports product.legacySlugs.
+      if (definition.content.listingSource.kind === 'trial-products-json') {
+        legacyListingRedirects = resolveSiteLegacyListingRedirects(definition);
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       throw new Error(`Validation failed for site ${definition.id}\n${message}`);
