@@ -41,8 +41,10 @@ type ToolsProductEntry = {
 
 const productsPath = resolve(process.cwd(), 'sites/serpdownloaders.com/products.json')
 const serpdownloadersPublicPath = resolve(process.cwd(), 'apps/serpdownloaders.com/public')
-const toolsProductsPath = resolve(
-  '/Users/devin/dev/repos/tools.serp.co/packages/app-core/src/data/tools.json'
+// Snapshot of the tools.serp.co records these relatedLinks were generated from (see `source`).
+const toolsSourceLinksPath = resolve(
+  process.cwd(),
+  'scripts/serpdownloaders-tools-source-links.json'
 )
 
 const missing404ProductSlugs = [
@@ -179,7 +181,9 @@ function canonicalUrl(url?: string): string | undefined {
 }
 
 function findToolsProductBySerply(serplyUrl: string): ToolsProductEntry | undefined {
-  const toolsProducts = JSON.parse(readFileSync(toolsProductsPath, 'utf8')) as ToolsProductEntry[]
+  const { entries: toolsProducts } = JSON.parse(readFileSync(toolsSourceLinksPath, 'utf8')) as {
+    entries: ToolsProductEntry[]
+  }
   return toolsProducts.find(entry => entry.content?.productLinks?.serplyUrl === serplyUrl)
 }
 
