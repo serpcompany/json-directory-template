@@ -12,7 +12,7 @@ Public product detail pages render under `/products/[slug]`.
 Keep each record in `products.json` focused on five groups:
 
 - `product`
-  Page-facing fields such as `title`, `tagline`, `productPage`, `slug`, and optional `categories`.
+  Page-facing fields such as `title`, `tagline`, `productPage`, `slug`, and optional `categories` and `legacySlugs`.
 - `media`
   Optional structured assets such as a `logo`, screenshots in `images`, or one `video` URL.
 - `content`
@@ -26,6 +26,13 @@ If you need a product to appear in more than one category:
 - put the canonical route category first in that array
 
 If you omit both, this site still falls back to the default category from `site-config.ts`.
+
+If you rename a product or merge a duplicate record into another one:
+
+- delete the old record
+- add its old slug to `product.legacySlugs` on the surviving record, for example `"legacySlugs": ["hotmovsvideodownloader.pages.dev"]`
+
+The build then writes redirect pages at `/products/<old-slug>/` and `/<old-slug>/` that point to `/products/<slug>/`. See "Legacy slug redirects" in `docs/knowledge/listing-data-contract.md` for the validation rules.
 
 Do not add extension implementation or design config here. Fields like popup UI config, context menu config, download manager panel config, and player button styling are outside the starter contract.
 

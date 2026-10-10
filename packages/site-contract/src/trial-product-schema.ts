@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { isValidAssetReference } from './asset-reference';
+import { getLegacyListingSlugFormatError } from './legacy-listing-slugs';
 
 export const trialFaqEntrySchema = z.object({
   answer: z.string().trim().min(1, 'faq.answer is required'),
@@ -56,6 +57,24 @@ export const canonicalTrialProductSchema = z.object({
     categories: z
       .array(z.string().trim().min(1, 'product.categories must not be empty'))
       .min(1, 'product.categories must include at least one slug')
+      .optional(),
+    legacySlugs: z
+      .array(
+        z
+          .string()
+          .trim()
+          .superRefine((legacySlug, context) => {
+            const formatError = getLegacyListingSlugFormatError(legacySlug);
+
+            if (formatError) {
+              context.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `product.legacySlugs entry "${legacySlug}" ${formatError}`,
+              });
+            }
+          })
+      )
+      .min(1, 'product.legacySlugs must include at least one slug when present')
       .optional(),
     productPage: z.string().url('product.productPage must be a valid URL'),
     slug: z.string().trim().min(1, 'product.slug is required'),

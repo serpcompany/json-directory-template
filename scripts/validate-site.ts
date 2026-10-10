@@ -9,6 +9,7 @@ import {
 } from './site-config.ts';
 import { createRunTempDir } from './run-context.ts';
 import { writeTrialWebsiteEntries } from './trial-build.ts';
+import { resolveSiteLegacyListingRedirects } from './legacy-listing-redirects.ts';
 import {
   getActiveCategories,
   getUnknownCategorySlugs,
@@ -99,6 +100,21 @@ export function validateSite(input: SiteInputTarget): void {
           `Unknown category slugs: ${unknownCategorySlugs.join(', ')}`,
           getCategoryFixHint(definition.id, definition.content.listingSource),
         ].join('\n')
+      );
+    }
+
+    let legacyListingRedirects: ReturnType<typeof resolveSiteLegacyListingRedirects>;
+
+    try {
+      legacyListingRedirects = resolveSiteLegacyListingRedirects(definition);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Validation failed for site ${definition.id}\n${message}`);
+    }
+
+    if (legacyListingRedirects.length > 0) {
+      console.log(
+        `Legacy listing redirects for ${definition.id}: ${legacyListingRedirects.length}`
       );
     }
 

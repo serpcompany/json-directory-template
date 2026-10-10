@@ -9,7 +9,10 @@ import {
   defaultSiteConfig,
   resolveCheckedInSiteConfig,
 } from '@thedaviddias/site-contract'
-import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases'
+import {
+  getSiteLegacyListingRedirects,
+  getSiteRootListingAliases,
+} from '@thedaviddias/site-contract/site-root-listing-aliases'
 import { categories } from '@thedaviddias/web-core/categories'
 import type { NextConfig } from 'next'
 import { isStaticExportBuild } from './lib/runtime-mode'
@@ -67,6 +70,7 @@ const docsBasePath = normalizeBasePath(runtimeSiteConfig.routes.docsBasePath)
 const networkBasePath = normalizeBasePath(runtimeSiteConfig.routes.networkBasePath)
 const brandsBasePath = normalizeBasePath(runtimeSiteConfig.routes.brandsBasePath)
 const rootListingAliases = getSiteRootListingAliases(runtimeSiteConfig.id)
+const legacyListingRedirects = getSiteLegacyListingRedirects(runtimeSiteConfig.id)
 const preservePostsRoute = runtimeSiteConfig.sitemap.staticPagePaths?.includes('/posts') ?? false
 
 let nextConfig: NextConfig = {
@@ -137,6 +141,13 @@ let nextConfig: NextConfig = {
         destination: `${buildPublicRoute(listingBasePath)}/${slug}/`,
         permanent: true,
       })),
+      ...legacyListingRedirects.flatMap(({ legacySlug, slug }) =>
+        [`/${legacySlug}`, `${buildPublicRoute(listingBasePath)}/${legacySlug}`].map(source => ({
+          source,
+          destination: `${buildPublicRoute(listingBasePath)}/${slug}/`,
+          permanent: true,
+        }))
+      ),
       {
         source: '/website/:path*',
         destination: `${buildPublicRoute(listingBasePath)}/:path*`,

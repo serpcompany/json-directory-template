@@ -63,6 +63,7 @@ export type SiteProduct = {
   media?: { images?: string[]; logo?: string; video?: string }
   product?: {
     categories?: string[]
+    legacySlugs?: string[]
     productPage?: string
     slug?: string
     tagline?: string

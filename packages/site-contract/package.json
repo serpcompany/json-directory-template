@@ -8,6 +8,7 @@
     "./asset-reference": "./src/asset-reference.ts",
     "./categories": "./src/categories.ts",
     "./checked-in-site-source-path": "./src/checked-in-site-source-path.ts",
+    "./legacy-listing-slugs": "./src/legacy-listing-slugs.ts",
     "./operator-onboarding": "./src/operator-onboarding.ts",
     "./operator-onboarding-server": "./src/operator-onboarding-server.ts",
     "./site-content": "./src/site-content.ts",

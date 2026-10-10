@@ -146,10 +146,43 @@ Use this as the rule of thumb:
   For the current listing UI, `media.logo` should prefer a checked-in or remote `.png`. Non-`.png`, missing, or broken logos fall back to the neutral placeholder asset at `/placeholder.svg`.
 - `product.categories`
   Optional ordered list of all categories the listing should belong to. The first category is treated as the canonical route category.
+- `product.legacySlugs`
+  Optional list of old slugs that must keep resolving after a listing is renamed or merged into this record. See "Legacy slug redirects" below.
 - `content`
   The long-form catch-all area. `content.body` is the main markdown/text field.
 - `relatedLinks`
   The lower link section below the main content.
+
+## Legacy slug redirects
+
+Use `product.legacySlugs` on the surviving record when a listing is renamed or a duplicate record is merged into it:
+
+```json
+{
+  "hotmovs-downloader": {
+    "product": {
+      "slug": "hotmovs-downloader",
+      "legacySlugs": ["hotmovsvideodownloader.pages.dev"],
+      "title": "HotMovs Downloader",
+      "tagline": "One-line directory summary.",
+      "productPage": "https://serp.ly/hotmovs-downloader"
+    }
+  }
+}
+```
+
+For each legacy slug, `pnpm build:site` writes a static redirect page at both `/<listingBasePath>/<legacy>/` and the root alias `/<legacy>/` (plus `/<listingBasePath>/<legacy>/<listingDetailSuffix>/` when the site uses a detail suffix). Each page meta-refreshes to the surviving listing's canonical detail route and declares an absolute canonical built from `site.publicUrl`. The pages are not `noindex`: like other alias pages they rely on the canonical, which also keeps them out of the generated sitemaps. In `pnpm dev:site`, the wrapper `next.config.ts` serves the same paths as permanent redirects.
+
+Validation (`pnpm validate:site`, which `pnpm build:site` also runs) fails when a legacy slug:
+
+- is malformed: it must use lowercase letters and digits separated by single `.` or `-` characters, and must not end in a public file extension such as `.png` or `.xml`. Dotted slugs such as `hotmovsvideodownloader.pages.dev` are valid
+- equals any live listing slug, including the record's own slug. Every live slug already has a root alias page
+- appears twice, on one record or across records
+- collides with a reserved top-level route: configured route base paths, sitemap paths, starter-owned routes such as `categories`, `brands`, `legal`, `search`, and `posts`, the wrapper app's top-level route and `public/` entries, and category slugs
+
+The build also fails rather than overwrite a generated route, and fails if the surviving listing page was not generated.
+
+Only the `trial-products-json` source supports `legacySlugs`. Delete the old record when you add its slug here; leaving both fails validation.
 
 ## Required listing fields
 

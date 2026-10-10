@@ -1,6 +1,12 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolveCheckedInSiteConfig } from './index';
 import { resolveCheckedInSiteSourcePath } from './checked-in-site-source-path';
+import {
+  type CollectLegacyListingRedirectsOptions,
+  collectLegacyListingRedirects,
+  type LegacyListingRedirect,
+} from './legacy-listing-slugs';
+import { normalizeTrialProduct, type TrialProducts } from './trial-products';
 
 type TrialProductsJsonEntry = {
   product?: {
@@ -42,4 +48,42 @@ export function getSiteRootListingAliases(siteId: string): string[] {
   }
 
   return [];
+}
+
+/**
+ * Reads `product.legacySlugs` from a `trial-products-json` source and returns one validated
+ * redirect per legacy slug. `listing-json` sources do not support legacy slugs.
+ */
+export function getSiteLegacyListingRedirects(
+  siteId: string,
+  options: CollectLegacyListingRedirectsOptions = {}
+): LegacyListingRedirect[] {
+  const siteConfig = resolveCheckedInSiteConfig(siteId);
+  const listingSource = siteConfig.content.listingSource;
+
+  if (listingSource.kind !== 'trial-products-json') {
+    return [];
+  }
+
+  const sourcePath = resolveCheckedInSiteSourcePath(listingSource.path);
+
+  if (!existsSync(sourcePath)) {
+    return [];
+  }
+
+  const products = JSON.parse(readFileSync(sourcePath, 'utf8')) as TrialProducts;
+  const listings = Object.entries(products).map(([fallbackSlug, product]) => {
+    const normalizedProduct = normalizeTrialProduct(
+      product,
+      fallbackSlug,
+      listingSource.category
+    );
+
+    return {
+      legacySlugs: normalizedProduct.legacySlugs,
+      slug: normalizedProduct.slug,
+    };
+  });
+
+  return collectLegacyListingRedirects(listings, options);
 }

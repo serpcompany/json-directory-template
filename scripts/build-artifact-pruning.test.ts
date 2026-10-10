@@ -432,6 +432,7 @@ describe('applyLegacyRootListingRedirects', () => {
 
     applyLegacyRootListingRedirects(artifactDir, {
       listingBasePath: 'products',
+      publicUrl: 'https://serpdownloaders.com',
       siteId: 'serpdownloaders.com'
     })
 
