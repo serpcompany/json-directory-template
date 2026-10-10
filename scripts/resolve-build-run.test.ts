@@ -1,7 +1,8 @@
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
 import { describe, expect, it, vi } from 'vitest'
 import {
-  inferSiteIdFromChangedPaths,
   readAssociatedMergedPullRequestChangedPaths,
   resolveBuildRun,
   resolvePushSiteInput,
@@ -29,6 +30,14 @@ function createMockFetch(routes: Record<string, Response | unknown>): typeof fet
 
     return response instanceof Response ? response : jsonResponse(response)
   }) as unknown as typeof fetch
+}
+
+function writePushEvent(event: unknown): string {
+  mkdirSync(resolve(process.cwd(), 'tmp'), { recursive: true })
+  const dir = mkdtempSync(resolve(process.cwd(), 'tmp/resolve-build-run-'))
+  const path = resolve(dir, 'event.json')
+  writeFileSync(path, JSON.stringify(event))
+  return path
 }
 
 function expectedDeployTargets(siteIds: readonly string[]) {
@@ -99,79 +108,167 @@ describe('resolveBuildRun', () => {
     )
   })
 
-  it('infers a single checked-in site id from changed wrapper app paths', () => {
+  it('deploys the site whose wrapper app paths changed', () => {
     expect(
-      inferSiteIdFromChangedPaths([
+      resolvePushSiteInputFromChangedPaths([
         'apps/serpdownloaders.com/lib/content-loader.ts',
         'apps/serpdownloaders.com/app/products/[slug]/page.tsx'
       ])
-    ).toBe('serpdownloaders.com')
-  })
-
-  it('infers a single checked-in site id from changed site config paths', () => {
-    expect(inferSiteIdFromChangedPaths(['sites/serpdownloaders.com/site-config.ts'])).toBe(
-      'serpdownloaders.com'
-    )
-  })
-
-  it('maps starter app changes to the default checked-in site', () => {
-    expect(inferSiteIdFromChangedPaths(['apps/starter/app/layout.tsx'])).toBe('default')
-  })
-
-  it('prefers a concrete site over starter app changes', () => {
-    expect(
-      inferSiteIdFromChangedPaths([
-        'apps/starter/app/layout.tsx',
-        'sites/browserextensions.io/products.json'
-      ])
-    ).toBe('browserextensions.io')
-  })
-
-  it('infers exact deploy targets when changed paths touch multiple concrete sites', () => {
-    const paths = ['apps/serpdownloaders.com/app/layout.tsx', 'apps/serp.ai/app/layout.tsx']
-
-    expect(inferSiteIdFromChangedPaths(paths)).toBeUndefined()
-    expect(resolvePushSiteInputFromChangedPaths(paths)).toEqual({
-      shouldDeploy: true,
-      siteIds: ['serp.ai', 'serpdownloaders.com']
-    })
-  })
-
-  it('deploys all active checked-in sites when changed paths are shared-only', () => {
-    expect(
-      resolvePushSiteInputFromChangedPaths([
-        '.github/workflows/build-and-deploy.yml',
-        'scripts/resolve-build-run.ts'
-      ])
-    ).toEqual({
-      shouldDeploy: true,
-      siteIds: activeCheckedInSiteIds
-    })
-  })
-
-  it('does not map paths under the removed serp.co trees to a site', () => {
-    expect(
-      inferSiteIdFromChangedPaths(['apps/serp.co/app/page.tsx', 'sites/serp.co/products.json'])
-    ).toBeUndefined()
-    expect(
-      resolvePushSiteInputFromChangedPaths([
-        'apps/serp.co/app/page.tsx',
-        'sites/serp.co/products.json'
-      ])
-    ).toEqual({
-      shouldDeploy: true,
-      siteIds: activeCheckedInSiteIds
-    })
-  })
-
-  it('deploys the site inferred from push changed paths', () => {
-    expect(
-      resolvePushSiteInputFromChangedPaths(['apps/serpdownloaders.com/lib/content-loader.ts'])
     ).toEqual({
       shouldDeploy: true,
       siteId: 'serpdownloaders.com',
       siteIds: ['serpdownloaders.com']
     })
+  })
+
+  it('deploys the site whose checked-in site files changed', () => {
+    expect(resolvePushSiteInputFromChangedPaths(['sites/serpdownloaders.com/site-config.ts'])).toEqual(
+      {
+        shouldDeploy: true,
+        siteId: 'serpdownloaders.com',
+        siteIds: ['serpdownloaders.com']
+      }
+    )
+  })
+
+  it('deploys exact sites when changed paths touch multiple concrete sites only', () => {
+    expect(
+      resolvePushSiteInputFromChangedPaths([
+        'sites/serpdownloaders.com/products.json',
+        'apps/serp.ai/app/page.tsx'
+      ])
+    ).toEqual({
+      shouldDeploy: true,
+      siteIds: ['serp.ai', 'serpdownloaders.com']
+    })
+  })
+
+  it.each([
+    ['scripts/resolve-build-run.ts'],
+    ['scripts/sitemap-files.ts'],
+    ['packages/web-core/src/schema.ts'],
+    ['packages/site-contract/src/trial-products.ts'],
+    ['packages/design-system/components/custom/breadcrumb.tsx'],
+    ['packages/content/data/about/about.mdx'],
+    ['configs/next/index.ts'],
+    ['sites/site-config.default.ts'],
+    ['sites/default/categories.json'],
+    ['package.json'],
+    ['pnpm-lock.yaml'],
+    ['.nvmrc']
+  ])('deploys every active site when the shared build path %s changes', path => {
+    expect(resolvePushSiteInputFromChangedPaths([path])).toEqual({
+      shouldDeploy: true,
+      siteIds: activeCheckedInSiteIds
+    })
+  })
+
+  it('deploys every active site when shared and site paths change together (#159)', () => {
+    // #159 changed scripts/sitemap-files.ts plus sites/browserextensions.io/site-config.ts and
+    // deployed only browserextensions.io, so serpdownloaders.com and serp.ai missed the fix.
+    expect(
+      resolvePushSiteInputFromChangedPaths([
+        'scripts/sitemap-files.test.ts',
+        'scripts/sitemap-files.ts',
+        'sites/browserextensions.io/site-config.ts'
+      ])
+    ).toEqual({
+      shouldDeploy: true,
+      siteIds: activeCheckedInSiteIds
+    })
+  })
+
+  it.each([
+    ['scripts/listing-rewrite.ts'],
+    ['scripts/listing-rewrite-brief.md'],
+    ['scripts/resolve-build-run.test.ts'],
+    ['packages/web-core/src/structured-data.test.ts'],
+    ['packages/cli/src/index.ts'],
+    ['docs/BUILD_PIPELINE.md'],
+    ['sites/serpdownloaders.com/README.md'],
+    ['data/listings.json'],
+    ['apps/starter/app/layout.tsx'],
+    ['.github/workflows/build-and-deploy.yml']
+  ])('does not deploy when only the non-build path %s changes', path => {
+    expect(resolvePushSiteInputFromChangedPaths([path])).toEqual({ shouldDeploy: false })
+  })
+
+  it('ignores retired site paths', () => {
+    expect(
+      resolvePushSiteInputFromChangedPaths([
+        'apps/serp.co/app/page.tsx',
+        'sites/serp.co/products.json',
+        'sites/pornvideodownloaders.com/products.json',
+        'sites/serp.software/site-config.ts'
+      ])
+    ).toEqual({ shouldDeploy: false })
+    expect(
+      resolvePushSiteInputFromChangedPaths([
+        'sites/serp.co/products.json',
+        'sites/serpdownloaders.com/products.json'
+      ])
+    ).toEqual({
+      shouldDeploy: true,
+      siteId: 'serpdownloaders.com',
+      siteIds: ['serpdownloaders.com']
+    })
+  })
+
+  it('deploys every active site for a shared push even when PR metadata names one site', async () => {
+    const fetch = vi.fn() as unknown as typeof globalThis.fetch
+
+    await expect(
+      resolvePushSiteInput(
+        {
+          after: 'abc123',
+          commits: [
+            {
+              id: 'abc123',
+              message:
+                'fix(sitemaps): keep noindex and alias pages out of browserextensions.io sitemaps (#159)',
+              modified: ['scripts/sitemap-files.ts', 'sites/browserextensions.io/site-config.ts']
+            }
+          ],
+          repository: {
+            full_name: 'owner/repo'
+          }
+        },
+        {
+          GITHUB_API_URL: 'https://api.github.test',
+          GITHUB_EVENT_NAME: 'push',
+          GITHUB_TOKEN: 'token'
+        },
+        fetch
+      )
+    ).resolves.toEqual({
+      shouldDeploy: true,
+      siteIds: activeCheckedInSiteIds
+    })
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it('skips the deploy when a push only changes non-build files', async () => {
+    const fetch = vi.fn() as unknown as typeof globalThis.fetch
+
+    await expect(
+      resolveBuildRun(
+        [],
+        {
+          GITHUB_EVENT_NAME: 'push',
+          GITHUB_EVENT_PATH: writePushEvent({
+            after: 'abc123',
+            commits: [{ id: 'abc123', modified: ['scripts/listing-rewrite.ts', 'docs/PLAN.md'] }],
+            repository: { full_name: 'owner/repo' }
+          }),
+          GITHUB_TOKEN: 'token'
+        },
+        { fetch }
+      )
+    ).resolves.toEqual({
+      deployTargets: [],
+      shouldDeploy: false
+    })
+    expect(fetch).not.toHaveBeenCalled()
   })
 
   it('resolves BrowserExtensions.io from associated merged PR files', async () => {
@@ -196,8 +293,7 @@ describe('resolveBuildRun', () => {
           after: 'abc123',
           commits: [
             {
-              id: 'abc123',
-              modified: ['scripts/resolve-build-run.ts']
+              id: 'abc123'
             }
           ],
           repository: {
@@ -218,7 +314,7 @@ describe('resolveBuildRun', () => {
     })
   })
 
-  it('prefers a concrete site over shared and starter files from associated PRs', async () => {
+  it('ignores starter and docs files in associated PR files', async () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
@@ -245,8 +341,7 @@ describe('resolveBuildRun', () => {
           after: 'abc123',
           commits: [
             {
-              id: 'abc123',
-              modified: ['scripts/resolve-build-run.ts']
+              id: 'abc123'
             }
           ],
           repository: {
@@ -293,8 +388,7 @@ describe('resolveBuildRun', () => {
           after: 'abc123',
           commits: [
             {
-              id: 'abc123',
-              modified: ['scripts/resolve-build-run.ts']
+              id: 'abc123'
             }
           ],
           repository: {
@@ -371,8 +465,7 @@ describe('resolveBuildRun', () => {
           after: 'abc123',
           commits: [
             {
-              id: 'abc123',
-              modified: ['scripts/import-downloaders-from-sheet.ts']
+              id: 'abc123'
             }
           ],
           repository: {
@@ -392,7 +485,7 @@ describe('resolveBuildRun', () => {
     })
   })
 
-  it('resolves BrowserExtensions.io from a shared-only PR body site URL', async () => {
+  it('resolves BrowserExtensions.io from a PR body site URL when no changed paths are available', async () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
@@ -402,11 +495,7 @@ describe('resolveBuildRun', () => {
           title: 'Add accepted browser extension submission'
         }
       ],
-      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
-        {
-          filename: 'scripts/resolve-build-run.ts'
-        }
-      ]
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': []
     })
 
     await expect(
@@ -415,8 +504,7 @@ describe('resolveBuildRun', () => {
           after: 'abc123',
           commits: [
             {
-              id: 'abc123',
-              modified: ['scripts/resolve-build-run.ts']
+              id: 'abc123'
             }
           ],
           repository: {
@@ -437,7 +525,7 @@ describe('resolveBuildRun', () => {
     })
   })
 
-  it('deploys all active sites when a shared-only PR body has no exact site match', async () => {
+  it('deploys all active sites when no changed paths are available and the PR body has no exact site match', async () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
@@ -447,11 +535,7 @@ describe('resolveBuildRun', () => {
           title: 'Update shared resolver'
         }
       ],
-      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
-        {
-          filename: 'scripts/resolve-build-run.ts'
-        }
-      ]
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': []
     })
 
     await expect(
@@ -460,8 +544,7 @@ describe('resolveBuildRun', () => {
           after: 'abc123',
           commits: [
             {
-              id: 'abc123',
-              modified: ['scripts/resolve-build-run.ts']
+              id: 'abc123'
             }
           ],
           repository: {
@@ -491,11 +574,7 @@ describe('resolveBuildRun', () => {
           title: 'Accept public browser extension submission'
         }
       ],
-      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
-        {
-          filename: 'docs/BUILD_PIPELINE.md'
-        }
-      ],
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [],
       'https://api.github.test/repos/serpcompany/browserextensions.io/issues/1': {
         body: 'Website URL: https://submitted-product.example',
         title: 'Submission: Example extension'
@@ -508,8 +587,7 @@ describe('resolveBuildRun', () => {
           after: 'abc123',
           commits: [
             {
-              id: 'abc123',
-              modified: ['docs/BUILD_PIPELINE.md']
+              id: 'abc123'
             }
           ],
           repository: {
@@ -544,11 +622,7 @@ describe('resolveBuildRun', () => {
           title: 'Accept unrelated-domain submission'
         }
       ],
-      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
-        {
-          filename: 'scripts/resolve-build-run.ts'
-        }
-      ],
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [],
       'https://api.github.test/repos/serpcompany/browserextensions.io/issues/7': {
         body: [
           'Website URL: https://serp.co/products/not-the-target',
@@ -564,8 +638,7 @@ describe('resolveBuildRun', () => {
           after: 'abc123',
           commits: [
             {
-              id: 'abc123',
-              modified: ['scripts/resolve-build-run.ts']
+              id: 'abc123'
             }
           ],
           repository: {
@@ -586,7 +659,7 @@ describe('resolveBuildRun', () => {
     })
   })
 
-  it('resolves BrowserExtensions.io from a push commit message when associated PR files are shared-only', async () => {
+  it('resolves BrowserExtensions.io from a push commit message when no changed paths are available', async () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': [
         {
@@ -596,11 +669,7 @@ describe('resolveBuildRun', () => {
           title: null
         }
       ],
-      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
-        {
-          filename: 'scripts/resolve-build-run.ts'
-        }
-      ]
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': []
     })
 
     await expect(
@@ -610,8 +679,7 @@ describe('resolveBuildRun', () => {
           commits: [
             {
               id: 'abc123',
-              message: 'Accept submission for browserextensions.io',
-              modified: ['scripts/resolve-build-run.ts']
+              message: 'Accept submission for browserextensions.io'
             }
           ],
           repository: {
@@ -642,11 +710,7 @@ describe('resolveBuildRun', () => {
           title: 'Shared multi-site deploy'
         }
       ],
-      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
-        {
-          filename: 'scripts/resolve-build-run.ts'
-        }
-      ]
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': []
     })
 
     await expect(
@@ -655,8 +719,7 @@ describe('resolveBuildRun', () => {
           after: 'abc123',
           commits: [
             {
-              id: 'abc123',
-              modified: ['scripts/resolve-build-run.ts']
+              id: 'abc123'
             }
           ],
           repository: {
@@ -685,11 +748,7 @@ describe('resolveBuildRun', () => {
           title: 'Accept public browser extension submission'
         }
       ],
-      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [
-        {
-          filename: 'scripts/resolve-build-run.ts'
-        }
-      ],
+      'https://api.github.test/repos/owner/repo/pulls/42/files?page=1&per_page=100': [],
       'https://api.github.test/repos/serpcompany/browserextensions.io/issues/1': jsonResponse(
         { message: 'API rate limit exceeded' },
         {
@@ -705,8 +764,7 @@ describe('resolveBuildRun', () => {
           after: 'abc123',
           commits: [
             {
-              id: 'abc123',
-              modified: ['scripts/resolve-build-run.ts']
+              id: 'abc123'
             }
           ],
           repository: {
@@ -749,8 +807,7 @@ describe('resolveBuildRun', () => {
           after: 'abc123',
           commits: [
             {
-              id: 'abc123',
-              modified: ['scripts/resolve-build-run.ts']
+              id: 'abc123'
             }
           ],
           repository: {
@@ -795,8 +852,7 @@ describe('resolveBuildRun', () => {
           after: 'abc123',
           commits: [
             {
-              id: 'abc123',
-              modified: ['scripts/resolve-build-run.ts']
+              id: 'abc123'
             }
           ],
           repository: {
@@ -882,7 +938,7 @@ describe('resolveBuildRun', () => {
       resolvePushSiteInput(
         {
           after: 'abc123',
-          commits: [{ id: 'abc123', modified: ['scripts/resolve-build-run.ts'] }],
+          commits: [{ id: 'abc123' }],
           repository: {
             full_name: 'owner/repo'
           }
@@ -897,7 +953,7 @@ describe('resolveBuildRun', () => {
     )
   })
 
-  it('deploys all active sites for a shared-only push even when no associated merged PR is found', async () => {
+  it('deploys all active sites when neither the push nor an associated merged PR lists changed paths', async () => {
     const fetch = createMockFetch({
       'https://api.github.test/repos/owner/repo/commits/abc123/pulls': []
     })
@@ -906,7 +962,7 @@ describe('resolveBuildRun', () => {
       resolvePushSiteInput(
         {
           after: 'abc123',
-          commits: [{ id: 'abc123', modified: ['scripts/resolve-build-run.ts'] }],
+          commits: [{ id: 'abc123' }],
           repository: {
             full_name: 'owner/repo'
           }
@@ -939,7 +995,7 @@ describe('resolveBuildRun', () => {
       resolvePushSiteInput(
         {
           after: 'abc123',
-          commits: [{ id: 'abc123', modified: ['scripts/resolve-build-run.ts'] }],
+          commits: [{ id: 'abc123' }],
           repository: {
             full_name: 'owner/repo'
           }

@@ -3,27 +3,41 @@ name: Build & Deploy
 on:
   push:
     branches: [main]
+    # Generated from scripts/deploy-trigger-paths.ts (buildAndDeployWorkflowPushPaths); keep them
+    # identical. scripts/build-and-deploy-workflow.test.ts fails when they drift.
     paths:
-      - 'data/listings.json'
-      - 'sites/**'
-      - '!sites/pornvideodownloaders.com/**'
-      - '!sites/serp.co/**'
-      - '!sites/serp.software/**'
       - 'apps/browserextensions.io/**'
+      - 'sites/browserextensions.io/**'
       - 'apps/serp.ai/**'
+      - 'sites/serp.ai/**'
       - 'apps/serpdownloaders.com/**'
-      - 'apps/starter/**'
-      - 'packages/web-core/**'
+      - 'sites/serpdownloaders.com/**'
+      - 'packages/**'
+      - 'configs/**'
       - 'scripts/**'
-      - '!scripts/**/*.test.ts'
-      - '!scripts/build-and-deploy-workflow.test.ts'
+      - 'sites/*'
+      - 'sites/default/**'
+      - '.nvmrc'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'turbo.json'
+      - '!**/*.test.ts'
+      - '!**/*.test.tsx'
+      - '!**/__tests__/**'
+      - '!**/*.md'
+      - '!packages/cli/**'
+      - '!packages/generator/**'
+      - '!packages/validators/**'
       - '!scripts/deploy-to-repo.sh'
-      - '!scripts/deploy-to-repo-script.test.ts'
       - '!scripts/featured-badge-approved-r2-assets.json'
       - '!scripts/generate-badges.ts'
       - '!scripts/import-downloaders-from-sheet.ts'
+      - '!scripts/listing-rewrite-excluded.txt'
+      - '!scripts/listing-rewrite-fact-overrides.json'
+      - '!scripts/listing-rewrite-source-overrides.json'
+      - '!scripts/listing-rewrite.ts'
       - '!scripts/r2-featured-badge-assets.json'
-      - '!scripts/target-verify-badge-workflow.test.ts'
       - '!scripts/templates/target-verify-badge.yml'
       - '!scripts/test-submission-flow.ts'
       - '!scripts/upgrade-downloader-content.ts'
@@ -51,7 +65,9 @@ jobs:
   resolve:
     name: Resolve Deploy Targets
     if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip static deploy]')
-    runs-on: self-hosted
+    # Was `self-hosted`. Swapped to GitHub-hosted runners for now because the self-hosted runners
+    # are offline (owner decision, #161).
+    runs-on: ubuntu-latest
     outputs:
       deploy_targets: ${{ steps.resolve.outputs.deploy_targets }}
       should_deploy: ${{ steps.resolve.outputs.should_deploy }}
@@ -71,7 +87,9 @@ jobs:
     name: Validate, Build & Deploy (${{ matrix.target.siteId }})
     needs: resolve
     if: needs.resolve.outputs.should_deploy == 'true'
-    runs-on: self-hosted
+    # Was `self-hosted`. Swapped to GitHub-hosted runners for now because the self-hosted runners
+    # are offline (owner decision, #161).
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:

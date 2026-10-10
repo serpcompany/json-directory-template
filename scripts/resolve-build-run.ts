@@ -2,17 +2,10 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
+import { classifyChangedPaths } from './deploy-trigger-paths.ts'
 import { loadCheckedInSite, loadCheckedInSiteFromInput, parseSiteInputArgs } from './site-config.ts'
 
 const defaultSiteId = 'default'
-
-const changedPathSitePrefixes: Array<readonly [string, string]> = [
-  ...activeCheckedInSiteIds.flatMap(siteId => [
-    [`apps/${siteId}/`, siteId] as const,
-    [`sites/${siteId}/`, siteId] as const
-  ]),
-  ['apps/starter/', defaultSiteId]
-]
 
 type GitHubPushEvent = {
   after?: string
@@ -94,10 +87,6 @@ type PushSiteResolution = {
   siteIds?: string[]
 }
 
-type ChangedPathSiteResolution = PushSiteResolution & {
-  ambiguousConcreteSitePaths: boolean
-}
-
 type BuildRunResolution = {
   artifactDir?: string
   deployTargets?: DeployTarget[]
@@ -117,90 +106,30 @@ function hasExplicitSiteInput(argv: string[], env: NodeJS.ProcessEnv): boolean {
   )
 }
 
-function normalizeChangedPath(path: string): string {
-  return path.replace(/^\.?\//, '')
-}
+/**
+ * Resolves deploy targets from concrete changed paths (see scripts/deploy-trigger-paths.ts):
+ *
+ * - any shared build-affecting path deploys every active checked-in site, even when site paths or
+ *   PR metadata also name one site, because shared code reaches every site's artifact
+ * - otherwise, per-site paths deploy exactly those sites
+ * - otherwise (only tests, docs, or non-build scripts changed) nothing deploys
+ */
+export function resolvePushSiteInputFromChangedPaths(paths: string[]): PushSiteResolution {
+  const { sharedBuildPaths, siteIds } = classifyChangedPaths(paths)
 
-export function inferSiteIdFromChangedPaths(paths: string[]): string | undefined {
-  const matchedSiteIds = new Set<string>()
-
-  for (const path of paths) {
-    const normalizedPath = normalizeChangedPath(path)
-    const matchedPrefix = changedPathSitePrefixes.find(([prefix]) =>
-      normalizedPath.startsWith(prefix)
-    )
-
-    if (matchedPrefix) {
-      matchedSiteIds.add(matchedPrefix[1])
-    }
+  if (sharedBuildPaths.length > 0) {
+    return { shouldDeploy: true, siteIds: [...activeCheckedInSiteIds] }
   }
-
-  const concreteSiteIds = [...matchedSiteIds].filter(siteId => siteId !== defaultSiteId).sort()
-
-  if (concreteSiteIds.length > 1) {
-    return undefined
-  }
-
-  if (concreteSiteIds.length === 1) {
-    return concreteSiteIds[0]
-  }
-
-  return matchedSiteIds.has(defaultSiteId) ? defaultSiteId : undefined
-}
-
-function inferSiteIdsFromChangedPaths(paths: string[]): string[] {
-  const matchedSiteIds = new Set<string>()
-
-  for (const path of paths) {
-    const normalizedPath = normalizeChangedPath(path)
-    const matchedPrefix = changedPathSitePrefixes.find(([prefix]) =>
-      normalizedPath.startsWith(prefix)
-    )
-
-    if (matchedPrefix) {
-      matchedSiteIds.add(matchedPrefix[1])
-    }
-  }
-
-  const concreteSiteIds = [...matchedSiteIds].filter(siteId => siteId !== defaultSiteId).sort()
-
-  if (concreteSiteIds.length > 0) {
-    return concreteSiteIds
-  }
-
-  return matchedSiteIds.has(defaultSiteId) ? [defaultSiteId] : []
-}
-
-function resolveChangedPathSiteInput(paths: string[]): ChangedPathSiteResolution {
-  const siteIds = inferSiteIdsFromChangedPaths(paths)
-  const siteId = inferSiteIdFromChangedPaths(paths)
 
   if (siteIds.length > 0) {
     return {
-      ambiguousConcreteSitePaths: false,
       shouldDeploy: true,
-      siteId,
+      ...(siteIds.length === 1 ? { siteId: siteIds[0] } : {}),
       siteIds
     }
   }
 
-  return {
-    ambiguousConcreteSitePaths: false,
-    shouldDeploy: false
-  }
-}
-
-export function resolvePushSiteInputFromChangedPaths(paths: string[]): PushSiteResolution {
-  const { shouldDeploy, siteId, siteIds } = resolveChangedPathSiteInput(paths)
-
-  if (shouldDeploy) {
-    return { shouldDeploy, siteId, siteIds }
-  }
-
-  return {
-    shouldDeploy: true,
-    siteIds: [...activeCheckedInSiteIds]
-  }
+  return { shouldDeploy: false }
 }
 
 function readPushEvent(env: NodeJS.ProcessEnv): GitHubPushEvent | undefined {
@@ -212,9 +141,9 @@ function readPushEvent(env: NodeJS.ProcessEnv): GitHubPushEvent | undefined {
 }
 
 function readPushEventChangedPaths(event: GitHubPushEvent | undefined): string[] {
-  const commits = event.commits?.length
+  const commits = event?.commits?.length
     ? event.commits
-    : event.head_commit
+    : event?.head_commit
       ? [event.head_commit]
       : []
 
@@ -754,42 +683,23 @@ export async function resolvePushSiteInput(
   env: NodeJS.ProcessEnv,
   fetchImpl: typeof fetch = fetch
 ): Promise<PushSiteResolution> {
-  const pushChangedPathResolution = resolveChangedPathSiteInput(readPushEventChangedPaths(event))
+  const pushChangedPaths = readPushEventChangedPaths(event)
 
-  if (pushChangedPathResolution.shouldDeploy) {
-    return {
-      shouldDeploy: true,
-      siteId: pushChangedPathResolution.siteId,
-      siteIds: pushChangedPathResolution.siteIds
-    }
+  if (pushChangedPaths.length > 0) {
+    return resolvePushSiteInputFromChangedPaths(pushChangedPaths)
   }
 
-  if (pushChangedPathResolution.ambiguousConcreteSitePaths) {
-    return {
-      shouldDeploy: false
-    }
-  }
-
+  // The push payload listed no files, so fall back to the associated merged PR's files.
   const associatedPullRequests = await readAssociatedMergedPullRequests(event, env, fetchImpl)
   const pullRequestChangedPaths = associatedPullRequests.flatMap(
     pullRequest => pullRequest.changedPaths
   )
-  const pullRequestChangedPathResolution = resolveChangedPathSiteInput(pullRequestChangedPaths)
 
-  if (pullRequestChangedPathResolution.shouldDeploy) {
-    return {
-      shouldDeploy: true,
-      siteId: pullRequestChangedPathResolution.siteId,
-      siteIds: pullRequestChangedPathResolution.siteIds
-    }
+  if (pullRequestChangedPaths.length > 0) {
+    return resolvePushSiteInputFromChangedPaths(pullRequestChangedPaths)
   }
 
-  if (pullRequestChangedPathResolution.ambiguousConcreteSitePaths) {
-    return {
-      shouldDeploy: false
-    }
-  }
-
+  // No changed paths at all: use exact site signals from PR or commit metadata, else every site.
   const metadataResolution = await resolvePushSiteInputFromAssociatedPullRequestMetadata(
     associatedPullRequests,
     event,
@@ -883,7 +793,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1
       console.log(`deploy_targets=${JSON.stringify(run.deployTargets ?? [])}`)
 
       if (!run.shouldDeploy) {
-        console.error('No checked-in site could be inferred for this push; skipping deploy.')
+        console.error(
+          'No build-affecting changes for an active checked-in site in this push; skipping deploy.'
+        )
       }
     })
     .catch(error => {

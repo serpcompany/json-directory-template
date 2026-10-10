@@ -1,9 +1,16 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { activeCheckedInSiteIds, removedSiteIds } from '@thedaviddias/site-contract/active-site-ids'
 import yaml from 'js-yaml'
 import { describe, expect, it } from 'vitest'
+import {
+  buildAndDeployWorkflowPushPaths,
+  isBuildAffectingPath,
+  nonBuildPathPatterns
+} from './deploy-trigger-paths.ts'
 
 interface WorkflowJob {
+  'runs-on'?: string
   environment?: Record<string, string>
   env?: Record<string, string>
   if?: string
@@ -43,35 +50,118 @@ function loadWorkflow(): WorkflowDefinition {
 }
 
 describe('build-and-deploy workflow', () => {
-  it('runs when shared web-core brands sources change', () => {
+  it('uses the shared deploy trigger paths as its push path filter', () => {
     const workflow = loadWorkflow()
 
-    expect(workflow.on.push?.paths).toEqual(expect.arrayContaining(['packages/web-core/**']))
+    expect(workflow.on.push?.paths).toEqual([...buildAndDeployWorkflowPushPaths])
   })
 
-  it('does not rebuild sites for target workflow-only maintenance changes', () => {
+  it('runs when any shared build input changes', () => {
+    for (const path of [
+      'packages/web-core/src/schema.ts',
+      'packages/site-contract/src/trial-products.ts',
+      'packages/design-system/components/custom/breadcrumb.tsx',
+      'packages/content/data/about/about.mdx',
+      'configs/next/index.ts',
+      'scripts/sitemap-files.ts',
+      'scripts/build-site.ts',
+      'sites/site-config.default.ts',
+      'sites/default/categories.json',
+      'package.json',
+      'pnpm-lock.yaml',
+      '.nvmrc'
+    ]) {
+      expect(isBuildAffectingPath(path), path).toBe(true)
+    }
+  })
+
+  it('does not rebuild sites for tests, docs, non-build scripts, or target workflow-only maintenance', () => {
     const workflow = loadWorkflow()
 
-    expect(workflow.on.push?.paths).toEqual(
-      expect.arrayContaining([
-        '!sites/pornvideodownloaders.com/**',
-        '!sites/serp.software/**',
-        '!scripts/**/*.test.ts',
-        '!scripts/deploy-to-repo.sh',
-        '!scripts/build-and-deploy-workflow.test.ts',
-        '!scripts/deploy-to-repo-script.test.ts',
-        '!scripts/featured-badge-approved-r2-assets.json',
-        '!scripts/generate-badges.ts',
-        '!scripts/import-downloaders-from-sheet.ts',
-        '!scripts/r2-featured-badge-assets.json',
-        '!scripts/target-verify-badge-workflow.test.ts',
-        '!scripts/templates/target-verify-badge.yml',
-        '!scripts/test-submission-flow.ts',
-        '!scripts/upgrade-downloader-content.ts'
-      ])
-    )
+    for (const path of [
+      'scripts/resolve-build-run.test.ts',
+      'packages/web-core/src/structured-data.test.ts',
+      'apps/starter/lib/__tests__/schema-copy.test.ts',
+      'docs/BUILD_PIPELINE.md',
+      'sites/serpdownloaders.com/README.md',
+      'scripts/listing-rewrite.ts',
+      'scripts/listing-rewrite-brief.md',
+      'scripts/deploy-to-repo.sh',
+      'scripts/templates/target-verify-badge.yml',
+      'data/listings.json',
+      'apps/starter/app/layout.tsx',
+      '.github/workflows/build-and-deploy.yml',
+      '.github/workflows/reusable-verify-badge.yml'
+    ]) {
+      expect(isBuildAffectingPath(path), path).toBe(false)
+    }
     expect(workflow.on.push?.paths).not.toContain('.github/workflows/build-and-deploy.yml')
     expect(workflow.on.push?.paths).not.toContain('.github/workflows/reusable-verify-badge.yml')
+  })
+
+  it('ignores retired site directories', () => {
+    for (const siteId of removedSiteIds) {
+      expect(isBuildAffectingPath(`sites/${siteId}/products.json`), siteId).toBe(false)
+      expect(isBuildAffectingPath(`apps/${siteId}/app/page.tsx`), siteId).toBe(false)
+    }
+  })
+
+  it('covers every workspace package an active wrapper app depends on', () => {
+    const workspacePackageDirs = new Map<string, string>()
+
+    for (const root of ['packages', 'configs']) {
+      for (const entry of readdirSync(resolve(process.cwd(), root), { withFileTypes: true })) {
+        const packageJsonPath = resolve(process.cwd(), root, entry.name, 'package.json')
+
+        if (entry.isDirectory() && existsSync(packageJsonPath)) {
+          const { name } = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as { name: string }
+          workspacePackageDirs.set(name, `${root}/${entry.name}`)
+        }
+      }
+    }
+
+    const readWorkspaceDependencies = (dir: string): string[] => {
+      const packageJson = JSON.parse(
+        readFileSync(resolve(process.cwd(), dir, 'package.json'), 'utf8')
+      ) as Record<string, Record<string, string> | undefined>
+
+      return ['dependencies', 'devDependencies', 'peerDependencies'].flatMap(field =>
+        Object.keys(packageJson[field] ?? {}).filter(name => workspacePackageDirs.has(name))
+      )
+    }
+
+    const reachedDirs = new Set<string>()
+    const queue = activeCheckedInSiteIds.flatMap(siteId => readWorkspaceDependencies(`apps/${siteId}`))
+
+    while (queue.length > 0) {
+      const dir = workspacePackageDirs.get(queue.pop() ?? '')
+
+      if (dir && !reachedDirs.has(dir)) {
+        reachedDirs.add(dir)
+        queue.push(...readWorkspaceDependencies(dir))
+      }
+    }
+
+    expect(reachedDirs.size).toBeGreaterThan(0)
+    for (const dir of reachedDirs) {
+      expect(isBuildAffectingPath(`${dir}/src/index.ts`), dir).toBe(true)
+      expect(isBuildAffectingPath(`${dir}/package.json`), dir).toBe(true)
+    }
+
+    const excludedPackageDirs = nonBuildPathPatterns
+      .filter(pattern => pattern.startsWith('packages/'))
+      .map(pattern => pattern.replace(/\/\*\*$/, ''))
+
+    for (const dir of excludedPackageDirs) {
+      expect(reachedDirs.has(dir), dir).toBe(false)
+    }
+  })
+
+  it('runs both jobs on GitHub-hosted runners while the self-hosted runners are offline', () => {
+    const workflow = loadWorkflow()
+
+    expect(workflow.jobs.resolve['runs-on']).toBe('ubuntu-latest')
+    expect(workflow.jobs.deploy['runs-on']).toBe('ubuntu-latest')
   })
 
   it('runs push and workflow dispatch through a resolver plus deploy matrix', () => {
@@ -253,7 +343,7 @@ describe('build-and-deploy workflow', () => {
     expect(deployJob.if).toBe(`needs.resolve.outputs.should_deploy == 'true'`)
   })
 
-  it('runs for changes to active wrapper apps', () => {
+  it('runs for changes to active wrapper apps and checked-in site sources', () => {
     const workflow = loadWorkflow()
     const paths = workflow.on.push?.paths ?? []
 
@@ -262,9 +352,12 @@ describe('build-and-deploy workflow', () => {
         'apps/browserextensions.io/**',
         'apps/serp.ai/**',
         'apps/serpdownloaders.com/**',
-        'apps/starter/**'
+        'sites/browserextensions.io/**',
+        'sites/serp.ai/**',
+        'sites/serpdownloaders.com/**'
       ])
     )
     expect(paths).not.toContain('apps/serp.co/**')
+    expect(paths).not.toContain('apps/starter/**')
   })
 })

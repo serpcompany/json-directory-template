@@ -154,21 +154,38 @@ over every resolved checked-in site target:
 
 - workflow dispatch `site_id` selects the checked-in site config explicitly
 - workflow dispatch `site_id=all` deploys every active checked-in site
-- push events first infer changed checked-in sites from the push payload
-- a push that touches one site-specific target deploys that site
-- a push that touches multiple site-specific targets deploys those exact sites
-- if the push payload only contains shared paths, the resolver checks the
-  associated merged PR files through the GitHub API
-- if the associated merged PR also only contains shared paths, the resolver checks
-  PR title/body text, linked configured public issue URLs, linked public issue
-  body/title text, and push commit messages for checked-in site signals
-- shared-only pushes with no concrete site signal deploy every active checked-in site
+- a push commit whose head message contains `[skip static deploy]` skips the run
+- push events classify the changed files with `scripts/deploy-trigger-paths.ts`, the single source
+  of truth for deploy triggers. The workflow `paths:` filter is exactly
+  `buildAndDeployWorkflowPushPaths` from that file, and
+  `scripts/build-and-deploy-workflow.test.ts` fails if they drift
+- a changed file is build-affecting when it matches that list; tests (`*.test.ts(x)`,
+  `__tests__/`), Markdown, packages no active wrapper depends on (`packages/cli`,
+  `packages/generator`, `packages/validators`), and non-build scripts such as
+  `scripts/listing-rewrite.ts` are not
+- any shared build-affecting change deploys every active checked-in site, even when the same push
+  also touches one site's files or its PR/commit text names one site. Shared inputs are
+  `packages/**`, `configs/**`, `scripts/**`, the top-level `sites/*` files, `sites/default/**`,
+  `.nvmrc`, `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, and `turbo.json`
+- a push whose build-affecting changes are all under `apps/<site-id>/` or `sites/<site-id>/` deploys
+  exactly those sites
+- a push with no build-affecting changes deploys nothing
+- `data/listings.json` and `apps/starter/**` do not trigger deploys: every active site uses
+  `trial-products-json` and the build regenerates `data/listings.json` from
+  `sites/<site-id>/products.json`, no active wrapper imports `apps/starter`, and the `default`
+  starter has no deploy target
+- retired site ids (`removedSiteIds`) never become deploy targets
+- only when neither the push payload nor the associated merged PR lists any changed file does the
+  resolver fall back to submission-aware metadata (below), and then to every active site
 - the generated artifact stays in the job workspace for deploy; normal deploys do
   not upload/download the large artifact between jobs
 - deploy repo and branch are not workflow inputs during normal deploys; they
   must come from checked-in site config
+- both jobs run on GitHub-hosted `ubuntu-latest` runners for now because the self-hosted runners
+  are offline (#161). `.github/actions/install` installs pnpm and the `.nvmrc` Node version itself,
+  and the build and deploy scripts only need `git`, `bash`, and coreutils
 
-The submission-aware metadata pass builds its signal map from checked-in site config only:
+The submission-aware metadata fallback builds its signal map from checked-in site config only:
 
 - `site.id`
 - `site.domain`
@@ -182,10 +199,9 @@ are reviewer context only; an unrelated submitted product domain must not become
 
 Guardrails:
 
-- shared-only changes with no site signal deploy all active checked-in sites
-- starter/default deploys only when it is the only matched site
+- shared build-affecting changes always deploy all active checked-in sites
 - metadata that matches multiple concrete sites fails and asks for manual `workflow_dispatch`
-  per `site_id`, unless concrete changed paths already identify the exact site targets
+  per `site_id`
 - normal deploys do not use repository variables as fallback site IDs
 
 ## Design rules
