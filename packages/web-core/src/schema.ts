@@ -1,7 +1,13 @@
 import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url'
 import { getCategoryDisplayName } from './category-display'
-import { getCanonicalListingListRoute, getRoute } from './routes'
-import { SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL, SITE_URL } from './seo-config'
+import { getRoute } from './routes'
+import {
+  SITE_LOGO_URL,
+  SITE_NAME,
+  SITE_PUBLIC_URL,
+  SITE_URL,
+  SITE_WEBSITE_ID
+} from './seo-config'
 import { siteCopy } from './site-copy'
 
 export interface SchemaOrg {
@@ -126,42 +132,17 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadataLike) {
         name: `${website.name} ${listingLabelTitle}`,
         description: website.description,
         isPartOf: {
-          '@id': `${SITE_URL}/#website`
+          '@id': SITE_WEBSITE_ID
         },
         primaryImageOfPage: {
           '@type': 'ImageObject',
           url: getFaviconUrl(website.website, 256)
         },
         datePublished: website.publishedAt,
-        dateModified: website.publishedAt,
-        breadcrumb: {
-          '@id': `${pageUrl}#breadcrumb`
-        }
+        dateModified: website.publishedAt
       },
-      {
-        '@type': 'BreadcrumbList',
-        '@id': `${pageUrl}#breadcrumb`,
-        itemListElement: [
-          {
-            '@type': 'ListItem',
-            position: 1,
-            name: 'Home',
-            item: SITE_URL
-          },
-          {
-            '@type': 'ListItem',
-            position: 2,
-            name: siteCopy.allLabel,
-            item: `${SITE_URL}${getCanonicalListingListRoute()}`
-          },
-          {
-            '@type': 'ListItem',
-            position: 3,
-            name: website.name,
-            item: pageUrl
-          }
-        ]
-      },
+      // No `offers`, `aggregateRating`, or `review`: listing source data carries no price or
+      // rating data, and markup must not claim one. Add them only from real listing data.
       {
         '@type': 'SoftwareApplication',
         '@id': `${pageUrl}#software`,
@@ -170,12 +151,6 @@ export function generateWebsiteDetailSchema(website: WebsiteMetadataLike) {
         url: website.website,
         applicationCategory: categoryFormatted,
         operatingSystem: 'Web Browser',
-        offers: {
-          '@type': 'Offer',
-          price: '0',
-          priceCurrency: 'USD',
-          availability: 'https://schema.org/InStock'
-        },
         publisher: {
           '@type': 'Organization',
           name: website.name,

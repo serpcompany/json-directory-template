@@ -8,7 +8,7 @@ import { hasConfiguredGitHubIssueTarget, siteConfig } from '@thedaviddias/web-co
 export const metadata: Metadata = generateBaseMetadata({
   title: 'Page Not Found',
   description: `The page you are looking for does not exist. Browse ${siteConfig.name} to explore the directory.`,
-  path: '/404',
+  canonical: false,
   noindex: true,
 })
 

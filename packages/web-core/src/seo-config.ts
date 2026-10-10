@@ -14,6 +14,8 @@ export const SITE_TAGLINE = siteConfig.tagline;
 export const SITE_DESCRIPTION = siteConfig.description;
 export const SITE_PUBLIC_URL = siteConfig.publicUrl;
 export const SITE_URL = SITE_PUBLIC_URL;
+/** Shared JSON-LD `@id` of the site's WebSite node, referenced by page-level `isPartOf`. */
+export const SITE_WEBSITE_ID = `${SITE_URL}/#website`;
 export const SITE_TWITTER_HANDLE = hasConfiguredPublicSocialLinks(siteConfig)
   ? getTwitterHandleFromUrl(siteConfig.twitterUrl)
   : null;
@@ -73,6 +75,11 @@ export function generateBaseMetadata(options: {
   keywords?: string[];
   image?: typeof DEFAULT_OG_IMAGE;
   noindex?: boolean;
+  /**
+   * Set to false for pages that have no canonical URL of their own, such as the 404 page, so no
+   * `rel=canonical` or `og:url` is emitted.
+   */
+  canonical?: boolean;
 }): Metadata {
   const {
     title,
@@ -81,6 +88,7 @@ export function generateBaseMetadata(options: {
     keywords = KEYWORDS.global,
     image = DEFAULT_OG_IMAGE,
     noindex = false,
+    canonical = true,
   } = options;
 
   const url = `${SITE_URL}${path}`;
@@ -93,13 +101,11 @@ export function generateBaseMetadata(options: {
     creator: SITE_NAME,
     publisher: SITE_NAME,
     metadataBase: new URL(SITE_URL),
-    alternates: {
-      canonical: url,
-    },
+    ...(canonical ? { alternates: { canonical: url } } : {}),
     openGraph: {
       title,
       description,
-      url,
+      ...(canonical ? { url } : {}),
       siteName: SITE_NAME,
       images: [image],
       locale: 'en_US',
@@ -213,21 +219,6 @@ export function generateDynamicMetadata(options: {
   return metadata;
 }
 
-export function generateBreadcrumbSchema(items: Array<{ name: string; url?: string }>) {
-  const breadcrumbs = items.map((item, index) => ({
-    '@type': 'ListItem',
-    position: index + 1,
-    name: item.name,
-    ...(item.url ? { item: `${SITE_URL}${item.url}` } : {}),
-  }));
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: breadcrumbs,
-  };
-}
-
 export function generateWebsiteSchema() {
   const sameAs = [
     ...getConfiguredSocialLinks(siteConfig),
@@ -237,6 +228,7 @@ export function generateWebsiteSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
+    '@id': SITE_WEBSITE_ID,
     name: SITE_NAME,
     description: SITE_DESCRIPTION,
     url: SITE_PUBLIC_URL,

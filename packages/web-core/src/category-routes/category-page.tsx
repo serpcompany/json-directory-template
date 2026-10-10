@@ -17,15 +17,10 @@ import {
 import { AppSidebar } from '../layout/app-sidebar'
 import { getRoute } from '../routes'
 import { NewsletterSection } from '../sections/newsletter-section'
-import {
-  generateDynamicMetadata,
-  optimizeMetaDescription,
-  SITE_LOGO_URL,
-  SITE_NAME,
-  SITE_PUBLIC_URL
-} from '../seo-config'
+import { generateDynamicMetadata, optimizeMetaDescription, SITE_NAME, SITE_PUBLIC_URL } from '../seo-config'
 import { siteConfig } from '../site-config'
 import { siteCopy } from '../site-copy'
+import { buildListingCollectionPageSchema } from './collection-page-schema'
 import { resolveCollectionPageSchemaDates } from './schema-dates'
 
 type JsonLdProps = {
@@ -134,75 +129,20 @@ export function CategoryRoutePage({
     element: (
       <>
         <JsonLd
-          data={{
-            '@context': 'https://schema.org',
-            '@type': 'CollectionPage',
-            '@id': categoryUrl,
-            name: `${categoryDisplayName} - ${SITE_NAME}`,
-            headline: `${categoryProjects.length}+ ${categoryDisplayName} ${siteCopy.listingName.pluralTitle}`,
+          data={buildListingCollectionPageSchema({
+            dates: schemaDates,
             description: `Explore ${
               categoryProjects.length
             }+ curated ${categoryDisplayName.toLowerCase()} ${
               siteCopy.listingName.plural
             } from ${SITE_NAME}. ${category.description}`,
-            url: categoryUrl,
-            inLanguage: 'en-US',
-            isPartOf: {
-              '@type': 'WebSite',
-              '@id': SITE_PUBLIC_URL,
-              name: SITE_NAME,
-              description: siteConfig.description,
-              url: SITE_PUBLIC_URL
-            },
-            breadcrumb: {
-              '@type': 'BreadcrumbList',
-              itemListElement: [
-                {
-                  '@type': 'ListItem',
-                  position: 1,
-                  name: 'Home',
-                  item: SITE_PUBLIC_URL
-                },
-                {
-                  '@type': 'ListItem',
-                  position: 2,
-                  name: categoryDisplayName,
-                  item: categoryUrl
-                }
-              ]
-            },
-            numberOfItems: categoryProjects.length,
-            itemListElement: categoryProjects.slice(0, 10).map((project, index) => ({
-              '@type': 'ListItem',
-              position: index + 1,
-              url: project.website,
-              name: project.name,
-              description: project.description
-            })),
-            mainEntity: {
-              '@type': 'ItemList',
-              name: `${categoryDisplayName} ${siteCopy.listingName.pluralTitle}`,
-              description: category.description,
-              numberOfItems: categoryProjects.length,
-              itemListOrder: 'https://schema.org/ItemListOrderAscending',
-              itemListElement: categoryProjects.slice(0, 20).map((project, index) => ({
-                '@type': 'Thing',
-                position: index + 1,
-                url: project.website,
-                name: project.name
-              }))
-            },
-            publisher: {
-              '@type': 'Organization',
-              name: SITE_NAME,
-              url: SITE_PUBLIC_URL,
-              logo: {
-                '@type': 'ImageObject',
-                url: SITE_LOGO_URL
-              }
-            },
-            ...schemaDates
-          }}
+            headline: `${categoryProjects.length}+ ${categoryDisplayName} ${siteCopy.listingName.pluralTitle}`,
+            itemListDescription: category.description,
+            itemListName: `${categoryDisplayName} ${siteCopy.listingName.pluralTitle}`,
+            listings: categoryProjects,
+            name: `${categoryDisplayName} - ${SITE_NAME}`,
+            url: categoryUrl
+          })}
         />
         {seoContent.faqQuestions && seoContent.faqQuestions.length > 0 && (
           <JsonLd

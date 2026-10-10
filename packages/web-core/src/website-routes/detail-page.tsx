@@ -7,8 +7,8 @@ import type {
   WebsiteNavigationMetadata,
   WebsiteRelatedCardMetadata
 } from '../content-query'
+import { getListingDetailBreadcrumbItems } from '../listing-breadcrumbs'
 import { resolveListingDetailTemplate } from '../listing-detail-template'
-import { getCanonicalListingListRoute, getRoute } from '../routes'
 import { generateWebsiteDetailSchema } from '../schema'
 import { generateDynamicMetadata } from '../seo-config'
 import { siteConfig } from '../site-config'
@@ -143,16 +143,7 @@ export function WebsiteDetailRoutePage({
     WebsiteResourcesSection
   } = slots
 
-  const breadcrumbItems = [
-    {
-      name: siteCopy.listingName.pluralTitle,
-      href: getCanonicalListingListRoute()
-    },
-    {
-      name: project.name,
-      href: getRoute('listing.detail', { slug: project.slug })
-    }
-  ]
+  const breadcrumbItems = getListingDetailBreadcrumbItems(project)
   const detailTemplate = resolveListingDetailTemplate(project.entityType)
   const logoMedia = project.media?.logo
     ? {
