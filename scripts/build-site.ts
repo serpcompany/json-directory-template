@@ -19,6 +19,8 @@ import type { LegacyListingRedirect } from '@thedaviddias/site-contract/legacy-l
 import { getSiteRootListingAliases } from '@thedaviddias/site-contract/site-root-listing-aliases'
 import type { AssetSource, CheckedInSiteConfig } from '@thedaviddias/site-contract/types'
 import { categories } from '@thedaviddias/web-core/categories'
+import { type CategoryLike, getActiveCategories } from '@thedaviddias/web-core/category-navigation'
+import { generateCategoryPaginationStaticParams } from '@thedaviddias/web-core/category-pagination'
 import { resolveSiteLegacyListingRedirects } from './legacy-listing-redirects.ts'
 import { createRunTempDir } from './run-context.ts'
 import {
@@ -49,6 +51,7 @@ type BuildSourceAppPaths = {
   authRouteBackupPath: string
   authRoutePath: string
   brandsRoutePath: string
+  categoryPaginationRoutePath: string
   docsRoutePath: string
   favoritesRoutePath: string
   faviconPath: string
@@ -76,6 +79,7 @@ type StaticExportRoutePaths = Pick<
   | 'accountRoutePath'
   | 'apiRoutePath'
   | 'brandsRoutePath'
+  | 'categoryPaginationRoutePath'
   | 'docsRoutePath'
   | 'favoritesRoutePath'
   | 'guidesRoutePath'
@@ -101,6 +105,7 @@ export function resolveBuildSourceAppPaths({
     authRouteBackupPath: resolve(appDir, 'app/api/auth/[...nextauth]/route.static-export-disabled'),
     authRoutePath: resolve(appDir, 'app/api/auth/[...nextauth]/route.ts'),
     brandsRoutePath: resolve(appDir, 'app/brands'),
+    categoryPaginationRoutePath: resolve(appDir, 'app/categories/[category]/page'),
     docsRoutePath: resolve(appDir, 'app/docs'),
     favoritesRoutePath: resolve(appDir, 'app/favorites'),
     faviconPath: resolve(appDir, 'app/favicon.ico'),
@@ -470,10 +475,17 @@ async function prepareBrandAssets(input: SiteInputTarget): Promise<{ restore: ()
 
 export function prepareDisabledRoutePathsForStaticExport({
   featureFlags,
+  hasCategoryPaginationPages = false,
   siteId,
   sourceAppPaths
 }: {
   featureFlags: StaticExportRouteFeatureFlags
+  /**
+   * Whether any category page after the first is generated. `output: export` rejects a dynamic
+   * route whose `generateStaticParams()` is empty, so the paginated category route is staged out
+   * when there is nothing to paginate.
+   */
+  hasCategoryPaginationPages?: boolean
   siteId: string
   sourceAppPaths: StaticExportRoutePaths
 }): { restore: () => void } {
@@ -515,6 +527,10 @@ export function prepareDisabledRoutePathsForStaticExport({
     maybeStage(sourceAppPaths.guidesRoutePath, 'guides')
   }
 
+  if (!hasCategoryPaginationPages) {
+    maybeStage(sourceAppPaths.categoryPaginationRoutePath, 'category-pagination')
+  }
+
   return {
     restore: () => {
       stages.reverse().forEach(restoreStagedPath)
@@ -534,9 +550,31 @@ function prepareDisabledRoutesForStaticExport(input: SiteInputTarget): {
 
   return prepareDisabledRoutePathsForStaticExport({
     featureFlags: definition.features,
+    hasCategoryPaginationPages: hasCategoryPaginationPages(definition),
     siteId: definition.id,
     sourceAppPaths
   })
+}
+
+// Reads the listing data prepared for this build (prepareSourceData runs first).
+function hasCategoryPaginationPages(definition: ReturnType<typeof loadCheckedInSiteFromInput>): boolean {
+  const pageSize = definition.browse?.categoryPageSize
+
+  if (!pageSize) {
+    return false
+  }
+
+  const listings = JSON.parse(
+    readFileSync(resolve(workspaceRoot, definition.content.listingSource.outputPath), 'utf8')
+  ) as CategoryLike[]
+
+  return (
+    generateCategoryPaginationStaticParams(
+      getActiveCategories(listings, definition.id),
+      listings,
+      pageSize
+    ).length > 0
+  )
 }
 
 type ArtifactSurfaceFlags = {

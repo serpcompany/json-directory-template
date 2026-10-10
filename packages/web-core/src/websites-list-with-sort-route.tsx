@@ -14,10 +14,12 @@ interface WebsitesListWithSortRouteProps {
   initialWebsites: WebsiteBrowseCardMetadata[]
   emptyTitle?: string
   emptyDescription?: string
+  summary?: string
 }
 
 export function WebsitesListWithSortRoute({
   initialWebsites,
+  summary,
   emptyTitle = siteCopy.categoryEmptyTitle,
   emptyDescription = siteCopy.categoryEmptyDescription
 }: WebsitesListWithSortRouteProps) {
@@ -28,6 +30,7 @@ export function WebsitesListWithSortRoute({
       initialWebsites={initialWebsites}
       emptyTitle={emptyTitle}
       emptyDescription={emptyDescription}
+      summary={summary}
       trackSortChange={trackSortChange}
       slots={{
         Badge,

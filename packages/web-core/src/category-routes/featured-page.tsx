@@ -37,7 +37,8 @@ type FeaturedCategorySlots = {
 }
 
 export const featuredCategoryPageMetadata: Metadata = generateBaseMetadata({
-  title: `Featured ${siteCopy.listingName.pluralTitle} - ${SITE_NAME}`,
+  // The root layout appends ` | <site name>`.
+  title: `Featured ${siteCopy.listingName.pluralTitle}`,
   description: `Discover our curated selection of featured ${siteCopy.listingName.plural} and related resources.`,
   keywords: [
     'featured',

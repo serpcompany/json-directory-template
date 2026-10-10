@@ -7,8 +7,8 @@ type CollectionListing = {
   slug: string
 }
 
-// Only the first listings are marked up; the page itself renders every listing.
-const COLLECTION_ITEM_LIST_LIMIT = 20
+// Unpaginated collection pages mark up only their first listings; the page renders every listing.
+export const COLLECTION_ITEM_LIST_LIMIT = 20
 
 /**
  * CollectionPage JSON-LD for category-style listing pages.
@@ -24,10 +24,18 @@ export function buildListingCollectionPageSchema(options: {
   headline: string
   itemListDescription: string
   itemListName: string
+  /** Maximum listings to mark up. Defaults to 20. */
+  itemLimit?: number
   listings: CollectionListing[]
   name: string
+  /** Total listings in the collection when `listings` is one page of it. */
+  numberOfItems?: number
+  /** Position of the first listing minus one, for pages after the first. */
+  positionOffset?: number
   url: string
 }): Record<string, unknown> {
+  const positionOffset = options.positionOffset ?? 0
+
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -48,13 +56,13 @@ export function buildListingCollectionPageSchema(options: {
       '@type': 'ItemList',
       name: options.itemListName,
       description: options.itemListDescription,
-      numberOfItems: options.listings.length,
+      numberOfItems: options.numberOfItems ?? options.listings.length,
       itemListOrder: 'https://schema.org/ItemListOrderAscending',
       itemListElement: options.listings
-        .slice(0, COLLECTION_ITEM_LIST_LIMIT)
+        .slice(0, options.itemLimit ?? COLLECTION_ITEM_LIST_LIMIT)
         .map((listing, index) => ({
           '@type': 'ListItem',
-          position: index + 1,
+          position: positionOffset + index + 1,
           name: listing.name,
           url: `${SITE_PUBLIC_URL}${getRoute('listing.detail', { slug: listing.slug })}`
         }))

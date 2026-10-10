@@ -7,7 +7,11 @@ import {
   getFeaturedListingCount,
   listingMatchesCategory
 } from '../category-navigation'
-import { getCategorySEO } from '../category-seo'
+import {
+  buildCategoryMetaDescription,
+  buildCategoryMetaTitle,
+  getCategorySEO
+} from '../category-seo'
 import {
   type GuideMetadata,
   toWebsiteBrowseCardMetadata,
@@ -15,11 +19,17 @@ import {
   type WebsiteMetadata
 } from '../content-query'
 import { AppSidebar } from '../layout/app-sidebar'
-import { getRoute } from '../routes'
 import { NewsletterSection } from '../sections/newsletter-section'
-import { generateDynamicMetadata, optimizeMetaDescription, SITE_NAME, SITE_PUBLIC_URL } from '../seo-config'
+import { generateDynamicMetadata, SITE_NAME, SITE_PUBLIC_URL } from '../seo-config'
 import { siteConfig } from '../site-config'
 import { siteCopy } from '../site-copy'
+import {
+  getCategoryPageCount,
+  getCategoryPageRoute,
+  getConfiguredCategoryPageSize,
+  sliceCategoryPage
+} from '../category-pagination'
+import { CategoryPaginationNav } from './category-pagination-nav'
 import { buildListingCollectionPageSchema } from './collection-page-schema'
 import { resolveCollectionPageSchemaDates } from './schema-dates'
 
@@ -29,6 +39,7 @@ type JsonLdProps = {
 
 type CategoryWebsitesListProps = {
   initialWebsites: WebsiteBrowseCardMetadata[]
+  summary?: string
 }
 
 type FeaturedGuidesSectionProps = {
@@ -51,10 +62,12 @@ export function generateCategoryRouteStaticParams(categories: Category[]) {
 
 export async function generateCategoryRouteMetadata({
   allProjects,
-  category
+  category,
+  page = 1
 }: {
   allProjects: Array<WebsiteMetadata & CategoryLike>
   category: Category
+  page?: number
 }): Promise<Metadata> {
   const seoContent = getCategorySEO(category.slug, category)
   const categoryProjectsCount =
@@ -62,23 +75,52 @@ export async function generateCategoryRouteMetadata({
       ? allProjects.filter(project => project.featured === true).length
       : allProjects.filter(project => listingMatchesCategory(project, category.slug)).length
 
-  const title =
+  const categoryName = getCategoryDisplayName(category.slug)
+  const title = buildCategoryMetaTitle({
+    categoryName,
+    listingCount: categoryProjectsCount,
+    siteName: SITE_NAME
+  })
+  const description = buildCategoryMetaDescription([
     categoryProjectsCount > 0
-      ? `${categoryProjectsCount}+ ${seoContent.metaTitle}`
-      : seoContent.metaTitle
+      ? `Explore ${categoryProjectsCount}+ ${categoryName.toLowerCase()} ${siteCopy.listingName.plural}`
+      : `Explore ${categoryName.toLowerCase()} ${siteCopy.listingName.plural}`,
+    category.description
+  ])
 
-  const description =
-    categoryProjectsCount > 0
-      ? `${categoryProjectsCount}+ ${siteCopy.listingName.plural}. ${seoContent.metaDescription}`
-      : seoContent.metaDescription
-
-  return generateDynamicMetadata({
+  const metadata = generateDynamicMetadata({
     type: 'category',
     name: title,
-    description: optimizeMetaDescription(description),
+    description,
     slug: category.slug,
     additionalKeywords: seoContent.keywords
   })
+
+  if (page <= 1) {
+    return metadata
+  }
+
+  // Later pages are self-canonical with their own title and description.
+  const pageCount = getCategoryPageCount(categoryProjectsCount, getConfiguredCategoryPageSize())
+  const pageUrl = `${SITE_PUBLIC_URL}${getCategoryPageRoute(category.slug, page)}`
+  const pageTitle = `${buildCategoryMetaTitle({
+    categoryName,
+    listingCount: categoryProjectsCount,
+    siteName: `${SITE_NAME} - Page ${page}`
+  })} - Page ${page}`
+  const pageDescription = buildCategoryMetaDescription([
+    `Page ${page} of ${pageCount}`,
+    ...description.split(/(?<=[.!?])\s+/)
+  ])
+
+  return {
+    ...metadata,
+    title: pageTitle,
+    description: pageDescription,
+    alternates: { canonical: pageUrl },
+    openGraph: { ...metadata.openGraph, title: pageTitle, description: pageDescription, url: pageUrl },
+    twitter: { ...metadata.twitter, title: pageTitle, description: pageDescription }
+  }
 }
 
 export function CategoryRoutePage({
@@ -87,6 +129,7 @@ export function CategoryRoutePage({
   category,
   featuredGuides,
   featuredProjects,
+  page = 1,
   slots
 }: {
   activeCategorySlugs: string[]
@@ -94,6 +137,8 @@ export function CategoryRoutePage({
   category: Category
   featuredGuides: GuideMetadata[]
   featuredProjects: WebsiteMetadata[]
+  /** 1-based category page; pages after the first exist only when `browse.categoryPageSize` is set. */
+  page?: number
   slots: CategoryRouteSlots
 }) {
   const {
@@ -106,8 +151,8 @@ export function CategoryRoutePage({
 
   const seoContent = getCategorySEO(category.slug, category)
   const categoryDisplayName = getCategoryDisplayName(category.slug)
-  const categoryPath = getRoute('category.page', { category: category.slug })
-  const categoryUrl = `${SITE_PUBLIC_URL}${categoryPath}`
+  const categoryPageSize = getConfiguredCategoryPageSize()
+  const categoryUrl = `${SITE_PUBLIC_URL}${getCategoryPageRoute(category.slug, page)}`
 
   const categoryProjects =
     category.slug === 'featured'
@@ -118,14 +163,24 @@ export function CategoryRoutePage({
           .filter(project => listingMatchesCategory(project, category.slug))
           .sort((a, b) => a.name.localeCompare(b.name))
   const listedCategoryProjects =
-    category.slug === 'other' && categoryProjects.length > 200
+    !categoryPageSize && category.slug === 'other' && categoryProjects.length > 200
       ? categoryProjects.slice(0, 200)
       : categoryProjects
-  const listedCategoryProjectCards = listedCategoryProjects.map(toWebsiteBrowseCardMetadata)
+  const categoryPage = sliceCategoryPage(listedCategoryProjects, page, categoryPageSize)
+
+  if (!categoryPage) {
+    return { categoryProjects: [], element: null }
+  }
+
+  const listedCategoryProjectCards = categoryPage.items.map(toWebsiteBrowseCardMetadata)
   const schemaDates = resolveCollectionPageSchemaDates(categoryProjects)
+  const pageSummary =
+    categoryPage.pageCount > 1
+      ? `Showing ${categoryPage.startIndex + 1}-${categoryPage.startIndex + categoryPage.items.length} of ${categoryPage.totalCount} ${siteCopy.listingName.plural} in this category`
+      : undefined
 
   return {
-    categoryProjects,
+    categoryProjects: categoryPage.items,
     element: (
       <>
         <JsonLd
@@ -139,8 +194,18 @@ export function CategoryRoutePage({
             headline: `${categoryProjects.length}+ ${categoryDisplayName} ${siteCopy.listingName.pluralTitle}`,
             itemListDescription: category.description,
             itemListName: `${categoryDisplayName} ${siteCopy.listingName.pluralTitle}`,
-            listings: categoryProjects,
-            name: `${categoryDisplayName} - ${SITE_NAME}`,
+            ...(categoryPage.pageCount > 1
+              ? {
+                  itemLimit: categoryPage.items.length,
+                  listings: categoryPage.items,
+                  numberOfItems: categoryPage.totalCount,
+                  positionOffset: categoryPage.startIndex
+                }
+              : { listings: categoryProjects }),
+            name:
+              page > 1
+                ? `${categoryDisplayName} - Page ${page} - ${SITE_NAME}`
+                : `${categoryDisplayName} - ${SITE_NAME}`,
             url: categoryUrl
           })}
         />
@@ -179,7 +244,15 @@ export function CategoryRoutePage({
                   </div>
                   <p className="text-muted-foreground mt-1">{seoContent.introText}</p>
                 </div>
-                <CategoryWebsitesList initialWebsites={listedCategoryProjectCards} />
+                <CategoryWebsitesList
+                  initialWebsites={listedCategoryProjectCards}
+                  summary={pageSummary}
+                />
+                <CategoryPaginationNav
+                  categorySlug={category.slug}
+                  page={categoryPage.page}
+                  pageCount={categoryPage.pageCount}
+                />
               </section>
 
               {siteConfig.features.showExternalResources && <ExternalResourcesSection />}

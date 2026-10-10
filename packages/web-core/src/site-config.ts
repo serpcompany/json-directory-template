@@ -2,6 +2,7 @@ import { defaultSiteConfig, resolveCheckedInSiteConfig } from '@thedaviddias/sit
 import type {
   AssetSource,
   SiteBadgesConfig,
+  SiteBrowseConfig,
   SiteCopyConfig,
   SiteFeatureFlags,
   SiteSitemapConfig
@@ -26,6 +27,7 @@ export type SiteConfig = {
   badges: ResolvedSiteBadgesConfig
   brandsRouteBasePath: string
   branding: SiteBrandingConfig
+  browse: SiteBrowseConfig
   copy: SiteCopyConfig
   description: string
   docsRouteBasePath: string
@@ -169,6 +171,7 @@ export function resolveSiteConfig(
       )
     },
     brandsRouteBasePath: configuredSite.routes.brandsBasePath,
+    browse: configuredSite.browse ?? {},
     copy: configuredSite.copy,
     description: configuredSite.site.description,
     docsRouteBasePath: configuredSite.routes.docsBasePath,

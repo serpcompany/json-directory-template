@@ -9,6 +9,7 @@
     "./auth/github-sign-in-button": "./src/auth/github-sign-in-button.tsx",
     "./auth/sign-out-button": "./src/auth/sign-out-button.tsx",
     "./categories": "./src/categories.ts",
+    "./category-pagination": "./src/category-pagination.ts",
     "./category-websites-list-route": "./src/category-websites-list-route.tsx",
     "./category-websites-list": "./src/category-websites-list.tsx",
     "./category-display": "./src/category-display.ts",

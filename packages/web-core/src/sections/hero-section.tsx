@@ -28,17 +28,21 @@ export function HeroSection({ websiteCount }: HeroSectionProps) {
         </div>
 
         <h1 className="animate-fade-in-up opacity-0 stagger-2 text-4xl font-bold leading-[1.1] tracking-tight md:text-5xl lg:text-6xl xl:text-7xl">
-          <span className="relative whitespace-nowrap">
+          <span className={siteConfig.copy.homepage?.heading ? 'relative' : 'relative whitespace-nowrap'}>
             <span className="bg-gradient-to-r from-foreground via-foreground/80 to-foreground bg-clip-text text-transparent">
-              {siteConfig.name}
+              {siteConfig.copy.homepage?.heading ?? siteConfig.name}
             </span>
           </span>
         </h1>
 
         <p className="animate-fade-in-up opacity-0 stagger-3 mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg lg:text-xl">
-          <span className="font-medium text-foreground">{siteConfig.tagline}</span> and browse
-          curated {siteCopy.listingName.plural}, resources, and documentation links in one
-          searchable directory
+          {siteConfig.copy.homepage?.intro ?? (
+            <>
+              <span className="font-medium text-foreground">{siteConfig.tagline}</span> and browse
+              curated {siteCopy.listingName.plural}, resources, and documentation links in one
+              searchable directory
+            </>
+          )}
         </p>
 
         <div className="animate-fade-in-up opacity-0 stagger-4 flex flex-col justify-center gap-3 pt-2 sm:flex-row md:gap-4">

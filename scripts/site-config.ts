@@ -89,10 +89,22 @@ const trialProductsSourceSchema = z.object({
 
 const siteCopyDefaults = defaultSiteConfig.copy
 
+const siteHomepageCopySchema = z
+  .object({
+    description: z.string().trim().min(1).optional(),
+    heading: z.string().trim().min(1).optional(),
+    intro: z.string().trim().min(1).optional(),
+    title: z.string().trim().min(1).optional()
+  })
+  .strict()
+  .optional()
+
 const siteCopySchema = z.object({
+  brandsDescription: z.string().trim().min(1).optional(),
   brandsLabel: z.string().min(1).default(siteCopyDefaults.brandsLabel),
   categoryLabels: z.record(z.string().min(1)).default(siteCopyDefaults.categoryLabels),
   docsLabel: z.string().min(1).default(siteCopyDefaults.docsLabel),
+  homepage: siteHomepageCopySchema,
   listingName: z
     .object({
       plural: z.string().min(1).default(siteCopyDefaults.listingName.plural),
@@ -102,6 +114,15 @@ const siteCopySchema = z.object({
   networkLabel: z.string().min(1).default(siteCopyDefaults.networkLabel),
   submitLabel: z.string().min(1).default(siteCopyDefaults.submitLabel)
 })
+
+const siteBrowseSchema = z
+  .object({
+    categoryPageSize: z.number().int().min(1).optional(),
+    homepageCategorySectionLimit: z.number().int().min(1).optional(),
+    homepageListingLayout: z.enum(['alphabetical', 'category-sections']).optional()
+  })
+  .strict()
+  .optional()
 
 const featureFlagsSchema = z.object({
   showAuth: z.boolean().default(false),
@@ -265,6 +286,7 @@ const checkedInSiteConfigSchema = z.object({
     artifactDir: z.string().min(1),
     mode: z.literal('static-directory').default('static-directory')
   }),
+  browse: siteBrowseSchema,
   copy: siteCopySchema.default(siteCopyDefaults),
   content: z.object({
     listingSource: z.union([listingJsonSourceSchema, trialProductsSourceSchema])
@@ -349,7 +371,17 @@ export type SiteInputTarget = {
 export function validateCheckedInSiteConfig(
   siteConfig: CheckedInSiteConfig
 ): CheckedInSiteConfigRecord {
-  return checkedInSiteConfigSchema.parse(siteConfig)
+  const record = checkedInSiteConfigSchema.parse(siteConfig)
+
+  // Paginated category pages are generated under /categories/<slug>/page/<n>/; sites that
+  // republish category pages under sitemap.categoryBasePath have no route for them.
+  if (record.browse?.categoryPageSize && record.sitemap.categoryBasePath) {
+    throw new Error(
+      `Site ${record.id}: browse.categoryPageSize is not supported together with sitemap.categoryBasePath.`
+    )
+  }
+
+  return record
 }
 
 export function parseSiteInputArgs(
