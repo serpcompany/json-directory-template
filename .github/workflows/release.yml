@@ -15,7 +15,10 @@ permissions:
 
 jobs:
   release:
-    runs-on: self-hosted
+    # Was `self-hosted`. Swapped to GitHub-hosted runners for now because the self-hosted runners
+    # are offline (owner decision, #161). This job shares the `main-ci-<ref>` concurrency group with
+    # Build & Deploy, so a Release run queued on an offline runner held every deploy behind it.
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
 

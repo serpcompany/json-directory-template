@@ -100,4 +100,12 @@ describe('ci workflow install isolation', () => {
 
     expect(workflow.jobs.submit?.['runs-on']).toBe('ubuntu-latest')
   })
+
+  it('runs the release job on a GitHub-hosted runner so it cannot hold the shared main-ci group', () => {
+    const workflow = loadYamlFile<{ jobs: Record<string, { 'runs-on'?: string }> }>(
+      '.github/workflows/release.yml'
+    )
+
+    expect(workflow.jobs.release?.['runs-on']).toBe('ubuntu-latest')
+  })
 })

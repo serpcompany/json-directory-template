@@ -17,11 +17,15 @@
 
 ## Runners
 
-- `.github/workflows/build-and-deploy.yml` (both jobs) and `.github/workflows/submit-gsc-sitemaps.yml`
-  run on GitHub-hosted `ubuntu-latest` for now because the self-hosted runners are offline (owner
-  decision, #161). `.github/actions/install` sets up pnpm and the `.nvmrc` Node version itself.
-- `release.yml`, `labels.yml`, `link-checker.yml`, and `update-listings-json.yml` still use
-  `self-hosted` and will not run until those runners are back or they are switched too.
+- `.github/workflows/build-and-deploy.yml` (both jobs), `.github/workflows/submit-gsc-sitemaps.yml`
+  and `.github/workflows/release.yml` run on GitHub-hosted `ubuntu-latest` for now because the
+  self-hosted runners are offline (owner decision, #161). `.github/actions/install` sets up pnpm and
+  the `.nvmrc` Node version itself.
+- Release and Build & Deploy share the `main-ci-<ref>` concurrency group so they run one after the
+  other. A run queued on an offline runner holds that group, so every workflow in it must be able
+  to start; that is why `release.yml` moved too.
+- `labels.yml`, `link-checker.yml`, and `update-listings-json.yml` still use `self-hosted` and will
+  not run until those runners are back or they are switched too.
 
 ## Deploy triggers
 
