@@ -11,6 +11,7 @@ import {
   buildExistingInput,
   withoutReviews,
   withoutInternalNotes,
+  copiedRuns,
   pipelineNotes,
   existingListingCopyIssues,
   buildImages,
@@ -1049,6 +1050,33 @@ describe('apply helpers', () => {
         'Saves MP4 at 720p. Listed in the pass-242 lineup CSV. See `popup.js:30-33, 265` for details.'
       )
     ).toBe('Saves MP4 at 720p. See  for details.')
+  })
+
+  it('flags copied source runs, wrong product names and raw placeholders', () => {
+    const source =
+      'Works on Chrome, Edge, Firefox, Brave and Opera on Windows, macOS and Linux. Only download content you own or have explicit permission to save.'
+    expect(
+      copiedRuns(
+        source,
+        'Runs in Chrome, Edge, Firefox, Brave and Opera on Windows, macOS and Linux.'
+      )
+    ).toEqual([])
+    expect(
+      copiedRuns(
+        source,
+        'Please only download content you own or have explicit permission to save.'
+      )
+    ).toHaveLength(4)
+    const output = {
+      body: '## A\n\nClick the Okxxx Downloader icon on /video/{}/.\n\n## B\n\nb\n\n## C\n\nc',
+      faq: [],
+      slug: 'okxxx-downloader',
+      tagline: 'x'.repeat(80)
+    }
+    expect(existingListingCopyIssues(output, ['Okxxx Video Downloader', 'Okxxx'])).toEqual([
+      'raw "{}" route placeholders not allowed',
+      'product named "Okxxx Downloader"; use the title "Okxxx Video Downloader"'
+    ])
   })
 
   it('rejects unusable --threshold and --limit values', () => {

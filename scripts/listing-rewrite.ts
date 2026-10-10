@@ -1426,6 +1426,31 @@ export function validateOutputShape(value: unknown, slug: string): string[] {
   return issues
 }
 
+/** Browser, OS, format and function words that may legitimately repeat a source fact list. */
+const FACT_LIST_WORDS = new Set(
+  'chrome edge firefox brave opera whale yandex safari arc windows macos linux mobile browsers browser mp4 hls m3u8 dash webm and or the a an on to for of in with'.split(
+    ' '
+  )
+)
+
+/**
+ * 8-word runs shared with the source that carry at least 5 words outside fact lists
+ * (browser/OS/format names and function words). The brief bans copied runs (#161).
+ */
+export function copiedRuns(sourceText: string, rewriteText: string, size = 8): string[] {
+  const words = (text: string) => text.toLowerCase().match(/[a-z0-9']+/g) ?? []
+  const grams = (tokens: string[]) => {
+    const out = new Set<string>()
+    for (let index = 0; index + size <= tokens.length; index += 1) {
+      const gram = tokens.slice(index, index + size)
+      if (gram.filter(token => !FACT_LIST_WORDS.has(token)).length >= 5) out.add(gram.join(' '))
+    }
+    return out
+  }
+  const source = grams(words(sourceText))
+  return [...grams(words(rewriteText))].filter(gram => source.has(gram))
+}
+
 /** Internal build/QA status from the source pipeline. Not product facts; never public copy (#161). */
 export const PIPELINE_NOTE_PATTERNS: Array<[string, RegExp]> = [
   [
@@ -1442,7 +1467,21 @@ export const PIPELINE_NOTE_PATTERNS: Array<[string, RegExp]> = [
   ['confidence rating', /\bconfidence (?:rating|level)\b|\bready-solid\b/i],
   ['extraction QA', /\bextraction (?:QA|review)\b/i],
   ['stale config', /\bstale config(?:uration)?\b/i],
-  ['release readiness', /\brelease[- ]read(?:y|iness)\b|\breadiness messaging\b/i]
+  ['release readiness', /\brelease[- ]read(?:y|iness)\b|\breadiness messaging\b/i],
+  ['verified target', /\btarget[- ](?:verified|ready)\b|\bverified target\b|\bconfirmed target\b/i],
+  ['candidate level', /\bcandidate[- ]level\b|\btarget candidate\b/i],
+  [
+    'proven',
+    /\b(?:not (?:yet )?(?:a )?proven|fully proven|proven downloader|how (?:well )?proven)\b/i
+  ],
+  [
+    'readiness',
+    /\breadiness\b|\bdevelopment stage\b|\bstill being (?:expanded|refined)\b|\bkeeps being refined\b/i
+  ],
+  [
+    'writer notes',
+    /\b(?:the|this) listing\b(?! (?:layout|pages?|grid|view|to\b))|\bthe (?:product's|repository|repo) (?:own )?(?:notes|documentation)\b|\b(?:its|the|per the) documentation\b|\bclaimed here\b|\bgeneric (?:copy|text)\b/i
+  ]
 ]
 
 export function pipelineNotes(text: string): string[] {
@@ -1454,15 +1493,38 @@ export function pipelineNotes(text: string): string[] {
 
 /** Old shared-template section titles the existing-listing rewrites must not recreate (#161). */
 const TEMPLATE_HEADING =
-  /troubleshoot|\bnotes?\b|^about\b|supported formats|step[- ]by[- ]step|who it'?s for|use cases|installation instructions|trial/i
+  /troubleshoot|\bfix(?:es|ing)\b|symptom|\bproblems\b|problem[- ]solving|hiccups|snags|\berrors\b|recover|when (?:something|things) go|honest|\bnotes?\b|^about\b|supported formats|step[- ]by[- ]step|who it'?s for|use cases|installation instructions|trial/i
 
 /**
  * Copy rules for rewriting existing listings: no pipeline notes, no recreated template
  * sections, no "<Name> is a ..." opening, "activation" instead of licence wording, and a
  * tagline that fits a meta description.
  */
-export function existingListingCopyIssues(output: RewriteOutput, names: string[]): string[] {
+export function existingListingCopyIssues(
+  output: RewriteOutput,
+  names: string[],
+  sourceText = ''
+): string[] {
   const issues: string[] = []
+  const copyText = [output.tagline, output.body, faqText(output.faq)].join('\n')
+  if (/\{\}/.test(copyText)) issues.push('raw "{}" route placeholders not allowed')
+  const title = names[0] ?? ''
+  const platform = names.at(-1) ?? ''
+  const wrongName = `${platform} Downloader`
+  if (title && platform && title.toLowerCase() !== wrongName.toLowerCase()) {
+    const misnamed = new RegExp(`\\b${escapeRegExp(wrongName)}\\b`, 'i')
+    if (misnamed.test(copyText.split(title).join(' '))) {
+      issues.push(`product named "${wrongName}"; use the title "${title}"`)
+    }
+  }
+  if (sourceText) {
+    const runs = copiedRuns(sourceText, copyText)
+    if (runs.length) {
+      issues.push(
+        `${runs.length} runs of 8+ words copied from source: ${runs.slice(0, 3).join(' | ')}`
+      )
+    }
+  }
   const all = [output.tagline, output.body, faqText(output.faq)].join('\n')
   const notes = pipelineNotes(all)
   if (notes.length) issues.push(`internal pipeline notes not allowed: ${notes.join(', ')}`)
@@ -1711,7 +1773,8 @@ export function checkRewrite(
   }
 
   issues.push(...checkFacts(input.facts, rewriteText, names))
-  if (input.mode === 'existing') issues.push(...existingListingCopyIssues(output, names))
+  if (input.mode === 'existing')
+    issues.push(...existingListingCopyIssues(output, names, sourceText))
 
   return { issues, pass: issues.length === 0, scores, slug: input.slug, threshold }
 }
