@@ -1765,8 +1765,15 @@ export function checkRewrite(
       `faq dropped entries (${output.faq.length} vs ${requiredFaq} non-pricing in source); rewrite every one`
     )
   }
-  const sourceWords = normalizeWords(input.source.body, names).length
-  if (own.bodyWords.length < sourceWords * 0.6) {
+  // Existing listings drop reviews, pricing, internal notes and the shared template the
+  // owner asked to remove (#161), so measure against the cleaned source with a lower floor;
+  // checkFacts still guards against dropped facts.
+  const existing = input.mode === 'existing'
+  const comparableBody = existing
+    ? withoutInternalNotes(withoutPricing(withoutReviews(input.source.body)))
+    : input.source.body
+  const sourceWords = normalizeWords(comparableBody, names).length
+  if (own.bodyWords.length < sourceWords * (existing ? 0.45 : 0.6)) {
     issues.push(
       `body is much shorter than source (${own.bodyWords.length} vs ${sourceWords} words)`
     )
