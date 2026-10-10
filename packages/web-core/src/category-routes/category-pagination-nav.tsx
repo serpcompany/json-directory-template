@@ -16,7 +16,9 @@ export function getVisibleCategoryPages(page: number, pageCount: number): Array<
   }
 
   const pages = new Set([1, pageCount, page - 1, page, page + 1])
-  const sortedPages = [...pages].filter(value => value >= 1 && value <= pageCount).sort((a, b) => a - b)
+  const sortedPages = [...pages]
+    .filter(value => value >= 1 && value <= pageCount)
+    .sort((a, b) => a - b)
 
   return sortedPages.flatMap((value, index) =>
     index > 0 && value - (sortedPages[index - 1] ?? value) > 1 ? ['gap' as const, value] : [value]
@@ -51,7 +53,10 @@ export function CategoryPaginationNav({
             </PaginationItem>
           ) : (
             <PaginationItem key={value}>
-              <PaginationLink href={getCategoryPageRoute(categorySlug, value)} isActive={value === page}>
+              <PaginationLink
+                href={getCategoryPageRoute(categorySlug, value)}
+                isActive={value === page}
+              >
                 {value}
               </PaginationLink>
             </PaginationItem>

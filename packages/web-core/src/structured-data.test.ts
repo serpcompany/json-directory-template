@@ -124,11 +124,10 @@ describe('listing detail JSON-LD', () => {
 
 describe('category CollectionPage JSON-LD', () => {
   it('uses only schema.org properties valid for each type, with on-site absolute item URLs', async () => {
-    const { buildListingCollectionPageSchema } =
-      await importForSite<CollectionPageSchemaModule>(
-        'serpdownloaders.com',
-        './category-routes/collection-page-schema'
-      )
+    const { buildListingCollectionPageSchema } = await importForSite<CollectionPageSchemaModule>(
+      'serpdownloaders.com',
+      './category-routes/collection-page-schema'
+    )
     const listings = Array.from({ length: 25 }, (_, index) => ({
       name: `Listing ${index}`,
       slug: `listing-${index}.pages.dev`

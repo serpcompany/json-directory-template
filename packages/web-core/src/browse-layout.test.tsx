@@ -133,10 +133,7 @@ describe('category pagination helpers', () => {
     expect(parseCategoryPageParam('02')).toBeUndefined()
     expect(parseCategoryPageParam('x')).toBeUndefined()
 
-    const categories = [
-      { slug: 'adult' },
-      { slug: 'video-downloaders' }
-    ] as unknown as Category[]
+    const categories = [{ slug: 'adult' }, { slug: 'video-downloaders' }] as unknown as Category[]
     const listings = [
       ...Array.from({ length: 5 }, (_, index) => listing(`a-${index}`, ['adult'])),
       listing('v-1', ['video-downloaders'])

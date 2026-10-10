@@ -131,7 +131,9 @@ describe('build-and-deploy workflow', () => {
     }
 
     const reachedDirs = new Set<string>()
-    const queue = activeCheckedInSiteIds.flatMap(siteId => readWorkspaceDependencies(`apps/${siteId}`))
+    const queue = activeCheckedInSiteIds.flatMap(siteId =>
+      readWorkspaceDependencies(`apps/${siteId}`)
+    )
 
     while (queue.length > 0) {
       const dir = workspacePackageDirs.get(queue.pop() ?? '')

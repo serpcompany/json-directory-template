@@ -13,7 +13,8 @@ import { Card, CardContent } from '../ui/card'
 export const dynamic = 'force-static'
 
 const brandsDescription =
-  siteConfig.copy.brandsDescription ?? `Browse sites and products in the ${siteConfig.name} network.`
+  siteConfig.copy.brandsDescription ??
+  `Browse sites and products in the ${siteConfig.name} network.`
 
 export function generateMetadata(): Metadata {
   if (!siteConfig.features.showBrands) {
@@ -83,9 +84,7 @@ export default function BrandsPage() {
             Network
           </p>
           <h1 className="text-4xl font-bold tracking-tight">{siteCopy.brandsLabel}</h1>
-          <p className="max-w-3xl text-lg text-muted-foreground">
-            {brandsDescription}
-          </p>
+          <p className="max-w-3xl text-lg text-muted-foreground">{brandsDescription}</p>
         </section>
 
         <section

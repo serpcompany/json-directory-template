@@ -8,6 +8,12 @@ import {
   listingMatchesCategory
 } from '../category-navigation'
 import {
+  getCategoryPageCount,
+  getCategoryPageRoute,
+  getConfiguredCategoryPageSize,
+  sliceCategoryPage
+} from '../category-pagination'
+import {
   buildCategoryMetaDescription,
   buildCategoryMetaTitle,
   getCategorySEO
@@ -23,12 +29,6 @@ import { NewsletterSection } from '../sections/newsletter-section'
 import { generateDynamicMetadata, SITE_NAME, SITE_PUBLIC_URL } from '../seo-config'
 import { siteConfig } from '../site-config'
 import { siteCopy } from '../site-copy'
-import {
-  getCategoryPageCount,
-  getCategoryPageRoute,
-  getConfiguredCategoryPageSize,
-  sliceCategoryPage
-} from '../category-pagination'
 import { CategoryPaginationNav } from './category-pagination-nav'
 import { buildListingCollectionPageSchema } from './collection-page-schema'
 import { resolveCollectionPageSchemaDates } from './schema-dates'
@@ -118,7 +118,12 @@ export async function generateCategoryRouteMetadata({
     title: pageTitle,
     description: pageDescription,
     alternates: { canonical: pageUrl },
-    openGraph: { ...metadata.openGraph, title: pageTitle, description: pageDescription, url: pageUrl },
+    openGraph: {
+      ...metadata.openGraph,
+      title: pageTitle,
+      description: pageDescription,
+      url: pageUrl
+    },
     twitter: { ...metadata.twitter, title: pageTitle, description: pageDescription }
   }
 }

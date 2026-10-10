@@ -1,46 +1,45 @@
-import type { Metadata } from 'next';
-import { getRoute } from './routes';
-import { siteCopy } from './site-copy';
-import { siteContent } from './site-content';
+import type { Metadata } from 'next'
+import { getRoute } from './routes'
 import {
   getConfiguredSocialLinks,
   getTwitterHandleFromUrl,
   hasConfiguredPublicSocialLinks,
-  siteConfig,
-} from './site-config';
+  siteConfig
+} from './site-config'
+import { siteContent } from './site-content'
+import { siteCopy } from './site-copy'
 
-export const SITE_NAME = siteConfig.name;
-export const SITE_TAGLINE = siteConfig.tagline;
-export const SITE_DESCRIPTION = siteConfig.description;
-export const SITE_PUBLIC_URL = siteConfig.publicUrl;
-export const SITE_URL = SITE_PUBLIC_URL;
+export const SITE_NAME = siteConfig.name
+export const SITE_TAGLINE = siteConfig.tagline
+export const SITE_DESCRIPTION = siteConfig.description
+export const SITE_PUBLIC_URL = siteConfig.publicUrl
+export const SITE_URL = SITE_PUBLIC_URL
 /** Shared JSON-LD `@id` of the site's WebSite node, referenced by page-level `isPartOf`. */
-export const SITE_WEBSITE_ID = `${SITE_URL}/#website`;
+export const SITE_WEBSITE_ID = `${SITE_URL}/#website`
 export const SITE_TWITTER_HANDLE = hasConfiguredPublicSocialLinks(siteConfig)
   ? getTwitterHandleFromUrl(siteConfig.twitterUrl)
-  : null;
-export const SITE_FAVICON_URL =
-  siteConfig.branding.faviconUrl ?? `${SITE_URL}/favicon.ico`;
+  : null
+export const SITE_FAVICON_URL = siteConfig.branding.faviconUrl ?? `${SITE_URL}/favicon.ico`
 export const SITE_APPLE_TOUCH_ICON_URL =
-  siteConfig.branding.appleTouchIconUrl ?? `${SITE_URL}/apple-touch-icon.png`;
+  siteConfig.branding.appleTouchIconUrl ?? `${SITE_URL}/apple-touch-icon.png`
 function absoluteSiteAssetUrl(url: string): string {
-  return new URL(url, SITE_URL).toString();
+  return new URL(url, SITE_URL).toString()
 }
 
 export const SITE_LOGO_URL = absoluteSiteAssetUrl(
   siteConfig.branding.logoUrl ?? `${SITE_URL}/placeholder.svg`
-);
+)
 export const SITE_OG_IMAGE_URL = absoluteSiteAssetUrl(
   siteConfig.branding.opengraphImageUrl ?? SITE_LOGO_URL
-);
-export const DIRECTORY_LISTINGS_KEYWORD = `directory ${siteCopy.listingName.plural}`;
+)
+export const DIRECTORY_LISTINGS_KEYWORD = `directory ${siteCopy.listingName.plural}`
 
 export const DEFAULT_OG_IMAGE = {
   url: SITE_OG_IMAGE_URL,
   width: 1200,
   height: 630,
-  alt: `${SITE_NAME} - ${SITE_TAGLINE}`,
-};
+  alt: `${SITE_NAME} - ${SITE_TAGLINE}`
+}
 
 export const ROBOTS_CONFIG = {
   index: true,
@@ -51,12 +50,18 @@ export const ROBOTS_CONFIG = {
     noimageindex: false,
     'max-video-preview': -1,
     'max-image-preview': 'large' as const,
-    'max-snippet': -1,
-  },
-};
+    'max-snippet': -1
+  }
+}
 
 export const KEYWORDS = {
-  global: [DIRECTORY_LISTINGS_KEYWORD, 'listing directory', 'resources', 'documentation', 'discover'],
+  global: [
+    DIRECTORY_LISTINGS_KEYWORD,
+    'listing directory',
+    'resources',
+    'documentation',
+    'discover'
+  ],
   homepage: [SITE_NAME, DIRECTORY_LISTINGS_KEYWORD, 'listing directory', 'resources'],
   categories: {
     ai: ['AI tools', 'artificial intelligence', 'machine learning', 'neural networks'],
@@ -64,22 +69,22 @@ export const KEYWORDS = {
     education: ['education technology', 'e-learning', 'online courses', 'educational platforms'],
     productivity: ['productivity tools', 'workflow automation', 'task management', 'efficiency'],
     documentation: ['technical documentation', 'API docs', 'developer docs', 'knowledge base'],
-    saas: ['SaaS platforms', 'cloud software', 'web applications', 'software as a service'],
-  },
-};
+    saas: ['SaaS platforms', 'cloud software', 'web applications', 'software as a service']
+  }
+}
 
 export function generateBaseMetadata(options: {
-  title: string;
-  description: string;
-  path?: string;
-  keywords?: string[];
-  image?: typeof DEFAULT_OG_IMAGE;
-  noindex?: boolean;
+  title: string
+  description: string
+  path?: string
+  keywords?: string[]
+  image?: typeof DEFAULT_OG_IMAGE
+  noindex?: boolean
   /**
    * Set to false for pages that have no canonical URL of their own, such as the 404 page, so no
    * `rel=canonical` or `og:url` is emitted.
    */
-  canonical?: boolean;
+  canonical?: boolean
 }): Metadata {
   const {
     title,
@@ -88,10 +93,10 @@ export function generateBaseMetadata(options: {
     keywords = KEYWORDS.global,
     image = DEFAULT_OG_IMAGE,
     noindex = false,
-    canonical = true,
-  } = options;
+    canonical = true
+  } = options
 
-  const url = `${SITE_URL}${path}`;
+  const url = `${SITE_URL}${path}`
 
   return {
     title,
@@ -109,7 +114,7 @@ export function generateBaseMetadata(options: {
       siteName: SITE_NAME,
       images: [image],
       locale: 'en_US',
-      type: 'website',
+      type: 'website'
     },
     twitter: {
       card: 'summary_large_image',
@@ -117,7 +122,7 @@ export function generateBaseMetadata(options: {
       description,
       site: SITE_TWITTER_HANDLE || undefined,
       creator: SITE_TWITTER_HANDLE || undefined,
-      images: [image.url],
+      images: [image.url]
     },
     robots: noindex
       ? {
@@ -125,29 +130,29 @@ export function generateBaseMetadata(options: {
           follow: false,
           googleBot: {
             index: false,
-            follow: false,
-          },
+            follow: false
+          }
         }
       : ROBOTS_CONFIG,
     verification: {
       google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
       yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
       other: {
-        'msvalidate.01': process.env.NEXT_PUBLIC_BING_VERIFICATION || '',
-      },
-    },
-  };
+        'msvalidate.01': process.env.NEXT_PUBLIC_BING_VERIFICATION || ''
+      }
+    }
+  }
 }
 
 export function generateDynamicMetadata(options: {
-  type: 'website' | 'listing' | 'category' | 'member' | 'guide' | 'news' | 'doc';
-  name: string;
-  description: string;
-  slug: string;
-  additionalKeywords?: string[];
-  image?: typeof DEFAULT_OG_IMAGE;
-  publishedAt?: string;
-  updatedAt?: string;
+  type: 'website' | 'listing' | 'category' | 'member' | 'guide' | 'news' | 'doc'
+  name: string
+  description: string
+  slug: string
+  additionalKeywords?: string[]
+  image?: typeof DEFAULT_OG_IMAGE
+  publishedAt?: string
+  updatedAt?: string
 }): Metadata {
   const {
     type,
@@ -157,38 +162,38 @@ export function generateDynamicMetadata(options: {
     additionalKeywords = [],
     image,
     publishedAt,
-    updatedAt,
-  } = options;
+    updatedAt
+  } = options
 
-  let path = '';
-  let title = name;
+  let path = ''
+  let title = name
 
   switch (type) {
     case 'website':
     case 'listing':
-      path = getRoute('listing.detail', { slug });
-      title = `${name} - ${siteCopy.listingName.singularTitle}`;
-      break;
+      path = getRoute('listing.detail', { slug })
+      title = `${name} - ${siteCopy.listingName.singularTitle}`
+      break
     case 'category':
-      path = getRoute('category.page', { category: slug });
-      title = name;
-      break;
+      path = getRoute('category.page', { category: slug })
+      title = name
+      break
     case 'member':
-      path = `/u/${slug}`;
-      title = `${name} - Community Member`;
-      break;
+      path = `/u/${slug}`
+      title = `${name} - Community Member`
+      break
     case 'guide':
-      path = getRoute('guides.guide', { slug });
-      title = `${name} - Developer Guide`;
-      break;
+      path = getRoute('guides.guide', { slug })
+      title = `${name} - Developer Guide`
+      break
     case 'news':
-      path = `/news/${slug}`;
-      title = `${name} - News & Updates`;
-      break;
+      path = `/news/${slug}`
+      title = `${name} - News & Updates`
+      break
     case 'doc':
-      path = getRoute('docs.doc', { slug });
-      title = `${name} - ${siteCopy.docsLabel}`;
-      break;
+      path = getRoute('docs.doc', { slug })
+      title = `${name} - ${siteCopy.docsLabel}`
+      break
   }
 
   const metadata = generateBaseMetadata({
@@ -196,8 +201,8 @@ export function generateDynamicMetadata(options: {
     description,
     path,
     keywords: [...KEYWORDS.global, ...additionalKeywords],
-    image,
-  });
+    image
+  })
 
   if (
     (type === 'guide' || type === 'news' || type === 'website' || type === 'listing') &&
@@ -210,20 +215,18 @@ export function generateDynamicMetadata(options: {
       modifiedTime: updatedAt || publishedAt,
       authors: [SITE_NAME],
       section:
-        type === 'website' || type === 'listing'
-          ? siteCopy.listingName.singularTitle
-          : undefined,
-    };
+        type === 'website' || type === 'listing' ? siteCopy.listingName.singularTitle : undefined
+    }
   }
 
-  return metadata;
+  return metadata
 }
 
 export function generateWebsiteSchema() {
   const sameAs = [
     ...getConfiguredSocialLinks(siteConfig),
-    ...siteContent.networkLinks.map(link => link.href),
-  ];
+    ...siteContent.networkLinks.map(link => link.href)
+  ]
 
   return {
     '@context': 'https://schema.org',
@@ -236,9 +239,9 @@ export function generateWebsiteSchema() {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `${SITE_PUBLIC_URL}/search/?q={search_term_string}`,
+        urlTemplate: `${SITE_PUBLIC_URL}/search/?q={search_term_string}`
       },
-      'query-input': 'required name=search_term_string',
+      'query-input': 'required name=search_term_string'
     },
     publisher: {
       '@type': 'Organization',
@@ -246,18 +249,18 @@ export function generateWebsiteSchema() {
       url: SITE_PUBLIC_URL,
       logo: {
         '@type': 'ImageObject',
-        url: SITE_LOGO_URL,
+        url: SITE_LOGO_URL
       },
-      sameAs: [...new Set(sameAs)],
-    },
-  };
+      sameAs: [...new Set(sameAs)]
+    }
+  }
 }
 
 export function generateCollectionSchema(options: {
-  name: string;
-  description: string;
-  url: string;
-  itemCount: number;
+  name: string
+  description: string
+  url: string
+  itemCount: number
 }) {
   return {
     '@context': 'https://schema.org',
@@ -269,9 +272,9 @@ export function generateCollectionSchema(options: {
     isPartOf: {
       '@type': 'WebSite',
       name: SITE_NAME,
-      url: SITE_URL,
-    },
-  };
+      url: SITE_URL
+    }
+  }
 }
 
-export { formatPageTitle, generateAltText, optimizeMetaDescription } from './seo-helpers';
+export { formatPageTitle, generateAltText, optimizeMetaDescription } from './seo-helpers'

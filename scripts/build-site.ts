@@ -557,7 +557,9 @@ function prepareDisabledRoutesForStaticExport(input: SiteInputTarget): {
 }
 
 // Reads the listing data prepared for this build (prepareSourceData runs first).
-function hasCategoryPaginationPages(definition: ReturnType<typeof loadCheckedInSiteFromInput>): boolean {
+function hasCategoryPaginationPages(
+  definition: ReturnType<typeof loadCheckedInSiteFromInput>
+): boolean {
   const pageSize = definition.browse?.categoryPageSize
 
   if (!pageSize) {
@@ -1162,7 +1164,9 @@ export function applyLegacyListingRedirects(
 
     const legacyRouteDirs = [
       [listingBasePath, legacySlug].filter(Boolean),
-      ...(listingDetailSuffix ? [[listingBasePath, legacySlug, listingDetailSuffix].filter(Boolean)] : []),
+      ...(listingDetailSuffix
+        ? [[listingBasePath, legacySlug, listingDetailSuffix].filter(Boolean)]
+        : []),
       [legacySlug]
     ]
 

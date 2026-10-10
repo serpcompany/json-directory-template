@@ -5,10 +5,10 @@ import yaml from 'js-yaml'
 import { describe, expect, it } from 'vitest'
 import { runBuildSite } from './build-site.ts'
 import { buildDeployPlan } from './deploy-site.ts'
+import { matchesWorkflowPathFilter } from './deploy-trigger-paths.ts'
 import { loadCheckedInSite } from './site-config.ts'
 import { getSitemapTargets } from './submit-gsc-sitemaps.ts'
 import { validateSite } from './validate-site.ts'
-import { matchesWorkflowPathFilter } from './deploy-trigger-paths.ts'
 
 const retiredSiteIds = ['pornvideodownloaders.com', 'serp.co', 'serp.software'] as const
 const activeSiteIds = ['browserextensions.io', 'serp.ai', 'serpdownloaders.com'] as const

@@ -1,13 +1,7 @@
 import { getFaviconUrl } from '@thedaviddias/utils/get-favicon-url'
 import { getCategoryDisplayName } from './category-display'
 import { getRoute } from './routes'
-import {
-  SITE_LOGO_URL,
-  SITE_NAME,
-  SITE_PUBLIC_URL,
-  SITE_URL,
-  SITE_WEBSITE_ID
-} from './seo-config'
+import { SITE_LOGO_URL, SITE_NAME, SITE_PUBLIC_URL, SITE_URL, SITE_WEBSITE_ID } from './seo-config'
 import { siteCopy } from './site-copy'
 
 export interface SchemaOrg {

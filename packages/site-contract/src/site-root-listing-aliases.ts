@@ -1,53 +1,49 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { resolveCheckedInSiteConfig } from './index';
-import { resolveCheckedInSiteSourcePath } from './checked-in-site-source-path';
+import { existsSync, readFileSync } from 'node:fs'
+import { resolveCheckedInSiteSourcePath } from './checked-in-site-source-path'
+import { resolveCheckedInSiteConfig } from './index'
 import {
   type CollectLegacyListingRedirectsOptions,
   collectLegacyListingRedirects,
-  type LegacyListingRedirect,
-} from './legacy-listing-slugs';
-import { normalizeTrialProduct, type TrialProducts } from './trial-products';
+  type LegacyListingRedirect
+} from './legacy-listing-slugs'
+import { normalizeTrialProduct, type TrialProducts } from './trial-products'
 
 type TrialProductsJsonEntry = {
   product?: {
-    slug?: string;
-  };
-};
+    slug?: string
+  }
+}
 
 type ListingJsonEntry = {
-  slug?: string;
-};
+  slug?: string
+}
 
 export function getSiteRootListingAliases(siteId: string): string[] {
-  const siteConfig = resolveCheckedInSiteConfig(siteId);
-  const sourcePath = resolveCheckedInSiteSourcePath(
-    siteConfig.content.listingSource.path
-  );
+  const siteConfig = resolveCheckedInSiteConfig(siteId)
+  const sourcePath = resolveCheckedInSiteSourcePath(siteConfig.content.listingSource.path)
 
   if (!existsSync(sourcePath)) {
-    return [];
+    return []
   }
 
   if (siteConfig.content.listingSource.kind === 'trial-products-json') {
     const products = JSON.parse(readFileSync(sourcePath, 'utf8')) as Record<
       string,
       TrialProductsJsonEntry
-    >;
+    >
 
     return Object.values(products)
-      .map((entry) => entry.product?.slug?.trim())
-      .filter((slug): slug is string => Boolean(slug));
+      .map(entry => entry.product?.slug?.trim())
+      .filter((slug): slug is string => Boolean(slug))
   }
 
   if (siteConfig.content.listingSource.kind === 'listing-json') {
-    const listings = JSON.parse(readFileSync(sourcePath, 'utf8')) as ListingJsonEntry[];
+    const listings = JSON.parse(readFileSync(sourcePath, 'utf8')) as ListingJsonEntry[]
 
-    return listings
-      .map((entry) => entry.slug?.trim())
-      .filter((slug): slug is string => Boolean(slug));
+    return listings.map(entry => entry.slug?.trim()).filter((slug): slug is string => Boolean(slug))
   }
 
-  return [];
+  return []
 }
 
 /**
@@ -58,32 +54,28 @@ export function getSiteLegacyListingRedirects(
   siteId: string,
   options: CollectLegacyListingRedirectsOptions = {}
 ): LegacyListingRedirect[] {
-  const siteConfig = resolveCheckedInSiteConfig(siteId);
-  const listingSource = siteConfig.content.listingSource;
+  const siteConfig = resolveCheckedInSiteConfig(siteId)
+  const listingSource = siteConfig.content.listingSource
 
   if (listingSource.kind !== 'trial-products-json') {
-    return [];
+    return []
   }
 
-  const sourcePath = resolveCheckedInSiteSourcePath(listingSource.path);
+  const sourcePath = resolveCheckedInSiteSourcePath(listingSource.path)
 
   if (!existsSync(sourcePath)) {
-    return [];
+    return []
   }
 
-  const products = JSON.parse(readFileSync(sourcePath, 'utf8')) as TrialProducts;
+  const products = JSON.parse(readFileSync(sourcePath, 'utf8')) as TrialProducts
   const listings = Object.entries(products).map(([fallbackSlug, product]) => {
-    const normalizedProduct = normalizeTrialProduct(
-      product,
-      fallbackSlug,
-      listingSource.category
-    );
+    const normalizedProduct = normalizeTrialProduct(product, fallbackSlug, listingSource.category)
 
     return {
       legacySlugs: normalizedProduct.legacySlugs,
-      slug: normalizedProduct.slug,
-    };
-  });
+      slug: normalizedProduct.slug
+    }
+  })
 
-  return collectLegacyListingRedirects(listings, options);
+  return collectLegacyListingRedirects(listings, options)
 }

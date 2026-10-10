@@ -1,6 +1,10 @@
 import type { Category } from './categories'
 import { getCategoryDisplayName } from './category-display'
-import { getActiveCategories, getListingCategories, listingMatchesCategory } from './category-navigation'
+import {
+  getActiveCategories,
+  getListingCategories,
+  listingMatchesCategory
+} from './category-navigation'
 import type { WebsiteMetadata } from './content-query'
 import { getRoute } from './routes'
 

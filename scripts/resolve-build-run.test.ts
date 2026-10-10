@@ -122,13 +122,13 @@ describe('resolveBuildRun', () => {
   })
 
   it('deploys the site whose checked-in site files changed', () => {
-    expect(resolvePushSiteInputFromChangedPaths(['sites/serpdownloaders.com/site-config.ts'])).toEqual(
-      {
-        shouldDeploy: true,
-        siteId: 'serpdownloaders.com',
-        siteIds: ['serpdownloaders.com']
-      }
-    )
+    expect(
+      resolvePushSiteInputFromChangedPaths(['sites/serpdownloaders.com/site-config.ts'])
+    ).toEqual({
+      shouldDeploy: true,
+      siteId: 'serpdownloaders.com',
+      siteIds: ['serpdownloaders.com']
+    })
   })
 
   it('deploys exact sites when changed paths touch multiple concrete sites only', () => {
