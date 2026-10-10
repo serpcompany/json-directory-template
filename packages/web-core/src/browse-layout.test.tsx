@@ -85,7 +85,11 @@ describe('category count wording', () => {
     const { buildCategoryCountSentence, buildCategoryMetaTitle } = await import('./category-seo')
 
     expect(
-      buildCategoryMetaTitle({ categoryName: 'GIF Downloaders', listingCount: 1, siteName: 'SERP AI' })
+      buildCategoryMetaTitle({
+        categoryName: 'GIF Downloaders',
+        listingCount: 1,
+        siteName: 'SERP AI'
+      })
     ).toBe('GIF Downloaders: 1 Product')
     expect(buildCategoryCountSentence('Movies & TV Downloaders', 1)).toBe(
       'Explore 1 product in Movies & TV Downloaders.'

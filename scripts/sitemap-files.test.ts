@@ -31,7 +31,10 @@ describe('writeSplitSitemaps', () => {
       `<link rel="canonical" href="https://example.com${path}"/>`
 
     writeFile(resolve(artifactDir, 'index.html'))
-    writeFile(resolve(artifactDir, 'categories/adult/index.html'), categoryPage('/categories/adult/'))
+    writeFile(
+      resolve(artifactDir, 'categories/adult/index.html'),
+      categoryPage('/categories/adult/')
+    )
     writeFile(
       resolve(artifactDir, 'categories/adult/page/2/index.html'),
       categoryPage('/categories/adult/page/2/')

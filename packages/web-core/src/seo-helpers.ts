@@ -1,5 +1,5 @@
-import { SITE_NAME } from './seo-config';
-import { siteCopy } from './site-copy';
+import { SITE_NAME } from './seo-config'
+import { siteCopy } from './site-copy'
 
 export function generateAltText(
   type: 'favicon' | 'avatar' | 'logo' | 'website',
@@ -7,22 +7,22 @@ export function generateAltText(
 ): string {
   switch (type) {
     case 'favicon':
-      return `${name} favicon`;
+      return `${name} favicon`
     case 'avatar':
-      return `${name} profile picture`;
+      return `${name} profile picture`
     case 'logo':
-      return `${SITE_NAME} logo`;
+      return `${SITE_NAME} logo`
     case 'website':
-      return `${name} ${siteCopy.listingName.singular}`;
+      return `${name} ${siteCopy.listingName.singular}`
     default:
-      return name;
+      return name
   }
 }
 
 export function formatPageTitle(title: string, includeSiteName = true): string {
-  const cleanTitle = title.trim();
+  const cleanTitle = title.trim()
   if (!includeSiteName || cleanTitle.includes(SITE_NAME)) {
-    return cleanTitle;
+    return cleanTitle
   }
-  return `${cleanTitle} | ${SITE_NAME}`;
+  return `${cleanTitle} | ${SITE_NAME}`
 }

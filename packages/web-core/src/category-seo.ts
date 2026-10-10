@@ -21,7 +21,10 @@ export const CATEGORY_TITLE_MAX_LENGTH = 60
 export const CATEGORY_DESCRIPTION_MAX_LENGTH = 160
 
 /** `1 Product`, `338 Products`: the exact count with the singular or plural listing name. */
-export function formatListingCount(listingCount: number, options: { title?: boolean } = {}): string {
+export function formatListingCount(
+  listingCount: number,
+  options: { title?: boolean } = {}
+): string {
   const { listingName } = siteCopy
   const noun =
     listingCount === 1
