@@ -12,13 +12,13 @@ describe('resolveSiteConfig', () => {
     expect(config.name).toBe('SERP Downloaders')
     expect(config.domain).toBe('serpdownloaders.com')
     expect(config.description).toBe(
-      'A collection of tools to help you download anything from anywhere, anytime.'
+      'Browser extensions that save videos from YouTube, TikTok, Udemy, Vimeo and hundreds of other sites for offline viewing.'
     )
     expect(config.githubIssueOwner).toBe('serpcompany')
     expect(config.githubIssueRepo).toBe('serpdownloaders.com')
     expect(config.githubIssuesUrl).toBe('https://github.com/serpcompany/serpdownloaders.com/issues')
-    expect(config.githubRepoUrl).toBe('https://github.com/serpdownloaders')
-    expect(config.githubUrl).toBe('https://github.com/serpdownloaders')
+    expect(config.githubRepoUrl).toBe('https://github.com/serpapps')
+    expect(config.githubUrl).toBe('https://github.com/serpapps')
     expect(config.publicUrl).toBe('https://serpdownloaders.com')
     expect(config.gtmId).toBe('GTM-M82HC3SC')
     expect(config.listingRouteBasePath).toBe('products')
@@ -70,8 +70,8 @@ describe('resolveSiteConfig', () => {
     expect(config.githubIssueOwner).toBe('serpcompany')
     expect(config.githubIssueRepo).toBe('serpdownloaders.com')
     expect(config.githubIssuesUrl).toBe('https://github.com/serpcompany/serpdownloaders.com/issues')
-    expect(config.githubRepoUrl).toBe('https://github.com/serpdownloaders')
-    expect(config.githubUrl).toBe('https://github.com/serpdownloaders')
+    expect(config.githubRepoUrl).toBe('https://github.com/serpapps')
+    expect(config.githubUrl).toBe('https://github.com/serpapps')
     expect(config.listingRouteBasePath).toBe('products')
     expect(config.docsRouteBasePath).toBe('docs')
     expect(config.networkRouteBasePath).toBe('network')
@@ -136,7 +136,7 @@ describe('resolveSiteConfig', () => {
     expect(hasConfiguredGitHubIssueTarget(config)).toBe(true)
     expect(hasConfiguredPublicSocialLinks(config)).toBe(true)
     expect(getConfiguredSocialLinks(config)).toEqual([
-      'https://github.com/serpdownloaders',
+      'https://github.com/serpapps',
       'https://www.reddit.com/r/serpdownloaders/',
       'https://x.com/serpdownloaders'
     ])

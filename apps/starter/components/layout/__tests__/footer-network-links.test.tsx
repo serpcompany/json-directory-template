@@ -28,7 +28,7 @@ describe('Footer network links', () => {
       ['Medium', 'https://medium.com/howtodownloadvideosimages'],
       ['Google Sites', 'https://sites.google.com/serp.co/serpdownloaders/'],
       ['Peerlist', 'https://peerlist.io/company/serpdownloaders'],
-      ['YouTube', 'https://youtube.com/@serp-downloaders']
+      ['YouTube', 'https://www.youtube.com/@serp-downloaders']
     ] as const
 
     for (const [label, href] of expectedIconLinks) {

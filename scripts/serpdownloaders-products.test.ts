@@ -362,10 +362,13 @@ describe('serpdownloaders checked-in products', () => {
       expect(JSON.stringify(relatedLinks), slug).not.toContain('help.serp.co/en')
       expect(relatedLinks, slug).toEqual(
         expect.arrayContaining([
-          { label: 'SERPX', url: `https://serpx.link/${slug}` },
-          { label: 'Latest Release', url: `https://github.com/serpapps/${slug}/releases/latest` },
-          { label: 'GitHub Issues', url: `https://github.com/serpapps/${slug}/issues` }
+          { label: 'Install browser extension', url: `https://serp.ly/${slug}` }
         ])
+      )
+      // #161: serpx.link hops, retired serp.co review URLs and the private/missing
+      // serpapps GitHub repos are dropped from relatedLinks.
+      expect(JSON.stringify(relatedLinks), slug).not.toMatch(
+        /serpx\.link|\/\/serp\.co\/|github\.com\/serpapps\//
       )
     }
   })

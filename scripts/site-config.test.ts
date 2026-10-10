@@ -109,7 +109,7 @@ describe('loadCheckedInSite', () => {
       'https://sites.google.com/serp.co/serpdownloaders/'
     )
     expect(networkLinksByLabel.get('peerlist')).toBe('https://peerlist.io/company/serpdownloaders')
-    expect(networkLinksByLabel.get('youtube')).toBe('https://youtube.com/@serp-downloaders')
+    expect(networkLinksByLabel.get('youtube')).toBe('https://www.youtube.com/@serp-downloaders')
     expect(config.deploy?.strategy).toBe('github-pages-repo-sync')
   })
 
@@ -560,7 +560,8 @@ describe('resolveResolvedSiteConfig', () => {
         },
         submitLabel: 'Submit Yours'
       },
-      description: 'A collection of tools to help you download anything from anywhere, anytime.',
+      description:
+        'Browser extensions that save videos from YouTube, TikTok, Udemy, Vimeo and hundreds of other sites for offline viewing.',
       domain: 'serpdownloaders.com',
       gtmId: 'GTM-M82HC3SC',
       githubIssueOwner: 'serpcompany',
@@ -574,7 +575,7 @@ describe('resolveResolvedSiteConfig', () => {
       name: 'SERP Downloaders',
       networkRouteBasePath: 'network',
       publicUrl: 'https://serpdownloaders.com',
-      tagline: 'For the people who just like to get down...loading'
+      tagline: 'Find a video downloader browser extension for the sites you use'
     })
   })
 })

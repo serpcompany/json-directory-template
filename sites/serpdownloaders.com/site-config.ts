@@ -64,18 +64,19 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
     excludedPaths: ['/products']
   },
   site: {
-    description: 'A collection of tools to help you download anything from anywhere, anytime.',
+    description:
+      'Browser extensions that save videos from YouTube, TikTok, Udemy, Vimeo and hundreds of other sites for offline viewing.',
     domain: 'serpdownloaders.com',
     name: 'SERP Downloaders',
     publicUrl: 'https://serpdownloaders.com',
-    tagline: 'For the people who just like to get down...loading'
+    tagline: 'Find a video downloader browser extension for the sites you use'
   },
   social: {
     githubIssueOwner: 'serpcompany',
     githubIssueRepo: 'serpdownloaders.com',
     githubIssuesUrl: 'https://github.com/serpcompany/serpdownloaders.com/issues',
-    githubRepoUrl: 'https://github.com/serpdownloaders',
-    githubUrl: 'https://github.com/serpdownloaders',
+    githubRepoUrl: 'https://github.com/serpapps',
+    githubUrl: 'https://github.com/serpapps',
     redditUrl: 'https://www.reddit.com/r/serpdownloaders/',
     twitterUrl: 'https://x.com/serpdownloaders'
   }

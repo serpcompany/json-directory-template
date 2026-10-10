@@ -22,15 +22,15 @@ describe('categories', () => {
   })
 
   it('applies fallback metadata when a category only supplies slug and name', () => {
-    const category = resolveCategories('serpdownloaders.com').find(
-      item => item.slug === 'video-downloaders'
+    const category = resolveCategories('default').find(
+      item => item.slug === 'developer-tools'
     )
 
     expect(category).toBeDefined()
     expect(category?.icon).toBeDefined()
-    expect(category?.priority).toBe('medium')
+    expect(category?.priority).toBe('high')
     expect(category?.description).toBe(
-      'Downloaders, recorders, and browser tools for saving online video'
+      'APIs, frameworks, libraries, IDEs, and development utilities'
     )
   })
 
