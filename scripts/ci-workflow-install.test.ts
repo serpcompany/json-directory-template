@@ -102,20 +102,25 @@ describe('ci workflow install isolation', () => {
   })
 
   it('runs every job in the shared main-ci group on a GitHub-hosted runner', () => {
+    type Concurrency = string | { group?: string }
+    type Job = { concurrency?: Concurrency; 'runs-on'?: unknown }
     const workflowDir = '.github/workflows'
+    const isMainCi = (concurrency?: Concurrency) =>
+      (typeof concurrency === 'string' ? concurrency : concurrency?.group)?.startsWith(
+        'main-ci-'
+      ) ?? false
+
     const mainCiJobs = readdirSync(resolve(process.cwd(), workflowDir))
-      .filter(file => file.endsWith('.yml'))
+      .filter(file => /\.ya?ml$/.test(file))
       .flatMap(file => {
-        const workflow = loadYamlFile<
-          WorkflowDefinition & { jobs: Record<string, { 'runs-on'?: string }> }
-        >(`${workflowDir}/${file}`)
+        const workflow = loadYamlFile<{ concurrency?: Concurrency; jobs: Record<string, Job> }>(
+          `${workflowDir}/${file}`
+        )
+        const workflowIsMainCi = isMainCi(workflow.concurrency)
 
-        if (!workflow.concurrency?.group?.startsWith('main-ci-')) return []
-
-        return Object.entries(workflow.jobs).map(([job, definition]) => ({
-          job: `${file}:${job}`,
-          runsOn: definition['runs-on']
-        }))
+        return Object.entries(workflow.jobs)
+          .filter(([, definition]) => workflowIsMainCi || isMainCi(definition.concurrency))
+          .map(([job, definition]) => ({ job: `${file}:${job}`, runsOn: definition['runs-on'] }))
       })
 
     expect(mainCiJobs.map(({ job }) => job)).toEqual(

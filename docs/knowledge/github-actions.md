@@ -29,6 +29,10 @@
   and because deploy targets are resolved per push, that push's sites may not be rebuilt. Check
   `gh run list --workflow "Build & Deploy"` after back-to-back merges and dispatch it manually if a
   run was cancelled.
+- One push queues both Release and Build & Deploy in that group. If an earlier run still holds the
+  group, the push's own Release can cancel its own pending deploy. Before merging, wait for the
+  previous push's runs in the group to finish, then confirm the merge SHA's Build & Deploy run was
+  not cancelled.
 - `labels.yml`, `link-checker.yml`, and `update-listings-json.yml` still use `self-hosted` and will
   not run until those runners are back or they are switched too.
 
