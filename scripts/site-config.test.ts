@@ -72,6 +72,7 @@ describe('loadCheckedInSite', () => {
     expect(config.routes.networkBasePath).toBe('network')
     expect(config.routes.brandsBasePath).toBe('brands')
     expect(config.content.listingSource.outputPath).toBe('data/listings.json')
+    expect(config.content.listingSource).toMatchObject({ featuredCount: 0 })
     expect(config.browse).toMatchObject({
       categoryPageSize: 60,
       homepageListingLayout: 'category-sections'

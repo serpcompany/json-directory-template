@@ -1001,6 +1001,22 @@ describe('apply helpers', () => {
     ).toEqual(goodRewrite.faq.map(f => f.question))
   })
 
+  it("keeps an existing listing's featured flag even when its input predates it", () => {
+    const featuredListing: SiteProducts[string] = {
+      content: { body: 'old', faq: [{ answer: 'old', question: 'Old question?' }] },
+      featured: true,
+      product: { productPage: 'https://serp.ly/x', title: 'X Downloader' }
+    }
+    const input = buildExistingInput(
+      'x-downloader',
+      { ...featuredListing, featured: undefined },
+      'serpdownloaders.com'
+    )
+    if (!input) throw new Error('expected input')
+    expect(input.entry.featured).toBe(false)
+    expect(buildEntry(input, goodRewrite, LEGAL_ANSWER, featuredListing).featured).toBe(true)
+  })
+
   it('leaves star-rated review testimonials out of existing-listing facts', () => {
     const body = [
       '## Overview\n\nSaves X videos as MP4 in 720p.',

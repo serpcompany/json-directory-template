@@ -32,7 +32,7 @@ export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   content: {
     listingSource: {
       category: 'video-downloaders',
-      featuredCount: 6,
+      featuredCount: 0,
       kind: 'trial-products-json',
       outputPath: 'data/listings.json',
       path: 'sites/serpdownloaders.com/products.json',
