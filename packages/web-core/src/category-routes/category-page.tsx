@@ -14,6 +14,7 @@ import {
   sliceCategoryPage
 } from '../category-pagination'
 import {
+  buildCategoryCountSentence,
   buildCategoryMetaDescription,
   buildCategoryMetaTitle,
   getCategorySEO
@@ -82,9 +83,7 @@ export async function generateCategoryRouteMetadata({
     siteName: SITE_NAME
   })
   const description = buildCategoryMetaDescription([
-    categoryProjectsCount > 0
-      ? `Explore ${categoryProjectsCount}+ ${categoryName.toLowerCase()} ${siteCopy.listingName.plural}`
-      : `Explore ${categoryName.toLowerCase()} ${siteCopy.listingName.plural}`,
+    buildCategoryCountSentence(categoryName, categoryProjectsCount),
     category.description
   ])
 

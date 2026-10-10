@@ -54,7 +54,7 @@ describe('category meta titles', () => {
       siteName: 'SERP Downloaders'
     })
 
-    expect(title).toBe('Video Downloaders: 338+ Products')
+    expect(title).toBe('Video Downloaders: 338 Products')
     expect(`${title} | SERP Downloaders`.length).toBeLessThanOrEqual(60)
   })
 
@@ -68,7 +68,7 @@ describe('category meta titles', () => {
         listingCount: 40,
         siteName: 'SERP Downloaders'
       })
-    ).toBe('Course Platform Video Downloaders (40+)')
+    ).toBe('Course Platform Video Downloaders (40)')
     expect(
       buildCategoryMetaTitle({
         categoryName: 'An Extremely Long Category Name For Testing Purposes',
@@ -79,18 +79,36 @@ describe('category meta titles', () => {
   })
 })
 
+describe('category count wording', () => {
+  it('uses exact counts, singular for one, and keeps category name casing', async () => {
+    await withSite('serpdownloaders.com')
+    const { buildCategoryCountSentence, buildCategoryMetaTitle } = await import('./category-seo')
+
+    expect(
+      buildCategoryMetaTitle({ categoryName: 'GIF Downloaders', listingCount: 1, siteName: 'SERP AI' })
+    ).toBe('GIF Downloaders: 1 Product')
+    expect(buildCategoryCountSentence('Movies & TV Downloaders', 1)).toBe(
+      'Explore 1 product in Movies & TV Downloaders.'
+    )
+    expect(buildCategoryCountSentence('Course Platform Downloaders', 9)).toBe(
+      'Explore 9 products in Course Platform Downloaders.'
+    )
+    expect(buildCategoryCountSentence('Adult', 0)).toBe('Explore products in Adult.')
+  })
+})
+
 describe('category meta descriptions', () => {
   it('keeps whole sentences within 160 characters', async () => {
     await withSite('serpdownloaders.com')
     const { buildCategoryMetaDescription } = await import('./category-seo')
     const description = buildCategoryMetaDescription([
-      'Explore 338+ video downloaders products',
+      'Explore 338 products in Video Downloaders',
       'Downloaders, recorders, and browser tools for saving online video from hundreds of sites',
       'This third sentence would push the description past the limit and must be dropped'
     ])
 
     expect(description).toBe(
-      'Explore 338+ video downloaders products. Downloaders, recorders, and browser tools for saving online video from hundreds of sites.'
+      'Explore 338 products in Video Downloaders. Downloaders, recorders, and browser tools for saving online video from hundreds of sites.'
     )
     expect(description.length).toBeLessThanOrEqual(160)
     expect(description).not.toContain('...')

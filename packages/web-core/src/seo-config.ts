@@ -277,4 +277,4 @@ export function generateCollectionSchema(options: {
   }
 }
 
-export { formatPageTitle, generateAltText, optimizeMetaDescription } from './seo-helpers'
+export { formatPageTitle, generateAltText } from './seo-helpers'

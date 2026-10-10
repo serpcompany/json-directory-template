@@ -26,13 +26,3 @@ export function formatPageTitle(title: string, includeSiteName = true): string {
   }
   return `${cleanTitle} | ${SITE_NAME}`;
 }
-
-export function optimizeMetaDescription(description: string, maxLength = 160): string {
-  if (description.length <= maxLength) {
-    return description;
-  }
-
-  const truncated = description.substring(0, maxLength - 3);
-  const lastSpace = truncated.lastIndexOf(' ');
-  return `${truncated.substring(0, lastSpace)}...`;
-}

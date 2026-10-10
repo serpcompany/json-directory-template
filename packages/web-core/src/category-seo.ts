@@ -3,8 +3,6 @@ import { getCategoryDisplayName } from './category-display'
 import { siteCopy } from './site-copy'
 
 interface CategorySEOConfig {
-  metaTitle: string
-  metaDescription: string
   keywords: string[]
   h1Title: string
   introText: string
@@ -22,10 +20,26 @@ function toKeywordValue(value: string): string {
 export const CATEGORY_TITLE_MAX_LENGTH = 60
 export const CATEGORY_DESCRIPTION_MAX_LENGTH = 160
 
+/** `1 Product`, `338 Products`: the exact count with the singular or plural listing name. */
+export function formatListingCount(listingCount: number, options: { title?: boolean } = {}): string {
+  const { listingName } = siteCopy
+  const noun =
+    listingCount === 1
+      ? options.title
+        ? listingName.singularTitle
+        : listingName.singular
+      : options.title
+        ? listingName.pluralTitle
+        : listingName.plural
+
+  return `${listingCount} ${noun}`
+}
+
 /**
  * Category page `<title>` text (the root layout appends ` | <site name>`). Uses the most
  * descriptive form whose full rendered title fits in 60 characters:
- * `<Category>: <n>+ <Listings>`, then `<Category> (<n>+)`, then `<Category>`.
+ * `<Category>: <n> <Listings>`, then `<Category> (<n>)`, then `<Category>`. The category name
+ * keeps its configured casing.
  */
 export function buildCategoryMetaTitle(options: {
   categoryName: string
@@ -36,8 +50,8 @@ export function buildCategoryMetaTitle(options: {
   const candidates =
     listingCount > 0
       ? [
-          `${categoryName}: ${listingCount}+ ${siteCopy.listingName.pluralTitle}`,
-          `${categoryName} (${listingCount}+)`,
+          `${categoryName}: ${formatListingCount(listingCount, { title: true })}`,
+          `${categoryName} (${listingCount})`,
           categoryName
         ]
       : [`${categoryName} ${siteCopy.listingName.pluralTitle}`, categoryName]
@@ -53,6 +67,17 @@ function toSentence(value: string): string {
   const trimmedValue = value.trim()
 
   return /[.!?]$/.test(trimmedValue) ? trimmedValue : `${trimmedValue}.`
+}
+
+/**
+ * First sentence of a category meta description, e.g. `Explore 9 products in Course Platform
+ * Downloaders.` The category name keeps its casing (GIF, TV) and is not followed by the listing
+ * noun, which would double it ("downloaders products").
+ */
+export function buildCategoryCountSentence(categoryName: string, listingCount: number): string {
+  return listingCount > 0
+    ? `Explore ${formatListingCount(listingCount)} in ${categoryName}.`
+    : `Explore ${siteCopy.listingName.plural} in ${categoryName}.`
 }
 
 /**
@@ -88,10 +113,6 @@ export function getCategorySEO(_slug: string, category: Category): CategorySEOCo
   const categoryDescription = category.description
 
   return {
-    metaTitle: `${categoryName} ${siteCopy.listingName.pluralTitle} Directory`,
-    metaDescription: `Discover curated ${toKeywordValue(categoryName)} ${
-      siteCopy.listingName.plural
-    } and resources. ${categoryDescription}`,
     keywords: [
       toKeywordValue(categoryName),
       `${toKeywordValue(categoryName)} ${siteCopy.listingName.plural}`,
