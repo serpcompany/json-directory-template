@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import yaml from 'js-yaml'
 import { describe, expect, it } from 'vitest'
@@ -101,11 +101,28 @@ describe('ci workflow install isolation', () => {
     expect(workflow.jobs.submit?.['runs-on']).toBe('ubuntu-latest')
   })
 
-  it('runs the release job on a GitHub-hosted runner so it cannot hold the shared main-ci group', () => {
-    const workflow = loadYamlFile<{ jobs: Record<string, { 'runs-on'?: string }> }>(
-      '.github/workflows/release.yml'
-    )
+  it('runs every job in the shared main-ci group on a GitHub-hosted runner', () => {
+    const workflowDir = '.github/workflows'
+    const mainCiJobs = readdirSync(resolve(process.cwd(), workflowDir))
+      .filter(file => file.endsWith('.yml'))
+      .flatMap(file => {
+        const workflow = loadYamlFile<
+          WorkflowDefinition & { jobs: Record<string, { 'runs-on'?: string }> }
+        >(`${workflowDir}/${file}`)
 
-    expect(workflow.jobs.release?.['runs-on']).toBe('ubuntu-latest')
+        if (!workflow.concurrency?.group?.startsWith('main-ci-')) return []
+
+        return Object.entries(workflow.jobs).map(([job, definition]) => ({
+          job: `${file}:${job}`,
+          runsOn: definition['runs-on']
+        }))
+      })
+
+    expect(mainCiJobs.map(({ job }) => job)).toEqual(
+      expect.arrayContaining(['build-and-deploy.yml:resolve', 'release.yml:release'])
+    )
+    for (const { job, runsOn } of mainCiJobs) {
+      expect(runsOn, job).toBe('ubuntu-latest')
+    }
   })
 })
