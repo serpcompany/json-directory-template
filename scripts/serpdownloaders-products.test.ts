@@ -195,8 +195,9 @@ describe('serpdownloaders checked-in products', () => {
         tagline: expect.any(String),
         title: expect.any(String)
       })
-      expect(products[slug]?.content?.body).toContain('## Overview')
-      expect(products[slug]?.content?.body).toContain('## Key Features')
+      // #161 rewrote every listing with its own structure, so assert shape, not headings.
+      expect(products[slug]?.content?.body?.match(/^## \S/gm)?.length ?? 0).toBeGreaterThanOrEqual(3)
+      expect(products[slug]?.content?.body).not.toMatch(/Trial & Access|Troubleshooting/)
       expect(products[slug]?.content?.faq?.length).toBeGreaterThanOrEqual(3)
       expect(products[slug]?.relatedLinks).toEqual(
         expect.arrayContaining([
@@ -358,7 +359,7 @@ describe('serpdownloaders checked-in products', () => {
       const relatedLinks = product?.relatedLinks ?? []
 
       expect(product?.product?.productPage, slug).toBe(`https://serp.ly/${slug}`)
-      expect(product?.content?.body, slug).toContain('## Why')
+      expect(product?.content?.body?.match(/^## \S/gm)?.length ?? 0, slug).toBeGreaterThanOrEqual(3)
       expect(product?.content?.faq?.length, slug).toBeGreaterThanOrEqual(3)
       expect(JSON.stringify(relatedLinks), slug).not.toContain('help.serp.co/en')
       expect(relatedLinks, slug).toEqual(
