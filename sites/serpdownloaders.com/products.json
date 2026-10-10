@@ -1448,7 +1448,17 @@
       ]
     },
     "media": {
-      "logo": "/listing-logos/serpdownloaders.com/beeg-downloader.png"
+      "logo": "/listing-logos/serpdownloaders.com/beeg-downloader.png",
+      "images": [
+        "/media/products/beeg-downloader/beeg-video-downloader-1.webp",
+        "/media/products/beeg-downloader/beeg-video-downloader-2.webp",
+        "/media/products/beeg-downloader/beeg-video-downloader-3.webp",
+        "/media/products/beeg-downloader/beeg-video-downloader-4.webp",
+        "/media/products/beeg-downloader/beeg-video-downloader-5.webp",
+        "/media/products/beeg-downloader/beeg-video-downloader-6.webp",
+        "/media/products/beeg-downloader/beeg-video-downloader-7.webp",
+        "/media/products/beeg-downloader/beeg-video-downloader-8.webp"
+      ]
     },
     "product": {
       "categories": [
@@ -3170,6 +3180,7 @@
     },
     "media": {
       "images": [
+        "/media/products/coomer-downloader/coomer-homepage.webp",
         "/media/products/coomer-downloader/homepage.png"
       ],
       "logo": "/listing-logos/serpdownloaders.com/coomer-downloader.png"
@@ -3456,6 +3467,9 @@
     },
     "media": {
       "images": [
+        "/media/products/dailymotion-downloader/dailymotion-homepage.webp",
+        "/media/products/dailymotion-downloader/dailymotion-downloader-screenshot-1.webp",
+        "/media/products/dailymotion-downloader/dailymotion-downloader-screenshot-2.webp",
         "https://raw.githubusercontent.com/serpapps/.github/refs/heads/main/sites/dailymotion-downloader.jpg"
       ],
       "logo": "/listing-logos/serpdownloaders.com/dailymotion-downloader.png"
@@ -10159,6 +10173,12 @@
     },
     "media": {
       "images": [
+        "/media/products/onlyfans-downloader/screenshot-onlyfans-downloader-media-modal.webp",
+        "/media/products/onlyfans-downloader/screenshot-onlyfans-downloader-media-detection.webp",
+        "/media/products/onlyfans-downloader/screenshot-onlyfans-downloader-automatic-download-organization.webp",
+        "/media/products/onlyfans-downloader/screenshot-onlyfans-downloader-creator-selection.webp",
+        "/media/products/onlyfans-downloader/screenshot-onlyfans-downloader-download-button-overlay.webp",
+        "/media/products/onlyfans-downloader/screenshot-onlyfans-downloader-download-progress.webp",
         "/media/products/onlyfans-downloader/homepage.png"
       ],
       "logo": "/listing-logos/serpdownloaders.com/onlyfans-downloader.png"
@@ -19828,6 +19848,11 @@
     },
     "media": {
       "images": [
+        "/media/products/youporn-downloader/youporn-downloader-screenshot1.webp",
+        "/media/products/youporn-downloader/youporn-downloader-screenshot2.webp",
+        "/media/products/youporn-downloader/youporn-downloader-screenshot3.webp",
+        "/media/products/youporn-downloader/youporn-downloader-screenshot4.webp",
+        "/media/products/youporn-downloader/youporn-downloader-screenshot5.webp",
         "/media/products/youporn-downloader/homepage.png"
       ],
       "logo": "/listing-logos/serpdownloaders.com/youporn-downloader.png"
