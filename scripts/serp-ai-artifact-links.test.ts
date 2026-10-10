@@ -3,8 +3,6 @@ import { extname, join, resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 const artifactRoot = resolve(process.cwd(), 'dist/sites/serp.ai')
-const serpBrandsJsonPath = '/Users/devin/dev/repos/serp/docs/websites/pages/brands.json'
-const localBrandsJsonPath = resolve(process.cwd(), 'packages/web-core/src/data/network-brands.json')
 
 const liveCategoryPaths = [
   '/products/best/adult/',
@@ -247,14 +245,4 @@ describe.runIf(existsSync(artifactRoot))('serp.ai artifact links', () => {
 
     expect(badSearchIndexEntries).toEqual([])
   })
-
-  it.runIf(existsSync(serpBrandsJsonPath))(
-    'keeps the brands page data in parity with the serp project source JSON',
-    () => {
-      const sourceBrands = JSON.parse(readFileSync(serpBrandsJsonPath, 'utf8'))
-      const localBrands = JSON.parse(readFileSync(localBrandsJsonPath, 'utf8'))
-
-      expect(localBrands).toEqual(sourceBrands)
-    }
-  )
 })

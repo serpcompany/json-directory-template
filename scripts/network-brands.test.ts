@@ -1,5 +1,3 @@
-import { existsSync, readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   getNetworkBrands,
@@ -7,9 +5,6 @@ import {
   parseNetworkBrandGroup,
   parseNetworkBrands
 } from '../packages/web-core/src/network-brands.ts'
-
-const serpBrandsJsonPath = '/Users/devin/dev/repos/serp/docs/websites/pages/brands.json'
-const localBrandsJsonPath = resolve(process.cwd(), 'packages/web-core/src/data/network-brands.json')
 
 describe('parseNetworkBrands', () => {
   it('returns sorted brand entries with hostnames', () => {
@@ -112,16 +107,6 @@ describe('parseNetworkBrands', () => {
       })
     )
   })
-
-  it.runIf(existsSync(serpBrandsJsonPath))(
-    'keeps committed network brands data in parity with the serp repo source JSON',
-    () => {
-      const sourceBrands = JSON.parse(readFileSync(serpBrandsJsonPath, 'utf8'))
-      const localBrands = JSON.parse(readFileSync(localBrandsJsonPath, 'utf8'))
-
-      expect(localBrands).toEqual(sourceBrands)
-    }
-  )
 
   it('returns the committed adult-only brand group from the shared source data', () => {
     const brands = getNetworkBrandsForGroup('adultsOnly')

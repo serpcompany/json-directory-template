@@ -66,8 +66,7 @@ describe('build-and-deploy workflow', () => {
         '!scripts/r2-featured-badge-assets.json',
         '!scripts/target-verify-badge-workflow.test.ts',
         '!scripts/templates/target-verify-badge.yml',
-        '!scripts/test-submission-flow.ts',
-        '!scripts/upgrade-downloader-content.ts'
+        '!scripts/test-submission-flow.ts'
       ])
     )
     expect(workflow.on.push?.paths).not.toContain('.github/workflows/build-and-deploy.yml')

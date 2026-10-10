@@ -26,7 +26,6 @@ on:
       - '!scripts/target-verify-badge-workflow.test.ts'
       - '!scripts/templates/target-verify-badge.yml'
       - '!scripts/test-submission-flow.ts'
-      - '!scripts/upgrade-downloader-content.ts'
   workflow_dispatch:
     inputs:
       site_id:
