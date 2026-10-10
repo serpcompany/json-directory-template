@@ -10,6 +10,8 @@ import {
   buildEntry,
   buildExistingInput,
   withoutReviews,
+  pipelineNotes,
+  existingListingCopyIssues,
   buildImages,
   buildInput,
   buildRelatedLinks,
@@ -1006,6 +1008,28 @@ describe('apply helpers', () => {
     expect(input?.facts.quality).toEqual(expect.arrayContaining(['720p']))
     expect(input?.facts.numbers).not.toEqual(expect.arrayContaining(['4.9']))
     expect(input?.facts.numbers).not.toEqual(expect.arrayContaining(['50']))
+  })
+
+  it('flags pipeline notes and recreated template structure in existing-listing rewrites', () => {
+    expect(pipelineNotes('Detects MP4 and HLS candidates on the page.')).toEqual([])
+    expect(pipelineNotes('Links pass through a handoff route; useful for team handoffs.')).toEqual(
+      []
+    )
+    expect(pipelineNotes('It is still a candidate that relies on generated stubs.')).toEqual([
+      'candidate status ("still a candidate")',
+      'stubs ("generated stubs")'
+    ])
+    const output = {
+      body: '## Troubleshooting\n\nX Downloader is a browser extension.\n\n## B\n\nb\n\n## C\n\nc',
+      faq: [],
+      slug: 'x-downloader',
+      tagline: 'Too short.'
+    }
+    expect(existingListingCopyIssues(output, ['X Downloader'])).toEqual([
+      'old template section headings: Troubleshooting',
+      'body opens with a "<Name> is a ..." definition',
+      'tagline must be 70-160 characters (has 10)'
+    ])
   })
 
   it('rejects unusable --threshold and --limit values', () => {

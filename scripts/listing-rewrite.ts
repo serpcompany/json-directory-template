@@ -1406,6 +1406,71 @@ export function validateOutputShape(value: unknown, slug: string): string[] {
   return issues
 }
 
+/** Internal build/QA status from the source pipeline. Not product facts; never public copy (#161). */
+export const PIPELINE_NOTE_PATTERNS: Array<[string, RegExp]> = [
+  [
+    'handoff',
+    /\bhand-?off (?:is|still|verification|information|rated|needs|has)\b|\b(?:target|solid) hand-?off\b/i
+  ],
+  ['seed candidate', /\bseed candidates?\b/i],
+  [
+    'candidate status',
+    /\bcandidate[- ](?:stage|status|build|release|extension|tool)\b|\b(?:still|currently|remains) (?:an? |in )?candidate\b/i
+  ],
+  ['stubs', /\b(?:generated|placeholder|direct-video) (?:direct-video )?stubs?\b|\bstubs?\b/i],
+  ['adapter probing', /\badapter probing\b|\bprobe-rejected\b/i],
+  ['confidence rating', /\bconfidence (?:rating|level)\b|\bready-solid\b/i],
+  ['extraction QA', /\bextraction (?:QA|review)\b/i],
+  ['stale config', /\bstale config(?:uration)?\b/i],
+  ['release readiness', /\brelease[- ]read(?:y|iness)\b|\breadiness messaging\b/i]
+]
+
+export function pipelineNotes(text: string): string[] {
+  return PIPELINE_NOTE_PATTERNS.flatMap(([label, pattern]) => {
+    const match = text.match(pattern)
+    return match ? [`${label} ("${match[0]}")`] : []
+  })
+}
+
+/** Old shared-template section titles the existing-listing rewrites must not recreate (#161). */
+const TEMPLATE_HEADING =
+  /troubleshoot|\bnotes?\b|^about\b|supported formats|step[- ]by[- ]step|who it'?s for|use cases|installation instructions|trial/i
+
+/**
+ * Copy rules for rewriting existing listings: no pipeline notes, no recreated template
+ * sections, no "<Name> is a ..." opening, "activation" instead of licence wording, and a
+ * tagline that fits a meta description.
+ */
+export function existingListingCopyIssues(output: RewriteOutput, names: string[]): string[] {
+  const issues: string[] = []
+  const all = [output.tagline, output.body, faqText(output.faq)].join('\n')
+  const notes = pipelineNotes(all)
+  if (notes.length) issues.push(`internal pipeline notes not allowed: ${notes.join(', ')}`)
+  const templateHeadings = (output.body.match(/^##+ .+$/gm) ?? [])
+    .map(line => line.replace(/^#+\s*/, ''))
+    .filter(heading => TEMPLATE_HEADING.test(heading))
+  if (templateHeadings.length) {
+    issues.push(`old template section headings: ${templateHeadings.join(' | ')}`)
+  }
+  const firstSentence = output.body
+    .replace(/^##+ .+$/gm, '')
+    .trim()
+    .split(/(?<=[.!?])\s+/)[0]
+  const opensWithDefinition = [...names, 'This extension', 'The extension'].some(name =>
+    new RegExp(
+      `^(?:the )?${escapeRegExp(name)}(?: video)?(?: downloader)?(?: extension)? is an? `,
+      'i'
+    ).test(firstSentence ?? '')
+  )
+  if (opensWithDefinition) issues.push('body opens with a "<Name> is a ..." definition')
+  if (/\blicen[cs](?:e|es|ing)\b/i.test(all)) issues.push('use "activation", not licence wording')
+  const taglineLength = output.tagline.trim().length
+  if (taglineLength < 70 || taglineLength > 160) {
+    issues.push(`tagline must be 70-160 characters (has ${taglineLength})`)
+  }
+  return issues
+}
+
 export type ComparisonListing = {
   body: string
   faq?: FaqEntry[]
@@ -1618,6 +1683,7 @@ export function checkRewrite(
   }
 
   issues.push(...checkFacts(input.facts, rewriteText, names))
+  if (input.mode === 'existing') issues.push(...existingListingCopyIssues(output, names))
 
   return { issues, pass: issues.length === 0, scores, slug: input.slug, threshold }
 }
