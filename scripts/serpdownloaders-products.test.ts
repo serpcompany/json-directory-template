@@ -113,11 +113,12 @@ const homepageScreenshotSlugs = Object.entries(foldedLegacySlugs)
   .filter(([legacySlug, slug]) => legacySlug.endsWith('.pages.dev') && slug !== 'whop-downloader')
   .map(([, slug]) => slug)
 
-// 339 records before #161, minus 21 folded records and the removed launchbuzz.io and serp-notes.
+// 339 records before #161, minus 21 folded records and the 4 removed listings:
+// launchbuzz.io and serp-notes (off-topic), xvgold and tellatv (discontinued upstream).
 const expectedSerpdownloadersProductCount =
   339 -
   Object.values(foldedLegacySlugs).filter(slug => !renamedSlugs.includes(slug)).length -
-  2
+  4
 
 function cleanLabel(label?: string): string | undefined {
   if (label === 'Install extension') {
