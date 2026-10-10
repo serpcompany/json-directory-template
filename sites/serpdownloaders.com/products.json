@@ -15528,7 +15528,7 @@
           "question": "Does it pick up media on every StreamPorn page?"
         },
         {
-          "answer": "No. It is made for desktop Chrome, Edge, Brave and Firefox, and mobile browsers are not supported.",
+          "answer": "Not supported: it is made for desktop Chrome, Edge, Brave and Firefox, and mobile browsers can't run it.",
           "question": "StreamPorn on a handset: supported or not?"
         },
         {
