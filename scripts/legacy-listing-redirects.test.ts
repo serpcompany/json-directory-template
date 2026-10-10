@@ -14,7 +14,10 @@ import {
   applyLegacyRootListingRedirects,
   buildStaticRedirectHtml
 } from './build-site.ts'
-import { getReservedRootRouteSegments } from './legacy-listing-redirects.ts'
+import {
+  getReservedListingRouteSegments,
+  getReservedRootRouteSegments
+} from './legacy-listing-redirects.ts'
 import { loadCheckedInSite } from './site-config.ts'
 import { writeSplitSitemaps } from './sitemap-files.ts'
 
@@ -191,6 +194,28 @@ describe('getReservedRootRouteSegments', () => {
     const reserved = getReservedRootRouteSegments(loadCheckedInSite('serp.ai'))
 
     expect(reserved).toEqual(expect.arrayContaining(['cookies', 'media', 'badge', 'rss.xml']))
+  })
+})
+
+describe('getReservedListingRouteSegments', () => {
+  it('reserves serp.ai /products/best/ from both sitemap config and the app route directory', () => {
+    expect(getReservedListingRouteSegments(loadCheckedInSite('serp.ai'))).toContain('best')
+  })
+
+  it.each(['browserextensions.io', 'serpdownloaders.com'])(
+    'reserves no listing-level segments for %s, which has only the dynamic [slug] route',
+    siteId => {
+      expect(getReservedListingRouteSegments(loadCheckedInSite(siteId))).toEqual([])
+    }
+  )
+
+  it('fails validation for a legacy slug that shadows a route under the listing base path', () => {
+    expect(() =>
+      collectLegacyListingRedirects([{ legacySlugs: ['best'], slug: 'a-tool' }], {
+        listingBasePath: 'products',
+        reservedListingSegments: getReservedListingRouteSegments(loadCheckedInSite('serp.ai'))
+      })
+    ).toThrow('legacy slug "best" collides with the reserved route "/products/best/"')
   })
 })
 

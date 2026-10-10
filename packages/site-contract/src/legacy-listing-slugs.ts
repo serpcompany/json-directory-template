@@ -33,6 +33,14 @@ export type CollectLegacyListingRedirectsOptions = {
    * not shadow one of these.
    */
   reservedRootSegments?: Iterable<string>
+  /**
+   * Route segments the site already serves directly under the listing base path (for example
+   * `best` for serp.ai's `/products/best/`). A legacy slug also gets a redirect page at
+   * `/<listingBasePath>/<legacy>/`, so it must not shadow one of these.
+   */
+  reservedListingSegments?: Iterable<string>
+  /** Listing base path, used in error messages. Defaults to `listing`. */
+  listingBasePath?: string
 }
 
 export function getLegacyListingSlugFormatError(legacySlug: string): string | undefined {
@@ -64,6 +72,12 @@ export function collectLegacyListingRedirects(
       .map(segment => segment.replace(/^\/+|\/+$/g, '').split('/')[0] ?? '')
       .filter(Boolean)
   )
+  const reservedListingSegments = new Set(
+    [...(options.reservedListingSegments ?? [])]
+      .map(segment => segment.replace(/^\/+|\/+$/g, '').split('/')[0] ?? '')
+      .filter(Boolean)
+  )
+  const listingBasePath = (options.listingBasePath ?? 'listing').replace(/^\/+|\/+$/g, '')
   const ownersByLegacySlug = new Map<string, string>()
   const redirects: LegacyListingRedirect[] = []
   const errors: string[] = []
@@ -87,6 +101,13 @@ export function collectLegacyListingRedirects(
       if (reservedRootSegments.has(legacySlug)) {
         errors.push(
           `${listing.slug}: legacy slug "${legacySlug}" collides with the reserved top-level route "/${legacySlug}/".`
+        )
+        continue
+      }
+
+      if (reservedListingSegments.has(legacySlug)) {
+        errors.push(
+          `${listing.slug}: legacy slug "${legacySlug}" collides with the reserved route "/${listingBasePath}/${legacySlug}/".`
         )
         continue
       }

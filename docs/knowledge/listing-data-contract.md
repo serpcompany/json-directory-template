@@ -179,6 +179,7 @@ Validation (`pnpm validate:site`, which `pnpm build:site` also runs) fails when 
 - equals any live listing slug, including the record's own slug. Every live slug already has a root alias page
 - appears twice, on one record or across records
 - collides with a reserved top-level route: configured route base paths, sitemap paths, starter-owned routes such as `categories`, `brands`, `legal`, `search`, and `posts`, the wrapper app's top-level route and `public/` entries, and category slugs
+- collides with a route directly under the listing base path, such as serp.ai's `/products/best/` (configured sitemap paths below the listing base and static route directories in `apps/<site-id>/app/<listingBasePath>/`)
 
 The build also fails rather than overwrite a generated route, and fails if the surviving listing page was not generated.
 

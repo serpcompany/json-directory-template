@@ -92,10 +92,64 @@ export function getReservedRootRouteSegments(definition: CheckedInSiteConfigReco
   ].sort()
 }
 
+function normalizeRoutePath(path: string | undefined): string {
+  return path?.replace(/^\/+|\/+$/g, '') ?? ''
+}
+
+// Static (non-dynamic) route directories under a Next.js app route directory. Route groups such as
+// `(group)` do not add a segment, so their children count too.
+function listRouteDirectorySegments(directory: string): string[] {
+  if (!existsSync(directory)) {
+    return []
+  }
+
+  return readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+    if (!entry.isDirectory()) {
+      return []
+    }
+
+    if (entry.name.startsWith('(') && entry.name.endsWith(')')) {
+      return listRouteDirectorySegments(resolve(directory, entry.name))
+    }
+
+    return /^[_[@]/.test(entry.name) ? [] : [entry.name]
+  })
+}
+
+/**
+ * Every segment directly under the listing base path that a legacy listing redirect page
+ * (`/<listingBasePath>/<legacy>/`) must not overwrite: configured paths below the listing base
+ * (for example serp.ai's `sitemap.categoryBasePath: 'products/best'` reserves `best`) and the
+ * wrapper app's static route directories under `app/<listingBasePath>/`.
+ */
+export function getReservedListingRouteSegments(definition: CheckedInSiteConfigRecord): string[] {
+  const appRoot = resolve(workspaceRoot, dirname(definition.build.appOutDir))
+  const listingBasePath = normalizeRoutePath(definition.routes.listingBasePath)
+  const configuredPaths = [
+    definition.sitemap.categoryBasePath,
+    definition.sitemap.featuredCategoryPath,
+    ...(definition.sitemap.staticPagePaths ?? []),
+    ...(definition.sitemap.excludedPaths ?? []),
+    ...(definition.sitemap.artifactExcludedPaths ?? []),
+    ...Object.values(definition.sitemap.pathByGroup ?? {})
+  ]
+  const segments = [
+    ...configuredPaths
+      .map(normalizeRoutePath)
+      .filter(path => path.startsWith(`${listingBasePath}/`))
+      .map(path => path.split('/')[1]),
+    ...listRouteDirectorySegments(resolve(appRoot, 'app', listingBasePath))
+  ]
+
+  return [...new Set(segments.filter((segment): segment is string => Boolean(segment)))].sort()
+}
+
 export function resolveSiteLegacyListingRedirects(
   definition: CheckedInSiteConfigRecord
 ): LegacyListingRedirect[] {
   return getSiteLegacyListingRedirects(definition.id, {
+    listingBasePath: definition.routes.listingBasePath,
+    reservedListingSegments: getReservedListingRouteSegments(definition),
     reservedRootSegments: getReservedRootRouteSegments(definition)
   })
 }
