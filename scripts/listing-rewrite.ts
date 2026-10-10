@@ -1434,7 +1434,7 @@ const FACT_LIST_WORDS = new Set(
 )
 
 /**
- * 8-word runs shared with the source that carry at least 5 words outside fact lists
+ * 8-word runs shared with the source that carry at least 4 words outside fact lists
  * (browser/OS/format names and function words). The brief bans copied runs (#161).
  */
 export function copiedRuns(sourceText: string, rewriteText: string, size = 8): string[] {
@@ -1443,7 +1443,7 @@ export function copiedRuns(sourceText: string, rewriteText: string, size = 8): s
     const out = new Set<string>()
     for (let index = 0; index + size <= tokens.length; index += 1) {
       const gram = tokens.slice(index, index + size)
-      if (gram.filter(token => !FACT_LIST_WORDS.has(token)).length >= 5) out.add(gram.join(' '))
+      if (gram.filter(token => !FACT_LIST_WORDS.has(token)).length >= 4) out.add(gram.join(' '))
     }
     return out
   }
@@ -1477,6 +1477,10 @@ export const PIPELINE_NOTE_PATTERNS: Array<[string, RegExp]> = [
   [
     'readiness',
     /\breadiness\b|\bdevelopment stage\b|\bstill being (?:expanded|refined)\b|\bkeeps being refined\b/i
+  ],
+  [
+    'sample notes',
+    /\bsampled\b|\bdocumented (?:sample|case|example)\b|\bbest-documented\b|\bruntime configuration\b|\brealistic (?:terms|messaging)\b|\bstatic-media\b|\bdeclared host\b|\bverified (?:address|url) pattern\b/i
   ],
   [
     'writer notes',
