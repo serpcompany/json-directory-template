@@ -164,6 +164,30 @@ describe('category pagination helpers', () => {
     expect(generateCategoryPaginationStaticParams(categories, listings, undefined)).toEqual([])
   })
 
+  it('links the pager to the previous and next category pages', async () => {
+    await withSite('serpdownloaders.com')
+    const { renderToStaticMarkup } = await import('react-dom/server')
+    const { CategoryPaginationNav } = await import('./category-routes/category-pagination-nav')
+    const hrefFor = (html: string, label: string) =>
+      html.match(new RegExp(`<a[^>]*aria-label="${label}"[^>]*>`))?.[0].match(/href="([^"]+)"/)?.[1]
+
+    const second = renderToStaticMarkup(
+      <CategoryPaginationNav categorySlug="adult" page={2} pageCount={3} />
+    )
+    expect(hrefFor(second, 'Go to previous page')).toBe('/categories/adult/')
+    expect(hrefFor(second, 'Go to next page')).toBe('/categories/adult/page/3/')
+    expect(second).toContain('aria-current="page"')
+
+    const last = renderToStaticMarkup(
+      <CategoryPaginationNav categorySlug="adult" page={3} pageCount={3} />
+    )
+    expect(hrefFor(last, 'Go to previous page')).toBe('/categories/adult/page/2/')
+    expect(hrefFor(last, 'Go to next page')).toBeUndefined()
+    expect(
+      renderToStaticMarkup(<CategoryPaginationNav categorySlug="adult" page={1} pageCount={1} />)
+    ).toBe('')
+  })
+
   it('shows a compact pager for many pages', async () => {
     await withSite('serpdownloaders.com')
     const { getVisibleCategoryPages } = await import('./category-routes/category-pagination-nav')
@@ -297,12 +321,21 @@ describe('homepage category sections', () => {
 
 describe('homepage and brands copy overrides', () => {
   it('keep the starter copy when no override is configured', async () => {
-    await withSite('serpdownloaders.com')
+    await withSite('serpdownloaders.com', config => ({
+      ...config,
+      copy: { ...config.copy, brandsDescription: undefined, homepage: undefined },
+      name: 'Example Site',
+      tagline: 'Example tagline'
+    }))
     const { homePageMetadata } = await import('./home-page')
+    const { generateMetadata } = await import('./static-pages/brands-page')
 
-    expect(homePageMetadata.title).toBe('SERP Downloaders Directory of Products and Resources')
+    expect(homePageMetadata.title).toBe('Example Site Directory of Products and Resources')
     expect(homePageMetadata.description).toBe(
-      'For the people who just like to get down...loading. Browse curated products, resources, and documentation links in one searchable directory.'
+      'Example tagline. Browse curated products, resources, and documentation links in one searchable directory.'
+    )
+    expect(generateMetadata().description).toBe(
+      'Browse sites and products in the Example Site network.'
     )
   })
 
