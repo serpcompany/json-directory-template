@@ -159,13 +159,16 @@ over every resolved checked-in site target:
   of truth for deploy triggers. The workflow `paths:` filter is exactly
   `buildAndDeployWorkflowPushPaths` from that file, and
   `scripts/build-and-deploy-workflow.test.ts` fails if they drift
+- path patterns follow GitHub's filter semantics: `*` stays within one path segment, `**` crosses
+  segments, and both match dotfiles
 - a changed file is build-affecting when it matches that list; tests (`*.test.ts(x)`,
   `__tests__/`), Markdown, packages no active wrapper depends on (`packages/cli`,
   `packages/generator`, `packages/validators`), and non-build scripts such as
   `scripts/listing-rewrite.ts` are not
 - any shared build-affecting change deploys every active checked-in site, even when the same push
   also touches one site's files or its PR/commit text names one site. Shared inputs are
-  `packages/**`, `configs/**`, `scripts/**`, the top-level `sites/*` files, `sites/default/**`,
+  the Node/pnpm install action (`.github/actions/install/**`), `packages/**`, `configs/**`,
+  `scripts/**`, the top-level `sites/*` files, `sites/default/**`,
   `.nvmrc`, `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, and `turbo.json`
 - a push whose build-affecting changes are all under `apps/<site-id>/` or `sites/<site-id>/` deploys
   exactly those sites

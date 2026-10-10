@@ -1,4 +1,3 @@
-import { matchesGlob } from 'node:path'
 import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
 
 // Single source of truth for which changed files deploy which static sites.
@@ -19,8 +18,8 @@ export function getSiteDeployPathPrefixes(siteId: string): string[] {
 }
 
 /**
- * Shared inputs of every active site build: the workspace packages and configs the wrapper apps
- * import, the build/validate/audit/deploy scripts, the shared checked-in site files and default
+ * Shared inputs of every active site build: the install action that sets up Node and pnpm for every
+ * build job, the workspace packages and configs the wrapper apps import, the build/validate/audit/deploy scripts, the shared checked-in site files and default
  * categories, the workspace manifests and lockfile, and the pinned Node version.
  *
  * `data/listings.json` is not listed: every active site uses `trial-products-json`, and
@@ -29,6 +28,7 @@ export function getSiteDeployPathPrefixes(siteId: string): string[] {
  * no deploy target.
  */
 export const sharedBuildPathPatterns = [
+  '.github/actions/install/**',
   'packages/**',
   'configs/**',
   'scripts/**',
@@ -80,6 +80,47 @@ function normalizeChangedPath(path: string): string {
   return path.replace(/^\.?\//, '')
 }
 
+const globRegExpCache = new Map<string, RegExp>()
+
+/**
+ * Converts a GitHub Actions path-filter glob to a RegExp. As in GitHub's filter, `*` matches any
+ * characters except `/`, `**` matches any characters including `/`, and both match dotfiles and
+ * dot directories (Node's `path.matchesGlob` skips those, so it is not used here).
+ */
+export function workflowGlobToRegExp(glob: string): RegExp {
+  const cached = globRegExpCache.get(glob)
+
+  if (cached) {
+    return cached
+  }
+
+  let source = ''
+
+  for (let index = 0; index < glob.length; index += 1) {
+    const character = glob[index] ?? ''
+
+    if (character === '*' && glob[index + 1] === '*') {
+      if (glob[index + 2] === '/') {
+        source += '(?:.*/)?'
+        index += 2
+      } else {
+        source += '.*'
+        index += 1
+      }
+    } else if (character === '*') {
+      source += '[^/]*'
+    } else if (character === '?') {
+      source += '[^/]'
+    } else {
+      source += character.replace(/[.+^${}()|[\]\\]/g, '\\$&')
+    }
+  }
+
+  const regExp = new RegExp(`^${source}$`)
+  globRegExpCache.set(glob, regExp)
+  return regExp
+}
+
 /** Evaluates a GitHub Actions style path filter: the last matching pattern wins. */
 export function matchesWorkflowPathFilter(path: string, patterns: readonly string[]): boolean {
   const normalizedPath = normalizeChangedPath(path)
@@ -89,7 +130,7 @@ export function matchesWorkflowPathFilter(path: string, patterns: readonly strin
     const negated = pattern.startsWith('!')
     const glob = negated ? pattern.slice(1) : pattern
 
-    if (matchesGlob(normalizedPath, glob)) {
+    if (workflowGlobToRegExp(glob).test(normalizedPath)) {
       matched = !negated
     }
   }

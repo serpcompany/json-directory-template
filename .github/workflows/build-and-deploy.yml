@@ -12,6 +12,7 @@ on:
       - 'sites/serp.ai/**'
       - 'apps/serpdownloaders.com/**'
       - 'sites/serpdownloaders.com/**'
+      - '.github/actions/install/**'
       - 'packages/**'
       - 'configs/**'
       - 'scripts/**'

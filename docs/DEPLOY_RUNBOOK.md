@@ -118,7 +118,7 @@ Push deploy targets come from the changed files, classified by
 
 | Push changes | Deployed sites |
 |---|---|
-| Any shared build input (`packages/**`, `configs/**`, `scripts/**` build code, top-level `sites/*`, `sites/default/**`, `.nvmrc`, `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`) | Every active checked-in site |
+| Any shared build input (the `.github/actions/install/**` Node/pnpm setup, `packages/**`, `configs/**`, `scripts/**` build code, top-level `sites/*`, `sites/default/**`, `.nvmrc`, `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `turbo.json`) | Every active checked-in site |
 | Shared build input plus one site's `apps/<site-id>/` or `sites/<site-id>/` files | Every active checked-in site |
 | Only `apps/<site-id>/` or `sites/<site-id>/` files of one or more active sites | Exactly those sites |
 | Only tests, Markdown, non-build scripts, `data/listings.json`, `apps/starter/**`, or retired site paths | None (the workflow does not start) |

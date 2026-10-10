@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest'
 import {
   buildAndDeployWorkflowPushPaths,
   isBuildAffectingPath,
+  matchesWorkflowPathFilter,
   nonBuildPathPatterns
 } from './deploy-trigger-paths.ts'
 
@@ -58,6 +59,10 @@ describe('build-and-deploy workflow', () => {
 
   it('runs when any shared build input changes', () => {
     for (const path of [
+      '.github/actions/install/action.yml',
+      'packages/web-core/.eslintrc.json',
+      'packages/web-core/src/.generated/routes.ts',
+      'scripts/.build-env.json',
       'packages/web-core/src/schema.ts',
       'packages/site-contract/src/trial-products.ts',
       'packages/design-system/components/custom/breadcrumb.tsx',
@@ -91,12 +96,26 @@ describe('build-and-deploy workflow', () => {
       'data/listings.json',
       'apps/starter/app/layout.tsx',
       '.github/workflows/build-and-deploy.yml',
-      '.github/workflows/reusable-verify-badge.yml'
+      '.github/workflows/reusable-verify-badge.yml',
+      'packages/web-core/src/.cache/schema.test.ts',
+      'docs/.notes.md'
     ]) {
       expect(isBuildAffectingPath(path), path).toBe(false)
     }
     expect(workflow.on.push?.paths).not.toContain('.github/workflows/build-and-deploy.yml')
     expect(workflow.on.push?.paths).not.toContain('.github/workflows/reusable-verify-badge.yml')
+  })
+
+  it('matches dotfiles and dot directories like GitHub path filters do', () => {
+    expect(matchesWorkflowPathFilter('packages/.hidden/a.ts', ['packages/**'])).toBe(true)
+    expect(matchesWorkflowPathFilter('.nvmrc', ['*'])).toBe(true)
+    expect(matchesWorkflowPathFilter('scripts/a/b.ts', ['scripts/*'])).toBe(false)
+    expect(matchesWorkflowPathFilter('scripts/a.ts', ['scripts/*'])).toBe(true)
+    expect(matchesWorkflowPathFilter('apps/x/.next/a.test.ts', ['apps/**', '!**/*.test.ts'])).toBe(
+      false
+    )
+    expect(matchesWorkflowPathFilter('a.test.ts', ['**', '!**/*.test.ts'])).toBe(false)
+    expect(matchesWorkflowPathFilter('sites/serp.ai/x', ['sites/serp?ai/**'])).toBe(true)
   })
 
   it('ignores retired site directories', () => {

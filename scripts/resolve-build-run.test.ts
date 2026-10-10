@@ -155,7 +155,8 @@ describe('resolveBuildRun', () => {
     ['sites/default/categories.json'],
     ['package.json'],
     ['pnpm-lock.yaml'],
-    ['.nvmrc']
+    ['.nvmrc'],
+    ['.github/actions/install/action.yml']
   ])('deploys every active site when the shared build path %s changes', path => {
     expect(resolvePushSiteInputFromChangedPaths([path])).toEqual({
       shouldDeploy: true,
