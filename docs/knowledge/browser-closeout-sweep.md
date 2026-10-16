@@ -18,6 +18,8 @@ For each verified site:
 - confirm disabled optional routes are not publicly available when their feature flags are off
 - confirm GTM is absent for sites without a checked-in `analytics.gtmId`
 - if a site is configured with `analytics.gtmId`, confirm the GTM script and noscript iframe render in production output
+- confirm the Umami script is absent for sites without a checked-in `analytics.umamiWebsiteId`
+- if a site is configured with `analytics.umamiWebsiteId`, confirm the built HTML loads `umami.serpcompany.workers.dev/script.js` with that `data-website-id` and `data-domains="<domain>,www.<domain>"`
 - note any stale copy, stale redirects, broken layouts, broken forms, or dead links
 
 ## Default-site route expectations

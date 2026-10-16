@@ -19,6 +19,7 @@ describe('loadCheckedInSite', () => {
     const config = loadCheckedInSite('browserextensions.io')
 
     expect(config.id).toBe('browserextensions.io')
+    expect(config.analytics?.umamiWebsiteId).toBe('d24bd2cb-150a-4b32-a790-29dc29285575')
     expect(config.content.listingSource).toEqual({
       category: 'video-downloaders',
       featuredCount: 0,
@@ -106,6 +107,7 @@ describe('loadCheckedInSite', () => {
     expect(config.features.showNewsletter).toBe(true)
     expect(config.features.showProjects).toBe(false)
     expect(config.features.showBrands).toBe(true)
+    expect(config.analytics?.umamiWebsiteId).toBe('ddfa2f7f-719d-4126-b67f-22407d8eaf5f')
     expect(config.analytics?.gtmId).toBe('GTM-M82HC3SC')
     expect(config.networkBrandGroup).toBe('all')
     expect(config.social.githubIssueOwner).toBe('serpcompany')
@@ -151,6 +153,7 @@ describe('loadCheckedInSite', () => {
       artifactDir: 'dist/sites/serp.ai'
     })
     expect(config.analytics?.gtmId).toBe('GTM-M4ZSK3X')
+    expect(config.analytics?.umamiWebsiteId).toBe('5c05dd75-117a-4761-8232-6d280c00bc1f')
     expect(config.routes.listingBasePath).toBe('products')
     expect(config.copy.submitLabel).toBe('Submit Yours')
     expect(config.features.showBrands).toBe(true)
@@ -216,6 +219,7 @@ describe('loadCheckedInSite', () => {
     expect(config.routes.networkBasePath).toBe('network')
     expect(config.routes.brandsBasePath).toBe('brands')
     expect(config.analytics?.gtmId).toBeUndefined()
+    expect(config.analytics?.umamiWebsiteId).toBeUndefined()
     expect(config.copy.listingName.singular).toBe('listing')
     expect(config.copy.brandsLabel).toBe('Brands')
     expect(config.copy.docsLabel).toBe('Docs')
@@ -390,6 +394,30 @@ describe('validateCheckedInSiteConfig', () => {
       expect.arrayContaining([
         expect.objectContaining({
           path: ['analytics', 'gtmId']
+        })
+      ])
+    )
+  })
+
+  it('rejects non-UUID Umami website ids', () => {
+    const invalidConfig = cloneDefaultSiteConfig()
+    invalidConfig.analytics = {
+      umamiWebsiteId: 'not-a-uuid'
+    }
+
+    let error: unknown
+
+    try {
+      validateCheckedInSiteConfig(invalidConfig)
+    } catch (caughtError) {
+      error = caughtError
+    }
+
+    expect(error).toBeInstanceOf(ZodError)
+    expect((error as ZodError).issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: ['analytics', 'umamiWebsiteId']
         })
       ])
     )
@@ -579,6 +607,7 @@ describe('resolveResolvedSiteConfig', () => {
         'Browser extensions that save videos from YouTube, TikTok, Udemy, Vimeo and hundreds of other sites for offline viewing.',
       domain: 'serpdownloaders.com',
       gtmId: 'GTM-M82HC3SC',
+      umamiWebsiteId: 'ddfa2f7f-719d-4126-b67f-22407d8eaf5f',
       githubIssueOwner: 'serpcompany',
       githubIssueRepo: 'serpdownloaders.com',
       githubIssuesUrl: 'https://github.com/serpcompany/serpdownloaders.com/issues',

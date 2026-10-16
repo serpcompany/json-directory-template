@@ -11,6 +11,7 @@ import { Header } from '@thedaviddias/web-core/layout/header'
 import { RootAppShell, rootLayoutMetadata } from '@thedaviddias/web-core/root-shell'
 import { resolveSiteConfig } from '@thedaviddias/web-core/site-config'
 import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { resolveUmamiDomains } from '@thedaviddias/web-core/umami'
 import { SignOutButton } from '@/components/auth/sign-out-button'
 import { getHeaderAuthState } from '@/lib/auth'
 import { getWebsites } from '@/lib/content-loader'
@@ -36,7 +37,7 @@ export default async function RootLayout({ children }: RootLayoutProps): Promise
       feedTitle={`${activeSiteConfig.name} - New ${siteCopy.listingName.pluralTitle}`}
       footer={<Footer />}
       gtmId={gtmId}
-      umamiDomains={[activeSiteConfig.domain, `www.${activeSiteConfig.domain}`]}
+      umamiDomains={resolveUmamiDomains(activeSiteConfig)}
       umamiWebsiteId={activeSiteConfig.umamiWebsiteId}
       header={
         <Header

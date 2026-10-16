@@ -109,6 +109,7 @@ describe('resolveSiteConfig', () => {
     expect(config.redditUrl).toBe('https://www.reddit.com/r/directorystarter/')
     expect(config.twitterUrl).toBe('https://x.com/directorystarter')
     expect(config.gtmId).toBeUndefined()
+    expect(config.umamiWebsiteId).toBeUndefined()
     expect(config.listingRouteBasePath).toBe('listing')
     expect(config.docsRouteBasePath).toBe('docs')
     expect(config.networkRouteBasePath).toBe('network')

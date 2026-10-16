@@ -82,5 +82,22 @@ describe('RootAppShell', () => {
     expect(markup).toContain(`src="${UMAMI_SCRIPT_URL}"`)
     expect(markup).toContain('data-website-id="umami-site-id"')
     expect(markup).toContain('data-domains="serpdownloaders.com,www.serpdownloaders.com"')
+    expect(markup).toMatch(/<script defer=""[^>]*src="https:\/\/umami\.serpcompany\.workers\.dev/)
+  })
+
+  it('omits data-domains when no Umami domains are given', () => {
+    const markup = renderToStaticMarkup(
+      <RootAppShell
+        feedTitle="SERP Downloaders - New Products"
+        footer={<footer>Footer slot</footer>}
+        header={<header>Header slot</header>}
+        umamiWebsiteId="umami-site-id"
+      >
+        <div>Page content</div>
+      </RootAppShell>
+    )
+
+    expect(markup).toContain('data-website-id="umami-site-id"')
+    expect(markup).not.toContain('data-domains')
   })
 })

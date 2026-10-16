@@ -183,6 +183,10 @@ export type CheckedInSiteConfig = {
     showExternalResources: boolean;
     showNewsletter: boolean;
   };
+  analytics?: {
+    gtmId?: string;
+    umamiWebsiteId?: string;
+  };
   legal?: {
     contactEmailDomain?: string;
   };
@@ -212,6 +216,8 @@ export type CheckedInSiteConfig = {
 | `browse.categoryPageSize`              | No       | Listings per category page. Later pages are `/categories/<slug>/page/<n>/`. Omit to keep one page per category. See below.          |
 | `browse.homepageListingLayout`         | No       | `alphabetical` (default, first 200 listings by name) or `category-sections` (one capped section per category).                      |
 | `browse.homepageCategorySectionLimit`  | No       | Cards per homepage category section. Defaults to 12.                                                                                |
+| `analytics.gtmId`                      | No       | Google Tag Manager container (`GTM-…`). When set, the shared shell renders the GTM script and noscript iframe.                       |
+| `analytics.umamiWebsiteId`             | No       | UUID of the site in the SERP Cloudflare Umami. When set, the shell loads `https://umami.serpcompany.workers.dev/script.js`, counting only `<domain>` and `www.<domain>`. |
 | `legal.contactEmailDomain`             | No       | Domain for `{{domain}}` (the contact addresses) in shared legal pages. Falls back to `site.domain`. See Known Gaps.                 |
 | `deploy.*`                             | No       | Required for deploy runs; omitted only for non-deploy examples.                                                                     |
 
