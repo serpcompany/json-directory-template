@@ -1,11 +1,15 @@
-import { renderToStaticMarkup } from 'react-dom/server.node'
-import { rootLayoutMetadata, RootAppShell } from '@thedaviddias/web-core/root-shell'
+import {
+  RootAppShell,
+  rootLayoutMetadata,
+  UMAMI_SCRIPT_URL
+} from '@thedaviddias/web-core/root-shell'
 import { siteConfig } from '@thedaviddias/web-core/site-config'
+import { renderToStaticMarkup } from 'react-dom/server.node'
 
 jest.mock('@thedaviddias/design-system/theme-provider', () => ({
   DesignSystemProvider: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="design-system-provider">{children}</div>
-  ),
+  )
 }))
 
 jest.mock('@thedaviddias/web-core/root-shell-client', () => ({
@@ -19,19 +23,19 @@ jest.mock('@thedaviddias/web-core/root-shell-client', () => ({
   ),
   GoogleTagManagerScript: ({ gtmId }: { gtmId?: string }) => (
     <script data-testid="gtm-script" data-gtm-id={gtmId ?? ''} />
-  ),
+  )
 }))
 
 describe('RootAppShell', () => {
   it('exports shared root layout metadata for wrapper apps', () => {
     expect(rootLayoutMetadata.title).toEqual({
       default: `${siteConfig.name} - ${siteConfig.tagline}`,
-      template: `%s | ${siteConfig.name}`,
+      template: `%s | ${siteConfig.name}`
     })
     expect(rootLayoutMetadata.description).toBe(siteConfig.description)
     expect(rootLayoutMetadata.icons).toEqual({
       apple: `${siteConfig.publicUrl}/apple-touch-icon.png`,
-      icon: `${siteConfig.publicUrl}/favicon.ico`,
+      icon: `${siteConfig.publicUrl}/favicon.ico`
     })
   })
 
@@ -59,5 +63,24 @@ describe('RootAppShell', () => {
     expect(markup).toContain('Back to top')
     expect(markup).toContain('title="SERP Downloaders - New Products"')
     expect(markup).toContain('href="/rss.xml"')
+    expect(markup).not.toContain('umami')
+  })
+
+  it('renders the Umami script only when a website ID is configured', () => {
+    const markup = renderToStaticMarkup(
+      <RootAppShell
+        feedTitle="SERP Downloaders - New Products"
+        footer={<footer>Footer slot</footer>}
+        header={<header>Header slot</header>}
+        umamiDomains={['serpdownloaders.com', 'www.serpdownloaders.com']}
+        umamiWebsiteId="umami-site-id"
+      >
+        <div>Page content</div>
+      </RootAppShell>
+    )
+
+    expect(markup).toContain(`src="${UMAMI_SCRIPT_URL}"`)
+    expect(markup).toContain('data-website-id="umami-site-id"')
+    expect(markup).toContain('data-domains="serpdownloaders.com,www.serpdownloaders.com"')
   })
 })

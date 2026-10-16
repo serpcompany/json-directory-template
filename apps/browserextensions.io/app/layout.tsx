@@ -1,16 +1,19 @@
 import type { ReactElement, ReactNode } from 'react'
 import './globals.css'
 import { fonts } from '@thedaviddias/design-system/lib/fonts'
-import { SignOutButton } from '../components/auth/sign-out-button'
+import {
+  getActiveCategories,
+  getFeaturedListingCount
+} from '@thedaviddias/web-core/category-navigation'
+import { resolveGoogleTagManagerId } from '@thedaviddias/web-core/google-tag-manager'
 import { Footer } from '@thedaviddias/web-core/layout/footer'
 import { Header } from '@thedaviddias/web-core/layout/header'
-import { getHeaderAuthState } from '../lib/auth'
-import { getActiveCategories, getFeaturedListingCount } from '@thedaviddias/web-core/category-navigation'
-import { getWebsites } from '../lib/content-loader'
-import { resolveGoogleTagManagerId } from '@thedaviddias/web-core/google-tag-manager'
 import { RootAppShell, rootLayoutMetadata } from '@thedaviddias/web-core/root-shell'
-import { siteCopy } from '@thedaviddias/web-core/site-copy'
 import { resolveSiteConfig } from '@thedaviddias/web-core/site-config'
+import { siteCopy } from '@thedaviddias/web-core/site-copy'
+import { SignOutButton } from '../components/auth/sign-out-button'
+import { getHeaderAuthState } from '../lib/auth'
+import { getWebsites } from '../lib/content-loader'
 
 export const metadata = rootLayoutMetadata
 
@@ -33,6 +36,8 @@ export default async function RootLayout({ children }: RootLayoutProps): Promise
       feedTitle={`${activeSiteConfig.name} - New ${siteCopy.listingName.pluralTitle}`}
       footer={<Footer />}
       gtmId={gtmId}
+      umamiDomains={[activeSiteConfig.domain, `www.${activeSiteConfig.domain}`]}
+      umamiWebsiteId={activeSiteConfig.umamiWebsiteId}
       header={
         <Header
           activeCategorySlugs={activeCategorySlugs}

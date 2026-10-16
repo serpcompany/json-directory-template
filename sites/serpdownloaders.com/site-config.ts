@@ -2,7 +2,8 @@ import type { CheckedInSiteConfigOverride } from '../types'
 
 export const serpdownloadersComSiteConfig: CheckedInSiteConfigOverride = {
   analytics: {
-    gtmId: 'GTM-M82HC3SC'
+    gtmId: 'GTM-M82HC3SC',
+    umamiWebsiteId: 'ddfa2f7f-719d-4126-b67f-22407d8eaf5f'
   },
   badges: {
     featuredOn: {

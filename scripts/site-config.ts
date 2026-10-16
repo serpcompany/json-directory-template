@@ -42,7 +42,8 @@ const siteAnalyticsSchema = z
     gtmId: z
       .string()
       .regex(/^GTM-[A-Z0-9]+$/)
-      .optional()
+      .optional(),
+    umamiWebsiteId: z.string().uuid().optional()
   })
   .optional()
 
@@ -437,6 +438,7 @@ export function resolveResolvedSiteConfig(siteConfig: CheckedInSiteConfig) {
     domain: siteConfig.site.domain,
     features: siteConfig.features,
     gtmId: siteConfig.analytics?.gtmId,
+    umamiWebsiteId: siteConfig.analytics?.umamiWebsiteId,
     githubIssueOwner: siteConfig.social.githubIssueOwner,
     githubIssueRepo: siteConfig.social.githubIssueRepo,
     githubIssuesUrl: siteConfig.social.githubIssuesUrl,

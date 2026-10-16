@@ -34,6 +34,7 @@ export type SiteConfig = {
   domain: string
   features: SiteFeatureFlags
   gtmId?: string
+  umamiWebsiteId?: string
   githubIssueOwner: string | null
   githubIssueRepo: string | null
   githubIssuesUrl: string | null
@@ -178,6 +179,7 @@ export function resolveSiteConfig(
     domain: configuredSite.site.domain,
     features: configuredSite.features,
     gtmId: configuredSite.analytics?.gtmId,
+    umamiWebsiteId: configuredSite.analytics?.umamiWebsiteId,
     githubIssueOwner: configuredSite.social.githubIssueOwner,
     githubIssueRepo: configuredSite.social.githubIssueRepo,
     githubIssuesUrl: configuredSite.social.githubIssuesUrl,

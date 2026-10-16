@@ -1,21 +1,23 @@
+import { DesignSystemProvider } from '@thedaviddias/design-system/theme-provider'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
-import { DesignSystemProvider } from '@thedaviddias/design-system/theme-provider'
+import {
+  AnalyticsTracker,
+  BackToTop,
+  FavoritesProvider,
+  GoogleTagManagerNoScript,
+  GoogleTagManagerScript
+} from './root-shell-client'
 import {
   SITE_APPLE_TOUCH_ICON_URL,
   SITE_DESCRIPTION,
   SITE_FAVICON_URL,
   SITE_NAME,
   SITE_TAGLINE,
-  SITE_URL,
+  SITE_URL
 } from './seo-config'
-import {
-  AnalyticsTracker,
-  BackToTop,
-  FavoritesProvider,
-  GoogleTagManagerNoScript,
-  GoogleTagManagerScript,
-} from './root-shell-client'
+
+export const UMAMI_SCRIPT_URL = 'https://umami.serpcompany.workers.dev/script.js'
 
 export const rootLayoutMetadata: Metadata = {
   title: {
@@ -37,6 +39,9 @@ interface RootAppShellProps {
   footer: ReactNode
   gtmId?: string
   header: ReactNode
+  /** Hostnames Umami should count; other hosts (localhost, previews) are ignored. */
+  umamiDomains?: string[]
+  umamiWebsiteId?: string
 }
 
 export function RootAppShell({
@@ -46,17 +51,22 @@ export function RootAppShell({
   footer,
   gtmId,
   header,
+  umamiDomains,
+  umamiWebsiteId
 }: RootAppShellProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <GoogleTagManagerScript gtmId={gtmId} />
-        <link
-          rel="alternate"
-          type="application/feed+json"
-          title={feedTitle}
-          href="/rss.xml"
-        />
+        {umamiWebsiteId ? (
+          <script
+            defer
+            src={UMAMI_SCRIPT_URL}
+            data-website-id={umamiWebsiteId}
+            data-domains={umamiDomains?.length ? umamiDomains.join(',') : undefined}
+          />
+        ) : null}
+        <link rel="alternate" type="application/feed+json" title={feedTitle} href="/rss.xml" />
       </head>
       <body className={bodyClassName}>
         <GoogleTagManagerNoScript gtmId={gtmId} />

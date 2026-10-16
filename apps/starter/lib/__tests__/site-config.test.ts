@@ -21,6 +21,7 @@ describe('resolveSiteConfig', () => {
     expect(config.githubUrl).toBe('https://github.com/serpapps')
     expect(config.publicUrl).toBe('https://serpdownloaders.com')
     expect(config.gtmId).toBe('GTM-M82HC3SC')
+    expect(config.umamiWebsiteId).toBe('ddfa2f7f-719d-4126-b67f-22407d8eaf5f')
     expect(config.listingRouteBasePath).toBe('products')
     expect(config.docsRouteBasePath).toBe('docs')
     expect(config.networkRouteBasePath).toBe('network')

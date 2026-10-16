@@ -110,6 +110,8 @@ export type SiteOwnedContent = {
 
 export type SiteAnalyticsConfig = {
   gtmId?: string
+  /** Website ID in the SERP Cloudflare Umami (https://umami.serpcompany.workers.dev). */
+  umamiWebsiteId?: string
 }
 
 export type SiteLegalConfig = {

@@ -27,7 +27,8 @@ export const browserextensionsIoSiteConfig: CheckedInSiteConfigOverride = {
     artifactDir: 'dist/sites/browserextensions.io'
   },
   analytics: {
-    gtmId: 'GTM-NL242383'
+    gtmId: 'GTM-NL242383',
+    umamiWebsiteId: 'd24bd2cb-150a-4b32-a790-29dc29285575'
   },
   content: {
     listingSource: {
