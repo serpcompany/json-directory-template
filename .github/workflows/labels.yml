@@ -9,7 +9,9 @@ jobs:
       contents: read
       issues: write
       pull-requests: write
-    runs-on: self-hosted
+    # GitHub-hosted, never `self-hosted`: this repository is public, so anyone's pull request can
+    # start this job. It only calls the GitHub API (#170).
+    runs-on: ubuntu-latest
 
     steps:
       - name: Ensure managed labels exist
