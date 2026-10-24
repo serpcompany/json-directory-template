@@ -1,7 +1,7 @@
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { activeCheckedInSiteIds } from '@thedaviddias/site-contract/active-site-ids'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   readAssociatedMergedPullRequestChangedPaths,
   resolveBuildRun,
@@ -32,13 +32,22 @@ function createMockFetch(routes: Record<string, Response | unknown>): typeof fet
   }) as unknown as typeof fetch
 }
 
+const tempDirs: string[] = []
+
 function writePushEvent(event: unknown): string {
   mkdirSync(resolve(process.cwd(), 'tmp'), { recursive: true })
   const dir = mkdtempSync(resolve(process.cwd(), 'tmp/resolve-build-run-'))
+  tempDirs.push(dir)
   const path = resolve(dir, 'event.json')
   writeFileSync(path, JSON.stringify(event))
   return path
 }
+
+afterEach(() => {
+  tempDirs.splice(0).forEach(dir => {
+    rmSync(dir, { force: true, recursive: true })
+  })
+})
 
 function expectedDeployTargets(siteIds: readonly string[]) {
   return siteIds.map(siteId => ({
